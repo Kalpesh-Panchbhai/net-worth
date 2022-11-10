@@ -65,28 +65,40 @@ struct NewAccountView: View {
                             .keyboardType(.decimalPad)
                             .onChange(of: currentBalance, perform: {_ in
                                 let filtered = currentBalance.filter {"0123456789.".contains($0)}
-
+                                
                                 if filtered.contains(".") {
                                     let splitted = filtered.split(separator: ".")
                                     if splitted.count >= 2 {
                                         let preDecimal = String(splitted[0])
                                         if String(splitted[1]).count == 3 {
                                             let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
-                                            currentBalance = "\(preDecimal).\(afterDecimal)"
+                                            if isPlus {
+                                                currentBalance = "\(preDecimal).\(afterDecimal)"
+                                            }else {
+                                                currentBalance = "-\(preDecimal).\(afterDecimal)"
+                                            }
                                         }else {
                                             let afterDecimal = String(splitted[1])
-                                            currentBalance = "\(preDecimal).\(afterDecimal)"
+                                            if isPlus {
+                                                currentBalance = "\(preDecimal).\(afterDecimal)"
+                                            }else {
+                                                currentBalance = "-\(preDecimal).\(afterDecimal)"
+                                            }
                                         }
                                     }else if splitted.count == 1 {
                                         let preDecimal = String(splitted[0])
-                                        currentBalance = "\(preDecimal)."
+                                        if isPlus {
+                                            currentBalance = "\(preDecimal)."
+                                        }else {
+                                            currentBalance = "-\(preDecimal)."
+                                        }
                                     }else {
-                                        currentBalance = "0."
+                                        if isPlus {
+                                            currentBalance = "0."
+                                        }else {
+                                            currentBalance = "-0."
+                                        }
                                     }
-                                } else if filtered.isEmpty && !currentBalance.isEmpty {
-                                    currentBalance = ""
-                                } else if !filtered.isEmpty {
-                                    currentBalance = filtered
                                 }
                             })
                     }
