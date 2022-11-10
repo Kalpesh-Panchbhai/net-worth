@@ -13,7 +13,7 @@ struct net_worthApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MainScreenView()
+            AuthenticationView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
