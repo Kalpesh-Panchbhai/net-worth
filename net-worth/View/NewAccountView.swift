@@ -53,7 +53,7 @@ struct NewAccountView: View {
                                 currentBalance = "-\(currentBalance)"
                                 isPlus = false
                             }else {
-                                var value = Double((currentBalance as NSString).doubleValue) * -1
+                                let value = Double((currentBalance as NSString).doubleValue) * -1
                                 currentBalance = "\(value)"
                                 isPlus = true
                             }
@@ -61,7 +61,34 @@ struct NewAccountView: View {
                             Label("", systemImage: isPlus ? "minus" : "plus")
                         })
                         Spacer()
-                        TextField("Current Balance", text: $currentBalance).keyboardType(.decimalPad)
+                        TextField("Current Balance", text: $currentBalance)
+                            .keyboardType(.decimalPad)
+                            .onChange(of: currentBalance, perform: {_ in
+                                let filtered = currentBalance.filter {"0123456789.".contains($0)}
+
+                                if filtered.contains(".") {
+                                    let splitted = filtered.split(separator: ".")
+                                    if splitted.count >= 2 {
+                                        let preDecimal = String(splitted[0])
+                                        if String(splitted[1]).count == 3 {
+                                            let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
+                                            currentBalance = "\(preDecimal).\(afterDecimal)"
+                                        }else {
+                                            let afterDecimal = String(splitted[1])
+                                            currentBalance = "\(preDecimal).\(afterDecimal)"
+                                        }
+                                    }else if splitted.count == 1 {
+                                        let preDecimal = String(splitted[0])
+                                        currentBalance = "\(preDecimal)."
+                                    }else {
+                                        currentBalance = "0."
+                                    }
+                                } else if filtered.isEmpty && !currentBalance.isEmpty {
+                                    currentBalance = ""
+                                } else if !filtered.isEmpty {
+                                    currentBalance = filtered
+                                }
+                            })
                     }
                     if accountType == "Loan" || accountType == "Credit Card" {
                         Toggle("Enable Payment Reminder", isOn: $paymentReminder)
