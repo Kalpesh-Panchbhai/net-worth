@@ -11,11 +11,13 @@ struct NewAccountView: View {
     
     @State var accountType: String = "None"
     @State var accountName: String = ""
-    @State var currentBalance: String = ""
+    @State var currentBalance: String = "0.0"
     @State var paymentReminder = false
     
     @State private var paymentDate = 1
     @State var dates = Array(1...31)
+    
+    @State var isPlus = true;
     
     var accountTypes =  ["None", "Saving", "Credit Card", "Loan", "Stock", "Mutual Fund"]
     
@@ -46,6 +48,19 @@ struct NewAccountView: View {
                     HStack {
                         Text("Current Balance")
                         Spacer()
+                        Button(action: {
+                            if isPlus {
+                                currentBalance = "-\(currentBalance)"
+                                isPlus = false
+                            }else {
+                                var value = Double((currentBalance as NSString).doubleValue) * -1
+                                currentBalance = "\(value)"
+                                isPlus = true
+                            }
+                        }, label: {
+                            Label("", systemImage: isPlus ? "minus" : "plus")
+                        })
+                        Spacer()
                         TextField("Current Balance", text: $currentBalance).keyboardType(.decimalPad)
                     }
                     if accountType == "Loan" || accountType == "Credit Card" {
@@ -67,11 +82,47 @@ struct NewAccountView: View {
                         dismiss()
                     }, label: {
                         Label("Add Account", systemImage: "checkmark")
-                    }).disabled(false)
+                    }).disabled(!allFieldsFilled())
                 }
             }
             .navigationTitle("New Account")
             .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+    
+    private func allFieldsFilled () -> Bool {
+        if accountType == "Saving" {
+            if accountName.isEmpty || currentBalance.isEmpty {
+                return false
+            } else {
+                return true
+            }
+        }else if accountType == "Credit Card" {
+            if accountName.isEmpty || currentBalance.isEmpty {
+                return false
+            } else {
+                return true
+            }
+        }else if accountType == "Loan" {
+            if accountName.isEmpty || currentBalance.isEmpty {
+                return false
+            } else {
+                return true
+            }
+        }else if accountType == "Stock" {
+            if accountName.isEmpty || currentBalance.isEmpty {
+                return false
+            } else {
+                return true
+            }
+        }else if accountType == "Mutual Fund" {
+            if accountName.isEmpty || currentBalance.isEmpty {
+                return false
+            } else {
+                return true
+            }
+        }else {
+            return false
         }
     }
 }

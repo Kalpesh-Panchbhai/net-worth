@@ -111,11 +111,10 @@
 			isa = PBXGroup;
 			children = (
 				7D79FA50291B7430004A2ECF /* net_worthApp.swift */,
+				7D79FA5E291B7431004A2ECF /* Info.plist */,
 				7D79FA88291B9C6E004A2ECF /* View */,
 				7D79FA80291B75CB004A2ECF /* Data Model */,
 				7D79FA83291B7EC2004A2ECF /* Controller */,
-				7D79FA54291B7431004A2ECF /* Assets.xcassets */,
-				7D79FA5E291B7431004A2ECF /* Info.plist */,
 				7D79FA56291B7431004A2ECF /* Preview Content */,
 			);
 			path = "net-worth";
@@ -124,6 +123,7 @@
 		7D79FA56291B7431004A2ECF /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
+				7D79FA54291B7431004A2ECF /* Assets.xcassets */,
 				7D79FA57291B7431004A2ECF /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
