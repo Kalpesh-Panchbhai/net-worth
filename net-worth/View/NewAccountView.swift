@@ -61,13 +61,6 @@ struct NewAccountView: View {
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        dismiss()
-                    }, label: {
-                        Label("Cancel", systemImage: "xmark")
-                    })
-                }
                 ToolbarItem {
                     Button(action: {
                         accountController.addAccount(accountType: accountType, accountName: accountName, currentBalance: currentBalance, paymentReminder: paymentReminder, paymentDate: paymentDate)
