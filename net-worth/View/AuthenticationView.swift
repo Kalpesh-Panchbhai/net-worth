@@ -22,14 +22,14 @@ struct AuthenticationView: View {
                     authenticateTypeMessage = "Unlock with Touch ID"
                     authenticate()
                 }.fullScreenCover(isPresented: $unlocked, content: {
-                    MainScreenView()
+                    AppTabBarView()
                 })
             }else if authenticType == .face{
                 Button("Unlock with Face ID") {
                     authenticateTypeMessage = "Unlock with Face ID"
                     authenticate()
                 }.fullScreenCover(isPresented: $unlocked, content: {
-                    MainScreenView()
+                    AppTabBarView()
                 })
             }
         }
