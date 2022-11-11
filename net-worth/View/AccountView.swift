@@ -22,6 +22,8 @@ struct AccountView: View {
     
     @State var isOpen: Bool = false
     
+    @State var isDeleteButtonVisible = false
+    
     var body: some View {
         NavigationView {
             List {
@@ -37,6 +39,7 @@ struct AccountView: View {
                             Spacer()
                             Text("\(String(format: "%.2f", account.currentbalance))")
                         }
+                        .padding()
                     })
                 }
                 .onDelete(perform: deleteAccount)
@@ -54,8 +57,6 @@ struct AccountView: View {
                         NewAccountView()
                     })
                 }
-            }
-            .toolbar {
                 ToolbarItem(placement: .bottomBar){
                     let balance = accountController.getAccountTotalBalance()
                     HStack {
@@ -65,6 +66,10 @@ struct AccountView: View {
             }
             .navigationTitle("Accounts")
         }
+    }
+    
+    private var deleteButton: some View {
+        Image(systemName: "trash")
     }
     
     private func deleteAccount(offsets: IndexSet) {
