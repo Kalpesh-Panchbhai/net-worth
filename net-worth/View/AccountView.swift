@@ -26,9 +26,7 @@ struct AccountView: View {
         NavigationView {
             List {
                 ForEach(accounts) { account in
-                    NavigationLink {
-                        AccountDetailsView(uuid: account.sysid!)
-                    } label: {
+                    NavigationLink(destination: AccountDetailsView(uuid: account.sysid!), label: {
                         HStack{
                             VStack {
                                 Text(account.accountname!)
@@ -37,9 +35,9 @@ struct AccountView: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             Spacer()
-                            Text("\(account.currentbalance)")
+                            Text("\(String(format: "%.2f", account.currentbalance))")
                         }
-                    }
+                    })
                 }
                 .onDelete(perform: deleteAccount)
             }
@@ -61,7 +59,7 @@ struct AccountView: View {
                 ToolbarItem(placement: .bottomBar){
                     let balance = accountController.getAccountTotalBalance()
                     HStack {
-                        TextField("Total Balance \(balance)", text: $accountName).disabled(true).foregroundColor(.red).font(.title2)
+                        TextField("Total Balance \(String(format: "%.2f", balance))", text: $accountName).disabled(true).foregroundColor(.red).font(.title2)
                     }
                 }
             }

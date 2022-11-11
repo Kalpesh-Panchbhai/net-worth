@@ -99,6 +99,10 @@ struct NewAccountView: View {
                                             currentBalance = "-0."
                                         }
                                     }
+                                } else if filtered.isEmpty && !currentBalance.isEmpty {
+                                    currentBalance = ""
+                                } else if !filtered.isEmpty {
+                                    currentBalance = filtered
                                 }
                             })
                     }
