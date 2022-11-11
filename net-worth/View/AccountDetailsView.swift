@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SlidingTabView
 
 struct AccountDetailsView: View {
     
@@ -15,6 +16,8 @@ struct AccountDetailsView: View {
     
     private var account: Account
     
+    @State private var selectedTabIndex = 0
+    
     init(uuid: UUID) {
         self.uuid = uuid
         self.accountController = AccountController()
@@ -22,7 +25,16 @@ struct AccountDetailsView: View {
     }
     
     var body: some View {
-        Text("Item at \(account.sysid!) \(account.timestamp!, formatter: accountFormatter) \(account.accounttype!) \(account.accountname!) \(String(account.paymentReminder)) \(account.currentbalance) \(account.paymentDate)")
+        VStack {
+            SlidingTabView(selection: self.$selectedTabIndex
+                           , tabs: ["First", "Second"]
+                           , animation: .easeOut
+                           , activeAccentColor: .blue
+                           , inactiveAccentColor: .blue
+                           , selectionBarColor: .blue)
+            (selectedTabIndex == 0 ? Text("First View") : Text("Second View"))
+            Spacer()
+        }.padding(.top)
     }
     
     private let accountFormatter: DateFormatter = {

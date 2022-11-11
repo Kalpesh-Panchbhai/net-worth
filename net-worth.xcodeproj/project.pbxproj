@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7D42520F291BE95C0001C41C /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D42520E291BE95C0001C41C /* AuthenticationView.swift */; };
+		7D51FE18291E1E8500BBA94A /* SlidingTabView in Frameworks */ = {isa = PBXBuildFile; productRef = 7D51FE17291E1E8400BBA94A /* SlidingTabView */; };
 		7D79FA51291B7430004A2ECF /* net_worthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA50291B7430004A2ECF /* net_worthApp.swift */; };
 		7D79FA53291B7430004A2ECF /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA52291B7430004A2ECF /* AccountView.swift */; };
 		7D79FA55291B7431004A2ECF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D79FA54291B7431004A2ECF /* Assets.xcassets */; };
@@ -68,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D51FE18291E1E8500BBA94A /* SlidingTabView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,6 +195,9 @@
 			dependencies = (
 			);
 			name = "net-worth";
+			packageProductDependencies = (
+				7D51FE17291E1E8400BBA94A /* SlidingTabView */,
+			);
 			productName = "net-worth";
 			productReference = 7D79FA4D291B7430004A2ECF /* net-worth.app */;
 			productType = "com.apple.product-type.application";
@@ -265,6 +270,9 @@
 				Base,
 			);
 			mainGroup = 7D79FA44291B7430004A2ECF;
+			packageReferences = (
+				7D51FE16291E1E8400BBA94A /* XCRemoteSwiftPackageReference "SlidingTabView" */,
+			);
 			productRefGroup = 7D79FA4E291B7430004A2ECF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -649,6 +657,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7D51FE16291E1E8400BBA94A /* XCRemoteSwiftPackageReference "SlidingTabView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/QuynhNguyen/SlidingTabView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7D51FE17291E1E8400BBA94A /* SlidingTabView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7D51FE16291E1E8400BBA94A /* XCRemoteSwiftPackageReference "SlidingTabView" */;
+			productName = SlidingTabView;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		7D79FA5B291B7431004A2ECF /* net_worth.xcdatamodeld */ = {
