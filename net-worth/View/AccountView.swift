@@ -22,8 +22,6 @@ struct AccountView: View {
     
     @State var isOpen: Bool = false
     
-    @State var isDeleteButtonVisible = false
-    
     var body: some View {
         NavigationView {
             List {
@@ -67,11 +65,7 @@ struct AccountView: View {
             .navigationTitle("Accounts")
         }
     }
-    
-    private var deleteButton: some View {
-        Image(systemName: "trash")
-    }
-    
+
     private func deleteAccount(offsets: IndexSet) {
         withAnimation {
             offsets.map { accounts[$0] }.forEach(viewContext.delete)
