@@ -27,7 +27,7 @@ struct AccountView: View {
             List {
                 ForEach(accounts) { account in
                     NavigationLink {
-                        Text("Item at \(account.timestamp!, formatter: accountFormatter) \(account.accounttype!) \(account.accountname!) \(String(account.paymentReminder)) \(account.currentbalance) \(account.paymentDate)")
+                        AccountDetailsView(uuid: account.sysid!)
                     } label: {
                         HStack{
                             VStack {
@@ -82,13 +82,6 @@ struct AccountView: View {
         }
     }
 }
-
-private let accountFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

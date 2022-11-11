@@ -14,6 +14,7 @@ class AccountController {
     
     public func addAccount(accountType: String, accountName: String, currentBalance: String, paymentReminder: Bool, paymentDate: Int) {
         let newAccount = Account(context: viewContext)
+        newAccount.sysid = UUID()
         newAccount.timestamp = Date()
         newAccount.accounttype = accountType
         newAccount.accountname =  accountName
@@ -49,4 +50,25 @@ class AccountController {
         return balance
     }
     
+    public func getAccount(uuid: UUID) -> Account {
+        let request = Account.fetchRequest()
+        request.predicate = NSPredicate(
+            format: "sysid = %@", uuid.uuidString
+        )
+        var account: Account
+        do{
+            account = try viewContext.fetch(request).first!
+        }catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+        return account
+    }
+    
+    private let accountFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .medium
+        return formatter
+    }()
 }
