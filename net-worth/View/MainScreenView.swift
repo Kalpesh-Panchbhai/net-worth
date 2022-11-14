@@ -16,10 +16,7 @@ struct MainScreenView: View {
                 Image(systemName: "star.fill")
                 Text("Accounts")
             }.tag("account_view")
-            NavigationView(){
-                Text("Tab 2")
-                    .navigationTitle("Income")
-            }
+            IncomeView()
             .tabItem{
                 Image(systemName: "indianrupeesign.circle.fill")
                 Text("Income")

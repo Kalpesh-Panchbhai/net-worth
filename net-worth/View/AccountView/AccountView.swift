@@ -9,6 +9,7 @@ import SwiftUI
 import CoreData
 
 struct AccountView: View {
+    
     @Environment(\.managedObjectContext) private var viewContext
     
     @FetchRequest(
@@ -26,7 +27,7 @@ struct AccountView: View {
         NavigationView {
             List {
                 ForEach(accounts) { account in
-                    NavigationLink(destination: AccountDetailsView(uuid: account.sysid!), label: {
+                    NavigationLink(destination: AccountDetailsNavigationLinkView(uuid: account.sysid!), label: {
                         HStack{
                             VStack {
                                 Text(account.accountname!)
@@ -43,8 +44,10 @@ struct AccountView: View {
                 .onDelete(perform: deleteAccount)
             }
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    EditButton()
+                if !accounts.isEmpty {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        EditButton()
+                    }
                 }
                 ToolbarItem {
                     Button(action: {
@@ -58,14 +61,14 @@ struct AccountView: View {
                 ToolbarItem(placement: .bottomBar){
                     let balance = accountController.getAccountTotalBalance()
                     HStack {
-                        TextField("Total Balance \(String(format: "%.2f", balance))", text: $accountName).disabled(true).foregroundColor(.red).font(.title2)
+                        Text("Total Balance \(String(format: "%.2f", balance))").foregroundColor(.blue).font(.title2)
                     }
                 }
             }
             .navigationTitle("Accounts")
         }
     }
-
+    
     private func deleteAccount(offsets: IndexSet) {
         withAnimation {
             offsets.map { accounts[$0] }.forEach(viewContext.delete)

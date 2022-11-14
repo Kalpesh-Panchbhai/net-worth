@@ -19,7 +19,7 @@ struct AuthenticationView: View {
     var body: some View {
         VStack {
             let authenticType = biometricType()
-            if settingsController.isAuthenticationRequire() {
+            if false {
                 if authenticType == .touch {
                     Button("Unlock with Touch ID") {
                         authenticateTypeMessage = "Unlock with Touch ID"

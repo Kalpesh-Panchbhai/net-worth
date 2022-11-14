@@ -8,7 +8,7 @@
 import SwiftUI
 import SlidingTabView
 
-struct AccountDetailsView: View {
+struct AccountDetailsNavigationLinkView: View {
     
     private var uuid: UUID
     
@@ -27,12 +27,13 @@ struct AccountDetailsView: View {
     var body: some View {
         VStack {
             SlidingTabView(selection: self.$selectedTabIndex
-                           , tabs: ["First", "Second"]
+                           , tabs: ["Details", "History"]
                            , animation: .easeOut
                            , activeAccentColor: .blue
                            , inactiveAccentColor: .blue
                            , selectionBarColor: .blue)
-            (selectedTabIndex == 0 ? Text("First View") : Text("Second View"))
+            .navigationBarTitleDisplayMode(NavigationBarItem.TitleDisplayMode.inline)
+            (selectedTabIndex == 0 ? Text(account.accountname!) : Text("Second View"))
             Spacer()
         }.padding(.top)
     }
@@ -45,8 +46,8 @@ struct AccountDetailsView: View {
     }()
 }
 
-struct AccountDetailsView_Previews: PreviewProvider {
+struct AccountDetailsNavigationLinkView_Previews: PreviewProvider {
     static var previews: some View {
-        AccountDetailsView(uuid: UUID())
+        AccountDetailsNavigationLinkView(uuid: UUID())
     }
 }

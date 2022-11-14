@@ -36,7 +36,7 @@ struct NewAccountView: View {
                     }
                     .onChange(of: accountType) { _ in
                         accountName=""
-                        currentBalance=""
+                        currentBalance="0.0"
                         paymentDate = 1
                         paymentReminder = false
                     }
