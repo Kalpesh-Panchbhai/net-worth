@@ -23,6 +23,8 @@
 		7D79FA8C291BA152004A2ECF /* NewAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA8B291BA152004A2ECF /* NewAccountView.swift */; };
 		7D80ECF0291CE0C500A22496 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D80ECEF291CE0C500A22496 /* LaunchScreen.storyboard */; };
 		7DA80405291E177700570DCB /* AccountDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA80404291E177700570DCB /* AccountDetailsView.swift */; };
+		7DC97A24292216BB003F69D4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A23292216BB003F69D4 /* SettingsView.swift */; };
+		7DC97A2629221990003F69D4 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A2529221990003F69D4 /* SettingsController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +64,8 @@
 		7D79FA8B291BA152004A2ECF /* NewAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAccountView.swift; sourceTree = "<group>"; };
 		7D80ECEF291CE0C500A22496 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7DA80404291E177700570DCB /* AccountDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailsView.swift; sourceTree = "<group>"; };
+		7DC97A23292216BB003F69D4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		7DC97A2529221990003F69D4 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				7D79FA86291B803A004A2ECF /* AccountController.swift */,
+				7DC97A2529221990003F69D4 /* SettingsController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -175,6 +180,7 @@
 				7D79FA8B291BA152004A2ECF /* NewAccountView.swift */,
 				7D42520E291BE95C0001C41C /* AuthenticationView.swift */,
 				7DA80404291E177700570DCB /* AccountDetailsView.swift */,
+				7DC97A23292216BB003F69D4 /* SettingsView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -317,10 +323,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D79FA5D291B7431004A2ECF /* net_worth.xcdatamodeld in Sources */,
+				7DC97A2629221990003F69D4 /* SettingsController.swift in Sources */,
 				7D79FA8A291B9CE6004A2ECF /* MainScreenView.swift in Sources */,
 				7DA80405291E177700570DCB /* AccountDetailsView.swift in Sources */,
 				7D79FA5A291B7431004A2ECF /* Persistence.swift in Sources */,
 				7D79FA87291B803A004A2ECF /* AccountController.swift in Sources */,
+				7DC97A24292216BB003F69D4 /* SettingsView.swift in Sources */,
 				7D79FA8C291BA152004A2ECF /* NewAccountView.swift in Sources */,
 				7D79FA53291B7430004A2ECF /* AccountView.swift in Sources */,
 				7D42520F291BE95C0001C41C /* AuthenticationView.swift in Sources */,

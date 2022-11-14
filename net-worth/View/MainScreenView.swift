@@ -24,10 +24,7 @@ struct MainScreenView: View {
                 Image(systemName: "indianrupeesign.circle.fill")
                 Text("Income")
             }.tag("income_view")
-            NavigationView(){
-                Text("Tab 3")
-                    .navigationTitle("Settings")
-            }
+            SettingsView()
             .tabItem{
                 Image(systemName: "slider.horizontal.3")
                 Text("Settings")
