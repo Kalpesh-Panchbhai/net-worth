@@ -183,10 +183,10 @@
 			isa = PBXGroup;
 			children = (
 				7DD7A56C29224C1200CD5B37 /* AccountView */,
+				7DD7A56B29224BFD00CD5B37 /* IncomeView */,
+				7DD7A56D29224C1D00CD5B37 /* SettingsView */,
 				7D79FA89291B9CE6004A2ECF /* MainScreenView.swift */,
 				7D42520E291BE95C0001C41C /* AuthenticationView.swift */,
-				7DD7A56D29224C1D00CD5B37 /* SettingsView */,
-				7DD7A56B29224BFD00CD5B37 /* IncomeView */,
 			);
 			path = View;
 			sourceTree = "<group>";
