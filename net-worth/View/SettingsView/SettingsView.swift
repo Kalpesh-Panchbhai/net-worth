@@ -26,6 +26,8 @@ struct SettingsView: View {
                             settingsController.changeAuthentication(isRequired: _isOn)
                         }
                 }
+                let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+                Text("Version " + appVersion!)
             }
             .navigationTitle("Settings")
         }
