@@ -15,20 +15,18 @@ class NotificationController {
     private var notificationCenter  =  UNUserNotificationCenter.current()
     
     public func enableNotification() {
-        notificationCenter.getNotificationSettings { (settings) in
-            if(settings.authorizationStatus != .authorized) {
-                self.notificationCenter.requestAuthorization(options: [.alert,
-                                                                       .sound,
-                                                                       .badge,
-                                                                       .criticalAlert,
-                                                                       .providesAppNotificationSettings]) {
-                                                                           (permissionGranted, error) in
-                                                                           if(!permissionGranted) {
-                                                                               print("Permission Failed to Grant")
-                                                                           }
-                                                                       }
-            }
-        }
+        notificationCenter.requestAuthorization(options: [.alert,
+                                                          .sound,
+                                                          .badge,
+                                                          .criticalAlert,
+                                                          .providesAppNotificationSettings]) {
+                                                              (permissionGranted, error) in
+                                                              if(!permissionGranted) {
+                                                                  print("Permission Failed to Grant")
+                                                              }else {
+                                                                  print("Granted")
+                                                              }
+                                                          }
     }
     
     public func setNotification(id: UUID, day: Int, accountType: String, accountName: String) {
@@ -38,9 +36,8 @@ class NotificationController {
         var dateComponents = DateComponents()
         dateComponents.calendar = Calendar.current
         
-        //        dateComponents.day = day
-        //        dateComponents.hour = defaultHour
-        dateComponents.nanosecond = 0
+        dateComponents.day = day
+        dateComponents.hour = defaultHour
         
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         
