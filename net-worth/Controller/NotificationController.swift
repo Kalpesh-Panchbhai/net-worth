@@ -12,9 +12,15 @@ class NotificationController {
     
     private var defaultHour = 8
     
+    private var granted: Bool = false
+    
+    init() {
+        enableNotification()
+    }
+    
     private var notificationCenter  =  UNUserNotificationCenter.current()
     
-    func enableNotification() async throws -> Bool {
+    private func enableNotification() async throws -> Bool {
         return try await notificationCenter.requestAuthorization(options: [.alert,
                                                                            .sound,
                                                                            .badge,
@@ -22,38 +28,41 @@ class NotificationController {
                                                                            .providesAppNotificationSettings])
     }
     
-    public func setNotification(id: UUID, day: Int, accountType: String, accountName: String) {
+    private func enableNotification() {
         Task {
             do {
-                let granted = try await enableNotification()
-                if granted {
-                    let content = getContent(accountType: accountType, accountName: accountName)
-                    
-                    var dateComponents = DateComponents()
-                    dateComponents.calendar = Calendar.current
-                    
-                    dateComponents.day = day
-                    dateComponents.hour = defaultHour
-                    
-                    let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-                    
-                    let request = UNNotificationRequest(identifier: id.uuidString,
-                                                        content: content, trigger: trigger)
-                    
-                    let notificationCenter = UNUserNotificationCenter.current()
-                    notificationCenter.add(request) { (error) in
-                        if error != nil {
-                            print("Failed to add notification")
-                        }else {
-                            print("Added Notification")
-                        }
-                    }
-                } else {
-                    print("access is denied")
-                }
+                granted = try await enableNotification()
             } catch {
                 print(error)
             }
+        }
+    }
+    
+    public func setNotification(id: UUID, day: Int, accountType: String, accountName: String) {
+        if granted {
+            let content = getContent(accountType: accountType, accountName: accountName)
+            
+            var dateComponents = DateComponents()
+            dateComponents.calendar = Calendar.current
+            
+            dateComponents.day = day
+            dateComponents.hour = defaultHour
+            
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+            
+            let request = UNNotificationRequest(identifier: id.uuidString,
+                                                content: content, trigger: trigger)
+            
+            let notificationCenter = UNUserNotificationCenter.current()
+            notificationCenter.add(request) { (error) in
+                if error != nil {
+                    print("Failed to add notification")
+                }else {
+                    print("Added Notification")
+                }
+            }
+        } else {
+            print("access is denied")
         }
     }
     
