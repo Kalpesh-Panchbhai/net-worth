@@ -12,6 +12,8 @@ class AccountController {
     
     let viewContext = PersistenceController.shared.container.viewContext
     
+    private var notificationController = NotificationController()
+    
     public func addAccount(accountType: String, accountName: String, currentBalance: String, paymentReminder: Bool, paymentDate: Int) {
         let newAccount = Account(context: viewContext)
         newAccount.sysid = UUID()
@@ -28,6 +30,9 @@ class AccountController {
         
         do {
             try viewContext.save()
+            if(paymentReminder) {
+                notificationController.setNotification(id: newAccount.sysid!, day: paymentDate, accountType: accountType, accountName: accountName)
+            }
         } catch {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")

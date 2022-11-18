@@ -19,6 +19,8 @@ struct AccountView: View {
     
     private var accountController = AccountController()
     
+    private var notificationController = NotificationController()
+    
     @State var accountName: String = ""
     
     @State var isOpen: Bool = false
@@ -71,7 +73,13 @@ struct AccountView: View {
     
     private func deleteAccount(offsets: IndexSet) {
         withAnimation {
-            offsets.map { accounts[$0] }.forEach(viewContext.delete)
+            offsets.map {
+                let acc = accounts[$0]
+                if(acc.paymentReminder) {
+                    notificationController.removeNotification(id: acc.sysid!)
+                }
+                return acc
+            }.forEach(viewContext.delete)
             
             do {
                 try viewContext.save()
