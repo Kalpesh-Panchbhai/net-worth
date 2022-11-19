@@ -10,22 +10,26 @@ import SwiftUI
 struct SettingsView: View {
     
     @State private var isAuthenticationRequired: Bool
+    @State private var isNotificationEnabled: Bool
     
     private var settingsController = SettingsController()
+    private var notificationController = NotificationController()
     
     init() {
         isAuthenticationRequired = settingsController.isAuthenticationRequire()
+        Thread.sleep(forTimeInterval: 1)
+        isNotificationEnabled = notificationController.getGranted()
     }
     
     var body: some View {
         NavigationView(){
             List{
-                HStack {
-                    Toggle("Require Face ID", isOn: $isAuthenticationRequired)
-                        .onChange(of: isAuthenticationRequired) { _isOn in
-                            settingsController.changeAuthentication(isRequired: _isOn)
-                        }
-                }
+                Toggle("Require Face ID", isOn: $isAuthenticationRequired)
+                    .onChange(of: isAuthenticationRequired) { _isOn in
+                        settingsController.changeAuthentication(isRequired: _isOn)
+                    }
+                Toggle("Enable Notification", isOn: $isNotificationEnabled)
+                
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
                 Text("Version " + appVersion!)
             }

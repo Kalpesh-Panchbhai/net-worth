@@ -14,6 +14,10 @@ class NotificationController {
     
     private var granted: Bool = false
     
+    public func getGranted() -> Bool {
+        return granted
+    }
+    
     init() {
         enableNotification()
     }
