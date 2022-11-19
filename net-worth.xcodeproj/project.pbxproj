@@ -174,7 +174,7 @@
 		7D79FA83291B7EC2004A2ECF /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				7DCC0AA0292663A1006CBF36 /* Notificatioon */,
+				7DCC0AA0292663A1006CBF36 /* Notification */,
 				7D79FA86291B803A004A2ECF /* AccountController.swift */,
 				7DC97A2529221990003F69D4 /* SettingsController.swift */,
 				7DC97A2929223989003F69D4 /* IncomeController.swift */,
@@ -194,12 +194,12 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		7DCC0AA0292663A1006CBF36 /* Notificatioon */ = {
+		7DCC0AA0292663A1006CBF36 /* Notification */ = {
 			isa = PBXGroup;
 			children = (
 				7D849C1929276C8400434BD4 /* NotificationController.swift */,
 			);
-			path = Notificatioon;
+			path = Notification;
 			sourceTree = "<group>";
 		};
 		7DD7A56B29224BFD00CD5B37 /* IncomeView */ = {
