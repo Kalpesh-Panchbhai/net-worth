@@ -37,6 +37,8 @@ struct NewAccountView: View {
                     }
                     .onChange(of: accountType) { _ in
                         accountName=""
+                        totalShares=""
+                        currentRateShare=""
                         currentBalance="0.0"
                         paymentDate = 1
                         paymentReminder = false
@@ -59,11 +61,18 @@ struct NewAccountView: View {
                     else if(accountType == "Stock") {
                         stockNameField()
                         totalSharesField()
-                        currentRateField()
+                        currentRateStockField()
                         totalValueField()
                     }
                     else if(accountType == "Mutual Fund") {
-                        
+                        mutualFundNameField()
+                        totalUnitsField()
+                        currentRateMutualFundField()
+                        totalValueField()
+                        enablePaymentReminderMutualFundField()
+                        if(paymentReminder) {
+                            paymentDateMutualFundField()
+                        }
                     }
                 }
             }
@@ -118,7 +127,7 @@ struct NewAccountView: View {
                 return true
             }
         }else if accountType == "Mutual Fund" {
-            if accountName.isEmpty || currentBalance.isEmpty {
+            if accountName.isEmpty || totalShares.isEmpty || currentRateShare.isEmpty || currentBalance.isEmpty {
                 return false
             } else {
                 return true
@@ -137,6 +146,12 @@ struct NewAccountView: View {
     private func stockNameField() -> HStack<(TextField<Text>)> {
         return HStack {
             TextField("Stock Name", text: $accountName)
+        }
+    }
+    
+    private func mutualFundNameField() -> HStack<(TextField<Text>)> {
+        return HStack {
+            TextField("Mutual Fund Name", text: $accountName)
         }
     }
     
@@ -177,9 +192,83 @@ struct NewAccountView: View {
         }
     }
     
-    private func currentRateField() -> HStack<(some View)> {
+    private func totalUnitsField() -> HStack<(some View)> {
+        return HStack {
+            TextField("Total Units", text: $totalShares)
+                .keyboardType(.decimalPad)
+                .onChange(of: totalShares, perform: { _ in
+                    let filtered = totalShares.filter {"0123456789.".contains($0)}
+                    
+                    if filtered.contains(".") {
+                        let splitted = filtered.split(separator: ".")
+                        if splitted.count >= 2 {
+                            let preDecimal = String(splitted[0])
+                            if String(splitted[1]).count == 3 {
+                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
+                                totalShares = "\(preDecimal).\(afterDecimal)"
+                            }else {
+                                let afterDecimal = String(splitted[1])
+                                totalShares = "\(preDecimal).\(afterDecimal)"
+                            }
+                        }else if splitted.count == 1 {
+                            let preDecimal = String(splitted[0])
+                            totalShares = "\(preDecimal)."
+                        }else {
+                            totalShares = "0."
+                        }
+                    } else if filtered.isEmpty && !totalShares.isEmpty {
+                        totalShares = ""
+                    } else if !filtered.isEmpty {
+                        totalShares = filtered
+                    }
+                    
+                    let totalShares = Double((totalShares as NSString).doubleValue)
+                    let currentRateShare = Double((currentRateShare as NSString).doubleValue)
+                    currentBalance = String(totalShares * currentRateShare)
+                })
+        }
+    }
+    
+    private func currentRateStockField() -> HStack<(some View)> {
         return HStack {
             TextField("Current rate of a share", text: $currentRateShare)
+                .keyboardType(.decimalPad)
+                .onChange(of: currentRateShare, perform: { _ in
+                    let filtered = currentRateShare.filter {"0123456789.".contains($0)}
+                    
+                    if filtered.contains(".") {
+                        let splitted = filtered.split(separator: ".")
+                        if splitted.count >= 2 {
+                            let preDecimal = String(splitted[0])
+                            if String(splitted[1]).count == 3 {
+                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
+                                currentRateShare = "\(preDecimal).\(afterDecimal)"
+                            }else {
+                                let afterDecimal = String(splitted[1])
+                                currentRateShare = "\(preDecimal).\(afterDecimal)"
+                            }
+                        }else if splitted.count == 1 {
+                            let preDecimal = String(splitted[0])
+                            currentRateShare = "\(preDecimal)."
+                        }else {
+                            currentRateShare = "0."
+                        }
+                    } else if filtered.isEmpty && !currentRateShare.isEmpty {
+                        currentRateShare = ""
+                    } else if !filtered.isEmpty {
+                        currentRateShare = filtered
+                    }
+                    
+                    let totalShares = Double((totalShares as NSString).doubleValue)
+                    let currentRateShare = Double((currentRateShare as NSString).doubleValue)
+                    currentBalance = String(totalShares * currentRateShare)
+                })
+        }
+    }
+    
+    private func currentRateMutualFundField() -> HStack<(some View)> {
+        return HStack {
+            TextField("Current rate of a unit", text: $currentRateShare)
                 .keyboardType(.decimalPad)
                 .onChange(of: currentRateShare, perform: { _ in
                     let filtered = currentRateShare.filter {"0123456789.".contains($0)}
@@ -290,8 +379,20 @@ struct NewAccountView: View {
         return Toggle("Enable Payment Reminder", isOn: $paymentReminder)
     }
     
+    private func enablePaymentReminderMutualFundField() -> Toggle<Text> {
+        return Toggle("Enable SIP Reminder", isOn: $paymentReminder)
+    }
+    
     private func paymentDateField() -> Picker<Text, Int, ForEach<[Int], Int, some View>> {
         return Picker("Select a payment date", selection: $paymentDate) {
+            ForEach(dates, id: \.self) {
+                Text("\($0.formatted(.number.grouping(.never)))").tag($0)
+            }
+        }
+    }
+    
+    private func paymentDateMutualFundField() -> Picker<Text, Int, ForEach<[Int], Int, some View>> {
+        return Picker("Select a SIP date", selection: $paymentDate) {
             ForEach(dates, id: \.self) {
                 Text("\($0.formatted(.number.grouping(.never)))").tag($0)
             }
