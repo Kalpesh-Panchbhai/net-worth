@@ -51,14 +51,62 @@ struct NewAccountView: View {
                         HStack {
                             Text("Current Balance")
                             Spacer()
-                            Button(action: currentBalanceButtonAction, label: {
+                            Button(action: {
+                                if isPlus {
+                                    currentBalance = "-\(currentBalance)"
+                                    isPlus = false
+                                }else {
+                                    let value = Double((currentBalance as NSString).doubleValue) * -1
+                                    currentBalance = "\(value)"
+                                    isPlus = true
+                                }
+                            }, label: {
                                 Label("", systemImage: isPlus ? "minus" : "plus")
                             })
                             Spacer()
                             TextField("Current Balance", text: $currentBalance)
                                 .keyboardType(.decimalPad)
                                 .onChange(of: currentBalance, perform: { _ in
-                                    currentBalanceOnChange()
+                                    let filtered = currentBalance.filter {"0123456789.".contains($0)}
+                                    
+                                    if filtered.contains(".") {
+                                        let splitted = filtered.split(separator: ".")
+                                        if splitted.count >= 2 {
+                                            let preDecimal = String(splitted[0])
+                                            if String(splitted[1]).count == 3 {
+                                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
+                                                if isPlus {
+                                                    currentBalance = "\(preDecimal).\(afterDecimal)"
+                                                }else {
+                                                    currentBalance = "-\(preDecimal).\(afterDecimal)"
+                                                }
+                                            }else {
+                                                let afterDecimal = String(splitted[1])
+                                                if isPlus {
+                                                    currentBalance = "\(preDecimal).\(afterDecimal)"
+                                                }else {
+                                                    currentBalance = "-\(preDecimal).\(afterDecimal)"
+                                                }
+                                            }
+                                        }else if splitted.count == 1 {
+                                            let preDecimal = String(splitted[0])
+                                            if isPlus {
+                                                currentBalance = "\(preDecimal)."
+                                            }else {
+                                                currentBalance = "-\(preDecimal)."
+                                            }
+                                        }else {
+                                            if isPlus {
+                                                currentBalance = "0."
+                                            }else {
+                                                currentBalance = "-0."
+                                            }
+                                        }
+                                    } else if filtered.isEmpty && !currentBalance.isEmpty {
+                                        currentBalance = ""
+                                    } else if !filtered.isEmpty {
+                                        currentBalance = filtered
+                                    }
                                 })
                         }
                     }
@@ -122,60 +170,6 @@ struct NewAccountView: View {
             }
         }else {
             return false
-        }
-    }
-    
-    private func currentBalanceButtonAction() {
-        if isPlus {
-            currentBalance = "-\(currentBalance)"
-            isPlus = false
-        }else {
-            let value = Double((currentBalance as NSString).doubleValue) * -1
-            currentBalance = "\(value)"
-            isPlus = true
-        }
-    }
-    
-    private func currentBalanceOnChange() {
-        let filtered = currentBalance.filter {"0123456789.".contains($0)}
-        
-        if filtered.contains(".") {
-            let splitted = filtered.split(separator: ".")
-            if splitted.count >= 2 {
-                let preDecimal = String(splitted[0])
-                if String(splitted[1]).count == 3 {
-                    let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
-                    if isPlus {
-                        currentBalance = "\(preDecimal).\(afterDecimal)"
-                    }else {
-                        currentBalance = "-\(preDecimal).\(afterDecimal)"
-                    }
-                }else {
-                    let afterDecimal = String(splitted[1])
-                    if isPlus {
-                        currentBalance = "\(preDecimal).\(afterDecimal)"
-                    }else {
-                        currentBalance = "-\(preDecimal).\(afterDecimal)"
-                    }
-                }
-            }else if splitted.count == 1 {
-                let preDecimal = String(splitted[0])
-                if isPlus {
-                    currentBalance = "\(preDecimal)."
-                }else {
-                    currentBalance = "-\(preDecimal)."
-                }
-            }else {
-                if isPlus {
-                    currentBalance = "0."
-                }else {
-                    currentBalance = "-0."
-                }
-            }
-        } else if filtered.isEmpty && !currentBalance.isEmpty {
-            currentBalance = ""
-        } else if !filtered.isEmpty {
-            currentBalance = filtered
         }
     }
 }
