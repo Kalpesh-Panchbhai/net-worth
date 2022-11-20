@@ -9,11 +9,12 @@ import SwiftUI
 
 struct NewAccountView: View {
     
-    @State var accountType: String = "None"
-    @State var accountName: String = ""
-    @State var currentBalance: String = "0.0"
-    @State var paymentReminder = false
-    
+    @State private var accountType: String = "None"
+    @State private var accountName: String = ""
+    @State private var accountNumber: String = ""
+    @State private var ifscCode: String = ""
+    @State private var currentBalance: String = "0.0"
+    @State private var paymentReminder = false
     @State private var paymentDate = 1
     @State var dates = Array(1...31)
     
@@ -36,96 +37,30 @@ struct NewAccountView: View {
                     }
                     .onChange(of: accountType) { _ in
                         accountName=""
+                        accountNumber = ""
+                        ifscCode = ""
                         currentBalance="0.0"
                         paymentDate = 1
                         paymentReminder = false
                     }
-                    if accountType != "None" {
-                        HStack {
-                            Text("Account Name")
-                            Spacer()
-                            TextField("Account Name", text: $accountName)
-                        }
-                    }
-                    if accountType != "None" {
-                        HStack {
-                            Text("Current Balance")
-                            Spacer()
-                            Button(action: {
-                                if isPlus {
-                                    currentBalance = "-\(currentBalance)"
-                                    isPlus = false
-                                }else {
-                                    let value = Double((currentBalance as NSString).doubleValue) * -1
-                                    currentBalance = "\(value)"
-                                    isPlus = true
-                                }
-                            }, label: {
-                                Label("", systemImage: isPlus ? "minus" : "plus")
-                            })
-                            Spacer()
-                            TextField("Current Balance", text: $currentBalance)
-                                .keyboardType(.decimalPad)
-                                .onChange(of: currentBalance, perform: { _ in
-                                    let filtered = currentBalance.filter {"0123456789.".contains($0)}
-                                    
-                                    if filtered.contains(".") {
-                                        let splitted = filtered.split(separator: ".")
-                                        if splitted.count >= 2 {
-                                            let preDecimal = String(splitted[0])
-                                            if String(splitted[1]).count == 3 {
-                                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
-                                                if isPlus {
-                                                    currentBalance = "\(preDecimal).\(afterDecimal)"
-                                                }else {
-                                                    currentBalance = "-\(preDecimal).\(afterDecimal)"
-                                                }
-                                            }else {
-                                                let afterDecimal = String(splitted[1])
-                                                if isPlus {
-                                                    currentBalance = "\(preDecimal).\(afterDecimal)"
-                                                }else {
-                                                    currentBalance = "-\(preDecimal).\(afterDecimal)"
-                                                }
-                                            }
-                                        }else if splitted.count == 1 {
-                                            let preDecimal = String(splitted[0])
-                                            if isPlus {
-                                                currentBalance = "\(preDecimal)."
-                                            }else {
-                                                currentBalance = "-\(preDecimal)."
-                                            }
-                                        }else {
-                                            if isPlus {
-                                                currentBalance = "0."
-                                            }else {
-                                                currentBalance = "-0."
-                                            }
-                                        }
-                                    } else if filtered.isEmpty && !currentBalance.isEmpty {
-                                        currentBalance = ""
-                                    } else if !filtered.isEmpty {
-                                        currentBalance = filtered
-                                    }
-                                })
-                        }
-                    }
-                    if accountType == "Loan" || accountType == "Credit Card" {
-                        Toggle("Enable Payment Reminder", isOn: $paymentReminder)
-                    }
-                    if paymentReminder {
-                        Picker("Select a payment date", selection: $paymentDate) {
-                            ForEach(dates, id: \.self) {
-                                Text("\($0.formatted(.number.grouping(.never)))").tag($0)
-                            }
-                        }
+                    if accountType == "Saving" {
+                        accountNameField()
+                        accountNumberField()
+                        ifscCodeField()
+                        currentBalanceField()
                     }
                 }
             }
             .toolbar {
                 ToolbarItem {
                     Button(action: {
-                        accountController.addAccount(accountType: accountType, accountName: accountName, currentBalance: currentBalance, paymentReminder: paymentReminder, paymentDate: paymentDate)
+                        let accountModel = AccountModel()
+                        accountModel.accountType = accountType
+                        accountModel.accountName = accountName
+                        accountModel.accountNumber = accountNumber
+                        accountModel.ifscCode = ifscCode
+                        accountModel.currentBalance = currentBalance
+                        accountController.addAccount(accountModel: accountModel)
                         dismiss()
                     }, label: {
                         Label("Add Account", systemImage: "checkmark")
@@ -139,7 +74,7 @@ struct NewAccountView: View {
     
     private func allFieldsFilled () -> Bool {
         if accountType == "Saving" {
-            if accountName.isEmpty || currentBalance.isEmpty {
+            if accountName.isEmpty || accountNumber.isEmpty || ifscCode.isEmpty || currentBalance.isEmpty {
                 return false
             } else {
                 return true
@@ -170,6 +105,114 @@ struct NewAccountView: View {
             }
         }else {
             return false
+        }
+    }
+    
+    private func accountNameField() -> HStack<TupleView<(Text, Spacer, TextField<Text>)>> {
+        return HStack {
+            Text("Account Name")
+            Spacer()
+            TextField("Account Name", text: $accountName)
+        }
+    }
+    
+    private func accountNumberField() -> HStack<TupleView<(Text, Spacer, some View)>> {
+        return HStack {
+            Text("Account Number")
+            Spacer()
+            TextField("Account Number", text: $accountNumber)
+                .keyboardType(.numberPad)
+                .onChange(of: accountNumber, perform: { _ in
+                    accountNumber = accountNumber.filter {"0123456789".contains($0)}
+                })
+        }
+    }
+    
+    private func ifscCodeField() -> HStack<TupleView<(Text, Spacer, some View)>> {
+        return HStack {
+            Text("IFSC Code")
+            Spacer()
+            TextField("IFSC Code", text: $ifscCode)
+                .keyboardType(.default)
+                .onChange(of: ifscCode, perform: { _ in
+                    ifscCode = ifscCode.filter {"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".contains($0)}
+                })
+        }
+    }
+    
+    private func currentBalanceField() -> HStack<TupleView<(Text, Spacer, Button<Label<Text, Image>>, Spacer, some View)>> {
+        return HStack {
+            Text("Current Balance")
+            Spacer()
+            Button(action: {
+                if isPlus {
+                    currentBalance = "-\(currentBalance)"
+                    isPlus = false
+                }else {
+                    let value = Double((currentBalance as NSString).doubleValue) * -1
+                    currentBalance = "\(value)"
+                    isPlus = true
+                }
+            }, label: {
+                Label("", systemImage: isPlus ? "minus" : "plus")
+            })
+            Spacer()
+            TextField("Current Balance", text: $currentBalance)
+                .keyboardType(.decimalPad)
+                .onChange(of: currentBalance, perform: { _ in
+                    let filtered = currentBalance.filter {"0123456789.".contains($0)}
+                    
+                    if filtered.contains(".") {
+                        let splitted = filtered.split(separator: ".")
+                        if splitted.count >= 2 {
+                            let preDecimal = String(splitted[0])
+                            if String(splitted[1]).count == 3 {
+                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
+                                if isPlus {
+                                    currentBalance = "\(preDecimal).\(afterDecimal)"
+                                }else {
+                                    currentBalance = "-\(preDecimal).\(afterDecimal)"
+                                }
+                            }else {
+                                let afterDecimal = String(splitted[1])
+                                if isPlus {
+                                    currentBalance = "\(preDecimal).\(afterDecimal)"
+                                }else {
+                                    currentBalance = "-\(preDecimal).\(afterDecimal)"
+                                }
+                            }
+                        }else if splitted.count == 1 {
+                            let preDecimal = String(splitted[0])
+                            if isPlus {
+                                currentBalance = "\(preDecimal)."
+                            }else {
+                                currentBalance = "-\(preDecimal)."
+                            }
+                        }else {
+                            if isPlus {
+                                currentBalance = "0."
+                            }else {
+                                currentBalance = "-0."
+                            }
+                        }
+                    } else if filtered.isEmpty && !currentBalance.isEmpty {
+                        currentBalance = ""
+                    } else if !filtered.isEmpty {
+                        currentBalance = filtered
+                    }
+                })
+        }
+    }
+    
+    private func enablePaymentReminderField() -> Toggle<Text> {
+        return Toggle("Enable Payment Reminder", isOn: $paymentReminder)
+    }
+    
+    private func paymentDateField() -> Picker<Text, Int, ForEach<[Int], Int, some View>> {
+        return Picker("Select a payment date", selection: $paymentDate) {
+            ForEach(dates, id: \.self) {
+                Text("\($0.formatted(.number.grouping(.never)))").tag($0)
+            }
         }
     }
 }

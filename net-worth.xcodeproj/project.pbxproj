@@ -29,6 +29,7 @@
 		7DC97A2A29223989003F69D4 /* IncomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A2929223989003F69D4 /* IncomeController.swift */; };
 		7DC97A2C29223ADB003F69D4 /* NewIncomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A2B29223ADB003F69D4 /* NewIncomeView.swift */; };
 		7DE766F32928B62900EFBD2D /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE766F22928B62900EFBD2D /* NotificationController.swift */; };
+		7DF1E9C8292A43C8003D030E /* AccountModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF1E9C7292A43C8003D030E /* AccountModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,7 @@
 		7DC97A2929223989003F69D4 /* IncomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeController.swift; sourceTree = "<group>"; };
 		7DC97A2B29223ADB003F69D4 /* NewIncomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewIncomeView.swift; sourceTree = "<group>"; };
 		7DE766F22928B62900EFBD2D /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		7DF1E9C7292A43C8003D030E /* AccountModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +169,7 @@
 			children = (
 				7D79FA59291B7431004A2ECF /* Persistence.swift */,
 				7D79FA5B291B7431004A2ECF /* net_worth.xcdatamodeld */,
+				7DF1E9C7292A43C8003D030E /* AccountModel.swift */,
 			);
 			path = "Data Model";
 			sourceTree = "<group>";
@@ -377,6 +380,7 @@
 				7D79FA87291B803A004A2ECF /* AccountController.swift in Sources */,
 				7DC97A2A29223989003F69D4 /* IncomeController.swift in Sources */,
 				7DC97A24292216BB003F69D4 /* SettingsView.swift in Sources */,
+				7DF1E9C8292A43C8003D030E /* AccountModel.swift in Sources */,
 				7D79FA8C291BA152004A2ECF /* NewAccountView.swift in Sources */,
 				7D79FA53291B7430004A2ECF /* AccountView.swift in Sources */,
 				7D42520F291BE95C0001C41C /* AuthenticationView.swift in Sources */,

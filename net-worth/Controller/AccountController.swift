@@ -14,25 +14,27 @@ class AccountController {
     
     private var notificationController = NotificationController()
     
-    public func addAccount(accountType: String, accountName: String, currentBalance: String, paymentReminder: Bool, paymentDate: Int) {
+    public func addAccount(accountModel: AccountModel) {
         let newAccount = Account(context: viewContext)
         newAccount.sysid = UUID()
         newAccount.timestamp = Date()
-        newAccount.accounttype = accountType
-        newAccount.accountname =  accountName
-        if accountType == "Loan" || accountType == "Credit Card" {
-            newAccount.currentbalance = Double((currentBalance as NSString).doubleValue) * -1
-        }else{
-            newAccount.currentbalance = Double((currentBalance as NSString).doubleValue)
-        }
-        newAccount.paymentReminder = paymentReminder
-        newAccount.paymentDate = Int16(paymentDate)
+        newAccount.accounttype = accountModel.accountType
+        newAccount.accountname =  accountModel.accountName
+        newAccount.accountnumber = accountModel.accountNumber
+        newAccount.ifsccode = accountModel.ifscCode
+//        if accountModel.accountType == "Loan" || accountModel.accountType == "Credit Card" {
+//            newAccount.currentbalance = Double((accountModel.currentBalance as NSString).doubleValue) * -1
+//        }else{
+//            newAccount.currentbalance = Double((accountModel.currentBalance as NSString).doubleValue)
+//        }
+//        newAccount.paymentReminder = paymentReminder
+//        newAccount.paymentDate = Int16(paymentDate)
         
         do {
             try viewContext.save()
-            if(paymentReminder) {
-                notificationController.setNotification(id: newAccount.sysid!, day: paymentDate, accountType: accountType, accountName: accountName)
-            }
+//            if(paymentReminder) {
+//                notificationController.setNotification(id: newAccount.sysid!, day: paymentDate, accountType: accountType, accountName: accountName)
+//            }
         } catch {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
