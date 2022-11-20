@@ -39,9 +39,17 @@ struct NewAccountView: View {
                         paymentDate = 1
                         paymentReminder = false
                     }
-                    if accountType == "Saving" {
+                    if(accountType == "Saving") {
                         accountNameField()
                         currentBalanceField()
+                    }
+                    else if(accountType == "Credit Card") {
+                        accountNameField()
+                        currentBalanceField()
+                        enablePaymentReminderField()
+                        if(paymentReminder) {
+                            paymentDateField()
+                        }
                     }
                 }
             }
@@ -52,6 +60,10 @@ struct NewAccountView: View {
                         accountModel.accountType = accountType
                         accountModel.accountName = accountName
                         accountModel.currentBalance = currentBalance
+                        accountModel.paymentReminder = paymentReminder
+                        if(paymentReminder) {
+                            accountModel.paymentDate = paymentDate
+                        }
                         accountController.addAccount(accountModel: accountModel)
                         dismiss()
                     }, label: {

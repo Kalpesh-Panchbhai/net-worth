@@ -21,14 +21,14 @@ class AccountController {
         newAccount.accounttype = accountModel.accountType
         newAccount.accountname =  accountModel.accountName
         newAccount.currentbalance = Double((accountModel.currentBalance as NSString).doubleValue)
-        //        newAccount.paymentReminder = paymentReminder
-        //        newAccount.paymentDate = Int16(paymentDate)
+        newAccount.paymentReminder = accountModel.paymentReminder
+        newAccount.paymentDate = Int16(accountModel.paymentDate)
         
         do {
             try viewContext.save()
-            //            if(paymentReminder) {
-            //                notificationController.setNotification(id: newAccount.sysid!, day: paymentDate, accountType: accountType, accountName: accountName)
-            //            }
+            if(accountModel.paymentReminder) {
+                notificationController.setNotification(id: newAccount.sysid!, day: accountModel.paymentDate, accountType: accountModel.accountType, accountName: accountModel.accountName)
+            }
         } catch {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")

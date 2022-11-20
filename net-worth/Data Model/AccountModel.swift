@@ -14,4 +14,8 @@ class AccountModel {
     var accountName: String = ""
     
     var currentBalance: String = ""
+    
+    var paymentReminder: Bool = false
+    
+    var paymentDate: Int = 0
 }
