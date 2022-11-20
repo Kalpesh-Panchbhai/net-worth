@@ -44,34 +44,34 @@ struct NewAccountView: View {
                         paymentReminder = false
                     }
                     if(accountType == "Saving") {
-                        accountNameField()
+                        nameField(labelName: "Account Name")
                         currentBalanceField()
                     }
                     else if(accountType == "Credit Card") {
-                        accountNameField()
+                        nameField(labelName: "Credit Card Name")
                         currentBalanceField()
-                        enablePaymentReminderField()
+                        enablePaymentReminderField(labelName: "Enable Payment Reminder")
                         if(paymentReminder) {
-                            paymentDateField()
+                            paymentDateField(labelName: "Select a payment date")
                         }
                     }
                     else if(accountType == "Loan") {
                         
                     }
                     else if(accountType == "Stock") {
-                        stockNameField()
-                        totalSharesField()
-                        currentRateStockField()
+                        nameField(labelName: "Stock Name")
+                        totalField(labelName: "Total Shares")
+                        currentRateField(labelName: "Current rate of a share")
                         totalValueField()
                     }
                     else if(accountType == "Mutual Fund") {
-                        mutualFundNameField()
-                        totalUnitsField()
-                        currentRateMutualFundField()
+                        nameField(labelName: "Mutual Fund Name")
+                        totalField(labelName: "Total Units")
+                        currentRateField(labelName: "Current rate of a unit")
                         totalValueField()
-                        enablePaymentReminderMutualFundField()
+                        enablePaymentReminderField(labelName: "Enable SIP Reminder")
                         if(paymentReminder) {
-                            paymentDateMutualFundField()
+                            paymentDateField(labelName: "Select a SIP date")
                         }
                     }
                 }
@@ -137,27 +137,15 @@ struct NewAccountView: View {
         }
     }
     
-    private func accountNameField() -> HStack<(TextField<Text>)> {
+    private func nameField(labelName: String) -> HStack<(TextField<Text>)> {
         return HStack {
-            TextField("Account Name", text: $accountName)
+            TextField(labelName, text: $accountName)
         }
     }
     
-    private func stockNameField() -> HStack<(TextField<Text>)> {
+    private func totalField(labelName: String) -> HStack<(some View)> {
         return HStack {
-            TextField("Stock Name", text: $accountName)
-        }
-    }
-    
-    private func mutualFundNameField() -> HStack<(TextField<Text>)> {
-        return HStack {
-            TextField("Mutual Fund Name", text: $accountName)
-        }
-    }
-    
-    private func totalSharesField() -> HStack<(some View)> {
-        return HStack {
-            TextField("Total Shares", text: $totalShares)
+            TextField(labelName, text: $totalShares)
                 .keyboardType(.decimalPad)
                 .onChange(of: totalShares, perform: { _ in
                     let filtered = totalShares.filter {"0123456789.".contains($0)}
@@ -192,83 +180,9 @@ struct NewAccountView: View {
         }
     }
     
-    private func totalUnitsField() -> HStack<(some View)> {
-        return HStack {
-            TextField("Total Units", text: $totalShares)
-                .keyboardType(.decimalPad)
-                .onChange(of: totalShares, perform: { _ in
-                    let filtered = totalShares.filter {"0123456789.".contains($0)}
-                    
-                    if filtered.contains(".") {
-                        let splitted = filtered.split(separator: ".")
-                        if splitted.count >= 2 {
-                            let preDecimal = String(splitted[0])
-                            if String(splitted[1]).count == 3 {
-                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
-                                totalShares = "\(preDecimal).\(afterDecimal)"
-                            }else {
-                                let afterDecimal = String(splitted[1])
-                                totalShares = "\(preDecimal).\(afterDecimal)"
-                            }
-                        }else if splitted.count == 1 {
-                            let preDecimal = String(splitted[0])
-                            totalShares = "\(preDecimal)."
-                        }else {
-                            totalShares = "0."
-                        }
-                    } else if filtered.isEmpty && !totalShares.isEmpty {
-                        totalShares = ""
-                    } else if !filtered.isEmpty {
-                        totalShares = filtered
-                    }
-                    
-                    let totalShares = Double((totalShares as NSString).doubleValue)
-                    let currentRateShare = Double((currentRateShare as NSString).doubleValue)
-                    currentBalance = String(totalShares * currentRateShare)
-                })
-        }
-    }
-    
-    private func currentRateStockField() -> HStack<(some View)> {
+    private func currentRateField(labelName: String) -> HStack<(some View)> {
         return HStack {
             TextField("Current rate of a share", text: $currentRateShare)
-                .keyboardType(.decimalPad)
-                .onChange(of: currentRateShare, perform: { _ in
-                    let filtered = currentRateShare.filter {"0123456789.".contains($0)}
-                    
-                    if filtered.contains(".") {
-                        let splitted = filtered.split(separator: ".")
-                        if splitted.count >= 2 {
-                            let preDecimal = String(splitted[0])
-                            if String(splitted[1]).count == 3 {
-                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
-                                currentRateShare = "\(preDecimal).\(afterDecimal)"
-                            }else {
-                                let afterDecimal = String(splitted[1])
-                                currentRateShare = "\(preDecimal).\(afterDecimal)"
-                            }
-                        }else if splitted.count == 1 {
-                            let preDecimal = String(splitted[0])
-                            currentRateShare = "\(preDecimal)."
-                        }else {
-                            currentRateShare = "0."
-                        }
-                    } else if filtered.isEmpty && !currentRateShare.isEmpty {
-                        currentRateShare = ""
-                    } else if !filtered.isEmpty {
-                        currentRateShare = filtered
-                    }
-                    
-                    let totalShares = Double((totalShares as NSString).doubleValue)
-                    let currentRateShare = Double((currentRateShare as NSString).doubleValue)
-                    currentBalance = String(totalShares * currentRateShare)
-                })
-        }
-    }
-    
-    private func currentRateMutualFundField() -> HStack<(some View)> {
-        return HStack {
-            TextField("Current rate of a unit", text: $currentRateShare)
                 .keyboardType(.decimalPad)
                 .onChange(of: currentRateShare, perform: { _ in
                     let filtered = currentRateShare.filter {"0123456789.".contains($0)}
@@ -375,24 +289,12 @@ struct NewAccountView: View {
         }
     }
     
-    private func enablePaymentReminderField() -> Toggle<Text> {
-        return Toggle("Enable Payment Reminder", isOn: $paymentReminder)
+    private func enablePaymentReminderField(labelName: String) -> Toggle<Text> {
+        return Toggle(labelName, isOn: $paymentReminder)
     }
     
-    private func enablePaymentReminderMutualFundField() -> Toggle<Text> {
-        return Toggle("Enable SIP Reminder", isOn: $paymentReminder)
-    }
-    
-    private func paymentDateField() -> Picker<Text, Int, ForEach<[Int], Int, some View>> {
-        return Picker("Select a payment date", selection: $paymentDate) {
-            ForEach(dates, id: \.self) {
-                Text("\($0.formatted(.number.grouping(.never)))").tag($0)
-            }
-        }
-    }
-    
-    private func paymentDateMutualFundField() -> Picker<Text, Int, ForEach<[Int], Int, some View>> {
-        return Picker("Select a SIP date", selection: $paymentDate) {
+    private func paymentDateField(labelName: String) -> Picker<Text, Int, ForEach<[Int], Int, some View>> {
+        return Picker(labelName, selection: $paymentDate) {
             ForEach(dates, id: \.self) {
                 Text("\($0.formatted(.number.grouping(.never)))").tag($0)
             }
