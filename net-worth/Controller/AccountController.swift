@@ -20,21 +20,15 @@ class AccountController {
         newAccount.timestamp = Date()
         newAccount.accounttype = accountModel.accountType
         newAccount.accountname =  accountModel.accountName
-        newAccount.accountnumber = accountModel.accountNumber
-        newAccount.ifsccode = accountModel.ifscCode
-//        if accountModel.accountType == "Loan" || accountModel.accountType == "Credit Card" {
-//            newAccount.currentbalance = Double((accountModel.currentBalance as NSString).doubleValue) * -1
-//        }else{
-//            newAccount.currentbalance = Double((accountModel.currentBalance as NSString).doubleValue)
-//        }
-//        newAccount.paymentReminder = paymentReminder
-//        newAccount.paymentDate = Int16(paymentDate)
+        newAccount.currentbalance = Double((accountModel.currentBalance as NSString).doubleValue)
+        //        newAccount.paymentReminder = paymentReminder
+        //        newAccount.paymentDate = Int16(paymentDate)
         
         do {
             try viewContext.save()
-//            if(paymentReminder) {
-//                notificationController.setNotification(id: newAccount.sysid!, day: paymentDate, accountType: accountType, accountName: accountName)
-//            }
+            //            if(paymentReminder) {
+            //                notificationController.setNotification(id: newAccount.sysid!, day: paymentDate, accountType: accountType, accountName: accountName)
+            //            }
         } catch {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")

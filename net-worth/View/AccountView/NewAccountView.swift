@@ -11,8 +11,6 @@ struct NewAccountView: View {
     
     @State private var accountType: String = "None"
     @State private var accountName: String = ""
-    @State private var accountNumber: String = ""
-    @State private var ifscCode: String = ""
     @State private var currentBalance: String = "0.0"
     @State private var paymentReminder = false
     @State private var paymentDate = 1
@@ -37,16 +35,12 @@ struct NewAccountView: View {
                     }
                     .onChange(of: accountType) { _ in
                         accountName=""
-                        accountNumber = ""
-                        ifscCode = ""
                         currentBalance="0.0"
                         paymentDate = 1
                         paymentReminder = false
                     }
                     if accountType == "Saving" {
                         accountNameField()
-                        accountNumberField()
-                        ifscCodeField()
                         currentBalanceField()
                     }
                 }
@@ -57,8 +51,6 @@ struct NewAccountView: View {
                         let accountModel = AccountModel()
                         accountModel.accountType = accountType
                         accountModel.accountName = accountName
-                        accountModel.accountNumber = accountNumber
-                        accountModel.ifscCode = ifscCode
                         accountModel.currentBalance = currentBalance
                         accountController.addAccount(accountModel: accountModel)
                         dismiss()
@@ -74,7 +66,7 @@ struct NewAccountView: View {
     
     private func allFieldsFilled () -> Bool {
         if accountType == "Saving" {
-            if accountName.isEmpty || accountNumber.isEmpty || ifscCode.isEmpty || currentBalance.isEmpty {
+            if accountName.isEmpty || currentBalance.isEmpty {
                 return false
             } else {
                 return true
@@ -113,30 +105,6 @@ struct NewAccountView: View {
             Text("Account Name")
             Spacer()
             TextField("Account Name", text: $accountName)
-        }
-    }
-    
-    private func accountNumberField() -> HStack<TupleView<(Text, Spacer, some View)>> {
-        return HStack {
-            Text("Account Number")
-            Spacer()
-            TextField("Account Number", text: $accountNumber)
-                .keyboardType(.numberPad)
-                .onChange(of: accountNumber, perform: { _ in
-                    accountNumber = accountNumber.filter {"0123456789".contains($0)}
-                })
-        }
-    }
-    
-    private func ifscCodeField() -> HStack<TupleView<(Text, Spacer, some View)>> {
-        return HStack {
-            Text("IFSC Code")
-            Spacer()
-            TextField("IFSC Code", text: $ifscCode)
-                .keyboardType(.default)
-                .onChange(of: ifscCode, perform: { _ in
-                    ifscCode = ifscCode.filter {"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".contains($0)}
-                })
         }
     }
     

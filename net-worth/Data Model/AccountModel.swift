@@ -13,9 +13,5 @@ class AccountModel {
     
     var accountName: String = ""
     
-    var accountNumber: String = ""
-    
-    var ifscCode: String = ""
-    
     var currentBalance: String = ""
 }
