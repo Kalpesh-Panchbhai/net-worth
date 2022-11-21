@@ -156,43 +156,39 @@ struct NewAccountView: View {
         }
     }
     
-    fileprivate func extractedFunc() {
-        let filtered = totalShares.filter {"0123456789.".contains($0)}
-        
-        if filtered.contains(".") {
-            let splitted = filtered.split(separator: ".")
-            if splitted.count >= 2 {
-                let preDecimal = String(splitted[0])
-                if String(splitted[1]).count == 3 {
-                    let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
-                    totalShares = "\(preDecimal).\(afterDecimal)"
-                }else {
-                    let afterDecimal = String(splitted[1])
-                    totalShares = "\(preDecimal).\(afterDecimal)"
-                }
-            }else if splitted.count == 1 {
-                let preDecimal = String(splitted[0])
-                totalShares = "\(preDecimal)."
-            }else {
-                totalShares = "0."
-            }
-        } else if filtered.isEmpty && !totalShares.isEmpty {
-            totalShares = ""
-        } else if !filtered.isEmpty {
-            totalShares = filtered
-        }
-        
-        let totalShares = Double((totalShares as NSString).doubleValue)
-        let currentRateShare = Double((currentRateShare as NSString).doubleValue)
-        currentBalance = String(totalShares * currentRateShare)
-    }
-    
     private func totalField(labelName: String) -> HStack<(some View)> {
         return HStack {
             TextField(labelName, text: $totalShares)
                 .keyboardType(.decimalPad)
                 .onChange(of: totalShares, perform: { _ in
-                    extractedFunc()
+                    let filtered = totalShares.filter {"0123456789.".contains($0)}
+                    
+                    if filtered.contains(".") {
+                        let splitted = filtered.split(separator: ".")
+                        if splitted.count >= 2 {
+                            let preDecimal = String(splitted[0])
+                            if String(splitted[1]).count == 3 {
+                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
+                                totalShares = "\(preDecimal).\(afterDecimal)"
+                            }else {
+                                let afterDecimal = String(splitted[1])
+                                totalShares = "\(preDecimal).\(afterDecimal)"
+                            }
+                        }else if splitted.count == 1 {
+                            let preDecimal = String(splitted[0])
+                            totalShares = "\(preDecimal)."
+                        }else {
+                            totalShares = "0."
+                        }
+                    } else if filtered.isEmpty && !totalShares.isEmpty {
+                        totalShares = ""
+                    } else if !filtered.isEmpty {
+                        totalShares = filtered
+                    }
+                    
+                    let totalShares = Double((totalShares as NSString).doubleValue)
+                    let currentRateShare = Double((currentRateShare as NSString).doubleValue)
+                    currentBalance = String(totalShares * currentRateShare)
                 })
         }
     }
