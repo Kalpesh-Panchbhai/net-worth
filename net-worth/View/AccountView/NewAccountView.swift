@@ -167,7 +167,7 @@ struct NewAccountView: View {
                         let splitted = filtered.split(separator: ".")
                         if splitted.count >= 2 {
                             let preDecimal = String(splitted[0])
-                            if String(splitted[1]).count == 3 {
+                            if String(splitted[1]).count == 5 {
                                 let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
                                 totalShares = "\(preDecimal).\(afterDecimal)"
                             }else {
@@ -204,7 +204,7 @@ struct NewAccountView: View {
                         let splitted = filtered.split(separator: ".")
                         if splitted.count >= 2 {
                             let preDecimal = String(splitted[0])
-                            if String(splitted[1]).count == 3 {
+                            if String(splitted[1]).count == 5 {
                                 let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
                                 currentRateShare = "\(preDecimal).\(afterDecimal)"
                             }else {
@@ -264,7 +264,7 @@ struct NewAccountView: View {
                         let splitted = filtered.split(separator: ".")
                         if splitted.count >= 2 {
                             let preDecimal = String(splitted[0])
-                            if String(splitted[1]).count == 3 {
+                            if String(splitted[1]).count == 5 {
                                 let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
                                 if isPlus {
                                     currentBalance = "\(preDecimal).\(afterDecimal)"
