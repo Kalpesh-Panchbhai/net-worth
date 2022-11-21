@@ -33,7 +33,12 @@ struct AccountDetailsNavigationLinkView: View {
                            , inactiveAccentColor: .blue
                            , selectionBarColor: .blue)
             .navigationBarTitleDisplayMode(NavigationBarItem.TitleDisplayMode.inline)
-            (selectedTabIndex == 0 ? Text(account.accountname!) : Text("Second View"))
+            .navigationBarTitle(self.account.accountname!)
+            if(selectedTabIndex == 0) {
+                AccountDetailsView(account: self.account)
+            }else {
+                AccountDetailsView(account: self.account)
+            }
             Spacer()
         }.padding(.top)
     }
