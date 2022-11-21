@@ -11,8 +11,11 @@ struct NewAccountView: View {
     
     @State private var accountType: String = "None"
     @State private var accountName: String = ""
+    
+    //Mutual fund and Stock fields
     @State private var totalShares: String = ""
     @State private var currentRateShare: String = ""
+    
     @State private var currentBalance: String = "0.00"
     @State private var paymentReminder = false
     @State private var paymentDate = 1
@@ -96,8 +99,6 @@ struct NewAccountView: View {
                         accountModel.currentRateShare = currentRateShare
                         accountModel.totalShares = totalShares
                         
-                        //Loan fields
-                        
                         if(paymentReminder) {
                             accountModel.paymentDate = paymentDate
                         }
@@ -155,39 +156,43 @@ struct NewAccountView: View {
         }
     }
     
+    fileprivate func extractedFunc() {
+        let filtered = totalShares.filter {"0123456789.".contains($0)}
+        
+        if filtered.contains(".") {
+            let splitted = filtered.split(separator: ".")
+            if splitted.count >= 2 {
+                let preDecimal = String(splitted[0])
+                if String(splitted[1]).count == 3 {
+                    let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
+                    totalShares = "\(preDecimal).\(afterDecimal)"
+                }else {
+                    let afterDecimal = String(splitted[1])
+                    totalShares = "\(preDecimal).\(afterDecimal)"
+                }
+            }else if splitted.count == 1 {
+                let preDecimal = String(splitted[0])
+                totalShares = "\(preDecimal)."
+            }else {
+                totalShares = "0."
+            }
+        } else if filtered.isEmpty && !totalShares.isEmpty {
+            totalShares = ""
+        } else if !filtered.isEmpty {
+            totalShares = filtered
+        }
+        
+        let totalShares = Double((totalShares as NSString).doubleValue)
+        let currentRateShare = Double((currentRateShare as NSString).doubleValue)
+        currentBalance = String(totalShares * currentRateShare)
+    }
+    
     private func totalField(labelName: String) -> HStack<(some View)> {
         return HStack {
             TextField(labelName, text: $totalShares)
                 .keyboardType(.decimalPad)
                 .onChange(of: totalShares, perform: { _ in
-                    let filtered = totalShares.filter {"0123456789.".contains($0)}
-                    
-                    if filtered.contains(".") {
-                        let splitted = filtered.split(separator: ".")
-                        if splitted.count >= 2 {
-                            let preDecimal = String(splitted[0])
-                            if String(splitted[1]).count == 3 {
-                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
-                                totalShares = "\(preDecimal).\(afterDecimal)"
-                            }else {
-                                let afterDecimal = String(splitted[1])
-                                totalShares = "\(preDecimal).\(afterDecimal)"
-                            }
-                        }else if splitted.count == 1 {
-                            let preDecimal = String(splitted[0])
-                            totalShares = "\(preDecimal)."
-                        }else {
-                            totalShares = "0."
-                        }
-                    } else if filtered.isEmpty && !totalShares.isEmpty {
-                        totalShares = ""
-                    } else if !filtered.isEmpty {
-                        totalShares = filtered
-                    }
-                    
-                    let totalShares = Double((totalShares as NSString).doubleValue)
-                    let currentRateShare = Double((currentRateShare as NSString).doubleValue)
-                    currentBalance = String(totalShares * currentRateShare)
+                    extractedFunc()
                 })
         }
     }
