@@ -16,9 +16,6 @@ struct NewAccountView: View {
     @State private var currentBalance: String = "0.00"
     @State private var paymentReminder = false
     @State private var paymentDate = 1
-    @State private var loanAmount = ""
-    @State private var loanROI = ""
-    @State private var loanTenure = ""
     @State private var total = ""
     @State private var monthlyInstallation = ""
     @State var dates = Array(1...31)
@@ -62,11 +59,7 @@ struct NewAccountView: View {
                     }
                     else if(accountType == "Loan") {
                         nameField(labelName: "Loan Name")
-                        loanAmountField()
-                        loanROIField()
-                        loanTenureField()
-                        monthlyRepaymentLoanField()
-                        totalRepaymentLoanField()
+                        currentBalanceField()
                         enablePaymentReminderField(labelName: "Enable Loan Payment Reminder")
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
@@ -98,8 +91,13 @@ struct NewAccountView: View {
                         accountModel.accountName = accountName
                         accountModel.currentBalance = currentBalance
                         accountModel.paymentReminder = paymentReminder
+                        
+                        //Mutual fund and Stock fields
                         accountModel.currentRateShare = currentRateShare
                         accountModel.totalShares = totalShares
+                        
+                        //Loan fields
+                        
                         if(paymentReminder) {
                             accountModel.paymentDate = paymentDate
                         }
@@ -129,7 +127,7 @@ struct NewAccountView: View {
                 return true
             }
         }else if accountType == "Loan" {
-            if accountName.isEmpty || loanROI.isEmpty || loanTenure.isEmpty || loanAmount.isEmpty {
+            if accountName.isEmpty || currentBalance.isEmpty {
                 return false
             } else {
                 return true
@@ -154,112 +152,6 @@ struct NewAccountView: View {
     private func nameField(labelName: String) -> HStack<(TextField<Text>)> {
         return HStack {
             TextField(labelName, text: $accountName)
-        }
-    }
-    
-    private func loanAmountField() -> HStack<(some View)> {
-        return HStack {
-            TextField("Loan Amount", text: $loanAmount)
-                .keyboardType(.decimalPad)
-                .onChange(of: loanAmount, perform: { _ in
-                    let filtered = loanAmount.filter {"0123456789.".contains($0)}
-                    
-                    if filtered.contains(".") {
-                        let splitted = filtered.split(separator: ".")
-                        if splitted.count >= 2 {
-                            let preDecimal = String(splitted[0])
-                            if String(splitted[1]).count == 3 {
-                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
-                                loanAmount = "\(preDecimal).\(afterDecimal)"
-                            }else {
-                                let afterDecimal = String(splitted[1])
-                                loanAmount = "\(preDecimal).\(afterDecimal)"
-                            }
-                        }else if splitted.count == 1 {
-                            let preDecimal = String(splitted[0])
-                            loanAmount = "\(preDecimal)."
-                        }else {
-                            loanAmount = "0."
-                        }
-                    } else if filtered.isEmpty && !loanAmount.isEmpty {
-                        loanAmount = ""
-                    } else if !filtered.isEmpty {
-                        loanAmount = filtered
-                    }
-                })
-        }
-    }
-    
-    private func loanROIField() -> HStack<(some View)> {
-        return HStack {
-            TextField("Loan Rate of Interest (P.A)", text: $loanROI)
-                .keyboardType(.decimalPad)
-                .onChange(of: loanROI, perform: { _ in
-                    let filtered = loanROI.filter {"0123456789.".contains($0)}
-                    
-                    if filtered.contains(".") {
-                        let splitted = filtered.split(separator: ".")
-                        if splitted.count >= 2 {
-                            let preDecimal = String(splitted[0])
-                            if String(splitted[1]).count == 3 {
-                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
-                                loanROI = "\(preDecimal).\(afterDecimal)"
-                            }else {
-                                let afterDecimal = String(splitted[1])
-                                loanROI = "\(preDecimal).\(afterDecimal)"
-                            }
-                        }else if splitted.count == 1 {
-                            let preDecimal = String(splitted[0])
-                            loanROI = "\(preDecimal)."
-                        }else {
-                            loanROI = "0."
-                        }
-                    } else if filtered.isEmpty && !loanROI.isEmpty {
-                        loanROI = ""
-                    } else if !filtered.isEmpty {
-                        loanROI = filtered
-                    }
-                })
-        }
-    }
-    
-    private func loanTenureField() -> HStack<(some View)> {
-        return HStack {
-            TextField("Loan Tenure (Months)", text: $loanTenure)
-                .keyboardType(.numberPad)
-                .onChange(of: loanTenure, perform: { _ in
-                    loanTenure = loanTenure.filter {"0123456789".contains($0)}
-                })
-        }
-    }
-    
-    private func monthlyRepaymentLoanField() -> HStack<(some View)> {
-        return HStack {
-            Label("Monthly Repayment", image: "")
-            TextField("Monthly Repayment", text: $monthlyInstallation)
-                .onChange(of: [loanTenure, loanROI, loanAmount], perform: { _ in
-                    if(!(loanTenure.isEmpty || loanROI.isEmpty || loanAmount.isEmpty)) {
-                        monthlyInstallation = calcPayment(loanAmountIn: Float((loanAmount as NSString).floatValue), numOfPmtsIn: Int(loanTenure)!, interestRateIn: Float((loanROI as NSString).floatValue))
-                    }else {
-                        monthlyInstallation = ""
-                    }
-                })
-                .disabled(true)
-        }
-    }
-    
-    private func totalRepaymentLoanField() -> HStack<(some View)> {
-        return HStack {
-            Label("Total Repayment", image: "")
-            TextField("Total Repayment", text: $total)
-                .onChange(of: [loanTenure, loanROI, loanAmount], perform: { _ in
-                    if(!(loanTenure.isEmpty || loanROI.isEmpty || loanAmount.isEmpty)) {
-                        total = String(Double((loanTenure as NSString).doubleValue)  *  Double((monthlyInstallation as NSString).doubleValue))
-                    }else {
-                        total = ""
-                    }
-                })
-                .disabled(true)
         }
     }
     
@@ -419,25 +311,6 @@ struct NewAccountView: View {
                 Text("\($0.formatted(.number.grouping(.never)))").tag($0)
             }
         }
-    }
-    
-    private func calcPayment(loanAmountIn: Float, numOfPmtsIn: Int, interestRateIn: Float) -> String {
-        
-        var interestRate = interestRateIn;
-        interestRate = interestRate / (12 * 100)
-        
-        let fracPrePow = 1 + interestRate
-        let fracPow = pow(fracPrePow, Float(numOfPmtsIn))
-        
-        let formulaTop = interestRate * fracPow
-        
-        let formulaBottom = fracPow - 1
-        
-        let formulaFrac = formulaTop / formulaBottom
-        
-        let pmtAmount: Float = Float(loanAmountIn) * formulaFrac
-        
-        return String(round(pmtAmount * 100) / 100.0)
     }
 }
 

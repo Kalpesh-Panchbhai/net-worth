@@ -57,7 +57,7 @@ struct IncomeView: View {
                 ToolbarItem(placement: .bottomBar){
                     let balance = incomeController.getTotalBalance()
                     HStack {
-                        Text("Total Income \(String(format: "%.2f", balance))").foregroundColor(.blue).font(.title2)
+                        Text("Total Income \(balance.withCommas())").foregroundColor(.blue).font(.title2)
                     }
                 }
             }

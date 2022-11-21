@@ -63,7 +63,7 @@ struct AccountView: View {
                 ToolbarItem(placement: .bottomBar){
                     let balance = accountController.getAccountTotalBalance()
                     HStack {
-                        Text("Total Balance \(String(format: "%.2f", balance))").foregroundColor(.blue).font(.title2)
+                        Text("Total Balance \(balance.withCommas())").foregroundColor(.blue).font(.title)
                     }
                 }
             }
