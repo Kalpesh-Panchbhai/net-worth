@@ -20,7 +20,14 @@ class MutualFundController {
     
     @objc
     private func fetch() {
-        guard let url = URL(string: "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?frmdt=18-Nov-2022") else {
+        
+        let lastDay = Calendar.current.date(byAdding: .day, value: -1, to: Date())
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MMM-yyyy"
+        var date: String? = dateFormatter.string(from: lastDay!)
+        print(date!)
+        date = "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?frmdt=" + date!
+        guard let url = URL(string: date!) else {
             return
         }
         
@@ -53,6 +60,7 @@ class MutualFundController {
         var nameFound = false
         var name: String = ""
         var rate: String = ""
+        deleteWholeData()
         while i < totalCount {
             if let dummyRate = bodyArr[i].double {
                 rate = String(dummyRate)
@@ -70,7 +78,7 @@ class MutualFundController {
         }
     }
     
-    func saveUserData(name: String, rate: String) {
+    private func saveUserData(name: String, rate: String) {
         let newMutualFund = Mutualfund(context: viewContext)
         newMutualFund.sysid = UUID()
         newMutualFund.name = name
@@ -78,8 +86,19 @@ class MutualFundController {
         do {
             try viewContext.save()
         } catch {
-//            let nsError = error as NSError
-//            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            //            let nsError = error as NSError
+            //            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+    }
+    
+    private func deleteWholeData() {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Mutualfund")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        do {
+            try viewContext.execute(deleteRequest)
+        } catch _ as NSError {
+            // TODO: handle the error
         }
     }
     

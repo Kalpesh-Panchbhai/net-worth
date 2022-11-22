@@ -90,7 +90,7 @@ struct NewAccountView: View {
                         }.onChange(of: mutualFundField) { (data) in
                             accountName = data.name!
                             currentRateShare = data.rate!
-                        }
+                        }.pickerStyle(.navigationLink)
                         
                         totalField(labelName: "Total Units")
                         currentRateField(labelName: "Current rate of a unit")
@@ -211,38 +211,9 @@ struct NewAccountView: View {
     
     private func currentRateField(labelName: String) -> HStack<(some View)> {
         return HStack {
-            TextField("Current rate of a share", text: $currentRateShare)
-            //                .keyboardType(.decimalPad)
-            //                .onChange(of: currentRateShare, perform: { _ in
-            //                    let filtered = currentRateShare.filter {"0123456789.".contains($0)}
-            //
-            //                    if filtered.contains(".") {
-            //                        let splitted = filtered.split(separator: ".")
-            //                        if splitted.count >= 2 {
-            //                            let preDecimal = String(splitted[0])
-            //                            if String(splitted[1]).count == 5 {
-            //                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
-            //                                currentRateShare = "\(preDecimal).\(afterDecimal)"
-            //                            }else {
-            //                                let afterDecimal = String(splitted[1])
-            //                                currentRateShare = "\(preDecimal).\(afterDecimal)"
-            //                            }
-            //                        }else if splitted.count == 1 {
-            //                            let preDecimal = String(splitted[0])
-            //                            currentRateShare = "\(preDecimal)."
-            //                        }else {
-            //                            currentRateShare = "0."
-            //                        }
-            //                    } else if filtered.isEmpty && !currentRateShare.isEmpty {
-            //                        currentRateShare = ""
-            //                    } else if !filtered.isEmpty {
-            //                        currentRateShare = filtered
-            //                    }
-            //
-            //                    let totalShares = Double((totalShares as NSString).doubleValue)
-            //                    let currentRateShare = Double((currentRateShare as NSString).doubleValue)
-            //                    currentBalance = String(totalShares * currentRateShare)
-            //                })
+            Text(labelName)
+            Spacer()
+            Text(currentRateShare)
         }
     }
     
