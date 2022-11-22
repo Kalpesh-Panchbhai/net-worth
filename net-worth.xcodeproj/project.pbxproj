@@ -31,6 +31,7 @@
 		7DC97A2A29223989003F69D4 /* IncomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A2929223989003F69D4 /* IncomeController.swift */; };
 		7DC97A2C29223ADB003F69D4 /* NewIncomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A2B29223ADB003F69D4 /* NewIncomeView.swift */; };
 		7DCFE4C8292CB92900C940F0 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCFE4C7292CB92900C940F0 /* StringExtension.swift */; };
+		7DCFE4CA292D036500C940F0 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCFE4C9292D036500C940F0 /* SearchBar.swift */; };
 		7DE766F32928B62900EFBD2D /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE766F22928B62900EFBD2D /* NotificationController.swift */; };
 		7DF1E9C8292A43C8003D030E /* AccountModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF1E9C7292A43C8003D030E /* AccountModel.swift */; };
 		7DFA8CE9292BA5C800D5DA0F /* MutualFundController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DFA8CE8292BA5C800D5DA0F /* MutualFundController.swift */; };
@@ -81,6 +82,7 @@
 		7DC97A2929223989003F69D4 /* IncomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeController.swift; sourceTree = "<group>"; };
 		7DC97A2B29223ADB003F69D4 /* NewIncomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewIncomeView.swift; sourceTree = "<group>"; };
 		7DCFE4C7292CB92900C940F0 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		7DCFE4C9292D036500C940F0 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		7DE766F22928B62900EFBD2D /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		7DF1E9C7292A43C8003D030E /* AccountModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountModel.swift; sourceTree = "<group>"; };
 		7DFA8CE8292BA5C800D5DA0F /* MutualFundController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MutualFundController.swift; sourceTree = "<group>"; };
@@ -212,6 +214,7 @@
 				7DD7A56D29224C1D00CD5B37 /* SettingsView */,
 				7D79FA89291B9CE6004A2ECF /* MainScreenView.swift */,
 				7D42520E291BE95C0001C41C /* AuthenticationView.swift */,
+				7DCFE4C9292D036500C940F0 /* SearchBar.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -411,6 +414,7 @@
 				7D237BEF292B6F1400DEF91D /* AccountDetailsView.swift in Sources */,
 				7DCFE4C8292CB92900C940F0 /* StringExtension.swift in Sources */,
 				7DF1E9C8292A43C8003D030E /* AccountModel.swift in Sources */,
+				7DCFE4CA292D036500C940F0 /* SearchBar.swift in Sources */,
 				7D79FA8C291BA152004A2ECF /* NewAccountView.swift in Sources */,
 				7D79FA53291B7430004A2ECF /* AccountView.swift in Sources */,
 				7DFA8CE9292BA5C800D5DA0F /* MutualFundController.swift in Sources */,

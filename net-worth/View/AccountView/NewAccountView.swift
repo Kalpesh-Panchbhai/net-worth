@@ -38,6 +38,7 @@ struct NewAccountView: View {
         animation: .default)
     private var mutualfunds: FetchedResults<Mutualfund>
     
+    @State private var searchTerm: String = ""
     
     var body: some View {
         NavigationView {
@@ -84,7 +85,8 @@ struct NewAccountView: View {
                     }
                     else if(accountType == "Mutual Fund") {
                         Picker(selection: $mutualFundField, label: Text("Mutual Fund Name")) {
-                            ForEach(mutualfunds) { mf in
+                            SearchBar(text: $searchTerm, placeholder: "Search Mutual Funds")
+                            ForEach(filteredMF) { mf in
                                 Text(mf.name ?? "").tag(mf)
                             }
                         }.onChange(of: mutualFundField) { (data) in
@@ -296,6 +298,16 @@ struct NewAccountView: View {
         return Picker(labelName, selection: $paymentDate) {
             ForEach(dates, id: \.self) {
                 Text("\($0.formatted(.number.grouping(.never)))").tag($0)
+            }
+        }
+    }
+    
+    var filteredMF: [Mutualfund] {
+        mutualfunds.filter { mf in
+            if(searchTerm.isEmpty) {
+                return true
+            } else {
+                return mf.name!.lowercased().contains(searchTerm.lowercased())
             }
         }
     }
