@@ -23,11 +23,11 @@ struct AccountDetailsView: View {
             Section(account.accounttype! + " Account detail") {
                 if(account.accounttype == "Saving") {
                     field(labelName: "Account Name", value: account.accountname!)
-                    field(labelName: "Current Balance", value: "\(String(format: "%.4f", account.currentbalance))")
+                    field(labelName: "Current Balance", value: "\(account.currentbalance.withCommas())")
                 }
                 else if(account.accounttype == "Credit Card") {
                     field(labelName: "Credit Card Name", value: account.accountname!)
-                    field(labelName: "Current Balance", value: "\(String(format: "%.4f", account.currentbalance))")
+                    field(labelName: "Current Balance", value: "\(account.currentbalance.withCommas())")
                     if(account.paymentReminder) {
                         field(labelName: "Payment Reminder", value: "On")
                         field(labelName: "Payment Date", value: "\(account.paymentDate)")
@@ -37,7 +37,7 @@ struct AccountDetailsView: View {
                 }
                 else if(account.accounttype == "Loan") {
                     field(labelName: "Loan Name", value: account.accountname!)
-                    field(labelName: "Current Balance", value: "\(String(format: "%.4f", account.currentbalance))")
+                    field(labelName: "Current Balance", value: "\(account.currentbalance.withCommas())")
                     if(account.paymentReminder) {
                         field(labelName: "Payment Reminder", value: "On")
                         field(labelName: "Payment Date", value: "\(account.paymentDate)")
@@ -47,15 +47,15 @@ struct AccountDetailsView: View {
                 }
                 else if(account.accounttype == "Stock") {
                     field(labelName: "Stock Name", value: account.accountname!)
-                    field(labelName: "Total Shares", value: "\(account.totalShares)")
-                    field(labelName: "Current rate of a share", value: "\(currentRate)")
-                    field(labelName: "Total Value", value: "\(String(format: "%.4f", account.currentbalance))")
+                    field(labelName: "Total Shares", value: "\(account.totalShares.withCommas())")
+                    field(labelName: "Current rate of a share", value: "\(currentRate.toDouble()!.withCommas())")
+                    field(labelName: "Total Value", value: "\(account.currentbalance.withCommas())")
                 }
                 else if(account.accounttype == "Mutual Fund") {
                     field(labelName: "Mutual Fund Name", value: account.accountname!)
-                    field(labelName: "Total Units", value: "\(account.totalShares)")
-                    field(labelName: "Current rate of a unit", value: "\(currentRate)")
-                    field(labelName: "Total Value", value: "\(String(format: "%.4f", account.currentbalance))")
+                    field(labelName: "Total Units", value: "\(account.totalShares.withCommas())")
+                    field(labelName: "Current rate of a unit", value: "\(currentRate.toDouble()!.withCommas())")
+                    field(labelName: "Total Value", value: "\(account.currentbalance.withCommas())")
                     if(account.paymentReminder) {
                         field(labelName: "Payment Reminder", value: "On")
                         field(labelName: "Payment Date", value: "\(account.paymentDate)")

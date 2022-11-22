@@ -12,3 +12,9 @@ extension StringProtocol {
     var float: Float? { Float(self) }
     var integer: Int? { Int(self) }
 }
+
+extension String {
+    func toDouble() -> Double? {
+        return NumberFormatter().number(from: self)?.doubleValue
+    }
+}

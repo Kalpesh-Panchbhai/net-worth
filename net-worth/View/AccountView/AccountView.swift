@@ -38,7 +38,7 @@ struct AccountView: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             Spacer()
-                            Text("\(String(format: "%.4f", account.currentbalance))")
+                            Text("\(account.currentbalance.withCommas())")
                         }
                         .padding()
                     })
