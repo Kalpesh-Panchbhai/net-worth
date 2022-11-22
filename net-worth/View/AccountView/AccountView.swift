@@ -63,14 +63,14 @@ struct AccountView: View {
                 ToolbarItem(placement: .bottomBar){
                     let balance = accountController.getAccountTotalBalance()
                     HStack {
-                        Text("Total Balance \(balance.withCommas())").foregroundColor(.blue).font(.title)
+                        Text("Total Balance \(balance.withCommas())").foregroundColor(.blue).font(.title2)
                     }
                 }
             }
             .navigationTitle("Accounts")
             .searchable(text: $searchAccountName) {
                 ForEach(searchResults, id: \.self) { result in
-                    Text("Are you looking for \(result.accountname!)?").searchCompletion(result.accountname!)
+                    Text("\(result.accountname!)").searchCompletion(result.accountname!)
                 }
             }
         }
