@@ -67,6 +67,17 @@ class AccountController {
         return account
     }
     
+    public func deleteAccount(account: Account) {
+        viewContext.delete(account)
+        do {
+            notificationController.removeNotification(id: account.sysid!)
+            try viewContext.save()
+        }catch {
+            viewContext.rollback()
+            print("Failed to delete account \(error)")
+        }
+    }
+    
     private let accountFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .short

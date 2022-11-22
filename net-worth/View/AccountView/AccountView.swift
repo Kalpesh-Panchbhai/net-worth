@@ -19,8 +19,6 @@ struct AccountView: View {
     
     private var accountController = AccountController()
     
-    private var notificationController = NotificationController()
-    
     @State var searchAccountName: String = ""
     
     @State var isOpen: Bool = false
@@ -35,10 +33,14 @@ struct AccountView: View {
         }
     }
     
+    @State var selection = Set<Account>()
+    
+    @State var editMode = EditMode.inactive
+    
     var body: some View {
         NavigationView {
-            List {
-                ForEach(searchResults) { account in
+            List(selection: $selection) {
+                ForEach(searchResults, id: \.self) { account in
                     NavigationLink(destination: AccountDetailsNavigationLinkView(uuid: account.sysid!), label: {
                         HStack{
                             VStack {
@@ -53,23 +55,50 @@ struct AccountView: View {
                         .padding()
                     })
                 }
-                .onDelete(perform: deleteAccount)
             }
+            .environment(\.editMode, self.$editMode)
             .listStyle(.inset)
             .toolbar {
                 if !accounts.isEmpty {
                     ToolbarItem(placement: .navigationBarLeading) {
-                        EditButton()
+                        if(editMode == .inactive) {
+                            Button(action: {
+                                self.editMode = .active
+                                self.selection = Set<Account>()
+                            }) {
+                                Text("Edit")
+                            }
+                        }
+                        else {
+                            Button(action: {
+                                self.editMode = .inactive
+                                self.selection = Set<Account>()
+                            }) {
+                                Text("Done")
+                            }
+                        }
                     }
                 }
-                ToolbarItem {
-                    Button(action: {
-                        self.isOpen = true
-                    }, label: {
-                        Label("Add Item", systemImage: "plus")
-                    }).sheet(isPresented: $isOpen, content: {
-                        NewAccountView()
-                    })
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    if(editMode == .inactive) {
+                        Button(action: {
+                            self.isOpen = true
+                        }, label: {
+                            Label("Add Item", systemImage: "plus")
+                        }).sheet(isPresented: $isOpen, content: {
+                            NewAccountView()
+                        })
+                    }
+                    else {
+                        Button(action: {
+                            for id in selection {
+                                accountController.deleteAccount(account: id)
+                            }
+                            editMode = .inactive
+                        }, label: {
+                            Label("Add Item", systemImage: "trash")
+                        })
+                    }
                 }
                 ToolbarItem(placement: .bottomBar){
                     let balance = accountController.getAccountTotalBalance()
@@ -83,25 +112,6 @@ struct AccountView: View {
                 ForEach(searchResults, id: \.self) { result in
                     Text("\(result.accountname!)").searchCompletion(result.accountname!)
                 }
-            }
-        }
-    }
-    
-    private func deleteAccount(offsets: IndexSet) {
-        withAnimation {
-            offsets.map {
-                let acc = accounts[$0]
-                if(acc.paymentReminder) {
-                    notificationController.removeNotification(id: acc.sysid!)
-                }
-                return acc
-            }.forEach(viewContext.delete)
-            
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
         }
     }

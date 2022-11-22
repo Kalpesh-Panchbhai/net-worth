@@ -16,7 +16,11 @@ struct AccountDetailsView: View {
     var account: Account
     init(account: Account) {
         self.account = account
-        self.currentRate = mutualFundController.getMutualFund(name: self.account.accountname!).rate!
+        if(self.account.accounttype == "Mutual Fund") {
+            self.currentRate = mutualFundController.getMutualFund(name: self.account.accountname!).rate!
+        }else {
+            self.currentRate = "0.0"
+        }
     }
     var body: some View {
         Form {
