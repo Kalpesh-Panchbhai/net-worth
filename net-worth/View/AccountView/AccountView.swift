@@ -21,14 +21,14 @@ struct AccountView: View {
     
     private var notificationController = NotificationController()
     
-    @State var accountName: String = ""
+    @State var searchAccountName: String = ""
     
     @State var isOpen: Bool = false
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(accounts) { account in
+                ForEach(searchResults) { account in
                     NavigationLink(destination: AccountDetailsNavigationLinkView(uuid: account.sysid!), label: {
                         HStack{
                             VStack {
@@ -68,6 +68,21 @@ struct AccountView: View {
                 }
             }
             .navigationTitle("Accounts")
+            .searchable(text: $searchAccountName) {
+                ForEach(searchResults, id: \.self) { result in
+                    Text("Are you looking for \(result.accountname!)?").searchCompletion(result.accountname!)
+                }
+            }
+        }
+    }
+    
+    var searchResults: [Account] {
+        accounts.filter { account in
+            if(searchAccountName.isEmpty) {
+                return true
+            } else {
+                return account.accountname!.lowercased().contains(searchAccountName.lowercased())
+            }
         }
     }
     
