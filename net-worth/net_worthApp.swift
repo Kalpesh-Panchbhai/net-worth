@@ -10,6 +10,12 @@ import SwiftUI
 @main
 struct net_worthApp: App {
     let persistenceController = PersistenceController.shared
+    
+    private var mutualFundController = MutualFundController()
+    
+    init() {
+        mutualFundController.schedule()
+    }
 
     var body: some Scene {
         WindowGroup {

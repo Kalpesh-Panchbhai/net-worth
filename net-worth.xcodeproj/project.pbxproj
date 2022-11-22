@@ -30,8 +30,10 @@
 		7DC97A28292236FB003F69D4 /* IncomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A27292236FB003F69D4 /* IncomeView.swift */; };
 		7DC97A2A29223989003F69D4 /* IncomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A2929223989003F69D4 /* IncomeController.swift */; };
 		7DC97A2C29223ADB003F69D4 /* NewIncomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A2B29223ADB003F69D4 /* NewIncomeView.swift */; };
+		7DCFE4C8292CB92900C940F0 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCFE4C7292CB92900C940F0 /* StringExtension.swift */; };
 		7DE766F32928B62900EFBD2D /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE766F22928B62900EFBD2D /* NotificationController.swift */; };
 		7DF1E9C8292A43C8003D030E /* AccountModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF1E9C7292A43C8003D030E /* AccountModel.swift */; };
+		7DFA8CE9292BA5C800D5DA0F /* MutualFundController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DFA8CE8292BA5C800D5DA0F /* MutualFundController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,8 +80,10 @@
 		7DC97A27292236FB003F69D4 /* IncomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeView.swift; sourceTree = "<group>"; };
 		7DC97A2929223989003F69D4 /* IncomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeController.swift; sourceTree = "<group>"; };
 		7DC97A2B29223ADB003F69D4 /* NewIncomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewIncomeView.swift; sourceTree = "<group>"; };
+		7DCFE4C7292CB92900C940F0 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		7DE766F22928B62900EFBD2D /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		7DF1E9C7292A43C8003D030E /* AccountModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountModel.swift; sourceTree = "<group>"; };
+		7DFA8CE8292BA5C800D5DA0F /* MutualFundController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MutualFundController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				7D237BEC292B672800DEF91D /* DoubleExtension.swift */,
+				7DCFE4C7292CB92900C940F0 /* StringExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -190,6 +195,7 @@
 		7D79FA83291B7EC2004A2ECF /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				7DFA8CE7292BA59D00D5DA0F /* MutualFund */,
 				7DCC0AA0292663A1006CBF36 /* Notification */,
 				7D79FA86291B803A004A2ECF /* AccountController.swift */,
 				7DC97A2529221990003F69D4 /* SettingsController.swift */,
@@ -244,6 +250,14 @@
 				7DC97A23292216BB003F69D4 /* SettingsView.swift */,
 			);
 			path = SettingsView;
+			sourceTree = "<group>";
+		};
+		7DFA8CE7292BA59D00D5DA0F /* MutualFund */ = {
+			isa = PBXGroup;
+			children = (
+				7DFA8CE8292BA5C800D5DA0F /* MutualFundController.swift */,
+			);
+			path = MutualFund;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -395,9 +409,11 @@
 				7DC97A2A29223989003F69D4 /* IncomeController.swift in Sources */,
 				7DC97A24292216BB003F69D4 /* SettingsView.swift in Sources */,
 				7D237BEF292B6F1400DEF91D /* AccountDetailsView.swift in Sources */,
+				7DCFE4C8292CB92900C940F0 /* StringExtension.swift in Sources */,
 				7DF1E9C8292A43C8003D030E /* AccountModel.swift in Sources */,
 				7D79FA8C291BA152004A2ECF /* NewAccountView.swift in Sources */,
 				7D79FA53291B7430004A2ECF /* AccountView.swift in Sources */,
+				7DFA8CE9292BA5C800D5DA0F /* MutualFundController.swift in Sources */,
 				7D237BED292B672900DEF91D /* DoubleExtension.swift in Sources */,
 				7D42520F291BE95C0001C41C /* AuthenticationView.swift in Sources */,
 				7D79FA51291B7430004A2ECF /* net_worthApp.swift in Sources */,

@@ -12,6 +12,8 @@ struct NewAccountView: View {
     @State private var accountType: String = "None"
     @State private var accountName: String = ""
     
+    @State private var mutualFundField: Mutualfund = Mutualfund()
+    
     //Mutual fund and Stock fields
     @State private var totalShares: String = ""
     @State private var currentRateShare: String = ""
@@ -30,6 +32,12 @@ struct NewAccountView: View {
     private var accountController = AccountController()
     
     @Environment(\.dismiss) var dismiss
+    
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \Mutualfund.name, ascending: true)],
+        animation: .default)
+    private var mutualfunds: FetchedResults<Mutualfund>
+    
     
     var body: some View {
         NavigationView {
@@ -75,7 +83,15 @@ struct NewAccountView: View {
                         totalValueField()
                     }
                     else if(accountType == "Mutual Fund") {
-                        nameField(labelName: "Mutual Fund Name")
+                        Picker(selection: $mutualFundField, label: Text("Mutual Fund Name")) {
+                            ForEach(mutualfunds) { mf in
+                                Text(mf.name ?? "").tag(mf)
+                            }
+                        }.onChange(of: mutualFundField) { (data) in
+                            accountName = data.name!
+                            currentRateShare = data.rate!
+                        }
+                        
                         totalField(labelName: "Total Units")
                         currentRateField(labelName: "Current rate of a unit")
                         totalValueField()
@@ -196,37 +212,37 @@ struct NewAccountView: View {
     private func currentRateField(labelName: String) -> HStack<(some View)> {
         return HStack {
             TextField("Current rate of a share", text: $currentRateShare)
-                .keyboardType(.decimalPad)
-                .onChange(of: currentRateShare, perform: { _ in
-                    let filtered = currentRateShare.filter {"0123456789.".contains($0)}
-                    
-                    if filtered.contains(".") {
-                        let splitted = filtered.split(separator: ".")
-                        if splitted.count >= 2 {
-                            let preDecimal = String(splitted[0])
-                            if String(splitted[1]).count == 5 {
-                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
-                                currentRateShare = "\(preDecimal).\(afterDecimal)"
-                            }else {
-                                let afterDecimal = String(splitted[1])
-                                currentRateShare = "\(preDecimal).\(afterDecimal)"
-                            }
-                        }else if splitted.count == 1 {
-                            let preDecimal = String(splitted[0])
-                            currentRateShare = "\(preDecimal)."
-                        }else {
-                            currentRateShare = "0."
-                        }
-                    } else if filtered.isEmpty && !currentRateShare.isEmpty {
-                        currentRateShare = ""
-                    } else if !filtered.isEmpty {
-                        currentRateShare = filtered
-                    }
-                    
-                    let totalShares = Double((totalShares as NSString).doubleValue)
-                    let currentRateShare = Double((currentRateShare as NSString).doubleValue)
-                    currentBalance = String(totalShares * currentRateShare)
-                })
+            //                .keyboardType(.decimalPad)
+            //                .onChange(of: currentRateShare, perform: { _ in
+            //                    let filtered = currentRateShare.filter {"0123456789.".contains($0)}
+            //
+            //                    if filtered.contains(".") {
+            //                        let splitted = filtered.split(separator: ".")
+            //                        if splitted.count >= 2 {
+            //                            let preDecimal = String(splitted[0])
+            //                            if String(splitted[1]).count == 5 {
+            //                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
+            //                                currentRateShare = "\(preDecimal).\(afterDecimal)"
+            //                            }else {
+            //                                let afterDecimal = String(splitted[1])
+            //                                currentRateShare = "\(preDecimal).\(afterDecimal)"
+            //                            }
+            //                        }else if splitted.count == 1 {
+            //                            let preDecimal = String(splitted[0])
+            //                            currentRateShare = "\(preDecimal)."
+            //                        }else {
+            //                            currentRateShare = "0."
+            //                        }
+            //                    } else if filtered.isEmpty && !currentRateShare.isEmpty {
+            //                        currentRateShare = ""
+            //                    } else if !filtered.isEmpty {
+            //                        currentRateShare = filtered
+            //                    }
+            //
+            //                    let totalShares = Double((totalShares as NSString).doubleValue)
+            //                    let currentRateShare = Double((currentRateShare as NSString).doubleValue)
+            //                    currentBalance = String(totalShares * currentRateShare)
+            //                })
         }
     }
     
