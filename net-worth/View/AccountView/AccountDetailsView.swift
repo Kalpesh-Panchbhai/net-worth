@@ -9,9 +9,14 @@ import SwiftUI
 
 struct AccountDetailsView: View {
     
+    private var mutualFundController = MutualFundController()
+    
+    private var currentRate: String
+    
     var account: Account
     init(account: Account) {
         self.account = account
+        self.currentRate = mutualFundController.getMutualFund(name: self.account.accountname!).rate!
     }
     var body: some View {
         Form {
@@ -43,13 +48,13 @@ struct AccountDetailsView: View {
                 else if(account.accounttype == "Stock") {
                     field(labelName: "Stock Name", value: account.accountname!)
                     field(labelName: "Total Shares", value: "\(account.totalShares)")
-                    field(labelName: "Current rate of a share", value: "\(account.currentRateShare)")
+                    field(labelName: "Current rate of a share", value: "\(currentRate)")
                     field(labelName: "Total Value", value: "\(account.currentbalance)")
                 }
                 else if(account.accounttype == "Mutual Fund") {
                     field(labelName: "Mutual Fund Name", value: account.accountname!)
                     field(labelName: "Total Units", value: "\(account.totalShares)")
-                    field(labelName: "Current rate of a unit", value: "\(account.currentRateShare)")
+                    field(labelName: "Current rate of a unit", value: "\(currentRate)")
                     field(labelName: "Total Value", value: "\(account.currentbalance)")
                     if(account.paymentReminder) {
                         field(labelName: "Payment Reminder", value: "On")

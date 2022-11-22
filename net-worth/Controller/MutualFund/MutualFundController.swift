@@ -25,7 +25,6 @@ class MutualFundController {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd-MMM-yyyy"
         var date: String? = dateFormatter.string(from: lastDay!)
-        print(date!)
         date = "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?frmdt=" + date!
         guard let url = URL(string: date!) else {
             return
@@ -80,14 +79,11 @@ class MutualFundController {
     
     private func saveUserData(name: String, rate: String) {
         let newMutualFund = Mutualfund(context: viewContext)
-        newMutualFund.sysid = UUID()
         newMutualFund.name = name
         newMutualFund.rate = rate
         do {
             try viewContext.save()
         } catch {
-            //            let nsError = error as NSError
-            //            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
     
@@ -100,6 +96,21 @@ class MutualFundController {
         } catch _ as NSError {
             // TODO: handle the error
         }
+    }
+    
+    public func getMutualFund(name: String) -> Mutualfund {
+        let request = Mutualfund.fetchRequest()
+        request.predicate = NSPredicate(
+            format: "name = %@", name
+        )
+        var mutualFund: Mutualfund
+        do{
+            mutualFund = try viewContext.fetch(request).first!
+        }catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+        return mutualFund
     }
     
 }

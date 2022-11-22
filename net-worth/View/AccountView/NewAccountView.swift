@@ -112,7 +112,6 @@ struct NewAccountView: View {
                         accountModel.paymentReminder = paymentReminder
                         
                         //Mutual fund and Stock fields
-                        accountModel.currentRateShare = currentRateShare
                         accountModel.totalShares = totalShares
                         
                         if(paymentReminder) {
