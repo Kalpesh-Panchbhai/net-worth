@@ -55,6 +55,7 @@ struct AccountView: View {
                 }
                 .onDelete(perform: deleteAccount)
             }
+            .listStyle(.inset)
             .toolbar {
                 if !accounts.isEmpty {
                     ToolbarItem(placement: .navigationBarLeading) {

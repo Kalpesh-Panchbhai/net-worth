@@ -39,6 +39,7 @@ struct IncomeView: View {
                 }
                 .onDelete(perform: deleteIncome)
             }
+            .listStyle(.inset)
             .toolbar {
                 if !incomes.isEmpty {
                     ToolbarItem(placement: .navigationBarLeading) {
