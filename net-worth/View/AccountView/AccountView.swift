@@ -13,7 +13,7 @@ struct AccountView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Account.timestamp, ascending: true)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \Account.accountname, ascending: true)],
         animation: .default)
     private var accounts: FetchedResults<Account>
     
@@ -24,6 +24,16 @@ struct AccountView: View {
     @State var searchAccountName: String = ""
     
     @State var isOpen: Bool = false
+    
+    var searchResults: [Account] {
+        accounts.filter { account in
+            if(searchAccountName.isEmpty) {
+                return true
+            } else {
+                return account.accountname!.lowercased().contains(searchAccountName.lowercased())
+            }
+        }
+    }
     
     var body: some View {
         NavigationView {
@@ -72,16 +82,6 @@ struct AccountView: View {
                 ForEach(searchResults, id: \.self) { result in
                     Text("\(result.accountname!)").searchCompletion(result.accountname!)
                 }
-            }
-        }
-    }
-    
-    var searchResults: [Account] {
-        accounts.filter { account in
-            if(searchAccountName.isEmpty) {
-                return true
-            } else {
-                return account.accountname!.lowercased().contains(searchAccountName.lowercased())
             }
         }
     }
