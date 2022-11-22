@@ -54,6 +54,14 @@ struct AccountView: View {
                         }
                         .padding()
                     })
+                    .swipeActions {
+                        Button{
+                            accountController.deleteAccount(account: account)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                        .tint(.red)
+                    }
                 }
             }
             .environment(\.editMode, self.$editMode)
@@ -91,8 +99,8 @@ struct AccountView: View {
                     }
                     else {
                         Button(action: {
-                            for id in selection {
-                                accountController.deleteAccount(account: id)
+                            for accountSelected in selection {
+                                accountController.deleteAccount(account: accountSelected)
                             }
                             editMode = .inactive
                         }, label: {
