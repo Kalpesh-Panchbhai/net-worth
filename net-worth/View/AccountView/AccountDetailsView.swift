@@ -36,7 +36,7 @@ struct AccountDetailsView: View {
                 else if(account.accounttype == "Credit Card") {
                     field(labelName: "Credit Card Name", value: account.accountname!)
                     field(labelName: "Current Balance", value: "\(account.currentbalance.withCommas())")
-                    if(account.paymentReminder) {
+                    if(account.paymentreminder) {
                         field(labelName: "Payment Reminder", value: "On")
                         field(labelName: "Payment Date", value: "\(account.paymentdate)")
                     }else {
@@ -46,7 +46,7 @@ struct AccountDetailsView: View {
                 else if(account.accounttype == "Loan") {
                     field(labelName: "Loan Name", value: account.accountname!)
                     field(labelName: "Current Balance", value: "\(account.currentbalance.withCommas())")
-                    if(account.paymentReminder) {
+                    if(account.paymentreminder) {
                         field(labelName: "Payment Reminder", value: "On")
                         field(labelName: "Payment Date", value: "\(account.paymentdate)")
                     }else {
@@ -64,7 +64,7 @@ struct AccountDetailsView: View {
                     field(labelName: "Total Units", value: "\(account.totalShares.withCommas())")
                     field(labelName: "Current rate of a unit", value: "\(currentRate.toDouble()!.withCommas())")
                     field(labelName: "Total Value", value: "\(totalValue.withCommas())")
-                    if(account.paymentReminder) {
+                    if(account.paymentreminder) {
                         field(labelName: "Payment Reminder", value: "On")
                         field(labelName: "Payment Date", value: "\(account.paymentdate)")
                     }else {
