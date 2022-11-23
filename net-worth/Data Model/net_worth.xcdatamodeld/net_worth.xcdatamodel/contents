@@ -4,7 +4,7 @@
         <attribute name="accountname" optional="YES" attributeType="String"/>
         <attribute name="accounttype" optional="YES" attributeType="String"/>
         <attribute name="currentbalance" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="paymentDate" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="paymentdate" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="paymentReminder" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="sysid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>

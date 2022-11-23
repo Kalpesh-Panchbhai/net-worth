@@ -25,7 +25,7 @@ class AccountController {
         newAccount.currentbalance = Double((accountModel.currentBalance as NSString).doubleValue)
         newAccount.totalShares = Double((accountModel.totalShares as NSString).doubleValue)
         newAccount.paymentReminder = accountModel.paymentReminder
-        newAccount.paymentDate = Int16(accountModel.paymentDate)
+        newAccount.paymentdate = Int16(accountModel.paymentDate)
         
         do {
             try viewContext.save()

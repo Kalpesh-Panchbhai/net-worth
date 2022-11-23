@@ -38,7 +38,7 @@ struct AccountDetailsView: View {
                     field(labelName: "Current Balance", value: "\(account.currentbalance.withCommas())")
                     if(account.paymentReminder) {
                         field(labelName: "Payment Reminder", value: "On")
-                        field(labelName: "Payment Date", value: "\(account.paymentDate)")
+                        field(labelName: "Payment Date", value: "\(account.paymentdate)")
                     }else {
                         field(labelName: "Payment Reminder", value: "Off")
                     }
@@ -48,7 +48,7 @@ struct AccountDetailsView: View {
                     field(labelName: "Current Balance", value: "\(account.currentbalance.withCommas())")
                     if(account.paymentReminder) {
                         field(labelName: "Payment Reminder", value: "On")
-                        field(labelName: "Payment Date", value: "\(account.paymentDate)")
+                        field(labelName: "Payment Date", value: "\(account.paymentdate)")
                     }else {
                         field(labelName: "Payment Reminder", value: "Off")
                     }
@@ -66,7 +66,7 @@ struct AccountDetailsView: View {
                     field(labelName: "Total Value", value: "\(totalValue.withCommas())")
                     if(account.paymentReminder) {
                         field(labelName: "Payment Reminder", value: "On")
-                        field(labelName: "Payment Date", value: "\(account.paymentDate)")
+                        field(labelName: "Payment Date", value: "\(account.paymentdate)")
                     }else {
                         field(labelName: "Payment Reminder", value: "Off")
                     }
