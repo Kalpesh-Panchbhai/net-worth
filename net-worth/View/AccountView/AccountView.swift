@@ -25,6 +25,8 @@ struct AccountView: View {
     
     @State var isOpen: Bool = false
     
+    @State var isAllSelected: Bool = false
+    
     var searchResults: [Account] {
         accounts.filter { account in
             if(searchAccountName.isEmpty) {
@@ -112,13 +114,29 @@ struct AccountView: View {
                             editMode = .inactive
                         }, label: {
                             Label("Add Item", systemImage: "trash")
-                        })
+                        }).disabled(selection.count == 0)
                     }
                 }
                 ToolbarItem(placement: .bottomBar){
-                    let balance = accountController.getAccountTotalBalance()
-                    HStack {
-                        Text("Total Balance \(balance.withCommas())").foregroundColor(.blue).font(.title2)
+                    if(editMode == .inactive) {
+                        let balance = accountController.getAccountTotalBalance()
+                        HStack {
+                            Text("Total Balance \(balance.withCommas())").foregroundColor(.blue).font(.title2)
+                        }
+                    }else {
+                        if(!isAllSelected) {
+                            Button("Select all", action: {
+                                searchResults.forEach { (acc) in
+                                    self.selection.insert(acc)
+                                }
+                                isAllSelected = true
+                            })
+                        }else {
+                            Button("Deselect all", action: {
+                                self.selection.removeAll()
+                                isAllSelected = false
+                            })
+                        }
                     }
                 }
             }
