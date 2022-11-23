@@ -153,6 +153,6 @@ struct AccountView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        AccountView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        AccountView()
     }
 }
