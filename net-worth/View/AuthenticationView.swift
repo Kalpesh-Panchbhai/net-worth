@@ -12,14 +12,18 @@ struct AuthenticationView: View {
     
     @State private var unlocked =  false
     
+    @State private var hasAlreadyLaunched =  false
+    
     @State private var authenticateTypeMessage = ""
     
     private var settingsController = SettingsController()
     
+    private var mutualFundController = MutualFundController()
+    
     var body: some View {
         VStack {
             let authenticType = biometricType()
-            if false {
+            if true {
                 if authenticType == .touch {
                     Button("Unlock with Touch ID") {
                         authenticateTypeMessage = "Unlock with Touch ID"
@@ -53,6 +57,17 @@ struct AuthenticationView: View {
                     unlocked = true
                 }
             }
+        }
+        detectFirstLaunch()
+    }
+    
+    private func detectFirstLaunch() {
+        hasAlreadyLaunched = UserDefaults.standard.bool(forKey: "hasAlreadyLaunched")
+        if (hasAlreadyLaunched){
+            hasAlreadyLaunched = true
+        }else{
+            UserDefaults.standard.set(true, forKey: "hasAlreadyLaunched")
+            mutualFundController.schedule()
         }
     }
     

@@ -14,7 +14,7 @@ class MutualFundController {
     
     public func schedule() {
         let date = Date.now
-        let timer = Timer(fireAt: date, interval: 86400, target: self, selector: #selector(fetch), userInfo: nil, repeats: true)
+        let timer = Timer(fireAt: date, interval: 1800, target: self, selector: #selector(fetch), userInfo: nil, repeats: true)
         RunLoop.main.add(timer, forMode: .common)
     }
     

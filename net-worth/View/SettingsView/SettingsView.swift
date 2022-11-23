@@ -15,8 +15,6 @@ struct SettingsView: View {
     private var settingsController = SettingsController()
     private var notificationController = NotificationController()
     
-    private var mutualFundController = MutualFundController()
-    
     init() {
         isAuthenticationRequired = settingsController.isAuthenticationRequire()
         Thread.sleep(forTimeInterval: 1)
@@ -31,10 +29,6 @@ struct SettingsView: View {
                         settingsController.changeAuthentication(isRequired: _isOn)
                     }
                 Toggle("Enable Notification", isOn: $isNotificationEnabled)
-                
-                Button("Update Mutual Fund Data", action: {
-                    mutualFundController.schedule()
-                })
                 
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
                 Text("Version " + appVersion!)
