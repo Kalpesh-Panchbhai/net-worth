@@ -23,7 +23,7 @@ class AccountController {
         newAccount.accounttype = accountModel.accountType
         newAccount.accountname =  accountModel.accountName
         newAccount.currentbalance = accountModel.currentBalance
-        newAccount.totalshare = Double((accountModel.totalShares as NSString).doubleValue)
+        newAccount.totalshare = accountModel.totalShares
         newAccount.paymentreminder = accountModel.paymentReminder
         newAccount.paymentdate = Int16(accountModel.paymentDate)
         

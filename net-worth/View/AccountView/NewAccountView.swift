@@ -15,7 +15,7 @@ struct NewAccountView: View {
     @State private var mutualFundField: Mutualfund = Mutualfund()
     
     //Mutual fund and Stock fields
-    @State private var totalShares: String = ""
+    @State private var totalShares: Double = 0.0
     @State private var currentRateShare: Double = 0.0
     
     @State private var currentBalance: Double = 0.0
@@ -52,7 +52,7 @@ struct NewAccountView: View {
                     }
                     .onChange(of: accountType) { _ in
                         accountName=""
-                        totalShares=""
+                        totalShares = 0.0
                         currentRateShare = 0.0
                         currentBalance = 0.0
                         paymentDate = 1
@@ -94,7 +94,6 @@ struct NewAccountView: View {
                             accountName = data.name!
                             currentRateShare = data.rate
                             
-                            let totalShares = Double((totalShares as NSString).doubleValue)
                             currentBalance = totalShares * currentRateShare
                         }.pickerStyle(.navigationLink)
                         
@@ -165,13 +164,13 @@ struct NewAccountView: View {
                 return true
             }
         }else if accountType == "Stock" {
-            if accountName.isEmpty || totalShares.isEmpty || currentRateShare.isZero {
+            if accountName.isEmpty || totalShares.isZero || currentRateShare.isZero {
                 return false
             } else {
                 return true
             }
         }else if accountType == "Mutual Fund" {
-            if accountName.isEmpty || totalShares.isEmpty || currentRateShare.isZero {
+            if accountName.isEmpty || totalShares.isZero || currentRateShare.isZero {
                 return false
             } else {
                 return true
@@ -189,35 +188,9 @@ struct NewAccountView: View {
     
     private func totalField(labelName: String) -> HStack<(some View)> {
         return HStack {
-            TextField(labelName, text: $totalShares)
+            TextField(labelName, value: $totalShares, formatter: formatter)
                 .keyboardType(.decimalPad)
                 .onChange(of: totalShares, perform: { _ in
-                    let filtered = totalShares.filter {"0123456789.".contains($0)}
-                    
-                    if filtered.contains(".") {
-                        let splitted = filtered.split(separator: ".")
-                        if splitted.count >= 2 {
-                            let preDecimal = String(splitted[0])
-                            if String(splitted[1]).count == 5 {
-                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
-                                totalShares = "\(preDecimal).\(afterDecimal)"
-                            }else {
-                                let afterDecimal = String(splitted[1])
-                                totalShares = "\(preDecimal).\(afterDecimal)"
-                            }
-                        }else if splitted.count == 1 {
-                            let preDecimal = String(splitted[0])
-                            totalShares = "\(preDecimal)."
-                        }else {
-                            totalShares = "0."
-                        }
-                    } else if filtered.isEmpty && !totalShares.isEmpty {
-                        totalShares = ""
-                    } else if !filtered.isEmpty {
-                        totalShares = filtered
-                    }
-                    
-                    let totalShares = Double((totalShares as NSString).doubleValue)
                     currentBalance = totalShares * currentRateShare
                 })
         }

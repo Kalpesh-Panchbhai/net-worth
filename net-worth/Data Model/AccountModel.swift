@@ -15,7 +15,7 @@ class AccountModel {
     
     var currentBalance: Double = 0.0
     
-    var totalShares: String = ""
+    var totalShares: Double = 0.0
     
     var paymentReminder: Bool = false
     
