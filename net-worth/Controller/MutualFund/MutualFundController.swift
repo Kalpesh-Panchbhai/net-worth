@@ -58,11 +58,11 @@ class MutualFundController {
         var i = 8
         var nameFound = false
         var name: String = ""
-        var rate: String = ""
+        var rate: Double = 0.0
         deleteWholeData()
         while i < totalCount {
             if let dummyRate = bodyArr[i].double {
-                rate = String(dummyRate)
+                rate = dummyRate
                 nameFound = false
                 i+=2
                 saveUserData(name: name, rate: rate)
@@ -77,7 +77,7 @@ class MutualFundController {
         }
     }
     
-    private func saveUserData(name: String, rate: String) {
+    private func saveUserData(name: String, rate: Double) {
         let newMutualFund = Mutualfund(context: viewContext)
         newMutualFund.name = name
         newMutualFund.rate = rate

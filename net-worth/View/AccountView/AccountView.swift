@@ -56,7 +56,7 @@ struct AccountView: View {
                             Spacer()
                             if(account.accounttype == "Mutual Fund") {
                                 let mutualFund = mutualFundController.getMutualFund(name: account.accountname!)
-                                Text("\((account.totalshare * mutualFund.rate!.toDouble()!).withCommas())")
+                                Text("\((account.totalshare * mutualFund.rate).withCommas())")
                             } else {
                                 Text("\(account.currentbalance.withCommas())")
                             }

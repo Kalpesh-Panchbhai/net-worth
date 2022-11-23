@@ -21,6 +21,6 @@
     </entity>
     <entity name="Mutualfund" representedClassName=".Mutualfund" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="rate" optional="YES" attributeType="String"/>
+        <attribute name="rate" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
     </entity>
 </model>

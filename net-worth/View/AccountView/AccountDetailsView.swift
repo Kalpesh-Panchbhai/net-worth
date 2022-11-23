@@ -11,7 +11,7 @@ struct AccountDetailsView: View {
     
     private var mutualFundController = MutualFundController()
     
-    private var currentRate: String
+    private var currentRate: Double
     
     private var totalValue: Double
     
@@ -19,10 +19,10 @@ struct AccountDetailsView: View {
     init(account: Account) {
         self.account = account
         if(self.account.accounttype == "Mutual Fund") {
-            self.currentRate = mutualFundController.getMutualFund(name: self.account.accountname!).rate!
-            self.totalValue = currentRate.toDouble()! * account.totalshare
+            self.currentRate = mutualFundController.getMutualFund(name: self.account.accountname!).rate
+            self.totalValue = currentRate * account.totalshare
         }else {
-            self.currentRate = "0.0"
+            self.currentRate = 0.0
             self.totalValue = 0.0
         }
     }
@@ -56,13 +56,13 @@ struct AccountDetailsView: View {
                 else if(account.accounttype == "Stock") {
                     field(labelName: "Stock Name", value: account.accountname!)
                     field(labelName: "Total Shares", value: "\(account.totalshare.withCommas())")
-                    field(labelName: "Current rate of a share", value: "\(currentRate.toDouble()!.withCommas())")
+                    field(labelName: "Current rate of a share", value: "\(currentRate.withCommas())")
                     field(labelName: "Total Value", value: "\(account.currentbalance.withCommas())")
                 }
                 else if(account.accounttype == "Mutual Fund") {
                     field(labelName: "Mutual Fund Name", value: account.accountname!)
                     field(labelName: "Total Units", value: "\(account.totalshare.withCommas())")
-                    field(labelName: "Current rate of a unit", value: "\(currentRate.toDouble()!.withCommas())")
+                    field(labelName: "Current rate of a unit", value: "\(currentRate.withCommas())")
                     field(labelName: "Total Value", value: "\(totalValue.withCommas())")
                     if(account.paymentreminder) {
                         field(labelName: "Payment Reminder", value: "On")

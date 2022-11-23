@@ -92,7 +92,11 @@ struct NewAccountView: View {
                             }
                         }.onChange(of: mutualFundField) { (data) in
                             accountName = data.name!
-                            currentRateShare = data.rate!
+                            currentRateShare = String(data.rate)
+                            
+                            let totalShares = Double((totalShares as NSString).doubleValue)
+                            let currentRateShare = Double((currentRateShare as NSString).doubleValue)
+                            currentBalance = String(totalShares * currentRateShare)
                         }.pickerStyle(.navigationLink)
                         
                         totalField(labelName: "Total Units")

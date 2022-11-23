@@ -51,7 +51,7 @@ class AccountController {
         for account in accounts {
             if(account.accounttype == "Mutual Fund") {
                 let mutualFund = mutualFundController.getMutualFund(name: account.accountname!)
-                let currentBalance = account.totalshare * mutualFund.rate!.toDouble()!
+                let currentBalance = account.totalshare * mutualFund.rate
                 balance += currentBalance
             }else {
                 balance += account.currentbalance
