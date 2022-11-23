@@ -18,7 +18,7 @@ struct NewAccountView: View {
     @State private var totalShares: String = ""
     @State private var currentRateShare: Double = 0.0
     
-    @State private var currentBalance: String = "0.00"
+    @State private var currentBalance: Double = 0.0
     @State private var paymentReminder = false
     @State private var paymentDate = 1
     @State private var total = ""
@@ -54,7 +54,7 @@ struct NewAccountView: View {
                         accountName=""
                         totalShares=""
                         currentRateShare = 0.0
-                        currentBalance="0.0"
+                        currentBalance = 0.0
                         paymentDate = 1
                         paymentReminder = false
                     }
@@ -95,7 +95,7 @@ struct NewAccountView: View {
                             currentRateShare = data.rate
                             
                             let totalShares = Double((totalShares as NSString).doubleValue)
-                            currentBalance = String(totalShares * currentRateShare)
+                            currentBalance = totalShares * currentRateShare
                         }.pickerStyle(.navigationLink)
                         
                         totalField(labelName: "Total Units")
@@ -147,31 +147,31 @@ struct NewAccountView: View {
     
     private func allFieldsFilled () -> Bool {
         if accountType == "Saving" {
-            if accountName.isEmpty || currentBalance.isEmpty {
+            if accountName.isEmpty || currentBalance.isZero {
                 return false
             } else {
                 return true
             }
         }else if accountType == "Credit Card" {
-            if accountName.isEmpty || currentBalance.isEmpty {
+            if accountName.isEmpty || currentBalance.isZero {
                 return false
             } else {
                 return true
             }
         }else if accountType == "Loan" {
-            if accountName.isEmpty || currentBalance.isEmpty {
+            if accountName.isEmpty || currentBalance.isZero {
                 return false
             } else {
                 return true
             }
         }else if accountType == "Stock" {
-            if accountName.isEmpty || totalShares.isEmpty || currentRateShare.isZero || currentBalance.isEmpty {
+            if accountName.isEmpty || totalShares.isEmpty || currentRateShare.isZero {
                 return false
             } else {
                 return true
             }
         }else if accountType == "Mutual Fund" {
-            if accountName.isEmpty || totalShares.isEmpty || currentRateShare.isZero || currentBalance.isEmpty {
+            if accountName.isEmpty || totalShares.isEmpty || currentRateShare.isZero {
                 return false
             } else {
                 return true
@@ -218,7 +218,7 @@ struct NewAccountView: View {
                     }
                     
                     let totalShares = Double((totalShares as NSString).doubleValue)
-                    currentBalance = String(totalShares * currentRateShare)
+                    currentBalance = totalShares * currentRateShare
                 })
         }
     }
@@ -235,7 +235,7 @@ struct NewAccountView: View {
         return HStack {
             Text("Total Value")
             Spacer()
-            Text(currentBalance)
+            Text("\(currentBalance)")
         }
     }
     
@@ -245,61 +245,18 @@ struct NewAccountView: View {
             Spacer()
             Button(action: {
                 if isPlus {
-                    currentBalance = "-\(currentBalance)"
+                    currentBalance = currentBalance * -1
                     isPlus = false
                 }else {
-                    let value = Double((currentBalance as NSString).doubleValue) * -1
-                    currentBalance = "\(value)"
+                    currentBalance = currentBalance * -1
                     isPlus = true
                 }
             }, label: {
                 Label("", systemImage: isPlus ? "minus" : "plus")
             })
             Spacer()
-            TextField("Current Balance", text: $currentBalance)
+            TextField("Current Balance", value: $currentBalance, formatter: formatter)
                 .keyboardType(.decimalPad)
-                .onChange(of: currentBalance, perform: { _ in
-                    let filtered = currentBalance.filter {"0123456789.".contains($0)}
-                    
-                    if filtered.contains(".") {
-                        let splitted = filtered.split(separator: ".")
-                        if splitted.count >= 2 {
-                            let preDecimal = String(splitted[0])
-                            if String(splitted[1]).count == 5 {
-                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
-                                if isPlus {
-                                    currentBalance = "\(preDecimal).\(afterDecimal)"
-                                }else {
-                                    currentBalance = "-\(preDecimal).\(afterDecimal)"
-                                }
-                            }else {
-                                let afterDecimal = String(splitted[1])
-                                if isPlus {
-                                    currentBalance = "\(preDecimal).\(afterDecimal)"
-                                }else {
-                                    currentBalance = "-\(preDecimal).\(afterDecimal)"
-                                }
-                            }
-                        }else if splitted.count == 1 {
-                            let preDecimal = String(splitted[0])
-                            if isPlus {
-                                currentBalance = "\(preDecimal)."
-                            }else {
-                                currentBalance = "-\(preDecimal)."
-                            }
-                        }else {
-                            if isPlus {
-                                currentBalance = "0."
-                            }else {
-                                currentBalance = "-0."
-                            }
-                        }
-                    } else if filtered.isEmpty && !currentBalance.isEmpty {
-                        currentBalance = ""
-                    } else if !filtered.isEmpty {
-                        currentBalance = filtered
-                    }
-                })
         }
     }
     
@@ -324,6 +281,12 @@ struct NewAccountView: View {
             }
         }
     }
+    
+    let formatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter
+    }()
 }
 
 struct NewAccountView_Previews: PreviewProvider {

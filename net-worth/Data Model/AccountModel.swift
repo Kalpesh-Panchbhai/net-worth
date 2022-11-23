@@ -13,7 +13,7 @@ class AccountModel {
     
     var accountName: String = ""
     
-    var currentBalance: String = ""
+    var currentBalance: Double = 0.0
     
     var totalShares: String = ""
     
