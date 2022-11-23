@@ -21,8 +21,6 @@ struct NewAccountView: View {
     @State private var currentBalance: Double = 0.0
     @State private var paymentReminder = false
     @State private var paymentDate = 1
-    @State private var total = ""
-    @State private var monthlyInstallation = ""
     @State var dates = Array(1...31)
     
     @State var isPlus = true;
