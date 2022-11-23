@@ -17,8 +17,6 @@ class AccountModel {
     
     var totalShares: String = ""
     
-    var currentRateShare: String = ""
-    
     var paymentReminder: Bool = false
     
     var paymentDate: Int = 0

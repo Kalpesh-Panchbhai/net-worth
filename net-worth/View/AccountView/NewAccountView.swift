@@ -16,7 +16,7 @@ struct NewAccountView: View {
     
     //Mutual fund and Stock fields
     @State private var totalShares: String = ""
-    @State private var currentRateShare: String = ""
+    @State private var currentRateShare: Double = 0.0
     
     @State private var currentBalance: String = "0.00"
     @State private var paymentReminder = false
@@ -53,7 +53,7 @@ struct NewAccountView: View {
                     .onChange(of: accountType) { _ in
                         accountName=""
                         totalShares=""
-                        currentRateShare=""
+                        currentRateShare = 0.0
                         currentBalance="0.0"
                         paymentDate = 1
                         paymentReminder = false
@@ -92,10 +92,9 @@ struct NewAccountView: View {
                             }
                         }.onChange(of: mutualFundField) { (data) in
                             accountName = data.name!
-                            currentRateShare = String(data.rate)
+                            currentRateShare = data.rate
                             
                             let totalShares = Double((totalShares as NSString).doubleValue)
-                            let currentRateShare = Double((currentRateShare as NSString).doubleValue)
                             currentBalance = String(totalShares * currentRateShare)
                         }.pickerStyle(.navigationLink)
                         
@@ -166,13 +165,13 @@ struct NewAccountView: View {
                 return true
             }
         }else if accountType == "Stock" {
-            if accountName.isEmpty || totalShares.isEmpty || currentRateShare.isEmpty || currentBalance.isEmpty {
+            if accountName.isEmpty || totalShares.isEmpty || currentRateShare.isZero || currentBalance.isEmpty {
                 return false
             } else {
                 return true
             }
         }else if accountType == "Mutual Fund" {
-            if accountName.isEmpty || totalShares.isEmpty || currentRateShare.isEmpty || currentBalance.isEmpty {
+            if accountName.isEmpty || totalShares.isEmpty || currentRateShare.isZero || currentBalance.isEmpty {
                 return false
             } else {
                 return true
@@ -219,7 +218,6 @@ struct NewAccountView: View {
                     }
                     
                     let totalShares = Double((totalShares as NSString).doubleValue)
-                    let currentRateShare = Double((currentRateShare as NSString).doubleValue)
                     currentBalance = String(totalShares * currentRateShare)
                 })
         }
@@ -229,7 +227,7 @@ struct NewAccountView: View {
         return HStack {
             Text(labelName)
             Spacer()
-            Text(currentRateShare)
+            Text("\(currentRateShare)")
         }
     }
     
