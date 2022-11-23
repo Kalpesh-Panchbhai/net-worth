@@ -8,7 +8,7 @@
         <attribute name="paymentreminder" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="sysid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="totalShares" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="totalshare" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
     </entity>
     <entity name="Authentication" representedClassName=".Authentication" syncable="YES" codeGenerationType="class">
         <attribute name="require" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>

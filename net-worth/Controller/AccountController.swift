@@ -23,7 +23,7 @@ class AccountController {
         newAccount.accounttype = accountModel.accountType
         newAccount.accountname =  accountModel.accountName
         newAccount.currentbalance = Double((accountModel.currentBalance as NSString).doubleValue)
-        newAccount.totalShares = Double((accountModel.totalShares as NSString).doubleValue)
+        newAccount.totalshare = Double((accountModel.totalShares as NSString).doubleValue)
         newAccount.paymentreminder = accountModel.paymentReminder
         newAccount.paymentdate = Int16(accountModel.paymentDate)
         
@@ -51,7 +51,7 @@ class AccountController {
         for account in accounts {
             if(account.accounttype == "Mutual Fund") {
                 let mutualFund = mutualFundController.getMutualFund(name: account.accountname!)
-                let currentBalance = account.totalShares * mutualFund.rate!.toDouble()!
+                let currentBalance = account.totalshare * mutualFund.rate!.toDouble()!
                 balance += currentBalance
             }else {
                 balance += account.currentbalance

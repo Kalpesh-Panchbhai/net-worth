@@ -20,7 +20,7 @@ struct AccountDetailsView: View {
         self.account = account
         if(self.account.accounttype == "Mutual Fund") {
             self.currentRate = mutualFundController.getMutualFund(name: self.account.accountname!).rate!
-            self.totalValue = currentRate.toDouble()! * account.totalShares
+            self.totalValue = currentRate.toDouble()! * account.totalshare
         }else {
             self.currentRate = "0.0"
             self.totalValue = 0.0
@@ -55,13 +55,13 @@ struct AccountDetailsView: View {
                 }
                 else if(account.accounttype == "Stock") {
                     field(labelName: "Stock Name", value: account.accountname!)
-                    field(labelName: "Total Shares", value: "\(account.totalShares.withCommas())")
+                    field(labelName: "Total Shares", value: "\(account.totalshare.withCommas())")
                     field(labelName: "Current rate of a share", value: "\(currentRate.toDouble()!.withCommas())")
                     field(labelName: "Total Value", value: "\(account.currentbalance.withCommas())")
                 }
                 else if(account.accounttype == "Mutual Fund") {
                     field(labelName: "Mutual Fund Name", value: account.accountname!)
-                    field(labelName: "Total Units", value: "\(account.totalShares.withCommas())")
+                    field(labelName: "Total Units", value: "\(account.totalshare.withCommas())")
                     field(labelName: "Current rate of a unit", value: "\(currentRate.toDouble()!.withCommas())")
                     field(labelName: "Total Value", value: "\(totalValue.withCommas())")
                     if(account.paymentreminder) {
