@@ -90,6 +90,7 @@ struct AccountView: View {
                             Button(action: {
                                 self.editMode = .inactive
                                 self.selection = Set<Account>()
+                                isAllSelected =  false
                             }) {
                                 Text("Done")
                             }
@@ -124,7 +125,7 @@ struct AccountView: View {
                             Text("Total Balance \(balance.withCommas())").foregroundColor(.blue).font(.title2)
                         }
                     }else {
-                        if(!isAllSelected) {
+                        if(!isAllSelected && searchResults.count != selection.count) {
                             Button("Select all", action: {
                                 searchResults.forEach { (acc) in
                                     self.selection.insert(acc)
