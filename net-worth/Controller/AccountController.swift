@@ -14,6 +14,8 @@ class AccountController {
     
     private var notificationController = NotificationController()
     
+    private var mutualFundController = MutualFundController()
+    
     public func addAccount(accountModel: AccountModel) {
         let newAccount = Account(context: viewContext)
         newAccount.sysid = UUID()
@@ -47,7 +49,13 @@ class AccountController {
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
         for account in accounts {
-            balance += account.currentbalance
+            if(account.accounttype == "Mutual Fund") {
+                let mutualFund = mutualFundController.getMutualFund(name: account.accountname!)
+                let currentBalance = account.totalShares * mutualFund.rate!.toDouble()!
+                balance += currentBalance
+            }else {
+                balance += account.currentbalance
+            }
         }
         return balance
     }

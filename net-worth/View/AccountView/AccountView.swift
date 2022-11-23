@@ -19,6 +19,8 @@ struct AccountView: View {
     
     private var accountController = AccountController()
     
+    private var mutualFundController = MutualFundController()
+    
     @State var searchAccountName: String = ""
     
     @State var isOpen: Bool = false
@@ -50,7 +52,12 @@ struct AccountView: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             Spacer()
-                            Text("\(account.currentbalance.withCommas())")
+                            if(account.accounttype == "Mutual Fund") {
+                                let mutualFund = mutualFundController.getMutualFund(name: account.accountname!)
+                                Text("\((account.totalShares * mutualFund.rate!.toDouble()!).withCommas())")
+                            } else {
+                                Text("\(account.currentbalance.withCommas())")
+                            }
                         }
                         .padding()
                     })

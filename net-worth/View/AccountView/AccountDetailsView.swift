@@ -13,13 +13,17 @@ struct AccountDetailsView: View {
     
     private var currentRate: String
     
+    private var totalValue: Double
+    
     var account: Account
     init(account: Account) {
         self.account = account
         if(self.account.accounttype == "Mutual Fund") {
             self.currentRate = mutualFundController.getMutualFund(name: self.account.accountname!).rate!
+            self.totalValue = currentRate.toDouble()! * account.totalShares
         }else {
             self.currentRate = "0.0"
+            self.totalValue = 0.0
         }
     }
     var body: some View {
@@ -59,7 +63,7 @@ struct AccountDetailsView: View {
                     field(labelName: "Mutual Fund Name", value: account.accountname!)
                     field(labelName: "Total Units", value: "\(account.totalShares.withCommas())")
                     field(labelName: "Current rate of a unit", value: "\(currentRate.toDouble()!.withCommas())")
-                    field(labelName: "Total Value", value: "\(account.currentbalance.withCommas())")
+                    field(labelName: "Total Value", value: "\(totalValue.withCommas())")
                     if(account.paymentReminder) {
                         field(labelName: "Payment Reminder", value: "On")
                         field(labelName: "Payment Date", value: "\(account.paymentDate)")

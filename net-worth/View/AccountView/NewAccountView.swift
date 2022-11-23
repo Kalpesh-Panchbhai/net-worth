@@ -110,7 +110,9 @@ struct NewAccountView: View {
                         let accountModel = AccountModel()
                         accountModel.accountType = accountType
                         accountModel.accountName = accountName
-                        accountModel.currentBalance = currentBalance
+                        if(accountType != "Mutual Fund") {
+                            accountModel.currentBalance = currentBalance
+                        }
                         accountModel.paymentReminder = paymentReminder
                         
                         //Mutual fund and Stock fields
