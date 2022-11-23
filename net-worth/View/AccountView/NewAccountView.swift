@@ -26,6 +26,7 @@ struct NewAccountView: View {
     @State var dates = Array(1...31)
     
     @State var isPlus = true;
+    @State private var showingAlert = false
     
     var accountTypes =  ["None", "Saving", "Credit Card", "Loan", "Stock", "Mutual Fund"]
     
@@ -122,10 +123,18 @@ struct NewAccountView: View {
                             accountModel.paymentDate = paymentDate
                         }
                         accountController.addAccount(accountModel: accountModel)
-                        dismiss()
+                        showingAlert = true
                     }, label: {
                         Label("Add Account", systemImage: "checkmark")
-                    }).disabled(!allFieldsFilled())
+                    })
+                    .disabled(!allFieldsFilled())
+                    .alert("New " + accountType + " account has been added!", isPresented: $showingAlert, actions: {
+                        Button("OK", role: .cancel) {
+                            dismiss()
+                        }
+                    }, message: {
+                        Text("Account Name : " + accountName)
+                    })
                 }
             }
             .navigationTitle("New Account")
