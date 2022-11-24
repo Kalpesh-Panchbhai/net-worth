@@ -11,60 +11,14 @@ import SwiftUI
 
 class SettingsController {
     
-    let viewContext = PersistenceController.shared.container.viewContext
-    
-    private var authentication: Authentication
-    
     private var mutualFundController = MutualFundController()
     
-    init() {
-        authentication = Authentication(context: viewContext)
+    public func isAuthenticationRequired() -> Bool {
+        return UserDefaults.standard.bool(forKey: "authentication")
     }
     
-    public func changeAuthentication(isRequired: Bool) {
-        authentication.require = isRequired
-        
-        do {
-            try viewContext.save()
-        } catch {
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
-    }
-    
-    private func isAuthenticationAvailable() -> Bool {
-        let request = Authentication.fetchRequest()
-        var authentication: [Authentication] = []
-        do{
-            authentication = try viewContext.fetch(request)
-        }catch {
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
-        return authentication.first!.require
-    }
-    
-    public func isAuthenticationRequire() -> Bool {
-        let request = Authentication.fetchRequest()
-        var authentication: [Authentication] = []
-        do{
-            authentication = try viewContext.fetch(request)
-        }catch {
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
-        return authentication.isEmpty ? defaultAuthentication() : isAuthenticationAvailable()
-    }
-    
-    private func defaultAuthentication() -> Bool {
-        authentication.require = false
-        do {
-            try viewContext.save()
-        } catch {
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
-        return false
+    public func setAuthentication(newValue: Bool) {
+        UserDefaults.standard.set(newValue, forKey: "authentication")
     }
     
     public func updateMutualFundData() {

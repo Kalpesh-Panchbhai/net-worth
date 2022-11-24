@@ -17,8 +17,7 @@ struct SettingsView: View {
     private var notificationController = NotificationController()
     
     init() {
-        isAuthenticationRequired = settingsController.isAuthenticationRequire()
-        Thread.sleep(forTimeInterval: 1)
+        isAuthenticationRequired = settingsController.isAuthenticationRequired()
         isNotificationEnabled = notificationController.getGranted()
     }
     
@@ -27,7 +26,7 @@ struct SettingsView: View {
             List{
                 Toggle("Require Face ID", isOn: $isAuthenticationRequired)
                     .onChange(of: isAuthenticationRequired) { _isOn in
-                        settingsController.changeAuthentication(isRequired: _isOn)
+                        settingsController.setAuthentication(newValue: _isOn)
                     }
                 Toggle("Enable Notification", isOn: $isNotificationEnabled)
                 
