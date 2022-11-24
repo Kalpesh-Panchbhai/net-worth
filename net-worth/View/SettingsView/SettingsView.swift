@@ -10,7 +10,6 @@ import SwiftUI
 struct SettingsView: View {
     
     @State private var isAuthenticationRequired: Bool
-    @State private var isNotificationEnabled: Bool
     @State private var buttonDisabled = false
     
     private var settingsController = SettingsController()
@@ -18,17 +17,20 @@ struct SettingsView: View {
     
     init() {
         isAuthenticationRequired = settingsController.isAuthenticationRequired()
-        isNotificationEnabled = notificationController.getGranted()
     }
     
     var body: some View {
         NavigationView(){
             List{
                 Toggle("Require Face ID", isOn: $isAuthenticationRequired)
-                    .onChange(of: isAuthenticationRequired) { _isOn in
-                        settingsController.setAuthentication(newValue: _isOn)
+                    .onChange(of: isAuthenticationRequired) { newValue in
+                        settingsController.setAuthentication(newValue: newValue)
                     }
-                Toggle("Enable Notification", isOn: $isNotificationEnabled)
+                NavigationLink(destination: {
+                    NotificationsView()
+                }, label: {
+                    Label("Notifications", systemImage: "play.square")
+                })
                 
                 Button("Update Mutual Fund Data", action: {
                     buttonDisabled = true
@@ -43,6 +45,7 @@ struct SettingsView: View {
                 Text("Version " + appVersion!)
             }
             .navigationTitle("Settings")
+            .listStyle(.inset)
         }
     }
 }

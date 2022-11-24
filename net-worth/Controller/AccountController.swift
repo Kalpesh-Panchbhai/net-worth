@@ -75,6 +75,21 @@ class AccountController {
         return account
     }
     
+    public func getAccount(accountType: String) -> [Account] {
+        let request = Account.fetchRequest()
+        request.predicate = NSPredicate(
+            format: "accounttype = %@", accountType
+        )
+        var accountList: [Account]
+        do{
+            accountList = try viewContext.fetch(request)
+        }catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+        return accountList
+    }
+    
     public func deleteAccount(account: Account) {
         viewContext.delete(account)
         do {
