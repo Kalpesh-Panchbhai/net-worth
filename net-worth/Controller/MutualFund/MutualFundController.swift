@@ -12,6 +12,10 @@ class MutualFundController {
     
     let viewContext = PersistenceController.shared.container.viewContext
     
+    private var dataFound = false
+    
+    private var taskCompleted = false
+    
     public func schedule() {
         let date = Date.now
         let timer = Timer(fireAt: date, interval: 30, target: self, selector: #selector(fetch), userInfo: nil, repeats: true)
@@ -19,15 +23,26 @@ class MutualFundController {
     }
     
     @objc
-    private func fetch() {
+    public func fetch(lastDay: Bool) -> Bool{
         
-        let lastDay = Calendar.current.date(byAdding: .day, value: -1, to: Date())
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd-MMM-yyyy"
-        var date: String? = dateFormatter.string(from: lastDay!)
-        date = "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?frmdt=" + date!
-        guard let url = URL(string: date!) else {
-            return
+        var date: String
+        
+        if(lastDay){
+            let lastDay = Calendar.current.date(byAdding: .day, value: -1, to: Date())
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd-MMM-yyyy"
+            dateFormatter.timeZone = TimeZone.current
+            date = dateFormatter.string(from: lastDay!)
+        }else {
+            let lastDay = Date.now
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd-MMM-yyyy"
+            dateFormatter.timeZone = TimeZone.current
+            date = dateFormatter.string(from: lastDay)
+        }
+        date = "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?frmdt=" + date
+        guard let url = URL(string: date) else {
+            return false
         }
         
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
@@ -41,12 +56,22 @@ class MutualFundController {
             }
             
             let result = String(data: data, encoding: .utf8) ?? ""
+            if(!result.contains("<!DOCTYPE")) {
+                self.extractResponse(response: result)
+                self.dataFound = true
+            }
             
-            self.extractResponse(response: result)
+            self.taskCompleted = true
             
         }
         
         task.resume()
+        
+        while(!taskCompleted) {
+            
+        }
+        
+        return dataFound
     }
     
     private func extractResponse(response: String) {

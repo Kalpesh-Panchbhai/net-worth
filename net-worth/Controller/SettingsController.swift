@@ -15,6 +15,8 @@ class SettingsController {
     
     private var authentication: Authentication
     
+    private var mutualFundController = MutualFundController()
+    
     init() {
         authentication = Authentication(context: viewContext)
     }
@@ -63,6 +65,12 @@ class SettingsController {
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
         return false
+    }
+    
+    public func updateMutualFundData() {
+        if(!mutualFundController.fetch(lastDay: false)) {
+            mutualFundController.fetch(lastDay: true)
+        }
     }
     
 }

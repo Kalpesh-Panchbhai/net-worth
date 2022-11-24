@@ -18,7 +18,7 @@ struct AuthenticationView: View {
     
     private var settingsController = SettingsController()
     
-    private var mutualFundController = MutualFundController()
+//    private var mutualFundController = MutualFundController()
     
     var body: some View {
         VStack {
@@ -58,18 +58,18 @@ struct AuthenticationView: View {
                 }
             }
         }
-        detectFirstLaunch()
+//        detectFirstLaunch()
     }
     
-    private func detectFirstLaunch() {
-        hasAlreadyLaunched = UserDefaults.standard.bool(forKey: "hasAlreadyLaunched")
-        if (hasAlreadyLaunched){
-            hasAlreadyLaunched = true
-        }else{
-            UserDefaults.standard.set(true, forKey: "hasAlreadyLaunched")
-            mutualFundController.schedule()
-        }
-    }
+//    private func detectFirstLaunch() {
+//        hasAlreadyLaunched = UserDefaults.standard.bool(forKey: "hasAlreadyLaunched")
+//        if (hasAlreadyLaunched){
+//            hasAlreadyLaunched = true
+//        }else{
+//            UserDefaults.standard.set(true, forKey: "hasAlreadyLaunched")
+//            mutualFundController.schedule()
+//        }
+//    }
     
     private func biometricType() -> BiometricType {
         let authContext = LAContext()
