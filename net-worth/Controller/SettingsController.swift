@@ -23,7 +23,7 @@ class SettingsController {
     
     public func updateMutualFundData() {
         if(!mutualFundController.fetch(lastDay: false)) {
-            mutualFundController.fetch(lastDay: true)
+            let _ = mutualFundController.fetch(lastDay: true)
         }
     }
     
