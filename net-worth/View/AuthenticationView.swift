@@ -14,32 +14,20 @@ struct AuthenticationView: View {
     
     @State private var hasAlreadyLaunched =  false
     
-    @State private var authenticateTypeMessage = ""
+    @State private var authenticateTypeMessage = "Please authenticate"
     
     private var settingsController = SettingsController()
     
     var body: some View {
-        VStack {
-            let authenticType = biometricType()
-            if settingsController.isAuthenticationRequired() {
-                if authenticType == .touch {
-                    Button("Unlock with Touch ID") {
-                        authenticateTypeMessage = "Unlock with Touch ID"
-                        authenticate()
-                    }.fullScreenCover(isPresented: $unlocked, content: {
-                        MainScreenView()
-                    })
-                }else if authenticType == .face{
-                    Button("Unlock with Face ID") {
-                        authenticateTypeMessage = "Unlock with Face ID"
-                        authenticate()
-                    }.fullScreenCover(isPresented: $unlocked, content: {
-                        MainScreenView()
-                    })
+        if settingsController.isAuthenticationRequired() {
+            VStack {
+                if unlocked {
+                    MainScreenView()
                 }
-            }else {
-                MainScreenView()
             }
+            .onAppear(perform: authenticate)
+        }else {
+            MainScreenView()
         }
     }
     
