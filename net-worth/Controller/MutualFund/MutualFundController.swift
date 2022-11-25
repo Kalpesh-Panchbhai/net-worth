@@ -25,11 +25,10 @@ class MutualFundController {
     @objc
     public func fetch() {
         
-        let lastDay = Calendar.current.date(byAdding: .day, value: -1, to: Date())
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd-MMM-yyyy"
         dateFormatter.timeZone = TimeZone.current
-        var date: String = dateFormatter.string(from: lastDay!)
+        var date: String = dateFormatter.string(from: Date())
         date = "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?frmdt=" + date
         guard let url = URL(string: date) else {
             return
@@ -54,6 +53,7 @@ class MutualFundController {
     }
     
     private func extractResponse(response: String) {
+        let updateStartdateTimeStamp = Date()
         var result : String = response;
         result = result.replacingOccurrences(of: "\n", with: "")
         result = result.replacingOccurrences(of: "\r", with: "")
@@ -63,7 +63,6 @@ class MutualFundController {
         var nameFound = false
         var name: String = ""
         var rate: Double = 0.0
-        deleteWholeData()
         while i < totalCount {
             if let dummyRate = bodyArr[i].double {
                 rate = dummyRate
@@ -79,6 +78,7 @@ class MutualFundController {
             }
             i+=1
         }
+        deleteWholeData(updateStartdateTimeStamp: updateStartdateTimeStamp)
     }
     
     private func saveUserData(name: String, rate: Double) {
@@ -91,8 +91,11 @@ class MutualFundController {
         }
     }
     
-    private func deleteWholeData() {
+    private func deleteWholeData(updateStartdateTimeStamp: Date) {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Mutualfund")
+        fetchRequest.predicate = NSPredicate(
+            format: "timestamp <= %@", updateStartdateTimeStamp as NSDate
+        )
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         
         do {

@@ -73,6 +73,9 @@ struct AccountView: View {
                     }
                 }
             }
+            .refreshable {
+                mutualFundController.fetch()
+            }
             .environment(\.editMode, self.$editMode)
             .listStyle(.inset)
             .toolbar {
