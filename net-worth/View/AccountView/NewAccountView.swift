@@ -144,13 +144,13 @@ struct NewAccountView: View {
     
     private func allFieldsFilled () -> Bool {
         if accountType == "Saving" {
-            if accountName.isEmpty || currentBalance.isZero {
+            if accountName.isEmpty {
                 return false
             } else {
                 return true
             }
         }else if accountType == "Credit Card" {
-            if accountName.isEmpty || currentBalance.isZero {
+            if accountName.isEmpty {
                 return false
             } else {
                 return true
