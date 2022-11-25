@@ -10,7 +10,6 @@ import SwiftUI
 struct SettingsView: View {
     
     @State private var isAuthenticationRequired: Bool
-    @State private var buttonDisabled = false
     
     private var settingsController = SettingsController()
     private var notificationController = NotificationController()
@@ -31,15 +30,6 @@ struct SettingsView: View {
                 }, label: {
                     Label("Notifications", systemImage: "play.square")
                 })
-                
-                Button("Update Mutual Fund Data", action: {
-                    buttonDisabled = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
-                        buttonDisabled = false
-                    }
-                    settingsController.updateMutualFundData()
-                })
-                .disabled(buttonDisabled)
                 
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
                 Text("Version " + appVersion!)

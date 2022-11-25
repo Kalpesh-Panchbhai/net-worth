@@ -23,26 +23,16 @@ class MutualFundController {
     }
     
     @objc
-    public func fetch(lastDay: Bool) -> Bool{
+    public func fetch() {
         
-        var date: String
-        
-        if(lastDay){
-            let lastDay = Calendar.current.date(byAdding: .day, value: -1, to: Date())
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd-MMM-yyyy"
-            dateFormatter.timeZone = TimeZone.current
-            date = dateFormatter.string(from: lastDay!)
-        }else {
-            let lastDay = Date.now
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd-MMM-yyyy"
-            dateFormatter.timeZone = TimeZone.current
-            date = dateFormatter.string(from: lastDay)
-        }
+        let lastDay = Calendar.current.date(byAdding: .day, value: -1, to: Date())
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MMM-yyyy"
+        dateFormatter.timeZone = TimeZone.current
+        var date: String = dateFormatter.string(from: lastDay!)
         date = "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?frmdt=" + date
         guard let url = URL(string: date) else {
-            return false
+            return
         }
         
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
@@ -58,20 +48,9 @@ class MutualFundController {
             let result = String(data: data, encoding: .utf8) ?? ""
             if(!result.contains("<!DOCTYPE")) {
                 self.extractResponse(response: result)
-                self.dataFound = true
             }
-            
-            self.taskCompleted = true
-            
         }
-        
         task.resume()
-        
-        while(!taskCompleted) {
-            
-        }
-        
-        return dataFound
     }
     
     private func extractResponse(response: String) {
@@ -128,14 +107,14 @@ class MutualFundController {
         request.predicate = NSPredicate(
             format: "name = %@", name
         )
-        var mutualFund: Mutualfund
+        var mutualFund: [Mutualfund]
         do{
-            mutualFund = try viewContext.fetch(request).first!
+            mutualFund = try viewContext.fetch(request)
         }catch {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
-        return mutualFund
+        return mutualFund.isEmpty ? Mutualfund(context: viewContext) : mutualFund[0]
     }
     
 }

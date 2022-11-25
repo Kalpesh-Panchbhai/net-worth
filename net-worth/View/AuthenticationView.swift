@@ -19,16 +19,19 @@ struct AuthenticationView: View {
     private var settingsController = SettingsController()
     
     var body: some View {
-        if settingsController.isAuthenticationRequired() {
-            VStack {
-                if unlocked {
-                    MainScreenView()
+        VStack {
+            if settingsController.isAuthenticationRequired() {
+                VStack {
+                    if unlocked {
+                        MainScreenView()
+                    }
                 }
+                .onAppear(perform: authenticate)
+            }else {
+                MainScreenView()
             }
-            .onAppear(perform: authenticate)
-        }else {
-            MainScreenView()
         }
+        .onAppear(perform: loadData)
     }
     
     
@@ -46,22 +49,10 @@ struct AuthenticationView: View {
         }
     }
     
-    private func biometricType() -> BiometricType {
-        let authContext = LAContext()
-        let _ = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
-        if authContext.biometryType == .touchID {
-            return .touch
-        }else if authContext.biometryType == .faceID {
-            return .face
-        }else {
-            return .none
-        }
-    }
-    
-    enum BiometricType {
-        case touch
-        case face
-        case none
+    private func loadData() {
+        print("Loading Mutual Fund data")
+        settingsController.updateMutualFundData()
+        print("Loaded Mutual Fund data")
     }
 }
 
