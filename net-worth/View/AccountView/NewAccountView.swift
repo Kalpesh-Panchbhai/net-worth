@@ -198,7 +198,7 @@ struct NewAccountView: View {
         return HStack {
             Text(labelName)
             Spacer()
-            Text("\(currentRateShare)")
+            Text("\(currentRateShare.withCommas())")
         }
     }
     
@@ -206,7 +206,7 @@ struct NewAccountView: View {
         return HStack {
             Text("Total Value")
             Spacer()
-            Text("\(currentBalance)")
+            Text("\(currentBalance.withCommas())")
         }
     }
     
@@ -254,9 +254,11 @@ struct NewAccountView: View {
     }
     
     let formatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        return formatter
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.roundingMode = .halfUp
+        numberFormatter.maximumFractionDigits =  4
+        return numberFormatter
     }()
 }
 

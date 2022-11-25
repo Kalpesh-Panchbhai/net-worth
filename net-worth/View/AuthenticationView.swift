@@ -31,7 +31,7 @@ struct AuthenticationView: View {
                 MainScreenView()
             }
         }
-        .onAppear(perform: loadData)
+        .onAppear(perform: loadDataMutualFund)
     }
     
     
@@ -49,9 +49,23 @@ struct AuthenticationView: View {
         }
     }
     
-    private func loadData() {
+    private func loadDataMutualFund() {
         print("Loading Mutual Fund data")
-        settingsController.updateMutualFundData()
+        let initialDataLoadedMutualFund = UserDefaults.standard.bool(forKey: "InitialDataLoadedMutualFund")
+        if(!initialDataLoadedMutualFund) {
+            print("Loading Initial Mutual Fund data")
+            settingsController.updateMutualFundData()
+            print("Loaded Initial Mutual Fund data")
+            UserDefaults.standard.set(true, forKey: "InitialDataLoadedMutualFund")
+        } else {
+            let day = Calendar.current.component(.day, from: Date())
+            if(day != UserDefaults.standard.integer(forKey: "DataUpdatedMutualFundLastDay")) {
+                print("Updating Mutual Fund data")
+                settingsController.updateMutualFundData()
+                UserDefaults.standard.set(day, forKey: "DataUpdatedMutualFundLastDay")
+                print("Updated Mutual Fund data")
+            }
+        }
         print("Loaded Mutual Fund data")
     }
 }
