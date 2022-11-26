@@ -26,8 +26,6 @@ struct NewAccountView: View {
     @State var isPlus = true;
     @State private var showingAlert = false
     
-    var accountTypes =  ["None", "Saving", "Credit Card", "Loan", "Stock", "Mutual Fund"]
-    
     private var accountController = AccountController()
     
     @Environment(\.dismiss) var dismiss
@@ -44,8 +42,8 @@ struct NewAccountView: View {
             Form {
                 Section("Account detail") {
                     Picker(selection: $accountType, label: Text("Account Type")) {
-                        ForEach(accountTypes, id: \.self) {
-                            Text($0).tag($0)
+                        ForEach(ConstantUtils.AccountType.allCases, id: \.rawValue) { accountType in
+                            Text(accountType.rawValue).tag(accountType.rawValue)
                         }
                     }
                     .onChange(of: accountType) { _ in
