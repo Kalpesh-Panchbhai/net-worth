@@ -105,7 +105,7 @@ struct AccountView: View {
                         Button(action: {
                             self.isOpen.toggle()
                         }, label: {
-                            Label("Add Item", systemImage: "plus")
+                            Label("Add Account", systemImage: "plus")
                         }).sheet(isPresented: $isOpen, content: {
                             NewAccountView()
                         })
@@ -117,7 +117,7 @@ struct AccountView: View {
                             }
                             editMode = .inactive
                         }, label: {
-                            Label("Add Item", systemImage: "trash")
+                            Label("delete Account", systemImage: "trash")
                         }).disabled(selection.count == 0)
                     }
                 }
