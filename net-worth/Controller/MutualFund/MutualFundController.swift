@@ -16,12 +16,6 @@ class MutualFundController {
     
     private var taskCompleted = false
     
-    public func schedule() {
-        let date = Date.now
-        let timer = Timer(fireAt: date, interval: 30, target: self, selector: #selector(fetch), userInfo: nil, repeats: true)
-        RunLoop.main.add(timer, forMode: .common)
-    }
-    
     @objc
     public func fetch() {
         
@@ -53,7 +47,7 @@ class MutualFundController {
     }
     
     private func extractResponse(response: String) {
-        let updateStartdateTimeStamp = Date()
+        let totalMutualFund = getMutualFundCount()
         var result : String = response;
         result = result.replacingOccurrences(of: "\n", with: "")
         result = result.replacingOccurrences(of: "\r", with: "")
@@ -78,7 +72,7 @@ class MutualFundController {
             }
             i+=1
         }
-        deleteWholeData(updateStartdateTimeStamp: updateStartdateTimeStamp)
+        deleteWholeData(totalCount: totalMutualFund)
     }
     
     private func saveUserData(name: String, rate: Double) {
@@ -91,11 +85,9 @@ class MutualFundController {
         }
     }
     
-    private func deleteWholeData(updateStartdateTimeStamp: Date) {
+    private func deleteWholeData(totalCount: Int) {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Mutualfund")
-        fetchRequest.predicate = NSPredicate(
-            format: "timestamp <= %@", updateStartdateTimeStamp as NSDate
-        )
+        fetchRequest.fetchLimit = totalCount
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         
         do {
@@ -118,6 +110,18 @@ class MutualFundController {
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
         return mutualFund.isEmpty ? Mutualfund(context: viewContext) : mutualFund[0]
+    }
+    
+    public func getMutualFundCount() -> Int {
+        let request = Mutualfund.fetchRequest()
+        var mutualFund: [Mutualfund]
+        do{
+            mutualFund = try viewContext.fetch(request)
+        }catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+        return mutualFund.isEmpty ? 0 : mutualFund.count
     }
     
 }
