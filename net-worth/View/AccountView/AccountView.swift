@@ -103,7 +103,7 @@ struct AccountView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if(editMode == .inactive) {
                         Button(action: {
-                            self.isOpen = true
+                            self.isOpen.toggle()
                         }, label: {
                             Label("Add Item", systemImage: "plus")
                         }).sheet(isPresented: $isOpen, content: {
