@@ -16,6 +16,53 @@ class AccountController {
     
     private var mutualFundController = MutualFundController()
     
+    public func addTransaction(accountModel: AccountModel) {
+        let newTransaction = AccountTransaction(context: viewContext)
+        newTransaction.sysid = UUID()
+        newTransaction.timestamp = Date()
+        newTransaction.accountsysid = accountModel.sysId
+        newTransaction.balancechange = accountModel.currentBalance
+        
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+    }
+    
+    public func getAccountTransaction(sysId: UUID) -> [AccountTransaction] {
+        let request = AccountTransaction.fetchRequest()
+        let sortDescriptors = NSSortDescriptor(key: "timestamp", ascending: false)
+        request.sortDescriptors = [sortDescriptors]
+        request.predicate = NSPredicate(
+            format: "accountsysid= %@", sysId.uuidString
+        )
+        var accountTransactionList: [AccountTransaction]
+        do{
+            accountTransactionList = try viewContext.fetch(request)
+        }catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+        return accountTransactionList
+    }
+    
+    public func deleteAccountTransaction(accountSysId: UUID) {
+        let transactionList = getAccountTransaction(sysId: accountSysId)
+        
+        for transaction in transactionList {
+            viewContext.delete(transaction)
+            
+            do {
+                try viewContext.save()
+            }catch {
+                viewContext.rollback()
+                print("Failed to delete account transaction \(error)")
+            }
+        }
+    }
+    
     public func addAccount(accountModel: AccountModel) {
         let newAccount = Account(context: viewContext)
         newAccount.sysid = UUID()
@@ -29,6 +76,8 @@ class AccountController {
         
         do {
             try viewContext.save()
+            accountModel.sysId = newAccount.sysid!
+            addTransaction(accountModel: accountModel)
             if(accountModel.paymentReminder) {
                 notificationController.setNotification(id: newAccount.sysid!, day: accountModel.paymentDate, accountType: accountModel.accountType, accountName: accountModel.accountName)
             }
@@ -91,6 +140,8 @@ class AccountController {
     }
     
     public func deleteAccount(account: Account) {
+        deleteAccountTransaction(accountSysId: account.sysid!)
+        
         viewContext.delete(account)
         do {
             notificationController.removeNotification(id: account.sysid!)
@@ -101,10 +152,12 @@ class AccountController {
         }
     }
     
-    private let accountFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .medium
-        return formatter
-    }()
+    public func updateAccount() {
+        do {
+            try viewContext.save()
+        } catch {
+            viewContext.rollback()
+            print("Failed to update account \(error)")
+        }
+    }
 }

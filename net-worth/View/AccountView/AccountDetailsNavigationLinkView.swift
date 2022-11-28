@@ -18,6 +18,8 @@ struct AccountDetailsNavigationLinkView: View {
     
     @State private var selectedTabIndex = 0
     
+    @State var isTransactionOpen: Bool = false
+    
     init(uuid: UUID) {
         self.uuid = uuid
         self.accountController = AccountController()
@@ -37,18 +39,21 @@ struct AccountDetailsNavigationLinkView: View {
             if(selectedTabIndex == 0) {
                 AccountDetailsView(account: self.account)
             }else {
-                AccountDetailsView(account: self.account)
+                AccountHistoryView(account: self.account)
             }
             Spacer()
-        }.padding(.top)
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Add Transaction", action: {
+                    self.isTransactionOpen.toggle()
+                }).sheet(isPresented: $isTransactionOpen, content: {
+                    AddTransactionAccountView(account: self.account)
+                })
+            }
+        }
+        .padding(.top)
     }
-    
-    private let accountFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .medium
-        return formatter
-    }()
 }
 
 struct AccountDetailsNavigationLinkView_Previews: PreviewProvider {

@@ -34,6 +34,9 @@
 		7DC97A2C29223ADB003F69D4 /* NewIncomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A2B29223ADB003F69D4 /* NewIncomeView.swift */; };
 		7DCFE4C8292CB92900C940F0 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCFE4C7292CB92900C940F0 /* StringExtension.swift */; };
 		7DCFE4CA292D036500C940F0 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCFE4C9292D036500C940F0 /* SearchBar.swift */; };
+		7DE42FC02934F69200D4DA0A /* AddTransactionAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE42FBF2934F69200D4DA0A /* AddTransactionAccountView.swift */; };
+		7DE42FC22934FC1800D4DA0A /* AccountHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE42FC12934FC1800D4DA0A /* AccountHistoryView.swift */; };
+		7DE42FC4293524E500D4DA0A /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE42FC3293524E500D4DA0A /* DateExtension.swift */; };
 		7DE766F32928B62900EFBD2D /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE766F22928B62900EFBD2D /* NotificationController.swift */; };
 		7DF1E9C8292A43C8003D030E /* AccountModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF1E9C7292A43C8003D030E /* AccountModel.swift */; };
 		7DFA8CE9292BA5C800D5DA0F /* MutualFundController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DFA8CE8292BA5C800D5DA0F /* MutualFundController.swift */; };
@@ -87,6 +90,9 @@
 		7DC97A2B29223ADB003F69D4 /* NewIncomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewIncomeView.swift; sourceTree = "<group>"; };
 		7DCFE4C7292CB92900C940F0 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		7DCFE4C9292D036500C940F0 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		7DE42FBF2934F69200D4DA0A /* AddTransactionAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionAccountView.swift; sourceTree = "<group>"; };
+		7DE42FC12934FC1800D4DA0A /* AccountHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountHistoryView.swift; sourceTree = "<group>"; };
+		7DE42FC3293524E500D4DA0A /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		7DE766F22928B62900EFBD2D /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		7DF1E9C7292A43C8003D030E /* AccountModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountModel.swift; sourceTree = "<group>"; };
 		7DFA8CE8292BA5C800D5DA0F /* MutualFundController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MutualFundController.swift; sourceTree = "<group>"; };
@@ -123,6 +129,7 @@
 			children = (
 				7D237BEC292B672800DEF91D /* DoubleExtension.swift */,
 				7DCFE4C7292CB92900C940F0 /* StringExtension.swift */,
+				7DE42FC3293524E500D4DA0A /* DateExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -257,6 +264,8 @@
 				7D79FA52291B7430004A2ECF /* AccountView.swift */,
 				7D79FA8B291BA152004A2ECF /* NewAccountView.swift */,
 				7D237BEE292B6F1400DEF91D /* AccountDetailsView.swift */,
+				7DE42FBF2934F69200D4DA0A /* AddTransactionAccountView.swift */,
+				7DE42FC12934FC1800D4DA0A /* AccountHistoryView.swift */,
 			);
 			path = AccountView;
 			sourceTree = "<group>";
@@ -419,11 +428,14 @@
 				7D79FA5D291B7431004A2ECF /* net_worth.xcdatamodeld in Sources */,
 				7D3636FB292F9CCB0013B4E5 /* NotificationsView.swift in Sources */,
 				7DC97A28292236FB003F69D4 /* IncomeView.swift in Sources */,
+				7DE42FC4293524E500D4DA0A /* DateExtension.swift in Sources */,
+				7DE42FC22934FC1800D4DA0A /* AccountHistoryView.swift in Sources */,
 				7DC97A2629221990003F69D4 /* SettingsController.swift in Sources */,
 				7D79FA8A291B9CE6004A2ECF /* MainScreenView.swift in Sources */,
 				7DA80405291E177700570DCB /* AccountDetailsNavigationLinkView.swift in Sources */,
 				7D79FA5A291B7431004A2ECF /* Persistence.swift in Sources */,
 				7D79FA87291B803A004A2ECF /* AccountController.swift in Sources */,
+				7DE42FC02934F69200D4DA0A /* AddTransactionAccountView.swift in Sources */,
 				7DC97A2A29223989003F69D4 /* IncomeController.swift in Sources */,
 				7DC97A24292216BB003F69D4 /* SettingsView.swift in Sources */,
 				7D237BEF292B6F1400DEF91D /* AccountDetailsView.swift in Sources */,

@@ -10,8 +10,11 @@
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="totalshare" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
     </entity>
-    <entity name="Authentication" representedClassName=".Authentication" syncable="YES" codeGenerationType="class">
-        <attribute name="require" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+    <entity name="AccountTransaction" representedClassName=".AccountTransaction" syncable="YES" codeGenerationType="class">
+        <attribute name="accountsysid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="balancechange" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="sysid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
     <entity name="Income" representedClassName=".Income" syncable="YES" codeGenerationType="class">
         <attribute name="amount" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>

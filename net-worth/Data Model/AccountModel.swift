@@ -9,6 +9,8 @@ import Foundation
 
 class AccountModel {
     
+    var sysId: UUID = UUID()
+    
     var accountType: String = ""
     
     var accountName: String = ""

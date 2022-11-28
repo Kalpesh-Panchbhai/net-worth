@@ -184,7 +184,7 @@ struct NewAccountView: View {
     
     private func totalField(labelName: String) -> HStack<(some View)> {
         return HStack {
-            TextField(labelName, value: $totalShares, formatter: formatter)
+            TextField(labelName, value: $totalShares, formatter: Double().formatter())
                 .keyboardType(.decimalPad)
                 .onChange(of: totalShares, perform: { _ in
                     currentBalance = totalShares * currentRateShare
@@ -224,7 +224,7 @@ struct NewAccountView: View {
                 Label("", systemImage: isPlus ? "minus" : "plus")
             })
             Spacer()
-            TextField("Current Balance", value: $currentBalance, formatter: formatter)
+            TextField("Current Balance", value: $currentBalance, formatter: Double().formatter())
                 .keyboardType(.decimalPad)
         }
     }
@@ -250,14 +250,6 @@ struct NewAccountView: View {
             }
         }
     }
-    
-    let formatter: NumberFormatter = {
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .decimal
-        numberFormatter.roundingMode = .halfUp
-        numberFormatter.maximumFractionDigits =  4
-        return numberFormatter
-    }()
 }
 
 struct NewAccountView_Previews: PreviewProvider {
