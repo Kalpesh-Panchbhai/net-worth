@@ -68,7 +68,9 @@ class MutualFundController {
             }
             i+=1
         }
-        deleteWholeData(totalCount: totalMutualFund)
+        if(totalMutualFund != 0) {
+            deleteWholeData(totalCount: totalMutualFund)
+        }
     }
     
     private func saveUserData(name: String, rate: Double) {

@@ -21,7 +21,11 @@ class AccountController {
         newTransaction.sysid = UUID()
         newTransaction.timestamp = Date()
         newTransaction.accountsysid = accountModel.sysId
-        newTransaction.balancechange = accountModel.currentBalance
+        if(accountModel.accountType == "Stock" || accountModel.accountType == "Mutual Fund") {
+            newTransaction.balancechange = accountModel.totalShares
+        } else {
+            newTransaction.balancechange = accountModel.currentBalance
+        }
         
         do {
             try viewContext.save()

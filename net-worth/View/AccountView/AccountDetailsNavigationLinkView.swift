@@ -44,12 +44,30 @@ struct AccountDetailsNavigationLinkView: View {
             Spacer()
         }
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Add Transaction", action: {
-                    self.isTransactionOpen.toggle()
-                }).sheet(isPresented: $isTransactionOpen, content: {
-                    AddTransactionAccountView(account: self.account)
-                })
+            if(account.accounttype == "Stock") {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Add Shares", action: {
+                        self.isTransactionOpen.toggle()
+                    }).sheet(isPresented: $isTransactionOpen, content: {
+                        AddTransactionAccountView(account: self.account)
+                    })
+                }
+            } else if(account.accounttype == "Mutual Fund") {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Add Units", action: {
+                        self.isTransactionOpen.toggle()
+                    }).sheet(isPresented: $isTransactionOpen, content: {
+                        AddTransactionAccountView(account: self.account)
+                    })
+                }
+            } else {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Add Transaction", action: {
+                        self.isTransactionOpen.toggle()
+                    }).sheet(isPresented: $isTransactionOpen, content: {
+                        AddTransactionAccountView(account: self.account)
+                    })
+                }
             }
         }
         .padding(.top)

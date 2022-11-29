@@ -28,7 +28,15 @@ struct AddTransactionAccountView: View {
     var body: some View {
         NavigationView {
             Form {
-                currentBalanceField()
+                if(account.accounttype == "Saving") {
+                    currentBalanceField()
+                } else if(account.accounttype == "Credit Card") {
+                    currentBalanceField()
+                } else if(account.accounttype == "Loan") {
+                    currentBalanceField()
+                } else if(account.accounttype == "Mutual Fund") {
+                    currentUnitField()
+                }
             }
             .toolbar {
                 ToolbarItem {
@@ -40,12 +48,16 @@ struct AddTransactionAccountView: View {
                         
                         accountController.addTransaction(accountModel: accountModel)
                         
-                        account.currentbalance = account.currentbalance + accountModel.currentBalance
+                        if(account.accounttype == "Stock" || account.accounttype == "Mutual Fund") {
+                            account.totalshare = accountModel.currentBalance
+                        } else {
+                            account.currentbalance = accountModel.currentBalance
+                        }
                         accountController.updateAccount()
                     }, label: {
                         Label("Add Account", systemImage: "checkmark")
                     })
-                    .disabled(!allFieldsFilled())
+//                    .disabled(!allFieldsFilled())
                     .alert("Transaction has been added!", isPresented: $showingAlert, actions: {
                         Button("OK", role: .cancel) {
                             dismiss()
@@ -55,7 +67,7 @@ struct AddTransactionAccountView: View {
                     })
                 }
             }
-            .navigationTitle("New Transaction")
+            .navigationTitle("Update Balance")
             .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -89,6 +101,15 @@ struct AddTransactionAccountView: View {
             })
             Spacer()
             TextField("Current Balance", value: $currentBalance, formatter: Double().formatter())
+                .keyboardType(.decimalPad)
+        }
+    }
+    
+    private func currentUnitField() -> HStack<TupleView<(Text, Spacer, some View)>> {
+        return HStack {
+            Text("Current Units")
+            Spacer()
+            TextField("Current Units", value: $currentBalance, formatter: Double().formatter())
                 .keyboardType(.decimalPad)
         }
     }
