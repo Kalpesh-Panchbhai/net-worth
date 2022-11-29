@@ -21,8 +21,12 @@ struct AccountHistoryView: View {
         List {
             ForEach(accountTransactionList, id: \.self) { accountTransaction in
                 HStack{
-                    Text("\(accountTransaction.timestamp!.format())")
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                    VStack {
+                        Text("\(accountTransaction.timestamp!.getDateAndFormat())")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Text("\(accountTransaction.timestamp!.getTimeAndFormat())")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                     Text("\(accountTransaction.balancechange.withCommas())")
                         .frame(maxWidth: .infinity, alignment: .trailing)
                 }

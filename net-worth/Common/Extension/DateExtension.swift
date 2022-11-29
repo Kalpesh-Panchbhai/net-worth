@@ -15,4 +15,16 @@ extension Date {
         formatter.timeStyle = .medium
         return formatter.string(from: self)
     }
+    
+    func getDateAndFormat() -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter.string(from: self)
+    }
+    
+    func getTimeAndFormat() -> String {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .medium
+        return formatter.string(from: self)
+    }
 }
