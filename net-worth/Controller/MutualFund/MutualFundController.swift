@@ -75,7 +75,7 @@ class MutualFundController {
     
     private func saveUserData(code: Int, name: String, rate: Double) {
         let newMutualFund = Mutualfund(context: viewContext)
-//        newMutualFund.schemecode = Int16(code)
+        newMutualFund.schemecode = Int32(code)
         newMutualFund.name = name
         newMutualFund.rate = rate
         do {
