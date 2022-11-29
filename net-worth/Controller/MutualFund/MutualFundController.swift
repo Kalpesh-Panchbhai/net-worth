@@ -12,10 +12,6 @@ class MutualFundController {
     
     let viewContext = PersistenceController.shared.container.viewContext
     
-    private var dataFound = false
-    
-    private var taskCompleted = false
-    
     @objc
     public func fetch() {
         
