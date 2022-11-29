@@ -15,12 +15,7 @@ class MutualFundController {
     @objc
     public func fetch() {
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd-MMM-yyyy"
-        dateFormatter.timeZone = TimeZone.current
-        var date: String = dateFormatter.string(from: Date())
-        date = "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?frmdt=" + date
-        guard let url = URL(string: date) else {
+        guard let url = URL(string: "https://www.amfiindia.com/spages/NAVAll.txt") else {
             return
         }
         
@@ -45,36 +40,42 @@ class MutualFundController {
     private func extractResponse(response: String) {
         let totalMutualFund = getMutualFundCount()
         var result : String = response;
-        result = result.replacingOccurrences(of: "\n", with: "")
-        result = result.replacingOccurrences(of: "\r", with: "")
-        let bodyArr : [String] = result.split{$0 == ";"}.map(String.init);
+        result = result.replacingOccurrences(of: "\n", with: ";")
+        result = result.replacingOccurrences(of: "\r", with: ";")
+        var bodyArr : [String] = result.split{$0 == ";"}.map(String.init);
+        bodyArr = bodyArr.filter{ $0 != " "}
         let totalCount = bodyArr.count
-        var i = 8
-        var nameFound = false
+        var i = 0
         var name: String = ""
         var rate: Double = 0.0
+        var code: Int = 0
         while i < totalCount {
-            if let dummyRate = bodyArr[i].double {
-                rate = dummyRate
-                nameFound = false
-                i+=2
-                saveUserData(name: name, rate: rate)
-                continue
-            }else if !nameFound {
-                name = bodyArr[i]
-                nameFound = true
+            while(bodyArr[i].integer == nil) {
                 i+=1
+            }
+            code = bodyArr[i].integer!
+            i+=3
+            name = bodyArr[i]
+            i+=1
+            if(bodyArr[i] == "N.A.") {
+                i+=2
                 continue
             }
-            i+=1
+            rate = bodyArr[i].double!
+            i+=2
+            while(i < totalCount && bodyArr[i].integer == nil) {
+                i+=1
+            }
+            saveUserData(code: code, name: name, rate: rate)
         }
         if(totalMutualFund != 0) {
             deleteWholeData(totalCount: totalMutualFund)
         }
     }
     
-    private func saveUserData(name: String, rate: Double) {
+    private func saveUserData(code: Int, name: String, rate: Double) {
         let newMutualFund = Mutualfund(context: viewContext)
+//        newMutualFund.schemecode = Int16(code)
         newMutualFund.name = name
         newMutualFund.rate = rate
         do {
