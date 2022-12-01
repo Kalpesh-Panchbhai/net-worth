@@ -165,25 +165,31 @@ struct NewAccountView: View {
         return HStack {
             TextField(labelName, value: $totalShares, formatter: Double().formatter())
                 .keyboardType(.decimalPad)
-                .onChange(of: totalShares, perform: { _ in
+                .onChange(of: [totalShares, currentRateShare], perform: { _ in
                     currentBalance = totalShares * currentRateShare
                 })
         }
     }
     
-    private func currentRateField(labelName: String) -> HStack<(some View)> {
+    private func currentRateField(labelName: String) -> HStack<TupleView<(Text, Spacer, some View)>> {
         return HStack {
             Text(labelName)
             Spacer()
             Text("\(currentRateShare.withCommas())")
+                .onChange(of: [totalShares, currentRateShare], perform: { _ in
+                    currentBalance = totalShares * currentRateShare
+                })
         }
     }
     
-    private func totalValueField() -> HStack<TupleView<(Text, Spacer, Text)>> {
+    private func totalValueField() -> HStack<TupleView<(Text, Spacer, some View)>> {
         return HStack {
             Text("Total Value")
             Spacer()
             Text("\(currentBalance.withCommas())")
+                .onChange(of: [totalShares, currentRateShare], perform: { _ in
+                    currentBalance = totalShares * currentRateShare
+                })
         }
     }
     
@@ -221,15 +227,15 @@ struct NewAccountView: View {
     }
     
     var symbolPicker: some View {
-        Picker(selection: $financeSelected, label: Text("Symbol Name")) {
-            SearchBar(text: $searchTerm, placeholder: "Search")
+        Picker("", selection: $financeSelected) {
+            SearchBar(text: $searchTerm, placeholder: "Search Mutual fund, stocks")
             ForEach(financeListVM.financeModels, id: \.self) { (data) in
                 HStack {
                     VStack {
                         SymbolPickerLeftVerticalViewer(financeModel: data)
                     }
                     VStack {
-                        SymbolPickerRightVerticalViewer(financeDetailModel: data.financeDetailModel!)
+                        SymbolPickerRightVerticalViewer(financeDetailModel: data.financeDetailModel ?? FinanceDetailModel())
                     }
                 }
                 .tag(data)
