@@ -35,6 +35,7 @@ struct NewAccountView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var searchTerm: String = ""
+    @StateObject private var financeListVM = FinanceListViewModel()
     
     var body: some View {
         NavigationView {
@@ -222,7 +223,7 @@ struct NewAccountView: View {
     var symbolPicker: some View {
         Picker(selection: $financeSelected, label: Text("Symbol Name")) {
             SearchBar(text: $searchTerm, placeholder: "Search")
-            ForEach(financeModel, id: \.self) { (data) in
+            ForEach(financeListVM.financeModels, id: \.self) { (data) in
                 HStack {
                     VStack {
                         HStack {
@@ -240,7 +241,13 @@ struct NewAccountView: View {
             }
         }
         .onChange(of: searchTerm) { (data) in
-            financeModel = financeController.getAllSymbols(searchTerm: searchTerm)
+            async {
+                if(!data.isEmpty) {
+                    await financeListVM.search(name: data)
+                } else {
+                    financeListVM.financeModels.removeAll()
+                }
+            }
         }
         .onChange(of: financeSelected) { (data) in
             accountName = data.longname ?? data.shortname ?? " "

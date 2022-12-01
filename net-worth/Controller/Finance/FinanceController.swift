@@ -15,7 +15,50 @@ class FinanceController {
     
     private var financeDetailModel = FinanceDetailModel()
     
-    public func getAllSymbols(searchTerm: String) -> [FinanceModel] {
+//    public func getAllSymbols(searchTerm: String) -> [FinanceModel] {
+//
+//        dataCaptured = false
+//        var url = "https://query1.finance.yahoo.com/v1/finance/search?q=" + searchTerm
+//        url = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+//        guard let url = URL(string: url) else {
+//            return financeModel
+//        }
+//
+//        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+//            guard let data = data, error == nil else {
+//                return
+//            }
+//
+//            guard let httpResponse = response as? HTTPURLResponse,
+//                  200 == httpResponse.statusCode else {
+//                return
+//            }
+//
+//            let decoder = JSONDecoder()
+//            decoder.keyDecodingStrategy = .convertFromSnakeCase
+//            let financeModelResponse = try! decoder.decode(FinanceModelResponse.self, from: data)
+//            self.financeModel = financeModelResponse.quotes.compactMap({
+//                var financeModel = FinanceModel()
+//                financeModel.shortname = $0.shortname
+//                financeModel.quoteType = $0.quoteType
+//                financeModel.symbol = $0.symbol
+//                financeModel.typeDisp = $0.typeDisp
+//                financeModel.longname = $0.longname
+//                financeModel.exchDisp = $0.exchDisp
+//
+//                return financeModel
+//            })
+//            self.dataCaptured = true
+//        }
+//
+//        task.resume()
+//
+//        while(!dataCaptured) {}
+//
+//        return financeModel
+//    }
+    
+    public func getAllSymbols(searchTerm: String) async throws -> [FinanceModel] {
         
         dataCaptured = false
         var url = "https://query1.finance.yahoo.com/v1/finance/search?q=" + searchTerm
@@ -24,36 +67,26 @@ class FinanceController {
             return financeModel
         }
         
-        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-            guard let data = data, error == nil else {
-                return
-            }
-            
-            guard let httpResponse = response as? HTTPURLResponse,
-                  200 == httpResponse.statusCode else {
-                return
-            }
-            
-            let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
-            let financeModelResponse = try! decoder.decode(FinanceModelResponse.self, from: data)
-            self.financeModel = financeModelResponse.quotes.compactMap({
-                var financeModel = FinanceModel()
-                financeModel.shortname = $0.shortname
-                financeModel.quoteType = $0.quoteType
-                financeModel.symbol = $0.symbol
-                financeModel.typeDisp = $0.typeDisp
-                financeModel.longname = $0.longname
-                financeModel.exchDisp = $0.exchDisp
-                
-                return financeModel
-            })
-            self.dataCaptured = true
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            return financeModel
         }
         
-        task.resume()
-        
-        while(!dataCaptured) {}
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let financeModelResponse = try! decoder.decode(FinanceModelResponse.self, from: data)
+        self.financeModel = financeModelResponse.quotes.compactMap({
+            var financeModel = FinanceModel()
+            financeModel.shortname = $0.shortname
+            financeModel.quoteType = $0.quoteType
+            financeModel.symbol = $0.symbol
+            financeModel.typeDisp = $0.typeDisp
+            financeModel.longname = $0.longname
+            financeModel.exchDisp = $0.exchDisp
+            
+            return financeModel
+        })
         
         return financeModel
     }

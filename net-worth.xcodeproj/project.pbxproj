@@ -42,6 +42,7 @@
 		7DE766F32928B62900EFBD2D /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE766F22928B62900EFBD2D /* NotificationController.swift */; };
 		7DEC3B802938A38B002E9C8B /* FinanceDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DEC3B7F2938A38B002E9C8B /* FinanceDetailModel.swift */; };
 		7DF1E9C8292A43C8003D030E /* AccountModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF1E9C7292A43C8003D030E /* AccountModel.swift */; };
+		7DFC6D042938E38E002F847C /* FinanceListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DFC6D032938E38E002F847C /* FinanceListViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +101,7 @@
 		7DE766F22928B62900EFBD2D /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		7DEC3B7F2938A38B002E9C8B /* FinanceDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceDetailModel.swift; sourceTree = "<group>"; };
 		7DF1E9C7292A43C8003D030E /* AccountModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountModel.swift; sourceTree = "<group>"; };
+		7DFC6D032938E38E002F847C /* FinanceListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceListViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				7D433CF529385DBB007FA625 /* FinanceController.swift */,
+				7DFC6D032938E38E002F847C /* FinanceListViewModel.swift */,
 			);
 			path = Finance;
 			sourceTree = "<group>";
@@ -446,6 +449,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7DE766F32928B62900EFBD2D /* NotificationController.swift in Sources */,
+				7DFC6D042938E38E002F847C /* FinanceListViewModel.swift in Sources */,
 				7DC97A2C29223ADB003F69D4 /* NewIncomeView.swift in Sources */,
 				7DEC3B802938A38B002E9C8B /* FinanceDetailModel.swift in Sources */,
 				7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */,
