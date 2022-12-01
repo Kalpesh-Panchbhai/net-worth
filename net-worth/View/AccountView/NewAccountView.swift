@@ -235,19 +235,6 @@ struct NewAccountView: View {
                                 .foregroundColor(.gray)
                         }
                     }
-                    VStack {
-                        Text("\((data.financeDetailModel?.regularMarketPrice ?? 0.0).withCommas())")
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                        if(data.financeDetailModel?.oneDayChange ?? 0.0 >= 0.0) {
-                            Text("+\((data.financeDetailModel?.oneDayChange ?? 0.0).withCommas())")
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                .foregroundColor(.green)
-                        } else {
-                            Text("\((data.financeDetailModel?.oneDayChange ?? 0.0).withCommas())")
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                .foregroundColor(.red)
-                        }
-                    }
                 }
                 .tag(data)
             }
@@ -259,7 +246,7 @@ struct NewAccountView: View {
             accountName = data.longname ?? data.shortname ?? " "
             symbolType = data.typeDisp ?? " "
             symbol = data.symbol ?? " "
-            currentRateShare = data.financeDetailModel?.regularMarketPrice ?? 0.0
+            currentRateShare = financeController.getSymbolDetails(symbol: data.symbol ?? "").regularMarketPrice ?? 0.0
             
             currentBalance = totalShares * currentRateShare
         }

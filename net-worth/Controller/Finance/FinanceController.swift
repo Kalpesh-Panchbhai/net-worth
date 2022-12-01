@@ -55,9 +55,9 @@ class FinanceController {
         
         while(!dataCaptured) {}
         
-        for i in 0..<financeModel.count {
-            financeModel[i].financeDetailModel = getSymbolDetails(symbol: financeModel[i].symbol!)
-        }
+//        for i in 0..<financeModel.count {
+//            financeModel[i].financeDetailModel = getSymbolDetails(symbol: financeModel[i].symbol!)
+//        }
         return financeModel
     }
     
