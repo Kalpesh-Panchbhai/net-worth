@@ -12,8 +12,6 @@ struct AccountDetailsView: View {
     private var currentRate: Double = 0.0
     
     private var totalValue: Double = 0.0
-    
-    private let financeController = FinanceController()
 
     @ObservedObject private var financeListVM = FinanceListViewModel()
     
