@@ -228,12 +228,6 @@ struct NewAccountView: View {
                         HStack {
                             Text(data.symbol!)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            Text(data.exchDisp ?? " ")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .foregroundColor(.gray)
-                            Text(data.financeDetailModel?.currency ?? " ")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .foregroundColor(.gray)
                         }
                         HStack {
                             Text(data.longname ?? data.shortname ?? " ")
