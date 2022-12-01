@@ -235,6 +235,7 @@ struct NewAccountView: View {
                 .tag(data)
             }
         }
+        .edgesIgnoringSafeArea(.all)
         .onChange(of: searchTerm) { (data) in
             Task.init {
                 if(!data.isEmpty) {
@@ -263,17 +264,20 @@ struct SymbolPickerLeftVerticalViewer: View {
     var body: some View {
         Text(financeModel.symbol!)
             .frame(maxWidth: .infinity, alignment: .leading)
-        HStack {
-            Text(financeModel.exchDisp!)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .foregroundColor(.gray)
-            Text(financeModel.financeDetailModel?.currency ?? "")
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                .foregroundColor(.gray)
-        }
-        Text(financeModel.longname ?? financeModel.shortname ?? "")
+        Text(financeModel.longname ?? financeModel.shortname ?? "").font(.system(size: 12))
             .frame(maxWidth: .greatestFiniteMagnitude, alignment: .leading)
-            .foregroundColor(Color(red: 64/255, green: 64/255, blue: 64/255))
+            .foregroundColor(.gray)
+        HStack {
+            Text(financeModel.exchDisp!).font(.system(size: 11))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .foregroundColor(Color(red: 96/255, green: 96/255, blue: 96/255))
+            Text(financeModel.financeDetailModel?.currency ?? "").font(.system(size: 11))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .foregroundColor(Color(red: 96/255, green: 96/255, blue: 96/255))
+        }
+        Text(financeModel.typeDisp!).font(.system(size: 10))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .foregroundColor(Color(red: 96/255, green: 96/255, blue: 96/255))
     }
 }
 
@@ -285,11 +289,11 @@ struct SymbolPickerRightVerticalViewer: View {
         Text(financeDetailModel.regularMarketPrice?.withCommas() ?? "0.0")
             .frame(maxWidth: .infinity, alignment: .trailing)
         if(financeDetailModel.oneDayChange ?? 0 > 0) {
-            Text("+" + (financeDetailModel.oneDayChange?.withCommas() ?? "0.0"))
+            Text("+" + (financeDetailModel.oneDayChange?.withCommas() ?? "0.0")).font(.system(size: 12))
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .foregroundColor(.green)
         } else if(financeDetailModel.oneDayChange ?? 0 < 0) {
-            Text(financeDetailModel.oneDayChange?.withCommas() ?? "0.0")
+            Text(financeDetailModel.oneDayChange?.withCommas() ?? "0.0").font(.system(size: 12))
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .foregroundColor(.red)
         }
