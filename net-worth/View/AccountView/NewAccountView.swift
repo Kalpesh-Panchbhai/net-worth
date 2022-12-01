@@ -225,11 +225,21 @@ struct NewAccountView: View {
             ForEach(financeModel, id: \.self) { (data) in
                 HStack {
                     VStack {
-                        Text(data.symbol!)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Text(data.longname ?? data.shortname ?? " ")
-                            .frame(maxWidth: .greatestFiniteMagnitude, alignment: .leading)
-                            .foregroundColor(.gray)
+                        HStack {
+                            Text(data.symbol!)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            Text(data.exchDisp ?? " ")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .foregroundColor(.gray)
+                            Text(data.financeDetailModel?.currency ?? " ")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .foregroundColor(.gray)
+                        }
+                        HStack {
+                            Text(data.longname ?? data.shortname ?? " ")
+                                .frame(maxWidth: .greatestFiniteMagnitude, alignment: .leading)
+                                .foregroundColor(.gray)
+                        }
                     }
                     VStack {
                         Text("\((data.financeDetailModel?.regularMarketPrice ?? 0.0).withCommas())")
