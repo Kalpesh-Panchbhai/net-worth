@@ -228,7 +228,7 @@ struct NewAccountView: View {
     
     var symbolPicker: some View {
         Picker("", selection: $financeSelected) {
-            SearchBar(text: $searchTerm, placeholder: "Search Mutual fund, stocks")
+            SearchBar(text: $searchTerm, placeholder: "Search MutualFund,Stocks,ETF,Crypto")
             ForEach(financeListVM.financeModels, id: \.self) { (data) in
                 HStack {
                     VStack {
