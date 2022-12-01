@@ -9,11 +9,13 @@ import SwiftUI
 
 struct AccountDetailsView: View {
     
-    private var currentRate: Double
+    private var currentRate: Double = 0.0
     
-    private var totalValue: Double
+    private var totalValue: Double = 0.0
     
     private let financeController = FinanceController()
+
+    @ObservedObject private var financeListVM = FinanceListViewModel()
     
     var account: Account
     init(account: Account) {
@@ -21,9 +23,6 @@ struct AccountDetailsView: View {
         if(self.account.accounttype == "Saving" || self.account.accounttype == "Credit Card" || self.account.accounttype == "Loan") {
             self.currentRate = 0.0
             self.totalValue = 0.0
-        }else {
-            self.currentRate = 0.0
-            self.totalValue = currentRate * account.totalshare
         }
     }
     var body: some View {
@@ -56,8 +55,8 @@ struct AccountDetailsView: View {
                 else {
                     field(labelName: "Symbol Name", value: account.accountname!)
                     field(labelName: "Total Units", value: "\(account.totalshare.withCommas())")
-                    field(labelName: "Current rate of a unit", value: "\(currentRate.withCommas())")
-                    field(labelName: "Total Value", value: "\(totalValue.withCommas())")
+                    field(labelName: "Current rate of a unit", value: (financeListVM.financeDetailModel.regularMarketPrice ?? 0.0).withCommas())
+                    field(labelName: "Total Value", value: (account.totalshare * (financeListVM.financeDetailModel.regularMarketPrice ?? 0.0)).withCommas() )
                     if(account.paymentreminder) {
                         field(labelName: "Payment Reminder", value: "On")
                         field(labelName: "Payment Date", value: "\(account.paymentdate)")
@@ -65,6 +64,11 @@ struct AccountDetailsView: View {
                         field(labelName: "Payment Reminder", value: "Off")
                     }
                 }
+            }
+        }
+        .task {
+            if(!(self.account.accounttype == "Saving" || self.account.accounttype == "Credit Card" || self.account.accounttype == "Loan")) {
+                await financeListVM.getSymbolDetails(symbol: account.symbol!)
             }
         }
     }
