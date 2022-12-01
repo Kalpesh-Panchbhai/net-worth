@@ -241,7 +241,7 @@ struct NewAccountView: View {
             }
         }
         .onChange(of: searchTerm) { (data) in
-            async {
+            Task.init {
                 if(!data.isEmpty) {
                     await financeListVM.search(name: data)
                 } else {
