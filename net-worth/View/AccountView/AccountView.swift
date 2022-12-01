@@ -54,26 +54,7 @@ struct AccountView: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             Spacer()
-                            VStack {
-                                if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan") {
-                                    Text("\(account.currentbalance.withCommas())")
-                                } else {
-//                                    let currentData = financeController.getSymbolDetails(symbol: account.symbol ?? "")
-                                    let currentRate = 0.0
-                                    let oneDayChange = 0.0
-                                    Text("\((account.totalshare * currentRate).withCommas())")
-                                        .frame(maxWidth: .infinity, alignment: .trailing)
-                                    if(oneDayChange >= 0.0) {
-                                        Text("+\((account.totalshare * oneDayChange).withCommas())").font(.system(size: 15))
-                                            .frame(maxWidth: .infinity, alignment: .trailing)
-                                            .foregroundColor(.green)
-                                    } else {
-                                        Text("\((account.totalshare * oneDayChange).withCommas())").font(.system(size: 15))
-                                            .frame(maxWidth: .infinity, alignment: .trailing)
-                                            .foregroundColor(.red)
-                                    }
-                                }
-                            }
+                            customView(account: account)
                         }
                         .padding()
                     })
@@ -163,6 +144,40 @@ struct AccountView: View {
                 ForEach(searchResults, id: \.self) { result in
                     Text("\(result.accountname!)").searchCompletion(result.accountname!)
                 }
+            }
+        }
+    }
+}
+
+struct customView: View {
+    
+    var account: Account
+    
+    @StateObject private var financeListViewModel = FinanceListViewModel()
+    
+    var body: some View {
+        VStack {
+            if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan") {
+                Text("\(account.currentbalance.withCommas())")
+            } else {
+                let currentRate = financeListViewModel.financeDetailModel.regularMarketPrice ?? 0.0
+                let oneDayChange = financeListViewModel.financeDetailModel.oneDayChange ?? 0.0
+                Text("\((account.totalshare * currentRate).withCommas())")
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                if(oneDayChange > 0.0) {
+                    Text("+\((account.totalshare * oneDayChange).withCommas())").font(.system(size: 15))
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .foregroundColor(.green)
+                } else if(oneDayChange < 0.0){
+                    Text("\((account.totalshare * oneDayChange).withCommas())").font(.system(size: 15))
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .foregroundColor(.red)
+                }
+            }
+        }
+        .task {
+            if(!(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan")) {
+                await financeListViewModel.getSymbolDetails(symbol: account.symbol!)
             }
         }
     }
