@@ -265,11 +265,11 @@ struct SymbolPickerLeftVerticalViewer: View {
         Text(financeModel.symbol!)
             .frame(maxWidth: .infinity, alignment: .leading)
         Text(financeModel.longname ?? financeModel.shortname ?? "").font(.system(size: 12))
-            .frame(maxWidth: .greatestFiniteMagnitude, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundColor(.gray)
         HStack {
             Text(financeModel.exchDisp!).font(.system(size: 11))
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(idealWidth: .infinity, alignment: .leading)
                 .foregroundColor(Color(red: 96/255, green: 96/255, blue: 96/255))
             Text(financeModel.financeDetailModel?.currency ?? "").font(.system(size: 11))
                 .frame(maxWidth: .infinity, alignment: .leading)
