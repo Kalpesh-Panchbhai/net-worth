@@ -9,21 +9,21 @@ import SwiftUI
 
 struct AccountDetailsView: View {
     
-    private var mutualFundController = MutualFundController()
-    
     private var currentRate: Double
     
     private var totalValue: Double
     
+    private let financeController = FinanceController()
+    
     var account: Account
     init(account: Account) {
         self.account = account
-        if(self.account.accounttype == "Mutual Fund") {
-            self.currentRate = mutualFundController.getMutualFund(name: self.account.accountname!).rate
-            self.totalValue = currentRate * account.totalshare
-        }else {
+        if(self.account.accounttype == "Saving" || self.account.accounttype == "Credit Card" || self.account.accounttype == "Loan") {
             self.currentRate = 0.0
             self.totalValue = 0.0
+        }else {
+            self.currentRate = financeController.getSymbolDetails(symbol: self.account.symbol ?? "").regularMarketPrice ?? 0.0
+            self.totalValue = currentRate * account.totalshare
         }
     }
     var body: some View {
@@ -53,14 +53,8 @@ struct AccountDetailsView: View {
                         field(labelName: "Payment Reminder", value: "Off")
                     }
                 }
-                else if(account.accounttype == "Stock") {
-                    field(labelName: "Stock Name", value: account.accountname!)
-                    field(labelName: "Total Shares", value: "\(account.totalshare.withCommas())")
-                    field(labelName: "Current rate of a share", value: "\(currentRate.withCommas())")
-                    field(labelName: "Total Value", value: "\(account.currentbalance.withCommas())")
-                }
-                else if(account.accounttype == "Mutual Fund") {
-                    field(labelName: "Mutual Fund Name", value: account.accountname!)
+                else {
+                    field(labelName: "Symbol Name", value: account.accountname!)
                     field(labelName: "Total Units", value: "\(account.totalshare.withCommas())")
                     field(labelName: "Current rate of a unit", value: "\(currentRate.withCommas())")
                     field(labelName: "Total Value", value: "\(totalValue.withCommas())")

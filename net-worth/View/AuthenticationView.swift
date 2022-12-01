@@ -31,7 +31,6 @@ struct AuthenticationView: View {
                 MainScreenView()
             }
         }
-        .onAppear(perform: loadDataMutualFund)
     }
     
     
@@ -48,16 +47,7 @@ struct AuthenticationView: View {
             }
         }
     }
-    
-    private func loadDataMutualFund() {
-        let initialDataLoadedMutualFund = UserDefaults.standard.bool(forKey: "InitialDataLoadedMutualFund")
-        if(!initialDataLoadedMutualFund) {
-            print("Loading Initial Mutual Fund data")
-            settingsController.updateMutualFundData()
-            UserDefaults.standard.set(true, forKey: "InitialDataLoadedMutualFund")
-            print("Loaded Initial Mutual Fund data")
-        }
-    }
+
 }
 
 struct AuthenticationView_Previews: PreviewProvider {

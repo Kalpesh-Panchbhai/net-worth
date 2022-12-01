@@ -22,4 +22,6 @@ class AccountModel {
     var paymentReminder: Bool = false
     
     var paymentDate: Int = 0
+    
+    var symbol: String = ""
 }

@@ -19,7 +19,7 @@ struct AccountView: View {
     
     private var accountController = AccountController()
     
-    private var mutualFundController = MutualFundController()
+    private var financeController = FinanceController()
     
     @State var searchAccountName: String = ""
     
@@ -54,108 +54,122 @@ struct AccountView: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             Spacer()
-                            if(account.accounttype == "Mutual Fund") {
-                                let mutualFund = mutualFundController.getMutualFund(name: account.accountname!)
-                                Text("\((account.totalshare * mutualFund.rate).withCommas())")
-                            } else {
-                                Text("\(account.currentbalance.withCommas())")
+                            VStack {
+                                if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan") {
+                                    Text("\(account.currentbalance.withCommas())")
+                                } else {
+                                    let currentData = financeController.getSymbolDetails(symbol: account.symbol ?? "")
+                                    let currentRate = currentData.regularMarketPrice ?? 0.0
+                                    let oneDayChange = currentData.oneDayChange ?? 0.0
+                                    Text("\((account.totalshare * currentRate).withCommas())")
+                                        .frame(maxWidth: .infinity, alignment: .trailing)
+                                    if(oneDayChange >= 0.0) {
+                                        Text("+\(oneDayChange.withCommas())").font(.system(size: 15))
+                                            .frame(maxWidth: .infinity, alignment: .trailing)
+                                            .foregroundColor(.green)
+                                    } else {
+                                        Text("\((account.totalshare * oneDayChange).withCommas())").font(.system(size: 15))
+                                            .frame(maxWidth: .infinity, alignment: .trailing)
+                                            .foregroundColor(.red)
+                                    }
+                                }
                             }
                         }
                         .padding()
                     })
-                    .swipeActions {
-                        Button{
-                            accountController.deleteAccount(account: account)
-                        } label: {
-                            Label("Delete", systemImage: "trash")
-                        }
-                        .tint(.red)
-                    }
-                }
-            }
-            .refreshable {
-                mutualFundController.fetch()
-            }
-            .environment(\.editMode, self.$editMode)
-            .listStyle(.inset)
-            .toolbar {
-                if !accounts.isEmpty {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        if(editMode == .inactive) {
-                            Button(action: {
-                                self.editMode = .active
-                                self.selection = Set<Account>()
-                            }) {
-                                Text("Edit")
-                            }
-                        }
-                        else {
-                            Button(action: {
-                                self.editMode = .inactive
-                                self.selection = Set<Account>()
-                                isAllSelected =  false
-                            }) {
-                                Text("Done")
-                            }
-                        }
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    if(editMode == .inactive) {
-                        Button(action: {
-                            self.isOpen.toggle()
-                        }, label: {
-                            Label("Add Account", systemImage: "plus")
-                        }).sheet(isPresented: $isOpen, content: {
-                            NewAccountView()
-                        })
-                    }
-                    else {
-                        Button(action: {
-                            for accountSelected in selection {
-                                accountController.deleteAccount(account: accountSelected)
-                            }
-                            editMode = .inactive
-                        }, label: {
-                            Label("delete Account", systemImage: "trash")
-                        }).disabled(selection.count == 0)
-                    }
-                }
-                ToolbarItem(placement: .bottomBar){
-                    if(editMode == .inactive) {
-                        let balance = accountController.getAccountTotalBalance()
-                        HStack {
-                            Text("Total Balance \(balance.withCommas())").foregroundColor(.blue).font(.title2)
-                        }
-                    }else {
-                        if(!isAllSelected && searchResults.count != selection.count) {
-                            Button("Select all", action: {
-                                searchResults.forEach { (acc) in
-                                    self.selection.insert(acc)
-                                }
-                                isAllSelected = true
-                            })
-                        }else {
-                            Button("Deselect all", action: {
-                                self.selection.removeAll()
-                                isAllSelected = false
-                            })
-                        }
-                    }
-                }
-            }
-            .navigationTitle("Accounts")
-            .searchable(text: $searchAccountName) {
-                ForEach(searchResults, id: \.self) { result in
-                    Text("\(result.accountname!)").searchCompletion(result.accountname!)
-                }
-            }
-        }
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        AccountView()
-    }
-}
+                                        .swipeActions {
+                                            Button{
+                                                accountController.deleteAccount(account: account)
+                                            } label: {
+                                                Label("Delete", systemImage: "trash")
+                                            }
+                                            .tint(.red)
+                                        }
+                                         }
+                                         }
+                                        .refreshable {
+                                            //                mutualFundController.fetch()
+                                        }
+                                        .environment(\.editMode, self.$editMode)
+                                        .listStyle(.inset)
+                                        .toolbar {
+                                            if !accounts.isEmpty {
+                                                ToolbarItem(placement: .navigationBarLeading) {
+                                                    if(editMode == .inactive) {
+                                                        Button(action: {
+                                                            self.editMode = .active
+                                                            self.selection = Set<Account>()
+                                                        }) {
+                                                            Text("Edit")
+                                                        }
+                                                    }
+                                                    else {
+                                                        Button(action: {
+                                                            self.editMode = .inactive
+                                                            self.selection = Set<Account>()
+                                                            isAllSelected =  false
+                                                        }) {
+                                                            Text("Done")
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            ToolbarItem(placement: .navigationBarTrailing) {
+                                                if(editMode == .inactive) {
+                                                    Button(action: {
+                                                        self.isOpen.toggle()
+                                                    }, label: {
+                                                        Label("Add Account", systemImage: "plus")
+                                                    }).sheet(isPresented: $isOpen, content: {
+                                                        NewAccountView()
+                                                    })
+                                                }
+                                                else {
+                                                    Button(action: {
+                                                        for accountSelected in selection {
+                                                            accountController.deleteAccount(account: accountSelected)
+                                                        }
+                                                        editMode = .inactive
+                                                    }, label: {
+                                                        Label("delete Account", systemImage: "trash")
+                                                    }).disabled(selection.count == 0)
+                                                }
+                                            }
+                                            ToolbarItem(placement: .bottomBar){
+                                                if(editMode == .inactive) {
+                                                    let balance = accountController.getAccountTotalBalance()
+                                                    HStack {
+                                                        Text("Total Balance \(balance.withCommas())").foregroundColor(.blue).font(.title2)
+                                                    }
+                                                }else {
+                                                    if(!isAllSelected && searchResults.count != selection.count) {
+                                                        Button("Select all", action: {
+                                                            searchResults.forEach { (acc) in
+                                                                self.selection.insert(acc)
+                                                            }
+                                                            isAllSelected = true
+                                                        })
+                                                    }else {
+                                                        Button("Deselect all", action: {
+                                                            self.selection.removeAll()
+                                                            isAllSelected = false
+                                                        })
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        .navigationTitle("Accounts")
+                                        .searchable(text: $searchAccountName) {
+                                            ForEach(searchResults, id: \.self) { result in
+                                                Text("\(result.accountname!)").searchCompletion(result.accountname!)
+                                            }
+                                        }
+                                         }
+                                         }
+                                         }
+                                         
+                                         struct ContentView_Previews: PreviewProvider {
+                                        static var previews: some View {
+                                            AccountView()
+                                        }
+                                    }

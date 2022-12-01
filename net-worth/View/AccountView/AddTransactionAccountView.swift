@@ -34,7 +34,7 @@ struct AddTransactionAccountView: View {
                     currentBalanceField()
                 } else if(account.accounttype == "Loan") {
                     currentBalanceField()
-                } else if(account.accounttype == "Mutual Fund") {
+                } else {
                     currentUnitField()
                 }
             }
@@ -48,10 +48,10 @@ struct AddTransactionAccountView: View {
                         
                         accountController.addTransaction(accountModel: accountModel)
                         
-                        if(account.accounttype == "Stock" || account.accounttype == "Mutual Fund") {
-                            account.totalshare = accountModel.currentBalance
-                        } else {
+                        if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan") {
                             account.currentbalance = accountModel.currentBalance
+                        } else {
+                            account.totalshare = accountModel.currentBalance
                         }
                         accountController.updateAccount()
                     }, label: {

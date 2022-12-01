@@ -10,13 +10,16 @@ import SwiftUI
 struct NewAccountView: View {
     
     @State private var accountType: String = "None"
+    @State private var symbolType: String = "None"
     @State private var accountName: String = ""
     
-    @State private var mutualFundField: Mutualfund = Mutualfund()
+    @State private var financeModel = [FinanceModel]()
+    @State private var financeSelected = FinanceModel()
     
     //Mutual fund and Stock fields
     @State private var totalShares: Double = 0.0
     @State private var currentRateShare: Double = 0.0
+    @State private var symbol: String = ""
     
     @State private var currentBalance: Double = 0.0
     @State private var paymentReminder = false
@@ -27,13 +30,9 @@ struct NewAccountView: View {
     @State private var showingAlert = false
     
     private var accountController = AccountController()
+    private var financeController = FinanceController()
     
     @Environment(\.dismiss) var dismiss
-    
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Mutualfund.name, ascending: true)],
-        animation: .default)
-    private var mutualfunds: FetchedResults<Mutualfund>
     
     @State private var searchTerm: String = ""
     
@@ -74,24 +73,8 @@ struct NewAccountView: View {
                             paymentDateField(labelName: "Select a payment date")
                         }
                     }
-                    else if(accountType == "Stock") {
-                        nameField(labelName: "Stock Name")
-                        totalField(labelName: "Total Shares")
-                        currentRateField(labelName: "Current rate of a share")
-                        totalValueField()
-                    }
-                    else if(accountType == "Mutual Fund") {
-                        Picker(selection: $mutualFundField, label: Text("Mutual Fund Name")) {
-                            SearchBar(text: $searchTerm, placeholder: "Search Mutual Funds")
-                            ForEach(filteredMF) { mf in
-                                Text(mf.name ?? "").tag(mf)
-                            }
-                        }.onChange(of: mutualFundField) { (data) in
-                            accountName = data.name!
-                            currentRateShare = data.rate
-                            
-                            currentBalance = totalShares * currentRateShare
-                        }.pickerStyle(.navigationLink)
+                    else if(accountType == "Symbol") {
+                        symbolPicker
                         
                         totalField(labelName: "Total Units")
                         currentRateField(labelName: "Current rate of a unit")
@@ -109,13 +92,14 @@ struct NewAccountView: View {
                         let accountModel = AccountModel()
                         accountModel.accountType = accountType
                         accountModel.accountName = accountName
-                        if(accountType != "Mutual Fund") {
+                        if(accountType != "Symbol") {
                             accountModel.currentBalance = currentBalance
+                        }else {
+                            accountModel.accountType = symbolType
+                            accountModel.totalShares = totalShares
+                            accountModel.symbol = symbol
                         }
                         accountModel.paymentReminder = paymentReminder
-                        
-                        //Mutual fund and Stock fields
-                        accountModel.totalShares = totalShares
                         
                         if(paymentReminder) {
                             accountModel.paymentDate = paymentDate
@@ -159,13 +143,7 @@ struct NewAccountView: View {
             } else {
                 return true
             }
-        }else if accountType == "Stock" {
-            if accountName.isEmpty || totalShares.isZero || currentRateShare.isZero {
-                return false
-            } else {
-                return true
-            }
-        }else if accountType == "Mutual Fund" {
+        }else if accountType == "Symbol" {
             if accountName.isEmpty || totalShares.isZero || currentRateShare.isZero {
                 return false
             } else {
@@ -241,14 +219,47 @@ struct NewAccountView: View {
         }
     }
     
-    var filteredMF: [Mutualfund] {
-        mutualfunds.filter { mf in
-            if(searchTerm.isEmpty) {
-                return true
-            } else {
-                return mf.name!.lowercased().contains(searchTerm.lowercased())
+    var symbolPicker: some View {
+        Picker(selection: $financeSelected, label: Text("Symbol Name")) {
+            SearchBar(text: $searchTerm, placeholder: "Search")
+            ForEach(financeModel, id: \.self) { (data) in
+                HStack {
+                    VStack {
+                        Text(data.symbol!)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Text(data.longname ?? data.shortname ?? " ")
+                            .frame(maxWidth: .greatestFiniteMagnitude, alignment: .leading)
+                            .foregroundColor(.gray)
+                    }
+                    VStack {
+                        Text("\((data.financeDetailModel?.regularMarketPrice ?? 0.0).withCommas())")
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                        if(data.financeDetailModel?.oneDayChange ?? 0.0 >= 0.0) {
+                            Text("+\((data.financeDetailModel?.oneDayChange ?? 0.0).withCommas())")
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .foregroundColor(.green)
+                        } else {
+                            Text("\((data.financeDetailModel?.oneDayChange ?? 0.0).withCommas())")
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .foregroundColor(.red)
+                        }
+                    }
+                }
+                .tag(data)
             }
         }
+        .onChange(of: searchTerm) { (data) in
+            financeModel = financeController.getAllSymbols(searchTerm: searchTerm)
+        }
+        .onChange(of: financeSelected) { (data) in
+            accountName = data.longname ?? data.shortname ?? " "
+            symbolType = data.typeDisp ?? " "
+            symbol = data.symbol ?? " "
+            currentRateShare = data.financeDetailModel?.regularMarketPrice ?? 0.0
+            
+            currentBalance = totalShares * currentRateShare
+        }
+        .pickerStyle(.navigationLink)
     }
 }
 

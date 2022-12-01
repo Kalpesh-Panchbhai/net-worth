@@ -11,8 +11,6 @@ import SwiftUI
 
 class SettingsController {
     
-    private var mutualFundController = MutualFundController()
-    
     public func isAuthenticationRequired() -> Bool {
         return UserDefaults.standard.bool(forKey: "authentication")
     }
@@ -20,9 +18,4 @@ class SettingsController {
     public func setAuthentication(newValue: Bool) {
         UserDefaults.standard.set(newValue, forKey: "authentication")
     }
-    
-    public func updateMutualFundData() {
-        mutualFundController.fetch()
-    }
-    
 }

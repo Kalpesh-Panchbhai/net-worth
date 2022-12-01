@@ -14,8 +14,7 @@ class ConstantUtils {
         case saving = "Saving";
         case creditcard = "Credit Card";
         case loan = "Loan";
-        case stock = "Stock";
-        case mutualfund = "Mutual Fund"
+        case symbol = "Symbol"
     }
     
 }

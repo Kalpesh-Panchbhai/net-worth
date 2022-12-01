@@ -14,17 +14,17 @@ class AccountController {
     
     private var notificationController = NotificationController()
     
-    private var mutualFundController = MutualFundController()
+    private var financeController = FinanceController()
     
     public func addTransaction(accountModel: AccountModel) {
         let newTransaction = AccountTransaction(context: viewContext)
         newTransaction.sysid = UUID()
         newTransaction.timestamp = Date()
         newTransaction.accountsysid = accountModel.sysId
-        if(accountModel.accountType == "Stock" || accountModel.accountType == "Mutual Fund") {
-            newTransaction.balancechange = accountModel.totalShares
-        } else {
+        if(accountModel.accountType == "Saving" || accountModel.accountType == "Credit Card" || accountModel.accountType == "Loan") {
             newTransaction.balancechange = accountModel.currentBalance
+        } else {
+            newTransaction.balancechange = accountModel.totalShares
         }
         
         do {
@@ -77,6 +77,7 @@ class AccountController {
         newAccount.totalshare = accountModel.totalShares
         newAccount.paymentreminder = accountModel.paymentReminder
         newAccount.paymentdate = Int16(accountModel.paymentDate)
+        newAccount.symbol = accountModel.symbol
         
         do {
             try viewContext.save()
@@ -102,12 +103,12 @@ class AccountController {
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
         for account in accounts {
-            if(account.accounttype == "Mutual Fund") {
-                let mutualFund = mutualFundController.getMutualFund(name: account.accountname!)
-                let currentBalance = account.totalshare * mutualFund.rate
-                balance += currentBalance
-            }else {
+            if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan") {
                 balance += account.currentbalance
+            }else {
+                let currentRate = financeController.getSymbolDetails(symbol: account.symbol ?? "").regularMarketPrice ?? 0.0
+                let currentBalance = currentRate * account.totalshare
+                balance += currentBalance
             }
         }
         return balance
