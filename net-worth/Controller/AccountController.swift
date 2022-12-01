@@ -106,7 +106,7 @@ class AccountController {
             if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan") {
                 balance += account.currentbalance
             }else {
-                let currentRate = financeController.getSymbolDetails(symbol: account.symbol ?? "").regularMarketPrice ?? 0.0
+                let currentRate = 0.0
                 let currentBalance = currentRate * account.totalshare
                 balance += currentBalance
             }

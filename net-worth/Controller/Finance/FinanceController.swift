@@ -48,40 +48,29 @@ class FinanceController {
         return financeModel
     }
     
-    public func getSymbolDetails(symbol: String) -> FinanceDetailModel {
+    public func getSymbolDetails(symbol: String) async throws -> FinanceDetailModel {
         
-        dataCaptured = false
         guard let url = URL(string: "https://query1.finance.yahoo.com/v8/finance/chart/" + symbol) else {
             return financeDetailModel
         }
         
-        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-            guard let data = data, error == nil else {
-                return
-            }
-            
-            guard let httpResponse = response as? HTTPURLResponse,
-                  200 == httpResponse.statusCode else {
-                return
-            }
-            
-            let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
-            let financeDetailModelResponse = try! decoder.decode(FinanceDetailModelResponse.self, from: data)
-            
-            for response in financeDetailModelResponse.chart.result {
-                self.financeDetailModel.currency = response.meta.currency
-                self.financeDetailModel.symbol = response.meta.currency
-                self.financeDetailModel.regularMarketPrice = response.meta.regularMarketPrice
-                self.financeDetailModel.chartPreviousClose = response.meta.chartPreviousClose
-                self.financeDetailModel.oneDayChange = (self.financeDetailModel.regularMarketPrice ?? 0.0) - (self.financeDetailModel.chartPreviousClose ?? 0.0)
-            }
-            self.dataCaptured = true
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            return financeDetailModel
         }
         
-        task.resume()
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let financeDetailModelResponse = try! decoder.decode(FinanceDetailModelResponse.self, from: data)
         
-        while(!dataCaptured) {}
+        for response in financeDetailModelResponse.chart.result {
+            self.financeDetailModel.currency = response.meta.currency
+            self.financeDetailModel.symbol = response.meta.currency
+            self.financeDetailModel.regularMarketPrice = response.meta.regularMarketPrice
+            self.financeDetailModel.chartPreviousClose = response.meta.chartPreviousClose
+            self.financeDetailModel.oneDayChange = (self.financeDetailModel.regularMarketPrice ?? 0.0) - (self.financeDetailModel.chartPreviousClose ?? 0.0)
+        }
         
         return financeDetailModel
     }

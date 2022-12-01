@@ -58,9 +58,9 @@ struct AccountView: View {
                                 if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan") {
                                     Text("\(account.currentbalance.withCommas())")
                                 } else {
-                                    let currentData = financeController.getSymbolDetails(symbol: account.symbol ?? "")
-                                    let currentRate = currentData.regularMarketPrice ?? 0.0
-                                    let oneDayChange = currentData.oneDayChange ?? 0.0
+//                                    let currentData = financeController.getSymbolDetails(symbol: account.symbol ?? "")
+                                    let currentRate = 0.0
+                                    let oneDayChange = 0.0
                                     Text("\((account.totalshare * currentRate).withCommas())")
                                         .frame(maxWidth: .infinity, alignment: .trailing)
                                     if(oneDayChange >= 0.0) {

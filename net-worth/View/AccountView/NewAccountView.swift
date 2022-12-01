@@ -243,7 +243,7 @@ struct NewAccountView: View {
         .onChange(of: searchTerm) { (data) in
             Task.init {
                 if(!data.isEmpty) {
-                    await financeListVM.search(name: data)
+                    await financeListVM.getAllSymbols(searchTerm: data)
                 } else {
                     financeListVM.financeModels.removeAll()
                 }
@@ -253,7 +253,7 @@ struct NewAccountView: View {
             accountName = data.longname ?? data.shortname ?? " "
             symbolType = data.typeDisp ?? " "
             symbol = data.symbol ?? " "
-            currentRateShare = financeController.getSymbolDetails(symbol: data.symbol ?? "").regularMarketPrice ?? 0.0
+            currentRateShare = 0.0
             
             currentBalance = totalShares * currentRateShare
         }

@@ -22,7 +22,7 @@ struct AccountDetailsView: View {
             self.currentRate = 0.0
             self.totalValue = 0.0
         }else {
-            self.currentRate = financeController.getSymbolDetails(symbol: self.account.symbol ?? "").regularMarketPrice ?? 0.0
+            self.currentRate = 0.0
             self.totalValue = currentRate * account.totalshare
         }
     }
