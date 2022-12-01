@@ -226,15 +226,10 @@ struct NewAccountView: View {
             ForEach(financeListVM.financeModels, id: \.self) { (data) in
                 HStack {
                     VStack {
-                        HStack {
-                            Text(data.symbol!)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        HStack {
-                            Text(data.longname ?? data.shortname ?? " ")
-                                .frame(maxWidth: .greatestFiniteMagnitude, alignment: .leading)
-                                .foregroundColor(.gray)
-                        }
+                        SymbolPickerLeftVerticalViewer(financeModel: data)
+                    }
+                    VStack {
+                        SymbolPickerRightVerticalViewer(financeDetailModel: data.financeDetailModel!)
                     }
                 }
                 .tag(data)
@@ -253,11 +248,51 @@ struct NewAccountView: View {
             accountName = data.longname ?? data.shortname ?? " "
             symbolType = data.typeDisp ?? " "
             symbol = data.symbol ?? " "
-            currentRateShare = 0.0
+            currentRateShare = data.financeDetailModel?.regularMarketPrice ?? 0.0
             
             currentBalance = totalShares * currentRateShare
         }
         .pickerStyle(.navigationLink)
+    }
+}
+
+struct SymbolPickerLeftVerticalViewer: View {
+    
+    var financeModel: FinanceModel
+    
+    var body: some View {
+        Text(financeModel.symbol!)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        HStack {
+            Text(financeModel.exchDisp!)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .foregroundColor(.gray)
+            Text(financeModel.financeDetailModel?.currency ?? "")
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .foregroundColor(.gray)
+        }
+        Text(financeModel.longname ?? financeModel.shortname ?? "")
+            .frame(maxWidth: .greatestFiniteMagnitude, alignment: .leading)
+            .foregroundColor(Color(red: 64/255, green: 64/255, blue: 64/255))
+    }
+}
+
+struct SymbolPickerRightVerticalViewer: View {
+    
+    var financeDetailModel: FinanceDetailModel
+    
+    var body: some View {
+        Text(financeDetailModel.regularMarketPrice?.withCommas() ?? "0.0")
+            .frame(maxWidth: .infinity, alignment: .trailing)
+        if(financeDetailModel.oneDayChange ?? 0 > 0) {
+            Text("+" + (financeDetailModel.oneDayChange?.withCommas() ?? "0.0"))
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .foregroundColor(.green)
+        } else if(financeDetailModel.oneDayChange ?? 0 < 0) {
+            Text(financeDetailModel.oneDayChange?.withCommas() ?? "0.0")
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .foregroundColor(.red)
+        }
     }
 }
 

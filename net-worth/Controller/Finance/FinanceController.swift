@@ -45,6 +45,9 @@ class FinanceController {
             return financeModel
         })
         
+        for i in 0..<financeModel.count {
+            financeModel[i].financeDetailModel = getSymbolDetail(symbol: financeModel[i].symbol!)
+        }
         return financeModel
     }
     
@@ -71,6 +74,44 @@ class FinanceController {
             self.financeDetailModel.chartPreviousClose = response.meta.chartPreviousClose
             self.financeDetailModel.oneDayChange = (self.financeDetailModel.regularMarketPrice ?? 0.0) - (self.financeDetailModel.chartPreviousClose ?? 0.0)
         }
+        
+        return financeDetailModel
+    }
+    
+    public func getSymbolDetail(symbol: String) -> FinanceDetailModel {
+        
+        dataCaptured = false
+        guard let url = URL(string: "https://query1.finance.yahoo.com/v8/finance/chart/" + symbol) else {
+            return financeDetailModel
+        }
+        
+        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            guard let data = data, error == nil else {
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  200 == httpResponse.statusCode else {
+                return
+            }
+            
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            let financeDetailModelResponse = try! decoder.decode(FinanceDetailModelResponse.self, from: data)
+            
+            for response in financeDetailModelResponse.chart.result {
+                self.financeDetailModel.currency = response.meta.currency
+                self.financeDetailModel.symbol = response.meta.currency
+                self.financeDetailModel.regularMarketPrice = response.meta.regularMarketPrice
+                self.financeDetailModel.chartPreviousClose = response.meta.chartPreviousClose
+                self.financeDetailModel.oneDayChange = (self.financeDetailModel.regularMarketPrice ?? 0.0) - (self.financeDetailModel.chartPreviousClose ?? 0.0)
+            }
+            self.dataCaptured = true
+        }
+        
+        task.resume()
+        
+        while(!dataCaptured) {}
         
         return financeDetailModel
     }

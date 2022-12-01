@@ -243,7 +243,6 @@
 			isa = PBXGroup;
 			children = (
 				7D433CF429385D9C007FA625 /* Finance */,
-				7DFA8CE7292BA59D00D5DA0F /* MutualFund */,
 				7DCC0AA0292663A1006CBF36 /* Notification */,
 				7D79FA86291B803A004A2ECF /* AccountController.swift */,
 				7DC97A2529221990003F69D4 /* SettingsController.swift */,
@@ -302,13 +301,6 @@
 				7DC97A23292216BB003F69D4 /* SettingsView.swift */,
 			);
 			path = SettingsView;
-			sourceTree = "<group>";
-		};
-		7DFA8CE7292BA59D00D5DA0F /* MutualFund */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = MutualFund;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
