@@ -58,6 +58,7 @@ struct AccountView: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                 Text(account.accounttype!).font(.system(size: 10))
                                     .frame(maxWidth: .infinity, alignment: .leading)
+                                    .foregroundColor(.gray)
                             }
                             Spacer()
                             AccountFinanceView(account: account)
@@ -118,9 +119,14 @@ struct AccountView: View {
                         Menu(content: {
                             Menu {
                                 Button(action: {
-                                    toggleAlphabetSortOrder()
+                                    toggleNameSortOrder()
                                 }) {
-                                    Text("Alphabet")
+                                    Text("Name")
+                                }
+                                Button(action: {
+                                    toggleDateAddedSortOrder()
+                                }) {
+                                    Text("Date Added")
                                 }
                             }
                         label: {
@@ -247,9 +253,15 @@ struct AccountView: View {
         }
     }
     
-    private func toggleAlphabetSortOrder() {
+    private func toggleNameSortOrder() {
         sortOrder = sortOrder == .reverse ? .forward : .reverse
         accounts.sortDescriptors = [SortDescriptor(\Account.accountname, order: sortOrder)]
+        reset = true
+    }
+    
+    private func toggleDateAddedSortOrder() {
+        sortOrder = sortOrder == .reverse ? .forward : .reverse
+        accounts.sortDescriptors = [SortDescriptor(\Account.timestamp, order: sortOrder)]
         reset = true
     }
     
