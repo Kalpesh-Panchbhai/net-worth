@@ -114,6 +114,28 @@ class AccountController {
         return balance
     }
     
+    public func getAccountTotalBalanceAsync() async throws -> Double {
+        var balance = 0.0
+        let request = Account.fetchRequest()
+        var accounts: [Account] = []
+        do{
+            accounts = try viewContext.fetch(request)
+        }catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+        for account in accounts {
+            if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan") {
+                balance += account.currentbalance
+            }else {
+                let currentRate = try await FinanceController().getSymbolDetails(symbol: account.symbol!).regularMarketPrice ?? 0.0
+                let currentBalance = currentRate * account.totalshare
+                balance += currentBalance
+            }
+        }
+        return balance
+    }
+    
     public func getAccount(uuid: UUID) -> Account {
         let request = Account.fetchRequest()
         request.predicate = NSPredicate(

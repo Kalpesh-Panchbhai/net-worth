@@ -25,6 +25,8 @@ struct AccountView: View {
     
     private var financeController = FinanceController()
     
+    @StateObject var financeListVM = FinanceListViewModel()
+    
     @State var searchKeyWord: String = ""
     
     @State var isOpen: Bool = false
@@ -73,7 +75,9 @@ struct AccountView: View {
                 }
             }
             .refreshable {
-                //                mutualFundController.fetch()
+                Task.init {
+                    await financeListVM.getTotalBalance()
+                }
             }
             .environment(\.editMode, self.$editMode)
             .listStyle(.inset)
@@ -195,7 +199,7 @@ struct AccountView: View {
                 }
                 ToolbarItem(placement: .bottomBar){
                     if(editMode == .inactive) {
-                        let balance = accountController.getAccountTotalBalance()
+                        let balance = financeListVM.totalBalance
                         HStack {
                             Text("Total Balance \(balance.withCommas(decimalPlace: 2))").foregroundColor(.blue).font(.title2)
                         }
@@ -218,6 +222,11 @@ struct AccountView: View {
             }
             .navigationTitle("Accounts")
             .searchable(text: $searchKeyWord, placement: .navigationBarDrawer(displayMode: .always))
+        }
+        .onAppear {
+            Task.init {
+                await financeListVM.getTotalBalance()
+            }
         }
     }
     
