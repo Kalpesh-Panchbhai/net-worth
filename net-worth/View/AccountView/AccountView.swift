@@ -206,7 +206,9 @@ struct AccountView: View {
                     if(editMode == .inactive) {
                         let balance = financeListVM.totalBalance
                         HStack {
-                            Text("Total Balance \(balance.withCommas(decimalPlace: 2))").foregroundColor(.blue).font(.title2)
+                            Text("Total Balance: \(SettingsController().getDefaultCurrency().symbol) \(balance.withCommas(decimalPlace: 2))")
+                                .foregroundColor(.blue)
+                                .font(.title2)
                         }
                     }else {
                         if(!isAllSelected && searchResults.count != selection.count) {

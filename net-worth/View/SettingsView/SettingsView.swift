@@ -56,7 +56,7 @@ struct SettingsView: View {
                 HStack {
                     Text(data.name)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(data.code)
+                    Text(data.symbol + " " + data.code)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                 }
                 .tag(data)
