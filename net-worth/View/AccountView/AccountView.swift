@@ -54,7 +54,7 @@ struct AccountView: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             Spacer()
-                            customView(account: account)
+                            AccountFinanceView(account: account)
                         }
                         .padding()
                     })
@@ -149,7 +149,7 @@ struct AccountView: View {
     }
 }
 
-struct customView: View {
+struct AccountFinanceView: View {
     
     var account: Account
     
