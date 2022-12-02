@@ -7,33 +7,81 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "160DF81E-F60E-4DD2-A558-557F7A73A574"
+            uuid = "CB26EDE1-7C08-43FF-8F28-D3C0373603D9"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "net-worth/Controller/Finance/FinanceController.swift"
+            filePath = "net-worth/View/SettingsView/SettingsView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
-            landmarkName = "getSymbolDetails(symbol:)"
+            startingLineNumber = "25"
+            endingLineNumber = "25"
+            landmarkName = "init()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "466B550B-0783-4E15-A344-BBC1B5F83343"
+            uuid = "A86FC518-A8C9-41CD-ABD4-4080A91F5F66"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "net-worth/View/AccountView/AccountView.swift"
+            filePath = "net-worth/Controller/SettingsController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "239"
-            endingLineNumber = "239"
-            landmarkName = "toggleAccountTypeFilter(accountType:)"
+            startingLineNumber = "43"
+            endingLineNumber = "43"
+            landmarkName = "setDefaultCurrency(newValue:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DFCBEDCC-5F40-4512-AA2D-1903B2AD3555"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "net-worth/Controller/SettingsController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "23"
+            endingLineNumber = "23"
+            landmarkName = "getDefaultCurrency()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "DFCBEDCC-5F40-4512-AA2D-1903B2AD3555 - 46516798f67db112"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "net_worth.SettingsController.getDefaultCurrency() -&gt; net_worth.Currency"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Controller/SettingsController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "23"
+                  endingLineNumber = "23"
+                  offsetFromSymbolStart = "104">
+               </Location>
+               <Location
+                  uuid = "DFCBEDCC-5F40-4512-AA2D-1903B2AD3555 - 46516798f67db112"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "net_worth.SettingsController.getDefaultCurrency() -&gt; net_worth.Currency"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Controller/SettingsController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "23"
+                  endingLineNumber = "23"
+                  offsetFromSymbolStart = "272">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

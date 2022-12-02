@@ -11,11 +11,19 @@ struct SettingsView: View {
     
     @State private var isAuthenticationRequired: Bool
     
+    @State private var currenySelected: Currency
+    @State private var searchTerm: String = ""
+    
+    private var currencyList = CurrencyList().currencyList
+    
+    @State private var filterCurrencyList = CurrencyList().currencyList
+    
     private var settingsController = SettingsController()
     private var notificationController = NotificationController()
     
     init() {
         isAuthenticationRequired = settingsController.isAuthenticationRequired()
+        currenySelected = settingsController.getDefaultCurrency()
     }
     
     var body: some View {
@@ -31,12 +39,43 @@ struct SettingsView: View {
                     Label("Notifications", systemImage: "play.square")
                 })
                 
+                defaultCurrencyPicker
+                
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
                 Text("Version " + appVersion!)
             }
             .navigationTitle("Settings")
             .listStyle(.inset)
         }
+    }
+    
+    var defaultCurrencyPicker: some View {
+        Picker("Default Currency", selection: $currenySelected) {
+            SearchBar(text: $searchTerm, placeholder: "Search currency")
+            ForEach(filterCurrencyList, id: \.self) { (data) in
+                HStack {
+                    Text(data.name)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text(data.code)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                }
+                .tag(data)
+            }
+        }
+        .edgesIgnoringSafeArea(.all)
+        .onChange(of: searchTerm) { (data) in
+            if(!data.isEmpty) {
+                filterCurrencyList = currencyList.filter({
+                    $0.name.lowercased().contains(searchTerm.lowercased()) || $0.symbol.lowercased().contains(searchTerm.lowercased()) || $0.code.lowercased().contains(searchTerm.lowercased())
+                })
+            } else {
+                filterCurrencyList = currencyList
+            }
+        }
+        .onChange(of: currenySelected) { (data) in
+            settingsController.setDefaultCurrency(newValue: data)
+        }
+        .pickerStyle(.navigationLink)
     }
 }
 
