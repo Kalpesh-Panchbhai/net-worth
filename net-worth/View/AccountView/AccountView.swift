@@ -222,6 +222,16 @@ struct AccountView: View {
             }
             .navigationTitle("Accounts")
             .searchable(text: $searchKeyWord, placement: .navigationBarDrawer(displayMode: .always))
+            .searchSuggestions {
+                Text("Saving").searchCompletion("Saving")
+                Text("Loan").searchCompletion("Loan")
+                Text("Credit Card").searchCompletion("Credit Card")
+                Text("Equity").searchCompletion("Equity")
+                Text("Cryptocurrency").searchCompletion("Cryptocurrency")
+                Text("Future").searchCompletion("Future")
+                Text("Fund").searchCompletion("Fund")
+                Text("ETF").searchCompletion("ETF")
+            }
         }
         .onAppear {
             Task.init {
