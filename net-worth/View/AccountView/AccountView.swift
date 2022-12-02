@@ -155,14 +155,19 @@ struct AccountView: View {
                                         Text("Mutual Fund")
                                     }
                                     Button(action: {
-                                        toggleAccountTypeFilter(accountType: "ETF")
-                                    }) {
-                                        Text("ETF")
-                                    }
-                                    Button(action: {
                                         toggleAccountTypeFilter(accountType: "Cryptocurrency")
                                     }) {
                                         Text("Cryptocurrency")
+                                    }
+                                    Button(action: {
+                                        toggleAccountTypeFilter(accountType: "Future")
+                                    }) {
+                                        Text("Future")
+                                    }
+                                    Button(action: {
+                                        toggleAccountTypeFilter(accountType: "ETF")
+                                    }) {
+                                        Text("ETF")
                                     }
                                 } label: {
                                     Label("Symbol", systemImage: "")
@@ -224,12 +229,12 @@ struct AccountView: View {
             .searchable(text: $searchKeyWord, placement: .navigationBarDrawer(displayMode: .always))
             .searchSuggestions {
                 Text("Saving").searchCompletion("Saving")
-                Text("Loan").searchCompletion("Loan")
                 Text("Credit Card").searchCompletion("Credit Card")
+                Text("Loan").searchCompletion("Loan")
                 Text("Equity").searchCompletion("Equity")
+                Text("Mutual Fund").searchCompletion("Fund")
                 Text("Cryptocurrency").searchCompletion("Cryptocurrency")
                 Text("Future").searchCompletion("Future")
-                Text("Fund").searchCompletion("Fund")
                 Text("ETF").searchCompletion("ETF")
             }
         }
