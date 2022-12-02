@@ -68,7 +68,9 @@ struct CurrencyList {
         currencyList.append(Currency(code: "BIF", symbol: "Fr", name: "Burundian franc"))
         currencyList.append(Currency(code: "BMD", symbol: "$", name: "Bermudian dollar"))
         currencyList.append(Currency(code: "BND", symbol: "$", name: "Brunei dollar"))
-        
+        currencyList.append(Currency(code: "EUR", symbol: "€", name: "Euro"))
+        currencyList.append(Currency(code: "EUR", symbol: "£", name: "Sterling"))
+        currencyList.append(Currency(code: "INR", symbol: "₹", name: "Indian rupee"))
         currencyList.append(Currency(code: "USD", symbol: "$", name: "US Dollar"))
     }
     
