@@ -206,7 +206,7 @@ struct AccountView: View {
                     if(editMode == .inactive) {
                         let balance = financeListVM.totalBalance
                         HStack {
-                            Text("Total Balance: \(SettingsController().getDefaultCurrency().symbol) \(balance.withCommas(decimalPlace: 2))")
+                            Text("Total Balance: \(SettingsController().getDefaultCurrency().code) \(balance.withCommas(decimalPlace: 2))")
                                 .foregroundColor(.blue)
                                 .font(.title2)
                         }
@@ -283,7 +283,7 @@ struct AccountFinanceView: View {
             } else {
                 let currentRate = financeListViewModel.financeDetailModel.regularMarketPrice ?? 0.0
                 let oneDayChange = financeListViewModel.financeDetailModel.oneDayChange ?? 0.0
-                Text("\((account.totalshare * currentRate).withCommas(decimalPlace: 2))")
+                Text((financeListViewModel.financeDetailModel.currency ?? "") + " \((account.totalshare * currentRate).withCommas(decimalPlace: 2))")
                     .frame(maxWidth: .infinity, alignment: .trailing)
                 if(oneDayChange > 0.0) {
                     Text("+\((account.totalshare * oneDayChange).withCommas(decimalPlace: 2))").font(.system(size: 15))
