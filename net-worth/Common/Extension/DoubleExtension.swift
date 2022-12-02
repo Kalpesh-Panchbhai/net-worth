@@ -5,11 +5,14 @@
 import Foundation
 
 extension Double {
-    func withCommas() -> String {
+    func withCommas(decimalPlace: Int) -> String {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
         numberFormatter.roundingMode = .halfUp
-        numberFormatter.maximumFractionDigits =  4
+        numberFormatter.minimumFractionDigits =  decimalPlace
+        numberFormatter.maximumFractionDigits =  decimalPlace
+        numberFormatter.paddingPosition = .afterPrefix
+        numberFormatter.paddingCharacter = "0"
         return numberFormatter.string(from: NSNumber(value:self))!
     }
     
@@ -17,7 +20,10 @@ extension Double {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
         numberFormatter.roundingMode = .halfUp
+        numberFormatter.minimumFractionDigits =  4
         numberFormatter.maximumFractionDigits =  4
+        numberFormatter.paddingPosition = .afterPrefix
+        numberFormatter.paddingCharacter = "0"
         return numberFormatter
     }
 }

@@ -175,7 +175,7 @@ struct NewAccountView: View {
         return HStack {
             Text(labelName)
             Spacer()
-            Text("\(currentRateShare.withCommas())")
+            Text("\(currentRateShare.withCommas(decimalPlace: 4))")
                 .onChange(of: [totalShares, currentRateShare], perform: { _ in
                     currentBalance = totalShares * currentRateShare
                 })
@@ -186,7 +186,7 @@ struct NewAccountView: View {
         return HStack {
             Text("Total Value")
             Spacer()
-            Text("\(currentBalance.withCommas())")
+            Text("\(currentBalance.withCommas(decimalPlace: 2))")
                 .onChange(of: [totalShares, currentRateShare], perform: { _ in
                     currentBalance = totalShares * currentRateShare
                 })
@@ -296,18 +296,18 @@ struct SymbolPickerRightVerticalViewer: View {
         case percentage, literal
     }
     var body: some View {
-        Text(financeDetailModel.regularMarketPrice?.withCommas() ?? "0.0")
+        Text(financeDetailModel.regularMarketPrice?.withCommas(decimalPlace: 2) ?? "0.0")
             .frame(maxWidth: .infinity, alignment: .trailing)
         if(valueType == ValueType.literal) {
             if(financeDetailModel.oneDayChange ?? 0 > 0) {
-                Button("+" + (financeDetailModel.oneDayChange?.withCommas() ?? "0.0")) {
+                Button("+" + (financeDetailModel.oneDayChange?.withCommas(decimalPlace: 2) ?? "0.0")) {
                     valueType = .percentage
                 }
                 .font(.system(size: 12))
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .foregroundColor(.green)
             } else if(financeDetailModel.oneDayChange ?? 0 < 0) {
-                Button(financeDetailModel.oneDayChange?.withCommas() ?? "0.0") {
+                Button(financeDetailModel.oneDayChange?.withCommas(decimalPlace: 2) ?? "0.0") {
                     valueType = .percentage
                 }
                 .font(.system(size: 12))
@@ -316,14 +316,14 @@ struct SymbolPickerRightVerticalViewer: View {
             }
         } else {
             if(financeDetailModel.oneDayPercentChange ?? 0 > 0) {
-                Button("+" + (financeDetailModel.oneDayPercentChange?.withCommas() ?? "0.0") + "%") {
+                Button("+" + (financeDetailModel.oneDayPercentChange?.withCommas(decimalPlace: 2) ?? "0.0") + "%") {
                     valueType = .literal
                 }
                 .font(.system(size: 12))
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .foregroundColor(.green)
             } else if(financeDetailModel.oneDayPercentChange ?? 0 < 0) {
-                Button(financeDetailModel.oneDayPercentChange?.withCommas() ?? "0.0" + "%") {
+                Button((financeDetailModel.oneDayPercentChange?.withCommas(decimalPlace: 2) ?? "0.0") + "%") {
                     valueType = .literal
                 }
                 .font(.system(size: 12))

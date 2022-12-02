@@ -28,14 +28,14 @@ struct AccountHistoryView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     VStack {
-                        Text("\(accountTransactionList[i].balancechange.withCommas())")
+                        Text("\(accountTransactionList[i].balancechange.withCommas(decimalPlace: 4))")
                             .frame(maxWidth: .infinity, alignment: .trailing)
                         if( i < accountTransactionList.count - 1) {
                             if((accountTransactionList[i].balancechange - accountTransactionList[i + 1].balancechange) > 0 ) {
-                                Text("+\((accountTransactionList[i].balancechange - accountTransactionList[i + 1].balancechange).withCommas())")
+                                Text("+\((accountTransactionList[i].balancechange - accountTransactionList[i + 1].balancechange).withCommas(decimalPlace: 2))")
                                     .frame(maxWidth: .infinity, alignment: .trailing).foregroundColor(.green)
                             } else if((accountTransactionList[i].balancechange - accountTransactionList[i + 1].balancechange) < 0 ) {
-                                Text("\((accountTransactionList[i].balancechange - accountTransactionList[i + 1].balancechange).withCommas())")
+                                Text("\((accountTransactionList[i].balancechange - accountTransactionList[i + 1].balancechange).withCommas(decimalPlace: 2))")
                                     .frame(maxWidth: .infinity, alignment: .trailing).foregroundColor(.red)
                             }
                         }
