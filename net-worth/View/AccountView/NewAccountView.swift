@@ -292,9 +292,7 @@ struct SymbolPickerRightVerticalViewer: View {
     var financeDetailModel: FinanceDetailModel
     
     @State private var valueType = ValueType.literal
-    enum ValueType {
-        case percentage, literal
-    }
+
     var body: some View {
         Text(financeDetailModel.regularMarketPrice?.withCommas(decimalPlace: 2) ?? "0.0")
             .frame(maxWidth: .infinity, alignment: .trailing)
