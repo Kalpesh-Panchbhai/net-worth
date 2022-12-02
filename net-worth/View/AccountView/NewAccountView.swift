@@ -291,17 +291,45 @@ struct SymbolPickerRightVerticalViewer: View {
     
     var financeDetailModel: FinanceDetailModel
     
+    @State private var valueType = ValueType.literal
+    enum ValueType {
+        case percentage, literal
+    }
     var body: some View {
         Text(financeDetailModel.regularMarketPrice?.withCommas() ?? "0.0")
             .frame(maxWidth: .infinity, alignment: .trailing)
-        if(financeDetailModel.oneDayChange ?? 0 > 0) {
-            Text("+" + (financeDetailModel.oneDayChange?.withCommas() ?? "0.0")).font(.system(size: 12))
+        if(valueType == ValueType.literal) {
+            if(financeDetailModel.oneDayChange ?? 0 > 0) {
+                Button("+" + (financeDetailModel.oneDayChange?.withCommas() ?? "0.0")) {
+                    valueType = .percentage
+                }
+                .font(.system(size: 12))
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .foregroundColor(.green)
-        } else if(financeDetailModel.oneDayChange ?? 0 < 0) {
-            Text(financeDetailModel.oneDayChange?.withCommas() ?? "0.0").font(.system(size: 12))
+            } else if(financeDetailModel.oneDayChange ?? 0 < 0) {
+                Button(financeDetailModel.oneDayChange?.withCommas() ?? "0.0") {
+                    valueType = .percentage
+                }
+                .font(.system(size: 12))
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .foregroundColor(.red)
+            }
+        } else {
+            if(financeDetailModel.oneDayPercentChange ?? 0 > 0) {
+                Button("+" + (financeDetailModel.oneDayPercentChange?.withCommas() ?? "0.0") + "%") {
+                    valueType = .literal
+                }
+                .font(.system(size: 12))
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .foregroundColor(.green)
+            } else if(financeDetailModel.oneDayPercentChange ?? 0 < 0) {
+                Button(financeDetailModel.oneDayPercentChange?.withCommas() ?? "0.0" + "%") {
+                    valueType = .literal
+                }
+                .font(.system(size: 12))
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .foregroundColor(.red)
+            }
         }
     }
 }

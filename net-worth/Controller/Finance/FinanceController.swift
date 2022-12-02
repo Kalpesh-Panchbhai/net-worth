@@ -73,6 +73,7 @@ class FinanceController {
             self.financeDetailModel.regularMarketPrice = response.meta.regularMarketPrice
             self.financeDetailModel.chartPreviousClose = response.meta.chartPreviousClose
             self.financeDetailModel.oneDayChange = (self.financeDetailModel.regularMarketPrice ?? 0.0) - (self.financeDetailModel.chartPreviousClose ?? 0.0)
+            self.financeDetailModel.oneDayPercentChange = (self.financeDetailModel.oneDayChange ?? 1.0) / (self.financeDetailModel.regularMarketPrice ?? 1.0) * 100
         }
         
         return financeDetailModel
@@ -105,6 +106,7 @@ class FinanceController {
                 self.financeDetailModel.regularMarketPrice = response.meta.regularMarketPrice
                 self.financeDetailModel.chartPreviousClose = response.meta.chartPreviousClose
                 self.financeDetailModel.oneDayChange = (self.financeDetailModel.regularMarketPrice ?? 0.0) - (self.financeDetailModel.chartPreviousClose ?? 0.0)
+                self.financeDetailModel.oneDayPercentChange = (self.financeDetailModel.oneDayChange ?? 1.0) / (self.financeDetailModel.regularMarketPrice ?? 1.0) * 100
             }
             self.dataCaptured = true
         }

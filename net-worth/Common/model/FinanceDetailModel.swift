@@ -19,6 +19,8 @@ struct FinanceDetailModel: Hashable {
     
     var oneDayChange: Double? = 0.0
     
+    var oneDayPercentChange: Double? = 0.0
+    
 }
 
 struct FinanceDetailModelResponse: Decodable {
