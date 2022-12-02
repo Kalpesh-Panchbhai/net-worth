@@ -12,8 +12,10 @@ struct AccountView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     
+    @State var sortOrder: SortOrder = .forward
+    
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Account.accountname, ascending: true)],
+        sortDescriptors: [SortDescriptor(\Account.accountname, order: .forward)],
         animation: .default)
     private var accounts: FetchedResults<Account>
     
@@ -95,6 +97,20 @@ struct AccountView: View {
                         }
                     }
                 }
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    if(editMode == .inactive) {
+                        Menu {
+                            Button(action: {
+                                toggleAlphabetSortOrder()
+                            }) {
+                                Text("By Alphabet")
+                            }
+                        }
+                    label: {
+                        Label("Add", systemImage: "arrow.up.arrow.down")
+                    }
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if(editMode == .inactive) {
                         Button(action: {
@@ -141,11 +157,13 @@ struct AccountView: View {
             }
             .navigationTitle("Accounts")
             .searchable(text: $searchAccountName) {
-                ForEach(searchResults, id: \.self) { result in
-                    Text("\(result.accountname!)").searchCompletion(result.accountname!)
-                }
             }
         }
+    }
+    
+    private func toggleAlphabetSortOrder() {
+        sortOrder = sortOrder == .reverse ? .forward : .reverse
+        accounts.sortDescriptors = [SortDescriptor(\Account.accountname, order: sortOrder)]
     }
 }
 
