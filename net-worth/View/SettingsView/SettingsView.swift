@@ -53,12 +53,7 @@ struct SettingsView: View {
         Picker("Default Currency", selection: $currenySelected) {
             SearchBar(text: $searchTerm, placeholder: "Search currency")
             ForEach(filterCurrencyList, id: \.self) { (data) in
-                HStack {
-                    Text(data.name)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(data.symbol + " " + data.code)
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                }
+                defaultCurrencyPickerRightVersionView(currency: data)
                 .tag(data)
             }
         }
@@ -76,6 +71,20 @@ struct SettingsView: View {
             settingsController.setDefaultCurrency(newValue: data)
         }
         .pickerStyle(.navigationLink)
+    }
+}
+
+struct defaultCurrencyPickerRightVersionView: View {
+    
+    var currency: Currency
+    
+    var body: some View {
+        HStack {
+            Text(currency.name)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Text(currency.symbol + " " + currency.code)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+        }
     }
 }
 
