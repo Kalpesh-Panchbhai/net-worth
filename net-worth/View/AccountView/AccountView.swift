@@ -14,6 +14,8 @@ struct AccountView: View {
     
     @State var sortOrder: SortOrder = .forward
     
+    @State private var reset : Bool = false
+    
     @FetchRequest(
         sortDescriptors: [SortDescriptor(\Account.accountname, order: .forward)],
         animation: .default)
@@ -23,7 +25,7 @@ struct AccountView: View {
     
     private var financeController = FinanceController()
     
-    @State var searchAccountName: String = ""
+    @State var searchKeyWord: String = ""
     
     @State var isOpen: Bool = false
     
@@ -31,10 +33,10 @@ struct AccountView: View {
     
     var searchResults: [Account] {
         accounts.filter { account in
-            if(searchAccountName.isEmpty) {
+            if(searchKeyWord.isEmpty) {
                 return true
             } else {
-                return account.accountname!.lowercased().contains(searchAccountName.lowercased())
+                return account.accountname!.lowercased().contains(searchKeyWord.lowercased()) || account.accounttype!.lowercased().contains(searchKeyWord.lowercased())
             }
         }
     }
@@ -97,18 +99,77 @@ struct AccountView: View {
                         }
                     }
                 }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    if(reset) {
+                        Button(action: {
+                            toggleResetFilter()
+                            self.reset.toggle()
+                        }, label: {
+                            Text("Reset")
+                        })
+                    }
+                }
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     if(editMode == .inactive) {
-                        Menu {
-                            Button(action: {
-                                toggleAlphabetSortOrder()
-                            }) {
-                                Text("By Alphabet")
+                        Menu(content: {
+                            Menu {
+                                Button(action: {
+                                    toggleAlphabetSortOrder()
+                                }) {
+                                    Text("Alphabet")
+                                }
                             }
+                        label: {
+                            Label("Sort By", systemImage: "arrow.up.arrow.down")
                         }
-                    label: {
-                        Label("Add", systemImage: "arrow.up.arrow.down")
-                    }
+                            
+                            Menu {
+                                Button(action: {
+                                    toggleAccountTypeFilter(accountType: "Saving")
+                                }) {
+                                    Text("Saving")
+                                }
+                                Button(action: {
+                                    toggleAccountTypeFilter(accountType: "Credit Card")
+                                }) {
+                                    Text("Credit Card")
+                                }
+                                Button(action: {
+                                    toggleAccountTypeFilter(accountType: "Loan")
+                                }) {
+                                    Text("Loan")
+                                }
+                                Menu {
+                                    Button(action: {
+                                        toggleAccountTypeFilter(accountType: "Equity")
+                                    }) {
+                                        Text("Equity")
+                                    }
+                                    Button(action: {
+                                        toggleAccountTypeFilter(accountType: "Fund")
+                                    }) {
+                                        Text("Mutual Fund")
+                                    }
+                                    Button(action: {
+                                        toggleAccountTypeFilter(accountType: "ETF")
+                                    }) {
+                                        Text("ETF")
+                                    }
+                                    Button(action: {
+                                        toggleAccountTypeFilter(accountType: "Cryptocurrency")
+                                    }) {
+                                        Text("Cryptocurrency")
+                                    }
+                                } label: {
+                                    Label("Symbol", systemImage: "")
+                                }
+                            }
+                        label: {
+                            Label("Filter By", systemImage: "")
+                        }
+                        }, label: {
+                            Label("", systemImage: "ellipsis.circle")
+                        })
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -156,14 +217,30 @@ struct AccountView: View {
                 }
             }
             .navigationTitle("Accounts")
-            .searchable(text: $searchAccountName) {
-            }
+            .searchable(text: $searchKeyWord, placement: .navigationBarDrawer(displayMode: .always))
         }
     }
     
     private func toggleAlphabetSortOrder() {
         sortOrder = sortOrder == .reverse ? .forward : .reverse
         accounts.sortDescriptors = [SortDescriptor(\Account.accountname, order: sortOrder)]
+        reset = true
+    }
+    
+    private func toggleResetFilter() {
+        sortOrder = .forward
+        accounts.sortDescriptors = [SortDescriptor(\Account.accountname, order: .forward)]
+        accounts.nsPredicate = NSPredicate(
+            format: "true = true"
+        )
+    }
+    
+    private func toggleAccountTypeFilter(accountType: String) {
+        accounts.sortDescriptors = [SortDescriptor(\Account.accountname, order: sortOrder)]
+        accounts.nsPredicate = NSPredicate(
+            format: "accounttype = %@", accountType
+        )
+        reset = true
     }
 }
 
