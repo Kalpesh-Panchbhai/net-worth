@@ -34,7 +34,7 @@ class FinanceListViewModel: ObservableObject {
     
     func getTotalBalance() async {
         do {
-            totalBalance = try await AccountController().getAccountTotalBalanceAsync()
+            totalBalance = try await AccountController().fetchTotalBalance()
         } catch {
             print(error)
         }

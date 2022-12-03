@@ -114,8 +114,8 @@ class AccountController {
         return balance
     }
     
-    public func getAccountTotalBalanceAsync() async throws -> Double {
-        var balance = 0.0
+    public func fetchTotalBalance() async throws -> Double {
+        
         let request = Account.fetchRequest()
         var accounts: [Account] = []
         do{
@@ -124,16 +124,28 @@ class AccountController {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
-        for account in accounts {
-            if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan") {
-                balance += account.currentbalance
-            }else {
-                let currentRate = try await FinanceController().getSymbolDetails(symbol: account.symbol!).regularMarketPrice ?? 0.0
-                let currentBalance = currentRate * account.totalshare
-                balance += currentBalance
+        
+        return try await withThrowingTaskGroup(of: Double.self) { group in
+            
+            var balance: Double = 0.0
+            
+            for account in accounts {
+                if(!(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan")) {
+                    group.addTask {
+                        (try await FinanceController().getSymbolDetails(symbol: account.symbol!).regularMarketPrice ?? 0.0) * account.totalshare
+                    }
+                } else {
+                    balance += account.currentbalance
+                }
             }
+            
+            for try await taskResult in group {
+                balance += taskResult
+            }
+            
+            return balance
+            
         }
-        return balance
     }
     
     public func getAccount(uuid: UUID) -> Account {
