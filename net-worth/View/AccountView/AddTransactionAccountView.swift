@@ -44,6 +44,7 @@ struct AddTransactionAccountView: View {
                         showingAlert.toggle()
                         let accountModel = AccountModel()
                         accountModel.sysId = account.sysid!
+                        accountModel.accountType = account.accounttype!
                         accountModel.currentBalance = currentBalance
                         
                         accountController.addTransaction(accountModel: accountModel)
