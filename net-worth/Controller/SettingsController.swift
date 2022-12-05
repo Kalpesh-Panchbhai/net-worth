@@ -22,10 +22,8 @@ class SettingsController {
     public func getDefaultCurrency() -> Currency {
         if let data = UserDefaults.standard.data(forKey: "default_currency") {
             do {
-                // Create JSON Decoder
                 let decoder = JSONDecoder()
 
-                // Decode Note
                 let currency = try decoder.decode(Currency.self, from: data)
 
                 return currency
@@ -39,10 +37,8 @@ class SettingsController {
     
     public func setDefaultCurrency(newValue: Currency) {
         do {
-            // Create JSON Encoder
             let encoder = JSONEncoder()
 
-            // Encode Note
             let data = try encoder.encode(newValue)
 
             // Write/Set Data
