@@ -78,6 +78,7 @@ class AccountController {
         newAccount.paymentreminder = accountModel.paymentReminder
         newAccount.paymentdate = Int16(accountModel.paymentDate)
         newAccount.symbol = accountModel.symbol
+        newAccount.currency = accountModel.currency
         
         do {
             try viewContext.save()

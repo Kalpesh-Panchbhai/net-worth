@@ -12,6 +12,9 @@ struct NewAccountView: View {
     @State private var accountType: String = "None"
     @State private var symbolType: String = "None"
     @State private var accountName: String = ""
+    @State public var currenySelected: Currency = Currency()
+    private var currencyList = CurrencyList().currencyList
+    @State private var filterCurrencyList = CurrencyList().currencyList
     
     @State private var financeModel = [FinanceModel]()
     @State private var financeSelected = FinanceModel()
@@ -53,14 +56,17 @@ struct NewAccountView: View {
                         currentBalance = 0.0
                         paymentDate = 1
                         paymentReminder = false
+                        currenySelected = Currency()
                     }
                     if(accountType == "Saving") {
                         nameField(labelName: "Account Name")
                         currentBalanceField()
+                        currencyPicker
                     }
                     else if(accountType == "Credit Card") {
                         nameField(labelName: "Credit Card Name")
                         currentBalanceField()
+                        currencyPicker
                         enablePaymentReminderField(labelName: "Enable Payment Reminder")
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
@@ -69,6 +75,7 @@ struct NewAccountView: View {
                     else if(accountType == "Loan") {
                         nameField(labelName: "Loan Name")
                         currentBalanceField()
+                        currencyPicker
                         enablePaymentReminderField(labelName: "Enable Loan Payment Reminder")
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
@@ -95,6 +102,7 @@ struct NewAccountView: View {
                         accountModel.accountName = accountName
                         if(accountType != "Symbol") {
                             accountModel.currentBalance = currentBalance
+                            accountModel.currency = currenySelected.code
                         }else {
                             accountModel.accountType = symbolType
                             accountModel.totalShares = totalShares
@@ -125,21 +133,45 @@ struct NewAccountView: View {
         }
     }
     
+    var currencyPicker: some View {
+        Picker("Currency", selection: $currenySelected) {
+            SearchBar(text: $searchTerm, placeholder: "Search currency")
+            ForEach(filterCurrencyList, id: \.self) { (data) in
+                defaultCurrencyPickerRightVersionView(currency: data)
+                .tag(data)
+            }
+        }
+        .edgesIgnoringSafeArea(.all)
+        .onChange(of: searchTerm) { (data) in
+            if(!data.isEmpty) {
+                filterCurrencyList = currencyList.filter({
+                    $0.name.lowercased().contains(searchTerm.lowercased()) || $0.symbol.lowercased().contains(searchTerm.lowercased()) || $0.code.lowercased().contains(searchTerm.lowercased())
+                })
+            } else {
+                filterCurrencyList = currencyList
+            }
+        }
+        .onChange(of: currenySelected) { (data) in
+            currenySelected = data
+        }
+        .pickerStyle(.navigationLink)
+    }
+    
     private func allFieldsFilled () -> Bool {
         if accountType == "Saving" {
-            if accountName.isEmpty {
+            if accountName.isEmpty || currenySelected.name.isEmpty {
                 return false
             } else {
                 return true
             }
         }else if accountType == "Credit Card" {
-            if accountName.isEmpty {
+            if accountName.isEmpty || currenySelected.name.isEmpty  {
                 return false
             } else {
                 return true
             }
         }else if accountType == "Loan" {
-            if accountName.isEmpty || currentBalance.isZero {
+            if accountName.isEmpty || currentBalance.isZero || currenySelected.name.isEmpty  {
                 return false
             } else {
                 return true
@@ -332,8 +364,8 @@ struct SymbolPickerRightVerticalViewer: View {
     }
 }
 
-struct NewAccountView_Previews: PreviewProvider {
-    static var previews: some View {
-        NewAccountView()
-    }
-}
+//struct NewAccountView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NewAccountView()
+//    }
+//}

@@ -29,10 +29,12 @@ struct AccountDetailsView: View {
                 if(account.accounttype == "Saving") {
                     field(labelName: "Account Name", value: account.accountname!)
                     field(labelName: "Current Balance", value: "\(account.currentbalance.withCommas(decimalPlace: 4))")
+                    field(labelName: "Currency", value: account.currency!)
                 }
                 else if(account.accounttype == "Credit Card") {
                     field(labelName: "Credit Card Name", value: account.accountname!)
                     field(labelName: "Current Balance", value: "\(account.currentbalance.withCommas(decimalPlace: 4))")
+                    field(labelName: "Currency", value: account.currency!)
                     if(account.paymentreminder) {
                         field(labelName: "Payment Reminder", value: "On")
                         field(labelName: "Payment Date", value: "\(account.paymentdate)")
@@ -43,6 +45,7 @@ struct AccountDetailsView: View {
                 else if(account.accounttype == "Loan") {
                     field(labelName: "Loan Name", value: account.accountname!)
                     field(labelName: "Current Balance", value: "\(account.currentbalance.withCommas(decimalPlace: 4))")
+                    field(labelName: "Currency", value: account.currency!)
                     if(account.paymentreminder) {
                         field(labelName: "Payment Reminder", value: "On")
                         field(labelName: "Payment Date", value: "\(account.paymentdate)")

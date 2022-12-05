@@ -291,7 +291,7 @@ struct AccountFinanceView: View {
     var body: some View {
         VStack {
             if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan") {
-                Text("\(account.currentbalance.withCommas(decimalPlace: 2))")
+                Text((account.currency ?? "") + " \(account.currentbalance.withCommas(decimalPlace: 2))")
             } else {
                 let currentRate = financeListViewModel.financeDetailModel.regularMarketPrice ?? 0.0
                 let oneDayChange = financeListViewModel.financeDetailModel.oneDayChange ?? 0.0

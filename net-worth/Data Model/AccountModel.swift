@@ -24,4 +24,6 @@ class AccountModel {
     var paymentDate: Int = 0
     
     var symbol: String = ""
+    
+    var currency: String = ""
 }
