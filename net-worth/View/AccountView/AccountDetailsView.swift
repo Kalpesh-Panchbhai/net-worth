@@ -67,8 +67,8 @@ struct AccountDetailsView: View {
                 else {
                     field(labelName: "Symbol Name", value: account.accountname!)
                     field(labelName: "Total Units", value: "\(account.totalshare.withCommas(decimalPlace: 4))")
-                    field(labelName: "Current rate of a unit", value: (financeListVM.financeDetailModel.regularMarketPrice ?? 0.0).withCommas(decimalPlace: 2))
-                    field(labelName: "Total Value", value: (account.totalshare * (financeListVM.financeDetailModel.regularMarketPrice ?? 0.0)).withCommas(decimalPlace: 2))
+                    field(labelName: "Current rate of a unit", value: (financeListVM.financeDetailModel.regularMarketPrice ?? 0.0).withCommas(decimalPlace: 4))
+                    field(labelName: "Total Value", value: (account.totalshare * (financeListVM.financeDetailModel.regularMarketPrice ?? 0.0)).withCommas(decimalPlace: 4))
                     if(account.paymentreminder) {
                         field(labelName: "Payment Reminder", value: "On")
                         field(labelName: "Payment Date", value: "\(account.paymentdate)")

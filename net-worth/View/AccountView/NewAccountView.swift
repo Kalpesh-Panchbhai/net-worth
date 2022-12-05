@@ -340,7 +340,7 @@ struct SymbolPickerRightVerticalViewer: View {
     @State private var valueType = ValueType.literal
 
     var body: some View {
-        Text((CurrencyList().getSymbolWithCode(code: financeDetailModel.symbol ?? "").symbol) + " " + (financeDetailModel.regularMarketPrice?.withCommas(decimalPlace: 2) ?? "0.0"))
+        Text((CurrencyList().getSymbolWithCode(code: financeDetailModel.symbol ?? "").symbol) + " " + (financeDetailModel.regularMarketPrice?.withCommas(decimalPlace: 4) ?? "0.0"))
             .frame(maxWidth: .infinity, alignment: .trailing)
         if(valueType == ValueType.literal) {
             if(financeDetailModel.oneDayChange ?? 0 > 0) {
