@@ -10,15 +10,23 @@ import SwiftUI
 struct NotificationsView: View {
     
     @State private var mutualFundNotification: Bool
+    @State private var equityNotification: Bool
+    @State private var etfNotification: Bool
+    @State private var cryptoCurrencyNotification: Bool
+    @State private var futureNotification: Bool
+    @State private var optionNotification: Bool
     @State private var creditCardNotification: Bool
-    @State private var stockNotification: Bool
     @State private var loanNotification: Bool
     
     private var notificationController = NotificationController()
     init() {
-        mutualFundNotification = notificationController.isNotificationEnabled(accountType: "Mutual Fund")
+        mutualFundNotification = notificationController.isNotificationEnabled(accountType: "MUTUALFUND")
+        equityNotification = notificationController.isNotificationEnabled(accountType: "EQUITY")
+        etfNotification = notificationController.isNotificationEnabled(accountType: "ETF")
+        cryptoCurrencyNotification = notificationController.isNotificationEnabled(accountType: "CRYPTOCURRENCY")
+        futureNotification = notificationController.isNotificationEnabled(accountType: "FUTURE")
+        optionNotification = notificationController.isNotificationEnabled(accountType: "OPTION")
         creditCardNotification = notificationController.isNotificationEnabled(accountType: "Credit Card")
-        stockNotification = notificationController.isNotificationEnabled(accountType: "Stock")
         loanNotification = notificationController.isNotificationEnabled(accountType: "Loan")
     }
     
@@ -28,19 +36,43 @@ struct NotificationsView: View {
                 Section("Mutual Fund Notifications") {
                     Toggle("Show Notifications", isOn: $mutualFundNotification)
                         .onChange(of: mutualFundNotification) { newValue in
-                            notificationController.setNotification(newValue: newValue, accountType: "Mutual Fund")
+                            notificationController.setNotification(newValue: newValue, accountType: "MUTUALFUND")
+                        }
+                }
+                Section("Equity Notifications") {
+                    Toggle("Show Notifications", isOn: $equityNotification)
+                        .onChange(of: equityNotification) { newValue in
+                            notificationController.setNotification(newValue: newValue, accountType: "EQUITY")
+                        }
+                }
+                Section("ETF Notifications") {
+                    Toggle("Show Notifications", isOn: $etfNotification)
+                        .onChange(of: etfNotification) { newValue in
+                            notificationController.setNotification(newValue: newValue, accountType: "ETF")
+                        }
+                }
+                Section("Cryptocurrency Notifications") {
+                    Toggle("Show Notifications", isOn: $cryptoCurrencyNotification)
+                        .onChange(of: cryptoCurrencyNotification) { newValue in
+                            notificationController.setNotification(newValue: newValue, accountType: "CRYPTOCURRENCY")
+                        }
+                }
+                Section("Futures Notifications") {
+                    Toggle("Show Notifications", isOn: $futureNotification)
+                        .onChange(of: futureNotification) { newValue in
+                            notificationController.setNotification(newValue: newValue, accountType: "FUTURE")
+                        }
+                }
+                Section("Options Notifications") {
+                    Toggle("Show Notifications", isOn: $optionNotification)
+                        .onChange(of: optionNotification) { newValue in
+                            notificationController.setNotification(newValue: newValue, accountType: "OPTION")
                         }
                 }
                 Section("Credit Card Notifications") {
                     Toggle("Show Notifications", isOn: $creditCardNotification)
                         .onChange(of: creditCardNotification) { newValue in
                             notificationController.setNotification(newValue: newValue, accountType: "Credit Card")
-                        }
-                }
-                Section("Stock Notifications") {
-                    Toggle("Show Notifications", isOn: $stockNotification)
-                        .onChange(of: stockNotification) { newValue in
-                            notificationController.setNotification(newValue: newValue, accountType: "Stock")
                         }
                 }
                 Section("Loan Notifications") {

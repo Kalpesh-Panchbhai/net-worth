@@ -15,8 +15,6 @@ struct FinanceModel: Hashable {
     
     var symbol: String? = ""
     
-    var typeDisp: String? = ""
-    
     var longname: String? = ""
     
     var exchDisp: String? = ""
@@ -36,8 +34,6 @@ struct FinanceQuotesResponse: Decodable {
     let quoteType: String?
     
     let symbol: String?
-    
-    let typeDisp: String?
     
     let longname: String?
     

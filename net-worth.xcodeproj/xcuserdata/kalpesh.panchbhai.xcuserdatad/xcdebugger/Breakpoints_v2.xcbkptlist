@@ -7,7 +7,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "EF67B29E-67D3-40C8-A6F5-88D9C4338909"
+            uuid = "D220AEE6-9A40-4D8D-B011-A00781AEFFF6"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -20,7 +20,7 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "EF67B29E-67D3-40C8-A6F5-88D9C4338909 - 63476ecbf78041d8"
+                  uuid = "D220AEE6-9A40-4D8D-B011-A00781AEFFF6 - 63476ecbf78041d8"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -35,7 +35,7 @@
                   offsetFromSymbolStart = "1400">
                </Location>
                <Location
-                  uuid = "EF67B29E-67D3-40C8-A6F5-88D9C4338909 - 503e6a59518c789b"
+                  uuid = "D220AEE6-9A40-4D8D-B011-A00781AEFFF6 - 503e6a59518c789b"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -47,7 +47,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "37"
                   endingLineNumber = "37"
-                  offsetFromSymbolStart = "184">
+                  offsetFromSymbolStart = "140">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -55,15 +55,31 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "03802966-C93A-4156-89BA-11571A0FE3B0"
+            uuid = "243DB225-BC94-45CD-AFDB-C99308BCE4BB"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "net-worth/Controller/Notification/NotificationController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
+            landmarkName = "setNotification(id:day:accountType:accountName:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E4B98A21-1B5D-4102-BB23-7633143AF1D9"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "net-worth/Controller/Finance/FinanceController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "56"
-            endingLineNumber = "56"
+            startingLineNumber = "43"
+            endingLineNumber = "43"
             landmarkName = "getAllSymbols(searchTerm:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -71,81 +87,33 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A32386CA-4F5B-4FAF-BB30-4304CBFA3B0D"
+            uuid = "916B6C7D-4CEB-4451-AE7C-95A1C9831AC1"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "net-worth/Controller/Finance/FinanceController.swift"
+            filePath = "net-worth/View/AccountView/NewAccountView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "20"
-            endingLineNumber = "20"
-            landmarkName = "getAllSymbols(searchTerm:)"
-            landmarkType = "7">
+            startingLineNumber = "256"
+            endingLineNumber = "256"
+            landmarkName = "symbolPicker"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F4BB2950-4528-48B1-9AA8-B1739DA804B3"
+            uuid = "B370586E-1367-4FD4-8DC9-54656EB9C66F"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "net-worth/Controller/Finance/FinanceController.swift"
+            filePath = "net-worth/View/AccountView/NewAccountView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "29"
-            endingLineNumber = "29"
-            landmarkName = "getAllSymbols(searchTerm:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "F4BB2950-4528-48B1-9AA8-B1739DA804B3 - 63476ecbf78040f1"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for net_worth.FinanceController.getAllSymbols(searchTerm: Swift.String) async throws -&gt; Swift.Array&lt;net_worth.FinanceModel&gt;"
-                  moduleName = "net-worth"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Controller/Finance/FinanceController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "29"
-                  endingLineNumber = "29"
-                  offsetFromSymbolStart = "368">
-               </Location>
-               <Location
-                  uuid = "F4BB2950-4528-48B1-9AA8-B1739DA804B3 - 63476ecbf78040f1"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for net_worth.FinanceController.getAllSymbols(searchTerm: Swift.String) async throws -&gt; Swift.Array&lt;net_worth.FinanceModel&gt;"
-                  moduleName = "net-worth"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Controller/Finance/FinanceController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "29"
-                  endingLineNumber = "29"
-                  offsetFromSymbolStart = "624">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "3B698A0F-EB74-4C12-9506-D1BF4412A07F"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "net-worth/Controller/Finance/FinanceController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
-            landmarkName = "getAllSymbols(searchTerm:)"
-            landmarkType = "7">
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "body"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

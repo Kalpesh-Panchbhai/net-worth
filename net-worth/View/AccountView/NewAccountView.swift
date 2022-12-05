@@ -253,7 +253,7 @@ struct NewAccountView: View {
         }
         .onChange(of: financeSelected) { (data) in
             accountName = data.longname ?? data.shortname ?? " "
-            symbolType = data.typeDisp ?? " "
+            symbolType = data.quoteType ?? " "
             symbol = data.symbol ?? " "
             currentRateShare = data.financeDetailModel?.regularMarketPrice ?? 0.0
             
@@ -281,7 +281,7 @@ struct SymbolPickerLeftVerticalViewer: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .foregroundColor(Color(red: 96/255, green: 96/255, blue: 96/255))
         }
-        Text(financeModel.typeDisp!).font(.system(size: 10))
+        Text(financeModel.quoteType!).font(.system(size: 10))
             .frame(maxWidth: .infinity, alignment: .leading)
             .foregroundColor(Color(red: 96/255, green: 96/255, blue: 96/255))
     }

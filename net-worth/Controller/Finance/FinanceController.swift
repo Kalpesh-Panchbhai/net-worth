@@ -38,13 +38,7 @@ class FinanceController {
                 var financeModel = FinanceModel()
                 financeModel.shortname = $0.shortname
                 financeModel.symbol = $0.symbol
-                if($0.quoteType?.lowercased().elementsEqual("fund") ?? false) {
-                    financeModel.typeDisp = "Mutual Fund"
-                    financeModel.quoteType = "MUTUAL FUND"
-                } else {
-                    financeModel.quoteType = $0.quoteType
-                    financeModel.typeDisp = $0.typeDisp
-                }
+                financeModel.quoteType = $0.quoteType
                 financeModel.longname = $0.longname
                 financeModel.exchDisp = $0.exchDisp
                 
