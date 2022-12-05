@@ -44,17 +44,9 @@ struct AccountDetailsNavigationLinkView: View {
             Spacer()
         }
         .toolbar {
-            if(account.accounttype == "Stock") {
+            if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Add Shares", action: {
-                        self.isTransactionOpen.toggle()
-                    }).sheet(isPresented: $isTransactionOpen, content: {
-                        AddTransactionAccountView(account: self.account)
-                    })
-                }
-            } else if(account.accounttype == "Mutual Fund") {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Add Units", action: {
+                    Button("Add Transaction", action: {
                         self.isTransactionOpen.toggle()
                     }).sheet(isPresented: $isTransactionOpen, content: {
                         AddTransactionAccountView(account: self.account)
@@ -62,7 +54,7 @@ struct AccountDetailsNavigationLinkView: View {
                 }
             } else {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Add Transaction", action: {
+                    Button("Add Units", action: {
                         self.isTransactionOpen.toggle()
                     }).sheet(isPresented: $isTransactionOpen, content: {
                         AddTransactionAccountView(account: self.account)
