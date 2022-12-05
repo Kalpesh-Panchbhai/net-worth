@@ -56,7 +56,7 @@ struct NewAccountView: View {
                         currentBalance = 0.0
                         paymentDate = 1
                         paymentReminder = false
-                        currenySelected = Currency()
+                        currenySelected = SettingsController().getDefaultCurrency()
                     }
                     if(accountType == "Saving") {
                         nameField(labelName: "Account Name")
@@ -162,6 +162,9 @@ struct NewAccountView: View {
         }
         .onChange(of: currenySelected) { (data) in
             currenySelected = data
+        }
+        .onAppear{
+            currenySelected = SettingsController().getDefaultCurrency()
         }
         .pickerStyle(.navigationLink)
     }
