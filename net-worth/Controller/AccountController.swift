@@ -21,7 +21,7 @@ class AccountController {
         newTransaction.sysid = UUID()
         newTransaction.timestamp = Date()
         newTransaction.accountsysid = accountModel.sysId
-        if(accountModel.accountType == "Saving" || accountModel.accountType == "Credit Card" || accountModel.accountType == "Loan") {
+        if(accountModel.accountType == "Saving" || accountModel.accountType == "Credit Card" || accountModel.accountType == "Loan" || accountModel.accountType == "Other") {
             newTransaction.balancechange = accountModel.currentBalance
         } else {
             newTransaction.balancechange = accountModel.totalShares

@@ -53,6 +53,17 @@ struct AccountDetailsView: View {
                         field(labelName: "Payment Reminder", value: "Off")
                     }
                 }
+                else if(account.accounttype == "Other") {
+                    field(labelName: "Account Name", value: account.accountname!)
+                    field(labelName: "Current Balance", value: "\(account.currentbalance.withCommas(decimalPlace: 4))")
+                    field(labelName: "Currency", value: account.currency!)
+                    if(account.paymentreminder) {
+                        field(labelName: "Payment Reminder", value: "On")
+                        field(labelName: "Payment Date", value: "\(account.paymentdate)")
+                    }else {
+                        field(labelName: "Payment Reminder", value: "Off")
+                    }
+                }
                 else {
                     field(labelName: "Symbol Name", value: account.accountname!)
                     field(labelName: "Total Units", value: "\(account.totalshare.withCommas(decimalPlace: 4))")

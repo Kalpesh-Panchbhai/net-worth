@@ -28,13 +28,10 @@ struct AddTransactionAccountView: View {
     var body: some View {
         NavigationView {
             Form {
-                if(account.accounttype == "Saving") {
+                if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
                     currentBalanceField()
-                } else if(account.accounttype == "Credit Card") {
-                    currentBalanceField()
-                } else if(account.accounttype == "Loan") {
-                    currentBalanceField()
-                } else {
+                }
+                else {
                     currentUnitField()
                 }
             }
@@ -49,7 +46,7 @@ struct AddTransactionAccountView: View {
                         
                         accountController.addTransaction(accountModel: accountModel)
                         
-                        if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan") {
+                        if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
                             account.currentbalance = accountModel.currentBalance
                         } else {
                             account.totalshare = accountModel.currentBalance
@@ -58,7 +55,6 @@ struct AddTransactionAccountView: View {
                     }, label: {
                         Label("Add Account", systemImage: "checkmark")
                     })
-//                    .disabled(!allFieldsFilled())
                     .alert("Transaction has been added!", isPresented: $showingAlert, actions: {
                         Button("OK", role: .cancel) {
                             dismiss()
@@ -70,18 +66,6 @@ struct AddTransactionAccountView: View {
             }
             .navigationTitle("Update Balance")
             .navigationBarTitleDisplayMode(.inline)
-        }
-    }
-    
-    private func allFieldsFilled () -> Bool {
-        if account.accounttype == "Saving" {
-            if currentBalance.isZero {
-                return false
-            } else {
-                return true
-            }
-        }else {
-            return false
         }
     }
     
