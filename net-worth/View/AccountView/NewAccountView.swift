@@ -115,6 +115,7 @@ struct NewAccountView: View {
                             accountModel.accountType = symbolType
                             accountModel.totalShares = totalShares
                             accountModel.symbol = symbol
+                            accountModel.currency = financeSelected.financeDetailModel?.currency ?? ""
                         }
                         accountModel.paymentReminder = paymentReminder
                         
