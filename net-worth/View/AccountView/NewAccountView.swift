@@ -15,6 +15,7 @@ struct NewAccountView: View {
     @State public var currenySelected: Currency = Currency()
     private var currencyList = CurrencyList().currencyList
     @State private var filterCurrencyList = CurrencyList().currencyList
+    @State private var currencyChanged = false
     
     @State private var financeModel = [FinanceModel]()
     @State private var financeSelected = FinanceModel()
@@ -162,9 +163,12 @@ struct NewAccountView: View {
         }
         .onChange(of: currenySelected) { (data) in
             currenySelected = data
+            currencyChanged.toggle()
         }
         .onAppear{
-            currenySelected = SettingsController().getDefaultCurrency()
+            if(currencyChanged){
+                currenySelected = SettingsController().getDefaultCurrency()
+            }
         }
         .pickerStyle(.navigationLink)
     }
