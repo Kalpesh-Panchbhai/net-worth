@@ -135,6 +135,7 @@
 		7D0D14B82937228A00AC30A3 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				7DF1E9C7292A43C8003D030E /* AccountModel.swift */,
 				7D433CF729386002007FA625 /* FinanceModel.swift */,
 				7DEC3B7F2938A38B002E9C8B /* FinanceDetailModel.swift */,
 			);
@@ -237,7 +238,6 @@
 			children = (
 				7D79FA59291B7431004A2ECF /* Persistence.swift */,
 				7D79FA5B291B7431004A2ECF /* net_worth.xcdatamodeld */,
-				7DF1E9C7292A43C8003D030E /* AccountModel.swift */,
 			);
 			path = "Data Model";
 			sourceTree = "<group>";
