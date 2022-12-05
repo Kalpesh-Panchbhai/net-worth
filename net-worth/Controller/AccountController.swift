@@ -111,7 +111,11 @@ class AccountController {
             for account in accounts {
                 if(!(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other")) {
                     group.addTask {
-                        (try await FinanceController().getSymbolDetails(symbol: account.symbol!).regularMarketPrice ?? 0.0) * account.totalshare
+                        var currentRate = 1.0
+                        if(account.currency != SettingsController().getDefaultCurrency().code) {
+                            currentRate = try await FinanceController().getSymbolDetails(symbol: account.currency! + SettingsController().getDefaultCurrency().code + "=X").regularMarketPrice ?? 1.0
+                        }
+                        return (try await FinanceController().getSymbolDetails(symbol: account.symbol!).regularMarketPrice ?? 0.0) * account.totalshare * currentRate
                     }
                 } else {
                     balance += account.currentbalance
