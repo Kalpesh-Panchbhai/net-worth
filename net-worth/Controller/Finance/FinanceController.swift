@@ -34,11 +34,11 @@ class FinanceController {
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         let financeModelResponse = try! decoder.decode(FinanceModelResponse.self, from: data)
         self.financeModel = financeModelResponse.quotes.compactMap({
-            if(!($0.quoteType?.lowercased().elementsEqual("index") ?? false)) {
+            if(!($0.quoteType?.lowercased().elementsEqual("index") ?? true)) {
                 var financeModel = FinanceModel()
                 financeModel.shortname = $0.shortname
                 financeModel.symbol = $0.symbol
-                if(($0.typeDisp?.lowercased().elementsEqual("fund")) != nil) {
+                if($0.quoteType?.lowercased().elementsEqual("fund") ?? false) {
                     financeModel.typeDisp = "Mutual Fund"
                     financeModel.quoteType = "MUTUAL FUND"
                 } else {
