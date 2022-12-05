@@ -17,6 +17,7 @@ struct NotificationsView: View {
     @State private var optionNotification: Bool
     @State private var creditCardNotification: Bool
     @State private var loanNotification: Bool
+    @State private var otherNotification: Bool
     
     private var notificationController = NotificationController()
     init() {
@@ -28,6 +29,7 @@ struct NotificationsView: View {
         optionNotification = notificationController.isNotificationEnabled(accountType: "OPTION")
         creditCardNotification = notificationController.isNotificationEnabled(accountType: "Credit Card")
         loanNotification = notificationController.isNotificationEnabled(accountType: "Loan")
+        otherNotification = notificationController.isNotificationEnabled(accountType: "Other")
     }
     
     var body: some View {
@@ -79,6 +81,12 @@ struct NotificationsView: View {
                     Toggle("Show Notifications", isOn: $loanNotification)
                         .onChange(of: loanNotification) { newValue in
                             notificationController.setNotification(newValue: newValue, accountType: "Loan")
+                        }
+                }
+                Section("Other Notifications") {
+                    Toggle("Show Notifications", isOn: $otherNotification)
+                        .onChange(of: otherNotification) { newValue in
+                            notificationController.setNotification(newValue: newValue, accountType: "Other")
                         }
                 }
             }

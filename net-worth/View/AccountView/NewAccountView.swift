@@ -91,6 +91,14 @@ struct NewAccountView: View {
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a SIP date")
                         }
+                    } else if(accountType == "Other") {
+                        nameField(labelName: "Account Name")
+                        currentBalanceField()
+                        currencyPicker
+                        enablePaymentReminderField(labelName: "Enable Payment Reminder")
+                        if(paymentReminder) {
+                            paymentDateField(labelName: "Select a payment date")
+                        }
                     }
                 }
             }
@@ -178,6 +186,12 @@ struct NewAccountView: View {
             }
         }else if accountType == "Symbol" {
             if accountName.isEmpty || totalShares.isZero || currentRateShare.isZero {
+                return false
+            } else {
+                return true
+            }
+        }else if accountType == "Other" {
+            if accountName.isEmpty || currenySelected.name.isEmpty  {
                 return false
             } else {
                 return true
