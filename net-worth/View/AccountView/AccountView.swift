@@ -116,87 +116,89 @@ struct AccountView: View {
                         })
                     }
                 }
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    if(editMode == .inactive) {
-                        Menu(content: {
-                            Menu {
-                                Button(action: {
-                                    toggleNameSortOrder()
-                                }) {
-                                    Text("Name")
-                                }
-                                Button(action: {
-                                    toggleDateAddedSortOrder()
-                                }) {
-                                    Text("Date Added")
-                                }
-                            }
-                        label: {
-                            Label("Sort By", systemImage: "arrow.up.arrow.down")
-                        }
-                            
-                            Menu {
-                                Button(action: {
-                                    toggleAccountTypeFilter(accountType: "Saving")
-                                }) {
-                                    Text("Saving")
-                                }
-                                Button(action: {
-                                    toggleAccountTypeFilter(accountType: "Credit Card")
-                                }) {
-                                    Text("Credit Card")
-                                }
-                                Button(action: {
-                                    toggleAccountTypeFilter(accountType: "Loan")
-                                }) {
-                                    Text("Loan")
-                                }
+                if !accounts.isEmpty {
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
+                        if(editMode == .inactive) {
+                            Menu(content: {
                                 Menu {
                                     Button(action: {
-                                        toggleAccountTypeFilter(accountType: "EQUITY")
+                                        toggleNameSortOrder()
                                     }) {
-                                        Text("Equity")
+                                        Text("Name")
                                     }
                                     Button(action: {
-                                        toggleAccountTypeFilter(accountType: "MUTUALFUND")
+                                        toggleDateAddedSortOrder()
                                     }) {
-                                        Text("Mutual Fund")
+                                        Text("Date Added")
                                     }
-                                    Button(action: {
-                                        toggleAccountTypeFilter(accountType: "CRYPTOCURRENCY")
-                                    }) {
-                                        Text("Cryptocurrency")
-                                    }
-                                    Button(action: {
-                                        toggleAccountTypeFilter(accountType: "FUTURE")
-                                    }) {
-                                        Text("Future")
-                                    }
-                                    Button(action: {
-                                        toggleAccountTypeFilter(accountType: "OPTION")
-                                    }) {
-                                        Text("Option")
-                                    }
-                                    Button(action: {
-                                        toggleAccountTypeFilter(accountType: "ETF")
-                                    }) {
-                                        Text("ETF")
-                                    }
-                                } label: {
-                                    Label("Symbol", systemImage: "")
                                 }
-                                Button(action: {
-                                    toggleAccountTypeFilter(accountType: "Other")
-                                }) {
-                                    Text("Other")
-                                }
+                            label: {
+                                Label("Sort By", systemImage: "arrow.up.arrow.down")
                             }
-                        label: {
-                            Label("Filter By", systemImage: "")
+                                
+                                Menu {
+                                    Button(action: {
+                                        toggleAccountTypeFilter(accountType: "Saving")
+                                    }) {
+                                        Text("Saving")
+                                    }
+                                    Button(action: {
+                                        toggleAccountTypeFilter(accountType: "Credit Card")
+                                    }) {
+                                        Text("Credit Card")
+                                    }
+                                    Button(action: {
+                                        toggleAccountTypeFilter(accountType: "Loan")
+                                    }) {
+                                        Text("Loan")
+                                    }
+                                    Menu {
+                                        Button(action: {
+                                            toggleAccountTypeFilter(accountType: "EQUITY")
+                                        }) {
+                                            Text("Equity")
+                                        }
+                                        Button(action: {
+                                            toggleAccountTypeFilter(accountType: "MUTUALFUND")
+                                        }) {
+                                            Text("Mutual Fund")
+                                        }
+                                        Button(action: {
+                                            toggleAccountTypeFilter(accountType: "CRYPTOCURRENCY")
+                                        }) {
+                                            Text("Cryptocurrency")
+                                        }
+                                        Button(action: {
+                                            toggleAccountTypeFilter(accountType: "FUTURE")
+                                        }) {
+                                            Text("Future")
+                                        }
+                                        Button(action: {
+                                            toggleAccountTypeFilter(accountType: "OPTION")
+                                        }) {
+                                            Text("Option")
+                                        }
+                                        Button(action: {
+                                            toggleAccountTypeFilter(accountType: "ETF")
+                                        }) {
+                                            Text("ETF")
+                                        }
+                                    } label: {
+                                        Label("Symbol", systemImage: "")
+                                    }
+                                    Button(action: {
+                                        toggleAccountTypeFilter(accountType: "Other")
+                                    }) {
+                                        Text("Other")
+                                    }
+                                }
+                            label: {
+                                Label("Filter By", systemImage: "")
+                            }
+                            }, label: {
+                                Label("", systemImage: "ellipsis.circle")
+                            })
                         }
-                        }, label: {
-                            Label("", systemImage: "ellipsis.circle")
-                        })
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {

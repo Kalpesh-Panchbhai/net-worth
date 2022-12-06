@@ -43,31 +43,27 @@ class NotificationController {
     }
     
     public func setNotification(id: UUID, day: Int, accountType: String, accountName: String) {
-        if granted {
-            if(isNotificationEnabled(accountType: accountType)) {
-                let content = getContent(accountType: accountType, accountName: accountName)
-                
-                var dateComponents = DateComponents()
-                dateComponents.calendar = Calendar.current
-                
-                dateComponents.day = day
-                dateComponents.hour = defaultHour
-                let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-                
-                let request = UNNotificationRequest(identifier: id.uuidString,
-                                                    content: content, trigger: trigger)
-                
-                let notificationCenter = UNUserNotificationCenter.current()
-                notificationCenter.add(request) { (error) in
-                    if error != nil {
-                        print("Failed to add notification")
-                    }else {
-                        print("Added Notification")
-                    }
+        if(isNotificationEnabled(accountType: accountType)) {
+            let content = getContent(accountType: accountType, accountName: accountName)
+            
+            var dateComponents = DateComponents()
+            dateComponents.calendar = Calendar.current
+            
+            dateComponents.day = day
+            dateComponents.hour = defaultHour
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+            
+            let request = UNNotificationRequest(identifier: id.uuidString,
+                                                content: content, trigger: trigger)
+            
+            let notificationCenter = UNUserNotificationCenter.current()
+            notificationCenter.add(request) { (error) in
+                if error != nil {
+                    print("Failed to add notification")
+                }else {
+                    print("Added Notification")
                 }
             }
-        } else {
-            print("access is denied")
         }
     }
     
@@ -102,5 +98,9 @@ class NotificationController {
                 removeNotification(id: account.sysid!)
             }
         }
+    }
+    
+    public func enableNotification(account: Account) {
+        setNotification(id: account.sysid!, day: Int(account.paymentdate), accountType: account.accounttype!, accountName: account.accountname!)
     }
 }

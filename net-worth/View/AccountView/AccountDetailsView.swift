@@ -12,7 +12,13 @@ struct AccountDetailsView: View {
     private var currentRate: Double = 0.0
     
     private var totalValue: Double = 0.0
-
+    
+    @State private var paymentDate = 0
+    @State var dates = Array(1...28)
+    
+    @State private var isTransactionOpen: Bool = false
+    @State private var isDatePickerOpen: Bool = false
+    
     @ObservedObject private var financeListVM = FinanceListViewModel()
     
     var account: Account
@@ -84,6 +90,50 @@ struct AccountDetailsView: View {
                 await financeListVM.getSymbolDetails(symbol: account.symbol!)
             }
         }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Menu {
+                    Button("Update Balance", action: {
+                        self.isTransactionOpen.toggle()
+                    })
+                    if(self.account.accounttype != "Saving") {
+                        if(!account.paymentreminder) {
+                            Picker("Enable Notification", selection: $paymentDate) {
+                                Text("Select a date").tag(0)
+                                ForEach(dates, id: \.self) {
+                                    Text("\($0.formatted(.number.grouping(.never)))").tag($0)
+                                }
+                            }
+                            .onChange(of: paymentDate) { _ in
+                                account.paymentreminder = true
+                                account.paymentdate = Int16(paymentDate)
+                                AccountController().updateAccount()
+                                NotificationController().enableNotification(account: account)
+                            }
+                            .pickerStyle(MenuPickerStyle())
+                        } else {
+                            Button("Disable Notification", action: {
+                                account.paymentreminder = false
+                                account.paymentdate = 0
+                                AccountController().updateAccount()
+                                NotificationController().removeNotification(id: account.sysid!)
+                                paymentDate = 0
+                            })
+                        }
+                    }
+                }
+            label: {
+                Label("", systemImage: "ellipsis.circle")
+            }
+                
+            }
+        }
+        .sheet(isPresented: $isTransactionOpen, content: {
+            AddTransactionAccountView(account: self.account)
+        })
+        .sheet(isPresented: $isDatePickerOpen, content: {
+            
+        })
     }
     
     private func field(labelName: String, value: String) -> HStack<TupleView<(Text, Spacer, Text)>> {
