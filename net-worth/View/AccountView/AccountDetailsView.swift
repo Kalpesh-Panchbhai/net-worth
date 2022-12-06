@@ -87,22 +87,16 @@ struct AccountDetailsView: View {
         }
         .refreshable {
             Task {
-                if(!(self.account.accounttype == "Saving" || self.account.accounttype == "Credit Card" || self.account.accounttype == "Loan")) {
                     await financeListVM.getSymbolDetails(symbol: account.symbol!)
-                }
             }
         }
         .onAppear {
             Task {
-                if(!(self.account.accounttype == "Saving" || self.account.accounttype == "Credit Card" || self.account.accounttype == "Loan")) {
                     await financeListVM.getSymbolDetails(symbol: account.symbol!)
-                }
             }
         }
         .task {
-            if(!(self.account.accounttype == "Saving" || self.account.accounttype == "Credit Card" || self.account.accounttype == "Loan")) {
                 await financeListVM.getSymbolDetails(symbol: account.symbol!)
-            }
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -165,14 +159,10 @@ struct AccountDetailsView: View {
             label: {
                 Label("", systemImage: "ellipsis.circle")
             }
-                
             }
         }
         .sheet(isPresented: $isTransactionOpen, content: {
             AddTransactionAccountView(account: self.account)
-        })
-        .sheet(isPresented: $isDatePickerOpen, content: {
-            
         })
     }
     
