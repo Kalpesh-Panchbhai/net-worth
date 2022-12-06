@@ -77,6 +77,11 @@ struct AccountView: View {
                     }
                 }
             }
+            .onAppear {
+                Task.init {
+                    await financeListVM.getTotalBalance()
+                }
+            }
             .refreshable {
                 Task.init {
                     await financeListVM.getTotalBalance()
@@ -269,11 +274,6 @@ struct AccountView: View {
                 Text("Other").searchCompletion("Other")
             }
         }
-        .onAppear {
-            Task.init {
-                await financeListVM.getTotalBalance()
-            }
-        }
     }
     
     private func toggleNameSortOrder() {
@@ -347,10 +347,13 @@ struct AccountFinanceView: View {
                 }
             }
         }
-        .task {
-            if(!(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan")) {
+        .onAppear {
+            Task.init {
                 await financeListViewModel.getSymbolDetails(symbol: account.symbol!)
             }
+        }
+        .task {
+            await financeListViewModel.getSymbolDetails(symbol: account.symbol!)
         }
     }
 }
