@@ -12,10 +12,11 @@ class IncomeController {
     
     let viewContext = PersistenceController.shared.container.viewContext
     
-    public func addIncome(incometype: String, amount: String, date: Date) {
+    public func addIncome(incometype: String, amount: String, date: Date, currency: String) {
         let newIncome = Income(context: viewContext)
         newIncome.sysid = UUID()
         newIncome.creditedon = date
+        newIncome.currency = currency
         newIncome.incometype = incometype
         newIncome.amount = Double((amount as NSString).doubleValue)
         

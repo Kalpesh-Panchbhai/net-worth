@@ -19,6 +19,12 @@ struct NewIncomeView: View {
     
     private var incomeController = IncomeController()
     
+    @State public var currenySelected: Currency = Currency()
+    private var currencyList = CurrencyList().currencyList
+    @State private var filterCurrencyList = CurrencyList().currencyList
+    @State private var currencyChanged = false
+    @State private var searchTerm: String = ""
+    
     var body: some View {
         NavigationView {
             Form {
@@ -66,12 +72,13 @@ struct NewIncomeView: View {
                     HStack{
                         DatePicker("Credited on", selection: $date, in: ...Date(), displayedComponents: [.date])
                     }
+                    currencyPicker
                 }
             }
             .toolbar {
                 ToolbarItem {
                     Button(action: {
-                        incomeController.addIncome(incometype: incomeType, amount: amount, date: date)
+                        incomeController.addIncome(incometype: incomeType, amount: amount, date: date, currency: currenySelected.code)
                         dismiss()
                     }, label: {
                         Label("Add Income", systemImage: "checkmark")
@@ -93,6 +100,36 @@ struct NewIncomeView: View {
         }else {
             return false
         }
+    }
+    
+    var currencyPicker: some View {
+        Picker("Currency", selection: $currenySelected) {
+            SearchBar(text: $searchTerm, placeholder: "Search currency")
+            ForEach(filterCurrencyList, id: \.self) { (data) in
+                defaultCurrencyPickerRightVersionView(currency: data)
+                .tag(data)
+            }
+        }
+        .edgesIgnoringSafeArea(.all)
+        .onChange(of: searchTerm) { (data) in
+            if(!data.isEmpty) {
+                filterCurrencyList = currencyList.filter({
+                    $0.name.lowercased().contains(searchTerm.lowercased()) || $0.symbol.lowercased().contains(searchTerm.lowercased()) || $0.code.lowercased().contains(searchTerm.lowercased())
+                })
+            } else {
+                filterCurrencyList = currencyList
+            }
+        }
+        .onChange(of: currenySelected) { (data) in
+            currenySelected = data
+            currencyChanged = true
+        }
+        .onAppear{
+            if(!currencyChanged){
+                currenySelected = SettingsController().getDefaultCurrency()
+            }
+        }
+        .pickerStyle(.navigationLink)
     }
 }
 

@@ -13,7 +13,7 @@ struct IncomeView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Income.creditedon, ascending: true)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \Income.creditedon, ascending: false)],
         animation: .default)
     private var incomes: FetchedResults<Income>
     
@@ -31,11 +31,11 @@ struct IncomeView: View {
                         VStack {
                             Text(income.incometype!)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            Spacer()
                             Text("\(income.creditedon!, formatter: dateFormatter)").font(.system(size: 10))
                                 .frame(maxWidth: .infinity, alignment: .leading)
+                                .foregroundColor(.gray)
                         }
-                        Text("\(String(format: "%.2f", income.amount))")
+                        Text("\(income.currency!) " + income.amount.withCommas(decimalPlace: 2))
                             .frame(maxWidth: .infinity, alignment: .trailing)
                     }
                 }
@@ -67,7 +67,9 @@ struct IncomeView: View {
                 ToolbarItem(placement: .bottomBar){
                     let balance = incomeController.getTotalBalance()
                     HStack {
-                        Text("Total Income \(balance.withCommas(decimalPlace: 2))").foregroundColor(.blue).font(.title2)
+                        Text("Total Income: \(SettingsController().getDefaultCurrency().code) \(balance.withCommas(decimalPlace: 2))")
+                            .foregroundColor(.blue)
+                            .font(.title2)
                     }
                 }
             }
