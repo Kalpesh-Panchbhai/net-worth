@@ -33,6 +33,8 @@ struct AccountView: View {
     
     @State var isAllSelected: Bool = false
     
+    @State private var showingSelectDefaultCurrencyAlert = false
+    
     var searchResults: [Account] {
         accounts.filter { account in
             if(searchKeyWord.isEmpty) {
@@ -195,12 +197,19 @@ struct AccountView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if(editMode == .inactive) {
                         Button(action: {
-                            self.isOpen.toggle()
+                            if(SettingsController().getDefaultCurrency().name == "") {
+                                showingSelectDefaultCurrencyAlert = true
+                            } else {
+                                self.isOpen.toggle()
+                            }
                         }, label: {
                             Label("Add Account", systemImage: "plus")
                         }).sheet(isPresented: $isOpen, content: {
                             NewAccountView()
                         })
+                        .alert("Please select the default currency in the settings tab to add an account.", isPresented: $showingSelectDefaultCurrencyAlert) {
+                            Button("OK", role: .cancel) { }
+                        }
                     }
                     else {
                         Button(action: {

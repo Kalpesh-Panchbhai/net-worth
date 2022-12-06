@@ -163,10 +163,10 @@ struct NewAccountView: View {
         }
         .onChange(of: currenySelected) { (data) in
             currenySelected = data
-            currencyChanged.toggle()
+            currencyChanged = true
         }
         .onAppear{
-            if(currencyChanged){
+            if(!currencyChanged){
                 currenySelected = SettingsController().getDefaultCurrency()
             }
         }

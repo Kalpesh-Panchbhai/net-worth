@@ -113,12 +113,18 @@ class AccountController {
                     group.addTask {
                         var currentRate = 1.0
                         if(account.currency != SettingsController().getDefaultCurrency().code) {
-                            currentRate = try await FinanceController().getSymbolDetails(symbol: account.currency! + SettingsController().getDefaultCurrency().code + "=X").regularMarketPrice ?? 1.0
+                            currentRate = try await FinanceController().getSymbolDetails(accountCurrency: account.currency!).regularMarketPrice ?? 1.0
                         }
                         return (try await FinanceController().getSymbolDetails(symbol: account.symbol!).regularMarketPrice ?? 0.0) * account.totalshare * currentRate
                     }
                 } else {
-                    balance += account.currentbalance
+                    group.addTask {
+                        var currentRate = 1.0
+                        if(account.currency != SettingsController().getDefaultCurrency().code) {
+                            currentRate = try await FinanceController().getSymbolDetails(accountCurrency: account.currency!).regularMarketPrice ?? 1.0
+                        }
+                        return account.currentbalance * currentRate
+                    }
                 }
             }
             

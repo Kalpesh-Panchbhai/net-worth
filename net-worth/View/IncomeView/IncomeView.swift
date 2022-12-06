@@ -21,6 +21,8 @@ struct IncomeView: View {
     
     private var incomeController = IncomeController()
     
+    @State private var showingSelectDefaultCurrencyAlert = false
+    
     var body: some View {
         NavigationView {
             List {
@@ -48,12 +50,19 @@ struct IncomeView: View {
                 }
                 ToolbarItem {
                     Button(action: {
-                        self.isOpen = true
+                        if(SettingsController().getDefaultCurrency().name == "") {
+                            showingSelectDefaultCurrencyAlert = true
+                        } else {
+                            self.isOpen.toggle()
+                        }
                     }, label: {
                         Label("Add Income", systemImage: "plus")
                     }).sheet(isPresented: $isOpen, content: {
                         NewIncomeView()
                     })
+                    .alert("Please select the default currency in the settings tab to add an account.", isPresented: $showingSelectDefaultCurrencyAlert) {
+                        Button("OK", role: .cancel) { }
+                    }
                 }
                 ToolbarItem(placement: .bottomBar){
                     let balance = incomeController.getTotalBalance()
