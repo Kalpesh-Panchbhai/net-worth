@@ -85,6 +85,20 @@ struct AccountDetailsView: View {
                 }
             }
         }
+        .refreshable {
+            Task {
+                if(!(self.account.accounttype == "Saving" || self.account.accounttype == "Credit Card" || self.account.accounttype == "Loan")) {
+                    await financeListVM.getSymbolDetails(symbol: account.symbol!)
+                }
+            }
+        }
+        .onAppear {
+            Task {
+                if(!(self.account.accounttype == "Saving" || self.account.accounttype == "Credit Card" || self.account.accounttype == "Loan")) {
+                    await financeListVM.getSymbolDetails(symbol: account.symbol!)
+                }
+            }
+        }
         .task {
             if(!(self.account.accounttype == "Saving" || self.account.accounttype == "Credit Card" || self.account.accounttype == "Loan")) {
                 await financeListVM.getSymbolDetails(symbol: account.symbol!)
@@ -137,9 +151,6 @@ struct AccountDetailsView: View {
                                 AccountController().updateAccount()
                                 NotificationController().removeNotification(id: account.sysid!)
                                 NotificationController().enableNotification(account: account)
-                            }
-                            .onAppear{
-                                paymentDate = Int(account.paymentdate)
                             }
                             .pickerStyle(MenuPickerStyle())
                             
