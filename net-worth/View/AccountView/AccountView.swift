@@ -153,24 +153,29 @@ struct AccountView: View {
                                 }
                                 Menu {
                                     Button(action: {
-                                        toggleAccountTypeFilter(accountType: "Equity")
+                                        toggleAccountTypeFilter(accountType: "EQUITY")
                                     }) {
                                         Text("Equity")
                                     }
                                     Button(action: {
-                                        toggleAccountTypeFilter(accountType: "Fund")
+                                        toggleAccountTypeFilter(accountType: "MUTUALFUND")
                                     }) {
                                         Text("Mutual Fund")
                                     }
                                     Button(action: {
-                                        toggleAccountTypeFilter(accountType: "Cryptocurrency")
+                                        toggleAccountTypeFilter(accountType: "CRYPTOCURRENCY")
                                     }) {
                                         Text("Cryptocurrency")
                                     }
                                     Button(action: {
-                                        toggleAccountTypeFilter(accountType: "Future")
+                                        toggleAccountTypeFilter(accountType: "FUTURE")
                                     }) {
                                         Text("Future")
+                                    }
+                                    Button(action: {
+                                        toggleAccountTypeFilter(accountType: "OPTION")
+                                    }) {
+                                        Text("Option")
                                     }
                                     Button(action: {
                                         toggleAccountTypeFilter(accountType: "ETF")
@@ -257,6 +262,7 @@ struct AccountView: View {
                 Text("Mutual Fund").searchCompletion("Fund")
                 Text("Cryptocurrency").searchCompletion("Cryptocurrency")
                 Text("Future").searchCompletion("Future")
+                Text("Option").searchCompletion("Option")
                 Text("ETF").searchCompletion("ETF")
                 Text("Other").searchCompletion("Other")
             }
