@@ -93,17 +93,21 @@ struct AccountDetailsView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
-                    Button("Update Balance", action: {
+                    Button(action: {
                         self.isTransactionOpen.toggle()
+                    }, label: {
+                        Label("Update Balance", systemImage: "square.and.pencil")
                     })
                     if(self.account.accounttype != "Saving") {
                         if(!account.paymentreminder) {
-                            Picker("Enable Notification", selection: $paymentDate) {
+                            Picker(selection: $paymentDate, content: {
                                 Text("Select a date").tag(0)
                                 ForEach(dates, id: \.self) {
                                     Text("\($0.formatted(.number.grouping(.never)))").tag($0)
                                 }
-                            }
+                            }, label: {
+                                Label("Enable Notification", systemImage: "speaker.wave.1.fill")
+                            })
                             .onChange(of: paymentDate) { _ in
                                 account.paymentreminder = true
                                 account.paymentdate = Int16(paymentDate)
@@ -112,15 +116,40 @@ struct AccountDetailsView: View {
                             }
                             .pickerStyle(MenuPickerStyle())
                         } else {
-                            Button("Disable Notification", action: {
+                            Button(action: {
                                 account.paymentreminder = false
                                 account.paymentdate = 0
                                 AccountController().updateAccount()
                                 NotificationController().removeNotification(id: account.sysid!)
                                 paymentDate = 0
+                            }, label: {
+                                Label("Disable Notification", systemImage: "speaker.slash.fill")
                             })
+                            Picker(selection: $paymentDate, content: {
+                                ForEach(dates, id: \.self) {
+                                    Text("\($0.formatted(.number.grouping(.never)))").tag($0)
+                                }
+                            }, label: {
+                                Label("Change Payment date", systemImage: "calendar.circle.fill")
+                            })
+                            .onChange(of: paymentDate) { _ in
+                                account.paymentdate = Int16(paymentDate)
+                                AccountController().updateAccount()
+                                NotificationController().removeNotification(id: account.sysid!)
+                                NotificationController().enableNotification(account: account)
+                            }
+                            .onAppear{
+                                paymentDate = Int(account.paymentdate)
+                            }
+                            .pickerStyle(MenuPickerStyle())
+                            
                         }
                     }
+                    Button(action: {
+                        AccountController().deleteAccount(account: account)
+                    }, label: {
+                        Label("Delete", systemImage: "trash")
+                    })
                 }
             label: {
                 Label("", systemImage: "ellipsis.circle")
