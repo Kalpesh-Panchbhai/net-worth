@@ -312,20 +312,36 @@ struct AccountFinanceView: View {
     var body: some View {
         VStack {
             if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
-                Text((account.currency ?? "") + " \(account.currentbalance.withCommas(decimalPlace: 2))")
+                HStack {
+                    Text((account.currency ?? "") + " \(account.currentbalance.withCommas(decimalPlace: 2))")
+                    if(account.paymentreminder && account.accounttype != "Saving") {
+                        Image(systemName: "speaker.wave.1.fill")
+                    } else if(account.accounttype != "Saving") {
+                        Image(systemName: "speaker.slash.fill")
+                    }
+                }
             } else {
                 let currentRate = financeListViewModel.financeDetailModel.regularMarketPrice ?? 0.0
                 let oneDayChange = financeListViewModel.financeDetailModel.oneDayChange ?? 0.0
-                Text((financeListViewModel.financeDetailModel.currency ?? "") + " \((account.totalshare * currentRate).withCommas(decimalPlace: 2))")
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                if(oneDayChange > 0.0) {
-                    Text("+\((account.totalshare * oneDayChange).withCommas(decimalPlace: 2))").font(.system(size: 15))
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .foregroundColor(.green)
-                } else if(oneDayChange < 0.0){
-                    Text("\((account.totalshare * oneDayChange).withCommas(decimalPlace: 2))").font(.system(size: 15))
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .foregroundColor(.red)
+                HStack{
+                    VStack {
+                        Text((financeListViewModel.financeDetailModel.currency ?? "") + " \((account.totalshare * currentRate).withCommas(decimalPlace: 2))")
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                        if(oneDayChange > 0.0) {
+                            Text("+\((account.totalshare * oneDayChange).withCommas(decimalPlace: 2))").font(.system(size: 15))
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .foregroundColor(.green)
+                        } else if(oneDayChange < 0.0){
+                            Text("\((account.totalshare * oneDayChange).withCommas(decimalPlace: 2))").font(.system(size: 15))
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .foregroundColor(.red)
+                        }
+                    }
+                    if(account.paymentreminder) {
+                        Image(systemName: "speaker.wave.1.fill")
+                    } else {
+                        Image(systemName: "speaker.slash.fill")
+                    }
                 }
             }
         }
