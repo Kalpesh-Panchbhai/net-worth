@@ -22,11 +22,18 @@ struct AuthenticationView: View {
         VStack {
             if settingsController.isAuthenticationRequired() {
                 VStack {
-                    if unlocked {
-                        MainScreenView()
-                    }
+                    Image(systemName: "lock.fill").font(.system(size: 30))
+                    Text("Net Worth Locked").font(.system(.title).bold())
+                    Text("Unlocked with Face ID to open Net Worth").font(.system(size: 14))
+                    Button("Use Face ID", action: {
+                        authenticate()
+                    })
+                    .foregroundColor(.blue)
                 }
                 .onAppear(perform: authenticate)
+                .fullScreenCover(isPresented: $unlocked, content: {
+                    MainScreenView()
+                })
             }else {
                 MainScreenView()
             }
