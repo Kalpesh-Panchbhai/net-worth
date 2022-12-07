@@ -41,6 +41,9 @@ struct IncomeView: View {
                 }
                 .onDelete(perform: deleteIncome)
             }
+            .halfSheet(showSheet: $isOpen) {
+                NewIncomeView()
+            }
             .listStyle(.inset)
             .toolbar {
                 if !incomes.isEmpty {
@@ -57,8 +60,6 @@ struct IncomeView: View {
                         }
                     }, label: {
                         Label("Add Income", systemImage: "plus")
-                    }).sheet(isPresented: $isOpen, content: {
-                        NewIncomeView()
                     })
                     .alert("Please select the default currency in the settings tab to add an account.", isPresented: $showingSelectDefaultCurrencyAlert) {
                         Button("OK", role: .cancel) { }
