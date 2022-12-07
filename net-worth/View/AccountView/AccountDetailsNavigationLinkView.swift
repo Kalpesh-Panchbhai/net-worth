@@ -24,8 +24,6 @@ struct AccountDetailsNavigationLinkView: View {
     
     @State private var selectedTabIndex = 0
     
-    @ObservedObject private var financeListVM = FinanceListViewModel()
-    
     init(uuid: UUID) {
         self.uuid = uuid
         self.accountController = AccountController()
@@ -43,7 +41,7 @@ struct AccountDetailsNavigationLinkView: View {
             .navigationBarTitleDisplayMode(NavigationBarItem.TitleDisplayMode.inline)
             .navigationBarTitle(self.account.accountname!)
             if(selectedTabIndex == 0) {
-                AccountDetailsView(account: self.account, financeListVM: financeListVM)
+                AccountDetailsView(account: self.account)
             }else {
                 AccountHistoryView(account: self.account)
             }
@@ -114,12 +112,6 @@ struct AccountDetailsNavigationLinkView: View {
         }
         .halfSheet(showSheet: $isTransactionOpen) {
             UpdateBalanceAccountView(account: self.account)
-        }
-        .onAppear {
-            print("Navi onAppear")
-            Task {
-                await financeListVM.getSymbolDetails(symbol: account.symbol!)
-            }
         }
         .padding(.top)
     }

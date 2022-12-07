@@ -13,22 +13,15 @@ struct AccountDetailsView: View {
     
     private var totalValue: Double = 0.0
     
-    @State private var paymentDate = 0
-    @State var dates = Array(1...28)
-    
-    @State private var isTransactionOpen: Bool = false
-    @State private var isDatePickerOpen: Bool = false
-    
-    @ObservedObject private var financeListVM: FinanceListViewModel
+    @ObservedObject private var financeListVM = FinanceListViewModel()
     
     var account: Account
-    init(account: Account, financeListVM: FinanceListViewModel) {
+    init(account: Account) {
         self.account = account
         if(self.account.accounttype == "Saving" || self.account.accounttype == "Credit Card" || self.account.accounttype == "Loan") {
             self.currentRate = 0.0
             self.totalValue = 0.0
         }
-        self.financeListVM = financeListVM
     }
     var body: some View {
         Form {
@@ -86,8 +79,12 @@ struct AccountDetailsView: View {
                 }
             }
         }
+        .onAppear {
+            Task {
+                await financeListVM.getSymbolDetails(symbol: account.symbol!)
+            }
+        }
         .refreshable {
-            print("Detail refreshable")
             Task {
                 await financeListVM.getSymbolDetails(symbol: account.symbol!)
             }
@@ -107,6 +104,6 @@ struct AccountDetailsView: View {
 struct AccountDetailsView_Previews: PreviewProvider {
     
     static var previews: some View {
-        AccountDetailsView(account: Account(), financeListVM: FinanceListViewModel())
+        AccountDetailsView(account: Account())
     }
 }
