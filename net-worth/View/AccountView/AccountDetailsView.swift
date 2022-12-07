@@ -87,16 +87,16 @@ struct AccountDetailsView: View {
         }
         .refreshable {
             Task {
-                    await financeListVM.getSymbolDetails(symbol: account.symbol!)
+                await financeListVM.getSymbolDetails(symbol: account.symbol!)
             }
         }
         .onAppear {
             Task {
-                    await financeListVM.getSymbolDetails(symbol: account.symbol!)
+                await financeListVM.getSymbolDetails(symbol: account.symbol!)
             }
         }
         .task {
-                await financeListVM.getSymbolDetails(symbol: account.symbol!)
+            await financeListVM.getSymbolDetails(symbol: account.symbol!)
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
