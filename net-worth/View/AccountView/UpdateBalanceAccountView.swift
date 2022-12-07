@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AddTransactionAccountView: View {
+struct UpdateBalanceAccountView: View {
     
     private var account: Account
     
@@ -127,7 +127,7 @@ struct AddTransactionAccountView: View {
     
     private func currentUnitField() -> HStack<TupleView<(Text, Spacer, some View)>> {
         return HStack {
-            Text("Current Units")
+            Text("Units")
             Spacer()
             TextField("Units", value: $amount, formatter: Double().formatter())
                 .keyboardType(.decimalPad)
@@ -135,8 +135,8 @@ struct AddTransactionAccountView: View {
     }
 }
 
-struct AddNewBalanceAccountView_Previews: PreviewProvider {
+struct UpdateBalanceAccountView_Previews: PreviewProvider {
     static var previews: some View {
-        AddTransactionAccountView(account: Account())
+        UpdateBalanceAccountView(account: Account())
     }
 }

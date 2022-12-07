@@ -111,7 +111,7 @@ struct AccountDetailsNavigationLinkView: View {
             }
         }
         .halfSheet(showSheet: $isTransactionOpen) {
-            AddTransactionAccountView(account: self.account)
+            UpdateBalanceAccountView(account: self.account)
         }
         .padding(.top)
     }
