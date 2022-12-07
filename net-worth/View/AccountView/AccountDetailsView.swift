@@ -161,9 +161,10 @@ struct AccountDetailsView: View {
             }
             }
         }
-        .sheet(isPresented: $isTransactionOpen, content: {
+        .halfSheet(showSheet: $isTransactionOpen) {
             AddTransactionAccountView(account: self.account)
-        })
+        }
+        
     }
     
     private func field(labelName: String, value: String) -> HStack<TupleView<(Text, Spacer, Text)>> {

@@ -30,6 +30,7 @@
 		7D80ECF0291CE0C500A22496 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D80ECEF291CE0C500A22496 /* LaunchScreen.storyboard */; };
 		7D9DF69F2939B80400BE4C9D /* CommonUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9DF69E2939B80400BE4C9D /* CommonUtils.swift */; };
 		7DA80405291E177700570DCB /* AccountDetailsNavigationLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA80404291E177700570DCB /* AccountDetailsNavigationLinkView.swift */; };
+		7DAC70AC29408D3E0033050C /* HalfView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAC70AB29408D3E0033050C /* HalfView.swift */; };
 		7DC97A24292216BB003F69D4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A23292216BB003F69D4 /* SettingsView.swift */; };
 		7DC97A2629221990003F69D4 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A2529221990003F69D4 /* SettingsController.swift */; };
 		7DC97A28292236FB003F69D4 /* IncomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A27292236FB003F69D4 /* IncomeView.swift */; };
@@ -90,6 +91,7 @@
 		7D80ECEF291CE0C500A22496 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7D9DF69E2939B80400BE4C9D /* CommonUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonUtils.swift; sourceTree = "<group>"; };
 		7DA80404291E177700570DCB /* AccountDetailsNavigationLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailsNavigationLinkView.swift; sourceTree = "<group>"; };
+		7DAC70AB29408D3E0033050C /* HalfView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HalfView.swift; sourceTree = "<group>"; };
 		7DC97A23292216BB003F69D4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		7DC97A2529221990003F69D4 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		7DC97A27292236FB003F69D4 /* IncomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeView.swift; sourceTree = "<group>"; };
@@ -257,6 +259,7 @@
 		7D79FA88291B9C6E004A2ECF /* View */ = {
 			isa = PBXGroup;
 			children = (
+				7DAC70A8294086890033050C /* CustomView */,
 				7DD7A56C29224C1200CD5B37 /* AccountView */,
 				7DD7A56B29224BFD00CD5B37 /* IncomeView */,
 				7DD7A56D29224C1D00CD5B37 /* SettingsView */,
@@ -274,6 +277,14 @@
 				7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */,
 			);
 			path = OtherView;
+			sourceTree = "<group>";
+		};
+		7DAC70A8294086890033050C /* CustomView */ = {
+			isa = PBXGroup;
+			children = (
+				7DAC70AB29408D3E0033050C /* HalfView.swift */,
+			);
+			path = CustomView;
 			sourceTree = "<group>";
 		};
 		7DCC0AA0292663A1006CBF36 /* Notification */ = {
@@ -481,6 +492,7 @@
 				7D237BED292B672900DEF91D /* DoubleExtension.swift in Sources */,
 				7D42520F291BE95C0001C41C /* AuthenticationView.swift in Sources */,
 				7D79FA51291B7430004A2ECF /* net_worthApp.swift in Sources */,
+				7DAC70AC29408D3E0033050C /* HalfView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

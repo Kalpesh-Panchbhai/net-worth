@@ -13,7 +13,7 @@ struct AddTransactionAccountView: View {
     
     private var accountController = AccountController()
     
-    @State private var currentBalance: Double = 0.0
+    @State private var amount: Double = 0.0
     
     @State var isPlus = true;
     
@@ -42,18 +42,54 @@ struct AddTransactionAccountView: View {
                         let accountModel = AccountModel()
                         accountModel.sysId = account.sysid!
                         accountModel.accountType = account.accounttype!
-                        accountModel.currentBalance = currentBalance
+                        if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
+                            accountModel.currentBalance = amount
+                        } else {
+                            accountModel.totalShares = amount
+                        }
                         
                         accountController.addTransaction(accountModel: accountModel)
                         
                         if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
                             account.currentbalance = accountModel.currentBalance
                         } else {
-                            account.totalshare = accountModel.currentBalance
+                            account.totalshare = accountModel.totalShares
                         }
                         accountController.updateAccount()
                     }, label: {
-                        Label("Add Account", systemImage: "checkmark")
+                        Text("Update")
+                    })
+                    .alert("Account Balance has been updated!", isPresented: $showingAlert, actions: {
+                        Button("OK", role: .cancel) {
+                            dismiss()
+                        }
+                    }, message: {
+                        Text("Account Name : " + self.account.accountname!)
+                    })
+                }
+                
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        showingAlert.toggle()
+                        let accountModel = AccountModel()
+                        accountModel.sysId = account.sysid!
+                        accountModel.accountType = account.accounttype!
+                        if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
+                            accountModel.currentBalance = account.currentbalance + amount
+                        } else {
+                            accountModel.totalShares = account.totalshare + amount
+                        }
+                        
+                        accountController.addTransaction(accountModel: accountModel)
+                        
+                        if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
+                            account.currentbalance = accountModel.currentBalance
+                        } else {
+                            account.totalshare = accountModel.totalShares
+                        }
+                        accountController.updateAccount()
+                    }, label: {
+                        Text("Add")
                     })
                     .alert("Transaction has been added!", isPresented: $showingAlert, actions: {
                         Button("OK", role: .cancel) {
@@ -64,28 +100,27 @@ struct AddTransactionAccountView: View {
                     })
                 }
             }
-            .navigationTitle("Update Balance")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(account.accountname!)
         }
     }
     
     private func currentBalanceField() -> HStack<TupleView<(Text, Spacer, Button<Label<Text, Image>>, Spacer, some View)>> {
         return HStack {
-            Text("Current Balance")
+            Text("Amount")
             Spacer()
             Button(action: {
                 if isPlus {
-                    currentBalance = currentBalance * -1
+                    amount = amount * -1
                     isPlus = false
                 }else {
-                    currentBalance = currentBalance * -1
+                    amount = amount * -1
                     isPlus = true
                 }
             }, label: {
                 Label("", systemImage: isPlus ? "minus" : "plus")
             })
             Spacer()
-            TextField("Current Balance", value: $currentBalance, formatter: Double().formatter())
+            TextField("Amount", value: $amount, formatter: Double().formatter())
                 .keyboardType(.decimalPad)
         }
     }
@@ -94,7 +129,7 @@ struct AddTransactionAccountView: View {
         return HStack {
             Text("Current Units")
             Spacer()
-            TextField("Current Units", value: $currentBalance, formatter: Double().formatter())
+            TextField("Units", value: $amount, formatter: Double().formatter())
                 .keyboardType(.decimalPad)
         }
     }
