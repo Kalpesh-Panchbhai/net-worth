@@ -260,12 +260,20 @@
 				7DD7A56C29224C1200CD5B37 /* AccountView */,
 				7DD7A56B29224BFD00CD5B37 /* IncomeView */,
 				7DD7A56D29224C1D00CD5B37 /* SettingsView */,
+				7DAC70A7294086420033050C /* OtherView */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		7DAC70A7294086420033050C /* OtherView */ = {
+			isa = PBXGroup;
+			children = (
 				7D79FA89291B9CE6004A2ECF /* MainScreenView.swift */,
 				7D42520E291BE95C0001C41C /* AuthenticationView.swift */,
 				7DCFE4C9292D036500C940F0 /* SearchBar.swift */,
 				7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */,
 			);
-			path = View;
+			path = OtherView;
 			sourceTree = "<group>";
 		};
 		7DCC0AA0292663A1006CBF36 /* Notification */ = {
