@@ -44,7 +44,7 @@ struct IncomeView: View {
             .halfSheet(showSheet: $isOpen) {
                 NewIncomeView()
             }
-            .listStyle(.inset)
+            .listStyle(.grouped)
             .toolbar {
                 if !incomes.isEmpty {
                     ToolbarItem(placement: .navigationBarLeading) {

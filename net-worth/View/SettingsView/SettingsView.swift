@@ -45,7 +45,7 @@ struct SettingsView: View {
                 Text("Version " + appVersion!)
             }
             .navigationTitle("Settings")
-            .listStyle(.inset)
+            .listStyle(.grouped)
         }
     }
     
