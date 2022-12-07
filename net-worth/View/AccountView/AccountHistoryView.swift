@@ -13,7 +13,10 @@ struct AccountHistoryView: View {
     
     private var accountController = AccountController()
     
+    private var account: Account
+    
     init(account: Account) {
+        self.account = account
         accountTransactionList = self.accountController.getAccountTransaction(sysId: account.sysid!)
     }
     
@@ -28,7 +31,7 @@ struct AccountHistoryView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     VStack {
-                        Text("\(accountTransactionList[i].balancechange.withCommas(decimalPlace: 4))")
+                        Text((account.currency ?? "") + " \(accountTransactionList[i].balancechange.withCommas(decimalPlace: 4))")
                             .frame(maxWidth: .infinity, alignment: .trailing)
                         if( i < accountTransactionList.count - 1) {
                             if((accountTransactionList[i].balancechange - accountTransactionList[i + 1].balancechange) > 0 ) {

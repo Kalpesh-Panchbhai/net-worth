@@ -12,13 +12,17 @@ struct AccountDetailsNavigationLinkView: View {
     
     private var uuid: UUID
     
+    @State private var paymentDate = 0
+    @State var dates = Array(1...28)
+    
+    @State private var isTransactionOpen: Bool = false
+    @State private var isDatePickerOpen: Bool = false
+    
     private var accountController: AccountController
     
     private var account: Account
     
     @State private var selectedTabIndex = 0
-    
-    @State var isTransactionOpen: Bool = false
     
     init(uuid: UUID) {
         self.uuid = uuid
@@ -43,25 +47,72 @@ struct AccountDetailsNavigationLinkView: View {
             }
             Spacer()
         }
-//        .toolbar {
-//            if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    Button("Add Transaction", action: {
-//                        self.isTransactionOpen.toggle()
-//                    }).sheet(isPresented: $isTransactionOpen, content: {
-//                        AddTransactionAccountView(account: self.account)
-//                    })
-//                }
-//            } else {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    Button("Add Units", action: {
-//                        self.isTransactionOpen.toggle()
-//                    }).sheet(isPresented: $isTransactionOpen, content: {
-//                        AddTransactionAccountView(account: self.account)
-//                    })
-//                }
-//            }
-//        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Menu {
+                    Button(action: {
+                        self.isTransactionOpen.toggle()
+                    }, label: {
+                        Label("Update Balance", systemImage: "square.and.pencil")
+                    })
+                    if(self.account.accounttype != "Saving") {
+                        if(!account.paymentreminder) {
+                            Picker(selection: $paymentDate, content: {
+                                Text("Select a date").tag(0)
+                                ForEach(dates, id: \.self) {
+                                    Text("\($0.formatted(.number.grouping(.never)))").tag($0)
+                                }
+                            }, label: {
+                                Label("Enable Notification", systemImage: "speaker.wave.1.fill")
+                            })
+                            .onChange(of: paymentDate) { _ in
+                                account.paymentreminder = true
+                                account.paymentdate = Int16(paymentDate)
+                                AccountController().updateAccount()
+                                NotificationController().enableNotification(account: account)
+                            }
+                            .pickerStyle(MenuPickerStyle())
+                        } else {
+                            Button(action: {
+                                account.paymentreminder = false
+                                account.paymentdate = 0
+                                AccountController().updateAccount()
+                                NotificationController().removeNotification(id: account.sysid!)
+                                paymentDate = 0
+                            }, label: {
+                                Label("Disable Notification", systemImage: "speaker.slash.fill")
+                            })
+                            Picker(selection: $paymentDate, content: {
+                                ForEach(dates, id: \.self) {
+                                    Text("\($0.formatted(.number.grouping(.never)))").tag($0)
+                                }
+                            }, label: {
+                                Label("Change Payment date", systemImage: "calendar.circle.fill")
+                            })
+                            .onChange(of: paymentDate) { _ in
+                                account.paymentdate = Int16(paymentDate)
+                                AccountController().updateAccount()
+                                NotificationController().removeNotification(id: account.sysid!)
+                                NotificationController().enableNotification(account: account)
+                            }
+                            .pickerStyle(MenuPickerStyle())
+                            
+                        }
+                    }
+                    Button(action: {
+                        AccountController().deleteAccount(account: account)
+                    }, label: {
+                        Label("Delete", systemImage: "trash")
+                    })
+                }
+            label: {
+                Label("", systemImage: "ellipsis.circle")
+            }
+            }
+        }
+        .halfSheet(showSheet: $isTransactionOpen) {
+            AddTransactionAccountView(account: self.account)
+        }
         .padding(.top)
     }
 }
