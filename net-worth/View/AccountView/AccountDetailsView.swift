@@ -19,15 +19,16 @@ struct AccountDetailsView: View {
     @State private var isTransactionOpen: Bool = false
     @State private var isDatePickerOpen: Bool = false
     
-    @ObservedObject private var financeListVM = FinanceListViewModel()
+    @ObservedObject private var financeListVM: FinanceListViewModel
     
     var account: Account
-    init(account: Account) {
+    init(account: Account, financeListVM: FinanceListViewModel) {
         self.account = account
         if(self.account.accounttype == "Saving" || self.account.accounttype == "Credit Card" || self.account.accounttype == "Loan") {
             self.currentRate = 0.0
             self.totalValue = 0.0
         }
+        self.financeListVM = financeListVM
     }
     var body: some View {
         Form {
@@ -86,19 +87,11 @@ struct AccountDetailsView: View {
             }
         }
         .refreshable {
+            print("Detail refreshable")
             Task {
                 await financeListVM.getSymbolDetails(symbol: account.symbol!)
             }
         }
-        .onAppear {
-            Task {
-                await financeListVM.getSymbolDetails(symbol: account.symbol!)
-            }
-        }
-        .task {
-            await financeListVM.getSymbolDetails(symbol: account.symbol!)
-        }
-        
     }
     
     private func field(labelName: String, value: String) -> HStack<TupleView<(Text, Spacer, Text)>> {
@@ -114,6 +107,6 @@ struct AccountDetailsView: View {
 struct AccountDetailsView_Previews: PreviewProvider {
     
     static var previews: some View {
-        AccountDetailsView(account: Account())
+        AccountDetailsView(account: Account(), financeListVM: FinanceListViewModel())
     }
 }
