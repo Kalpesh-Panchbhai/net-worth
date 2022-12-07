@@ -86,7 +86,7 @@ struct AccountView: View {
                 }
             }
             .environment(\.editMode, self.$editMode)
-            .listStyle(.inset)
+            .listStyle(.grouped)
             .toolbar {
                 if !accounts.isEmpty {
                     ToolbarItem(placement: .navigationBarLeading) {
