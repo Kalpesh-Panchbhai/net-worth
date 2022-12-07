@@ -198,9 +198,9 @@
 		7D79FA4F291B7430004A2ECF /* net-worth */ = {
 			isa = PBXGroup;
 			children = (
-				7D69DD6F293230FF00F024A6 /* Common */,
-				7D79FA50291B7430004A2ECF /* net_worthApp.swift */,
 				7D79FA5E291B7431004A2ECF /* Info.plist */,
+				7D79FA50291B7430004A2ECF /* net_worthApp.swift */,
+				7D69DD6F293230FF00F024A6 /* Common */,
 				7D79FA88291B9C6E004A2ECF /* View */,
 				7D79FA80291B75CB004A2ECF /* Data Model */,
 				7D79FA83291B7EC2004A2ECF /* Controller */,
@@ -274,7 +274,6 @@
 				7D79FA89291B9CE6004A2ECF /* MainScreenView.swift */,
 				7D42520E291BE95C0001C41C /* AuthenticationView.swift */,
 				7DCFE4C9292D036500C940F0 /* SearchBar.swift */,
-				7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */,
 			);
 			path = OtherView;
 			sourceTree = "<group>";
@@ -320,6 +319,7 @@
 		7DD7A56D29224C1D00CD5B37 /* SettingsView */ = {
 			isa = PBXGroup;
 			children = (
+				7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */,
 				7DC97A23292216BB003F69D4 /* SettingsView.swift */,
 			);
 			path = SettingsView;
