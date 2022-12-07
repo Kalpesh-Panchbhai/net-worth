@@ -14,7 +14,7 @@ class FinanceListViewModel: ObservableObject {
     
     @Published var financeDetailModel = FinanceDetailModel()
     
-    @Published var totalBalance = 0.0
+    @Published var totalBalance = BalanceModel()
     
     func getAllSymbols(searchTerm: String) async {
         do {

@@ -14,6 +14,7 @@
 		7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D433CF529385DBB007FA625 /* FinanceController.swift */; };
 		7D433CF829386002007FA625 /* FinanceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D433CF729386002007FA625 /* FinanceModel.swift */; };
 		7D51FE18291E1E8500BBA94A /* SlidingTabView in Frameworks */ = {isa = PBXBuildFile; productRef = 7D51FE17291E1E8400BBA94A /* SlidingTabView */; };
+		7D596278294105A40008A6B9 /* BalanceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D596277294105A40008A6B9 /* BalanceModel.swift */; };
 		7D69DD732932312400F024A6 /* ConstantUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D69DD722932312400F024A6 /* ConstantUtils.swift */; };
 		7D79FA51291B7430004A2ECF /* net_worthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA50291B7430004A2ECF /* net_worthApp.swift */; };
 		7D79FA53291B7430004A2ECF /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA52291B7430004A2ECF /* AccountView.swift */; };
@@ -71,6 +72,7 @@
 		7D42520E291BE95C0001C41C /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		7D433CF529385DBB007FA625 /* FinanceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceController.swift; sourceTree = "<group>"; };
 		7D433CF729386002007FA625 /* FinanceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceModel.swift; sourceTree = "<group>"; };
+		7D596277294105A40008A6B9 /* BalanceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceModel.swift; sourceTree = "<group>"; };
 		7D69DD722932312400F024A6 /* ConstantUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstantUtils.swift; sourceTree = "<group>"; };
 		7D79FA4D291B7430004A2ECF /* net-worth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "net-worth.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D79FA50291B7430004A2ECF /* net_worthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = net_worthApp.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 				7DF1E9C7292A43C8003D030E /* AccountModel.swift */,
 				7D433CF729386002007FA625 /* FinanceModel.swift */,
 				7DEC3B7F2938A38B002E9C8B /* FinanceDetailModel.swift */,
+				7D596277294105A40008A6B9 /* BalanceModel.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -466,6 +469,7 @@
 				7DFC6D042938E38E002F847C /* FinanceListViewModel.swift in Sources */,
 				7DC97A2C29223ADB003F69D4 /* NewIncomeView.swift in Sources */,
 				7DEC3B802938A38B002E9C8B /* FinanceDetailModel.swift in Sources */,
+				7D596278294105A40008A6B9 /* BalanceModel.swift in Sources */,
 				7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */,
 				7D79FA5D291B7431004A2ECF /* net_worth.xcdatamodeld in Sources */,
 				7D3636FB292F9CCB0013B4E5 /* NotificationsView.swift in Sources */,

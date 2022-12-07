@@ -93,7 +93,7 @@ class AccountController {
         }
     }
     
-    public func fetchTotalBalance() async throws -> Double {
+    public func fetchTotalBalance() async throws -> BalanceModel {
         
         let request = Account.fetchRequest()
         var accounts: [Account] = []
@@ -104,32 +104,43 @@ class AccountController {
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
         
-        return try await withThrowingTaskGroup(of: Double.self) { group in
+        return try await withThrowingTaskGroup(of: BalanceModel.self) { group in
             
-            var balance: Double = 0.0
+            var balance = BalanceModel()
             
             for account in accounts {
                 if(!(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other")) {
                     group.addTask {
-                        var currentRate = 1.0
+                        var balanceModel = BalanceModel(totalChange: 1.0, oneDayChange: 1.0)
                         if(account.currency != SettingsController().getDefaultCurrency().code) {
-                            currentRate = try await FinanceController().getSymbolDetails(accountCurrency: account.currency!).regularMarketPrice ?? 1.0
+                            var financeDetailModel = FinanceDetailModel()
+                            financeDetailModel = try await FinanceController().getSymbolDetails(accountCurrency: account.currency!)
+                            let regularMarketPrice = financeDetailModel.regularMarketPrice ?? 1.0
+                            let chartPreviousClose = financeDetailModel.chartPreviousClose ?? 1.0
+                            balanceModel.totalChange = regularMarketPrice
+                            balanceModel.oneDayChange = chartPreviousClose
                         }
-                        return (try await FinanceController().getSymbolDetails(symbol: account.symbol!).regularMarketPrice ?? 0.0) * account.totalshare * currentRate
+                        let financeDetailModel = try await FinanceController().getSymbolDetails(symbol: account.symbol!)
+                        balanceModel.totalChange = balanceModel.totalChange * (financeDetailModel.regularMarketPrice ?? 1.0 ) * account.totalshare
+                        balanceModel.oneDayChange = balanceModel.oneDayChange * (financeDetailModel.chartPreviousClose ?? 1.0) * account.totalshare
+                        balanceModel.oneDayChange = balanceModel.totalChange - balanceModel.oneDayChange
+                        return balanceModel
                     }
                 } else {
                     group.addTask {
-                        var currentRate = 1.0
+                        var currentRate = BalanceModel(totalChange: 1.0, oneDayChange: 1.0)
                         if(account.currency != SettingsController().getDefaultCurrency().code) {
-                            currentRate = try await FinanceController().getSymbolDetails(accountCurrency: account.currency!).regularMarketPrice ?? 1.0
+                            currentRate.totalChange = try await FinanceController().getSymbolDetails(accountCurrency: account.currency!).regularMarketPrice ?? 1.0
                         }
-                        return account.currentbalance * currentRate
+                        currentRate.totalChange = account.currentbalance * currentRate.totalChange
+                        return currentRate
                     }
                 }
             }
             
             for try await taskResult in group {
-                balance += taskResult
+                balance.totalChange += taskResult.totalChange
+                balance.oneDayChange += taskResult.oneDayChange
             }
             
             return balance

@@ -233,10 +233,22 @@ struct AccountView: View {
                 ToolbarItem(placement: .bottomBar){
                     if(editMode == .inactive) {
                         let balance = financeListVM.totalBalance
-                        HStack {
-                            Text("Total Balance: \(SettingsController().getDefaultCurrency().code) \(balance.withCommas(decimalPlace: 2))")
+                        VStack {
+                            Text("Total Balance: \(SettingsController().getDefaultCurrency().code) \(balance.totalChange.withCommas(decimalPlace: 2))")
                                 .foregroundColor(.blue)
                                 .font(.title2)
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                            if(balance.oneDayChange >= 0) {
+                                Text("\(balance.oneDayChange.withCommas(decimalPlace: 2))")
+                                    .foregroundColor(.green)
+                                    .font(.system(size: 10))
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                            } else {
+                                Text("\(balance.oneDayChange.withCommas(decimalPlace: 2))")
+                                    .foregroundColor(.red)
+                                    .font(.system(size: 10))
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                            }
                         }
                     }else {
                         if(!isAllSelected && searchResults.count != selection.count) {
