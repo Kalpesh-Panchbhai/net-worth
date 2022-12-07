@@ -77,6 +77,9 @@ struct AccountView: View {
                     }
                 }
             }
+            .halfSheet(showSheet: $isOpen) {
+                NewAccountView()
+            }
             .onAppear {
                 Task.init {
                     await financeListVM.getTotalBalance()
@@ -216,8 +219,6 @@ struct AccountView: View {
                             }
                         }, label: {
                             Label("Add Account", systemImage: "plus")
-                        }).sheet(isPresented: $isOpen, content: {
-                            NewAccountView()
                         })
                         .alert("Please select the default currency in the settings tab to add an account.", isPresented: $showingSelectDefaultCurrencyAlert) {
                             Button("OK", role: .cancel) { }
