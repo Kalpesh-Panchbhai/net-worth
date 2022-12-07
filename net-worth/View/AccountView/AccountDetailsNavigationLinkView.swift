@@ -34,10 +34,11 @@ struct AccountDetailsNavigationLinkView: View {
         VStack {
             SlidingTabView(selection: self.$selectedTabIndex
                            , tabs: ["Details", "History"]
-                           , animation: .easeOut
+                           , animation: .spring()
                            , activeAccentColor: .blue
-                           , inactiveAccentColor: .blue
-                           , selectionBarColor: .blue)
+                           , inactiveAccentColor: .gray
+                           , selectionBarColor: .blue,
+            selectionBarBackgroundHeight: 3)
             .navigationBarTitleDisplayMode(NavigationBarItem.TitleDisplayMode.inline)
             .navigationBarTitle(self.account.accountname!)
             if(selectedTabIndex == 0) {
