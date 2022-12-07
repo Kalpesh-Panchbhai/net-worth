@@ -353,9 +353,6 @@ struct AccountFinanceView: View {
                 await financeListViewModel.getSymbolDetails(symbol: account.symbol!)
             }
         }
-        .task {
-            await financeListViewModel.getSymbolDetails(symbol: account.symbol!)
-        }
     }
 }
 
