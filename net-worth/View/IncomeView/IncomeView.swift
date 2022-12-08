@@ -27,17 +27,7 @@ struct IncomeView: View {
         NavigationView {
             List {
                 ForEach(incomes) { income in
-                    HStack{
-                        VStack {
-                            Text(income.incometype!)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            Text("\(income.creditedon!, formatter: dateFormatter)").font(.system(size: 10))
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .foregroundColor(.gray)
-                        }
-                        Text("\(income.currency!) " + income.amount.withCommas(decimalPlace: 2))
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                    }
+                    ChildIncomeView(income: income)
                 }
                 .onDelete(perform: deleteIncome)
             }
@@ -91,11 +81,25 @@ struct IncomeView: View {
         }
     }
     
-    private let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        return formatter
-    }()
+}
+
+struct ChildIncomeView: View {
+    
+    @ObservedObject var income: Income
+    
+    var body: some View {
+        HStack{
+            VStack {
+                Text(income.incometype!)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text(income.creditedon!.getDateAndFormat()).font(.system(size: 10))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundColor(.gray)
+            }
+            Text("\(income.currency!) " + income.amount.withCommas(decimalPlace: 2))
+                .frame(maxWidth: .infinity, alignment: .trailing)
+        }
+    }
 }
 
 struct IncomeView_Previews: PreviewProvider {
