@@ -25,7 +25,7 @@ struct AccountView: View {
     
     private var financeController = FinanceController()
     
-    @StateObject var financeListVM = FinanceListViewModel()
+    @StateObject var financeListViewModel = FinanceListViewModel()
     
     @State var searchKeyWord: String = ""
     
@@ -82,7 +82,7 @@ struct AccountView: View {
             }
             .refreshable {
                 Task.init {
-                    await financeListVM.getTotalBalance()
+                    await financeListViewModel.getTotalBalance()
                 }
             }
             .environment(\.editMode, self.$editMode)
@@ -232,7 +232,7 @@ struct AccountView: View {
                 }
                 ToolbarItem(placement: .bottomBar){
                     if(editMode == .inactive) {
-                        let balance = financeListVM.totalBalance
+                        let balance = financeListViewModel.totalBalance
                         VStack {
                             Text("Total Balance: \(SettingsController().getDefaultCurrency().code) \(balance.totalChange.withCommas(decimalPlace: 2))")
                                 .foregroundColor(.blue)
@@ -284,7 +284,7 @@ struct AccountView: View {
         }
         .onAppear {
             Task.init {
-                await financeListVM.getTotalBalance()
+                await financeListViewModel.getTotalBalance()
             }
         }
     }
