@@ -13,7 +13,7 @@ struct AccountDetailsView: View {
     
     private var totalValue: Double = 0.0
     
-    @ObservedObject private var financeListVM = FinanceListViewModel()
+    @ObservedObject private var financeListViewModel = FinanceListViewModel()
     
     var account: Account
     init(account: Account) {
@@ -67,8 +67,8 @@ struct AccountDetailsView: View {
                 else {
                     field(labelName: "Symbol Name", value: account.accountname!)
                     field(labelName: "Total Units", value: "\(account.totalshare.withCommas(decimalPlace: 4))")
-                    field(labelName: "Current rate of a unit", value: (financeListVM.financeDetailModel.regularMarketPrice ?? 0.0).withCommas(decimalPlace: 4))
-                    field(labelName: "Total Value", value: (account.totalshare * (financeListVM.financeDetailModel.regularMarketPrice ?? 0.0)).withCommas(decimalPlace: 4))
+                    field(labelName: "Current rate of a unit", value: (financeListViewModel.financeDetailModel.regularMarketPrice ?? 0.0).withCommas(decimalPlace: 4))
+                    field(labelName: "Total Value", value: (account.totalshare * (financeListViewModel.financeDetailModel.regularMarketPrice ?? 0.0)).withCommas(decimalPlace: 4))
                     field(labelName: "Currency", value: account.currency!)
                     if(account.paymentreminder) {
                         field(labelName: "Payment Reminder", value: "On")
@@ -81,12 +81,12 @@ struct AccountDetailsView: View {
         }
         .onAppear {
             Task {
-                await financeListVM.getSymbolDetails(symbol: account.symbol!)
+                await financeListViewModel.getSymbolDetails(symbol: account.symbol!)
             }
         }
         .refreshable {
             Task {
-                await financeListVM.getSymbolDetails(symbol: account.symbol!)
+                await financeListViewModel.getSymbolDetails(symbol: account.symbol!)
             }
         }
     }

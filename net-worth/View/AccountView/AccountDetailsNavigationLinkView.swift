@@ -37,8 +37,8 @@ struct AccountDetailsNavigationLinkView: View {
                            , animation: .spring()
                            , activeAccentColor: .blue
                            , inactiveAccentColor: .gray
-                           , selectionBarColor: .blue,
-            selectionBarBackgroundHeight: 3)
+                           , selectionBarColor: .blue
+                           , selectionBarBackgroundHeight: 3)
             .navigationBarTitleDisplayMode(NavigationBarItem.TitleDisplayMode.inline)
             .navigationBarTitle(self.account.accountname!)
             if(selectedTabIndex == 0) {
