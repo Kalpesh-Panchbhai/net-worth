@@ -30,7 +30,7 @@ struct NewAccountView: View {
     @State private var paymentDate = 1
     @State var dates = Array(1...28)
     
-    @State var isPlus = true;
+    @State var isPlus = true
     
     private var accountController = AccountController()
     private var financeController = FinanceController()
