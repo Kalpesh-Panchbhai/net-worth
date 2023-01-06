@@ -58,7 +58,7 @@ struct AccountView: View {
                             VStack {
                                 Text(account.accountname!)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                Text(account.accounttype!).font(.system(size: 10))
+                                Text(account.accounttype!.uppercased()).font(.system(size: 10))
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .foregroundColor(.gray)
                             }
