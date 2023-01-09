@@ -7,17 +7,97 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "E01F3728-B604-4F2B-BBE2-77B9B0F2831A"
-            shouldBeEnabled = "No"
+            uuid = "4FBF12AF-9A22-425A-A6BE-2BF5A9903D82"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "net-worth/Controller/Finance/FinanceListViewModel.swift"
+            filePath = "net-worth/Views/CardsScreen.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "19"
-            endingLineNumber = "19"
-            landmarkName = "getAllSymbols(searchTerm:)"
-            landmarkType = "7">
+            startingLineNumber = "25"
+            endingLineNumber = "25"
+            landmarkName = "body"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "4FBF12AF-9A22-425A-A6BE-2BF5A9903D82 - 5a5c0a022c9f8810"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; SwiftUI.ForEach&lt;SwiftUI.SectionedFetchResults&lt;Swift.String, net_worth.Account&gt;, Swift.String, SwiftUI.Section&lt;SwiftUI.Text, SwiftUI.ScrollView&lt;&lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0&gt;, SwiftUI.EmptyView&gt;&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.edgesIgnoringSafeArea(SwiftUI.Edge.Set) -&gt; some&gt;&gt;.0, SwiftUI.ScrollView&lt;SwiftUI.ForEach&lt;SwiftUI.SectionedFetchResults&lt;Swift.String, net_worth.Account&gt;, Swift.String, SwiftUI.Section&lt;SwiftUI.Text, SwiftUI.ScrollView&lt;&lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0&gt;, SwiftUI.EmptyView&gt;&gt;&gt;)&gt; in closure #1 () -&gt; &lt;&lt;opaque return type of SwiftUI.View.foregroundColor(Swift.Optional&lt;SwiftUI.Color&gt;) -&gt; some&gt;&gt;.0 in net_worth.CardsScreen.body.getter : some"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Views/CardsScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "24"
+                  endingLineNumber = "24"
+                  offsetFromSymbolStart = "568">
+               </Location>
+               <Location
+                  uuid = "4FBF12AF-9A22-425A-A6BE-2BF5A9903D82 - 6bd74280fef17827"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (SwiftUI.SectionedFetchResults&lt;Swift.String, net_worth.Account&gt;.Section) -&gt; SwiftUI.Section&lt;SwiftUI.Text, SwiftUI.ScrollView&lt;&lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0&gt;, SwiftUI.EmptyView&gt; in closure #1 () -&gt; SwiftUI.ForEach&lt;SwiftUI.SectionedFetchResults&lt;Swift.String, net_worth.Account&gt;, Swift.String, SwiftUI.Section&lt;SwiftUI.Text, SwiftUI.ScrollView&lt;&lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0&gt;, SwiftUI.EmptyView&gt;&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.edgesIgnoringSafeArea(SwiftUI.Edge.Set) -&gt; some&gt;&gt;.0, SwiftUI.ScrollView&lt;SwiftUI.ForEach&lt;SwiftUI.SectionedFetchResults&lt;Swift.String, net_worth.Account&gt;, Swift.String, SwiftUI.Section&lt;SwiftUI.Text, SwiftUI.ScrollView&lt;&lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0&gt;, SwiftUI.EmptyView&gt;&gt;&gt;)&gt; in closure #1 () -&gt; &lt;&lt;opaque return type of SwiftUI.View.foregroundColor(Swift.Optional&lt;SwiftUI.Color&gt;) -&gt; some&gt;&gt;.0 in net_worth.CardsScreen.body.getter : some"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Views/CardsScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "25"
+                  endingLineNumber = "25"
+                  offsetFromSymbolStart = "448">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "862D2AB5-B5F8-4BA3-A440-6A8A73BA68E8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "net-worth/Views/CardsScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
+            landmarkName = "body"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "862D2AB5-B5F8-4BA3-A440-6A8A73BA68E8 - 6bd74280fef17827"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (SwiftUI.SectionedFetchResults&lt;Swift.String, net_worth.Account&gt;.Section) -&gt; SwiftUI.Section&lt;SwiftUI.Text, SwiftUI.ScrollView&lt;&lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0&gt;, SwiftUI.EmptyView&gt; in closure #1 () -&gt; SwiftUI.ForEach&lt;SwiftUI.SectionedFetchResults&lt;Swift.String, net_worth.Account&gt;, Swift.String, SwiftUI.Section&lt;SwiftUI.Text, SwiftUI.ScrollView&lt;&lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0&gt;, SwiftUI.EmptyView&gt;&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.edgesIgnoringSafeArea(SwiftUI.Edge.Set) -&gt; some&gt;&gt;.0, SwiftUI.ScrollView&lt;SwiftUI.ForEach&lt;SwiftUI.SectionedFetchResults&lt;Swift.String, net_worth.Account&gt;, Swift.String, SwiftUI.Section&lt;SwiftUI.Text, SwiftUI.ScrollView&lt;&lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0&gt;, SwiftUI.EmptyView&gt;&gt;&gt;)&gt; in closure #1 () -&gt; &lt;&lt;opaque return type of SwiftUI.View.foregroundColor(Swift.Optional&lt;SwiftUI.Color&gt;) -&gt; some&gt;&gt;.0 in net_worth.CardsScreen.body.getter : some"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Views/CardsScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "25"
+                  endingLineNumber = "25"
+                  offsetFromSymbolStart = "448">
+               </Location>
+               <Location
+                  uuid = "862D2AB5-B5F8-4BA3-A440-6A8A73BA68E8 - e3f9e86d38a946b0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; SwiftUI.ScrollView&lt;&lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0&gt; in closure #1 (SwiftUI.SectionedFetchResults&lt;Swift.String, net_worth.Account&gt;.Section) -&gt; SwiftUI.Section&lt;SwiftUI.Text, SwiftUI.ScrollView&lt;&lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0&gt;, SwiftUI.EmptyView&gt; in closure #1 () -&gt; SwiftUI.ForEach&lt;SwiftUI.SectionedFetchResults&lt;Swift.String, net_worth.Account&gt;, Swift.String, SwiftUI.Section&lt;SwiftUI.Text, SwiftUI.ScrollView&lt;&lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0&gt;, SwiftUI.EmptyView&gt;&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.edgesIgnoringSafeArea(SwiftUI.Edge.Set) -&gt; some&gt;&gt;.0, SwiftUI.ScrollView&lt;SwiftUI.ForEach&lt;SwiftUI.SectionedFetchResults&lt;Swift.String, net_worth.Account&gt;, Swift.String, SwiftUI.Section&lt;SwiftUI.Text, SwiftUI.ScrollView&lt;&lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0&gt;, SwiftUI.EmptyView&gt;&gt;&gt;)&gt; in closure #1 () -&gt; &lt;&lt;opaque return type of SwiftUI.View.foregroundColor(Swift.Optional&lt;SwiftUI.Color&gt;) -&gt; some&gt;&gt;.0 in net_worth.CardsScreen.body.getter : some"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Views/CardsScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "26"
+                  endingLineNumber = "26"
+                  offsetFromSymbolStart = "348">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

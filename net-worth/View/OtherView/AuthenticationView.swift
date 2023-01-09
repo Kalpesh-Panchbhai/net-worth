@@ -32,10 +32,10 @@ struct AuthenticationView: View {
                 }
                 .onAppear(perform: authenticate)
                 .fullScreenCover(isPresented: $unlocked, content: {
-                    MainScreenView()
+                    ContentView()
                 })
             }else {
-                MainScreenView()
+                ContentView()
             }
         }
     }
