@@ -73,9 +73,45 @@ class NotificationController {
     }
     
     private func getContent(accountType: String, accountName: String) -> UNMutableNotificationContent {
+        if(accountType == "Credit Card") {
+            return getCreditCardContent(accountName: accountName)
+        } else if(accountType == "Loan") {
+            return getLoanContent(accountName: accountName)
+        } else if(accountType == "Other") {
+            return getOtherContent(accountName: accountName)
+        } else {
+            return getSymbolContent(accountName: accountName)
+        }
+    }
+    
+    private func getCreditCardContent(accountName: String) -> UNMutableNotificationContent {
         let content = UNMutableNotificationContent()
-        content.title = accountType
-        content.body = accountName
+        content.title = accountName + " Credit Card Bill Generated"
+        content.body = "Please pay before due date to avoid late fees."
+        content.sound = .default
+        return content
+    }
+    
+    private func getLoanContent(accountName: String) -> UNMutableNotificationContent {
+        let content = UNMutableNotificationContent()
+        content.title = accountName + " Loan"
+        content.body = "EMI will be deducted today."
+        content.sound = .default
+        return content
+    }
+    
+    private func getOtherContent(accountName: String) -> UNMutableNotificationContent {
+        let content = UNMutableNotificationContent()
+        content.title = accountName
+        content.body = "Payment reminder."
+        content.sound = .default
+        return content
+    }
+    
+    private func getSymbolContent(accountName: String) -> UNMutableNotificationContent {
+        let content = UNMutableNotificationContent()
+        content.title = accountName
+        content.body = "Payment reminder."
         content.sound = .default
         return content
     }
