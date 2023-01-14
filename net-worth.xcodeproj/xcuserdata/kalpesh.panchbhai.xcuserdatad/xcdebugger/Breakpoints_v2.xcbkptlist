@@ -20,7 +20,7 @@
             landmarkType = "24">
             <Locations>
                <Location
-                  uuid = "4FBF12AF-9A22-425A-A6BE-2BF5A9903D82 - 5a5c0a022c9f8810"
+                  uuid = "4FBF12AF-9A22-425A-A6BE-2BF5A9903D82 - 5a5c0a022c9f8833"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -30,12 +30,12 @@
                   urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Views/CardsScreen.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "24"
-                  endingLineNumber = "24"
-                  offsetFromSymbolStart = "568">
+                  startingLineNumber = "25"
+                  endingLineNumber = "25"
+                  offsetFromSymbolStart = "384">
                </Location>
                <Location
-                  uuid = "4FBF12AF-9A22-425A-A6BE-2BF5A9903D82 - 6bd74280fef17827"
+                  uuid = "4FBF12AF-9A22-425A-A6BE-2BF5A9903D82 - 6bd74280fef17846"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -45,9 +45,9 @@
                   urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Views/CardsScreen.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "25"
-                  endingLineNumber = "25"
-                  offsetFromSymbolStart = "448">
+                  startingLineNumber = "26"
+                  endingLineNumber = "26"
+                  offsetFromSymbolStart = "276">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -68,7 +68,7 @@
             landmarkType = "24">
             <Locations>
                <Location
-                  uuid = "862D2AB5-B5F8-4BA3-A440-6A8A73BA68E8 - 6bd74280fef17827"
+                  uuid = "862D2AB5-B5F8-4BA3-A440-6A8A73BA68E8 - 6bd74280fef17846"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -78,12 +78,12 @@
                   urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Views/CardsScreen.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "25"
-                  endingLineNumber = "25"
-                  offsetFromSymbolStart = "448">
+                  startingLineNumber = "26"
+                  endingLineNumber = "26"
+                  offsetFromSymbolStart = "276">
                </Location>
                <Location
-                  uuid = "862D2AB5-B5F8-4BA3-A440-6A8A73BA68E8 - e3f9e86d38a946b0"
+                  uuid = "862D2AB5-B5F8-4BA3-A440-6A8A73BA68E8 - e3f9e86d38a94697"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -93,11 +93,43 @@
                   urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Views/CardsScreen.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "26"
-                  endingLineNumber = "26"
-                  offsetFromSymbolStart = "348">
+                  startingLineNumber = "27"
+                  endingLineNumber = "27"
+                  offsetFromSymbolStart = "248">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E422FFA2-4C3F-4C83-871C-43C5339D14B8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "net-worth/net_worthApp.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
+            landmarkName = "userNotificationCenter(_:didReceive:withCompletionHandler:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F2646635-8C1D-4390-8629-0E468B164374"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "net-worth/net_worthApp.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
+            landmarkName = "application(_:didFinishLaunchingWithOptions:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

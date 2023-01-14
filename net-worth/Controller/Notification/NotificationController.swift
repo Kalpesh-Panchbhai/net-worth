@@ -89,6 +89,14 @@ class NotificationController {
         content.title = accountName + " Credit Card Bill Generated"
         content.body = "Please pay before due date to avoid late fees."
         content.sound = .default
+        
+        let open = UNNotificationAction(identifier: "open", title: "Open")
+        let cancel = UNNotificationAction(identifier: "cancel", title: "cancel")
+        
+        let category = UNNotificationCategory(identifier: "action", actions: [open, cancel], intentIdentifiers: [])
+        notificationCenter.setNotificationCategories([category])
+        content.categoryIdentifier = "action"
+        
         return content
     }
     
