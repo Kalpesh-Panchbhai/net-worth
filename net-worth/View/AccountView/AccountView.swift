@@ -65,6 +65,7 @@ struct AccountView: View {
                             Spacer()
                             AccountFinanceView(account: account)
                         }
+                        .foregroundColor(Color.blue)
                         .padding()
                     })
                     .swipeActions {
@@ -86,7 +87,7 @@ struct AccountView: View {
                 }
             }
             .environment(\.editMode, self.$editMode)
-            .listStyle(.grouped)
+            .listStyle(InsetGroupedListStyle())
             .toolbar {
                 if !accounts.isEmpty {
                     ToolbarItem(placement: .navigationBarLeading) {
