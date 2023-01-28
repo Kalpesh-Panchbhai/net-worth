@@ -42,6 +42,7 @@ struct UpdateBalanceAccountView: View {
                         let accountModel = AccountModel()
                         accountModel.sysId = account.sysid!
                         accountModel.accountType = account.accounttype!
+                        amount = isPlus ? amount : amount * -1
                         if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
                             accountModel.currentBalance = amount
                         } else {
@@ -74,6 +75,7 @@ struct UpdateBalanceAccountView: View {
                         let accountModel = AccountModel()
                         accountModel.sysId = account.sysid!
                         accountModel.accountType = account.accounttype!
+                        amount = isPlus ? amount : amount * -1
                         if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
                             accountModel.currentBalance = account.currentbalance + amount
                         } else {
@@ -110,14 +112,12 @@ struct UpdateBalanceAccountView: View {
             Spacer()
             Button(action: {
                 if isPlus {
-                    amount = amount * -1
                     isPlus = false
                 }else {
-                    amount = amount * -1
                     isPlus = true
                 }
             }, label: {
-                Label("", systemImage: isPlus ? "minus" : "plus")
+                Label("", systemImage: isPlus ? "plus" : "minus")
             })
             Spacer()
             TextField("Amount", value: $amount, formatter: Double().formatter())
@@ -125,9 +125,19 @@ struct UpdateBalanceAccountView: View {
         }
     }
     
-    private func currentUnitField() -> HStack<TupleView<(Text, Spacer, some View)>> {
+    private func currentUnitField() -> HStack<TupleView<(Text, Spacer, Button<Label<Text, Image>>, Spacer, some View)>> {
         return HStack {
             Text("Units")
+            Spacer()
+            Button(action: {
+                if isPlus {
+                    isPlus = false
+                }else {
+                    isPlus = true
+                }
+            }, label: {
+                Label("", systemImage: isPlus ? "plus" : "minus")
+            })
             Spacer()
             TextField("Units", value: $amount, formatter: Double().formatter())
                 .keyboardType(.decimalPad)

@@ -31,8 +31,14 @@ struct AccountHistoryView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     VStack {
-                        Text((account.currency ?? "") + " \(accountTransactionList[i].balancechange.withCommas(decimalPlace: 4))")
-                            .frame(maxWidth: .infinity, alignment: .trailing)
+                        if(self.account.accounttype == "Saving" || self.account.accounttype == "Credit Card" || self.account.accounttype == "Loan" || self.account.accounttype == "Other") {
+                            Text((account.currency ?? "") + " \(accountTransactionList[i].balancechange.withCommas(decimalPlace: 4))")
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                        }
+                        else {
+                            Text(" \(accountTransactionList[i].balancechange.withCommas(decimalPlace: 4))")
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                        }
                         if( i < accountTransactionList.count - 1) {
                             if((accountTransactionList[i].balancechange - accountTransactionList[i + 1].balancechange) > 0 ) {
                                 Text("+\((accountTransactionList[i].balancechange - accountTransactionList[i + 1].balancechange).withCommas(decimalPlace: 2))")

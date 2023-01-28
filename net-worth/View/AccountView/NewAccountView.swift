@@ -109,7 +109,7 @@ struct NewAccountView: View {
                         accountModel.accountType = accountType
                         accountModel.accountName = accountName
                         if(accountType != "Symbol") {
-                            accountModel.currentBalance = currentBalance
+                            accountModel.currentBalance = isPlus ? currentBalance : currentBalance * -1
                             accountModel.currency = currenySelected.code
                         }else {
                             accountModel.accountType = symbolType
@@ -245,14 +245,12 @@ struct NewAccountView: View {
             Spacer()
             Button(action: {
                 if isPlus {
-                    currentBalance = currentBalance * -1
                     isPlus = false
                 }else {
-                    currentBalance = currentBalance * -1
                     isPlus = true
                 }
             }, label: {
-                Label("", systemImage: isPlus ? "minus" : "plus")
+                Label("", systemImage: isPlus ? "plus" : "minus")
             })
             Spacer()
             TextField("Current Balance", value: $currentBalance, formatter: Double().formatter())
