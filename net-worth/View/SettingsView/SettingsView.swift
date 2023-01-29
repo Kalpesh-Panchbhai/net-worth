@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     
     @State private var isAuthenticationRequired: Bool
+    @State private var logout =  false
     
     @State private var currenySelected: Currency
     @State private var searchTerm: String = ""
@@ -43,10 +44,21 @@ struct SettingsView: View {
                 
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
                 Text("Version " + appVersion!)
+                
+                Button(action: {
+                    UserDefaults.standard.set(false, forKey: "signIn")
+                    settingsController.setAuthentication(newValue: false)
+                    logout = true
+                }, label: {
+                    Label("Logout", systemImage: "rectangle.portrait.and.arrow.right")
+                })
             }
             .navigationTitle("Settings")
             .listStyle(.grouped)
         }
+        .fullScreenCover(isPresented: $logout, content: {
+            LoginScreen()
+        })
     }
     
     var defaultCurrencyPicker: some View {
