@@ -223,7 +223,6 @@
 		7D79FA4F291B7430004A2ECF /* net-worth */ = {
 			isa = PBXGroup;
 			children = (
-				7D921C58298682FB0014AC9E /* LoginView */,
 				7D921C4E29867EED0014AC9E /* GoogleService-Info.plist */,
 				7D79FA5E291B7431004A2ECF /* Info.plist */,
 				7D79FA50291B7430004A2ECF /* net_worthApp.swift */,
@@ -286,6 +285,7 @@
 		7D79FA88291B9C6E004A2ECF /* View */ = {
 			isa = PBXGroup;
 			children = (
+				7D921C58298682FB0014AC9E /* LoginView */,
 				7DAC70A8294086890033050C /* CustomView */,
 				7DD7A56C29224C1200CD5B37 /* AccountView */,
 				7DD7A56B29224BFD00CD5B37 /* IncomeView */,
