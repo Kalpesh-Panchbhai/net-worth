@@ -30,10 +30,11 @@ struct SettingsView: View {
     var body: some View {
         NavigationView(){
             List{
-                Toggle("Require Face ID", isOn: $isAuthenticationRequired)
-                    .onChange(of: isAuthenticationRequired) { newValue in
-                        settingsController.setAuthentication(newValue: newValue)
-                    }
+                Toggle(isOn: $isAuthenticationRequired, label: {
+                    Label("Require Face ID", systemImage: "faceid")
+                }).onChange(of: isAuthenticationRequired) { newValue in
+                    settingsController.setAuthentication(newValue: newValue)
+                }
                 NavigationLink(destination: {
                     NotificationsView()
                 }, label: {
