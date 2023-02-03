@@ -86,14 +86,18 @@ struct SettingsView: View {
     }
     
     func logoutUser() {
-        UserDefaults.standard.set(false, forKey: "signIn")
+        let defaults = UserDefaults.standard
+        let dictionary = defaults.dictionaryRepresentation()
+        dictionary.keys.forEach { key in
+            defaults.removeObject(forKey: key)
+        }
+        
         do {
             try Auth.auth().signOut()
         }
         catch {
             print("already logged out")
         }
-        UserDefaults.standard.removeObject(forKey: "currentLoggedUserUID")
         settingsController.setAuthentication(newValue: false)
         logout = true
     }
