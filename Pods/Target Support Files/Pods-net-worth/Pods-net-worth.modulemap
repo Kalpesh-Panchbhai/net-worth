@@ -1,0 +1,6 @@
+framework module Pods_net_worth {
+  umbrella header "Pods-net-worth-umbrella.h"
+
+  export *
+  module * { export * }
+}
