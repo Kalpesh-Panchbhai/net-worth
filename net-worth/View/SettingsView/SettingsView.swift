@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct SettingsView: View {
     
@@ -47,9 +48,7 @@ struct SettingsView: View {
                 Text("Version " + appVersion!)
                 
                 Button(action: {
-                    UserDefaults.standard.set(false, forKey: "signIn")
-                    settingsController.setAuthentication(newValue: false)
-                    logout = true
+                    logoutUser()
                 }, label: {
                     Label("Logout", systemImage: "rectangle.portrait.and.arrow.right")
                 })
@@ -84,6 +83,19 @@ struct SettingsView: View {
             settingsController.setDefaultCurrency(newValue: data)
         }
         .pickerStyle(.navigationLink)
+    }
+    
+    func logoutUser() {
+        UserDefaults.standard.set(false, forKey: "signIn")
+        do {
+            try Auth.auth().signOut()
+        }
+        catch {
+            print("already logged out")
+        }
+        UserDefaults.standard.removeObject(forKey: "currentLoggedUserUID")
+        settingsController.setAuthentication(newValue: false)
+        logout = true
     }
 }
 

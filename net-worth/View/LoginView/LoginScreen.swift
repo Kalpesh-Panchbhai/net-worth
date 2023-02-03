@@ -44,7 +44,7 @@ struct LoginScreen: View {
 
                     // Start the sign in flow!
                     GIDSignIn.sharedInstance.signIn(withPresenting: getRootViewController()) { user, error in
-                        if let error = error {
+                        if error != nil {
                             return
                         }
                         
@@ -62,6 +62,8 @@ struct LoginScreen: View {
                             }
                             
                             UserDefaults.standard.set(true, forKey: "signIn")
+                            guard let userUID = Auth.auth().currentUser?.uid else { return }
+                            UserDefaults.standard.set(userUID, forKey: "currentLoggedUserUID")
                         }
                     }
 
