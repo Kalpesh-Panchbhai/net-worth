@@ -59,7 +59,6 @@
 		7DF1E9C8292A43C8003D030E /* AccountModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF1E9C7292A43C8003D030E /* AccountModel.swift */; };
 		7DFC6D042938E38E002F847C /* FinanceListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DFC6D032938E38E002F847C /* FinanceListViewModel.swift */; };
 		A1F5E8ECAEDA6710B8D6EA11 /* Pods_net_worth_net_worthUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D5576F40F828E2D89BA00A0 /* Pods_net_worth_net_worthUITests.framework */; };
-		AC9252FB7001902624E71D2E /* Pods_net_worth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC5CC7014F51AC0DAEF83346 /* Pods_net_worth.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -150,7 +149,6 @@
 				7D921C522986801E0014AC9E /* FirebaseAuth in Frameworks */,
 				7D921C55298681BC0014AC9E /* GoogleSignIn in Frameworks */,
 				7D921C57298681BC0014AC9E /* GoogleSignInSwift in Frameworks */,
-				AC9252FB7001902624E71D2E /* Pods_net_worth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,7 +181,6 @@
 				86BAD84AC94BC1625CDE7E79 /* Pods-net-worthTests.debug.xcconfig */,
 				F904EDF3AA3AE3C4B4DC832D /* Pods-net-worthTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
