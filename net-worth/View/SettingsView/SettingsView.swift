@@ -46,9 +46,6 @@ struct SettingsView: View {
                 
                 defaultCurrencyPicker
                 
-                let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-                Text("Version " + appVersion!)
-                
                 Button(action: {
                     isPresentingDataAndAccountDeletionConfirmation.toggle()
                 }, label: {
@@ -69,6 +66,11 @@ struct SettingsView: View {
                                           logoutUser()
                                       }
                                     }
+                
+                Spacer()
+                
+                let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+                Label("Version " + (appVersion ?? ""), systemImage: "version")
             }
             .navigationTitle("Settings")
             .listStyle(.grouped)
@@ -109,7 +111,6 @@ struct SettingsView: View {
             defaults.removeObject(forKey: key)
         }
         settingsController.setAuthentication(newValue: false)
-        logout = true
     }
     
     func deleteAccountAndData() {
