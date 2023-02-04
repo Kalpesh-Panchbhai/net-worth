@@ -64,7 +64,6 @@ class IncomeViewModel: ObservableObject {
                                                creditedon: doc["creditedon"] as? Date ?? Date(),
                                                currency: doc["currency"] as? String ?? "",
                                                incometype: doc["incometype"] as? String ?? "")
-                                
                             }
                         }
                     } else {
