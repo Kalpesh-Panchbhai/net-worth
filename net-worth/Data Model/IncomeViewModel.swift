@@ -15,11 +15,11 @@ class IncomeViewModel: ObservableObject {
     
     @Published var incomeTotalAmount = 0.0
 
-    func addIncome(income: Income) async {
+    func addIncome(income: Income) {
         do {
-            try UserController().getCurrentUserDocument().collection("incomes").addDocument(from: income)
+            try UserController().getCurrentUserDocument().collection(ConstantUtils().incomeCollectionName).addDocument(from: income)
             
-            try await self.getIncomeList()
+            self.getIncomeList()
         } catch {
             print(error)
         }
@@ -27,7 +27,7 @@ class IncomeViewModel: ObservableObject {
     
     func deleteIncome(income: String) async {
         do {
-            try await UserController().getCurrentUserDocument().collection("incomes").document(income).delete()
+            try await UserController().getCurrentUserDocument().collection(ConstantUtils().incomeCollectionName).document(income).delete()
         } catch {
             print(error)
         }
@@ -41,10 +41,9 @@ class IncomeViewModel: ObservableObject {
         }
     }
     
-    func getIncomeList() async {
-        do {
-            try await UserController().getCurrentUserDocument()
-                .collection("incomes")
+    func getIncomeList() {
+        UserController().getCurrentUserDocument()
+                .collection(ConstantUtils().incomeCollectionName)
                 .getDocuments { snapshot, error in
                     if error == nil {
                         if let snapshot = snapshot {
@@ -60,8 +59,5 @@ class IncomeViewModel: ObservableObject {
                         
                     }
                 }
-        } catch {
-            print(error)
-        }
     }
 }
