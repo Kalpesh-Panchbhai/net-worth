@@ -25,7 +25,7 @@ struct IncomeView: View {
                 }
                 .onDelete(perform: deleteIncome)
             }
-            .onAppear {
+            .refreshable {
                 Task.init {
                     await incomeViewModel.getIncomeList()
                     await incomeViewModel.getTotalBalance()
@@ -65,6 +65,12 @@ struct IncomeView: View {
                 }
             }
             .navigationTitle("Income")
+        }
+        .onAppear {
+            Task.init {
+                await incomeViewModel.getIncomeList()
+                await incomeViewModel.getTotalBalance()
+            }
         }
     }
     

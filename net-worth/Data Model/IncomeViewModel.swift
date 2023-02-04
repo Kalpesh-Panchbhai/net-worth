@@ -35,17 +35,7 @@ class IncomeViewModel: ObservableObject {
     
     func getTotalBalance() async {
         do {
-            try await UserController().getCurrentUserDocument().collection(ConstantUtils().incomeCollectionName).getDocuments { snapshot, error in
-                if error == nil {
-                    if let snapshot = snapshot {
-                        snapshot.documents.forEach { doc in
-                            self.incomeTotalAmount = self.incomeTotalAmount + (doc["amount"] as? Double ?? 0.0)
-                        }
-                    }
-                } else {
-                    
-                }
-            }
+            incomeTotalAmount = try await IncomeController().fetchTotalAmount()
         } catch {
             print(error)
         }
@@ -61,7 +51,7 @@ class IncomeViewModel: ObservableObject {
                             self.incomeList = snapshot.documents.map { doc in
                                 return Income(id: doc.documentID,
                                                amount: doc["amount"] as? Double ?? 0.0,
-                                               creditedon: doc["creditedon"] as? Date ?? Date(),
+                                               creditedon: (doc["creditedon"] as? Timestamp)?.dateValue() ?? Date(),
                                                currency: doc["currency"] as? String ?? "",
                                                incometype: doc["incometype"] as? String ?? "")
                             }

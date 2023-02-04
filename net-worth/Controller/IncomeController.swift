@@ -19,4 +19,25 @@ class IncomeController {
         try await incomeViewModel.addIncome(income: newIncome)
     }
     
+    public func fetchTotalAmount() async throws -> Double {
+        var total = 0.0
+        try await withUnsafeThrowingContinuation { continuation in
+            UserController()
+                .getCurrentUserDocument()
+                .collection(ConstantUtils().incomeCollectionName)
+                .getDocuments { snapshot, error in
+                    if error  == nil {
+                        if let snapshot = snapshot {
+                            snapshot.documents.forEach { doc in
+                                total += doc["amount"] as? Double ?? 0.0
+                            }
+                            continuation.resume()
+                        }
+                    }
+                }
+        }
+        return total
+    }
+    
 }
+
