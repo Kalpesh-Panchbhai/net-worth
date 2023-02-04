@@ -42,6 +42,7 @@ class IncomeViewModel: ObservableObject {
     func getIncomeList() {
         UserController().getCurrentUserDocument()
                 .collection(ConstantUtils().incomeCollectionName)
+                .order(by: "creditedon", descending: true)
                 .getDocuments { snapshot, error in
                     if error == nil {
                         if let snapshot = snapshot {
