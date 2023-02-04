@@ -16,7 +16,7 @@ class IncomeController {
     
     public func addIncome(incometype: String, amount: String, date: Date, currency: String) async {
         let newIncome = Income(amount: Double(amount) ?? 0.0, creditedon: date, currency: currency, incometype: incometype)
-        try await incomeViewModel.addIncome(income: newIncome)
+        incomeViewModel.addIncome(income: newIncome)
     }
     
     public func fetchTotalAmount() async throws -> Double {

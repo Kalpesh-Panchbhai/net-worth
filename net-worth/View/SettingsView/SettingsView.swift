@@ -12,6 +12,8 @@ struct SettingsView: View {
     
     @State private var isAuthenticationRequired: Bool
     @State private var logout =  false
+    @State private var isPresentingDataAndAccountDeletionConfirmation = false
+    @State private var isPresentingLogoutConfirm = false
     
     @State private var currenySelected: Currency
     @State private var searchTerm: String = ""
@@ -48,10 +50,25 @@ struct SettingsView: View {
                 Text("Version " + appVersion!)
                 
                 Button(action: {
-                    logoutUser()
+                    isPresentingDataAndAccountDeletionConfirmation.toggle()
+                }, label: {
+                    Label("Delete Account & Data", systemImage: "xmark.bin")
+                }).confirmationDialog("Are you sure?",
+                                      isPresented: $isPresentingDataAndAccountDeletionConfirmation) {
+                                      Button("Delete all data and account?", role: .destructive) {
+                                          deleteAccountAndData()
+                                      }
+                                    }
+                Button(action: {
+                    isPresentingLogoutConfirm.toggle()
                 }, label: {
                     Label("Logout", systemImage: "rectangle.portrait.and.arrow.right")
-                })
+                }).confirmationDialog("Are you sure?",
+                                      isPresented: $isPresentingLogoutConfirm) {
+                                      Button("Logout?", role: .destructive) {
+                                          logoutUser()
+                                      }
+                                    }
             }
             .navigationTitle("Settings")
             .listStyle(.grouped)
@@ -93,6 +110,11 @@ struct SettingsView: View {
         }
         settingsController.setAuthentication(newValue: false)
         logout = true
+    }
+    
+    func deleteAccountAndData() {
+        UserController().deleteUser()
+        logoutUser()
     }
 }
 
