@@ -18,8 +18,6 @@ class IncomeViewModel: ObservableObject {
     func addIncome(income: Income) {
         do {
             try UserController().getCurrentUserDocument().collection(ConstantUtils().incomeCollectionName).addDocument(from: income)
-            
-            self.getIncomeList()
         } catch {
             print(error)
         }
