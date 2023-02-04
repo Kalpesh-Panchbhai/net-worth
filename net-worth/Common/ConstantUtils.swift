@@ -18,4 +18,8 @@ class ConstantUtils {
         case other = "Other"
     }
     
+    var usersCollectionName = "users"
+    var incomeCollectionName = "incomes"
+    var accountCollectionName = "accounts"
+    
 }

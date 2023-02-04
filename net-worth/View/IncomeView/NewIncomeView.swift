@@ -78,7 +78,9 @@ struct NewIncomeView: View {
             .toolbar {
                 ToolbarItem {
                     Button(action: {
-                        incomeController.addIncome(incometype: incomeType, amount: amount, date: date, currency: currenySelected.code)
+                        Task.init {
+                            await incomeController.addIncome(incometype: incomeType, amount: amount, date: date, currency: currenySelected.code)
+                        }
                         dismiss()
                     }, label: {
                         Label("Add Income", systemImage: "checkmark")
@@ -130,11 +132,5 @@ struct NewIncomeView: View {
             }
         }
         .pickerStyle(.navigationLink)
-    }
-}
-
-struct NewIncomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        NewIncomeView()
     }
 }

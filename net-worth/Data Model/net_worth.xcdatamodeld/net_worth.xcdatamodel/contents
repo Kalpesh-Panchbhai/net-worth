@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21512" systemVersion="21G217" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G419" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="Account" representedClassName=".Account" syncable="YES" codeGenerationType="class">
         <attribute name="accountname" optional="YES" attributeType="String"/>
         <attribute name="accounttype" optional="YES" attributeType="String"/>
@@ -17,12 +17,5 @@
         <attribute name="balancechange" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="sysid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-    </entity>
-    <entity name="Income" representedClassName=".Income" syncable="YES" codeGenerationType="class">
-        <attribute name="amount" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="creditedon" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="currency" optional="YES" attributeType="String"/>
-        <attribute name="incometype" optional="YES" attributeType="String"/>
-        <attribute name="sysid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
     </entity>
 </model>

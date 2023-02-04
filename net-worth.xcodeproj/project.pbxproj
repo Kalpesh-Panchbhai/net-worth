@@ -30,7 +30,13 @@
 		7D79FA87291B803A004A2ECF /* AccountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA86291B803A004A2ECF /* AccountController.swift */; };
 		7D79FA8A291B9CE6004A2ECF /* MainScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA89291B9CE6004A2ECF /* MainScreenView.swift */; };
 		7D79FA8C291BA152004A2ECF /* NewAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA8B291BA152004A2ECF /* NewAccountView.swift */; };
+		7D7AA909298D8DA2004C9776 /* UserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7AA908298D8DA2004C9776 /* UserController.swift */; };
 		7D80ECF0291CE0C500A22496 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D80ECEF291CE0C500A22496 /* LaunchScreen.storyboard */; };
+		7D85D030298D29BE0019F85E /* Income.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D85D02F298D29BE0019F85E /* Income.swift */; };
+		7D85D032298D2ADD0019F85E /* IncomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D85D031298D2ADD0019F85E /* IncomeViewModel.swift */; };
+		7D85D068298D2CCF0019F85E /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 7D85D067298D2CCF0019F85E /* FirebaseFirestore */; };
+		7D85D06A298D2CCF0019F85E /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7D85D069298D2CCF0019F85E /* FirebaseFirestoreSwift */; };
+		7D85D06C298D2D650019F85E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D85D06B298D2D650019F85E /* User.swift */; };
 		7D8FCD48298CDB84004E74B7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D8FCD47298CDB84004E74B7 /* GoogleService-Info.plist */; };
 		7D921C522986801E0014AC9E /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 7D921C512986801E0014AC9E /* FirebaseAuth */; };
 		7D921C55298681BC0014AC9E /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 7D921C54298681BC0014AC9E /* GoogleSignIn */; };
@@ -109,7 +115,11 @@
 		7D79FA86291B803A004A2ECF /* AccountController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountController.swift; sourceTree = "<group>"; };
 		7D79FA89291B9CE6004A2ECF /* MainScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenView.swift; sourceTree = "<group>"; };
 		7D79FA8B291BA152004A2ECF /* NewAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAccountView.swift; sourceTree = "<group>"; };
+		7D7AA908298D8DA2004C9776 /* UserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserController.swift; sourceTree = "<group>"; };
 		7D80ECEF291CE0C500A22496 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		7D85D02F298D29BE0019F85E /* Income.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Income.swift; sourceTree = "<group>"; };
+		7D85D031298D2ADD0019F85E /* IncomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeViewModel.swift; sourceTree = "<group>"; };
+		7D85D06B298D2D650019F85E /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		7D8FCD47298CDB84004E74B7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7D921C59298683100014AC9E /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		7D921C5B298683370014AC9E /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
@@ -147,8 +157,10 @@
 			files = (
 				7D51FE18291E1E8500BBA94A /* SlidingTabView in Frameworks */,
 				7D921C522986801E0014AC9E /* FirebaseAuth in Frameworks */,
+				7D85D068298D2CCF0019F85E /* FirebaseFirestore in Frameworks */,
 				7D921C55298681BC0014AC9E /* GoogleSignIn in Frameworks */,
 				7D921C57298681BC0014AC9E /* GoogleSignInSwift in Frameworks */,
+				7D85D06A298D2CCF0019F85E /* FirebaseFirestoreSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,6 +203,8 @@
 				7D433CF729386002007FA625 /* FinanceModel.swift */,
 				7DEC3B7F2938A38B002E9C8B /* FinanceDetailModel.swift */,
 				7D596277294105A40008A6B9 /* BalanceModel.swift */,
+				7D85D02F298D29BE0019F85E /* Income.swift */,
+				7D85D06B298D2D650019F85E /* User.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -294,6 +308,7 @@
 			children = (
 				7D79FA59291B7431004A2ECF /* Persistence.swift */,
 				7D79FA5B291B7431004A2ECF /* net_worth.xcdatamodeld */,
+				7D85D031298D2ADD0019F85E /* IncomeViewModel.swift */,
 			);
 			path = "Data Model";
 			sourceTree = "<group>";
@@ -306,6 +321,7 @@
 				7D79FA86291B803A004A2ECF /* AccountController.swift */,
 				7DC97A2529221990003F69D4 /* SettingsController.swift */,
 				7DC97A2929223989003F69D4 /* IncomeController.swift */,
+				7D7AA908298D8DA2004C9776 /* UserController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -426,6 +442,8 @@
 				7D921C512986801E0014AC9E /* FirebaseAuth */,
 				7D921C54298681BC0014AC9E /* GoogleSignIn */,
 				7D921C56298681BC0014AC9E /* GoogleSignInSwift */,
+				7D85D067298D2CCF0019F85E /* FirebaseFirestore */,
+				7D85D069298D2CCF0019F85E /* FirebaseFirestoreSwift */,
 			);
 			productName = "net-worth";
 			productReference = 7D79FA4D291B7430004A2ECF /* net-worth.app */;
@@ -626,6 +644,7 @@
 				7D596278294105A40008A6B9 /* BalanceModel.swift in Sources */,
 				7D921C66298684790014AC9E /* +View.swift in Sources */,
 				7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */,
+				7D7AA909298D8DA2004C9776 /* UserController.swift in Sources */,
 				7D79FA5D291B7431004A2ECF /* net_worth.xcdatamodeld in Sources */,
 				7D3636FB292F9CCB0013B4E5 /* NotificationsView.swift in Sources */,
 				7DC97A28292236FB003F69D4 /* IncomeView.swift in Sources */,
@@ -637,8 +656,11 @@
 				7D921C5E2986835C0014AC9E /* GoogleSiginBtn.swift in Sources */,
 				7D921C5C298683370014AC9E /* CustomTextField.swift in Sources */,
 				7D79FA5A291B7431004A2ECF /* Persistence.swift in Sources */,
+				7D85D030298D29BE0019F85E /* Income.swift in Sources */,
 				7D921C62298683B30014AC9E /* LoginScreen.swift in Sources */,
+				7D85D06C298D2D650019F85E /* User.swift in Sources */,
 				7D79FA87291B803A004A2ECF /* AccountController.swift in Sources */,
+				7D85D032298D2ADD0019F85E /* IncomeViewModel.swift in Sources */,
 				7DE42FC02934F69200D4DA0A /* UpdateBalanceAccountView.swift in Sources */,
 				7D9DF69F2939B80400BE4C9D /* CommonUtils.swift in Sources */,
 				7DC97A2A29223989003F69D4 /* IncomeController.swift in Sources */,
@@ -1031,6 +1053,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7D51FE16291E1E8400BBA94A /* XCRemoteSwiftPackageReference "SlidingTabView" */;
 			productName = SlidingTabView;
+		};
+		7D85D067298D2CCF0019F85E /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7D921C502986801E0014AC9E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		7D85D069298D2CCF0019F85E /* FirebaseFirestoreSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7D921C502986801E0014AC9E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestoreSwift;
 		};
 		7D921C512986801E0014AC9E /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;

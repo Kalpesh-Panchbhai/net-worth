@@ -91,13 +91,6 @@ struct SettingsView: View {
         dictionary.keys.forEach { key in
             defaults.removeObject(forKey: key)
         }
-        
-        do {
-            try Auth.auth().signOut()
-        }
-        catch {
-            print("already logged out")
-        }
         settingsController.setAuthentication(newValue: false)
         logout = true
     }

@@ -62,13 +62,12 @@ struct LoginScreen: View {
                             }
                             
                             UserDefaults.standard.set(true, forKey: "signIn")
-                            guard let userUID = Auth.auth().currentUser?.uid else { return }
-                            UserDefaults.standard.set(userUID, forKey: "currentLoggedUserUID")
+                            UserController().addCurrentUser()
                         }
                     }
 
-                } // GoogleSiginBtn
-            } // VStack
+                }
+            }
             .padding(.top, 52)
             Spacer()
         }

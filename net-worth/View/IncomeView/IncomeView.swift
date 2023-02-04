@@ -10,13 +10,7 @@ import CoreData
 
 struct IncomeView: View {
     
-    @Environment(\.managedObjectContext) private var viewContext
-    
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Income.creditedon, ascending: false)],
-        animation: .default)
-    private var incomes: FetchedResults<Income>
-    
+    @ObservedObject var incomeViewModel = IncomeViewModel()
     @State var isOpen: Bool = false
     
     private var incomeController = IncomeController()
@@ -26,17 +20,23 @@ struct IncomeView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(incomes) { income in
+                ForEach(incomeViewModel.incomeList, id: \.self) { income in
                     ChildIncomeView(income: income)
                 }
                 .onDelete(perform: deleteIncome)
+            }
+            .onAppear {
+                Task.init {
+                    await incomeViewModel.getIncomeList()
+                    await incomeViewModel.getTotalBalance()
+                }
             }
             .halfSheet(showSheet: $isOpen) {
                 NewIncomeView()
             }
             .listStyle(.grouped)
             .toolbar {
-                if !incomes.isEmpty {
+                if !incomeViewModel.incomeList.isEmpty {
                     ToolbarItem(placement: .navigationBarLeading) {
                         EditButton()
                     }
@@ -51,12 +51,12 @@ struct IncomeView: View {
                     }, label: {
                         Label("Add Income", systemImage: "plus")
                     })
-                    .alert("Please select the default currency in the settings tab to add an account.", isPresented: $showingSelectDefaultCurrencyAlert) {
+                    .alert("Please select the default currency in the settings tab to add an Income.", isPresented: $showingSelectDefaultCurrencyAlert) {
                         Button("OK", role: .cancel) { }
                     }
                 }
                 ToolbarItem(placement: .bottomBar){
-                    let balance = incomeController.getTotalBalance()
+                    let balance = incomeViewModel.incomeTotalAmount
                     HStack {
                         Text("Total Income: \(SettingsController().getDefaultCurrency().code) \(balance.withCommas(decimalPlace: 2))")
                             .foregroundColor(.blue)
@@ -69,15 +69,18 @@ struct IncomeView: View {
     }
     
     private func deleteIncome(offsets: IndexSet) {
+        var id = ""
         withAnimation {
-            offsets.map { incomes[$0] }.forEach(viewContext.delete)
-            
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            offsets.map {
+                id = incomeViewModel.incomeList[$0].id ?? ""
+            }.forEach {
+                Task.init {
+                    await incomeViewModel.deleteIncome(income: id)
+                }
             }
+        }
+        Task.init {
+            await incomeViewModel.getIncomeList()
         }
     }
     
@@ -85,25 +88,19 @@ struct IncomeView: View {
 
 struct ChildIncomeView: View {
     
-    @ObservedObject var income: Income
+    var income: Income
     
     var body: some View {
         HStack{
             VStack {
-                Text(income.incometype!)
+                Text(income.incometype)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text(income.creditedon!.getDateAndFormat()).font(.system(size: 10))
+                Text(income.creditedon.getDateAndFormat()).font(.system(size: 10))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundColor(.gray)
             }
-            Text("\(income.currency!) " + income.amount.withCommas(decimalPlace: 2))
+            Text("\(income.currency) " + income.amount.withCommas(decimalPlace: 2))
                 .frame(maxWidth: .infinity, alignment: .trailing)
         }
-    }
-}
-
-struct IncomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        IncomeView()
     }
 }
