@@ -32,7 +32,7 @@ struct IncomeView: View {
                 }
             }
             .halfSheet(showSheet: $isOpen) {
-                NewIncomeView()
+                NewIncomeView(incomeViewModel: incomeViewModel)
             }
             .listStyle(.grouped)
             .toolbar {

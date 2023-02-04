@@ -25,6 +25,12 @@ struct NewIncomeView: View {
     @State private var currencyChanged = false
     @State private var searchTerm: String = ""
     
+    @ObservedObject var incomeViewModel : IncomeViewModel
+    
+    init(incomeViewModel: IncomeViewModel) {
+        self.incomeViewModel = incomeViewModel
+    }
+    
     var body: some View {
         NavigationView {
             Form {
@@ -80,7 +86,9 @@ struct NewIncomeView: View {
                     Button(action: {
                         Task.init {
                             await incomeController.addIncome(incometype: incomeType, amount: amount, date: date, currency: currenySelected.code)
+                            await incomeViewModel.getTotalBalance()
                         }
+                        incomeViewModel.getIncomeList()
                         dismiss()
                     }, label: {
                         Label("Add Income", systemImage: "checkmark")
