@@ -82,11 +82,10 @@ struct IncomeView: View {
             }.forEach {
                 Task.init {
                     await incomeViewModel.deleteIncome(income: id)
+                    await incomeViewModel.getTotalBalance()
+                    await incomeViewModel.getIncomeList()
                 }
             }
-        }
-        Task.init {
-            await incomeViewModel.getIncomeList()
         }
     }
     
