@@ -24,12 +24,12 @@ class IncomeController {
         try await withUnsafeThrowingContinuation { continuation in
             UserController()
                 .getCurrentUserDocument()
-                .collection(ConstantUtils().incomeCollectionName)
+                .collection(ConstantUtils.incomeCollectionName)
                 .getDocuments { snapshot, error in
                     if error  == nil {
                         if let snapshot = snapshot {
                             snapshot.documents.forEach { doc in
-                                total += doc["amount"] as? Double ?? 0.0
+                                total += doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0
                             }
                             continuation.resume()
                         }

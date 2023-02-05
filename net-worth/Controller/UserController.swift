@@ -26,13 +26,13 @@ class UserController {
     
     func getCurrentUserDocument() -> DocumentReference {
         let db = Firestore.firestore()
-        return db.collection(ConstantUtils().usersCollectionName).document(getCurrentUserUID())
+        return db.collection(ConstantUtils.userCollectionName).document(getCurrentUserUID())
     }
     
     func deleteUser() {
         let db = Firestore.firestore()
-        delete(collection: db.collection(ConstantUtils().usersCollectionName).document(getCurrentUserUID()).collection(ConstantUtils().incomeCollectionName))
-        db.collection(ConstantUtils().usersCollectionName).document(getCurrentUserUID()).delete()
+        delete(collection: db.collection(ConstantUtils.userCollectionName).document(getCurrentUserUID()).collection(ConstantUtils.incomeCollectionName))
+        db.collection(ConstantUtils.userCollectionName).document(getCurrentUserUID()).delete()
     }
     
     func delete(collection: CollectionReference, batchSize: Int = 100) {

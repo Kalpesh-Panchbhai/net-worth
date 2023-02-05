@@ -17,7 +17,7 @@ class IncomeViewModel: ObservableObject {
 
     func addIncome(income: Income) {
         do {
-            try UserController().getCurrentUserDocument().collection(ConstantUtils().incomeCollectionName).addDocument(from: income)
+            try UserController().getCurrentUserDocument().collection(ConstantUtils.incomeCollectionName).addDocument(from: income)
         } catch {
             print(error)
         }
@@ -25,7 +25,7 @@ class IncomeViewModel: ObservableObject {
     
     func deleteIncome(income: String) async {
         do {
-            try await UserController().getCurrentUserDocument().collection(ConstantUtils().incomeCollectionName).document(income).delete()
+            try await UserController().getCurrentUserDocument().collection(ConstantUtils.incomeCollectionName).document(income).delete()
         } catch {
             print(error)
         }
@@ -41,17 +41,17 @@ class IncomeViewModel: ObservableObject {
     
     func getIncomeList() {
         UserController().getCurrentUserDocument()
-                .collection(ConstantUtils().incomeCollectionName)
-                .order(by: "creditedon", descending: true)
+                .collection(ConstantUtils.incomeCollectionName)
+                .order(by: ConstantUtils.incomeKeyCreditedOn, descending: true)
                 .getDocuments { snapshot, error in
                     if error == nil {
                         if let snapshot = snapshot {
                             self.incomeList = snapshot.documents.map { doc in
                                 return Income(id: doc.documentID,
-                                               amount: doc["amount"] as? Double ?? 0.0,
-                                               creditedon: (doc["creditedon"] as? Timestamp)?.dateValue() ?? Date(),
-                                               currency: doc["currency"] as? String ?? "",
-                                               incometype: doc["incometype"] as? String ?? "")
+                                              amount: doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0,
+                                              creditedon: (doc[ConstantUtils.incomeKeyCreditedOn] as? Timestamp)?.dateValue() ?? Date(),
+                                              currency: doc[ConstantUtils.incomeKeyCurrency] as? String ?? "",
+                                              incometype: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "")
                             }
                         }
                     } else {

@@ -10,16 +10,23 @@ import Foundation
 class ConstantUtils {
     
     enum AccountType: String, CaseIterable {
-        case none = "None";
-        case saving = "Saving";
-        case creditcard = "Credit Card";
-        case loan = "Loan";
+        case none = "None"
+        case saving = "Saving"
+        case creditcard = "Credit Card"
+        case loan = "Loan"
         case symbol = "Symbol"
         case other = "Other"
     }
+
     
-    var usersCollectionName = "users"
-    var incomeCollectionName = "incomes"
-    var accountCollectionName = "accounts"
+    static var userCollectionName = "users"
+    static var incomeCollectionName = "incomes"
+    static var accountCollectionName = "accounts"
+    
+    static var incomeKeyAmount = "amount"
+    static var incomeKeyCreditedOn = "creditedon"
+    static var incomeKeyIncomeType = "incometype"
+    static var incomeKeyCurrency = "currency"
+    
     
 }
