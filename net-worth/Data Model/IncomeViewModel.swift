@@ -49,9 +49,9 @@ class IncomeViewModel: ObservableObject {
                             self.incomeList = snapshot.documents.map { doc in
                                 return Income(id: doc.documentID,
                                               amount: doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0,
-                                              creditedon: (doc[ConstantUtils.incomeKeyCreditedOn] as? Timestamp)?.dateValue() ?? Date(),
+                                              creditedOn: (doc[ConstantUtils.incomeKeyCreditedOn] as? Timestamp)?.dateValue() ?? Date(),
                                               currency: doc[ConstantUtils.incomeKeyCurrency] as? String ?? "",
-                                              incometype: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "")
+                                              incomeType: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "")
                             }
                         }
                     } else {

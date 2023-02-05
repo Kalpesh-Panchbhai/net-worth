@@ -16,23 +16,17 @@ class AccountController {
     
     private var financeController = FinanceController()
     
-    public func addTransaction(accountModel: AccountModel) {
-        let newTransaction = AccountTransaction(context: viewContext)
-        newTransaction.sysid = UUID()
-        newTransaction.timestamp = Date()
-        newTransaction.accountsysid = accountModel.sysId
+    public func addTransaction(accountID: String, accountModel: AccountModel) {
+        var balanceChange = 0.0
         if(accountModel.accountType == "Saving" || accountModel.accountType == "Credit Card" || accountModel.accountType == "Loan" || accountModel.accountType == "Other") {
-            newTransaction.balancechange = accountModel.currentBalance
+            balanceChange = accountModel.currentBalance
         } else {
-            newTransaction.balancechange = accountModel.totalShares
+            balanceChange = accountModel.totalShares
         }
         
-        do {
-            try viewContext.save()
-        } catch {
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
+        let newTransaction = AccountTrans(timestamp: Date(), balanceChange: balanceChange)
+        
+        AccountViewModel().addTransaction(accountID: accountID, accountTransaction: newTransaction)
     }
     
     public func getAccountTransaction(sysId: UUID) -> [AccountTransaction] {
@@ -68,29 +62,11 @@ class AccountController {
     }
     
     public func addAccount(accountModel: AccountModel) {
-        let newAccount = Account(context: viewContext)
-        newAccount.sysid = UUID()
-        newAccount.timestamp = Date()
-        newAccount.accounttype = accountModel.accountType
-        newAccount.accountname =  accountModel.accountName
-        newAccount.currentbalance = accountModel.currentBalance
-        newAccount.totalshare = accountModel.totalShares
-        newAccount.paymentreminder = accountModel.paymentReminder
-        newAccount.paymentdate = Int16(accountModel.paymentDate)
-        newAccount.symbol = accountModel.symbol
-        newAccount.currency = accountModel.currency
+        let newAccount = Accountss(accountType: accountModel.accountType, accountName: accountModel.accountName, currentBalance: accountModel.currentBalance, totalShares: accountModel.totalShares, paymentReminder: accountModel.paymentReminder, paymentDate: accountModel.paymentDate, symbol: accountModel.symbol, currency: accountModel.currency)
         
-        do {
-            try viewContext.save()
-            accountModel.sysId = newAccount.sysid!
-            addTransaction(accountModel: accountModel)
-            if(accountModel.paymentReminder) {
-                notificationController.setNotification(id: newAccount.sysid!, day: accountModel.paymentDate, accountType: accountModel.accountType, accountName: accountModel.accountName)
-            }
-        } catch {
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
+        var accountID = AccountViewModel().addAccount(account: newAccount)
+        
+        addTransaction(accountID: accountID, accountModel: accountModel)
     }
     
     public func fetchTotalBalance() async throws -> BalanceModel {

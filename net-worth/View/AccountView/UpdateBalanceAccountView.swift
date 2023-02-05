@@ -49,7 +49,7 @@ struct UpdateBalanceAccountView: View {
                             accountModel.totalShares = amount
                         }
                         
-                        accountController.addTransaction(accountModel: accountModel)
+//                        accountController.addTransaction(accountModel: accountModel)
                         
                         if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
                             account.currentbalance = accountModel.currentBalance
@@ -82,7 +82,7 @@ struct UpdateBalanceAccountView: View {
                             accountModel.totalShares = account.totalshare + amount
                         }
                         
-                        accountController.addTransaction(accountModel: accountModel)
+//                        accountController.addTransaction(accountModel: accountModel)
                         
                         if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
                             account.currentbalance = accountModel.currentBalance

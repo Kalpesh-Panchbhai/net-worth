@@ -22,11 +22,19 @@ class ConstantUtils {
     static var userCollectionName = "users"
     static var incomeCollectionName = "incomes"
     static var accountCollectionName = "accounts"
+    static var accountTransactionCollectionName = "accountsTransaction"
     
     static var incomeKeyAmount = "amount"
-    static var incomeKeyCreditedOn = "creditedon"
-    static var incomeKeyIncomeType = "incometype"
+    static var incomeKeyCreditedOn = "creditedOn"
     static var incomeKeyCurrency = "currency"
+    static var incomeKeyIncomeType = "incomeType"
     
-    
+    static var accountKeyAccountName = "accountName"
+    static var accountKeyAccountType = "accountType"
+    static var accountKeyCurrency = "currency"
+    static var accountKeyCurrentBalance = "currentBalance"
+    static var accountKeyPaymentDate = "paymentDate"
+    static var accountKeyPaymentReminder = "paymentReminder"
+    static var accountKeySymbol = "symbol"
+    static var accountKeyTotalShares = "totalShares"
 }

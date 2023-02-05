@@ -15,7 +15,7 @@ class IncomeController {
     var incomeViewModel = IncomeViewModel()
     
     public func addIncome(incometype: String, amount: String, date: Date, currency: String) async {
-        let newIncome = Income(amount: Double(amount) ?? 0.0, creditedon: date, currency: currency, incometype: incometype)
+        let newIncome = Income(amount: Double(amount) ?? 0.0, creditedOn: date, currency: currency, incomeType: incometype)
         incomeViewModel.addIncome(income: newIncome)
     }
     

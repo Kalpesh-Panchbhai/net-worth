@@ -12,7 +12,7 @@ struct Income: Codable, Hashable {
     
     @DocumentID var id: String?
     var amount: Double
-    var creditedon: Date
+    var creditedOn: Date
     var currency: String
-    var incometype: String
+    var incomeType: String
 }
