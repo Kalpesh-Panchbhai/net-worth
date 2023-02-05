@@ -1,21 +1,2 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G419" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
-    <entity name="Accounts" representedClassName=".Account" syncable="YES" codeGenerationType="class">
-        <attribute name="accountname" optional="YES" attributeType="String"/>
-        <attribute name="accounttype" optional="YES" attributeType="String"/>
-        <attribute name="currency" optional="YES" attributeType="String"/>
-        <attribute name="currentbalance" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="paymentdate" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="paymentreminder" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="symbol" optional="YES" attributeType="String"/>
-        <attribute name="sysid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="totalshare" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-    </entity>
-    <entity name="AccountTransaction" representedClassName=".AccountTransaction" syncable="YES" codeGenerationType="class">
-        <attribute name="accountsysid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="balancechange" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="sysid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-    </entity>
-</model>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G419" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier=""/>
