@@ -12,14 +12,7 @@ struct AccountView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     
-    @State var sortOrder: SortOrder = .forward
-    
     @State private var reset : Bool = false
-    
-    @FetchRequest(
-        sortDescriptors: [SortDescriptor(\Account.accountname, order: .forward)],
-        animation: .default)
-    private var accounts: FetchedResults<Account>
     
     private var accountController = AccountController()
     
@@ -124,7 +117,7 @@ struct AccountView: View {
                         })
                     }
                 }
-                if !accounts.isEmpty {
+                if !accountViewModel.accountList.isEmpty {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
                         if(editMode == .inactive) {
                             Menu(content: {
@@ -297,30 +290,30 @@ struct AccountView: View {
     }
     
     private func toggleNameSortOrder() {
-        sortOrder = sortOrder == .reverse ? .forward : .reverse
-        accounts.sortDescriptors = [SortDescriptor(\Account.accountname, order: sortOrder)]
+//        sortOrder = sortOrder == .reverse ? .forward : .reverse
+//        accounts.sortDescriptors = [SortDescriptor(\Account.accountname, order: sortOrder)]
         reset = true
     }
     
     private func toggleDateAddedSortOrder() {
-        sortOrder = sortOrder == .reverse ? .forward : .reverse
-        accounts.sortDescriptors = [SortDescriptor(\Account.timestamp, order: sortOrder)]
+//        sortOrder = sortOrder == .reverse ? .forward : .reverse
+//        accounts.sortDescriptors = [SortDescriptor(\Account.timestamp, order: sortOrder)]
         reset = true
     }
     
     private func toggleResetFilter() {
-        sortOrder = .forward
-        accounts.sortDescriptors = [SortDescriptor(\Account.accountname, order: .forward)]
-        accounts.nsPredicate = NSPredicate(
-            format: "true = true"
-        )
+//        sortOrder = .forward
+//        accounts.sortDescriptors = [SortDescriptor(\Account.accountname, order: .forward)]
+//        accounts.nsPredicate = NSPredicate(
+//            format: "true = true"
+//        )
     }
     
     private func toggleAccountTypeFilter(accountType: String) {
-        accounts.sortDescriptors = [SortDescriptor(\Account.accountname, order: sortOrder)]
-        accounts.nsPredicate = NSPredicate(
-            format: "accounttype = %@", accountType
-        )
+//        accounts.sortDescriptors = [SortDescriptor(\Account.accountname, order: sortOrder)]
+//        accounts.nsPredicate = NSPredicate(
+//            format: "accounttype = %@", accountType
+//        )
         reset = true
     }
 }
