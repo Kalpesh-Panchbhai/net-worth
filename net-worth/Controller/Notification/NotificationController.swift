@@ -42,7 +42,7 @@ class NotificationController {
         }
     }
     
-    public func setNotification(id: UUID, day: Int, accountType: String, accountName: String) {
+    public func setNotification(id: String, day: Int, accountType: String, accountName: String) {
         if(isNotificationEnabled(accountType: accountType)) {
             let content = getContent(accountType: accountType, accountName: accountName)
             
@@ -53,7 +53,7 @@ class NotificationController {
             dateComponents.hour = defaultHour
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
             
-            let request = UNNotificationRequest(identifier: id.uuidString,
+            let request = UNNotificationRequest(identifier: id,
                                                 content: content, trigger: trigger)
             
             let notificationCenter = UNUserNotificationCenter.current()
@@ -67,9 +67,9 @@ class NotificationController {
         }
     }
     
-    public func removeNotification(id: UUID) {
-        notificationCenter.removeDeliveredNotifications(withIdentifiers: [id.uuidString])
-        notificationCenter.removePendingNotificationRequests(withIdentifiers: [id.uuidString])
+    public func removeNotification(id: String) {
+        notificationCenter.removeDeliveredNotifications(withIdentifiers: [id])
+        notificationCenter.removePendingNotificationRequests(withIdentifiers: [id])
     }
     
     private func getContent(accountType: String, accountName: String) -> UNMutableNotificationContent {
@@ -134,17 +134,17 @@ class NotificationController {
         if(newValue) {
             for account in accountList {
                 if(account.paymentreminder){
-                    setNotification(id: account.sysid!, day: Int(account.paymentdate), accountType: account.accounttype!, accountName: account.accountname!)
+//                    setNotification(id: account.sysid!, day: Int(account.paymentdate), accountType: account.accounttype!, accountName: account.accountname!)
                 }
             }
         }else {
             for account in accountList {
-                removeNotification(id: account.sysid!)
+//                removeNotification(id: acc)
             }
         }
     }
     
-    public func enableNotification(account: Account) {
-        setNotification(id: account.sysid!, day: Int(account.paymentdate), accountType: account.accounttype!, accountName: account.accountname!)
+    public func enableNotification(account: Accountss) {
+        setNotification(id: account.id!, day: account.paymentDate, accountType: account.accountType, accountName: account.accountName)
     }
 }

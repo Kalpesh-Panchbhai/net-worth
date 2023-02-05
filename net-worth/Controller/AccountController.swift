@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import FirebaseFirestore
 
 class AccountController {
     
@@ -64,7 +65,7 @@ class AccountController {
     public func addAccount(accountModel: AccountModel) {
         let newAccount = Accountss(accountType: accountModel.accountType, accountName: accountModel.accountName, currentBalance: accountModel.currentBalance, totalShares: accountModel.totalShares, paymentReminder: accountModel.paymentReminder, paymentDate: accountModel.paymentDate, symbol: accountModel.symbol, currency: accountModel.currency)
         
-        var accountID = AccountViewModel().addAccount(account: newAccount)
+        let accountID = AccountViewModel().addAccount(account: newAccount)
         
         addTransaction(accountID: accountID, accountModel: accountModel)
     }
@@ -154,25 +155,26 @@ class AccountController {
         return accountList
     }
     
-    public func deleteAccount(account: Account) {
-        deleteAccountTransaction(accountSysId: account.sysid!)
-        
-        viewContext.delete(account)
-        do {
-            notificationController.removeNotification(id: account.sysid!)
-            try viewContext.save()
-        }catch {
-            viewContext.rollback()
-            print("Failed to delete account \(error)")
-        }
+    public func deleteAccount(account: Accountss) {
+        let db = Firestore.firestore()
+        delete(collection: db.collection(ConstantUtils.userCollectionName).document(UserController().getCurrentUserUID()).collection(ConstantUtils.accountCollectionName).document(account.id!).collection(ConstantUtils.accountTransactionCollectionName))
+        db.collection(ConstantUtils.userCollectionName).document(UserController().getCurrentUserUID()).collection(ConstantUtils.accountCollectionName).document(account.id!).delete()
     }
     
-    public func updateAccount() {
-        do {
-            try viewContext.save()
-        } catch {
-            viewContext.rollback()
-            print("Failed to update account \(error)")
+    func delete(collection: CollectionReference, batchSize: Int = 100) {
+        collection.limit(to: batchSize).getDocuments { (docset, error) in
+          let docset = docset
+
+          let batch = collection.firestore.batch()
+          docset?.documents.forEach { batch.deleteDocument($0.reference) }
+
+          batch.commit {_ in
+            self.delete(collection: collection, batchSize: batchSize)
+          }
         }
+      }
+    
+    public func updateAccount(account: Accountss) {
+        AccountViewModel().updateAccount(id: account.id!, account: account)
     }
 }

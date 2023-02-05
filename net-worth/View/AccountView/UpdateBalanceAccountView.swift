@@ -9,7 +9,7 @@ import SwiftUI
 
 struct UpdateBalanceAccountView: View {
     
-    private var account: Account
+    private var account: Accountss
     
     private var accountController = AccountController()
     
@@ -21,14 +21,17 @@ struct UpdateBalanceAccountView: View {
     
     @Environment(\.dismiss) var dismiss
     
-    init(account: Account){
+    @ObservedObject var accountViewModel: AccountViewModel
+    
+    init(account: Accountss, accountViewModel: AccountViewModel){
         self.account = account
+        self.accountViewModel = accountViewModel
     }
     
     var body: some View {
         NavigationView {
             Form {
-                if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
+                if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
                     currentBalanceField()
                 }
                 else {
@@ -40,23 +43,24 @@ struct UpdateBalanceAccountView: View {
                     Button(action: {
                         showingAlert.toggle()
                         let accountModel = AccountModel()
-                        accountModel.sysId = account.sysid!
-                        accountModel.accountType = account.accounttype!
+                        var updatedAccount = account
+                        accountModel.accountType = account.accountType
                         amount = isPlus ? amount : amount * -1
-                        if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
+                        if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
                             accountModel.currentBalance = amount
                         } else {
                             accountModel.totalShares = amount
                         }
-                        
-//                        accountController.addTransaction(accountModel: accountModel)
-                        
-                        if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
-                            account.currentbalance = accountModel.currentBalance
+
+                        accountController.addTransaction(accountID: account.id!, accountModel: accountModel)
+
+                        if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
+                            updatedAccount.currentBalance = accountModel.currentBalance
                         } else {
-                            account.totalshare = accountModel.totalShares
+                            updatedAccount.totalShares = accountModel.totalShares
                         }
-                        accountController.updateAccount()
+                        accountController.updateAccount(account: updatedAccount)
+                        accountViewModel.getAccountList()
                     }, label: {
                         Text("Update")
                     })
@@ -65,7 +69,7 @@ struct UpdateBalanceAccountView: View {
                             dismiss()
                         }
                     }, message: {
-                        Text("Account Name : " + self.account.accountname!)
+                        Text("Account Name : " + self.account.accountName)
                     })
                 }
                 
@@ -73,23 +77,24 @@ struct UpdateBalanceAccountView: View {
                     Button(action: {
                         showingAlert.toggle()
                         let accountModel = AccountModel()
-                        accountModel.sysId = account.sysid!
-                        accountModel.accountType = account.accounttype!
+                        var updatedAccount = account
+                        accountModel.accountType = account.accountType
                         amount = isPlus ? amount : amount * -1
-                        if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
-                            accountModel.currentBalance = account.currentbalance + amount
+                        if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
+                            accountModel.currentBalance = account.currentBalance + amount
                         } else {
-                            accountModel.totalShares = account.totalshare + amount
+                            accountModel.totalShares = account.totalShares + amount
                         }
-                        
-//                        accountController.addTransaction(accountModel: accountModel)
-                        
-                        if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
-                            account.currentbalance = accountModel.currentBalance
+
+                        accountController.addTransaction(accountID: account.id!, accountModel: accountModel)
+
+                        if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
+                            updatedAccount.currentBalance = accountModel.currentBalance
                         } else {
-                            account.totalshare = accountModel.totalShares
+                            updatedAccount.totalShares = accountModel.totalShares
                         }
-                        accountController.updateAccount()
+                        accountController.updateAccount(account: updatedAccount)
+                        accountViewModel.getAccountList()
                     }, label: {
                         Text("Add")
                     })
@@ -98,11 +103,11 @@ struct UpdateBalanceAccountView: View {
                             dismiss()
                         }
                     }, message: {
-                        Text("Account Name : " + self.account.accountname!)
+                        Text("Account Name : " + self.account.accountName)
                     })
                 }
             }
-            .navigationTitle(account.accountname!)
+            .navigationTitle(account.accountName)
         }
     }
     
@@ -142,11 +147,5 @@ struct UpdateBalanceAccountView: View {
             TextField("Units", value: $amount, formatter: Double().formatter())
                 .keyboardType(.decimalPad)
         }
-    }
-}
-
-struct UpdateBalanceAccountView_Previews: PreviewProvider {
-    static var previews: some View {
-        UpdateBalanceAccountView(account: Account())
     }
 }

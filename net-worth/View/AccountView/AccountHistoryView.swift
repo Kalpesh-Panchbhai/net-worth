@@ -9,42 +9,41 @@ import SwiftUI
 
 struct AccountHistoryView: View {
     
-    var accountTransactionList: [AccountTransaction]
+    @ObservedObject var accountViewModel = AccountViewModel()
     
     private var accountController = AccountController()
     
-    private var account: Account
+    private var account: Accountss
     
-    init(account: Account) {
+    init(account: Accountss) {
         self.account = account
-        accountTransactionList = self.accountController.getAccountTransaction(sysId: account.sysid!)
     }
     
     var body: some View {
         List {
-            ForEach(0..<accountTransactionList.count, id: \.self) { i in
+            ForEach(0..<accountViewModel.accountTransactionList.count, id: \.self) { i in
                 HStack{
                     VStack {
-                        Text("\(accountTransactionList[i].timestamp!.getDateAndFormat())")
+                        Text("\(accountViewModel.accountTransactionList[i].timestamp.getDateAndFormat())")
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        Text("\(accountTransactionList[i].timestamp!.getTimeAndFormat())")
+                        Text("\(accountViewModel.accountTransactionList[i].timestamp.getTimeAndFormat())")
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     VStack {
-                        if(self.account.accounttype == "Saving" || self.account.accounttype == "Credit Card" || self.account.accounttype == "Loan" || self.account.accounttype == "Other") {
-                            Text((account.currency ?? "") + " \(accountTransactionList[i].balancechange.withCommas(decimalPlace: 4))")
+                        if(self.account.accountType == "Saving" || self.account.accountType == "Credit Card" || self.account.accountType == "Loan" || self.account.accountType == "Other") {
+                            Text((account.currency) + " \(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 4))")
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                         }
                         else {
-                            Text(" \(accountTransactionList[i].balancechange.withCommas(decimalPlace: 4))")
+                            Text(" \(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 4))")
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                         }
-                        if( i < accountTransactionList.count - 1) {
-                            if((accountTransactionList[i].balancechange - accountTransactionList[i + 1].balancechange) > 0 ) {
-                                Text("+\((accountTransactionList[i].balancechange - accountTransactionList[i + 1].balancechange).withCommas(decimalPlace: 2))")
+                        if( i < accountViewModel.accountTransactionList.count - 1) {
+                            if((accountViewModel.accountTransactionList[i].balanceChange - accountViewModel.accountTransactionList[i + 1].balanceChange) > 0 ) {
+                                Text("+\((accountViewModel.accountTransactionList[i].balanceChange - accountViewModel.accountTransactionList[i + 1].balanceChange).withCommas(decimalPlace: 2))")
                                     .frame(maxWidth: .infinity, alignment: .trailing).foregroundColor(.green)
-                            } else if((accountTransactionList[i].balancechange - accountTransactionList[i + 1].balancechange) < 0 ) {
-                                Text("\((accountTransactionList[i].balancechange - accountTransactionList[i + 1].balancechange).withCommas(decimalPlace: 2))")
+                            } else if((accountViewModel.accountTransactionList[i].balanceChange - accountViewModel.accountTransactionList[i + 1].balanceChange) < 0 ) {
+                                Text("\((accountViewModel.accountTransactionList[i].balanceChange - accountViewModel.accountTransactionList[i + 1].balanceChange).withCommas(decimalPlace: 2))")
                                     .frame(maxWidth: .infinity, alignment: .trailing).foregroundColor(.red)
                             }
                         }
@@ -52,11 +51,8 @@ struct AccountHistoryView: View {
                 }
             }
         }
-    }
-}
-
-struct AccountHistoryView_Previews: PreviewProvider {
-    static var previews: some View {
-        AccountHistoryView(account: Account())
+        .onAppear {
+            accountViewModel.getAccountTransactionList(id: account.id ?? "")
+        }
     }
 }

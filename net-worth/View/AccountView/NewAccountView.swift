@@ -40,6 +40,12 @@ struct NewAccountView: View {
     @State private var searchTerm: String = ""
     @StateObject private var financeListVM = FinanceListViewModel()
     
+    @ObservedObject var accountViewModel : AccountViewModel
+    
+    init(accountViewModel: AccountViewModel) {
+        self.accountViewModel = accountViewModel
+    }
+    
     var body: some View {
         NavigationView {
             Form {
@@ -123,6 +129,7 @@ struct NewAccountView: View {
                             accountModel.paymentDate = paymentDate
                         }
                         accountController.addAccount(accountModel: accountModel)
+                        accountViewModel.getAccountList()
                         dismiss()
                     }, label: {
                         Label("Add Account", systemImage: "checkmark")
@@ -375,9 +382,3 @@ struct SymbolPickerRightVerticalViewer: View {
         }
     }
 }
-
-//struct NewAccountView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NewAccountView()
-//    }
-//}

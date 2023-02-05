@@ -35,17 +35,19 @@ struct AccountView: View {
     
     @State private var showingSelectDefaultCurrencyAlert = false
     
-    var searchResults: [Account] {
-        accounts.filter { account in
+    @StateObject var accountViewModel = AccountViewModel()
+    
+    var searchResults: [Accountss] {
+        accountViewModel.accountList.filter { account in
             if(searchKeyWord.isEmpty) {
                 return true
             } else {
-                return account.accountname!.lowercased().contains(searchKeyWord.lowercased()) || account.accounttype!.lowercased().contains(searchKeyWord.lowercased())
+                return account.accountName.lowercased().contains(searchKeyWord.lowercased()) || account.accountType.lowercased().contains(searchKeyWord.lowercased())
             }
         }
     }
     
-    @State var selection = Set<Account>()
+    @State var selection = Set<Accountss>()
     
     @State var editMode = EditMode.inactive
     
@@ -53,12 +55,12 @@ struct AccountView: View {
         NavigationView {
             List(selection: $selection) {
                 ForEach(searchResults, id: \.self) { account in
-                    NavigationLink(destination: AccountDetailsNavigationLinkView(uuid: account.sysid!), label: {
+                    NavigationLink(destination: AccountDetailsNavigationLinkView(account: account, accountViewModel: accountViewModel), label: {
                         HStack{
                             VStack {
-                                Text(account.accountname!)
+                                Text(account.accountName)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                Text(account.accounttype!.uppercased()).font(.system(size: 10))
+                                Text(account.accountType.uppercased()).font(.system(size: 10))
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .foregroundColor(.gray)
                             }
@@ -71,6 +73,7 @@ struct AccountView: View {
                     .swipeActions {
                         Button{
                             accountController.deleteAccount(account: account)
+                            accountViewModel.getAccountList()
                         } label: {
                             Label("Delete", systemImage: "trash")
                         }
@@ -79,9 +82,10 @@ struct AccountView: View {
                 }
             }
             .halfSheet(showSheet: $isOpen) {
-                NewAccountView()
+                NewAccountView(accountViewModel: accountViewModel)
             }
             .refreshable {
+                accountViewModel.getAccountList()
                 Task.init {
                     await financeListViewModel.getTotalBalance()
                 }
@@ -89,12 +93,12 @@ struct AccountView: View {
             .environment(\.editMode, self.$editMode)
             .listStyle(InsetGroupedListStyle())
             .toolbar {
-                if !accounts.isEmpty {
+                if !accountViewModel.accountList.isEmpty {
                     ToolbarItem(placement: .navigationBarLeading) {
                         if(editMode == .inactive) {
                             Button(action: {
                                 self.editMode = .active
-                                self.selection = Set<Account>()
+                                self.selection = Set<Accountss>()
                             }) {
                                 Text("Edit")
                             }
@@ -102,7 +106,7 @@ struct AccountView: View {
                         else {
                             Button(action: {
                                 self.editMode = .inactive
-                                self.selection = Set<Account>()
+                                self.selection = Set<Accountss>()
                                 isAllSelected =  false
                             }) {
                                 Text("Done")
@@ -226,6 +230,7 @@ struct AccountView: View {
                                 accountController.deleteAccount(account: accountSelected)
                             }
                             editMode = .inactive
+                            accountViewModel.getAccountList()
                         }, label: {
                             Label("delete Account", systemImage: "trash")
                         }).disabled(selection.count == 0)
@@ -284,6 +289,7 @@ struct AccountView: View {
             }
         }
         .onAppear {
+            accountViewModel.getAccountList()
             Task.init {
                 await financeListViewModel.getTotalBalance()
             }
@@ -321,18 +327,18 @@ struct AccountView: View {
 
 struct AccountFinanceView: View {
     
-    var account: Account
+    var account: Accountss
     
     @StateObject private var financeListViewModel = FinanceListViewModel()
     
     var body: some View {
         VStack {
-            if(account.accounttype == "Saving" || account.accounttype == "Credit Card" || account.accounttype == "Loan" || account.accounttype == "Other") {
+            if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
                 HStack {
-                    Text((account.currency ?? "") + " \(account.currentbalance.withCommas(decimalPlace: 2))")
-                    if(account.paymentreminder && account.accounttype != "Saving") {
+                    Text((account.currency ?? "") + " \(account.currentBalance.withCommas(decimalPlace: 2))")
+                    if(account.paymentReminder && account.accountType != "Saving") {
                         Image(systemName: "speaker.wave.1.fill")
-                    } else if(account.accounttype != "Saving") {
+                    } else if(account.accountType != "Saving") {
                         Image(systemName: "speaker.slash.fill")
                     }
                 }
@@ -341,19 +347,19 @@ struct AccountFinanceView: View {
                 let oneDayChange = financeListViewModel.financeDetailModel.oneDayChange ?? 0.0
                 HStack{
                     VStack {
-                        Text((financeListViewModel.financeDetailModel.currency ?? "") + " \((account.totalshare * currentRate).withCommas(decimalPlace: 2))")
+                        Text((financeListViewModel.financeDetailModel.currency ?? "") + " \((account.totalShares * currentRate).withCommas(decimalPlace: 2))")
                             .frame(maxWidth: .infinity, alignment: .trailing)
                         if(oneDayChange > 0.0) {
-                            Text("+\((account.totalshare * oneDayChange).withCommas(decimalPlace: 2))").font(.system(size: 15))
+                            Text("+\((account.totalShares * oneDayChange).withCommas(decimalPlace: 2))").font(.system(size: 15))
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                 .foregroundColor(.green)
                         } else if(oneDayChange < 0.0){
-                            Text("\((account.totalshare * oneDayChange).withCommas(decimalPlace: 2))").font(.system(size: 15))
+                            Text("\((account.totalShares * oneDayChange).withCommas(decimalPlace: 2))").font(.system(size: 15))
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                 .foregroundColor(.red)
                         }
                     }
-                    if(account.paymentreminder) {
+                    if(account.paymentReminder) {
                         Image(systemName: "speaker.wave.1.fill")
                     } else {
                         Image(systemName: "speaker.slash.fill")
@@ -363,7 +369,7 @@ struct AccountFinanceView: View {
         }
         .onAppear {
             Task.init {
-                await financeListViewModel.getSymbolDetails(symbol: account.symbol!)
+                await financeListViewModel.getSymbolDetails(symbol: account.symbol)
             }
         }
     }
