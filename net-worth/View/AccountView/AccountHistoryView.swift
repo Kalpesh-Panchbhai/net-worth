@@ -13,9 +13,9 @@ struct AccountHistoryView: View {
     
     private var accountController = AccountController()
     
-    private var account: Accountss
+    private var account: Account
     
-    init(account: Accountss) {
+    init(account: Account) {
         self.account = account
     }
     

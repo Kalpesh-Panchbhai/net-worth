@@ -129,22 +129,22 @@ class NotificationController {
     }
     
     public func setNotification(newValue: Bool, accountType: String) {
-        UserDefaults.standard.set(newValue, forKey: accountType)
-        let accountList = AccountController().getAccount(accountType: accountType)
-        if(newValue) {
-            for account in accountList {
-                if(account.paymentreminder){
+//        UserDefaults.standard.set(newValue, forKey: accountType)
+//        let accountList = AccountController().getAccount(accountType: accountType)
+//        if(newValue) {
+//            for account in accountList {
+//                if(account.paymentreminder){
 //                    setNotification(id: account.sysid!, day: Int(account.paymentdate), accountType: account.accounttype!, accountName: account.accountname!)
-                }
-            }
-        }else {
-            for account in accountList {
+//                }
+//            }
+//        }else {
+//            for account in accountList {
 //                removeNotification(id: acc)
-            }
-        }
+//            }
+//        }
     }
     
-    public func enableNotification(account: Accountss) {
+    public func enableNotification(account: Account) {
         setNotification(id: account.id!, day: account.paymentDate, accountType: account.accountType, accountName: account.accountName)
     }
 }

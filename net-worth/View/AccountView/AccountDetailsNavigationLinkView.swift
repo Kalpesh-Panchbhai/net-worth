@@ -10,7 +10,7 @@ import SlidingTabView
 
 struct AccountDetailsNavigationLinkView: View {
     
-    @State private var account: Accountss
+    @State private var account: Account
     
     @State private var paymentDate = 0
     @State var dates = Array(1...28)
@@ -24,7 +24,7 @@ struct AccountDetailsNavigationLinkView: View {
     
     @ObservedObject var accountViewModel : AccountViewModel
     
-    init(account: Accountss, accountViewModel: AccountViewModel) {
+    init(account: Account, accountViewModel: AccountViewModel) {
         self.account = account
         self.accountController = AccountController()
         self.accountViewModel = accountViewModel

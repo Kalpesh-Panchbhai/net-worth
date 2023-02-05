@@ -62,8 +62,8 @@
             filePath = "net-worth/Controller/AccountController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "159"
-            endingLineNumber = "159"
+            startingLineNumber = "156"
+            endingLineNumber = "156"
             landmarkName = "deleteAccount(account:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -78,13 +78,13 @@
             filePath = "net-worth/Controller/AccountController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "165"
-            endingLineNumber = "165"
+            startingLineNumber = "162"
+            endingLineNumber = "162"
             landmarkName = "delete(collection:batchSize:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "3F9C0EAD-0EA3-4B17-B4EB-E716806E278C - 17d76c47d1f16de0"
+                  uuid = "3F9C0EAD-0EA3-4B17-B4EB-E716806E278C - 17d76c47d1f16c03"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -94,12 +94,12 @@
                   urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Controller/AccountController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "165"
-                  endingLineNumber = "165"
+                  startingLineNumber = "162"
+                  endingLineNumber = "162"
                   offsetFromSymbolStart = "60">
                </Location>
                <Location
-                  uuid = "3F9C0EAD-0EA3-4B17-B4EB-E716806E278C - 9b49079af17aa107"
+                  uuid = "3F9C0EAD-0EA3-4B17-B4EB-E716806E278C - 9b49079af17aa0a2"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -109,8 +109,8 @@
                   urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Controller/AccountController.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "166"
-                  endingLineNumber = "166"
+                  startingLineNumber = "163"
+                  endingLineNumber = "163"
                   offsetFromSymbolStart = "92">
                </Location>
             </Locations>
@@ -126,10 +126,148 @@
             filePath = "net-worth/Controller/AccountController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
+            startingLineNumber = "163"
+            endingLineNumber = "163"
             landmarkName = "delete(collection:batchSize:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9FF4B72F-C7C8-46B7-BCC5-453CCAFE6247"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "net-worth/Controller/AccountController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "81"
+            endingLineNumber = "81"
+            landmarkName = "fetchTotalBalance()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "9FF4B72F-C7C8-46B7-BCC5-453CCAFE6247 - b3f2c5492b06fe5c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for net_worth.AccountController.fetchTotalBalance() async throws -&gt; net_worth.BalanceModel"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Controller/AccountController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81"
+                  offsetFromSymbolStart = "216">
+               </Location>
+               <Location
+                  uuid = "9FF4B72F-C7C8-46B7-BCC5-453CCAFE6247 - dea2f7fc973eb1b4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for net_worth.AccountController.fetchTotalBalance() async throws -&gt; net_worth.BalanceModel"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Controller/AccountController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81"
+                  offsetFromSymbolStart = "40">
+               </Location>
+               <Location
+                  uuid = "9FF4B72F-C7C8-46B7-BCC5-453CCAFE6247 - bcdc6e6d0d7f3a5a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for net_worth.AccountController.fetchTotalBalance() async throws -&gt; net_worth.BalanceModel"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Controller/AccountController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81"
+                  offsetFromSymbolStart = "64">
+               </Location>
+               <Location
+                  uuid = "9FF4B72F-C7C8-46B7-BCC5-453CCAFE6247 - 3db6c5ff6040985b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for net_worth.AccountController.fetchTotalBalance() async throws -&gt; net_worth.BalanceModel"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Controller/AccountController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81"
+                  offsetFromSymbolStart = "40">
+               </Location>
+               <Location
+                  uuid = "9FF4B72F-C7C8-46B7-BCC5-453CCAFE6247 - 79e4dab365c74422"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (inout Swift.ThrowingTaskGroup&lt;net_worth.BalanceModel, Swift.Error&gt;) async throws -&gt; net_worth.BalanceModel in net_worth.AccountController.fetchTotalBalance() async throws -&gt; net_worth.BalanceModel"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Controller/AccountController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81"
+                  offsetFromSymbolStart = "0">
+               </Location>
+               <Location
+                  uuid = "9FF4B72F-C7C8-46B7-BCC5-453CCAFE6247 - c0ff51dd61fce6a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for closure #1 (inout Swift.ThrowingTaskGroup&lt;net_worth.BalanceModel, Swift.Error&gt;) async throws -&gt; net_worth.BalanceModel in net_worth.AccountController.fetchTotalBalance() async throws -&gt; net_worth.BalanceModel"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Controller/AccountController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "81"
+                  endingLineNumber = "81"
+                  offsetFromSymbolStart = "0">
+               </Location>
+               <Location
+                  uuid = "9FF4B72F-C7C8-46B7-BCC5-453CCAFE6247 - 6d41c4f847a69ebd"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for closure #1 (inout Swift.ThrowingTaskGroup&lt;net_worth.BalanceModel, Swift.Error&gt;) async throws -&gt; net_worth.BalanceModel in net_worth.AccountController.fetchTotalBalance() async throws -&gt; net_worth.BalanceModel"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Controller/AccountController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "115"
+                  endingLineNumber = "115"
+                  offsetFromSymbolStart = "120">
+               </Location>
+               <Location
+                  uuid = "9FF4B72F-C7C8-46B7-BCC5-453CCAFE6247 - 8af170175ae72d6c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for closure #1 (inout Swift.ThrowingTaskGroup&lt;net_worth.BalanceModel, Swift.Error&gt;) async throws -&gt; net_worth.BalanceModel in net_worth.AccountController.fetchTotalBalance() async throws -&gt; net_worth.BalanceModel"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/%3Ccompiler-generated%3E"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "48">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

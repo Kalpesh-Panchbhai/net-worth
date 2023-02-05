@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseFirestoreSwift
 
-struct AccountTrans: Codable, Hashable {
+struct AccountTransaction: Codable, Hashable {
     
     @DocumentID var id: String?
     var timestamp: Date

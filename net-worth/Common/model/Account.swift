@@ -9,7 +9,7 @@ import Foundation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
-struct Accountss: Codable, Hashable {
+struct Account: Codable, Hashable {
     
     @DocumentID var id: String?
     var accountType: String

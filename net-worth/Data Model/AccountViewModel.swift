@@ -10,11 +10,11 @@ import FirebaseFirestore
 
 class AccountViewModel: ObservableObject {
     
-    @Published var accountList = [Accountss]()
+    @Published var accountList = [Account]()
     
-    @Published var accountTransactionList = [AccountTrans]()
+    @Published var accountTransactionList = [AccountTransaction]()
     
-    func addAccount(account: Accountss) -> String {
+    func addAccount(account: Account) -> String {
         do {
             let accountID = try UserController()
                 .getCurrentUserDocument()
@@ -27,7 +27,7 @@ class AccountViewModel: ObservableObject {
         return ""
     }
     
-    func updateAccount(id: String, account: Accountss) {
+    func updateAccount(id: String, account: Account) {
         do {
             try UserController()
                 .getCurrentUserDocument()
@@ -39,7 +39,7 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func addTransaction(accountID: String, accountTransaction: AccountTrans) {
+    func addTransaction(accountID: String, accountTransaction: AccountTransaction) {
         do {
             try UserController()
                 .getCurrentUserDocument()
@@ -60,7 +60,7 @@ class AccountViewModel: ObservableObject {
                 if error == nil {
                     if let snapshot = snapshot {
                         self.accountList = snapshot.documents.map { doc in
-                            return Accountss(doc: doc)
+                            return Account(doc: doc)
                         }
                     }
                 } else {
@@ -80,7 +80,7 @@ class AccountViewModel: ObservableObject {
                 if error == nil {
                     if let snapshot = snapshot {
                         self.accountTransactionList = snapshot.documents.map { doc in
-                            return AccountTrans(id: doc.documentID,
+                            return AccountTransaction(id: doc.documentID,
                                                 timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
                                                 balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0)
                         }

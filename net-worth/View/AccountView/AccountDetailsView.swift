@@ -15,9 +15,9 @@ struct AccountDetailsView: View {
     
     @ObservedObject private var financeListViewModel = FinanceListViewModel()
     
-    var account: Accountss
+    var account: Account
     
-    init(account: Accountss) {
+    init(account: Account) {
         self.account = account
         if(self.account.accountType == "Saving" || self.account.accountType == "Credit Card" || self.account.accountType == "Loan") {
             self.currentRate = 0.0

@@ -30,7 +30,7 @@ struct AccountView: View {
     
     @StateObject var accountViewModel = AccountViewModel()
     
-    var searchResults: [Accountss] {
+    var searchResults: [Account] {
         accountViewModel.accountList.filter { account in
             if(searchKeyWord.isEmpty) {
                 return true
@@ -40,7 +40,7 @@ struct AccountView: View {
         }
     }
     
-    @State var selection = Set<Accountss>()
+    @State var selection = Set<Account>()
     
     @State var editMode = EditMode.inactive
     
@@ -91,7 +91,7 @@ struct AccountView: View {
                         if(editMode == .inactive) {
                             Button(action: {
                                 self.editMode = .active
-                                self.selection = Set<Accountss>()
+                                self.selection = Set<Account>()
                             }) {
                                 Text("Edit")
                             }
@@ -99,7 +99,7 @@ struct AccountView: View {
                         else {
                             Button(action: {
                                 self.editMode = .inactive
-                                self.selection = Set<Accountss>()
+                                self.selection = Set<Account>()
                                 isAllSelected =  false
                             }) {
                                 Text("Done")
@@ -320,7 +320,7 @@ struct AccountView: View {
 
 struct AccountFinanceView: View {
     
-    var account: Accountss
+    var account: Account
     
     @StateObject private var financeListViewModel = FinanceListViewModel()
     

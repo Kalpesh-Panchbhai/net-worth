@@ -9,7 +9,7 @@ import SwiftUI
 
 struct UpdateBalanceAccountView: View {
     
-    private var account: Accountss
+    private var account: Account
     
     private var accountController = AccountController()
     
@@ -23,7 +23,7 @@ struct UpdateBalanceAccountView: View {
     
     @ObservedObject var accountViewModel: AccountViewModel
     
-    init(account: Accountss, accountViewModel: AccountViewModel){
+    init(account: Account, accountViewModel: AccountViewModel){
         self.account = account
         self.accountViewModel = accountViewModel
     }
