@@ -32,38 +32,6 @@ class AccountController {
         AccountViewModel().addTransaction(accountID: accountID, accountTransaction: newTransaction)
     }
     
-//    public func getAccountTransaction(sysId: UUID) -> [AccountTransaction] {
-//        let request = AccountTransaction.fetchRequest()
-//        let sortDescriptors = NSSortDescriptor(key: "timestamp", ascending: false)
-//        request.sortDescriptors = [sortDescriptors]
-//        request.predicate = NSPredicate(
-//            format: "accountsysid= %@", sysId.uuidString
-//        )
-//        var accountTransactionList: [AccountTransaction]
-//        do{
-//            accountTransactionList = try viewContext.fetch(request)
-//        }catch {
-//            let nsError = error as NSError
-//            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-//        }
-//        return accountTransactionList
-//    }
-    
-//    public func deleteAccountTransaction(accountSysId: UUID) {
-//        let transactionList = getAccountTransaction(sysId: accountSysId)
-//
-//        for transaction in transactionList {
-//            viewContext.delete(transaction)
-//
-//            do {
-//                try viewContext.save()
-//            }catch {
-//                viewContext.rollback()
-//                print("Failed to delete account transaction \(error)")
-//            }
-//        }
-//    }
-    
     public func addAccount(accountModel: AccountModel) {
         let newAccount = Account(accountType: accountModel.accountType, accountName: accountModel.accountName, currentBalance: accountModel.currentBalance, totalShares: accountModel.totalShares, paymentReminder: accountModel.paymentReminder, paymentDate: accountModel.paymentDate, symbol: accountModel.symbol, currency: accountModel.currency)
         
@@ -122,36 +90,6 @@ class AccountController {
         }
     }
     
-//    public func getAccount(uuid: UUID) -> Account {
-//        let request = Account.fetchRequest()
-//        request.predicate = NSPredicate(
-//            format: "sysid = %@", uuid.uuidString
-//        )
-//        var account: Account
-//        do{
-//            account = try viewContext.fetch(request).first!
-//        }catch {
-//            let nsError = error as NSError
-//            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-//        }
-//        return account
-//    }
-    
-//    public func getAccount(accountType: String) -> [Account] {
-//        let request = Account.fetchRequest()
-//        request.predicate = NSPredicate(
-//            format: "accounttype = %@", accountType
-//        )
-//        var accountList: [Account]
-//        do{
-//            accountList = try viewContext.fetch(request)
-//        }catch {
-//            let nsError = error as NSError
-//            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-//        }
-//        return accountList
-//    }
-    
     public func deleteAccount(account: Account) {
         let db = Firestore.firestore()
         delete(collection: db.collection(ConstantUtils.userCollectionName).document(UserController().getCurrentUserUID()).collection(ConstantUtils.accountCollectionName).document(account.id!).collection(ConstantUtils.accountTransactionCollectionName))
@@ -173,5 +111,26 @@ class AccountController {
     
     public func updateAccount(account: Account) {
         AccountViewModel().updateAccount(id: account.id!, account: account)
+    }
+    
+    public func getAccount(accountType: String) -> [Account]{
+        var accountList = [Account]()
+        
+        UserController()
+            .getCurrentUserDocument()
+            .collection(ConstantUtils.accountCollectionName)
+            .whereField(ConstantUtils.accountKeyAccountType, isEqualTo: accountType)
+            .getDocuments { snapshot, error in
+                if error == nil {
+                    if let snapshot = snapshot {
+                        accountList = snapshot.documents.map { doc in
+                            return Account(doc: doc)
+                        }
+                    }
+                } else {
+                    
+                }
+            }
+        return accountList
     }
 }
