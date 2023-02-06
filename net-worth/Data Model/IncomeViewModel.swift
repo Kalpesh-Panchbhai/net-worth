@@ -19,8 +19,10 @@ class IncomeViewModel: ObservableObject {
     
     func getTotalBalance() async {
         do {
-            incomeTotalAmount = try await incomeController
-                .fetchTotalAmount()
+            let amount = try await incomeController.fetchTotalAmount()
+            DispatchQueue.main.async {
+                self.incomeTotalAmount = amount
+            }
         } catch {
             print(error)
         }
@@ -28,7 +30,10 @@ class IncomeViewModel: ObservableObject {
     
     func getIncomeList() async {
         do {
-            self.incomeList = try await incomeController.getIncomeList()
+            let list = try await incomeController.getIncomeList()
+            DispatchQueue.main.async {
+                self.incomeList = list
+            }
         } catch {
             print(error)
         }
