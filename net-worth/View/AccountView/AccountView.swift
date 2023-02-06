@@ -328,7 +328,7 @@ struct AccountFinanceView: View {
         VStack {
             if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
                 HStack {
-                    Text((account.currency ?? "") + " \(account.currentBalance.withCommas(decimalPlace: 2))")
+                    Text((account.currency) + " \(account.currentBalance.withCommas(decimalPlace: 2))")
                     if(account.paymentReminder && account.accountType != "Saving") {
                         Image(systemName: "speaker.wave.1.fill")
                     } else if(account.accountType != "Saving") {
