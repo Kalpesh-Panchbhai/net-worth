@@ -6,11 +6,8 @@
 //
 
 import SwiftUI
-import CoreData
 
 struct AccountView: View {
-    
-    @Environment(\.managedObjectContext) private var viewContext
     
     @State private var reset : Bool = false
     
