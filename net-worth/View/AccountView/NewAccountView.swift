@@ -111,24 +111,24 @@ struct NewAccountView: View {
             .toolbar {
                 ToolbarItem {
                     Button(action: {
-                        let accountModel = AccountModel()
-                        accountModel.accountType = accountType
-                        accountModel.accountName = accountName
+                        var newAccount = Account()
+                        newAccount.accountType = accountType
+                        newAccount.accountName = accountName
                         if(accountType != "Symbol") {
-                            accountModel.currentBalance = isPlus ? currentBalance : currentBalance * -1
-                            accountModel.currency = currenySelected.code
+                            newAccount.currentBalance = isPlus ? currentBalance : currentBalance * -1
+                            newAccount.currency = currenySelected.code
                         }else {
-                            accountModel.accountType = symbolType
-                            accountModel.totalShares = totalShares
-                            accountModel.symbol = symbol
-                            accountModel.currency = financeSelected.financeDetailModel?.currency ?? ""
+                            newAccount.accountType = symbolType
+                            newAccount.totalShares = totalShares
+                            newAccount.symbol = symbol
+                            newAccount.currency = financeSelected.financeDetailModel?.currency ?? ""
                         }
-                        accountModel.paymentReminder = paymentReminder
+                        newAccount.paymentReminder = paymentReminder
                         
                         if(paymentReminder) {
-                            accountModel.paymentDate = paymentDate
+                            newAccount.paymentDate = paymentDate
                         }
-                        accountController.addAccount(accountModel: accountModel)
+                        accountController.addAccount(newAccount: newAccount)
                         accountViewModel.getAccountList()
                         dismiss()
                     }, label: {

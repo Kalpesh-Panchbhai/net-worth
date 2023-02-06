@@ -42,23 +42,15 @@ struct UpdateBalanceAccountView: View {
                 ToolbarItem {
                     Button(action: {
                         showingAlert.toggle()
-                        let accountModel = AccountModel()
                         var updatedAccount = account
-                        accountModel.accountType = account.accountType
                         amount = isPlus ? amount : amount * -1
                         if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
-                            accountModel.currentBalance = amount
+                            updatedAccount.currentBalance = amount
                         } else {
-                            accountModel.totalShares = amount
+                            updatedAccount.totalShares = amount
                         }
 
-                        accountController.addTransaction(accountID: account.id!, accountModel: accountModel)
-
-                        if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
-                            updatedAccount.currentBalance = accountModel.currentBalance
-                        } else {
-                            updatedAccount.totalShares = accountModel.totalShares
-                        }
+                        accountController.addTransaction(accountID: account.id!, account: updatedAccount)
                         accountController.updateAccount(account: updatedAccount)
                         accountViewModel.getAccountList()
                     }, label: {
@@ -76,23 +68,15 @@ struct UpdateBalanceAccountView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
                         showingAlert.toggle()
-                        let accountModel = AccountModel()
                         var updatedAccount = account
-                        accountModel.accountType = account.accountType
                         amount = isPlus ? amount : amount * -1
                         if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
-                            accountModel.currentBalance = account.currentBalance + amount
+                            updatedAccount.currentBalance = account.currentBalance + amount
                         } else {
-                            accountModel.totalShares = account.totalShares + amount
+                            updatedAccount.totalShares = account.totalShares + amount
                         }
 
-                        accountController.addTransaction(accountID: account.id!, accountModel: accountModel)
-
-                        if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
-                            updatedAccount.currentBalance = accountModel.currentBalance
-                        } else {
-                            updatedAccount.totalShares = accountModel.totalShares
-                        }
+                        accountController.addTransaction(accountID: account.id!, account: updatedAccount)
                         accountController.updateAccount(account: updatedAccount)
                         accountViewModel.getAccountList()
                     }, label: {

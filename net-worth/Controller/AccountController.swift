@@ -11,33 +11,84 @@ import FirebaseFirestore
 
 class AccountController {
     
-    let viewContext = PersistenceController.shared.container.viewContext
-    
     private var notificationController = NotificationController()
     
     private var financeController = FinanceController()
     
     @ObservedObject var accountViewModel = AccountViewModel()
     
-    public func addTransaction(accountID: String, accountModel: AccountModel) {
+    private func getAccountCollection() -> CollectionReference {
+        return UserController()
+            .getCurrentUserDocument()
+            .collection(ConstantUtils.accountCollectionName)
+    }
+    
+    public func addAccount(newAccount: Account) {
+        do {
+            let accountID = try getAccountCollection()
+                .addDocument(from: newAccount).documentID
+            addTransaction(accountID: accountID, account: newAccount)
+        } catch {
+            print(error)
+        }
+    }
+    
+    public func deleteAccount(account: Account) {
+        CommonController.delete(collection: getAccountCollection().document(account.id!).collection(ConstantUtils.accountTransactionCollectionName))
+        getAccountCollection().document(account.id!).delete()
+    }
+    
+    public func updateAccount(account: Account) {
+        do {
+            try getAccountCollection()
+                .document(account.id!)
+                .setData(from: account, merge: true)
+        } catch {
+            print(error)
+        }
+    }
+    
+    public func getAccount(accountType: String) -> [Account]{
+        var accountList = [Account]()
+        
+        UserController()
+            .getCurrentUserDocument()
+            .collection(ConstantUtils.accountCollectionName)
+            .whereField(ConstantUtils.accountKeyAccountType, isEqualTo: accountType)
+            .getDocuments { snapshot, error in
+                if error == nil {
+                    if let snapshot = snapshot {
+                        accountList = snapshot.documents.map { doc in
+                            return Account(doc: doc)
+                        }
+                    }
+                } else {
+                    
+                }
+            }
+        return accountList
+    }
+    
+    public func addTransaction(accountID: String, account: Account) {
         var balanceChange = 0.0
-        if(accountModel.accountType == "Saving" || accountModel.accountType == "Credit Card" || accountModel.accountType == "Loan" || accountModel.accountType == "Other") {
-            balanceChange = accountModel.currentBalance
+        if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
+            balanceChange = account.currentBalance
         } else {
-            balanceChange = accountModel.totalShares
+            balanceChange = account.totalShares
         }
         
         let newTransaction = AccountTransaction(timestamp: Date(), balanceChange: balanceChange)
         
-        AccountViewModel().addTransaction(accountID: accountID, accountTransaction: newTransaction)
-    }
-    
-    public func addAccount(accountModel: AccountModel) {
-        let newAccount = Account(accountType: accountModel.accountType, accountName: accountModel.accountName, currentBalance: accountModel.currentBalance, totalShares: accountModel.totalShares, paymentReminder: accountModel.paymentReminder, paymentDate: accountModel.paymentDate, symbol: accountModel.symbol, currency: accountModel.currency)
-        
-        let accountID = AccountViewModel().addAccount(account: newAccount)
-        
-        addTransaction(accountID: accountID, accountModel: accountModel)
+        do {
+            let documentID = try getAccountCollection()
+                .document(accountID)
+                .collection(ConstantUtils.accountTransactionCollectionName)
+                .addDocument(from: newTransaction).documentID
+            
+            print("New Account transaction added : " + documentID)
+        } catch {
+            print(error)
+        }
     }
     
     public func fetchTotalBalance() async throws -> BalanceModel {
@@ -90,47 +141,5 @@ class AccountController {
         }
     }
     
-    public func deleteAccount(account: Account) {
-        let db = Firestore.firestore()
-        delete(collection: db.collection(ConstantUtils.userCollectionName).document(UserController().getCurrentUserUID()).collection(ConstantUtils.accountCollectionName).document(account.id!).collection(ConstantUtils.accountTransactionCollectionName))
-        db.collection(ConstantUtils.userCollectionName).document(UserController().getCurrentUserUID()).collection(ConstantUtils.accountCollectionName).document(account.id!).delete()
-    }
-    
-    func delete(collection: CollectionReference, batchSize: Int = 100) {
-        collection.limit(to: batchSize).getDocuments { (docset, error) in
-          let docset = docset
-
-          let batch = collection.firestore.batch()
-          docset?.documents.forEach { batch.deleteDocument($0.reference) }
-
-          batch.commit {_ in
-            self.delete(collection: collection, batchSize: batchSize)
-          }
-        }
-      }
-    
-    public func updateAccount(account: Account) {
-        AccountViewModel().updateAccount(id: account.id!, account: account)
-    }
-    
-    public func getAccount(accountType: String) -> [Account]{
-        var accountList = [Account]()
-        
-        UserController()
-            .getCurrentUserDocument()
-            .collection(ConstantUtils.accountCollectionName)
-            .whereField(ConstantUtils.accountKeyAccountType, isEqualTo: accountType)
-            .getDocuments { snapshot, error in
-                if error == nil {
-                    if let snapshot = snapshot {
-                        accountList = snapshot.documents.map { doc in
-                            return Account(doc: doc)
-                        }
-                    }
-                } else {
-                    
-                }
-            }
-        return accountList
-    }
+ 
 }

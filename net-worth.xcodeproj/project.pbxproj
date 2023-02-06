@@ -11,6 +11,7 @@
 		7D237BED292B672900DEF91D /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D237BEC292B672800DEF91D /* DoubleExtension.swift */; };
 		7D237BEF292B6F1400DEF91D /* AccountDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D237BEE292B6F1400DEF91D /* AccountDetailsView.swift */; };
 		7D3636FB292F9CCB0013B4E5 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */; };
+		7D3D5244299105A50021047B /* CommonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D5243299105A50021047B /* CommonController.swift */; };
 		7D42520F291BE95C0001C41C /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D42520E291BE95C0001C41C /* AuthenticationView.swift */; };
 		7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D433CF529385DBB007FA625 /* FinanceController.swift */; };
 		7D433CF829386002007FA625 /* FinanceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D433CF729386002007FA625 /* FinanceModel.swift */; };
@@ -96,6 +97,7 @@
 		7D237BEC292B672800DEF91D /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
 		7D237BEE292B6F1400DEF91D /* AccountDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailsView.swift; sourceTree = "<group>"; };
 		7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
+		7D3D5243299105A50021047B /* CommonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonController.swift; sourceTree = "<group>"; };
 		7D42520E291BE95C0001C41C /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		7D433CF529385DBB007FA625 /* FinanceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceController.swift; sourceTree = "<group>"; };
 		7D433CF729386002007FA625 /* FinanceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceModel.swift; sourceTree = "<group>"; };
@@ -331,6 +333,7 @@
 				7DC97A2529221990003F69D4 /* SettingsController.swift */,
 				7DC97A2929223989003F69D4 /* IncomeController.swift */,
 				7D7AA908298D8DA2004C9776 /* UserController.swift */,
+				7D3D5243299105A50021047B /* CommonController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -667,6 +670,7 @@
 				7D921C5E2986835C0014AC9E /* GoogleSiginBtn.swift in Sources */,
 				7D921C5C298683370014AC9E /* CustomTextField.swift in Sources */,
 				7D79FA5A291B7431004A2ECF /* Persistence.swift in Sources */,
+				7D3D5244299105A50021047B /* CommonController.swift in Sources */,
 				7D85D030298D29BE0019F85E /* Income.swift in Sources */,
 				7D921C62298683B30014AC9E /* LoginScreen.swift in Sources */,
 				7D85D06C298D2D650019F85E /* User.swift in Sources */,
