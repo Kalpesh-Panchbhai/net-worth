@@ -5,26 +5,43 @@
 //  Created by Kalpesh Panchbhai on 14/11/22.
 //
 
-import Foundation
-import SwiftUI
+import FirebaseFirestore
 
 class IncomeController {
     
-    let viewContext = PersistenceController.shared.container.viewContext
-    
-    var incomeViewModel = IncomeViewModel()
+    private func getIncomeCollection() -> CollectionReference {
+        return UserController()
+            .getCurrentUserDocument()
+            .collection(ConstantUtils.incomeCollectionName)
+    }
     
     public func addIncome(incometype: String, amount: String, date: Date, currency: String) async {
         let newIncome = Income(amount: Double(amount) ?? 0.0, creditedOn: date, currency: currency, incomeType: incometype)
-        incomeViewModel.addIncome(income: newIncome)
+        do {
+            let documentID = try getIncomeCollection()
+                .addDocument(from: newIncome)
+                .documentID
+            
+            print("New Income Added : " + documentID)
+        } catch {
+            print(error)
+        }
+    }
+    
+    public func deleteIncome(income: String) async {
+        do {
+            try await getIncomeCollection()
+                .document(income)
+                .delete()
+        } catch {
+            print(error)
+        }
     }
     
     public func fetchTotalAmount() async throws -> Double {
         var total = 0.0
         try await withUnsafeThrowingContinuation { continuation in
-            UserController()
-                .getCurrentUserDocument()
-                .collection(ConstantUtils.incomeCollectionName)
+            getIncomeCollection()
                 .getDocuments { snapshot, error in
                     if error  == nil {
                         if let snapshot = snapshot {
@@ -37,6 +54,22 @@ class IncomeController {
                 }
         }
         return total
+    }
+    
+    func getIncomeList() async throws -> [Income] {
+        var incomeList = [Income]()
+        incomeList = try await getIncomeCollection()
+            .order(by: ConstantUtils.incomeKeyCreditedOn, descending: true)
+            .getDocuments()
+            .documents
+            .map { doc in
+                return Income(id: doc.documentID,
+                              amount: doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0,
+                              creditedOn: (doc[ConstantUtils.incomeKeyCreditedOn] as? Timestamp)?.dateValue() ?? Date(),
+                              currency: doc[ConstantUtils.incomeKeyCurrency] as? String ?? "",
+                              incomeType: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "")
+            }
+        return incomeList
     }
     
 }

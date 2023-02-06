@@ -87,8 +87,8 @@ struct NewIncomeView: View {
                         Task.init {
                             await incomeController.addIncome(incometype: incomeType, amount: amount, date: date, currency: currenySelected.code)
                             await incomeViewModel.getTotalBalance()
+                            await incomeViewModel.getIncomeList()
                         }
-                        incomeViewModel.getIncomeList()
                         dismiss()
                     }, label: {
                         Label("Add Income", systemImage: "checkmark")

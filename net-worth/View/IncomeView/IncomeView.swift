@@ -26,9 +26,9 @@ struct IncomeView: View {
                 .onDelete(perform: deleteIncome)
             }
             .refreshable {
-                incomeViewModel.getIncomeList()
                 Task.init {
                     await incomeViewModel.getTotalBalance()
+                    await incomeViewModel.getIncomeList()
                 }
             }
             .halfSheet(showSheet: $isOpen) {
@@ -67,9 +67,9 @@ struct IncomeView: View {
             .navigationTitle("Income")
         }
         .onAppear {
-            incomeViewModel.getIncomeList()
             Task.init {
                 await incomeViewModel.getTotalBalance()
+                await incomeViewModel.getIncomeList()
             }
         }
     }
@@ -80,10 +80,10 @@ struct IncomeView: View {
             offsets.map {
                 id = incomeViewModel.incomeList[$0].id ?? ""
             }.forEach {
-                incomeViewModel.getIncomeList()
                 Task.init {
-                    await incomeViewModel.deleteIncome(income: id)
+                    await incomeController.deleteIncome(income: id)
                     await incomeViewModel.getTotalBalance()
+                    await incomeViewModel.getIncomeList()
                 }
             }
         }

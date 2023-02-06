@@ -41,12 +41,14 @@ class AccountViewModel: ObservableObject {
     
     func addTransaction(accountID: String, accountTransaction: AccountTransaction) {
         do {
-            try UserController()
+            let documentID = try UserController()
                 .getCurrentUserDocument()
                 .collection(ConstantUtils.accountCollectionName)
                 .document(accountID)
                 .collection(ConstantUtils.accountTransactionCollectionName)
-                .addDocument(from: accountTransaction)
+                .addDocument(from: accountTransaction).documentID
+            
+            print("New Account transaction added : " + documentID)
         } catch {
             print(error)
         }

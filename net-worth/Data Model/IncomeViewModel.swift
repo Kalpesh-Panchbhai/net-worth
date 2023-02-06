@@ -14,49 +14,23 @@ class IncomeViewModel: ObservableObject {
     @Published var incomeList = [Income]()
     
     @Published var incomeTotalAmount = 0.0
-
-    func addIncome(income: Income) {
-        do {
-            try UserController().getCurrentUserDocument().collection(ConstantUtils.incomeCollectionName).addDocument(from: income)
-        } catch {
-            print(error)
-        }
-    }
     
-    func deleteIncome(income: String) async {
-        do {
-            try await UserController().getCurrentUserDocument().collection(ConstantUtils.incomeCollectionName).document(income).delete()
-        } catch {
-            print(error)
-        }
-    }
+    private var incomeController = IncomeController()
     
     func getTotalBalance() async {
         do {
-            incomeTotalAmount = try await IncomeController().fetchTotalAmount()
+            incomeTotalAmount = try await incomeController
+                .fetchTotalAmount()
         } catch {
             print(error)
         }
     }
     
-    func getIncomeList() {
-        UserController().getCurrentUserDocument()
-                .collection(ConstantUtils.incomeCollectionName)
-                .order(by: ConstantUtils.incomeKeyCreditedOn, descending: true)
-                .getDocuments { snapshot, error in
-                    if error == nil {
-                        if let snapshot = snapshot {
-                            self.incomeList = snapshot.documents.map { doc in
-                                return Income(id: doc.documentID,
-                                              amount: doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0,
-                                              creditedOn: (doc[ConstantUtils.incomeKeyCreditedOn] as? Timestamp)?.dateValue() ?? Date(),
-                                              currency: doc[ConstantUtils.incomeKeyCurrency] as? String ?? "",
-                                              incomeType: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "")
-                            }
-                        }
-                    } else {
-                        
-                    }
-                }
+    func getIncomeList() async {
+        do {
+            self.incomeList = try await incomeController.getIncomeList()
+        } catch {
+            print(error)
+        }
     }
 }
