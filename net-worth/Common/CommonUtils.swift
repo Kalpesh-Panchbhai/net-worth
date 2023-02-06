@@ -11,21 +11,6 @@ enum ValueType {
     case percentage, literal
 }
 
-//enum Currency_symbol_map: String {
-//
-//    case AED
-//    case INR
-//    case USD
-//
-//    var rawValue: String {
-//        switch self {
-//        case .USD: return "$"
-//        case .INR: return "*"
-//        case .AED: return "#"
-//        }
-//    }
-//}
-
 struct Currency: Hashable, Encodable, Decodable {
     
     var code: String
