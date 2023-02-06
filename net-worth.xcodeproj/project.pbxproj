@@ -314,8 +314,8 @@
 		7D79FA80291B75CB004A2ECF /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
-				7D79FA59291B7431004A2ECF /* Persistence.swift */,
 				7D79FA5B291B7431004A2ECF /* net_worth.xcdatamodeld */,
+				7D79FA59291B7431004A2ECF /* Persistence.swift */,
 				7D85D031298D2ADD0019F85E /* IncomeViewModel.swift */,
 				7DF9DB92298F98A800831494 /* AccountViewModel.swift */,
 			);
