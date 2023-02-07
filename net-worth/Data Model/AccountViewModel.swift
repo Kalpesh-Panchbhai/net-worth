@@ -11,6 +11,7 @@ import FirebaseFirestore
 class AccountViewModel: ObservableObject {
     
     @Published var accountList = [Account]()
+    @Published var account = Account()
     @Published var accountTransactionList = [AccountTransaction]()
     @Published var totalBalance = BalanceModel()
     @Published var grouping: Grouping = .accountType
@@ -81,6 +82,16 @@ class AccountViewModel: ObservableObject {
         accountList = originalAccountList
     }
     
+    func getAccount(id: String) async {
+        do {
+            let list = try await accountController.getAccount(id: id)
+            DispatchQueue.main.async {
+                self.account = list
+            }
+        } catch {
+            print(error)
+        }
+    }
     func getAccountList() async {
         do {
             let list = try await accountController.getAccountList()

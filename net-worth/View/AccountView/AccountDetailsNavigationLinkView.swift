@@ -104,8 +104,10 @@ struct AccountDetailsNavigationLinkView: View {
                         AccountController().deleteAccount(account: account)
                         Task.init {
                             await accountViewModel.getAccountList()
+                            await accountViewModel.getAccount(id: account.id!)
                             await accountViewModel.getTotalBalance()
                         }
+                        account = accountViewModel.account
                     }, label: {
                         Label("Delete", systemImage: "trash")
                     })
@@ -116,7 +118,7 @@ struct AccountDetailsNavigationLinkView: View {
             }
         }
         .halfSheet(showSheet: $isTransactionOpen) {
-            UpdateBalanceAccountView(account: account, accountViewModel: accountViewModel)
+            UpdateBalanceAccountView(account: $account, accountViewModel: accountViewModel)
         }
         .padding(.top)
     }

@@ -46,12 +46,32 @@ class AccountController {
         }
     }
     
+    public func getAccount(id: String) async throws -> Account {
+        var account = Account()
+        
+        account = try await getAccountCollection()
+            .document(id)
+            .getDocument()
+            .data(as: Account.self)
+        
+        return account
+    }
+    
+    public func getAccountList() async throws -> [Account] {
+        var accountList = [Account]()
+        accountList = try await getAccountCollection()
+            .getDocuments()
+            .documents
+            .map { doc in
+                return Account(doc: doc)
+            }
+        return accountList
+    }
+    
     public func getAccount(accountType: String) -> [Account]{
         var accountList = [Account]()
         
-        UserController()
-            .getCurrentUserDocument()
-            .collection(ConstantUtils.accountCollectionName)
+        getAccountCollection()
             .whereField(ConstantUtils.accountKeyAccountType, isEqualTo: accountType)
             .getDocuments { snapshot, error in
                 if error == nil {
@@ -63,17 +83,6 @@ class AccountController {
                 } else {
                     
                 }
-            }
-        return accountList
-    }
-    
-    func getAccountList() async throws -> [Account] {
-        var accountList = [Account]()
-        accountList = try await getAccountCollection()
-            .getDocuments()
-            .documents
-            .map { doc in
-                return Account(doc: doc)
             }
         return accountList
     }
@@ -150,5 +159,5 @@ class AccountController {
         }
     }
     
- 
+    
 }
