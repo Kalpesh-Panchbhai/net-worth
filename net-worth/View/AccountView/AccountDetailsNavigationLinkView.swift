@@ -18,7 +18,7 @@ struct AccountDetailsNavigationLinkView: View {
     @State private var isTransactionOpen: Bool = false
     @State private var isDatePickerOpen: Bool = false
     
-    private var accountController: AccountController
+    private var accountController = AccountController()
     
     @State private var selectedTabIndex = 0
     
@@ -26,7 +26,6 @@ struct AccountDetailsNavigationLinkView: View {
     
     init(account: Account, accountViewModel: AccountViewModel) {
         self.account = account
-        self.accountController = AccountController()
         self.accountViewModel = accountViewModel
     }
     
@@ -69,7 +68,7 @@ struct AccountDetailsNavigationLinkView: View {
                             .onChange(of: paymentDate) { _ in
                                 account.paymentReminder = true
                                 account.paymentDate = paymentDate
-                                AccountController().updateAccount(account: account)
+                                accountController.updateAccount(account: account)
                                 NotificationController().enableNotification(account: account)
                             }
                             .pickerStyle(MenuPickerStyle())
@@ -77,7 +76,7 @@ struct AccountDetailsNavigationLinkView: View {
                             Button(action: {
                                 account.paymentReminder = false
                                 account.paymentDate = 0
-                                AccountController().updateAccount(account: account)
+                                accountController.updateAccount(account: account)
                                 NotificationController().removeNotification(id: account.id!)
                                 paymentDate = 0
                             }, label: {
@@ -92,7 +91,7 @@ struct AccountDetailsNavigationLinkView: View {
                             })
                             .onChange(of: paymentDate) { _ in
                                 account.paymentDate = paymentDate
-                                AccountController().updateAccount(account: account)
+                                accountController.updateAccount(account: account)
                                 NotificationController().removeNotification(id: account.id!)
                                 NotificationController().enableNotification(account: account)
                             }
