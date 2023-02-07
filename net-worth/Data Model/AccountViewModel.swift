@@ -92,6 +92,7 @@ class AccountViewModel: ObservableObject {
             print(error)
         }
     }
+    
     func getAccountList() async {
         do {
             let list = try await accountController.getAccountList()
@@ -115,26 +116,14 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func getAccountTransactionList(id: String) {
-        UserController()
-            .getCurrentUserDocument()
-            .collection(ConstantUtils.accountCollectionName)
-            .document(id)
-            .collection(ConstantUtils.accountTransactionCollectionName)
-            .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
-            .getDocuments { snapshot, error in
-                if error == nil {
-                    if let snapshot = snapshot {
-                        self.accountTransactionList = snapshot.documents.map { doc in
-                            return AccountTransaction(id: doc.documentID,
-                                                      timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
-                                                      balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0)
-                        }
-                    }
-                } else {
-                    
-                }
-                
+    func getAccountTransactionList(id: String) async {
+        do {
+            let list = try await accountController.getAccountTransactionList(id: id)
+            DispatchQueue.main.async {
+                self.accountTransactionList = list
             }
+        } catch {
+            print(error)
+        }
     }
 }

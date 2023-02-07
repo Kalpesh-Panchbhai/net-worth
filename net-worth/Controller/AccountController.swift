@@ -109,6 +109,24 @@ class AccountController {
         }
     }
     
+    public func getAccountTransactionList(id: String) async throws -> [AccountTransaction] {
+        var accountTransactionList = [AccountTransaction]()
+        accountTransactionList = try await getAccountCollection()
+            .document(id)
+            .collection(ConstantUtils.accountTransactionCollectionName)
+            .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
+            .getDocuments()
+            .documents
+            .map { doc in
+                return AccountTransaction(id: doc.documentID,
+                                          timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
+                                          balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0)
+            }
+        
+        return accountTransactionList
+    }
+    
+    
     public func fetchTotalBalance() async throws -> BalanceModel {
         
         var accounts: [Account] = []

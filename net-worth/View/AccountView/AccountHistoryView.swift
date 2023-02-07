@@ -9,14 +9,15 @@ import SwiftUI
 
 struct AccountHistoryView: View {
     
-    @ObservedObject var accountViewModel = AccountViewModel()
+    @ObservedObject var accountViewModel : AccountViewModel
     
     private var accountController = AccountController()
     
     private var account: Account
     
-    init(account: Account) {
+    init(account: Account, accountViewModel: AccountViewModel) {
         self.account = account
+        self.accountViewModel = accountViewModel
     }
     
     var body: some View {
@@ -50,9 +51,6 @@ struct AccountHistoryView: View {
                     }
                 }
             }
-        }
-        .onAppear {
-            accountViewModel.getAccountTransactionList(id: account.id ?? "")
         }
     }
 }
