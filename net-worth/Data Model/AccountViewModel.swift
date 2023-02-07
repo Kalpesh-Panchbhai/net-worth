@@ -12,8 +12,9 @@ class AccountViewModel: ObservableObject {
     
     @Published var accountList = [Account]()
     @Published var grouping: Grouping = .accountType
-    
     @Published var accountTransactionList = [AccountTransaction]()
+    
+    var originalAccountList = [Account]()
     
     enum Grouping: String, CaseIterable, Identifiable {
         case accountType = "Account Type"
@@ -53,16 +54,43 @@ class AccountViewModel: ObservableObject {
         
     }
     
+    func sortAccountList(orderBy: String) {
+        if(orderBy.elementsEqual(ConstantUtils.accountKeyAccountName)) {
+            accountList
+                .sort(by: {
+                    $0.accountName < $1.accountName
+                })
+        } else if(orderBy.elementsEqual(ConstantUtils.accountKeyCurrentBalance)) {
+            accountList
+                .sort(by: {
+                    $0.currentBalance < $1.currentBalance
+                })
+        }
+    }
+    
+    func filterAccountList(filter: String) {
+        accountList = originalAccountList
+            .filter { account in
+                account.accountType.lowercased().elementsEqual(filter.lowercased())
+            }
+    }
+    
+    func resetAccountList() {
+        accountList = originalAccountList
+    }
+    
     func getAccountList() {
         UserController()
             .getCurrentUserDocument()
             .collection(ConstantUtils.accountCollectionName)
+            .order(by: ConstantUtils.accountKeyAccountName)
             .getDocuments { snapshot, error in
                 if error == nil {
                     if let snapshot = snapshot {
                         self.accountList = snapshot.documents.map { doc in
                             return Account(doc: doc)
                         }
+                        self.originalAccountList = self.accountList
                     }
                 } else {
                     

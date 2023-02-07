@@ -13,6 +13,8 @@ struct AccountView: View {
     
     @State private var groupBy : Bool = false
     
+    @State private var sortedKey: String = ""
+    
     private var accountController = AccountController()
     
     private var financeController = FinanceController()
@@ -101,14 +103,14 @@ struct AccountView: View {
                             Menu(content: {
                                 Menu {
                                     Button(action: {
-                                        toggleNameSortOrder()
+                                        sortList(key: ConstantUtils.accountKeyAccountName)
                                     }) {
                                         Text("Name")
                                     }
                                     Button(action: {
-                                        toggleDateAddedSortOrder()
+                                        sortList(key: ConstantUtils.accountKeyCurrentBalance)
                                     }) {
-                                        Text("Date Added")
+                                        Text("Current Balance")
                                     }
                                 }
                             label: {
@@ -118,12 +120,14 @@ struct AccountView: View {
                                 Menu {
                                     Button(action: {
                                         groupBy = true
+                                        reset = true
                                         accountViewModel.grouping = .accountType
                                     }) {
                                         Text("Account Type")
                                     }
                                     Button(action: {
                                         groupBy = true
+                                        reset = true
                                         accountViewModel.grouping = .currency
                                     }) {
                                         Text("Currency")
@@ -135,48 +139,48 @@ struct AccountView: View {
                                 
                                 Menu {
                                     Button(action: {
-                                        toggleAccountTypeFilter(accountType: "Saving")
+                                        accountTypeFilter(accountType: "Saving")
                                     }) {
                                         Text("Saving")
                                     }
                                     Button(action: {
-                                        toggleAccountTypeFilter(accountType: "Credit Card")
+                                        accountTypeFilter(accountType: "Credit Card")
                                     }) {
                                         Text("Credit Card")
                                     }
                                     Button(action: {
-                                        toggleAccountTypeFilter(accountType: "Loan")
+                                        accountTypeFilter(accountType: "Loan")
                                     }) {
                                         Text("Loan")
                                     }
                                     Menu {
                                         Button(action: {
-                                            toggleAccountTypeFilter(accountType: "EQUITY")
+                                            accountTypeFilter(accountType: "EQUITY")
                                         }) {
                                             Text("Equity")
                                         }
                                         Button(action: {
-                                            toggleAccountTypeFilter(accountType: "MUTUALFUND")
+                                            accountTypeFilter(accountType: "MUTUALFUND")
                                         }) {
                                             Text("Mutual Fund")
                                         }
                                         Button(action: {
-                                            toggleAccountTypeFilter(accountType: "CRYPTOCURRENCY")
+                                            accountTypeFilter(accountType: "CRYPTOCURRENCY")
                                         }) {
                                             Text("Cryptocurrency")
                                         }
                                         Button(action: {
-                                            toggleAccountTypeFilter(accountType: "FUTURE")
+                                            accountTypeFilter(accountType: "FUTURE")
                                         }) {
                                             Text("Future")
                                         }
                                         Button(action: {
-                                            toggleAccountTypeFilter(accountType: "OPTION")
+                                            accountTypeFilter(accountType: "OPTION")
                                         }) {
                                             Text("Option")
                                         }
                                         Button(action: {
-                                            toggleAccountTypeFilter(accountType: "ETF")
+                                            accountTypeFilter(accountType: "ETF")
                                         }) {
                                             Text("ETF")
                                         }
@@ -184,7 +188,7 @@ struct AccountView: View {
                                         Label("Symbol", systemImage: "")
                                     }
                                     Button(action: {
-                                        toggleAccountTypeFilter(accountType: "Other")
+                                        accountTypeFilter(accountType: "Other")
                                     }) {
                                         Text("Other")
                                     }
@@ -285,32 +289,22 @@ struct AccountView: View {
         }
     }
     
-    private func toggleNameSortOrder() {
-//        sortOrder = sortOrder == .reverse ? .forward : .reverse
-//        accounts.sortDescriptors = [SortDescriptor(\Account.accountname, order: sortOrder)]
+    private func sortList(key: String) {
+        accountViewModel.sortAccountList(orderBy: key)
         reset = true
-    }
-    
-    private func toggleDateAddedSortOrder() {
-//        sortOrder = sortOrder == .reverse ? .forward : .reverse
-//        accounts.sortDescriptors = [SortDescriptor(\Account.timestamp, order: sortOrder)]
-        reset = true
+        sortedKey = key
     }
     
     private func toggleResetFilter() {
-        reset = true
-//        sortOrder = .forward
-//        accounts.sortDescriptors = [SortDescriptor(\Account.accountname, order: .forward)]
-//        accounts.nsPredicate = NSPredicate(
-//            format: "true = true"
-//        )
+        accountViewModel.resetAccountList()
+        groupBy = false
     }
     
-    private func toggleAccountTypeFilter(accountType: String) {
-//        accounts.sortDescriptors = [SortDescriptor(\Account.accountname, order: sortOrder)]
-//        accounts.nsPredicate = NSPredicate(
-//            format: "accounttype = %@", accountType
-//        )
+    private func accountTypeFilter(accountType: String) {
+        accountViewModel.filterAccountList(filter: accountType)
+        if(sortedKey.count > 0) {
+            accountViewModel.sortAccountList(orderBy: sortedKey)
+        }
         reset = true
     }
 }
