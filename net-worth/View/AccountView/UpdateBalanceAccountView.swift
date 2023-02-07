@@ -9,7 +9,7 @@ import SwiftUI
 
 struct UpdateBalanceAccountView: View {
     
-    var account : Binding<Account>
+    private var account : Account
     
     private var accountController = AccountController()
     
@@ -23,7 +23,7 @@ struct UpdateBalanceAccountView: View {
     
     @ObservedObject var accountViewModel: AccountViewModel
     
-    init(account: Binding<Account>, accountViewModel: AccountViewModel){
+    init(account: Account, accountViewModel: AccountViewModel){
         self.account = account
         self.accountViewModel = accountViewModel
     }
@@ -31,7 +31,7 @@ struct UpdateBalanceAccountView: View {
     var body: some View {
         NavigationView {
             Form {
-                if(account.wrappedValue.accountType == "Saving" || account.wrappedValue.accountType == "Credit Card" || account.wrappedValue.accountType == "Loan" || account.wrappedValue.accountType == "Other") {
+                if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
                     currentBalanceField()
                 }
                 else {
@@ -42,20 +42,20 @@ struct UpdateBalanceAccountView: View {
                 ToolbarItem {
                     Button(action: {
                         showingAlert.toggle()
-                        let updatedAccount = account
+                        var updatedAccount = accountViewModel.account
                         amount = isPlus ? amount : amount * -1
-                        if(account.wrappedValue.accountType == "Saving" || account.wrappedValue.accountType == "Credit Card" || account.wrappedValue.accountType == "Loan" || account.wrappedValue.accountType == "Other") {
-                            updatedAccount.wrappedValue.currentBalance = amount
+                        if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
+                            updatedAccount.currentBalance = amount
                         } else {
-                            updatedAccount.wrappedValue.totalShares = amount
+                            updatedAccount.totalShares = amount
                         }
 
-                        accountController.addTransaction(accountID: account.wrappedValue.id!, account: updatedAccount.wrappedValue)
-                        accountController.updateAccount(account: updatedAccount.wrappedValue)
+                        accountController.addTransaction(accountID: account.id!, account: updatedAccount)
+                        accountController.updateAccount(account: updatedAccount)
                         Task.init {
                             await accountViewModel.getAccountList()
-                            await accountViewModel.getAccount(id: account.wrappedValue.id!)
-                            await accountViewModel.getAccountTransactionList(id: account.wrappedValue.id!)
+                            await accountViewModel.getAccount(id: account.id!)
+                            await accountViewModel.getAccountTransactionList(id: account.id!)
                             await accountViewModel.getTotalBalance()
                         }
                     }, label: {
@@ -66,27 +66,27 @@ struct UpdateBalanceAccountView: View {
                             dismiss()
                         }
                     }, message: {
-                        Text("Account Name : " + self.account.wrappedValue.accountName)
+                        Text("Account Name : " + self.account.accountName)
                     })
                 }
                 
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
                         showingAlert.toggle()
-                        let updatedAccount = account
+                        var updatedAccount = accountViewModel.account
                         amount = isPlus ? amount : amount * -1
-                        if(account.wrappedValue.accountType == "Saving" || account.wrappedValue.accountType == "Credit Card" || account.wrappedValue.accountType == "Loan" || account.wrappedValue.accountType == "Other") {
-                            updatedAccount.wrappedValue.currentBalance = account.wrappedValue.currentBalance + amount
+                        if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
+                            updatedAccount.currentBalance = updatedAccount.currentBalance + amount
                         } else {
-                            updatedAccount.wrappedValue.totalShares = account.wrappedValue.totalShares + amount
+                            updatedAccount.totalShares = updatedAccount.totalShares + amount
                         }
 
-                        accountController.addTransaction(accountID: account.wrappedValue.id!, account: updatedAccount.wrappedValue)
-                        accountController.updateAccount(account: updatedAccount.wrappedValue)
+                        accountController.addTransaction(accountID: account.id!, account: updatedAccount)
+                        accountController.updateAccount(account: updatedAccount)
                         Task.init {
                             await accountViewModel.getAccountList()
-                            await accountViewModel.getAccount(id: account.wrappedValue.id!)
-                            await accountViewModel.getAccountTransactionList(id: account.wrappedValue.id!)
+                            await accountViewModel.getAccount(id: account.id!)
+                            await accountViewModel.getAccountTransactionList(id: account.id!)
                             await accountViewModel.getTotalBalance()
                         }
                     }, label: {
@@ -97,7 +97,7 @@ struct UpdateBalanceAccountView: View {
                             dismiss()
                         }
                     }, message: {
-                        Text("Account Name : " + self.account.wrappedValue.accountName)
+                        Text("Account Name : " + self.account.accountName)
                     })
                 }
             }

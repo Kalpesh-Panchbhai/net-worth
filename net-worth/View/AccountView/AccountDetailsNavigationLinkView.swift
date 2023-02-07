@@ -41,7 +41,7 @@ struct AccountDetailsNavigationLinkView: View {
             .navigationBarTitleDisplayMode(NavigationBarItem.TitleDisplayMode.inline)
             .navigationBarTitle(self.account.accountName)
             if(selectedTabIndex == 0) {
-                AccountDetailsView(account: self.account)
+                AccountDetailsView(account: self.account, accountViewModel: accountViewModel)
             }else {
                 AccountHistoryView(account: self.account, accountViewModel: accountViewModel)
             }
@@ -116,10 +116,11 @@ struct AccountDetailsNavigationLinkView: View {
             }
         }
         .halfSheet(showSheet: $isTransactionOpen) {
-            UpdateBalanceAccountView(account: $account, accountViewModel: accountViewModel)
+            UpdateBalanceAccountView(account: account, accountViewModel: accountViewModel)
         }
         .onAppear {
             Task.init {
+                await accountViewModel.getAccount(id: account.id!)
                 await accountViewModel.getAccountTransactionList(id: account.id!)
             }
         }
