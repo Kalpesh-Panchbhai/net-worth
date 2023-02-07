@@ -11,6 +11,8 @@ struct AccountView: View {
     
     @State private var reset : Bool = false
     
+    @State private var groupBy : Bool = false
+    
     private var accountController = AccountController()
     
     private var financeController = FinanceController()
@@ -43,32 +45,11 @@ struct AccountView: View {
     
     var body: some View {
         NavigationView {
-            List(selection: $selection) {
-                ForEach(searchResults, id: \.self) { account in
-                    NavigationLink(destination: AccountDetailsNavigationLinkView(account: account, accountViewModel: accountViewModel), label: {
-                        HStack{
-                            VStack {
-                                Text(account.accountName)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                Text(account.accountType.uppercased()).font(.system(size: 10))
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .foregroundColor(.gray)
-                            }
-                            Spacer()
-                            AccountFinanceView(account: account)
-                        }
-                        .foregroundColor(Color.blue)
-                        .padding()
-                    })
-                    .swipeActions {
-                        Button{
-                            accountController.deleteAccount(account: account)
-                            accountViewModel.getAccountList()
-                        } label: {
-                            Label("Delete", systemImage: "trash")
-                        }
-                        .tint(.red)
-                    }
+            VStack {
+                if groupBy {
+                    AccountGroupedView(accountViewModel: accountViewModel, selection: $selection, searchKeyWord: $searchKeyWord)
+                } else {
+                    AccountUngroupedView(accountViewModel: accountViewModel, selection: $selection, searchKeyWord: $searchKeyWord)
                 }
             }
             .halfSheet(showSheet: $isOpen) {
@@ -81,7 +62,7 @@ struct AccountView: View {
                 }
             }
             .environment(\.editMode, self.$editMode)
-            .listStyle(InsetGroupedListStyle())
+            .listStyle(SidebarListStyle())
             .toolbar {
                 if !accountViewModel.accountList.isEmpty {
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -132,6 +113,24 @@ struct AccountView: View {
                                 }
                             label: {
                                 Label("Sort By", systemImage: "arrow.up.arrow.down")
+                            }
+                                
+                                Menu {
+                                    Button(action: {
+                                        groupBy = true
+                                        accountViewModel.grouping = .accountType
+                                    }) {
+                                        Text("Account Type")
+                                    }
+                                    Button(action: {
+                                        groupBy = true
+                                        accountViewModel.grouping = .currency
+                                    }) {
+                                        Text("Currency")
+                                    }
+                                }
+                            label: {
+                                Label("Group By", systemImage: "arrow.up.arrow.down")
                             }
                                 
                                 Menu {
@@ -299,6 +298,7 @@ struct AccountView: View {
     }
     
     private func toggleResetFilter() {
+        reset = true
 //        sortOrder = .forward
 //        accounts.sortDescriptors = [SortDescriptor(\Account.accountname, order: .forward)]
 //        accounts.nsPredicate = NSPredicate(

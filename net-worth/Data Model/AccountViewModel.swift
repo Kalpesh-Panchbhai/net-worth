@@ -11,8 +11,47 @@ import FirebaseFirestore
 class AccountViewModel: ObservableObject {
     
     @Published var accountList = [Account]()
+    @Published var grouping: Grouping = .accountType
     
     @Published var accountTransactionList = [AccountTransaction]()
+    
+    enum Grouping: String, CaseIterable, Identifiable {
+        case accountType = "Account Type"
+        case currency = "Currency"
+        var id: String {
+            self.rawValue
+        }
+    }
+    
+    var groupedAccount: [String: [Account]] {
+        switch grouping {
+        case .accountType:
+            return Dictionary(grouping: accountList) { $0.accountType }
+        case .currency:
+            return Dictionary(grouping: accountList) { $0.currency }
+        }
+    }
+    
+    var sectionHeaders: [String] {
+        switch grouping {
+        case .accountType:
+            return Array(Set(accountList.map{$0.accountType})).sorted(by: <)
+        case .currency:
+            return Array(Set(accountList.map{$0.currency})).sorted(by: <)
+        }
+    }
+    
+    func sectionContent(key: String, searchKeyword: String) -> [Account] {
+        let data = groupedAccount[key] ?? []
+        if searchKeyword.isEmpty {
+            return data
+        } else {
+            return data.filter { value in
+                value.accountName.lowercased().contains(searchKeyword.lowercased()) || value.accountType.lowercased().contains(searchKeyword.lowercased())
+            }
+        }
+        
+    }
     
     func getAccountList() {
         UserController()

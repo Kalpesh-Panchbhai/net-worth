@@ -12,6 +12,8 @@
 		7D237BEF292B6F1400DEF91D /* AccountDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D237BEE292B6F1400DEF91D /* AccountDetailsView.swift */; };
 		7D3636FB292F9CCB0013B4E5 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */; };
 		7D3D5244299105A50021047B /* CommonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D5243299105A50021047B /* CommonController.swift */; };
+		7D3D52462992440B0021047B /* AccountGroupedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D52452992440B0021047B /* AccountGroupedView.swift */; };
+		7D3D5248299246C00021047B /* AccountUngroupedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D5247299246C00021047B /* AccountUngroupedView.swift */; };
 		7D42520F291BE95C0001C41C /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D42520E291BE95C0001C41C /* AuthenticationView.swift */; };
 		7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D433CF529385DBB007FA625 /* FinanceController.swift */; };
 		7D433CF829386002007FA625 /* FinanceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D433CF729386002007FA625 /* FinanceModel.swift */; };
@@ -98,6 +100,8 @@
 		7D237BEE292B6F1400DEF91D /* AccountDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailsView.swift; sourceTree = "<group>"; };
 		7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
 		7D3D5243299105A50021047B /* CommonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonController.swift; sourceTree = "<group>"; };
+		7D3D52452992440B0021047B /* AccountGroupedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountGroupedView.swift; sourceTree = "<group>"; };
+		7D3D5247299246C00021047B /* AccountUngroupedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountUngroupedView.swift; sourceTree = "<group>"; };
 		7D42520E291BE95C0001C41C /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		7D433CF529385DBB007FA625 /* FinanceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceController.swift; sourceTree = "<group>"; };
 		7D433CF729386002007FA625 /* FinanceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceModel.swift; sourceTree = "<group>"; };
@@ -409,6 +413,8 @@
 				7D237BEE292B6F1400DEF91D /* AccountDetailsView.swift */,
 				7DE42FBF2934F69200D4DA0A /* UpdateBalanceAccountView.swift */,
 				7DE42FC12934FC1800D4DA0A /* AccountHistoryView.swift */,
+				7D3D52452992440B0021047B /* AccountGroupedView.swift */,
+				7D3D5247299246C00021047B /* AccountUngroupedView.swift */,
 			);
 			path = AccountView;
 			sourceTree = "<group>";
@@ -650,6 +656,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7DE766F32928B62900EFBD2D /* NotificationController.swift in Sources */,
+				7D3D52462992440B0021047B /* AccountGroupedView.swift in Sources */,
 				7DF9DB91298F978600831494 /* Account.swift in Sources */,
 				7DFC6D042938E38E002F847C /* FinanceListViewModel.swift in Sources */,
 				7DC97A2C29223ADB003F69D4 /* NewIncomeView.swift in Sources */,
@@ -674,6 +681,7 @@
 				7D85D030298D29BE0019F85E /* Income.swift in Sources */,
 				7D921C62298683B30014AC9E /* LoginScreen.swift in Sources */,
 				7D85D06C298D2D650019F85E /* User.swift in Sources */,
+				7D3D5248299246C00021047B /* AccountUngroupedView.swift in Sources */,
 				7D79FA87291B803A004A2ECF /* AccountController.swift in Sources */,
 				7D85D032298D2ADD0019F85E /* IncomeViewModel.swift in Sources */,
 				7DE42FC02934F69200D4DA0A /* UpdateBalanceAccountView.swift in Sources */,
