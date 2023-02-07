@@ -102,9 +102,9 @@ class AccountController {
     
     public func fetchTotalBalance() async throws -> BalanceModel {
         
-        let accounts: [Account] = []
-//        accountViewModel.getAccountList()
-//        accounts = accountViewModel.accountList
+        var accounts: [Account] = []
+        
+        accounts = try await getAccountList()
         
         return try await withThrowingTaskGroup(of: BalanceModel.self) { group in
             
@@ -130,7 +130,7 @@ class AccountController {
                     }
                 } else {
                     group.addTask {
-                        var currentRate = BalanceModel(totalChange: 1.0, oneDayChange: 1.0)
+                        var currentRate = BalanceModel(totalChange: 1.0, oneDayChange: 0.0)
                         if(account.currency != SettingsController().getDefaultCurrency().code) {
                             currentRate.totalChange = try await FinanceController().getSymbolDetails(accountCurrency: account.currency).regularMarketPrice ?? 1.0
                         }

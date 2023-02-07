@@ -59,8 +59,8 @@ struct AccountView: View {
             }
             .refreshable {
                 Task.init {
-                    await financeListViewModel.getTotalBalance()
                     await accountViewModel.getAccountList()
+                    await accountViewModel.getTotalBalance()
                 }
             }
             .environment(\.editMode, self.$editMode)
@@ -225,6 +225,7 @@ struct AccountView: View {
                             editMode = .inactive
                             Task.init {
                                 await accountViewModel.getAccountList()
+                                await accountViewModel.getTotalBalance()
                             }
                         }, label: {
                             Label("delete Account", systemImage: "trash")
@@ -233,7 +234,7 @@ struct AccountView: View {
                 }
                 ToolbarItem(placement: .bottomBar){
                     if(editMode == .inactive) {
-                        let balance = financeListViewModel.totalBalance
+                        let balance = accountViewModel.totalBalance
                         VStack {
                             Text("Total Balance: \(SettingsController().getDefaultCurrency().code) \(balance.totalChange.withCommas(decimalPlace: 2))")
                                 .foregroundColor(.blue)
@@ -285,8 +286,8 @@ struct AccountView: View {
         }
         .onAppear {
             Task.init {
-                await financeListViewModel.getTotalBalance()
                 await accountViewModel.getAccountList()
+                await accountViewModel.getTotalBalance()
             }
         }
     }

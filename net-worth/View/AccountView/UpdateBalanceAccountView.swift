@@ -54,6 +54,7 @@ struct UpdateBalanceAccountView: View {
                         accountController.updateAccount(account: updatedAccount)
                         Task.init {
                             await accountViewModel.getAccountList()
+                            await accountViewModel.getTotalBalance()
                         }
                     }, label: {
                         Text("Update")
@@ -82,6 +83,7 @@ struct UpdateBalanceAccountView: View {
                         accountController.updateAccount(account: updatedAccount)
                         Task.init {
                             await accountViewModel.getAccountList()
+                            await accountViewModel.getTotalBalance()
                         }
                     }, label: {
                         Text("Add")

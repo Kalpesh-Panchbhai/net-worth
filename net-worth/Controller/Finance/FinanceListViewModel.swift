@@ -14,8 +14,6 @@ class FinanceListViewModel: ObservableObject {
     
     @Published var financeDetailModel = FinanceDetailModel()
     
-    @Published var totalBalance = BalanceModel()
-    
     func getAllSymbols(searchTerm: String) async {
         do {
             financeModels = try await FinanceController().getAllSymbols(searchTerm: searchTerm)
@@ -27,14 +25,6 @@ class FinanceListViewModel: ObservableObject {
     func getSymbolDetails(symbol: String) async {
         do {
             financeDetailModel = try await FinanceController().getSymbolDetails(symbol: symbol)
-        } catch {
-            print(error)
-        }
-    }
-    
-    func getTotalBalance() async {
-        do {
-            totalBalance = try await AccountController().fetchTotalBalance()
         } catch {
             print(error)
         }
