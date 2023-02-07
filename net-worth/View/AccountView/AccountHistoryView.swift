@@ -13,10 +13,7 @@ struct AccountHistoryView: View {
     
     private var accountController = AccountController()
     
-    private var account: Account
-    
-    init(account: Account, accountViewModel: AccountViewModel) {
-        self.account = account
+    init(accountViewModel: AccountViewModel) {
         self.accountViewModel = accountViewModel
     }
     
@@ -31,8 +28,8 @@ struct AccountHistoryView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     VStack {
-                        if(self.account.accountType == "Saving" || self.account.accountType == "Credit Card" || self.account.accountType == "Loan" || self.account.accountType == "Other") {
-                            Text((account.currency) + " \(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 4))")
+                        if(self.accountViewModel.account.accountType == "Saving" || self.accountViewModel.account.accountType == "Credit Card" || self.accountViewModel.account.accountType == "Loan" || self.accountViewModel.account.accountType == "Other") {
+                            Text((accountViewModel.account.currency) + " \(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 4))")
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                         }
                         else {

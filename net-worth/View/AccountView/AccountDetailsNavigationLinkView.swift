@@ -10,7 +10,7 @@ import SlidingTabView
 
 struct AccountDetailsNavigationLinkView: View {
     
-    @State private var account: Account
+    private var id: String
     
     @State private var paymentDate = 0
     @State var dates = Array(1...28)
@@ -24,8 +24,10 @@ struct AccountDetailsNavigationLinkView: View {
     
     @ObservedObject var accountViewModel : AccountViewModel
     
-    init(account: Account, accountViewModel: AccountViewModel) {
-        self.account = account
+    @Environment(\.presentationMode) var presentationMode
+    
+    init(id: String, accountViewModel: AccountViewModel) {
+        self.id = id
         self.accountViewModel = accountViewModel
     }
     
@@ -39,11 +41,11 @@ struct AccountDetailsNavigationLinkView: View {
                            , selectionBarColor: .blue
                            , selectionBarBackgroundHeight: 3)
             .navigationBarTitleDisplayMode(NavigationBarItem.TitleDisplayMode.inline)
-            .navigationBarTitle(self.account.accountName)
+            .navigationBarTitle(self.accountViewModel.account.accountName)
             if(selectedTabIndex == 0) {
-                AccountDetailsView(account: self.account, accountViewModel: accountViewModel)
+                AccountDetailsView(accountViewModel: accountViewModel)
             }else {
-                AccountHistoryView(account: self.account, accountViewModel: accountViewModel)
+                AccountHistoryView(accountViewModel: accountViewModel)
             }
             Spacer()
         }
@@ -55,8 +57,8 @@ struct AccountDetailsNavigationLinkView: View {
                     }, label: {
                         Label("Update Balance", systemImage: "square.and.pencil")
                     })
-                    if(self.account.accountType != "Saving") {
-                        if(!account.paymentReminder) {
+                    if(self.accountViewModel.account.accountType != "Saving") {
+                        if(!accountViewModel.account.paymentReminder) {
                             Picker(selection: $paymentDate, content: {
                                 Text("Select a date").tag(0)
                                 ForEach(dates, id: \.self) {
@@ -66,19 +68,27 @@ struct AccountDetailsNavigationLinkView: View {
                                 Label("Enable Notification", systemImage: "speaker.wave.1.fill")
                             })
                             .onChange(of: paymentDate) { _ in
-                                account.paymentReminder = true
-                                account.paymentDate = paymentDate
-                                accountController.updateAccount(account: account)
-                                NotificationController().enableNotification(account: account)
+                                accountViewModel.account.paymentReminder = true
+                                accountViewModel.account.paymentDate = paymentDate
+                                accountController.updateAccount(account: accountViewModel.account)
+                                NotificationController().enableNotification(account: accountViewModel.account)
+                                Task.init {
+                                    await accountViewModel.getAccountList()
+                                    await accountViewModel.getAccount(id: id)
+                                }
                             }
                             .pickerStyle(MenuPickerStyle())
                         } else {
                             Button(action: {
-                                account.paymentReminder = false
-                                account.paymentDate = 0
-                                accountController.updateAccount(account: account)
-                                NotificationController().removeNotification(id: account.id!)
+                                accountViewModel.account.paymentReminder = false
+                                accountViewModel.account.paymentDate = 0
+                                accountController.updateAccount(account: accountViewModel.account)
+                                NotificationController().removeNotification(id: accountViewModel.account.id!)
                                 paymentDate = 0
+                                Task.init {
+                                    await accountViewModel.getAccountList()
+                                    await accountViewModel.getAccount(id: id)
+                                }
                             }, label: {
                                 Label("Disable Notification", systemImage: "speaker.slash.fill")
                             })
@@ -90,22 +100,26 @@ struct AccountDetailsNavigationLinkView: View {
                                 Label("Change Payment date", systemImage: "calendar.circle.fill")
                             })
                             .onChange(of: paymentDate) { _ in
-                                account.paymentDate = paymentDate
-                                accountController.updateAccount(account: account)
-                                NotificationController().removeNotification(id: account.id!)
-                                NotificationController().enableNotification(account: account)
+                                accountViewModel.account.paymentDate = paymentDate
+                                accountController.updateAccount(account: accountViewModel.account)
+                                NotificationController().removeNotification(id: accountViewModel.account.id!)
+                                NotificationController().enableNotification(account: accountViewModel.account)
+                                Task.init {
+                                    await accountViewModel.getAccountList()
+                                    await accountViewModel.getAccount(id: id)
+                                }
                             }
                             .pickerStyle(MenuPickerStyle())
                             
                         }
                     }
                     Button(action: {
-                        accountController.deleteAccount(account: account)
+                        accountController.deleteAccount(account: accountViewModel.account)
                         Task.init {
                             await accountViewModel.getAccountList()
-                            await accountViewModel.getAccount(id: account.id!)
                             await accountViewModel.getTotalBalance()
                         }
+                        self.presentationMode.wrappedValue.dismiss()
                     }, label: {
                         Label("Delete", systemImage: "trash")
                     })
@@ -116,12 +130,12 @@ struct AccountDetailsNavigationLinkView: View {
             }
         }
         .halfSheet(showSheet: $isTransactionOpen) {
-            UpdateBalanceAccountView(account: account, accountViewModel: accountViewModel)
+            UpdateBalanceAccountView(accountViewModel: accountViewModel)
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getAccount(id: account.id!)
-                await accountViewModel.getAccountTransactionList(id: account.id!)
+                await accountViewModel.getAccount(id: id)
+                await accountViewModel.getAccountTransactionList(id: id)
             }
         }
         .padding(.top)

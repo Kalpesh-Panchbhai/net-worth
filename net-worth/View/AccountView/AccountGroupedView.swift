@@ -28,7 +28,7 @@ struct AccountGroupedView: View {
                 ForEach(accountViewModel.sectionHeaders, id: \.self) { key in
                     Section(header: Text(key).font(.title3).foregroundColor(.blue)) {
                         ForEach(accountViewModel.sectionContent(key: key, searchKeyword: searchKeyWord.wrappedValue), id: \.self) { account in
-                            NavigationLink(destination: AccountDetailsNavigationLinkView(account: account, accountViewModel: accountViewModel), label: {
+                            NavigationLink(destination: AccountDetailsNavigationLinkView(id: account.id!, accountViewModel: accountViewModel), label: {
                                  HStack{
                                      VStack {
                                          Text(account.accountName)

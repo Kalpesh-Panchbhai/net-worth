@@ -17,12 +17,9 @@ struct AccountDetailsView: View {
     
     @ObservedObject private var accountViewModel: AccountViewModel
     
-    var account: Account
-    
-    init(account: Account, accountViewModel: AccountViewModel) {
-        self.account = account
+    init(accountViewModel: AccountViewModel) {
         self.accountViewModel = accountViewModel
-        if(self.account.accountType == "Saving" || self.account.accountType == "Credit Card" || self.account.accountType == "Loan") {
+        if(self.accountViewModel.account.accountType == "Saving" || self.accountViewModel.account.accountType == "Credit Card" || self.accountViewModel.account.accountType == "Loan") {
             self.currentRate = 0.0
             self.totalValue = 0.0
         }
@@ -35,33 +32,33 @@ struct AccountDetailsView: View {
                     field(labelName: "Current Balance", value: "\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 4))")
                     field(labelName: "Currency", value: accountViewModel.account.currency)
                 }
-                else if(account.accountType == "Credit Card") {
+                else if(accountViewModel.account.accountType == "Credit Card") {
                     field(labelName: "Credit Card Name", value: accountViewModel.account.accountName)
                     field(labelName: "Current Balance", value: "\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 4))")
                     field(labelName: "Currency", value: accountViewModel.account.currency)
-                    if(account.paymentReminder) {
+                    if(accountViewModel.account.paymentReminder) {
                         field(labelName: "Payment Reminder", value: "On")
                         field(labelName: "Payment Date", value: "\(accountViewModel.account.paymentDate)")
                     }else {
                         field(labelName: "Payment Reminder", value: "Off")
                     }
                 }
-                else if(account.accountType == "Loan") {
+                else if(accountViewModel.account.accountType == "Loan") {
                     field(labelName: "Loan Name", value: accountViewModel.account.accountName)
                     field(labelName: "Current Balance", value: "\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 4))")
                     field(labelName: "Currency", value: accountViewModel.account.currency)
-                    if(account.paymentReminder) {
+                    if(accountViewModel.account.paymentReminder) {
                         field(labelName: "Payment Reminder", value: "On")
                         field(labelName: "Payment Date", value: "\(accountViewModel.account.paymentDate)")
                     }else {
                         field(labelName: "Payment Reminder", value: "Off")
                     }
                 }
-                else if(account.accountType == "Other") {
+                else if(accountViewModel.account.accountType == "Other") {
                     field(labelName: "Account Name", value: accountViewModel.account.accountName)
                     field(labelName: "Current Balance", value: "\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 4))")
                     field(labelName: "Currency", value: accountViewModel.account.currency)
-                    if(account.paymentReminder) {
+                    if(accountViewModel.account.paymentReminder) {
                         field(labelName: "Payment Reminder", value: "On")
                         field(labelName: "Payment Date", value: "\(accountViewModel.account.paymentDate)")
                     }else {
@@ -74,7 +71,7 @@ struct AccountDetailsView: View {
                     field(labelName: "Current rate of a unit", value: (financeListViewModel.financeDetailModel.regularMarketPrice ?? 0.0).withCommas(decimalPlace: 4))
                     field(labelName: "Total Value", value: (accountViewModel.account.totalShares * (financeListViewModel.financeDetailModel.regularMarketPrice ?? 0.0)).withCommas(decimalPlace: 4))
                     field(labelName: "Currency", value: accountViewModel.account.currency)
-                    if(account.paymentReminder) {
+                    if(accountViewModel.account.paymentReminder) {
                         field(labelName: "Payment Reminder", value: "On")
                         field(labelName: "Payment Date", value: "\(accountViewModel.account.paymentDate)")
                     }else {

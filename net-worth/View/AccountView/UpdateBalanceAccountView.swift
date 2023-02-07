@@ -9,8 +9,6 @@ import SwiftUI
 
 struct UpdateBalanceAccountView: View {
     
-    private var account : Account
-    
     private var accountController = AccountController()
     
     @State private var amount: Double = 0.0
@@ -23,15 +21,14 @@ struct UpdateBalanceAccountView: View {
     
     @ObservedObject var accountViewModel: AccountViewModel
     
-    init(account: Account, accountViewModel: AccountViewModel){
-        self.account = account
+    init(accountViewModel: AccountViewModel){
         self.accountViewModel = accountViewModel
     }
     
     var body: some View {
         NavigationView {
             Form {
-                if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
+                if(accountViewModel.account.accountType == "Saving" || accountViewModel.account.accountType == "Credit Card" || accountViewModel.account.accountType == "Loan" || accountViewModel.account.accountType == "Other") {
                     currentBalanceField()
                 }
                 else {
@@ -44,18 +41,18 @@ struct UpdateBalanceAccountView: View {
                         showingAlert.toggle()
                         var updatedAccount = accountViewModel.account
                         amount = isPlus ? amount : amount * -1
-                        if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
+                        if(accountViewModel.account.accountType == "Saving" || accountViewModel.account.accountType == "Credit Card" || accountViewModel.account.accountType == "Loan" || accountViewModel.account.accountType == "Other") {
                             updatedAccount.currentBalance = amount
                         } else {
                             updatedAccount.totalShares = amount
                         }
 
-                        accountController.addTransaction(accountID: account.id!, account: updatedAccount)
+                        accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount)
                         accountController.updateAccount(account: updatedAccount)
                         Task.init {
                             await accountViewModel.getAccountList()
-                            await accountViewModel.getAccount(id: account.id!)
-                            await accountViewModel.getAccountTransactionList(id: account.id!)
+                            await accountViewModel.getAccount(id: accountViewModel.account.id!)
+                            await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
                             await accountViewModel.getTotalBalance()
                         }
                     }, label: {
@@ -66,7 +63,7 @@ struct UpdateBalanceAccountView: View {
                             dismiss()
                         }
                     }, message: {
-                        Text("Account Name : " + self.account.accountName)
+                        Text("Account Name : " + self.accountViewModel.account.accountName)
                     })
                 }
                 
@@ -75,18 +72,18 @@ struct UpdateBalanceAccountView: View {
                         showingAlert.toggle()
                         var updatedAccount = accountViewModel.account
                         amount = isPlus ? amount : amount * -1
-                        if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
+                        if(accountViewModel.account.accountType == "Saving" || accountViewModel.account.accountType == "Credit Card" || accountViewModel.account.accountType == "Loan" || accountViewModel.account.accountType == "Other") {
                             updatedAccount.currentBalance = updatedAccount.currentBalance + amount
                         } else {
                             updatedAccount.totalShares = updatedAccount.totalShares + amount
                         }
 
-                        accountController.addTransaction(accountID: account.id!, account: updatedAccount)
+                        accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount)
                         accountController.updateAccount(account: updatedAccount)
                         Task.init {
                             await accountViewModel.getAccountList()
-                            await accountViewModel.getAccount(id: account.id!)
-                            await accountViewModel.getAccountTransactionList(id: account.id!)
+                            await accountViewModel.getAccount(id: accountViewModel.account.id!)
+                            await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
                             await accountViewModel.getTotalBalance()
                         }
                     }, label: {
@@ -97,11 +94,11 @@ struct UpdateBalanceAccountView: View {
                             dismiss()
                         }
                     }, message: {
-                        Text("Account Name : " + self.account.accountName)
+                        Text("Account Name : " + self.accountViewModel.account.accountName)
                     })
                 }
             }
-            .navigationTitle(account.accountName)
+            .navigationTitle(accountViewModel.account.accountName)
         }
     }
     
