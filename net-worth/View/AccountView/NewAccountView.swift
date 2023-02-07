@@ -129,7 +129,9 @@ struct NewAccountView: View {
                             newAccount.paymentDate = paymentDate
                         }
                         accountController.addAccount(newAccount: newAccount)
-                        accountViewModel.getAccountList()
+                        Task.init {
+                            await accountViewModel.getAccountList()
+                        }
                         dismiss()
                     }, label: {
                         Label("Add Account", systemImage: "checkmark")

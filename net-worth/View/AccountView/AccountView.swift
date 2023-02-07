@@ -58,9 +58,9 @@ struct AccountView: View {
                 NewAccountView(accountViewModel: accountViewModel)
             }
             .refreshable {
-                accountViewModel.getAccountList()
                 Task.init {
                     await financeListViewModel.getTotalBalance()
+                    await accountViewModel.getAccountList()
                 }
             }
             .environment(\.editMode, self.$editMode)
@@ -223,7 +223,9 @@ struct AccountView: View {
                                 accountController.deleteAccount(account: accountSelected)
                             }
                             editMode = .inactive
-                            accountViewModel.getAccountList()
+                            Task.init {
+                                await accountViewModel.getAccountList()
+                            }
                         }, label: {
                             Label("delete Account", systemImage: "trash")
                         }).disabled(selection.count == 0)
@@ -282,9 +284,9 @@ struct AccountView: View {
             }
         }
         .onAppear {
-            accountViewModel.getAccountList()
             Task.init {
                 await financeListViewModel.getTotalBalance()
+                await accountViewModel.getAccountList()
             }
         }
     }

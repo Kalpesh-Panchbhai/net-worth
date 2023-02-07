@@ -102,7 +102,9 @@ struct AccountDetailsNavigationLinkView: View {
                     }
                     Button(action: {
                         AccountController().deleteAccount(account: account)
-                        accountViewModel.getAccountList()
+                        Task.init {
+                            await accountViewModel.getAccountList()
+                        }
                     }, label: {
                         Label("Delete", systemImage: "trash")
                     })

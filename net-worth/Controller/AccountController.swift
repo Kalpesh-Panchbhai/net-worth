@@ -15,8 +15,6 @@ class AccountController {
     
     private var financeController = FinanceController()
     
-    @ObservedObject var accountViewModel = AccountViewModel()
-    
     private func getAccountCollection() -> CollectionReference {
         return UserController()
             .getCurrentUserDocument()
@@ -69,6 +67,17 @@ class AccountController {
         return accountList
     }
     
+    func getAccountList() async throws -> [Account] {
+        var accountList = [Account]()
+        accountList = try await getAccountCollection()
+            .getDocuments()
+            .documents
+            .map { doc in
+                return Account(doc: doc)
+            }
+        return accountList
+    }
+    
     public func addTransaction(accountID: String, account: Account) {
         var balanceChange = 0.0
         if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
@@ -93,9 +102,9 @@ class AccountController {
     
     public func fetchTotalBalance() async throws -> BalanceModel {
         
-        var accounts: [Account] = []
-        accountViewModel.getAccountList()
-        accounts = accountViewModel.accountList
+        let accounts: [Account] = []
+//        accountViewModel.getAccountList()
+//        accounts = accountViewModel.accountList
         
         return try await withThrowingTaskGroup(of: BalanceModel.self) { group in
             

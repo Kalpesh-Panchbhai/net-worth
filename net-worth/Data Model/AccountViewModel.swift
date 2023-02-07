@@ -15,6 +15,7 @@ class AccountViewModel: ObservableObject {
     @Published var accountTransactionList = [AccountTransaction]()
     
     var originalAccountList = [Account]()
+    private var accountController = AccountController()
     
     enum Grouping: String, CaseIterable, Identifiable {
         case accountType = "Account Type"
@@ -79,23 +80,16 @@ class AccountViewModel: ObservableObject {
         accountList = originalAccountList
     }
     
-    func getAccountList() {
-        UserController()
-            .getCurrentUserDocument()
-            .collection(ConstantUtils.accountCollectionName)
-            .order(by: ConstantUtils.accountKeyAccountName)
-            .getDocuments { snapshot, error in
-                if error == nil {
-                    if let snapshot = snapshot {
-                        self.accountList = snapshot.documents.map { doc in
-                            return Account(doc: doc)
-                        }
-                        self.originalAccountList = self.accountList
-                    }
-                } else {
-                    
-                }
+    func getAccountList() async {
+        do {
+            let list = try await accountController.getAccountList()
+            DispatchQueue.main.async {
+                self.accountList = list
+                self.originalAccountList = list
             }
+        } catch {
+            print(error)
+        }
     }
     
     func getAccountTransactionList(id: String) {

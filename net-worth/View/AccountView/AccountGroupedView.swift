@@ -46,7 +46,9 @@ struct AccountGroupedView: View {
                              .swipeActions {
                                  Button{
                                      accountController.deleteAccount(account: account)
-                                     accountViewModel.getAccountList()
+                                     Task.init {
+                                         await accountViewModel.getAccountList()
+                                     }
                                  } label: {
                                      Label("Delete", systemImage: "trash")
                                  }
