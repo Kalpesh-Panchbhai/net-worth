@@ -68,7 +68,7 @@ struct SettingsView: View {
                 }
                 
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-                Label("Version " + (appVersion ?? ""), systemImage: "slider.horizontal.3")
+                Label("Version " + (appVersion ?? ""), systemImage: "gear.badge.checkmark")
             }
             .navigationTitle("Settings")
             .listStyle(.grouped)
