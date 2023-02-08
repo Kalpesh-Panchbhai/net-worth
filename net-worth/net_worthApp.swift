@@ -11,20 +11,23 @@ import GoogleSignIn
 
 @main
 struct net_worthApp: App {
-    let persistenceController = PersistenceController.shared
 
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     @AppStorage("signIn") var isSignIn = false
+    @AppStorage("onboardingCompleted") var onboardingCompleted = false
     
     var body: some Scene {
         WindowGroup {
             if !isSignIn {
                 LoginScreen()
-                    .environment(\.managedObjectContext, persistenceController.container.viewContext)
-            } else {
+                if !onboardingCompleted && isSignIn {
+                    OnboardingView()
+                }
+            } else if !onboardingCompleted && isSignIn {
+                OnboardingView()
+            } else if onboardingCompleted && isSignIn {
                 AuthenticationView()
-                    .environment(\.managedObjectContext, persistenceController.container.viewContext)
             }
         }
     }

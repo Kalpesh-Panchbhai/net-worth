@@ -15,7 +15,14 @@ struct LoginScreen: View {
     @State var password: String = ""
     
     var body: some View {
-        VStack {
+        ZStack {
+            
+            RadialGradient(gradient: Gradient(colors: [Color(#colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1)), Color(#colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1))]),
+                           center: .topLeading,
+                           startRadius: 5,
+                           endRadius: UIScreen.main.bounds.height)
+            .ignoresSafeArea()
+            
             VStack {
                 LoginHeader()
                 
@@ -25,12 +32,6 @@ struct LoginScreen: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 100, height: 100)
                         .frame(height: 100)
-                }
-                .padding(.horizontal,100)
-                .padding(.vertical,100)
-                .background {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(.black)
                 }
                 
                 GoogleSiginBtn {
@@ -68,8 +69,6 @@ struct LoginScreen: View {
 
                 }
             }
-            .padding(.top, 52)
-            Spacer()
         }
     }
 }
