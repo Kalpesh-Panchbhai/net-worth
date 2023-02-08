@@ -52,25 +52,23 @@ struct SettingsView: View {
                     Label("Delete Account & Data", systemImage: "xmark.bin")
                 }).confirmationDialog("Are you sure?",
                                       isPresented: $isPresentingDataAndAccountDeletionConfirmation) {
-                                      Button("Delete all data and account?", role: .destructive) {
-                                          deleteAccountAndData()
-                                      }
-                                    }
+                    Button("Delete all data and account?", role: .destructive) {
+                        deleteAccountAndData()
+                    }
+                }.foregroundColor(.red)
                 Button(action: {
                     isPresentingLogoutConfirm.toggle()
                 }, label: {
                     Label("Logout", systemImage: "rectangle.portrait.and.arrow.right")
                 }).confirmationDialog("Are you sure?",
                                       isPresented: $isPresentingLogoutConfirm) {
-                                      Button("Logout?", role: .destructive) {
-                                          logoutUser()
-                                      }
-                                    }
-                
-                Spacer()
+                    Button("Logout?", role: .destructive) {
+                        logoutUser()
+                    }
+                }
                 
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-                Label("Version " + (appVersion ?? ""), systemImage: "version")
+                Label("Version " + (appVersion ?? ""), systemImage: "slider.horizontal.3")
             }
             .navigationTitle("Settings")
             .listStyle(.grouped)
@@ -85,7 +83,7 @@ struct SettingsView: View {
             SearchBar(text: $searchTerm, placeholder: "Search currency")
             ForEach(filterCurrencyList, id: \.self) { (data) in
                 defaultCurrencyPickerRightVersionView(currency: data)
-                .tag(data)
+                    .tag(data)
             }
         }
         .onChange(of: searchTerm) { (data) in
