@@ -13,13 +13,25 @@ struct OnboardingView: View {
     let transition: AnyTransition = .asymmetric(
         insertion: .move(edge: .trailing),
         removal: .move(edge: .leading))
-    @State var onboardingState: Int = 0
+    @State private var onboardingState: Int = 0
     @State private var currenySelected: Currency = Currency()
     @State private var filterCurrencyList = CurrencyList().currencyList
     private var currencyList = CurrencyList().currencyList
+    @State private var isAuthenticationRequired: Bool = false
+    
+    @State private var mutualFundNotification: Bool = false
+    @State private var equityNotification: Bool = false
+    @State private var etfNotification: Bool = false
+    @State private var cryptoCurrencyNotification: Bool = false
+    @State private var futureNotification: Bool = false
+    @State private var optionNotification: Bool = false
+    @State private var creditCardNotification: Bool = false
+    @State private var loanNotification: Bool = false
+    @State private var otherNotification: Bool = false
     
     private var settingsController = SettingsController()
-
+    private var notificationController = NotificationController()
+    
     @State var alertTitle: String = ""
     @State var showAlert: Bool = false
     
@@ -40,11 +52,17 @@ struct OnboardingView: View {
                 case 1:
                     selectDefaultCurrencySection
                         .transition(transition)
+                case 2:
+                    enableFaceID
+                        .transition(transition)
+                case 3:
+                    enableNotification
+                        .transition(transition)
                 default:
                     MainScreenView()
                 }
             }
-            if(onboardingState <= 1) {
+            if(onboardingState <= 3) {
                 VStack {
                     Spacer()
                     bottomView
@@ -58,17 +76,11 @@ struct OnboardingView: View {
     }
 }
 
-struct OnboardingView_Previews: PreviewProvider {
-    static var previews: some View {
-        OnboardingView()
-    }
-}
-
 // MARK: COMPONENTS
 extension OnboardingView {
     
     private var bottomView: some View {
-        Text(onboardingState == 1 ? "FINISHED" : "NEXT")
+        Text(onboardingState == 3 ? "FINISHED" : "NEXT")
             .font(.headline)
             .foregroundColor(.purple)
             .frame(height: 55)
@@ -83,11 +95,13 @@ extension OnboardingView {
     private var welcomeSection: some View {
         VStack(spacing: 40) {
             Spacer()
-            Image(systemName: "heart.text.square.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 200, height: 200)
-                .foregroundColor(.white)
+            HStack {
+                Image("net-worth-icon")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 100, height: 100)
+                    .frame(height: 100)
+            }
             Text("Net Worth")
                 .font(.largeTitle)
                 .fontWeight(.semibold)
@@ -139,6 +153,96 @@ extension OnboardingView {
         }
         .pickerStyle(.menu)
     }
+    
+    private var enableFaceID: some View {
+        VStack(spacing: 40) {
+            Spacer()
+            Text("Setup Face ID")
+                .font(.largeTitle)
+                .fontWeight(.semibold)
+                .foregroundColor(.white)
+            
+            Toggle(isOn: $isAuthenticationRequired, label: {
+                Label("Require Face ID", systemImage: "faceid")
+            }).onChange(of: isAuthenticationRequired) { newValue in
+                settingsController.setAuthentication(newValue: newValue)
+            }
+            Spacer()
+            Spacer()
+        }
+        .multilineTextAlignment(.center)
+        .padding(30)
+    }
+    
+    private var enableNotification: some View {
+        VStack() {
+            Text("Setup Notifications")
+                .font(.largeTitle)
+                .fontWeight(.semibold)
+                .foregroundColor(.white)
+            
+            Toggle(isOn: $mutualFundNotification, label: {
+                Text("Mutual Funds")
+            }).onChange(of: mutualFundNotification) { newValue in
+                notificationController.setNotification(newValue: newValue, accountType: "MUTUALFUND")
+            }
+            
+            Toggle(isOn: $equityNotification, label: {
+                Text("Equity")
+            }).onChange(of: equityNotification) { newValue in
+                notificationController.setNotification(newValue: newValue, accountType: "EQUITY")
+            }
+            
+            Toggle(isOn: $etfNotification, label: {
+                Text("ETF")
+            }).onChange(of: etfNotification) { newValue in
+                notificationController.setNotification(newValue: newValue, accountType: "ETF")
+            }
+
+            Toggle(isOn: $cryptoCurrencyNotification, label: {
+                Text("Cryptocurrency")
+            }).onChange(of: cryptoCurrencyNotification) { newValue in
+                notificationController.setNotification(newValue: newValue, accountType: "CRYPTOCURRENCY")
+            }
+
+            Toggle(isOn: $futureNotification, label: {
+                Text("Future")
+            })
+            .onChange(of: futureNotification) { newValue in
+                notificationController.setNotification(newValue: newValue, accountType: "FUTURE")
+            }
+
+            Toggle(isOn: $optionNotification, label: {
+                Text("Option")
+            })
+            .onChange(of: optionNotification) { newValue in
+                notificationController.setNotification(newValue: newValue, accountType: "OPTION")
+            }
+
+            Toggle(isOn: $creditCardNotification, label: {
+                Text("Credit Card")
+            })
+            .onChange(of: creditCardNotification) { newValue in
+                notificationController.setNotification(newValue: newValue, accountType: "Credit Card")
+            }
+
+            Toggle(isOn: $loanNotification, label: {
+                Text("Loan")
+            })
+            .onChange(of: loanNotification) { newValue in
+                notificationController.setNotification(newValue: newValue, accountType: "Loan")
+            }
+
+            Toggle(isOn: $otherNotification, label: {
+                Text("Other")
+            })
+            .onChange(of: otherNotification) { newValue in
+                notificationController.setNotification(newValue: newValue, accountType: "Other")
+            }
+        }
+        .multilineTextAlignment(.center)
+        .padding(30)
+    }
 }
 
 // MARK: FUNCTIONS
@@ -156,7 +260,7 @@ extension OnboardingView {
             break
         }
         
-        if onboardingState == 1 {
+        if onboardingState == 3 {
             signIn()
         } else {
             withAnimation(.spring()) {
