@@ -51,7 +51,7 @@ struct SettingsView: View {
                         
                     }
                     .frame(minWidth: 0, maxWidth: .infinity)
-                    .frame(height: 150)
+                    .frame(height: 180)
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
                 }
@@ -93,7 +93,7 @@ struct SettingsView: View {
                 Label("Version " + (appVersion ?? ""), systemImage: "gear.badge.checkmark")
             }
             .navigationTitle("Settings")
-            .listStyle(.grouped)
+            .listStyle(.insetGrouped)
         }
         .fullScreenCover(isPresented: $logout, content: {
             LoginScreen()
