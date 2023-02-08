@@ -23,14 +23,12 @@ struct AccountDetailsNavigationLinkView: View {
     @State private var selectedTabIndex = 0
     
     @ObservedObject var accountViewModel : AccountViewModel
-    @ObservedObject private var financeListViewModel: FinanceListViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
-    init(id: String, accountViewModel: AccountViewModel, financeListViewModel: FinanceListViewModel) {
+    init(id: String, accountViewModel: AccountViewModel) {
         self.id = id
         self.accountViewModel = accountViewModel
-        self.financeListViewModel = financeListViewModel
     }
     
     var body: some View {
@@ -45,7 +43,7 @@ struct AccountDetailsNavigationLinkView: View {
             .navigationBarTitleDisplayMode(NavigationBarItem.TitleDisplayMode.inline)
             .navigationBarTitle(self.accountViewModel.account.accountName)
             if(selectedTabIndex == 0) {
-                AccountDetailsView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel)
+                AccountDetailsView(accountViewModel: accountViewModel)
             }else {
                 AccountHistoryView(accountViewModel: accountViewModel)
             }
@@ -138,12 +136,6 @@ struct AccountDetailsNavigationLinkView: View {
             Task.init {
                 await accountViewModel.getAccount(id: id)
                 await accountViewModel.getAccountTransactionList(id: id)
-                await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
-            }
-        }
-        .refreshable {
-            Task {
-                await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
             }
         }
         .padding(.top)

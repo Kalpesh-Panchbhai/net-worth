@@ -10,7 +10,6 @@ import SwiftUI
 struct AccountUngroupedView: View {
     
     @ObservedObject var accountViewModel : AccountViewModel
-    @ObservedObject var financeListViewModel : FinanceListViewModel
     
     var selection : Binding<Set<Account>>
     
@@ -18,9 +17,8 @@ struct AccountUngroupedView: View {
     
     var accountController = AccountController()
     
-    init(accountViewModel: AccountViewModel, financeListViewModel: FinanceListViewModel, selection: Binding<Set<Account>>, searchKeyWord: Binding<String>) {
+    init(accountViewModel: AccountViewModel, selection: Binding<Set<Account>>, searchKeyWord: Binding<String>) {
         self.accountViewModel = accountViewModel
-        self.financeListViewModel = financeListViewModel
         self.selection = selection
         self.searchKeyWord = searchKeyWord
     }
@@ -39,7 +37,7 @@ struct AccountUngroupedView: View {
         VStack {
             List(selection: selection) {
                 ForEach(searchResults, id: \.self) { account in
-                    NavigationLink(destination: AccountDetailsNavigationLinkView(id: account.id!, accountViewModel: accountViewModel, financeListViewModel: financeListViewModel), label: {
+                    NavigationLink(destination: AccountDetailsNavigationLinkView(id: account.id!, accountViewModel: accountViewModel), label: {
                         HStack{
                             VStack {
                                 Text(account.accountName)
@@ -49,7 +47,7 @@ struct AccountUngroupedView: View {
                                     .foregroundColor(.gray)
                             }
                             Spacer()
-                            AccountFinanceView(account: account, financeListViewModel: financeListViewModel)
+                            AccountFinanceView(account: account)
                         }
                         .foregroundColor(Color.blue)
                         .padding()
