@@ -43,17 +43,17 @@ struct SettingsView: View {
                             .frame(width: 100, height: 100)
     
                         Text(Auth.auth().currentUser?.displayName ?? "")
-                            .foregroundColor(Color.blue)
+                            .font(.system(size: 25))
+                            .bold()
                         Text(Auth.auth().currentUser?.email ?? "")
-//                            .foregroundColor(Color.red)
+                            .font(.system(size: 15))
+                            .foregroundColor(Color.gray)
                         
                     }
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .frame(height: 150)
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
-                    // rgb get from screenshot of List in Sketch
-//                    .background(Color(red: 242/255, green: 242/255, blue: 247/255))
                 }
                 Toggle(isOn: $isAuthenticationRequired, label: {
                     Label("Require Face ID", systemImage: "faceid")
