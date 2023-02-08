@@ -11,6 +11,7 @@ import GoogleSignIn
 
 struct SettingsView: View {
     
+    @State private var profilePhoto = UIImage()
     @State private var isAuthenticationRequired: Bool
     @State private var logout =  false
     @State private var isPresentingDataAndAccountDeletionConfirmation = false
@@ -36,8 +37,7 @@ struct SettingsView: View {
             List{
                 Section() {
                     VStack() {
-                        Image(systemName: "person.fill")
-                            .data(url: (Auth.auth().currentUser?.photoURL)!)
+                        Image(uiImage: profilePhoto)
                             .clipShape(Circle())
                             .shadow(color: .white, radius: 3)
                             .frame(width: 100, height: 100)
@@ -95,16 +95,28 @@ struct SettingsView: View {
             .navigationTitle("Settings")
             .listStyle(.insetGrouped)
         }
+        .onAppear {
+            Task.init {
+                profilePhoto = await fetchProfilePhoto()
+            }
+        }
         .fullScreenCover(isPresented: $logout, content: {
             LoginScreen()
         })
     }
     
-    func getUserProfile() -> Image {
-        let imageUrl = Auth.auth().currentUser?.photoURL?.absoluteString
-        print(imageUrl!)
-        return Image(imageUrl!)
+    func fetchProfilePhoto() async -> UIImage {
+        do {
+            let (data, _) = try await URLSession.shared.data(from: (Auth.auth().currentUser?.photoURL)!)
+            if let image = UIImage(data: data) {
+                return image
+            }
+        } catch {
+            print(error)
+        }
+        return UIImage()
     }
+    
     var defaultCurrencyPicker: some View {
         Picker("Default Currency", selection: $currenySelected) {
             SearchBar(text: $searchTerm, placeholder: "Search currency")
