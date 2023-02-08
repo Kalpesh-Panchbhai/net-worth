@@ -236,7 +236,7 @@ struct AccountView: View {
                     if(editMode == .inactive) {
                         let balance = accountViewModel.totalBalance
                         VStack {
-                            Text("Total Balance: \(SettingsController().getDefaultCurrency().code) \(balance.totalChange.withCommas(decimalPlace: 2))")
+                            Text("Total Balance: \(SettingsController().getDefaultCurrency().code) \(balance.currentValue.withCommas(decimalPlace: 2))")
                                 .foregroundColor(.blue)
                                 .font(.title2)
                                 .frame(maxWidth: .infinity, alignment: .trailing)

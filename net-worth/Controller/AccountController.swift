@@ -126,6 +126,24 @@ class AccountController {
         return accountTransactionList
     }
     
+    public func getLastTwoAccountTransactionList(id: String) async throws -> [AccountTransaction] {
+        var accountTransactionList = [AccountTransaction]()
+        accountTransactionList = try await getAccountCollection()
+            .document(id)
+            .collection(ConstantUtils.accountTransactionCollectionName)
+            .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
+            .limit(to: 2)
+            .getDocuments()
+            .documents
+            .map { doc in
+                return AccountTransaction(id: doc.documentID,
+                                          timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
+                                          balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0)
+            }
+        
+        return accountTransactionList
+    }
+    
     
     public func fetchTotalBalance() async throws -> BalanceModel {
         
@@ -135,40 +153,46 @@ class AccountController {
         
         return try await withThrowingTaskGroup(of: BalanceModel.self) { group in
             
-            var balance = BalanceModel()
+            var balance = BalanceModel(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
             
             for account in accounts {
                 if(!(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other")) {
                     group.addTask {
-                        var balanceModel = BalanceModel(totalChange: 1.0, oneDayChange: 1.0)
+                        var balanceModel = BalanceModel()
                         if(account.currency != SettingsController().getDefaultCurrency().code) {
-                            var financeDetailModel = FinanceDetailModel()
-                            financeDetailModel = try await FinanceController().getSymbolDetails(accountCurrency: account.currency)
-                            let regularMarketPrice = financeDetailModel.regularMarketPrice ?? 1.0
-                            let chartPreviousClose = financeDetailModel.chartPreviousClose ?? 1.0
-                            balanceModel.totalChange = regularMarketPrice
-                            balanceModel.oneDayChange = chartPreviousClose
+                            let financeDetailModel = try await self.financeController.getSymbolDetails(accountCurrency: account.currency)
+                            balanceModel.currentValue = financeDetailModel.regularMarketPrice ?? 0.0
+                            balanceModel.previousDayValue = financeDetailModel.chartPreviousClose ?? 0.0
                         }
-                        let financeDetailModel = try await FinanceController().getSymbolDetails(symbol: account.symbol)
-                        balanceModel.totalChange = balanceModel.totalChange * (financeDetailModel.regularMarketPrice ?? 1.0 ) * account.totalShares
-                        balanceModel.oneDayChange = balanceModel.oneDayChange * (financeDetailModel.chartPreviousClose ?? 1.0) * account.totalShares
-                        balanceModel.oneDayChange = balanceModel.totalChange - balanceModel.oneDayChange
+                        let financeDetailModel = try await self.financeController.getSymbolDetails(symbol: account.symbol)
+                        balanceModel.currentValue = balanceModel.currentValue * account.totalShares * (financeDetailModel.regularMarketPrice ?? 1.0)
+                        balanceModel.previousDayValue = balanceModel.previousDayValue * account.totalShares * (financeDetailModel.chartPreviousClose ?? 1.0)
+                        balanceModel.oneDayChange = balanceModel.currentValue - balanceModel.previousDayValue
                         return balanceModel
                     }
                 } else {
                     group.addTask {
-                        var currentRate = BalanceModel(totalChange: 1.0, oneDayChange: 0.0)
+                        var balanceModel = BalanceModel()
                         if(account.currency != SettingsController().getDefaultCurrency().code) {
-                            currentRate.totalChange = try await FinanceController().getSymbolDetails(accountCurrency: account.currency).regularMarketPrice ?? 1.0
+                            let financeDetailModel =  try await self.financeController.getSymbolDetails(accountCurrency: account.currency)
+                            balanceModel.currentValue = financeDetailModel.regularMarketPrice ?? 0.0
+                            balanceModel.previousDayValue = financeDetailModel.chartPreviousClose ?? 0.0
                         }
-                        currentRate.totalChange = account.currentBalance * currentRate.totalChange
-                        return currentRate
+                        let accountTransaction = try await self.getLastTwoAccountTransactionList(id: account.id!)
+                        balanceModel.currentValue = balanceModel.currentValue * account.currentBalance
+                        if(accountTransaction.count > 1) {
+                            balanceModel.previousDayValue = balanceModel.previousDayValue * accountTransaction[1].balanceChange
+                        } else {
+                            balanceModel.previousDayValue = balanceModel.previousDayValue * account.currentBalance
+                        }
+                        balanceModel.oneDayChange = balanceModel.currentValue - balanceModel.previousDayValue
+                        return balanceModel
                     }
                 }
             }
             
             for try await taskResult in group {
-                balance.totalChange += taskResult.totalChange
+                balance.currentValue += taskResult.currentValue
                 balance.oneDayChange += taskResult.oneDayChange
             }
             

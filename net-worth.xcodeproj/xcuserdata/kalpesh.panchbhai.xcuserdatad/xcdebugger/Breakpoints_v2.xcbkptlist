@@ -7,95 +7,112 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "E6DBD978-F15F-451C-9103-53F14D2EADA4"
+            uuid = "CA695D8D-6A24-41E1-A54A-7889A3AFC1EB"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "net-worth/View/AccountView/UpdateBalanceAccountView.swift"
+            filePath = "net-worth/Controller/AccountController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
-            landmarkName = "body"
-            landmarkType = "24">
+            startingLineNumber = "175"
+            endingLineNumber = "175"
+            landmarkName = "fetchTotalBalance()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "E7C0D53B-F3EA-40C8-A951-8F129663CFBE"
+            uuid = "9ABDD4AE-EED9-4527-AA7F-969128E2F498"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "net-worth/View/AccountView/AccountDetailsNavigationLinkView.swift"
+            filePath = "net-worth/Controller/AccountController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137"
-            landmarkName = "body"
-            landmarkType = "24">
-            <Locations>
-               <Location
-                  uuid = "E7C0D53B-F3EA-40C8-A951-8F129663CFBE - 8f307252b0153e7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for closure #1 @Sendable () async -&gt; () in closure #4 () -&gt; () in net_worth.AccountDetailsNavigationLinkView.body.getter : some"
-                  moduleName = "net-worth"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/View/AccountView/AccountDetailsNavigationLinkView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "135"
-                  endingLineNumber = "135"
-                  offsetFromSymbolStart = "108">
-               </Location>
-               <Location
-                  uuid = "E7C0D53B-F3EA-40C8-A951-8F129663CFBE - b6bde00d66d77cc"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(2) await resume partial function for closure #1 @Sendable () async -&gt; () in closure #4 () -&gt; () in net_worth.AccountDetailsNavigationLinkView.body.getter : some"
-                  moduleName = "net-worth"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/View/AccountView/AccountDetailsNavigationLinkView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "135"
-                  endingLineNumber = "135"
-                  offsetFromSymbolStart = "44">
-               </Location>
-               <Location
-                  uuid = "E7C0D53B-F3EA-40C8-A951-8F129663CFBE - 9f4265e31fe63715"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for closure #1 @Sendable () async -&gt; () in closure #4 () -&gt; () in net_worth.AccountDetailsNavigationLinkView.body.getter : some"
-                  moduleName = "net-worth"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/View/AccountView/AccountDetailsNavigationLinkView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "135"
-                  endingLineNumber = "135"
-                  offsetFromSymbolStart = "88">
-               </Location>
-            </Locations>
+            startingLineNumber = "195"
+            endingLineNumber = "195"
+            landmarkName = "fetchTotalBalance()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "985A1B1D-FF5F-41B8-874E-86F3A25F85C1"
+            uuid = "AF9C6720-EBB9-4D75-A467-CEC63C1C048C"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "net-worth/View/AccountView/AccountDetailsNavigationLinkView.swift"
+            filePath = "net-worth/Controller/AccountController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
-            landmarkName = "init(id:accountViewModel:)"
+            startingLineNumber = "178"
+            endingLineNumber = "178"
+            landmarkName = "fetchTotalBalance()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "06AAA077-482D-4229-80DA-79CEBCA3452C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "net-worth/Controller/AccountController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "182"
+            endingLineNumber = "182"
+            landmarkName = "fetchTotalBalance()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B75AF59F-904A-4C7E-B73D-EF0D2E8EE06D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "net-worth/Controller/AccountController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "161"
+            endingLineNumber = "161"
+            landmarkName = "fetchTotalBalance()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "943A594B-5F9D-4B61-8173-0B2FD012331C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "net-worth/Controller/AccountController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
+            landmarkName = "fetchTotalBalance()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "79B18DB0-EB9B-4023-9B11-FB93EA841471"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "net-worth/Controller/AccountController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "168"
+            endingLineNumber = "168"
+            landmarkName = "fetchTotalBalance()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

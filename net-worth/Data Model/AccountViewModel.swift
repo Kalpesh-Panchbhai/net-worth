@@ -13,7 +13,7 @@ class AccountViewModel: ObservableObject {
     @Published var accountList = [Account]()
     @Published var account = Account()
     @Published var accountTransactionList = [AccountTransaction]()
-    @Published var totalBalance = BalanceModel()
+    @Published var totalBalance = BalanceModel(currentValue: 0.0)
     @Published var grouping: Grouping = .accountType
     
     var originalAccountList = [Account]()

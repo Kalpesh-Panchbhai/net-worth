@@ -9,7 +9,9 @@ import Foundation
 
 struct BalanceModel {
     
-    var totalChange: Double = 0.0
+    var currentValue: Double = 1.0
+    
+    var previousDayValue: Double = 1.0
     
     var oneDayChange: Double = 0.0
     
