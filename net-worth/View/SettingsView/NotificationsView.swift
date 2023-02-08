@@ -91,7 +91,7 @@ struct NotificationsView: View {
                 }
             }
             .navigationTitle("Notifications")
-            .listStyle(.inset)
+            .listStyle(.insetGrouped)
         }
     }
 }
