@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Firebase
+import GoogleSignIn
 
 struct SettingsView: View {
     
@@ -33,6 +34,27 @@ struct SettingsView: View {
     var body: some View {
         NavigationView(){
             List{
+                Section() {
+                    VStack() {
+                        Image(systemName: "person.fill")
+                            .data(url: (Auth.auth().currentUser?.photoURL)!)
+                            .clipShape(Circle())
+                            .shadow(color: .white, radius: 3)
+                            .frame(width: 100, height: 100)
+    
+                        Text(Auth.auth().currentUser?.displayName ?? "")
+                            .foregroundColor(Color.blue)
+                        Text(Auth.auth().currentUser?.email ?? "")
+//                            .foregroundColor(Color.red)
+                        
+                    }
+                    .frame(minWidth: 0, maxWidth: .infinity)
+                    .frame(height: 150)
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
+                    // rgb get from screenshot of List in Sketch
+//                    .background(Color(red: 242/255, green: 242/255, blue: 247/255))
+                }
                 Toggle(isOn: $isAuthenticationRequired, label: {
                     Label("Require Face ID", systemImage: "faceid")
                 }).onChange(of: isAuthenticationRequired) { newValue in
@@ -78,6 +100,11 @@ struct SettingsView: View {
         })
     }
     
+    func getUserProfile() -> Image {
+        let imageUrl = Auth.auth().currentUser?.photoURL?.absoluteString
+        print(imageUrl!)
+        return Image(imageUrl!)
+    }
     var defaultCurrencyPicker: some View {
         Picker("Default Currency", selection: $currenySelected) {
             SearchBar(text: $searchTerm, placeholder: "Search currency")
