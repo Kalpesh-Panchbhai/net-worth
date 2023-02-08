@@ -13,12 +13,13 @@ struct AccountDetailsView: View {
     
     private var totalValue: Double = 0.0
     
-    @ObservedObject private var financeListViewModel = FinanceListViewModel()
+    @ObservedObject private var financeListViewModel: FinanceListViewModel
     
     @ObservedObject private var accountViewModel: AccountViewModel
     
-    init(accountViewModel: AccountViewModel) {
+    init(accountViewModel: AccountViewModel, financeListViewModel: FinanceListViewModel) {
         self.accountViewModel = accountViewModel
+        self.financeListViewModel = financeListViewModel
         if(self.accountViewModel.account.accountType == "Saving" || self.accountViewModel.account.accountType == "Credit Card" || self.accountViewModel.account.accountType == "Loan") {
             self.currentRate = 0.0
             self.totalValue = 0.0
@@ -78,16 +79,6 @@ struct AccountDetailsView: View {
                         field(labelName: "Payment Reminder", value: "Off")
                     }
                 }
-            }
-        }
-        .onAppear {
-            Task {
-                await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
-            }
-        }
-        .refreshable {
-            Task {
-                await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
             }
         }
     }

@@ -10,14 +10,16 @@ import SwiftUI
 struct AccountGroupedView: View {
     
     @ObservedObject var accountViewModel : AccountViewModel
+    @ObservedObject var financeListViewModel : FinanceListViewModel
     
     var selection : Binding<Set<Account>>
     var searchKeyWord : Binding<String>
     
     var accountController = AccountController()
     
-    init(accountViewModel: AccountViewModel, selection: Binding<Set<Account>>, searchKeyWord: Binding<String>) {
+    init(accountViewModel: AccountViewModel, financeListViewModel: FinanceListViewModel, selection: Binding<Set<Account>>, searchKeyWord: Binding<String>) {
         self.accountViewModel = accountViewModel
+        self.financeListViewModel = financeListViewModel
         self.selection = selection
         self.searchKeyWord = searchKeyWord
     }
@@ -28,7 +30,7 @@ struct AccountGroupedView: View {
                 ForEach(accountViewModel.sectionHeaders, id: \.self) { key in
                     Section(header: Text(key).font(.title3).foregroundColor(.blue)) {
                         ForEach(accountViewModel.sectionContent(key: key, searchKeyword: searchKeyWord.wrappedValue), id: \.self) { account in
-                            NavigationLink(destination: AccountDetailsNavigationLinkView(id: account.id!, accountViewModel: accountViewModel), label: {
+                            NavigationLink(destination: AccountDetailsNavigationLinkView(id: account.id!, accountViewModel: accountViewModel, financeListViewModel: financeListViewModel), label: {
                                  HStack{
                                      VStack {
                                          Text(account.accountName)
@@ -38,7 +40,7 @@ struct AccountGroupedView: View {
                                              .foregroundColor(.gray)
                                      }
                                      Spacer()
-                                     AccountFinanceView(account: account)
+                                     AccountFinanceView(account: account, financeListViewModel: financeListViewModel)
                                  }
                                  .foregroundColor(Color.blue)
                                  .padding()

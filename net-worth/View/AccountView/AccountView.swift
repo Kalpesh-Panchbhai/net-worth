@@ -19,8 +19,6 @@ struct AccountView: View {
     
     private var financeController = FinanceController()
     
-    @StateObject var financeListViewModel = FinanceListViewModel()
-    
     @State var searchKeyWord: String = ""
     
     @State var isOpen: Bool = false
@@ -30,6 +28,8 @@ struct AccountView: View {
     @State private var showingSelectDefaultCurrencyAlert = false
     
     @StateObject var accountViewModel = AccountViewModel()
+    
+    @StateObject var financeListViewModel = FinanceListViewModel()
     
     var searchResults: [Account] {
         accountViewModel.accountList.filter { account in
@@ -49,9 +49,9 @@ struct AccountView: View {
         NavigationView {
             VStack {
                 if groupBy {
-                    AccountGroupedView(accountViewModel: accountViewModel, selection: $selection, searchKeyWord: $searchKeyWord)
+                    AccountGroupedView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel, selection: $selection, searchKeyWord: $searchKeyWord)
                 } else {
-                    AccountUngroupedView(accountViewModel: accountViewModel, selection: $selection, searchKeyWord: $searchKeyWord)
+                    AccountUngroupedView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel, selection: $selection, searchKeyWord: $searchKeyWord)
                 }
             }
             .halfSheet(showSheet: $isOpen) {
@@ -316,7 +316,7 @@ struct AccountFinanceView: View {
     
     var account: Account
     
-    @StateObject private var financeListViewModel = FinanceListViewModel()
+    @ObservedObject var financeListViewModel : FinanceListViewModel
     
     var body: some View {
         VStack {
