@@ -29,7 +29,7 @@ struct AccountView: View {
     
     @StateObject var accountViewModel = AccountViewModel()
     
-    @StateObject var financeListViewModel = FinanceListViewModel()
+    @ObservedObject var financeListViewModel = FinanceListViewModel()
     
     var searchResults: [Account] {
         accountViewModel.accountList.filter { account in
