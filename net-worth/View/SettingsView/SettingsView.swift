@@ -88,7 +88,6 @@ struct SettingsView: View {
                 .tag(data)
             }
         }
-        .edgesIgnoringSafeArea(.all)
         .onChange(of: searchTerm) { (data) in
             if(!data.isEmpty) {
                 filterCurrencyList = currencyList.filter({
