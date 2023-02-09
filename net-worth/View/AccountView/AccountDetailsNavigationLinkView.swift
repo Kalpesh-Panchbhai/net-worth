@@ -23,7 +23,7 @@ struct AccountDetailsNavigationLinkView: View {
     @State private var selectedTabIndex = 0
     
     @ObservedObject var accountViewModel : AccountViewModel
-    @ObservedObject private var financeListViewModel = FinanceListViewModel()
+    @StateObject private var financeListViewModel = FinanceListViewModel()
     
     @Environment(\.presentationMode) var presentationMode
     
