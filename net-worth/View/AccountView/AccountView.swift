@@ -55,6 +55,12 @@ struct AccountView: View {
             .halfSheet(showSheet: $isOpen) {
                 NewAccountView(accountViewModel: accountViewModel)
             }
+            .onAppear {
+                Task.init {
+                    await accountViewModel.getAccountList()
+                    await accountViewModel.getTotalBalance()
+                }
+            }
             .refreshable {
                 Task.init {
                     await accountViewModel.getAccountList()
@@ -280,12 +286,6 @@ struct AccountView: View {
                 Text("Option").searchCompletion("Option")
                 Text("ETF").searchCompletion("ETF")
                 Text("Other").searchCompletion("Other")
-            }
-        }
-        .onAppear {
-            Task.init {
-                await accountViewModel.getAccountList()
-                await accountViewModel.getTotalBalance()
             }
         }
     }

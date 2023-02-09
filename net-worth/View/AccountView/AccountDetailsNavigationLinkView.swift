@@ -73,10 +73,6 @@ struct AccountDetailsNavigationLinkView: View {
                                 accountViewModel.account.paymentDate = paymentDate
                                 accountController.updateAccount(account: accountViewModel.account)
                                 NotificationController().enableNotification(account: accountViewModel.account)
-                                Task.init {
-                                    await accountViewModel.getAccountList()
-                                    await accountViewModel.getAccount(id: account.id!)
-                                }
                             }
                             .pickerStyle(MenuPickerStyle())
                         } else {
@@ -86,10 +82,6 @@ struct AccountDetailsNavigationLinkView: View {
                                 accountController.updateAccount(account: accountViewModel.account)
                                 NotificationController().removeNotification(id: accountViewModel.account.id!)
                                 paymentDate = 0
-                                Task.init {
-                                    await accountViewModel.getAccountList()
-                                    await accountViewModel.getAccount(id: account.id!)
-                                }
                             }, label: {
                                 Label("Disable Notification", systemImage: "speaker.slash.fill")
                             })
@@ -105,10 +97,6 @@ struct AccountDetailsNavigationLinkView: View {
                                 accountController.updateAccount(account: accountViewModel.account)
                                 NotificationController().removeNotification(id: accountViewModel.account.id!)
                                 NotificationController().enableNotification(account: accountViewModel.account)
-                                Task.init {
-                                    await accountViewModel.getAccountList()
-                                    await accountViewModel.getAccount(id: account.id!)
-                                }
                             }
                             .pickerStyle(MenuPickerStyle())
                             
@@ -116,10 +104,6 @@ struct AccountDetailsNavigationLinkView: View {
                     }
                     Button(action: {
                         accountController.deleteAccount(account: accountViewModel.account)
-                        Task.init {
-                            await accountViewModel.getAccountList()
-                            await accountViewModel.getTotalBalance()
-                        }
                         self.presentationMode.wrappedValue.dismiss()
                     }, label: {
                         Label("Delete", systemImage: "trash")
@@ -135,11 +119,9 @@ struct AccountDetailsNavigationLinkView: View {
         }
         .onAppear {
             Task.init {
-                print(account.symbol)
                 await financeListViewModel.getSymbolDetails(symbol: account.symbol)
                 await accountViewModel.getAccount(id: account.id!)
                 await accountViewModel.getAccountTransactionList(id: account.id!)
-                print(account)
             }
         }.refreshable {
             Task {
