@@ -10,7 +10,7 @@ import SlidingTabView
 
 struct AccountDetailsNavigationLinkView: View {
     
-    private var id: String
+    private var account: Account
     
     @State private var paymentDate = 0
     @State var dates = Array(1...28)
@@ -23,11 +23,12 @@ struct AccountDetailsNavigationLinkView: View {
     @State private var selectedTabIndex = 0
     
     @ObservedObject var accountViewModel : AccountViewModel
+    @ObservedObject private var financeListViewModel = FinanceListViewModel()
     
     @Environment(\.presentationMode) var presentationMode
     
-    init(id: String, accountViewModel: AccountViewModel) {
-        self.id = id
+    init(account: Account, accountViewModel: AccountViewModel) {
+        self.account = account
         self.accountViewModel = accountViewModel
     }
     
@@ -43,7 +44,7 @@ struct AccountDetailsNavigationLinkView: View {
             .navigationBarTitleDisplayMode(NavigationBarItem.TitleDisplayMode.inline)
             .navigationBarTitle(self.accountViewModel.account.accountName)
             if(selectedTabIndex == 0) {
-                AccountDetailsView(accountViewModel: accountViewModel)
+                AccountDetailsView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel)
             }else {
                 AccountHistoryView(accountViewModel: accountViewModel)
             }
@@ -74,7 +75,7 @@ struct AccountDetailsNavigationLinkView: View {
                                 NotificationController().enableNotification(account: accountViewModel.account)
                                 Task.init {
                                     await accountViewModel.getAccountList()
-                                    await accountViewModel.getAccount(id: id)
+                                    await accountViewModel.getAccount(id: account.id!)
                                 }
                             }
                             .pickerStyle(MenuPickerStyle())
@@ -87,7 +88,7 @@ struct AccountDetailsNavigationLinkView: View {
                                 paymentDate = 0
                                 Task.init {
                                     await accountViewModel.getAccountList()
-                                    await accountViewModel.getAccount(id: id)
+                                    await accountViewModel.getAccount(id: account.id!)
                                 }
                             }, label: {
                                 Label("Disable Notification", systemImage: "speaker.slash.fill")
@@ -106,7 +107,7 @@ struct AccountDetailsNavigationLinkView: View {
                                 NotificationController().enableNotification(account: accountViewModel.account)
                                 Task.init {
                                     await accountViewModel.getAccountList()
-                                    await accountViewModel.getAccount(id: id)
+                                    await accountViewModel.getAccount(id: account.id!)
                                 }
                             }
                             .pickerStyle(MenuPickerStyle())
@@ -134,8 +135,16 @@ struct AccountDetailsNavigationLinkView: View {
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getAccount(id: id)
-                await accountViewModel.getAccountTransactionList(id: id)
+                print(account.symbol)
+                await financeListViewModel.getSymbolDetails(symbol: account.symbol)
+                await accountViewModel.getAccount(id: account.id!)
+                await accountViewModel.getAccountTransactionList(id: account.id!)
+                print(account)
+            }
+        }.refreshable {
+            Task {
+                await financeListViewModel.getSymbolDetails(symbol: account.symbol)
+                print(account)
             }
         }
         .padding(.top)

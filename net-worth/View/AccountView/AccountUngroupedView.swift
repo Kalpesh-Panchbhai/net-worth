@@ -37,7 +37,7 @@ struct AccountUngroupedView: View {
         VStack {
             List(selection: selection) {
                 ForEach(searchResults, id: \.self) { account in
-                    NavigationLink(destination: AccountDetailsNavigationLinkView(id: account.id!, accountViewModel: accountViewModel), label: {
+                    NavigationLink(destination: AccountDetailsNavigationLinkView(account: account, accountViewModel: accountViewModel), label: {
                         HStack{
                             VStack {
                                 Text(account.accountName)
