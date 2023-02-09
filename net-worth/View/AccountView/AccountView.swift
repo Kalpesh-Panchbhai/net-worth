@@ -19,8 +19,6 @@ struct AccountView: View {
     
     private var financeController = FinanceController()
     
-    @StateObject var financeListViewModel = FinanceListViewModel()
-    
     @State var searchKeyWord: String = ""
     
     @State var isOpen: Bool = false
