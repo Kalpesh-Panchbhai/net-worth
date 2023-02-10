@@ -33,7 +33,7 @@ struct AccountDetailExpendableButton: View {
                 }){
                     Image(systemName: "square.and.pencil")
                         .resizable()
-                        .frame(width: 35, height: 25)
+                        .frame(width: 25, height: 25)
                         .padding(18)
                 }
                 .background(.black)
@@ -47,7 +47,7 @@ struct AccountDetailExpendableButton: View {
                 }) {
                     Image(systemName: "trash.fill")
                         .resizable()
-                        .frame(width: 35, height: 25)
+                        .frame(width: 25, height: 25)
                         .padding(18)
                 }
                 .background(.black)
@@ -94,7 +94,7 @@ struct AccountDetailExpendableButton: View {
                         }) {
                             Image(systemName: "speaker.slash.fill")
                                 .resizable()
-                                .frame(width: 35, height: 25)
+                                .frame(width: 25, height: 25)
                                 .padding(18)
                         }
                         .background(.black)
@@ -108,7 +108,7 @@ struct AccountDetailExpendableButton: View {
                         }){
                             Image(systemName: "calendar.circle.fill")
                                 .resizable()
-                                .frame(width: 35, height: 25)
+                                .frame(width: 25, height: 25)
                                 .padding(18)
                         }
                         .background(.black)
@@ -132,8 +132,8 @@ struct AccountDetailExpendableButton: View {
             }) {
                 Image(systemName: "chevron.up")
                     .resizable()
-                    .frame(width: 25, height: 15)
-                    .padding(22)
+                    .frame(width: 25, height: 25)
+                    .padding(18)
             }
             .background(.blue)
             .foregroundColor(.white)

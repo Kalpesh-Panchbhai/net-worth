@@ -35,7 +35,8 @@ struct AccountDetailView: View {
                 HStack {
                     Spacer()
                     AccountDetailExpendableButton(show: $show, accountViewModel: accountViewModel, financeListViewModel: financeListViewModel, presentationMode: _presentationMode, account: account)
-                }.padding([.bottom,.trailing],30)
+                }.padding([.trailing],30)
+                    .padding(.bottom,80)
             }
         }
         .onAppear {

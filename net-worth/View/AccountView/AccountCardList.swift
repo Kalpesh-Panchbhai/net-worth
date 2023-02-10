@@ -9,7 +9,8 @@ import SwiftUI
 
 struct AccountCardList: View {
     
-    @State private var isOpen: Bool = false
+    @State private var isOpen = false
+    @State private var show = false
     @State private var selectedAccount = Account()
     
     @StateObject var accountViewModel = AccountViewModel()
@@ -22,51 +23,52 @@ struct AccountCardList: View {
                                startRadius: 5,
                                endRadius: UIScreen.main.bounds.height)
                 .ignoresSafeArea()
-                ScrollView(.vertical, showsIndicators: false) {
-                    LazyVStack {
-                        ForEach(accountViewModel.sectionHeaders, id: \.self) { accountType in
-                            HStack {
-                                Text(accountType.uppercased())
-                                    .bold()
-                                    .foregroundColor(.white)
-                                Spacer()
-                                if(accountViewModel.sectionContent(key: accountType, searchKeyword: "").count > 5) {
-                                    NavigationLink(destination: {
-                                        VStack {
-                                            List {
-                                                ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: ""), id: \.self) { account in
-                                                    Text(account.accountName)
+                VStack {
+                    ScrollView(.vertical, showsIndicators: false) {
+                        LazyVStack {
+                            ForEach(accountViewModel.sectionHeaders, id: \.self) { accountType in
+                                HStack {
+                                    Text(accountType.uppercased())
+                                        .bold()
+                                        .foregroundColor(.white)
+                                    Spacer()
+                                    if(accountViewModel.sectionContent(key: accountType, searchKeyword: "").count > 5) {
+                                        NavigationLink(destination: {
+                                            VStack {
+                                                List {
+                                                    ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: ""), id: \.self) { account in
+                                                        Text(account.accountName)
+                                                    }
                                                 }
                                             }
-                                        }
-                                    }, label: {
-                                        Label("See more", systemImage: "").foregroundColor(.green).bold()
-                                    })
-                                }
-                            }
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                LazyHStack {
-                                    ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: ""), id: \.self) { account in
-                                        NavigationLink(destination: AccountDetailView(account: account)) {
-                                            AccountCardView(account: account)
-                                                .shadow(color: Color.black, radius: 3)
-                                        }
+                                        }, label: {
+                                            Label("See more", systemImage: "").foregroundColor(.green).bold()
+                                        })
                                     }
-                                    .padding(2)
+                                }
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    LazyHStack {
+                                        ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: ""), id: \.self) { account in
+                                            NavigationLink(destination: AccountDetailView(account: account)) {
+                                                AccountCardView(account: account)
+                                                    .shadow(color: Color.black, radius: 3)
+                                            }
+                                        }
+                                        .padding(2)
+                                    }
                                 }
                             }
                         }
+                        .padding(10)
                     }
-                    .padding(10)
                 }
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        
-                    }) {
-                        Text("+")
-                    }
+                
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        AccountCardListExpendableButton(accountViewModel: accountViewModel)
+                    }.padding([.bottom,.trailing],30)
                 }
             }
         }
