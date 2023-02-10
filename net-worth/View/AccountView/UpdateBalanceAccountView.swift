@@ -38,7 +38,6 @@ struct UpdateBalanceAccountView: View {
             .toolbar {
                 ToolbarItem {
                     Button(action: {
-                        print(accountViewModel.account)
                         var updatedAccount = accountViewModel.account
                         amount = isPlus ? amount : amount * -1
                         if(accountViewModel.account.accountType == "Saving" || accountViewModel.account.accountType == "Credit Card" || accountViewModel.account.accountType == "Loan" || accountViewModel.account.accountType == "Other") {

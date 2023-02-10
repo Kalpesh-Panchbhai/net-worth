@@ -105,7 +105,6 @@ struct CardView: View {
         }
         .onAppear {
             Task.init {
-                print(account.accountName)
                 await financeListViewModel.getSymbolDetails(symbol: account.symbol)
                 await accountViewModel.getLastTwoAccountTransactionList(id: account.id ?? "")
             }
