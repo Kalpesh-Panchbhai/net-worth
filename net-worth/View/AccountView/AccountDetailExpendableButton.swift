@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ExpendableButton: View {
+struct AccountDetailExpendableButton: View {
     
     @Binding var show: Bool
     @ObservedObject var accountViewModel: AccountViewModel
@@ -21,7 +21,7 @@ struct ExpendableButton: View {
     var account: Account
     
     @State var isNewTransactionViewOpen = false
-    @State  var paymentDate = 0
+    @State var paymentDate = 0
     
     var body: some View {
         VStack(spacing: 20) {
@@ -100,6 +100,7 @@ struct ExpendableButton: View {
                         .background(.black)
                         .foregroundColor(.blue)
                         .clipShape(Circle())
+                        
                         Picker(selection: $paymentDate, content: {
                             ForEach(dates, id: \.self) {
                                 Text("\($0.formatted(.number.grouping(.never)))").tag($0)
@@ -121,13 +122,13 @@ struct ExpendableButton: View {
                             self.show.toggle()
                         }
                         .pickerStyle(MenuPickerStyle())
-                        
                     }
                 }
             }
             
             Button(action: {
                 self.show.toggle()
+                paymentDate = accountViewModel.account.paymentDate
             }) {
                 Image(systemName: "chevron.up")
                     .resizable()

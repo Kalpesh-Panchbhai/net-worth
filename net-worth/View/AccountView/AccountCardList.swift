@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CardList: View {
+struct AccountCardList: View {
     
     @State private var isOpen: Bool = false
     @State private var selectedAccount = Account()
@@ -31,18 +31,24 @@ struct CardList: View {
                                     .foregroundColor(.white)
                                 Spacer()
                                 if(accountViewModel.sectionContent(key: accountType, searchKeyword: "").count > 5) {
-                                    Button(action: {
-                                        
+                                    NavigationLink(destination: {
+                                        VStack {
+                                            List {
+                                                ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: ""), id: \.self) { account in
+                                                    Text(account.accountName)
+                                                }
+                                            }
+                                        }
                                     }, label: {
-                                        Label("See more", systemImage: "")
-                                    }).foregroundColor(.green)
+                                        Label("See more", systemImage: "").foregroundColor(.green).bold()
+                                    })
                                 }
                             }
                             ScrollView(.horizontal, showsIndicators: false) {
                                 LazyHStack {
                                     ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: ""), id: \.self) { account in
                                         NavigationLink(destination: AccountDetailView(account: account)) {
-                                            CardView(account: account)
+                                            AccountCardView(account: account)
                                                 .shadow(color: Color.black, radius: 3)
                                         }
                                     }

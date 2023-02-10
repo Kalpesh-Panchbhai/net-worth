@@ -13,7 +13,7 @@ struct MainScreenView: View {
         NavigationStack {
             ZStack {
                 TabView() {
-                    CardList()
+                    AccountCardList()
                         .tabItem{
                             Image(systemName: "star.fill")
                             Text("Accounts")

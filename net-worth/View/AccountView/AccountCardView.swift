@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CardView: View {
+struct AccountCardView: View {
     
     private var account: Account
     
