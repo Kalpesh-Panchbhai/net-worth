@@ -15,14 +15,14 @@ struct UpdateBalanceAccountView: View {
     
     @State var isPlus = true;
     
-    @State private var showingAlert = false
-    
     @Environment(\.dismiss) var dismiss
     
     @ObservedObject var accountViewModel: AccountViewModel
+    @ObservedObject var financeListViewModel: FinanceListViewModel
     
-    init(accountViewModel: AccountViewModel){
+    init(accountViewModel: AccountViewModel, financeListViewModel: FinanceListViewModel){
         self.accountViewModel = accountViewModel
+        self.financeListViewModel = financeListViewModel
     }
     
     var body: some View {
@@ -38,7 +38,7 @@ struct UpdateBalanceAccountView: View {
             .toolbar {
                 ToolbarItem {
                     Button(action: {
-                        showingAlert.toggle()
+                        print(accountViewModel.account)
                         var updatedAccount = accountViewModel.account
                         amount = isPlus ? amount : amount * -1
                         if(accountViewModel.account.accountType == "Saving" || accountViewModel.account.accountType == "Credit Card" || accountViewModel.account.accountType == "Loan" || accountViewModel.account.accountType == "Other") {
@@ -52,22 +52,16 @@ struct UpdateBalanceAccountView: View {
                         Task.init {
                             await accountViewModel.getAccount(id: accountViewModel.account.id!)
                             await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
+                            await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
                         }
+                        dismiss()
                     }, label: {
                         Text("Update")
-                    })
-                    .alert("Account Balance has been updated!", isPresented: $showingAlert, actions: {
-                        Button("OK", role: .cancel) {
-                            dismiss()
-                        }
-                    }, message: {
-                        Text("Account Name : " + self.accountViewModel.account.accountName)
                     })
                 }
                 
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        showingAlert.toggle()
                         var updatedAccount = accountViewModel.account
                         amount = isPlus ? amount : amount * -1
                         if(accountViewModel.account.accountType == "Saving" || accountViewModel.account.accountType == "Credit Card" || accountViewModel.account.accountType == "Loan" || accountViewModel.account.accountType == "Other") {
@@ -81,16 +75,11 @@ struct UpdateBalanceAccountView: View {
                         Task.init {
                             await accountViewModel.getAccount(id: accountViewModel.account.id!)
                             await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
+                            await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
                         }
+                        dismiss()
                     }, label: {
                         Text("Add")
-                    })
-                    .alert("Transaction has been added!", isPresented: $showingAlert, actions: {
-                        Button("OK", role: .cancel) {
-                            dismiss()
-                        }
-                    }, message: {
-                        Text("Account Name : " + self.accountViewModel.account.accountName)
                     })
                 }
             }

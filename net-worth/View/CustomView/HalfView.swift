@@ -48,7 +48,7 @@ class CustomHostingController<Content: View> : UIHostingController<Content> {
     override func viewDidLoad() {
         if let presentationController = presentationController as? UISheetPresentationController {
             presentationController.detents = [
-                .large()
+                .medium()
             ]
             presentationController.prefersGrabberVisible = true
             presentationController.preferredCornerRadius = 30

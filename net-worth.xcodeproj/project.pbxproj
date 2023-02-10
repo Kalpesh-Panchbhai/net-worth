@@ -51,8 +51,14 @@
 		7D921C66298684790014AC9E /* +View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D921C65298684790014AC9E /* +View.swift */; };
 		7D9DF69F2939B80400BE4C9D /* CommonUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9DF69E2939B80400BE4C9D /* CommonUtils.swift */; };
 		7D9EA38929940451005245EF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D9EA38829940451005245EF /* GoogleService-Info.plist */; };
+		7DA63A492995FACA00568FCA /* AccountDetailCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA63A482995FACA00568FCA /* AccountDetailCardView.swift */; };
+		7DA63A4B2996017D00568FCA /* AccountDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA63A4A2996017D00568FCA /* AccountDetailView.swift */; };
 		7DA80405291E177700570DCB /* AccountDetailsNavigationLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA80404291E177700570DCB /* AccountDetailsNavigationLinkView.swift */; };
 		7DAC70AC29408D3E0033050C /* HalfView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAC70AB29408D3E0033050C /* HalfView.swift */; };
+		7DB2B0A4299515B800E4B891 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2B0A3299515B800E4B891 /* CardView.swift */; };
+		7DB2B0A6299518A100E4B891 /* CardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2B0A5299518A100E4B891 /* CardList.swift */; };
+		7DB2B0A82995638700E4B891 /* TransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2B0A72995638700E4B891 /* TransactionView.swift */; };
+		7DB2B0AA2995639D00E4B891 /* TransactionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2B0A92995639D00E4B891 /* TransactionHeader.swift */; };
 		7DC97A24292216BB003F69D4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A23292216BB003F69D4 /* SettingsView.swift */; };
 		7DC97A2629221990003F69D4 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A2529221990003F69D4 /* SettingsController.swift */; };
 		7DC97A28292236FB003F69D4 /* IncomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A27292236FB003F69D4 /* IncomeView.swift */; };
@@ -137,8 +143,14 @@
 		7D921C65298684790014AC9E /* +View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+View.swift"; sourceTree = "<group>"; };
 		7D9DF69E2939B80400BE4C9D /* CommonUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonUtils.swift; sourceTree = "<group>"; };
 		7D9EA38829940451005245EF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		7DA63A482995FACA00568FCA /* AccountDetailCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailCardView.swift; sourceTree = "<group>"; };
+		7DA63A4A2996017D00568FCA /* AccountDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailView.swift; sourceTree = "<group>"; };
 		7DA80404291E177700570DCB /* AccountDetailsNavigationLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailsNavigationLinkView.swift; sourceTree = "<group>"; };
 		7DAC70AB29408D3E0033050C /* HalfView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HalfView.swift; sourceTree = "<group>"; };
+		7DB2B0A3299515B800E4B891 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		7DB2B0A5299518A100E4B891 /* CardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardList.swift; sourceTree = "<group>"; };
+		7DB2B0A72995638700E4B891 /* TransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionView.swift; sourceTree = "<group>"; };
+		7DB2B0A92995639D00E4B891 /* TransactionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHeader.swift; sourceTree = "<group>"; };
 		7DC97A23292216BB003F69D4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		7DC97A2529221990003F69D4 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		7DC97A27292236FB003F69D4 /* IncomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeView.swift; sourceTree = "<group>"; };
@@ -237,7 +249,6 @@
 			isa = PBXGroup;
 			children = (
 				7D433CF529385DBB007FA625 /* FinanceController.swift */,
-				7DFC6D032938E38E002F847C /* FinanceListViewModel.swift */,
 			);
 			path = Finance;
 			sourceTree = "<group>";
@@ -329,6 +340,7 @@
 			isa = PBXGroup;
 			children = (
 				7D79FA5B291B7431004A2ECF /* net_worth.xcdatamodeld */,
+				7DFC6D032938E38E002F847C /* FinanceListViewModel.swift */,
 				7D79FA59291B7431004A2ECF /* Persistence.swift */,
 				7D85D031298D2ADD0019F85E /* IncomeViewModel.swift */,
 				7DF9DB92298F98A800831494 /* AccountViewModel.swift */,
@@ -353,6 +365,7 @@
 		7D79FA88291B9C6E004A2ECF /* View */ = {
 			isa = PBXGroup;
 			children = (
+				7DB2B0A2299515A800E4B891 /* NewAccountView */,
 				7D730E0F299375AD0002E0ED /* OnboardingView */,
 				7D921C58298682FB0014AC9E /* LoginView */,
 				7DAC70A8294086890033050C /* CustomView */,
@@ -393,6 +406,19 @@
 				7DAC70AB29408D3E0033050C /* HalfView.swift */,
 			);
 			path = CustomView;
+			sourceTree = "<group>";
+		};
+		7DB2B0A2299515A800E4B891 /* NewAccountView */ = {
+			isa = PBXGroup;
+			children = (
+				7DB2B0A3299515B800E4B891 /* CardView.swift */,
+				7DB2B0A5299518A100E4B891 /* CardList.swift */,
+				7DB2B0A72995638700E4B891 /* TransactionView.swift */,
+				7DB2B0A92995639D00E4B891 /* TransactionHeader.swift */,
+				7DA63A482995FACA00568FCA /* AccountDetailCardView.swift */,
+				7DA63A4A2996017D00568FCA /* AccountDetailView.swift */,
+			);
+			path = NewAccountView;
 			sourceTree = "<group>";
 		};
 		7DCC0AA0292663A1006CBF36 /* Notification */ = {
@@ -672,11 +698,13 @@
 				7DEC3B802938A38B002E9C8B /* FinanceDetailModel.swift in Sources */,
 				7D596278294105A40008A6B9 /* BalanceModel.swift in Sources */,
 				7D921C66298684790014AC9E /* +View.swift in Sources */,
+				7DA63A492995FACA00568FCA /* AccountDetailCardView.swift in Sources */,
 				7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */,
 				7D7AA909298D8DA2004C9776 /* UserController.swift in Sources */,
 				7D79FA5D291B7431004A2ECF /* net_worth.xcdatamodeld in Sources */,
 				7D3636FB292F9CCB0013B4E5 /* NotificationsView.swift in Sources */,
 				7DC97A28292236FB003F69D4 /* IncomeView.swift in Sources */,
+				7DB2B0A4299515B800E4B891 /* CardView.swift in Sources */,
 				7DE42FC4293524E500D4DA0A /* DateExtension.swift in Sources */,
 				7DE42FC22934FC1800D4DA0A /* AccountHistoryView.swift in Sources */,
 				7DC97A2629221990003F69D4 /* SettingsController.swift in Sources */,
@@ -695,10 +723,12 @@
 				7DE42FC02934F69200D4DA0A /* UpdateBalanceAccountView.swift in Sources */,
 				7D9DF69F2939B80400BE4C9D /* CommonUtils.swift in Sources */,
 				7DC97A2A29223989003F69D4 /* IncomeController.swift in Sources */,
+				7DB2B0A82995638700E4B891 /* TransactionView.swift in Sources */,
 				7DC97A24292216BB003F69D4 /* SettingsView.swift in Sources */,
 				7D237BEF292B6F1400DEF91D /* AccountDetailsView.swift in Sources */,
 				7DCFE4C8292CB92900C940F0 /* StringExtension.swift in Sources */,
 				7DF9DB93298F98A800831494 /* AccountViewModel.swift in Sources */,
+				7DB2B0A6299518A100E4B891 /* CardList.swift in Sources */,
 				7D921C60298683760014AC9E /* LoginHeader.swift in Sources */,
 				7DF1E9C8292A43C8003D030E /* AccountModel.swift in Sources */,
 				7DCFE4CA292D036500C940F0 /* SearchBar.swift in Sources */,
@@ -710,6 +740,8 @@
 				7D237BED292B672900DEF91D /* DoubleExtension.swift in Sources */,
 				7D921C5A298683100014AC9E /* CustomButton.swift in Sources */,
 				7D42520F291BE95C0001C41C /* AuthenticationView.swift in Sources */,
+				7DB2B0AA2995639D00E4B891 /* TransactionHeader.swift in Sources */,
+				7DA63A4B2996017D00568FCA /* AccountDetailView.swift in Sources */,
 				7D79FA51291B7430004A2ECF /* net_worthApp.swift in Sources */,
 				7DAC70AC29408D3E0033050C /* HalfView.swift in Sources */,
 			);

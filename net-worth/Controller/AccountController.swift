@@ -60,6 +60,7 @@ class AccountController {
     public func getAccountList() async throws -> [Account] {
         var accountList = [Account]()
         accountList = try await getAccountCollection()
+            .order(by: ConstantUtils.accountKeyAccountName)
             .getDocuments()
             .documents
             .map { doc in

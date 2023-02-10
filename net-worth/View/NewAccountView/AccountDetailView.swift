@@ -1,64 +1,47 @@
 //
-//  AccountDetailsView.swift
+//  AccountDetailView.swift
 //  net-worth
 //
-//  Created by Kalpesh Panchbhai on 11/11/22.
+//  Created by Kalpesh Panchbhai on 10/02/23.
 //
 
 import SwiftUI
-import SlidingTabView
 
-struct AccountDetailsNavigationLinkView: View {
+struct AccountDetailView: View {
     
     private var account: Account
-    
-    @State private var paymentDate = 0
-    @State var dates = Array(1...28)
-    
-    @State private var isTransactionOpen: Bool = false
-    @State private var isDatePickerOpen: Bool = false
+    private var dates = Array(1...28)
     
     private var accountController = AccountController()
     
-    @State private var selectedTabIndex = 0
+    @State private var isNewTransactionViewOpen = false
+    @State private var paymentDate = 0
     
-    @ObservedObject var accountViewModel : AccountViewModel
-    @StateObject private var financeListViewModel = FinanceListViewModel()
+    @StateObject var accountViewModel = AccountViewModel()
+    @StateObject var financeListViewModel = FinanceListViewModel()
     
     @Environment(\.presentationMode) var presentationMode
     
-    init(account: Account, accountViewModel: AccountViewModel) {
+    init(account: Account) {
         self.account = account
-        self.accountViewModel = accountViewModel
     }
     
     var body: some View {
         VStack {
-            SlidingTabView(selection: self.$selectedTabIndex
-                           , tabs: ["Details", "History"]
-                           , animation: .spring()
-                           , activeAccentColor: .blue
-                           , inactiveAccentColor: .gray
-                           , selectionBarColor: .blue
-                           , selectionBarBackgroundHeight: 3)
-            .navigationBarTitleDisplayMode(NavigationBarItem.TitleDisplayMode.inline)
-            .navigationBarTitle(self.accountViewModel.account.accountName)
-            if(selectedTabIndex == 0) {
-                AccountDetailsView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel)
-            }else {
-                AccountHistoryView(accountViewModel: accountViewModel)
-            }
-            Spacer()
+            AccountDetailCardView(financeListViewModel: financeListViewModel, accountViewModel: accountViewModel)
+                .cornerRadius(20)
+                .shadow(color: Color.gray, radius: 3)
+            TransactionsView(accountViewModel: accountViewModel)
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
                     Button(action: {
-                        self.isTransactionOpen.toggle()
+                        self.isNewTransactionViewOpen.toggle()
                     }, label: {
-                        Label("Update Balance", systemImage: "square.and.pencil")
+                        Label("Add Transaction", systemImage: "square.and.pencil")
                     })
-                    if(self.accountViewModel.account.accountType != "Saving") {
+                    if(accountViewModel.account.accountType != "Saving") {
                         if(!accountViewModel.account.paymentReminder) {
                             Picker(selection: $paymentDate, content: {
                                 Text("Select a date").tag(0)
@@ -114,21 +97,17 @@ struct AccountDetailsNavigationLinkView: View {
             }
             }
         }
-        .halfSheet(showSheet: $isTransactionOpen) {
-//            UpdateBalanceAccountView(accountViewModel: accountViewModel)
+        .halfSheet(showSheet: $isNewTransactionViewOpen) {
+            UpdateBalanceAccountView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel)
         }
         .onAppear {
             Task.init {
                 await financeListViewModel.getSymbolDetails(symbol: account.symbol)
                 await accountViewModel.getAccount(id: account.id!)
                 await accountViewModel.getAccountTransactionList(id: account.id!)
-            }
-        }.refreshable {
-            Task {
-                await financeListViewModel.getSymbolDetails(symbol: account.symbol)
-                print(account)
+                await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
             }
         }
-        .padding(.top)
+        .background(.black)
     }
 }
