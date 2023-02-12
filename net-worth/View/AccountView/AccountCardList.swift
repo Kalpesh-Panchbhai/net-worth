@@ -31,12 +31,16 @@ struct AccountCardList: View {
                                     Text(accountType.uppercased())
                                         .bold()
                                         .foregroundColor(.white)
+                                        .font(.system(size: 15))
                                     Spacer()
                                     if(accountViewModel.sectionContent(key: accountType, searchKeyword: "").count > 5) {
                                         NavigationLink(destination: {
                                             AccountListView(accountType: accountType)
                                         }, label: {
-                                            Label("See more", systemImage: "").foregroundColor(.green).bold()
+                                            Label("See more", systemImage: "")
+                                                .foregroundColor(.green)
+                                                .bold()
+                                                .font(.system(size: 15))
                                         })
                                     }
                                 }
@@ -48,8 +52,9 @@ struct AccountCardList: View {
                                                     .shadow(color: Color.black, radius: 3)
                                             }
                                         }
-                                        .padding(2)
+                                        .padding(10)
                                     }
+                                    .padding(5)
                                 }
                             }
                         }
