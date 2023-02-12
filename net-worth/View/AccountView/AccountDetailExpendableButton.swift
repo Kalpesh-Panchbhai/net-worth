@@ -143,6 +143,6 @@ struct AccountDetailExpendableButton: View {
         .halfSheet(showSheet: $isNewTransactionViewOpen) {
             UpdateBalanceAccountView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel)
         }
-        .animation(.spring())
+        .animation(.spring(), value: show)
     }
 }

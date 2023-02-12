@@ -9,7 +9,8 @@ import SwiftUI
 
 struct AccountCardList: View {
     
-    @State private var isOpen = false
+    @State private var isNewAccountTypeAcountViewOpen = false
+    @State private var accountTypeSelected = "None"
     @State private var show = false
     @State private var selectedAccount = Account()
     @State private var searchText = ""
@@ -47,13 +48,29 @@ struct AccountCardList: View {
                                 }
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     LazyHStack {
+                                        VStack(spacing: 100) {
+                                            NewAccountCardView()
+                                                .onTapGesture(perform: {
+                                                    if(accountType == "Credit Card" || accountType == "Saving" || accountType == "Loan" || accountType == "Other") {
+                                                        self.accountTypeSelected = accountType
+                                                    } else {
+                                                        self.accountTypeSelected = "Symbol"
+                                                    }
+                                                    print(accountTypeSelected)
+                                                    isNewAccountTypeAcountViewOpen.toggle()
+                                                })
+                                            Spacer()
+                                        }
                                         ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
-                                            NavigationLink(destination: AccountDetailView(account: account,accountViewModel:  accountViewModel)) {
-                                                AccountCardView(account: account)
-                                                    .shadow(color: Color.black, radius: 3)
+                                            VStack {
+                                                NavigationLink(destination: AccountDetailView(account: account,accountViewModel:  accountViewModel)) {
+                                                    AccountCardView(account: account)
+                                                        .shadow(color: Color.black, radius: 3)
+                                                }
                                             }
                                         }
                                         .padding(10)
+                                        
                                     }
                                     .padding(5)
                                 }
@@ -71,6 +88,10 @@ struct AccountCardList: View {
                     }.padding([.bottom,.trailing],30)
                 }
             }
+        }
+        .halfSheet(showSheet: $isNewAccountTypeAcountViewOpen) {
+            NewAccountView(accountType: accountTypeSelected, accountViewModel: accountViewModel)
+//            NewAccountView(accountViewModel: accountViewModel, accountType: <#T##String#>)
         }
         .searchable(text: $searchText)
         .onAppear {

@@ -9,42 +9,38 @@ import SwiftUI
 
 struct NewAccountView: View {
     
-    @State private var accountType: String = "None"
-    @State private var symbolType: String = "None"
-    @State private var accountName: String = ""
-    @State public var currenySelected: Currency = Currency()
-    private var currencyList = CurrencyList().currencyList
-    @State private var filterCurrencyList = CurrencyList().currencyList
-    @State private var currencyChanged = false
+    @State var accountType: String
+    @State var symbolType: String = "None"
+    @State var accountName: String = ""
+    @State var currenySelected: Currency = Currency()
+    var currencyList = CurrencyList().currencyList
+    @State  var filterCurrencyList = CurrencyList().currencyList
+    @State  var currencyChanged = false
     
-    @State private var financeModel = [FinanceModel]()
-    @State private var financeSelected = FinanceModel()
+    @State  var financeModel = [FinanceModel]()
+    @State  var financeSelected = FinanceModel()
     
     //Mutual fund and Stock fields
-    @State private var totalShares: Double = 0.0
-    @State private var currentRateShare: Double = 0.0
-    @State private var symbol: String = ""
+    @State  var totalShares: Double = 0.0
+    @State  var currentRateShare: Double = 0.0
+    @State  var symbol: String = ""
     
-    @State private var currentBalance: Double = 0.0
-    @State private var paymentReminder = false
-    @State private var paymentDate = 1
+    @State  var currentBalance: Double = 0.0
+    @State  var paymentReminder = false
+    @State  var paymentDate = 1
     @State var dates = Array(1...28)
     
     @State var isPlus = true
     
-    private var accountController = AccountController()
-    private var financeController = FinanceController()
+    var accountController = AccountController()
+    var financeController = FinanceController()
     
     @Environment(\.dismiss) var dismiss
     
-    @State private var searchTerm: String = ""
-    @StateObject private var financeListVM = FinanceListViewModel()
+    @State var searchTerm: String = ""
+    @StateObject var financeListVM = FinanceListViewModel()
     
     @ObservedObject var accountViewModel : AccountViewModel
-    
-    init(accountViewModel: AccountViewModel) {
-        self.accountViewModel = accountViewModel
-    }
     
     var body: some View {
         NavigationView {
@@ -150,7 +146,7 @@ struct NewAccountView: View {
             SearchBar(text: $searchTerm, placeholder: "Search currency")
             ForEach(filterCurrencyList, id: \.self) { (data) in
                 defaultCurrencyPickerRightVersionView(currency: data)
-                .tag(data)
+                    .tag(data)
             }
         }
         .edgesIgnoringSafeArea(.all)
@@ -313,7 +309,7 @@ struct NewAccountView: View {
             
             currentBalance = totalShares * currentRateShare
         }
-        .pickerStyle(.navigationLink)
+        .pickerStyle(.inline)
     }
 }
 
@@ -346,7 +342,7 @@ struct SymbolPickerRightVerticalViewer: View {
     var financeDetailModel: FinanceDetailModel
     
     @State private var valueType = ValueType.literal
-
+    
     var body: some View {
         Text((CurrencyList().getSymbolWithCode(code: financeDetailModel.symbol ?? "").symbol) + " " + (financeDetailModel.regularMarketPrice?.withCommas(decimalPlace: 4) ?? "0.0"))
             .frame(maxWidth: .infinity, alignment: .trailing)

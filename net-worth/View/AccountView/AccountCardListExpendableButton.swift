@@ -29,8 +29,8 @@ struct AccountCardListExpendableButton: View {
             .clipShape(Circle())
         }
         .halfSheet(showSheet: $isNewTransactionViewOpen) {
-            NewAccountView(accountViewModel: accountViewModel)
+            NewAccountView(accountType: "None", accountViewModel: accountViewModel)
         }
-        .animation(.spring())
+        .animation(.spring(), value: true)
     }
 }
