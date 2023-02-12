@@ -34,7 +34,7 @@ struct AccountCardList: View {
                                     Spacer()
                                     if(accountViewModel.sectionContent(key: accountType, searchKeyword: "").count > 5) {
                                         NavigationLink(destination: {
-                                            AccountListView(accountTypeAccountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
+                                            AccountListView(accountTypeAccountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""), accountViewModel: accountViewModel)
                                         }, label: {
                                             Label("See more", systemImage: "").foregroundColor(.green).bold()
                                         })
@@ -43,7 +43,7 @@ struct AccountCardList: View {
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     LazyHStack {
                                         ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: ""), id: \.self) { account in
-                                            NavigationLink(destination: AccountDetailView(account: account)) {
+                                            NavigationLink(destination: AccountDetailView(account: account,accountViewModel:  accountViewModel)) {
                                                 AccountCardView(account: account)
                                                     .shadow(color: Color.black, radius: 3)
                                             }

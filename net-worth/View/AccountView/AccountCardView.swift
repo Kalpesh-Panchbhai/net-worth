@@ -128,10 +128,10 @@ struct AccountCardView: View {
     }
     
     func getTotalChangeForNonSymbol() -> Double {
-        return accountViewModel.accountTransactionList.count > 1 ? (accountViewModel.accountTransactionList[0].balanceChange - accountViewModel.accountTransactionList[1].balanceChange) : 0.0
+        return accountViewModel.accountLastTwoTransactionList.count > 1 ? (accountViewModel.accountLastTwoTransactionList[0].balanceChange - accountViewModel.accountLastTwoTransactionList[1].balanceChange) : 0.0
     }
     
     func getOneDayPercentageChangeForNonSymbol() -> Double {
-        return accountViewModel.accountTransactionList.count > 1 ? ((getTotalChangeForNonSymbol() * 100 ) / accountViewModel.accountTransactionList[1].balanceChange) : 0.0
+        return accountViewModel.accountLastTwoTransactionList.count > 1 ? ((getTotalChangeForNonSymbol() * 100 ) / accountViewModel.accountLastTwoTransactionList[1].balanceChange) : 0.0
     }
 }

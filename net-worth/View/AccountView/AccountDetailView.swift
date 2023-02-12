@@ -13,13 +13,14 @@ struct AccountDetailView: View {
     
     @State private var show = false
     
-    @StateObject var accountViewModel = AccountViewModel()
+    @ObservedObject var accountViewModel: AccountViewModel
     @StateObject var financeListViewModel = FinanceListViewModel()
     
     @Environment(\.presentationMode) var presentationMode
     
-    init(account: Account) {
+    init(account: Account, accountViewModel: AccountViewModel) {
         self.account = account
+        self.accountViewModel = accountViewModel
     }
     
     var body: some View {

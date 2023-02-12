@@ -51,6 +51,7 @@ struct UpdateBalanceAccountView: View {
                         Task.init {
                             await accountViewModel.getAccount(id: accountViewModel.account.id!)
                             await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
+                            await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
                             await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
                         }
                         dismiss()
@@ -74,6 +75,7 @@ struct UpdateBalanceAccountView: View {
                         Task.init {
                             await accountViewModel.getAccount(id: accountViewModel.account.id!)
                             await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
+                            await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
                             await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
                         }
                         dismiss()

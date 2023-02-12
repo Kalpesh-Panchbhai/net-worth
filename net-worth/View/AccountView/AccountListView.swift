@@ -11,6 +11,8 @@ struct AccountListView: View {
     
     var accountTypeAccountList: [Account]
     
+    @ObservedObject var accountViewModel: AccountViewModel
+    
     var body: some View {
         ZStack {
             RadialGradient(gradient: Gradient(colors: [Color(#colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1)), Color(#colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1))]),
@@ -22,9 +24,9 @@ struct AccountListView: View {
                 LazyVStack {
                     ForEach(accountTypeAccountList, id: \.self) { account in
                         NavigationLink(destination: {
-                            AccountDetailView(account: account)
+                            AccountDetailView(account: account, accountViewModel: accountViewModel)
                         }, label: {
-                            AccountRowView(account: account)
+                            AccountRowView(account: account, accountViewModel: accountViewModel)
                                 .shadow(color: Color.black, radius: 3)
                             Divider()
                         })

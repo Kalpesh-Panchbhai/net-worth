@@ -12,10 +12,11 @@ struct AccountRowView: View {
     private var account: Account
     
     @StateObject var financeListViewModel = FinanceListViewModel()
-    @StateObject var accountViewModel =  AccountViewModel()
+    @ObservedObject var accountViewModel: AccountViewModel
     
-    init(account: Account) {
+    init(account: Account, accountViewModel: AccountViewModel) {
         self.account = account
+        self.accountViewModel = accountViewModel
     }
     
     var body: some View {
