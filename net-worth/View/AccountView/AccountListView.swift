@@ -31,8 +31,10 @@ struct AccountListView: View {
                             Divider()
                         })
                     }
+                    .padding(10)
                 }
             }
+            .padding(10)
         }
         .onAppear {
             Task.init {
