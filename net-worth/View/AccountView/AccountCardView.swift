@@ -30,6 +30,9 @@ struct AccountCardView: View {
                     Label("", systemImage: "bell.fill")
                         .foregroundColor(.white)
                         .font(.caption.bold())
+                    Text("\(account.paymentDate)")
+                        .foregroundColor(.white)
+                        .font(.caption.bold())
                 } else {
                     Label("", systemImage: "bell.slash.fill")
                         .foregroundColor(.white)

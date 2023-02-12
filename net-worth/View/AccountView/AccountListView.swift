@@ -9,9 +9,9 @@ import SwiftUI
 
 struct AccountListView: View {
     
-    var accountTypeAccountList: [Account]
+    var accountType: String
     
-    @ObservedObject var accountViewModel: AccountViewModel
+    @StateObject var accountViewModel = AccountViewModel()
     
     var body: some View {
         ZStack {
@@ -22,16 +22,21 @@ struct AccountListView: View {
             .ignoresSafeArea()
             ScrollView(.vertical) {
                 LazyVStack {
-                    ForEach(accountTypeAccountList, id: \.self) { account in
+                    ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: ""), id: \.self) { account in
                         NavigationLink(destination: {
                             AccountDetailView(account: account, accountViewModel: accountViewModel)
                         }, label: {
-                            AccountRowView(account: account, accountViewModel: accountViewModel)
+                            AccountRowView(account: account)
                                 .shadow(color: Color.black, radius: 3)
                             Divider()
                         })
                     }
                 }
+            }
+        }
+        .onAppear {
+            Task.init {
+                await accountViewModel.getAccountList()
             }
         }
         .background(Color.gray)

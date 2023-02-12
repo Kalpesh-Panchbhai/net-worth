@@ -12,22 +12,21 @@ struct AccountRowView: View {
     private var account: Account
     
     @StateObject var financeListViewModel = FinanceListViewModel()
-    @ObservedObject var accountViewModel: AccountViewModel
+    @StateObject var accountViewModel = AccountViewModel()
     
-    init(account: Account, accountViewModel: AccountViewModel) {
+    init(account: Account) {
         self.account = account
-        self.accountViewModel = accountViewModel
     }
     
     var body: some View {
         VStack(alignment: .leading) {
             Spacer()
             HStack {
-                Text(account.accountName)
+                Text(accountViewModel.account.accountName)
                     .foregroundColor(.white)
                     .font(.caption.bold())
                 Spacer()
-                if(account.paymentReminder) {
+                if(accountViewModel.account.paymentReminder) {
                     Label("", systemImage: "bell.fill")
                         .foregroundColor(.white)
                         .font(.caption.bold())
@@ -39,16 +38,16 @@ struct AccountRowView: View {
             }
             Spacer()
             HStack {
-                if(!account.symbol.isEmpty) {
-                    Text("\(account.totalShares.withCommas(decimalPlace: 2)) Units")
+                if(!accountViewModel.account.symbol.isEmpty) {
+                    Text("\(accountViewModel.account.totalShares.withCommas(decimalPlace: 2)) Units")
                         .foregroundColor(.white)
                         .font(.caption.bold())
                 }
                 Spacer()
-                Text(account.currency)
+                Text(accountViewModel.account.currency)
                     .foregroundColor(.white)
                     .font(.caption)
-                if(!account.symbol.isEmpty) {
+                if(!accountViewModel.account.symbol.isEmpty) {
                     Text("\(getCurrentBalanceForSymbol().withCommas(decimalPlace: 2))")
                         .foregroundColor(.white)
                         .font(.caption.bold())
@@ -60,13 +59,13 @@ struct AccountRowView: View {
             }
             Spacer()
             HStack {
-                if(account.paymentReminder) {
-                    Text("\(account.paymentDate)")
+                if(accountViewModel.account.paymentReminder) {
+                    Text("\(accountViewModel.account.paymentDate)")
                         .foregroundColor(.white)
                         .font(.caption.bold())
                 }
                 Spacer()
-                if(!account.symbol.isEmpty) {
+                if(!accountViewModel.account.symbol.isEmpty) {
                     if(getTotalChangeForSymbol() >= 0) {
                         Text("\(getTotalChangeForSymbol().withCommas(decimalPlace: 2))")
                             .foregroundColor(.green)
@@ -110,10 +109,11 @@ struct AccountRowView: View {
             }
         }
         .onAppear {
-            print(account.accountName)
             Task.init {
                 await financeListViewModel.getSymbolDetails(symbol: account.symbol)
-                await accountViewModel.getLastTwoAccountTransactionList(id: account.id ?? "")
+                await accountViewModel.getAccount(id: account.id!)
+                await accountViewModel.getAccountTransactionList(id: account.id!)
+                await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
             }
         }
         .padding(.horizontal)
@@ -122,11 +122,11 @@ struct AccountRowView: View {
     }
     
     func getTotalChangeForSymbol() -> Double {
-        return (financeListViewModel.financeDetailModel.oneDayChange ?? 0.0) * account.totalShares
+        return (financeListViewModel.financeDetailModel.oneDayChange ?? 0.0) * accountViewModel.account.totalShares
     }
     
     func getCurrentBalanceForSymbol() -> Double {
-        return (financeListViewModel.financeDetailModel.regularMarketPrice ?? 0.0) * account.totalShares
+        return (financeListViewModel.financeDetailModel.regularMarketPrice ?? 0.0) * accountViewModel.account.totalShares
     }
     
     func getOneDayPercentageChangeForSymbol() -> Double {

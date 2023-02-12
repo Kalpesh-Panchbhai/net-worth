@@ -34,7 +34,7 @@ struct AccountCardList: View {
                                     Spacer()
                                     if(accountViewModel.sectionContent(key: accountType, searchKeyword: "").count > 5) {
                                         NavigationLink(destination: {
-                                            AccountListView(accountTypeAccountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""), accountViewModel: accountViewModel)
+                                            AccountListView(accountType: accountType)
                                         }, label: {
                                             Label("See more", systemImage: "").foregroundColor(.green).bold()
                                         })
