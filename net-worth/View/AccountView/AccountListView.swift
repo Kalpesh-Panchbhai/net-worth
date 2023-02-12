@@ -11,6 +11,8 @@ struct AccountListView: View {
     
     var accountType: String
     
+    @State private var searchText = ""
+    
     @StateObject var accountViewModel = AccountViewModel()
     
     var body: some View {
@@ -22,7 +24,7 @@ struct AccountListView: View {
             .ignoresSafeArea()
             ScrollView(.vertical) {
                 LazyVStack {
-                    ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: ""), id: \.self) { account in
+                    ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
                         NavigationLink(destination: {
                             AccountDetailView(account: account, accountViewModel: accountViewModel)
                         }, label: {
@@ -36,6 +38,7 @@ struct AccountListView: View {
             }
             .padding(10)
         }
+        .searchable(text: $searchText)
         .onAppear {
             Task.init {
                 await accountViewModel.getAccountList()

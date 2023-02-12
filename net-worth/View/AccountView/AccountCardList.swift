@@ -12,6 +12,7 @@ struct AccountCardList: View {
     @State private var isOpen = false
     @State private var show = false
     @State private var selectedAccount = Account()
+    @State private var searchText = ""
     
     @StateObject var accountViewModel = AccountViewModel()
     
@@ -46,7 +47,7 @@ struct AccountCardList: View {
                                 }
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     LazyHStack {
-                                        ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: ""), id: \.self) { account in
+                                        ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
                                             NavigationLink(destination: AccountDetailView(account: account,accountViewModel:  accountViewModel)) {
                                                 AccountCardView(account: account)
                                                     .shadow(color: Color.black, radius: 3)
@@ -71,6 +72,7 @@ struct AccountCardList: View {
                 }
             }
         }
+        .searchable(text: $searchText)
         .onAppear {
             Task.init {
                 await accountViewModel.getAccountList()
