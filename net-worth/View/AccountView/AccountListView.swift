@@ -12,8 +12,12 @@ struct AccountListView: View {
     var accountType: String
     
     @State private var searchText = ""
+    @State private var isNewTransactionViewOpen = false
     
     @StateObject var accountViewModel = AccountViewModel()
+    @StateObject var financeListViewModel = FinanceListViewModel()
+    
+    var accountController = AccountController()
     
     var body: some View {
         ZStack {
@@ -30,6 +34,27 @@ struct AccountListView: View {
                         }, label: {
                             AccountRowView(account: account)
                                 .shadow(color: Color.black, radius: 3)
+                                .contextMenu {
+                                    Button(role: .destructive, action: {
+                                        accountController.deleteAccount(account: account)
+                                        Task.init {
+                                            await accountViewModel.getAccountList()
+                                            await accountViewModel.getTotalBalance()
+                                        }
+                                    }, label: {
+                                        Label("Delete", systemImage: "trash")
+                                    })
+                                    
+                                    Button {
+                                        print("New Transaction")
+                                        Task.init {
+                                            await accountViewModel.getAccount(id: account.id!)
+                                        }
+                                        isNewTransactionViewOpen.toggle()
+                                    } label: {
+                                        Label("New Transaction", systemImage: "square.and.pencil")
+                                    }
+                                }
                             Divider()
                         })
                     }
@@ -37,6 +62,9 @@ struct AccountListView: View {
                 }
             }
             .padding(10)
+        }
+        .halfSheet(showSheet: $isNewTransactionViewOpen) {
+            UpdateBalanceAccountView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel)
         }
         .searchable(text: $searchText)
         .onAppear {
