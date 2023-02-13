@@ -10,12 +10,18 @@ import SwiftUI
 struct AccountCardList: View {
     
     @State private var isNewAccountTypeAcountViewOpen = false
+    @State private var isNewTransactionViewOpen = false
     @State private var accountTypeSelected = "None"
     @State private var show = false
     @State private var selectedAccount = Account()
     @State private var searchText = ""
+    @State private var longPressedItem = 0
+    @State private var longPressedAccountType = ""
     
     @StateObject var accountViewModel = AccountViewModel()
+    @StateObject var financeListViewModel = FinanceListViewModel()
+    
+    private var accountController = AccountController()
     
     var body: some View {
         NavigationView {
@@ -60,11 +66,32 @@ struct AccountCardList: View {
                                                 })
                                             Spacer()
                                         }
-                                        ForEach(0..<((accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 5) ? 5 : accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count)) { i in
+                                        ForEach(0..<((accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 5) ? 5 : accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count), id: \.self) { i in
                                             VStack {
                                                 NavigationLink(destination: AccountDetailView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i],accountViewModel:  accountViewModel)) {
                                                     AccountCardView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i])
                                                         .shadow(color: Color.black, radius: 3)
+                                                        .contextMenu {
+                                                            Button(role: .destructive, action: {
+                                                                accountController.deleteAccount(account: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i])
+                                                                Task.init {
+                                                                    await accountViewModel.getAccountList()
+                                                                    await accountViewModel.getTotalBalance()
+                                                                }
+                                                            }, label: {
+                                                                Label("Delete", systemImage: "trash")
+                                                            })
+                                                            
+                                                            Button {
+                                                                print("New Transaction")
+                                                                Task.init {
+                                                                    await accountViewModel.getAccount(id: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].id!)
+                                                                }
+                                                                isNewTransactionViewOpen.toggle()
+                                                            } label: {
+                                                                Label("New Transaction", systemImage: "square.and.pencil")
+                                                            }
+                                                        }
                                                 }
                                             }
                                         }
@@ -87,6 +114,9 @@ struct AccountCardList: View {
                     }.padding([.bottom,.trailing],30)
                 }
             }
+        }
+        .halfSheet(showSheet: $isNewTransactionViewOpen) {
+            UpdateBalanceAccountView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel)
         }
         .halfSheet(showSheet: $isNewAccountTypeAcountViewOpen) {
             NewAccountView(accountType: accountTypeSelected, accountViewModel: accountViewModel)

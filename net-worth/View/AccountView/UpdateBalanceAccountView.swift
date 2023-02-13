@@ -53,6 +53,8 @@ struct UpdateBalanceAccountView: View {
                             await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
                             await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
                             await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
+                            await accountViewModel.getAccountList()
+                            await accountViewModel.getTotalBalance()
                         }
                         dismiss()
                     }, label: {
@@ -77,6 +79,8 @@ struct UpdateBalanceAccountView: View {
                             await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
                             await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
                             await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
+                            await accountViewModel.getAccountList()
+                            await accountViewModel.getTotalBalance()
                         }
                         dismiss()
                     }, label: {
