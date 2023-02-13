@@ -36,6 +36,13 @@ class AccountController {
         getAccountCollection().document(account.id!).delete()
     }
     
+    public func deleteAccounts() async throws {
+        let accountList = try await getAccountList()
+        for account in accountList {
+            deleteAccount(account: account)
+        }
+    }
+    
     public func updateAccount(account: Account) {
         do {
             try getAccountCollection()

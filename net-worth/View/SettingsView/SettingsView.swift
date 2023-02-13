@@ -75,7 +75,9 @@ struct SettingsView: View {
                 }).confirmationDialog("Are you sure?",
                                       isPresented: $isPresentingDataAndAccountDeletionConfirmation) {
                     Button("Delete all data and account?", role: .destructive) {
-                        deleteAccountAndData()
+                        Task.init {
+                            await deleteAccountAndData()
+                        }
                     }
                 }.foregroundColor(.red)
                 Button(action: {
@@ -149,8 +151,8 @@ struct SettingsView: View {
         settingsController.setAuthentication(newValue: false)
     }
     
-    func deleteAccountAndData() {
-        UserController().deleteUser()
+    func deleteAccountAndData() async {
+        await UserController().deleteUser()
         logoutUser()
     }
 }

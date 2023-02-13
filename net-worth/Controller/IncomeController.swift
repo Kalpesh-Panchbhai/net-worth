@@ -38,6 +38,10 @@ class IncomeController {
         }
     }
     
+    public func deleteIncomes() {
+        CommonController.delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeCollectionName))
+    }
+    
     public func fetchTotalAmount() async throws -> Double {
         var total = 0.0
         try await withUnsafeThrowingContinuation { continuation in

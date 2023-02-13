@@ -29,10 +29,15 @@ class UserController {
         return db.collection(ConstantUtils.userCollectionName).document(getCurrentUserUID())
     }
     
-    func deleteUser() {
+    func deleteUser() async {
         let db = Firestore.firestore()
-        CommonController.delete(collection: db.collection(ConstantUtils.userCollectionName).document(getCurrentUserUID()).collection(ConstantUtils.incomeCollectionName))
-        db.collection(ConstantUtils.userCollectionName).document(getCurrentUserUID()).delete()
+        do {
+            try await AccountController().deleteAccounts()
+            IncomeController().deleteIncomes()
+            try await db.collection(ConstantUtils.userCollectionName).document(getCurrentUserUID()).delete()
+        } catch {
+            print(error)
+        }
     }
-
+    
 }
