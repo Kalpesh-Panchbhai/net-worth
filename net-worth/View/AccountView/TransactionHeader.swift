@@ -23,6 +23,6 @@ struct TransactionsHeader: View {
         .padding(20)
         .foregroundColor(.white)
         .background(Color(#colorLiteral(red: 0.1019468382, green: 0.1058915928, blue: 0.1333118379, alpha: 1)))
-        .cornerRadius(20)
+        .cornerRadius(10)
     }
 }

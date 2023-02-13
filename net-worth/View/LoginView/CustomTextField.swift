@@ -14,7 +14,7 @@ struct CustomTextfield: View {
         TextField("Username", text: $text)
             .padding(16)
             .overlay(
-                RoundedRectangle(cornerRadius: 6)
+                RoundedRectangle(cornerRadius: 10)
                     .stroke()
             )
             .padding(.horizontal, 24)

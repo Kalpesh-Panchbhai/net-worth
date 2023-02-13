@@ -112,10 +112,10 @@ struct AccountCardView: View {
                 await accountViewModel.getLastTwoAccountTransactionList(id: account.id ?? "")
             }
         }
-        .frame(width: 200, height: 150)
+        .frame(width: 150, height: 100)
         .padding(8)
         .background(Color(.black))
-        .cornerRadius(20)
+        .cornerRadius(10)
     }
     
     func getTotalChangeForSymbol() -> Double {

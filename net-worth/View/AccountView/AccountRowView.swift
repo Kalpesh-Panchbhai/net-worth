@@ -117,7 +117,7 @@ struct AccountRowView: View {
         }
         .padding(.horizontal)
         .background(Color(.black))
-        .cornerRadius(20)
+        .cornerRadius(10)
     }
     
     func getTotalChangeForSymbol() -> Double {

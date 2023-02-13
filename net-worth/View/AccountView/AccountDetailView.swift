@@ -27,7 +27,7 @@ struct AccountDetailView: View {
         ZStack {
             VStack {
                 AccountDetailCardView(financeListViewModel: financeListViewModel, accountViewModel: accountViewModel)
-                    .cornerRadius(20)
+                    .cornerRadius(10)
                     .shadow(color: Color.gray, radius: 3)
                 TransactionsView(accountViewModel: accountViewModel)
             }

@@ -48,7 +48,7 @@ struct AccountCardList: View {
                                 }
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     LazyHStack {
-                                        VStack(spacing: 100) {
+                                        VStack(spacing: 50) {
                                             NewAccountCardView()
                                                 .onTapGesture(perform: {
                                                     if(accountType == "Credit Card" || accountType == "Saving" || accountType == "Loan" || accountType == "Other") {
@@ -56,7 +56,6 @@ struct AccountCardList: View {
                                                     } else {
                                                         self.accountTypeSelected = "Symbol"
                                                     }
-                                                    print(accountTypeSelected)
                                                     isNewAccountTypeAcountViewOpen.toggle()
                                                 })
                                             Spacer()

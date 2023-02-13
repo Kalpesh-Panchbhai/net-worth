@@ -67,7 +67,7 @@ struct TransactionsView: View {
                 }
             }
             .background(Color.black)
-            .cornerRadius(20)
+            .cornerRadius(10)
         }
         .background(Color.black)
     }

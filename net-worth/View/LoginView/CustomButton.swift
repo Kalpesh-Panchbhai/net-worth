@@ -19,7 +19,7 @@ struct CustomButton: View {
         }
         .padding()
         .background(.black)
-        .cornerRadius(12)
+        .cornerRadius(10)
         .padding()
     }
 }
