@@ -90,7 +90,6 @@ struct AccountCardList: View {
         }
         .halfSheet(showSheet: $isNewAccountTypeAcountViewOpen) {
             NewAccountView(accountType: accountTypeSelected, accountViewModel: accountViewModel)
-//            NewAccountView(accountViewModel: accountViewModel, accountType: <#T##String#>)
         }
         .searchable(text: $searchText)
         .onAppear {
