@@ -60,10 +60,10 @@ struct AccountCardList: View {
                                                 })
                                             Spacer()
                                         }
-                                        ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
+                                        ForEach(0..<((accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 5) ? 5 : accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count)) { i in
                                             VStack {
-                                                NavigationLink(destination: AccountDetailView(account: account,accountViewModel:  accountViewModel)) {
-                                                    AccountCardView(account: account)
+                                                NavigationLink(destination: AccountDetailView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i],accountViewModel:  accountViewModel)) {
+                                                    AccountCardView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i])
                                                         .shadow(color: Color.black, radius: 3)
                                                 }
                                             }
