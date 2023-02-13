@@ -12,7 +12,6 @@ struct AccountCardList: View {
     @State private var isNewAccountTypeAcountViewOpen = false
     @State private var isNewTransactionViewOpen = false
     @State private var accountTypeSelected = "None"
-    @State private var show = false
     @State private var selectedAccount = Account()
     @State private var searchText = ""
     @State private var longPressedItem = 0
