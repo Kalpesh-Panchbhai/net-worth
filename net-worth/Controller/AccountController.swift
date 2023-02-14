@@ -13,8 +13,6 @@ class AccountController {
     
     private var notificationController = NotificationController()
     
-    private var financeController = FinanceController()
-    
     private func getAccountCollection() -> CollectionReference {
         return UserController()
             .getCurrentUserDocument()
@@ -168,11 +166,11 @@ class AccountController {
                     group.addTask {
                         var balanceModel = BalanceModel()
                         if(account.currency != SettingsController().getDefaultCurrency().code) {
-                            let financeDetailModel = try await self.financeController.getSymbolDetails(accountCurrency: account.currency)
+                            let financeDetailModel = try await FinanceController().getSymbolDetails(accountCurrency: account.currency)
                             balanceModel.currentValue = financeDetailModel.regularMarketPrice ?? 0.0
                             balanceModel.previousDayValue = financeDetailModel.chartPreviousClose ?? 0.0
                         }
-                        let financeDetailModel = try await self.financeController.getSymbolDetails(symbol: account.symbol)
+                        let financeDetailModel = try await FinanceController().getSymbolDetails(symbol: account.symbol)
                         balanceModel.currentValue = balanceModel.currentValue * account.totalShares * (financeDetailModel.regularMarketPrice ?? 1.0)
                         balanceModel.previousDayValue = balanceModel.previousDayValue * account.totalShares * (financeDetailModel.chartPreviousClose ?? 1.0)
                         balanceModel.oneDayChange = balanceModel.currentValue - balanceModel.previousDayValue
@@ -182,7 +180,7 @@ class AccountController {
                     group.addTask {
                         var balanceModel = BalanceModel()
                         if(account.currency != SettingsController().getDefaultCurrency().code) {
-                            let financeDetailModel =  try await self.financeController.getSymbolDetails(accountCurrency: account.currency)
+                            let financeDetailModel =  try await FinanceController().getSymbolDetails(accountCurrency: account.currency)
                             balanceModel.currentValue = financeDetailModel.regularMarketPrice ?? 0.0
                             balanceModel.previousDayValue = financeDetailModel.chartPreviousClose ?? 0.0
                         }
