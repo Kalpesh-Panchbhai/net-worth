@@ -39,6 +39,7 @@ struct UpdateWatchView: View {
                         var watch = Watch()
                         watch.id = watchList.id
                         watch.accountName = watchList.accountName
+                        watch.accountID = watchList.accountID
                         watchController.updateWatchList(watchList: watch)
                         Task.init {
                             await watchViewModel.getAllWatchList()

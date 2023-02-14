@@ -28,7 +28,7 @@ struct WatchListView: View {
                     .foregroundColor(.white)
                     .font(.system(size: 15))
                 Spacer()
-                if(!(watchList.id?.isEmpty ?? false)) {
+                if(!(watchList.id?.isEmpty ?? false) && watchViewModel.watchList.count > 1) {
                     Button(action: {
                         WatchController().deleteWatchList(watchList: watchList)
                         Task.init {
