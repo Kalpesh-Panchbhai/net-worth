@@ -85,7 +85,6 @@ struct AccountCardList: View {
                                                             })
                                                             
                                                             Button {
-                                                                print("New Transaction")
                                                                 Task.init {
                                                                     await accountViewModel.getAccount(id: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].id!)
                                                                 }

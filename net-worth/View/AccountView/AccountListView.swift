@@ -49,7 +49,6 @@ struct AccountListView: View {
                                     })
                                     
                                     Button {
-                                        print("New Transaction")
                                         Task.init {
                                             await accountViewModel.getAccount(id: account.id!)
                                         }
