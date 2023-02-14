@@ -106,9 +106,9 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func getTotalBalance() async {
+    func getTotalBalance(accountList: [Account]) async {
         do {
-            let balance = try await accountController.fetchTotalBalance()
+            let balance = try await accountController.fetchTotalBalance(accountList: accountList)
             DispatchQueue.main.async {
                 self.totalBalance = balance
             }

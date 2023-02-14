@@ -127,7 +127,7 @@ struct NewAccountView: View {
                         accountController.addAccount(newAccount: newAccount)
                         Task.init {
                             await accountViewModel.getAccountList()
-                            await accountViewModel.getTotalBalance()
+                            await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                         }
                         dismiss()
                     }, label: {

@@ -151,11 +151,13 @@ class AccountController {
     }
     
     
-    public func fetchTotalBalance() async throws -> BalanceModel {
-        
+    public func fetchTotalBalance(accountList: [Account]) async throws -> BalanceModel {
         var accounts: [Account] = []
-        
-        accounts = try await getAccountList()
+        if(accountList.isEmpty) {
+            accounts = try await getAccountList()
+        } else {
+            accounts = accountList
+        }
         
         return try await withThrowingTaskGroup(of: BalanceModel.self) { group in
             

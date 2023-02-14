@@ -48,7 +48,8 @@ struct BalanceCardView: View {
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getTotalBalance()
+                await accountViewModel.getAccountList()
+                await accountViewModel.getTotalBalance(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
             }
         }
     }

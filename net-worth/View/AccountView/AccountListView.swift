@@ -42,7 +42,7 @@ struct AccountListView: View {
                                         accountController.deleteAccount(account: account)
                                         Task.init {
                                             await accountViewModel.getAccountList()
-                                            await accountViewModel.getTotalBalance()
+                                            await accountViewModel.getTotalBalance(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
                                         }
                                     }, label: {
                                         Label("Delete", systemImage: "trash")
@@ -66,9 +66,18 @@ struct AccountListView: View {
             }
             .padding(10)
         }
-        .halfSheet(showSheet: $isNewTransactionViewOpen) {
+        .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
+            Task.init {
+                await accountViewModel.getAccount(id: accountViewModel.account.id!)
+                await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
+                await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
+                await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
+                await accountViewModel.getAccountList()
+                await accountViewModel.getTotalBalance(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
+            }
+        }, content: {
             UpdateBalanceAccountView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel)
-        }
+        })
         .searchable(text: $searchText)
         .onAppear {
             Task.init {

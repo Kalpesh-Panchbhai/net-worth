@@ -48,14 +48,6 @@ struct UpdateBalanceAccountView: View {
 
                         accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount)
                         accountController.updateAccount(account: updatedAccount)
-                        Task.init {
-                            await accountViewModel.getAccount(id: accountViewModel.account.id!)
-                            await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
-                            await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
-                            await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
-                            await accountViewModel.getAccountList()
-                            await accountViewModel.getTotalBalance()
-                        }
                         dismiss()
                     }, label: {
                         Text("Update")
@@ -74,14 +66,6 @@ struct UpdateBalanceAccountView: View {
 
                         accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount)
                         accountController.updateAccount(account: updatedAccount)
-                        Task.init {
-                            await accountViewModel.getAccount(id: accountViewModel.account.id!)
-                            await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
-                            await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
-                            await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
-                            await accountViewModel.getAccountList()
-                            await accountViewModel.getTotalBalance()
-                        }
                         dismiss()
                     }, label: {
                         Text("Add")
