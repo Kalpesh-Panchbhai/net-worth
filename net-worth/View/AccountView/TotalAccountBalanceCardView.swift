@@ -19,6 +19,7 @@ struct TotalAccountBalanceCardView: View {
                 Text("Total Net Worth")
                     .foregroundColor(.white)
                     .bold()
+                    .padding()
                 HStack {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(.white)
@@ -27,15 +28,26 @@ struct TotalAccountBalanceCardView: View {
                         .foregroundColor(.white)
                         .bold()
                 }
-                .padding()
+                HStack {
+                    if(accountViewModel.totalBalance.oneDayChange >= 0) {
+                        Text("\(accountViewModel.totalBalance.oneDayChange.withCommas(decimalPlace: 2))")
+                            .foregroundColor(.green)
+                            .font(.system(size: 14))
+                            .bold()
+                    } else {
+                        Text("\(accountViewModel.totalBalance.oneDayChange.withCommas(decimalPlace: 2))")
+                            .foregroundColor(.red)
+                            .font(.system(size: 14))
+                            .bold()
+                    }
+                }
             }
+            .padding()
         }
         .onAppear {
             Task.init {
                 await accountViewModel.getTotalBalance()
             }
         }
-        .frame(width: 350, height: 100)
-        .padding(.horizontal, 20)
     }
 }

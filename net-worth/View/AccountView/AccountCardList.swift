@@ -31,7 +31,7 @@ struct AccountCardList: View {
                                endRadius: UIScreen.main.bounds.height)
                 .ignoresSafeArea()
                 VStack {
-                    ScrollView(.vertical) {
+                    ScrollView(.vertical, showsIndicators: false) {
                         TotalAccountBalanceCardView(accountViewModel: accountViewModel)
                             .shadow(color: Color.black, radius: 3)
                             .cornerRadius(10)
@@ -54,7 +54,7 @@ struct AccountCardList: View {
                                         })
                                     }
                                 }
-                                ScrollView(.horizontal) {
+                                ScrollView(.horizontal, showsIndicators: false) {
                                     LazyHStack {
                                         VStack(spacing: 50) {
                                             NewAccountCardView()
