@@ -34,6 +34,8 @@ struct WatchListView: View {
                             await watchViewModel.getAllWatchList()
                             if(!watchViewModel.watchList.isEmpty) {
                                 watchList = watchViewModel.watchList[0]
+                            } else {
+                                watchList = Watch()
                             }
                         }
                     }, label: {
