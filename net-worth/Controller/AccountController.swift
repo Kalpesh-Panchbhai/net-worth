@@ -19,14 +19,16 @@ class AccountController {
             .collection(ConstantUtils.accountCollectionName)
     }
     
-    public func addAccount(newAccount: Account) {
+    public func addAccount(newAccount: Account) -> String {
         do {
             let accountID = try getAccountCollection()
                 .addDocument(from: newAccount).documentID
             addTransaction(accountID: accountID, account: newAccount)
+            return accountID
         } catch {
             print(error)
         }
+        return ""
     }
     
     public func deleteAccount(account: Account) {

@@ -34,13 +34,16 @@ struct NewAccountView: View {
     
     var accountController = AccountController()
     var financeController = FinanceController()
+    var watchController = WatchController()
     
     @Environment(\.dismiss) var dismiss
     
     @State var searchTerm: String = ""
     @StateObject var financeListVM = FinanceListViewModel()
+    @StateObject var watchViewModel = WatchViewModel()
     
     @ObservedObject var accountViewModel : AccountViewModel
+    @State private var selectedWatchList = Watch()
     
     var body: some View {
         NavigationView {
@@ -59,11 +62,13 @@ struct NewAccountView: View {
                         paymentDate = 1
                         paymentReminder = false
                         currenySelected = SettingsController().getDefaultCurrency()
+                        selectedWatchList = Watch()
                     }
                     if(accountType == "Saving") {
                         nameField(labelName: "Account Name")
                         currentBalanceField()
                         currencyPicker
+                        watchListPicker
                     }
                     else if(accountType == "Credit Card") {
                         nameField(labelName: "Credit Card Name")
@@ -73,6 +78,7 @@ struct NewAccountView: View {
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
                         }
+                        watchListPicker
                     }
                     else if(accountType == "Loan") {
                         nameField(labelName: "Loan Name")
@@ -82,6 +88,7 @@ struct NewAccountView: View {
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
                         }
+                        watchListPicker
                     }
                     else if(accountType == "Symbol") {
                         symbolPicker
@@ -93,6 +100,7 @@ struct NewAccountView: View {
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a SIP date")
                         }
+                        watchListPicker
                     } else if(accountType == "Other") {
                         nameField(labelName: "Account Name")
                         currentBalanceField()
@@ -101,6 +109,7 @@ struct NewAccountView: View {
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
                         }
+                        watchListPicker
                     }
                 }
             }
@@ -124,7 +133,9 @@ struct NewAccountView: View {
                         if(paymentReminder) {
                             newAccount.paymentDate = paymentDate
                         }
-                        accountController.addAccount(newAccount: newAccount)
+                        let accountID = accountController.addAccount(newAccount: newAccount)
+                        selectedWatchList.accountID.append(accountID)
+                        watchController.addAccountToWatchList(watch: selectedWatchList)
                         Task.init {
                             await accountViewModel.getAccountList()
                             await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
@@ -138,6 +149,11 @@ struct NewAccountView: View {
             }
             .navigationTitle("New Account")
             .navigationBarTitleDisplayMode(.inline)
+        }
+        .onAppear {
+            Task.init {
+                await watchViewModel.getAllWatchList()
+            }
         }
     }
     
@@ -169,6 +185,15 @@ struct NewAccountView: View {
             }
         }
         .pickerStyle(.navigationLink)
+    }
+    
+    var watchListPicker: some View {
+        Picker(selection: $selectedWatchList, label: Text("Watch List")) {
+            Text("Select").tag(Watch())
+            ForEach(watchViewModel.watchList, id: \.self) { data in
+                Text(data.accountName).tag(data)
+            }
+        }
     }
     
     private func allFieldsFilled () -> Bool {
