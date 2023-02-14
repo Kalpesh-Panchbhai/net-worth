@@ -26,11 +26,14 @@ struct AccountRowView: View {
                     .foregroundColor(.white)
                     .font(.caption.bold())
                 Spacer()
-                if(accountViewModel.account.paymentReminder) {
+                if(accountViewModel.account.paymentReminder && account.accountType != "Saving") {
                     Label("", systemImage: "bell.fill")
                         .foregroundColor(.white)
                         .font(.caption.bold())
-                } else {
+                    Text("\(account.paymentDate)")
+                        .foregroundColor(.white)
+                        .font(.caption.bold())
+                } else if(account.accountType != "Saving") {
                     Label("", systemImage: "bell.slash.fill")
                         .foregroundColor(.white)
                         .font(.caption.bold())
@@ -110,9 +113,9 @@ struct AccountRowView: View {
         }
         .onAppear {
             Task.init {
-                await financeListViewModel.getSymbolDetails(symbol: account.symbol)
                 await accountViewModel.getAccount(id: account.id!)
                 await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
+                await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
             }
         }
         .padding(.horizontal)

@@ -16,6 +16,7 @@ struct WatchListView: View {
     @State private var watchList = Watch()
     @State private var newWatchListViewOpen = false
     @State private var updateWatchListViewOpen = false
+    @State private var addAccountViewOpen = false
     
     @StateObject var watchViewModel = WatchViewModel()
     
@@ -58,11 +59,13 @@ struct WatchListView: View {
             .pickerStyle(.segmented)
             
             VStack {
-                HStack {
-                    List {
-                        ForEach(watchList.accountID, id: \.self) { accountId in
-                            Text("accountId")
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVStack {
+                        ForEach(watchList.accountID, id: \.self) { account in
+                            AccountRowView(account: Account(id: account))
+                                .shadow(color: Color.black, radius: 3)
                         }
+                        .padding(10)
                     }
                 }
                 if(!(watchList.id?.isEmpty ?? false)) {
@@ -77,7 +80,7 @@ struct WatchListView: View {
                         })
                         Spacer()
                         Button(action: {
-                            
+                            self.addAccountViewOpen.toggle()
                         }, label: {
                             Label("Add Account", systemImage: "")
                         })
@@ -91,6 +94,9 @@ struct WatchListView: View {
         }
         .halfSheet(showSheet: $updateWatchListViewOpen) {
             UpdateWatchView(watchList: watchList, watchViewModel: watchViewModel)
+        }
+        .sheet(isPresented: $addAccountViewOpen) {
+            AddAccountWatchListView(watchViewModel: watchViewModel, accountID: watchList.accountID, watch: watchList)
         }
         .onAppear {
             Task.init {

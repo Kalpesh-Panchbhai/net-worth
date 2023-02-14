@@ -32,6 +32,18 @@ struct Account: Codable, Hashable {
         self.currency = ""
     }
     
+    init(id: String) {
+        self.id = id
+        self.accountType = ""
+        self.accountName = ""
+        self.currentBalance = 0.0
+        self.totalShares = 0.0
+        self.paymentReminder = false
+        self.paymentDate = 0
+        self.symbol = ""
+        self.currency = ""
+    }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self._id = try container.decode(DocumentID<String>.self, forKey: .id)

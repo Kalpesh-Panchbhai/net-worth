@@ -28,11 +28,30 @@ class WatchController {
         return watchList
     }
     
+    public func getWatchList(id: String) async throws -> Watch {
+        var watch = Watch()
+        watch = try await getWatchCollection()
+            .document(id)
+            .getDocument()
+            .data(as: Watch.self)
+        return watch
+    }
+    
     public func addWatchList(watchList: Watch) {
         do {
             let documentID = try getWatchCollection()
                 .addDocument(from: watchList).documentID
             print("New Watch List created : " + documentID)
+        } catch {
+            print(error)
+        }
+    }
+    
+    public func addAccountToWatchList(watch: Watch) {
+        do {
+            try getWatchCollection()
+                .document(watch.id!)
+                .setData(from: watch, merge: true)
         } catch {
             print(error)
         }
