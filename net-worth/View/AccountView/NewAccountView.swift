@@ -134,8 +134,10 @@ struct NewAccountView: View {
                             newAccount.paymentDate = paymentDate
                         }
                         let accountID = accountController.addAccount(newAccount: newAccount)
-                        selectedWatchList.accountID.append(accountID)
-                        watchController.addAccountToWatchList(watch: selectedWatchList)
+                        if(selectedWatchList.id != "") {
+                            selectedWatchList.accountID.append(accountID)
+                            watchController.addAccountToWatchList(watch: selectedWatchList)
+                        }
                         Task.init {
                             await accountViewModel.getAccountList()
                             await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
