@@ -105,6 +105,7 @@ struct AccountCardList: View {
                             }
                         }
                         .padding(10)
+                        WatchListView()
                     }
                 }
                 

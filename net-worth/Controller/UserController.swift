@@ -34,6 +34,7 @@ class UserController {
         do {
             try await AccountController().deleteAccounts()
             IncomeController().deleteIncomes()
+            try await WatchController().deleteWatchLists()
             try await db.collection(ConstantUtils.userCollectionName).document(getCurrentUserUID()).delete()
         } catch {
             print(error)
