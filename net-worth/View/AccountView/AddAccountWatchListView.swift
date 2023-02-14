@@ -11,15 +11,14 @@ struct AddAccountWatchListView: View {
     
     @ObservedObject var accountViewModel = AccountViewModel()
     @ObservedObject var watchViewModel: WatchViewModel
-    var accountID: [String]
-    var watch: Watch
+    @State var watch: Watch
     
     var body: some View {
         VStack {
             ScrollView(.vertical) {
                 LazyVStack {
                     ForEach(accountViewModel.accountList, id: \.self) { account in
-                        AddAccountWatchView(account: account, watch: watch, isAdded: accountID.contains(account.id!))
+                        AddAccountWatchView(account: account, watch: $watch, isAdded: watch.accountID.contains(account.id!), watchViewModel: watchViewModel)
                     }
                 }
             }
@@ -37,8 +36,9 @@ struct AddAccountWatchView: View {
     var account: Account
     var watchController = WatchController()
     
-    @State var watch: Watch
+    @Binding var watch: Watch
     @State var isAdded: Bool
+    var watchViewModel: WatchViewModel
     
     var body: some View {
         HStack {
@@ -60,6 +60,9 @@ struct AddAccountWatchView: View {
                                 item != account.id
                             }
                             watchController.addAccountToWatchList(watch: watch)
+//                            Task.init {
+//                                await watchViewModel.getAllWatchList()
+//                            }
                         }
                 } else {
                     Image(systemName: "bookmark")
@@ -67,6 +70,9 @@ struct AddAccountWatchView: View {
                             isAdded.toggle()
                             self.watch.accountID.append(account.id!)
                             watchController.addAccountToWatchList(watch: watch)
+//                            Task.init {
+//                                await watchViewModel.getAllWatchList()
+//                            }
                         }
                 }
             }

@@ -95,8 +95,17 @@ struct WatchListView: View {
         .halfSheet(showSheet: $updateWatchListViewOpen) {
             UpdateWatchView(watchList: watchList, watchViewModel: watchViewModel)
         }
-        .sheet(isPresented: $addAccountViewOpen) {
-            AddAccountWatchListView(watchViewModel: watchViewModel, accountID: watchList.accountID, watch: watchList)
+        .sheet(isPresented: $addAccountViewOpen, onDismiss: {
+            Task.init {
+                await watchViewModel.getAllWatchList()
+                if(!watchViewModel.watchList.isEmpty) {
+                    watchList = watchViewModel.watchList.filter { item in
+                        item.id == watchList.id
+                    }.first!
+                }
+            }
+        }) {
+            AddAccountWatchListView(watchViewModel: watchViewModel, watch: watchList)
         }
         .onAppear {
             Task.init {
