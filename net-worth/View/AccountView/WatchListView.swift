@@ -105,7 +105,7 @@ struct WatchListView: View {
                 }
             }
         }) {
-            AddAccountWatchListView(watchViewModel: watchViewModel, watch: watchList)
+            AddAccountWatchListView(watch: watchList)
         }
         .onAppear {
             Task.init {
