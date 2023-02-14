@@ -32,7 +32,7 @@ struct AccountCardList: View {
                 .ignoresSafeArea()
                 VStack {
                     ScrollView(.vertical, showsIndicators: false) {
-                        TotalAccountBalanceCardView(accountViewModel: accountViewModel)
+                        BalanceCardView(accountViewModel: accountViewModel, accountType: "Net Worth")
                             .shadow(color: Color.black, radius: 3)
                             .cornerRadius(10)
                         LazyVStack {

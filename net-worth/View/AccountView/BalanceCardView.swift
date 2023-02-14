@@ -7,16 +7,18 @@
 
 import SwiftUI
 
-struct TotalAccountBalanceCardView: View {
+struct BalanceCardView: View {
     
     @StateObject var accountViewModel: AccountViewModel
+    
+    var accountType: String
     
     var body: some View {
         ZStack {
             Color.black
             VStack(alignment: .center) {
                 Spacer()
-                Text("Total Net Worth")
+                Text("Total " + accountType.localizedCapitalized + " Balance")
                     .foregroundColor(.white)
                     .bold()
                     .padding()

@@ -26,7 +26,10 @@ struct AccountListView: View {
                            startRadius: 5,
                            endRadius: UIScreen.main.bounds.height)
             .ignoresSafeArea()
-            ScrollView(.vertical) {
+            ScrollView(.vertical, showsIndicators: false) {
+                BalanceCardView(accountViewModel: accountViewModel, accountType: accountType)
+                    .shadow(color: Color.black, radius: 3)
+                    .cornerRadius(10)
                 LazyVStack {
                     ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
                         NavigationLink(destination: {
