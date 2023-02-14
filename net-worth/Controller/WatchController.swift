@@ -47,6 +47,15 @@ class WatchController {
         }
     }
     
+    public func addDefaultWatchList() async throws {
+        let count = try await getAllWatchList().count
+        if(count == 0) {
+            var watchList = Watch()
+            watchList.accountName = "My Watchlist"
+            addWatchList(watchList: watchList)
+        }
+    }
+    
     public func addAccountToWatchList(watch: Watch) {
         do {
             try getWatchCollection()
