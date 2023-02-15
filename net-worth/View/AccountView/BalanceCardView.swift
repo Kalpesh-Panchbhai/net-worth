@@ -12,6 +12,8 @@ struct BalanceCardView: View {
     @StateObject var accountViewModel: AccountViewModel
     
     var accountType: String
+    var isWatchListCardView: Bool
+    var watchList: Watch
     
     var body: some View {
         ZStack {
@@ -48,8 +50,13 @@ struct BalanceCardView: View {
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getAccountList()
-                await accountViewModel.getTotalBalance(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
+                if(!isWatchListCardView) {
+                    await accountViewModel.getAccountList()
+                    await accountViewModel.getTotalBalance(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
+                } else if(!watchList.accountID.isEmpty) {
+                    await accountViewModel.getAccountsForWatchList(accountID: watchList.accountID)
+                    await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+                }
             }
         }
     }

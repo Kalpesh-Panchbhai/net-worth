@@ -94,6 +94,18 @@ class AccountViewModel: ObservableObject {
         }
     }
     
+    func getAccountsForWatchList(accountID: [String]) async {
+        do {
+            for i in 0..<accountID.count {
+                let list = try await accountController.getAccount(id: accountID[i])
+                DispatchQueue.main.async {
+                    self.accountList.append(list)
+                }
+            }
+        } catch {
+            print(error)
+        }
+    }
     func getAccountList() async {
         do {
             let list = try await accountController.getAccountList()

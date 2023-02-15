@@ -30,7 +30,7 @@ struct AccountCardList: View {
                 VStack {
                     ScrollView(.vertical, showsIndicators: false) {
                         VStack {
-                            BalanceCardView(accountViewModel: accountViewModel, accountType: "Net Worth")
+                            BalanceCardView(accountViewModel: accountViewModel, accountType: "Net Worth", isWatchListCardView: false, watchList: Watch())
                                 .frame(width: 360)
                                 .cornerRadius(10)
                         }

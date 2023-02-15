@@ -24,7 +24,7 @@ struct AccountListView: View {
             Color.black.ignoresSafeArea()
             ScrollView(.vertical, showsIndicators: false) {
                 VStack {
-                    BalanceCardView(accountViewModel: accountViewModel, accountType: accountType)
+                    BalanceCardView(accountViewModel: accountViewModel, accountType: accountType, isWatchListCardView: false, watchList: Watch())
                         .frame(width: 360)
                         .cornerRadius(10)
                 }

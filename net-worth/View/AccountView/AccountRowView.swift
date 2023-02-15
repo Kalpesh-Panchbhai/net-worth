@@ -26,14 +26,14 @@ struct AccountRowView: View {
                     .foregroundColor(.white)
                     .font(.caption.bold())
                 Spacer()
-                if(accountViewModel.account.paymentReminder && account.accountType != "Saving") {
+                if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
                     Label("", systemImage: "bell.fill")
                         .foregroundColor(.white)
                         .font(.caption.bold())
-                    Text("\(account.paymentDate)")
+                    Text("\(accountViewModel.account.paymentDate)")
                         .foregroundColor(.white)
                         .font(.caption.bold())
-                } else if(account.accountType != "Saving") {
+                } else if(accountViewModel.account.accountType != "Saving") {
                     Label("", systemImage: "bell.slash.fill")
                         .foregroundColor(.white)
                         .font(.caption.bold())
@@ -55,7 +55,7 @@ struct AccountRowView: View {
                         .foregroundColor(.white)
                         .font(.caption.bold())
                 } else {
-                    Text("\(account.currentBalance.withCommas(decimalPlace: 2))")
+                    Text("\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 2))")
                         .foregroundColor(.white)
                         .font(.caption.bold())
                 }
