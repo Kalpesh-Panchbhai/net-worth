@@ -21,71 +21,81 @@ struct WatchListView: View {
     @StateObject var watchViewModel = WatchViewModel()
     
     var body: some View {
-        VStack {
-            HStack {
-                Text("All Watchlists")
-                    .bold()
-                    .foregroundColor(.white)
-                    .font(.system(size: 15))
-                Spacer()
-                if(!(watchList.id?.isEmpty ?? false) && watchViewModel.watchList.count > 1) {
-                    Button(action: {
-                        WatchController().deleteWatchList(watchList: watchList)
-                        Task.init {
-                            await watchViewModel.getAllWatchList()
-                            if(!watchViewModel.watchList.isEmpty) {
-                                watchList = watchViewModel.watchList[0]
-                            } else {
-                                watchList = Watch()
-                            }
-                        }
-                    }, label: {
-                        Label("", systemImage: "trash")
-                    }).foregroundColor(.red)
-                }
-                
-                Button(action: {
-                    self.newWatchListViewOpen.toggle()
-                }, label: {
-                    Label("", systemImage: "plus")
-                })
-            }
-            .padding()
-            Picker("", selection: $watchList) {
-                ForEach(watchViewModel.watchList, id: \.self) { data in
-                    Text(data.accountName).tag(data)
-                }
-            }
-            .pickerStyle(.segmented)
-            
+        NavigationView {
             VStack {
-                ScrollView(.vertical, showsIndicators: false) {
-                    LazyVStack {
-                        ForEach(watchList.accountID, id: \.self) { account in
-                            AccountRowView(account: Account(id: account))
-                                .shadow(color: Color.black, radius: 3)
-                        }
-                        .padding(10)
-                    }
-                }
-                if(!(watchList.id?.isEmpty ?? false)) {
-                    HStack {
+                HStack {
+                    Text("All Watchlists")
+                        .bold()
+                        .foregroundColor(.white)
+                        .font(.system(size: 15))
+                    Spacer()
+                    if(!(watchList.id?.isEmpty ?? false) && watchViewModel.watchList.count > 1) {
                         Button(action: {
-                            self.updateWatchListViewOpen.toggle()
-                            if(!watchViewModel.watchList.isEmpty) {
-                                watchList = watchViewModel.watchList[0]
+                            WatchController().deleteWatchList(watchList: watchList)
+                            Task.init {
+                                await watchViewModel.getAllWatchList()
+                                if(!watchViewModel.watchList.isEmpty) {
+                                    watchList = watchViewModel.watchList[0]
+                                } else {
+                                    watchList = Watch()
+                                }
                             }
                         }, label: {
-                            Label("Edit WatchList", systemImage: "")
-                        })
-                        Spacer()
-                        Button(action: {
-                            self.addAccountViewOpen.toggle()
+                            Label("", systemImage: "trash")
+                        }).foregroundColor(.red)
+                    }
+                    
+                    if(watchViewModel.watchList.count > 3) {
+                        NavigationLink(destination: {
+                            AllWatchListView(watchViewModel: watchViewModel)
                         }, label: {
-                            Label("Add Account", systemImage: "")
+                            Label("See all", systemImage: "")
                         })
                     }
-                    .padding()
+                    
+                    Button(action: {
+                        self.newWatchListViewOpen.toggle()
+                    }, label: {
+                        Label("", systemImage: "plus")
+                    })
+                }
+                .padding()
+                Picker("", selection: $watchList) {
+                    ForEach(watchViewModel.watchList, id: \.self) { data in
+                        Text(data.accountName).tag(data)
+                    }
+                }
+                .pickerStyle(.segmented)
+                
+                VStack {
+                    ScrollView(.vertical, showsIndicators: false) {
+                        LazyVStack {
+                            ForEach(watchList.accountID, id: \.self) { account in
+                                AccountRowView(account: Account(id: account))
+                                    .shadow(color: Color.gray, radius: 3)
+                            }
+                            .padding(10)
+                        }
+                    }
+                    if(!(watchList.id?.isEmpty ?? false)) {
+                        HStack {
+                            Button(action: {
+                                self.updateWatchListViewOpen.toggle()
+                                if(!watchViewModel.watchList.isEmpty) {
+                                    watchList = watchViewModel.watchList[0]
+                                }
+                            }, label: {
+                                Label("Edit WatchList", systemImage: "")
+                            })
+                            Spacer()
+                            Button(action: {
+                                self.addAccountViewOpen.toggle()
+                            }, label: {
+                                Label("Add Accounts", systemImage: "")
+                            })
+                        }
+                        .padding()
+                    }
                 }
             }
         }

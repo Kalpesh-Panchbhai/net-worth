@@ -21,11 +21,7 @@ struct AccountListView: View {
     
     var body: some View {
         ZStack {
-            RadialGradient(gradient: Gradient(colors: [Color(#colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1)), Color(#colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1))]),
-                           center: .topLeading,
-                           startRadius: 5,
-                           endRadius: UIScreen.main.bounds.height)
-            .ignoresSafeArea()
+            Color.black.ignoresSafeArea()
             ScrollView(.vertical, showsIndicators: false) {
                 BalanceCardView(accountViewModel: accountViewModel, accountType: accountType)
                     .shadow(color: Color.black, radius: 3)
@@ -36,7 +32,7 @@ struct AccountListView: View {
                             AccountDetailView(account: account, accountViewModel: accountViewModel)
                         }, label: {
                             AccountRowView(account: account)
-                                .shadow(color: Color.black, radius: 3)
+                                .shadow(color: Color.gray, radius: 3)
                                 .contextMenu {
                                     Button(role: .destructive, action: {
                                         accountController.deleteAccount(account: account)

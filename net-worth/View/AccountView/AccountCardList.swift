@@ -25,11 +25,7 @@ struct AccountCardList: View {
     var body: some View {
         NavigationView {
             ZStack {
-                RadialGradient(gradient: Gradient(colors: [Color(#colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1)), Color(#colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1))]),
-                               center: .topLeading,
-                               startRadius: 5,
-                               endRadius: UIScreen.main.bounds.height)
-                .ignoresSafeArea()
+                Color.black
                 VStack {
                     ScrollView(.vertical, showsIndicators: false) {
                         BalanceCardView(accountViewModel: accountViewModel, accountType: "Net Worth")
@@ -56,6 +52,7 @@ struct AccountCardList: View {
                                     LazyHStack {
                                         VStack(spacing: 50) {
                                             NewAccountCardView()
+                                                .shadow(color: Color.gray, radius: 3)
                                                 .onTapGesture(perform: {
                                                     if(accountType == "Credit Card" || accountType == "Saving" || accountType == "Loan" || accountType == "Other") {
                                                         self.accountTypeSelected = accountType
@@ -70,7 +67,7 @@ struct AccountCardList: View {
                                             VStack {
                                                 NavigationLink(destination: AccountDetailView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i],accountViewModel:  accountViewModel)) {
                                                     AccountCardView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i])
-                                                        .shadow(color: Color.black, radius: 3)
+                                                        .shadow(color: Color.gray, radius: 3)
                                                         .contextMenu {
                                                             Button(role: .destructive, action: {
                                                                 accountController.deleteAccount(account: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i])
