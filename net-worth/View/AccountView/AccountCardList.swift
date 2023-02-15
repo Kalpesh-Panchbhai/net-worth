@@ -29,9 +29,13 @@ struct AccountCardList: View {
                 Color.black
                 VStack {
                     ScrollView(.vertical, showsIndicators: false) {
-                        BalanceCardView(accountViewModel: accountViewModel, accountType: "Net Worth")
-                            .shadow(color: Color.black, radius: 3)
-                            .cornerRadius(10)
+                        VStack {
+                            BalanceCardView(accountViewModel: accountViewModel, accountType: "Net Worth")
+                                .frame(width: 360)
+                                .cornerRadius(10)
+                        }
+                        .shadow(color: Color.gray, radius: 3)
+                        
                         LazyVStack {
                             ForEach(accountViewModel.sectionHeaders, id: \.self) { accountType in
                                 HStack {

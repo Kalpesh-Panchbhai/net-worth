@@ -23,9 +23,13 @@ struct AccountListView: View {
         ZStack {
             Color.black.ignoresSafeArea()
             ScrollView(.vertical, showsIndicators: false) {
-                BalanceCardView(accountViewModel: accountViewModel, accountType: accountType)
-                    .shadow(color: Color.black, radius: 3)
-                    .cornerRadius(10)
+                VStack {
+                    BalanceCardView(accountViewModel: accountViewModel, accountType: accountType)
+                        .frame(width: 360)
+                        .cornerRadius(10)
+                }
+                .padding(.top, 5)
+                .shadow(color: Color.gray, radius: 3)
                 LazyVStack {
                     ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
                         NavigationLink(destination: {
