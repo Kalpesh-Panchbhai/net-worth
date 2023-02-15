@@ -43,16 +43,14 @@ struct AccountCardList: View {
                                         .foregroundColor(.white)
                                         .font(.system(size: 15))
                                     Spacer()
-                                    if(accountViewModel.sectionContent(key: accountType, searchKeyword: "").count > 5) {
-                                        NavigationLink(destination: {
-                                            AccountListView(accountType: accountType)
-                                        }, label: {
-                                            Label("See more", systemImage: "")
-                                                .foregroundColor(.green)
-                                                .bold()
-                                                .font(.system(size: 15))
-                                        })
-                                    }
+                                    NavigationLink(destination: {
+                                        AccountListView(accountType: accountType)
+                                    }, label: {
+                                        Label("See all", systemImage: "")
+                                            .foregroundColor(.green)
+                                            .bold()
+                                            .font(.system(size: 15))
+                                    })
                                 }
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     LazyHStack {
