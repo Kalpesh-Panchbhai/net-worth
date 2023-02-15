@@ -9,16 +9,21 @@ import SwiftUI
 
 struct WatchListView: View {
     
-    init(){
-        UISegmentedControl.appearance().selectedSegmentTintColor = .systemBlue
-    }
+//    init(){
+//        UISegmentedControl.appearance().selectedSegmentTintColor = .systemBlue
+//    }
     
     @State private var watchList = Watch()
     @State private var newWatchListViewOpen = false
     @State private var updateWatchListViewOpen = false
     @State private var addAccountViewOpen = false
+    @State private var isNewTransactionViewOpen = false
     
     @StateObject var watchViewModel = WatchViewModel()
+    @StateObject var accountViewModel: AccountViewModel
+    @StateObject var financeListViewModel: FinanceListViewModel
+    
+    var watchController = WatchController()
     
     var body: some View {
         NavigationView {
@@ -80,6 +85,31 @@ struct WatchListView: View {
                             ForEach(0..<((watchList.accountID.count > 5) ? 5 : watchList.accountID.count), id: \.self) { i in
                                 AccountRowView(account: Account(id: watchList.accountID[i]))
                                     .shadow(color: Color.gray, radius: 3)
+                                    .contextMenu {
+                                        Button(role: .destructive, action: {
+                                            watchController.deleteAccountFromWatchList(watchList: watchList, accountID: watchList.accountID[i])
+                                            Task.init {
+                                                await watchViewModel.getAllWatchList()
+                                                if(!watchViewModel.watchList.isEmpty) {
+                                                    watchList = watchViewModel.watchList.filter { item in
+                                                        item.id == watchList.id
+                                                    }.first!
+                                                }
+                                            }
+                                        }, label: {
+                                            Label("Delete", systemImage: "trash")
+                                        })
+                                        
+                                        Button {
+                                            Task.init {
+                                                let id = watchList.accountID[i]
+                                                await accountViewModel.getAccount(id: id)
+                                            }
+                                            isNewTransactionViewOpen.toggle()
+                                        } label: {
+                                            Label("New Transaction", systemImage: "square.and.pencil")
+                                        }
+                                    }
                             }
                             .padding(10)
                         }
@@ -124,6 +154,18 @@ struct WatchListView: View {
         }) {
             AddAccountWatchListView(watch: watchList)
         }
+        .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
+            Task.init {
+                await accountViewModel.getAccount(id: accountViewModel.account.id!)
+                await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
+                await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
+                await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
+                await accountViewModel.getAccountList()
+                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+            }
+        }, content: {
+            UpdateBalanceAccountView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel)
+        })
         .onAppear {
             Task.init {
                 await watchViewModel.getAllWatchList()

@@ -86,4 +86,12 @@ class WatchController {
     public func deleteWatchList(watchList: Watch) {
         getWatchCollection().document(watchList.id!).delete()
     }
+    
+    public func deleteAccountFromWatchList(watchList: Watch, accountID: String) {
+        var watchList = watchList
+        watchList.accountID = watchList.accountID.filter { id in
+            id != accountID
+        }
+        updateWatchList(watchList: watchList)
+    }
 }

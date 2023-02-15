@@ -104,7 +104,7 @@ struct AccountCardList: View {
                             }
                         }
                         .padding(10)
-                        WatchListView()
+                        WatchListView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel)
                     }
                 }
             }
