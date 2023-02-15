@@ -61,8 +61,8 @@ struct WatchListView: View {
                 }
                 .padding()
                 Picker("", selection: $watchList) {
-                    ForEach(watchViewModel.watchList, id: \.self) { data in
-                        Text(data.accountName).tag(data)
+                    ForEach(0..<((watchViewModel.watchList.count > 3) ? 3 : watchViewModel.watchList.count), id: \.self) { i in
+                        Text(watchViewModel.watchList[i].accountName).tag(watchViewModel.watchList[i])
                     }
                 }
                 .pickerStyle(.segmented)
