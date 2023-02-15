@@ -52,6 +52,13 @@ struct WatchListView: View {
                             Label("See all", systemImage: "")
                         })
                     }
+                    if(watchList.accountID.count > 0) {
+                        NavigationLink(destination: {
+                            SingleWatchListView(watchList: watchList)
+                        }, label: {
+                            Label("See all", systemImage: "").foregroundColor(.red)
+                        })
+                    }
                     
                     Button(action: {
                         self.newWatchListViewOpen.toggle()
