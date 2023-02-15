@@ -70,8 +70,8 @@ struct WatchListView: View {
                 VStack {
                     ScrollView(.vertical, showsIndicators: false) {
                         LazyVStack {
-                            ForEach(watchList.accountID, id: \.self) { account in
-                                AccountRowView(account: Account(id: account))
+                            ForEach(0..<((watchList.accountID.count > 5) ? 5 : watchList.accountID.count), id: \.self) { i in
+                                AccountRowView(account: Account(id: watchList.accountID[i]))
                                     .shadow(color: Color.gray, radius: 3)
                             }
                             .padding(10)
