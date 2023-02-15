@@ -10,6 +10,7 @@ import SwiftUI
 struct AccountCardList: View {
     
     @State private var isNewAccountTypeAcountViewOpen = false
+    @State private var isNewAccountAccountViewOpen = false
     @State private var isNewTransactionViewOpen = false
     @State private var accountTypeSelected = "None"
     @State private var selectedAccount = Account()
@@ -102,14 +103,15 @@ struct AccountCardList: View {
                         WatchListView()
                     }
                 }
-                
-                VStack {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        AccountCardListExpendableButton(accountViewModel: accountViewModel)
-                    }.padding([.bottom,.trailing],30)
-                }
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing , content: {
+                    Button(action: {
+                        isNewAccountAccountViewOpen.toggle()
+                    }, label: {
+                        Image(systemName: "plus")
+                    })
+                })
             }
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
@@ -126,6 +128,9 @@ struct AccountCardList: View {
         })
         .halfSheet(showSheet: $isNewAccountTypeAcountViewOpen) {
             NewAccountView(accountType: accountTypeSelected, accountViewModel: accountViewModel)
+        }
+        .halfSheet(showSheet: $isNewAccountAccountViewOpen) {
+            NewAccountView(accountType: "None", accountViewModel: accountViewModel)
         }
         .searchable(text: $searchText)
         .onAppear {
