@@ -72,29 +72,33 @@ struct WatchListView: View {
                     })
                 }
                 .padding()
-                Picker("", selection: $watchList) {
+                
+                Picker("Select a value", selection: $watchList) {
                     ForEach(0..<((watchViewModel.watchList.count > 3) ? 3 : watchViewModel.watchList.count), id: \.self) { i in
                         Text(watchViewModel.watchList[i].accountName).tag(watchViewModel.watchList[i])
                     }
                 }
-                .pickerStyle(.segmented)
+                .onChange(of: watchList) { (data) in
+                    Task.init {
+                        watchViewModel.watch = Watch()
+                        await watchViewModel.getWatchList(id: watchList.id!)
+                    }
+                }
+                .pickerStyle(.menu)
                 
                 VStack {
                     ScrollView(.vertical, showsIndicators: false) {
                         LazyVStack {
-                            ForEach(0..<((watchList.accountID.count > 5) ? 5 : watchList.accountID.count), id: \.self) { i in
-                                AccountRowView(account: Account(id: watchList.accountID[i]))
+                            ForEach(0..<((watchViewModel.watch.accountID.count > 5) ? 5 : watchViewModel.watch.accountID.count), id: \.self) { i in
+                                AccountRowView(account: Account(id: watchViewModel.watch.accountID[i]))
                                     .shadow(color: Color.gray, radius: 3)
                                     .contextMenu {
                                         Button(role: .destructive, action: {
-                                            watchController.deleteAccountFromWatchList(watchList: watchList, accountID: watchList.accountID[i])
+                                            watchController.deleteAccountFromWatchList(watchList: watchViewModel.watch, accountID: watchViewModel.watch.accountID[i])
                                             Task.init {
-                                                await watchViewModel.getAllWatchList()
-                                                if(!watchViewModel.watchList.isEmpty) {
-                                                    watchList = watchViewModel.watchList.filter { item in
-                                                        item.id == watchList.id
-                                                    }.first!
-                                                }
+                                                let id = watchViewModel.watch.id!
+                                                watchViewModel.watch = Watch()
+                                                await watchViewModel.getWatchList(id: id)
                                             }
                                         }, label: {
                                             Label("Delete", systemImage: "trash")
@@ -102,7 +106,7 @@ struct WatchListView: View {
                                         
                                         Button {
                                             Task.init {
-                                                let id = watchList.accountID[i]
+                                                let id = watchViewModel.watch.accountID[i]
                                                 await accountViewModel.getAccount(id: id)
                                             }
                                             isNewTransactionViewOpen.toggle()
@@ -162,6 +166,10 @@ struct WatchListView: View {
                 await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
                 await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+                
+                let id = watchViewModel.watch.id!
+                watchViewModel.watch = Watch()
+                await watchViewModel.getWatchList(id: id)
             }
         }, content: {
             UpdateBalanceAccountView(accountViewModel: accountViewModel)
@@ -169,9 +177,8 @@ struct WatchListView: View {
         .onAppear {
             Task.init {
                 await watchViewModel.getAllWatchList()
-                if(!watchViewModel.watchList.isEmpty) {
-                    watchList = watchViewModel.watchList[0]
-                }
+                watchList = watchViewModel.watchList[0]
+                await watchViewModel.getWatchList(id: watchList.id!)
             }
         }
     }
