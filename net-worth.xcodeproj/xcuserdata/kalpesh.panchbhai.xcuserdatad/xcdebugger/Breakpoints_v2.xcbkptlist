@@ -3,4 +3,85 @@
    uuid = "41AC9B6B-8FF3-459F-B78F-47BA6DFFA93A"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4DDE60C8-2653-4816-B48D-D97819FAEAC1"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "net-worth/Data Model/AccountViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "148"
+            endingLineNumber = "148"
+            landmarkName = "getLastTwoAccountTransactionList(id:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "4DDE60C8-2653-4816-B48D-D97819FAEAC1 - ab6d6a2ff7d71150"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for net_worth.AccountViewModel.getLastTwoAccountTransactionList(id: Swift.String) async -&gt; ()"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/AccountViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "148"
+                  endingLineNumber = "148"
+                  offsetFromSymbolStart = "80">
+               </Location>
+               <Location
+                  uuid = "4DDE60C8-2653-4816-B48D-D97819FAEAC1 - 6938e0f3d5de3222"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for net_worth.AccountViewModel.getLastTwoAccountTransactionList(id: Swift.String) async -&gt; ()"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/AccountViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "148"
+                  endingLineNumber = "148"
+                  offsetFromSymbolStart = "44">
+               </Location>
+               <Location
+                  uuid = "4DDE60C8-2653-4816-B48D-D97819FAEAC1 - e03adb48e8654759"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for net_worth.AccountViewModel.getLastTwoAccountTransactionList(id: Swift.String) async -&gt; ()"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/AccountViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "148"
+                  endingLineNumber = "148"
+                  offsetFromSymbolStart = "68">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9D07D1F1-30F1-4B87-A79E-37EE3498B810"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "net-worth/Data Model/AccountViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "150"
+            endingLineNumber = "150"
+            landmarkName = "getLastTwoAccountTransactionList(id:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

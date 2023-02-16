@@ -124,6 +124,7 @@ struct AccountCardList: View {
                 await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
                 await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
                 await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
+                accountViewModel.accountList = [Account]()
                 await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
             }
