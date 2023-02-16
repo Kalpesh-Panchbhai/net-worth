@@ -9,10 +9,12 @@ import SwiftUI
 
 struct SingleWatchListView: View {
     
-    @State var watchList: Watch
+    var watchList: Watch
+    @State private var isNewTransactionViewOpen = false
     var watchController = WatchController()
     
     @StateObject private var accountViewModel = AccountViewModel()
+    @StateObject private var financeListViewModel = FinanceListViewModel()
     @StateObject var watchViewModel = WatchViewModel()
     
     var body: some View {
@@ -26,15 +28,14 @@ struct SingleWatchListView: View {
                 .shadow(color: Color.gray, radius: 3)
                 
                 LazyVStack {
-                    ForEach(watchList.accountID, id: \.self) { account in
+                    ForEach(watchViewModel.watch.accountID, id: \.self) { account in
                         AccountRowView(account: Account(id: account))
                             .shadow(color: Color.gray, radius: 3)
                             .contextMenu {
                                 Button(role: .destructive, action: {
-                                    watchController.deleteAccountFromWatchList(watchList: watchList, accountID: account)
+                                    watchController.deleteAccountFromWatchList(watchList: watchViewModel.watch, accountID: account)
                                     Task.init {
                                         await watchViewModel.getWatchList(id: watchList.id!)
-                                        self.watchList = watchViewModel.watch
                                         await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
                                         if(!accountViewModel.accountList.isEmpty) {
                                             await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
@@ -46,24 +47,38 @@ struct SingleWatchListView: View {
                                     Label("Delete", systemImage: "trash")
                                 })
                                 
-                                //                                Button {
-                                //                                    Task.init {
-                                //                                        let id = watchList.accountID[i]
-                                //                                        await accountViewModel.getAccount(id: id)
-                                //                                    }
-                                //                                    isNewTransactionViewOpen.toggle()
-                                //                                } label: {
-                                //                                    Label("New Transaction", systemImage: "square.and.pencil")
-                                //                                }
+//                                Button {
+//                                    Task.init {
+//                                        await accountViewModel.getAccount(id: account)
+//                                    }
+//                                    isNewTransactionViewOpen.toggle()
+//                                } label: {
+//                                    Label("New Transaction", systemImage: "square.and.pencil")
+//                                }
                             }
                     }
                     .padding(10)
                 }
             }
         }
+//        .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
+//            Task.init {
+//                await accountViewModel.getAccount(id: accountViewModel.account.id!)
+//                await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
+//                await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
+//                await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
+//
+//                await watchViewModel.getWatchList(id: watchList.id!)
+//                await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
+//                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+//            }
+//        }, content: {
+//            UpdateBalanceAccountView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel)
+//        })
         .onAppear {
             Task.init {
-                await accountViewModel.getAccountsForWatchList(accountID: watchList.accountID)
+                await watchViewModel.getWatchList(id: watchList.id!)
+                await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
             }
         }
