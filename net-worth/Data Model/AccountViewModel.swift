@@ -17,6 +17,7 @@ class AccountViewModel: ObservableObject {
     @Published var totalBalance = BalanceModel(currentValue: 0.0)
     @Published var grouping: Grouping = .accountType
     
+    var watchList = [Account]()
     var originalAccountList = [Account]()
     private var accountController = AccountController()
     
@@ -96,11 +97,13 @@ class AccountViewModel: ObservableObject {
     
     func getAccountsForWatchList(accountID: [String]) async {
         do {
+            watchList = [Account]()
             for i in 0..<accountID.count {
-                let list = try await accountController.getAccount(id: accountID[i])
-                DispatchQueue.main.async {
-                    self.accountList.append(list)
-                }
+                let account = try await accountController.getAccount(id: accountID[i])
+                watchList.append(account)
+            }
+            DispatchQueue.main.async {
+                self.accountList = self.watchList
             }
         } catch {
             print(error)

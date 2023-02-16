@@ -36,7 +36,11 @@ struct SingleWatchListView: View {
                                         await watchViewModel.getWatchList(id: watchList.id!)
                                         self.watchList = watchViewModel.watch
                                         await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
-                                        await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+                                        if(!accountViewModel.accountList.isEmpty) {
+                                            await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+                                        } else {
+                                            accountViewModel.totalBalance = BalanceModel(currentValue: 0.0)
+                                        }
                                     }
                                 }, label: {
                                     Label("Delete", systemImage: "trash")
