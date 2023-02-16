@@ -18,11 +18,9 @@ struct UpdateBalanceAccountView: View {
     @Environment(\.dismiss) var dismiss
     
     @ObservedObject var accountViewModel: AccountViewModel
-    @ObservedObject var financeListViewModel: FinanceListViewModel
     
-    init(accountViewModel: AccountViewModel, financeListViewModel: FinanceListViewModel){
+    init(accountViewModel: AccountViewModel){
         self.accountViewModel = accountViewModel
-        self.financeListViewModel = financeListViewModel
     }
     
     var body: some View {

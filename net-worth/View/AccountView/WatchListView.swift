@@ -164,7 +164,7 @@ struct WatchListView: View {
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
             }
         }, content: {
-            UpdateBalanceAccountView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel)
+            UpdateBalanceAccountView(accountViewModel: accountViewModel)
         })
         .onAppear {
             Task.init {

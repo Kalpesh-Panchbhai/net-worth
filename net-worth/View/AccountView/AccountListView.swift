@@ -75,7 +75,7 @@ struct AccountListView: View {
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
             }
         }, content: {
-            UpdateBalanceAccountView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel)
+            UpdateBalanceAccountView(accountViewModel: accountViewModel)
         })
         .searchable(text: $searchText)
         .onAppear {

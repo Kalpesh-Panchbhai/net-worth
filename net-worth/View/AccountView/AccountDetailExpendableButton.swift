@@ -150,7 +150,7 @@ struct AccountDetailExpendableButton: View {
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
             }
         }, content: {
-            UpdateBalanceAccountView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel)
+            UpdateBalanceAccountView(accountViewModel: accountViewModel)
         })
         .animation(.spring(), value: show)
     }

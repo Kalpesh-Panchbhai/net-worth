@@ -128,7 +128,7 @@ struct AccountCardList: View {
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
             }
         }, content: {
-            UpdateBalanceAccountView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel)
+            UpdateBalanceAccountView(accountViewModel: accountViewModel)
         })
         .halfSheet(showSheet: $isNewAccountTypeAcountViewOpen) {
             NewAccountView(accountType: accountTypeSelected, accountViewModel: accountViewModel)

@@ -14,14 +14,13 @@ struct SingleWatchListView: View {
     var watchController = WatchController()
     
     @StateObject private var accountViewModel = AccountViewModel()
-    @StateObject private var financeListViewModel = FinanceListViewModel()
     @StateObject var watchViewModel = WatchViewModel()
     
     var body: some View {
         VStack {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack {
-                    BalanceCardView(accountViewModel: accountViewModel, accountType: watchList.accountName, isWatchListCardView: true, watchList: watchList)
+                    BalanceCardView(accountViewModel: accountViewModel, accountType: watchList.accountName, isWatchListCardView: true, watchList: watchViewModel.watch)
                         .frame(width: 360)
                         .cornerRadius(10)
                 }
@@ -47,34 +46,31 @@ struct SingleWatchListView: View {
                                     Label("Delete", systemImage: "trash")
                                 })
                                 
-//                                Button {
-//                                    Task.init {
-//                                        await accountViewModel.getAccount(id: account)
-//                                    }
-//                                    isNewTransactionViewOpen.toggle()
-//                                } label: {
-//                                    Label("New Transaction", systemImage: "square.and.pencil")
-//                                }
+                                Button {
+                                    Task.init {
+                                        await accountViewModel.getAccount(id: account)
+                                    }
+                                    isNewTransactionViewOpen.toggle()
+                                } label: {
+                                    Label("New Transaction", systemImage: "square.and.pencil")
+                                }
                             }
                     }
                     .padding(10)
                 }
             }
         }
-//        .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
-//            Task.init {
-//                await accountViewModel.getAccount(id: accountViewModel.account.id!)
-//                await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
-//                await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
-//                await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
-//
-//                await watchViewModel.getWatchList(id: watchList.id!)
-//                await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
-//                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-//            }
-//        }, content: {
-//            UpdateBalanceAccountView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel)
-//        })
+        .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
+            Task.init {
+                watchViewModel.watch = Watch()
+
+                await watchViewModel.getWatchList(id: watchList.id!)
+                await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
+                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+            }
+        }, content: {
+            UpdateBalanceAccountView(accountViewModel: accountViewModel)
+        })
         .onAppear {
             Task.init {
                 await watchViewModel.getWatchList(id: watchList.id!)
