@@ -121,8 +121,6 @@ struct AccountCardList: View {
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             Task.init {
                 await accountViewModel.getAccount(id: accountViewModel.account.id!)
-                await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
-                await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
                 await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
                 accountViewModel.accountList = [Account]()
                 await accountViewModel.getAccountList()
