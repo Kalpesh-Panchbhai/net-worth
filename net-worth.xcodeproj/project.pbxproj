@@ -49,7 +49,6 @@
 		7D921C66298684790014AC9E /* +View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D921C65298684790014AC9E /* +View.swift */; };
 		7D9DF69F2939B80400BE4C9D /* CommonUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9DF69E2939B80400BE4C9D /* CommonUtils.swift */; };
 		7D9EA38929940451005245EF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D9EA38829940451005245EF /* GoogleService-Info.plist */; };
-		7D9F6F56299CE01C00F964EC /* AllWatchListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9F6F55299CE01C00F964EC /* AllWatchListView.swift */; };
 		7D9F6F58299CE18000F964EC /* SingleWatchListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9F6F57299CE18000F964EC /* SingleWatchListView.swift */; };
 		7DA63A492995FACA00568FCA /* AccountDetailCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA63A482995FACA00568FCA /* AccountDetailCardView.swift */; };
 		7DA63A4B2996017D00568FCA /* AccountDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA63A4A2996017D00568FCA /* AccountDetailView.swift */; };
@@ -148,7 +147,6 @@
 		7D921C65298684790014AC9E /* +View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+View.swift"; sourceTree = "<group>"; };
 		7D9DF69E2939B80400BE4C9D /* CommonUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonUtils.swift; sourceTree = "<group>"; };
 		7D9EA38829940451005245EF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		7D9F6F55299CE01C00F964EC /* AllWatchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllWatchListView.swift; sourceTree = "<group>"; };
 		7D9F6F57299CE18000F964EC /* SingleWatchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleWatchListView.swift; sourceTree = "<group>"; };
 		7DA63A482995FACA00568FCA /* AccountDetailCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailCardView.swift; sourceTree = "<group>"; };
 		7DA63A4A2996017D00568FCA /* AccountDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailView.swift; sourceTree = "<group>"; };
@@ -457,11 +455,6 @@
 				7DB58AB429967B2E00B93592 /* AccountListView.swift */,
 				7D482CEF299911CA007B9697 /* NewAccountCardView.swift */,
 				7D5B9F92299A896300D0477B /* BalanceCardView.swift */,
-				7DB98803299B682F004ED6D2 /* NewWatchView.swift */,
-				7DB98805299B708C004ED6D2 /* UpdateWatchView.swift */,
-				7DB98807299B8A99004ED6D2 /* AddAccountWatchListView.swift */,
-				7D9F6F55299CE01C00F964EC /* AllWatchListView.swift */,
-				7D9F6F57299CE18000F964EC /* SingleWatchListView.swift */,
 			);
 			path = AccountView;
 			sourceTree = "<group>";
@@ -478,6 +471,10 @@
 		7DF8CCFB299F445300267C29 /* WatchView */ = {
 			isa = PBXGroup;
 			children = (
+				7DB98803299B682F004ED6D2 /* NewWatchView.swift */,
+				7DB98805299B708C004ED6D2 /* UpdateWatchView.swift */,
+				7DB98807299B8A99004ED6D2 /* AddAccountWatchListView.swift */,
+				7D9F6F57299CE18000F964EC /* SingleWatchListView.swift */,
 				7DF8CCF8299F444000267C29 /* WatchListView.swift */,
 			);
 			path = WatchView;
@@ -727,7 +724,6 @@
 				7D7AA909298D8DA2004C9776 /* UserController.swift in Sources */,
 				7D79FA5D291B7431004A2ECF /* net_worth.xcdatamodeld in Sources */,
 				7D9F6F58299CE18000F964EC /* SingleWatchListView.swift in Sources */,
-				7D9F6F56299CE01C00F964EC /* AllWatchListView.swift in Sources */,
 				7D3636FB292F9CCB0013B4E5 /* NotificationsView.swift in Sources */,
 				7DC97A28292236FB003F69D4 /* IncomeView.swift in Sources */,
 				7DB2B0A4299515B800E4B891 /* AccountCardView.swift in Sources */,
