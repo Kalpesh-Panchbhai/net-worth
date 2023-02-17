@@ -16,6 +16,7 @@ struct AccountDetailView: View {
     @State private var show = false
     @State var isNewTransactionViewOpen = false
     @State var paymentDate = 0
+    @State var tabItem = 1
     
     @ObservedObject var accountViewModel: AccountViewModel
     @StateObject var financeListViewModel = FinanceListViewModel()
@@ -28,12 +29,23 @@ struct AccountDetailView: View {
     }
     
     var body: some View {
-        ZStack {
+        VStack {
             VStack {
                 AccountDetailCardView(financeListViewModel: financeListViewModel, accountViewModel: accountViewModel)
                     .cornerRadius(10)
                     .shadow(color: Color.gray, radius: 3)
-                TransactionsView(accountViewModel: accountViewModel)
+                Picker(selection: $tabItem, content: {
+                    Text("Transactions").tag(1)
+                    Text("Charts").tag(2)
+                }, label: {
+                    Label("CCC", systemImage: "")
+                })
+                .pickerStyle(SegmentedPickerStyle())
+                if(tabItem == 1) {
+                    TransactionsView(accountViewModel: accountViewModel)
+                } else {
+                    AccountChartView(accountViewModel: accountViewModel)
+                }
             }
         }
         .toolbar {

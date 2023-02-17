@@ -77,6 +77,7 @@
 		7DE766F32928B62900EFBD2D /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE766F22928B62900EFBD2D /* NotificationController.swift */; };
 		7DEC3B802938A38B002E9C8B /* FinanceDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DEC3B7F2938A38B002E9C8B /* FinanceDetailModel.swift */; };
 		7DF8CCF9299F444000267C29 /* WatchListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF8CCF8299F444000267C29 /* WatchListView.swift */; };
+		7DF8CCFD299FB86100267C29 /* AccountChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF8CCFC299FB86100267C29 /* AccountChartView.swift */; };
 		7DF9DB91298F978600831494 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF9DB90298F978600831494 /* Account.swift */; };
 		7DF9DB93298F98A800831494 /* AccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF9DB92298F98A800831494 /* AccountViewModel.swift */; };
 		7DF9DB95298F9C2600831494 /* AccountTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF9DB94298F9C2600831494 /* AccountTransaction.swift */; };
@@ -174,6 +175,7 @@
 		7DE766F22928B62900EFBD2D /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		7DEC3B7F2938A38B002E9C8B /* FinanceDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceDetailModel.swift; sourceTree = "<group>"; };
 		7DF8CCF8299F444000267C29 /* WatchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchListView.swift; sourceTree = "<group>"; };
+		7DF8CCFC299FB86100267C29 /* AccountChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountChartView.swift; sourceTree = "<group>"; };
 		7DF9DB90298F978600831494 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		7DF9DB92298F98A800831494 /* AccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewModel.swift; sourceTree = "<group>"; };
 		7DF9DB94298F9C2600831494 /* AccountTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTransaction.swift; sourceTree = "<group>"; };
@@ -452,6 +454,7 @@
 				7DB58AB429967B2E00B93592 /* AccountListView.swift */,
 				7D482CEF299911CA007B9697 /* NewAccountCardView.swift */,
 				7D5B9F92299A896300D0477B /* BalanceCardView.swift */,
+				7DF8CCFC299FB86100267C29 /* AccountChartView.swift */,
 			);
 			path = AccountView;
 			sourceTree = "<group>";
@@ -719,6 +722,7 @@
 				7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */,
 				7D5B9F93299A896300D0477B /* BalanceCardView.swift in Sources */,
 				7D7AA909298D8DA2004C9776 /* UserController.swift in Sources */,
+				7DF8CCFD299FB86100267C29 /* AccountChartView.swift in Sources */,
 				7D79FA5D291B7431004A2ECF /* net_worth.xcdatamodeld in Sources */,
 				7D9F6F58299CE18000F964EC /* SingleWatchListView.swift in Sources */,
 				7D3636FB292F9CCB0013B4E5 /* NotificationsView.swift in Sources */,
