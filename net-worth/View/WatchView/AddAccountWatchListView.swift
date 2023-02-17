@@ -14,6 +14,7 @@ struct AddAccountWatchListView: View {
     
     var body: some View {
         VStack {
+            Spacer(minLength: 20)
             ScrollView(.vertical) {
                 LazyVStack {
                     ForEach(accountViewModel.accountList, id: \.self) { account in
