@@ -336,7 +336,7 @@ struct NewAccountView: View {
             
             currentBalance = totalShares * currentRateShare
         }
-        .pickerStyle(.inline)
+        .pickerStyle(.navigationLink)
     }
 }
 
