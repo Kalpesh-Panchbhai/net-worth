@@ -12,6 +12,7 @@ struct SingleWatchListView: View {
     var watchList: Watch
     @State private var isNewTransactionViewOpen = false
     @State private var addAccountViewOpen = false
+    @State private var isAscending = true
     var watchController = WatchController()
     
     @StateObject var accountViewModel = AccountViewModel()
@@ -79,7 +80,42 @@ struct SingleWatchListView: View {
                 Button(action: {
                     self.addAccountViewOpen.toggle()
                 }, label: {
-                    Text("Add Accounts")
+                    Image(systemName: "plus")
+                })
+            })
+            
+            ToolbarItem(content: {
+                
+                Menu(content: {
+                    Menu(content: {
+                        Button(action: {
+                            if(isAscending) {
+                                watchViewModel.watch.accountID = accountViewModel
+                                    .accountList
+                                    .sorted(by: {
+                                        $0.accountName > $1.accountName
+                                    }).map({
+                                        $0.id!
+                                    })
+                                self.isAscending.toggle()
+                            } else {
+                                watchViewModel.watch.accountID = accountViewModel
+                                    .accountList
+                                    .sorted(by: {
+                                        $0.accountName < $1.accountName
+                                    }).map({
+                                        $0.id!
+                                    })
+                                self.isAscending.toggle()
+                            }
+                        }, label: {
+                            Text("Alphabet")
+                        })
+                    }, label: {
+                        Text("Sort by")
+                    })
+                }, label: {
+                    Image(systemName: "ellipsis")
                 })
             })
         }
@@ -87,6 +123,11 @@ struct SingleWatchListView: View {
             Task.init {
                 await watchViewModel.getWatchList(id: watchList.id!)
                 await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
+                watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                    $0.accountName < $1.accountName
+                }).map({
+                    $0.id!
+                })
                 if(!watchViewModel.watch.accountID.isEmpty) {
                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                 } else {
