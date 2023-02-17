@@ -15,8 +15,6 @@ struct AccountCardList: View {
     @State private var accountTypeSelected = "None"
     @State private var selectedAccount = Account()
     @State private var searchText = ""
-    @State private var longPressedItem = 0
-    @State private var longPressedAccountType = ""
     
     @StateObject var accountViewModel = AccountViewModel()
     @StateObject var financeListViewModel = FinanceListViewModel()
@@ -104,7 +102,6 @@ struct AccountCardList: View {
                             }
                         }
                         .padding(10)
-                        WatchListView(accountViewModel: accountViewModel, financeListViewModel: financeListViewModel)
                     }
                 }
             }

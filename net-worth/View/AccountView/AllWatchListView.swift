@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AllWatchListView: View {
     
-    @StateObject var watchViewModel: WatchViewModel
+    @StateObject var watchViewModel = WatchViewModel()
     
     var body: some View {
         NavigationView {
@@ -21,6 +21,11 @@ struct AllWatchListView: View {
                         Text(watchList.accountName)
                     })
                 }
+            }
+        }
+        .onAppear {
+            Task.init {
+                await watchViewModel.getAllWatchList()
             }
         }
     }

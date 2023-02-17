@@ -7,61 +7,61 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "4DDE60C8-2653-4816-B48D-D97819FAEAC1"
+            uuid = "FC554573-CAB5-484C-9E37-A37FF4CEE43F"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "net-worth/Data Model/AccountViewModel.swift"
+            filePath = "net-worth/Data Model/WatchViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "148"
-            endingLineNumber = "148"
-            landmarkName = "getLastTwoAccountTransactionList(id:)"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "getWatchList(id:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "4DDE60C8-2653-4816-B48D-D97819FAEAC1 - ab6d6a2ff7d71150"
+                  uuid = "FC554573-CAB5-484C-9E37-A37FF4CEE43F - 6107c46e140adeb"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for net_worth.AccountViewModel.getLastTwoAccountTransactionList(id: Swift.String) async -&gt; ()"
+                  symbolName = "(1) suspend resume partial function for net_worth.WatchViewModel.getWatchList(id: Swift.String) async -&gt; ()"
                   moduleName = "net-worth"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/AccountViewModel.swift"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/WatchViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "148"
-                  endingLineNumber = "148"
+                  startingLineNumber = "30"
+                  endingLineNumber = "30"
                   offsetFromSymbolStart = "80">
                </Location>
                <Location
-                  uuid = "4DDE60C8-2653-4816-B48D-D97819FAEAC1 - 6938e0f3d5de3222"
+                  uuid = "FC554573-CAB5-484C-9E37-A37FF4CEE43F - b0d55546efab8c4"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "(2) await resume partial function for net_worth.AccountViewModel.getLastTwoAccountTransactionList(id: Swift.String) async -&gt; ()"
+                  symbolName = "(2) await resume partial function for net_worth.WatchViewModel.getWatchList(id: Swift.String) async -&gt; ()"
                   moduleName = "net-worth"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/AccountViewModel.swift"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/WatchViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "148"
-                  endingLineNumber = "148"
-                  offsetFromSymbolStart = "44">
+                  startingLineNumber = "30"
+                  endingLineNumber = "30"
+                  offsetFromSymbolStart = "40">
                </Location>
                <Location
-                  uuid = "4DDE60C8-2653-4816-B48D-D97819FAEAC1 - e03adb48e8654759"
+                  uuid = "FC554573-CAB5-484C-9E37-A37FF4CEE43F - 7e4f91b7c94adfee"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "(4) suspend resume partial function for net_worth.AccountViewModel.getLastTwoAccountTransactionList(id: Swift.String) async -&gt; ()"
+                  symbolName = "(4) suspend resume partial function for net_worth.WatchViewModel.getWatchList(id: Swift.String) async -&gt; ()"
                   moduleName = "net-worth"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/AccountViewModel.swift"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/WatchViewModel.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "148"
-                  endingLineNumber = "148"
+                  startingLineNumber = "30"
+                  endingLineNumber = "30"
                   offsetFromSymbolStart = "68">
                </Location>
             </Locations>
@@ -70,16 +70,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "9D07D1F1-30F1-4B87-A79E-37EE3498B810"
+            uuid = "3EE5DF6C-F703-4881-BE13-04175E22CEAA"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "net-worth/Data Model/AccountViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "150"
-            endingLineNumber = "150"
-            landmarkName = "getLastTwoAccountTransactionList(id:)"
+            startingLineNumber = "100"
+            endingLineNumber = "100"
+            landmarkName = "getAccountsForWatchList(accountID:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -18,6 +18,11 @@ struct MainScreenView: View {
                             Image(systemName: "star.fill")
                             Text("Accounts")
                         }.tag("account_view")
+                    WatchListView()
+                        .tabItem {
+                            Image(systemName: "list.bullet.below.rectangle")
+                            Text("Watch List")
+                        }.tag("watch_view")
                     IncomeView()
                         .tabItem{
                             Image(systemName: "indianrupeesign.circle.fill")

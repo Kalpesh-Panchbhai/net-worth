@@ -74,6 +74,5 @@ struct AddAccountWatchView: View {
         .background(.black)
         .foregroundColor(.white)
         .cornerRadius(10)
-//        .padding()
     }
 }

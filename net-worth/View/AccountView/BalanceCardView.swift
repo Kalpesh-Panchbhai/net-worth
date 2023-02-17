@@ -53,9 +53,6 @@ struct BalanceCardView: View {
                 if(!isWatchListCardView) {
                     await accountViewModel.getAccountList()
                     await accountViewModel.getTotalBalance(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
-                } else if(!watchList.accountID.isEmpty) {
-//                    await accountViewModel.getAccountsForWatchList(accountID: watchList.accountID)
-//                    await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                 }
             }
         }
