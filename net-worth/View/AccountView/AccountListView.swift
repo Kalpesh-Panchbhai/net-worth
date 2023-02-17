@@ -39,7 +39,9 @@ struct AccountListView: View {
                                 .shadow(color: Color.gray, radius: 3)
                                 .contextMenu {
                                     Button(role: .destructive, action: {
-                                        accountController.deleteAccount(account: account)
+                                        Task.init {
+                                            try await accountController.deleteAccount(account: account)
+                                        }
                                         Task.init {
                                             await accountViewModel.getAccountList()
                                             await accountViewModel.getTotalBalance(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))

@@ -41,7 +41,9 @@ struct AccountDetailExpendableButton: View {
                 .clipShape(Circle())
                 
                 Button(action: {
-                    accountController.deleteAccount(account: account)
+                    Task.init {
+                        try await accountController.deleteAccount(account: account)
+                    }
                     self.presentationMode.wrappedValue.dismiss()
                     self.show.toggle()
                 }) {

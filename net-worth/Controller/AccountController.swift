@@ -12,6 +12,7 @@ import FirebaseFirestore
 class AccountController {
     
     private var notificationController = NotificationController()
+    private var watchController = WatchController()
     
     private func getAccountCollection() -> CollectionReference {
         return UserController()
@@ -31,15 +32,21 @@ class AccountController {
         return ""
     }
     
-    public func deleteAccount(account: Account) {
+    public func deleteAccount(account: Account) async throws {
+        let watchList = try await watchController.getAllWatchList()
+        watchList.forEach { watch in
+            if(watch.accountID.contains(account.id!)) {
+                watchController.deleteAccountFromWatchList(watchList: watch, accountID: account.id!)
+            }
+        }
         CommonController.delete(collection: getAccountCollection().document(account.id!).collection(ConstantUtils.accountTransactionCollectionName))
-        getAccountCollection().document(account.id!).delete()
+        try await getAccountCollection().document(account.id!).delete()
     }
     
     public func deleteAccounts() async throws {
         let accountList = try await getAccountList()
         for account in accountList {
-            deleteAccount(account: account)
+            try await deleteAccount(account: account)
         }
     }
     
