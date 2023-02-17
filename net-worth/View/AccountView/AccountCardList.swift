@@ -9,7 +9,6 @@ import SwiftUI
 
 struct AccountCardList: View {
     
-    @State private var isNewAccountTypeAcountViewOpen = false
     @State private var isNewAccountAccountViewOpen = false
     @State private var isNewTransactionViewOpen = false
     @State private var accountTypeSelected = "None"
@@ -53,19 +52,6 @@ struct AccountCardList: View {
                                 }
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     LazyHStack {
-                                        VStack(spacing: 50) {
-                                            NewAccountCardView()
-                                                .shadow(color: Color.gray, radius: 3)
-                                                .onTapGesture(perform: {
-                                                    if(accountType == "Credit Card" || accountType == "Saving" || accountType == "Loan" || accountType == "Other") {
-                                                        self.accountTypeSelected = accountType
-                                                    } else {
-                                                        self.accountTypeSelected = "Symbol"
-                                                    }
-                                                    isNewAccountTypeAcountViewOpen.toggle()
-                                                })
-                                            Spacer()
-                                        }
                                         ForEach(0..<((accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 5) ? 5 : accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count), id: \.self) { i in
                                             VStack {
                                                 NavigationLink(destination: AccountDetailView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i],accountViewModel:  accountViewModel)) {
@@ -126,10 +112,7 @@ struct AccountCardList: View {
         }, content: {
             UpdateBalanceAccountView(accountViewModel: accountViewModel)
         })
-        .halfSheet(showSheet: $isNewAccountTypeAcountViewOpen) {
-            NewAccountView(accountType: accountTypeSelected, accountViewModel: accountViewModel)
-        }
-        .halfSheet(showSheet: $isNewAccountAccountViewOpen) {
+        .sheet(isPresented: $isNewAccountAccountViewOpen) {
             NewAccountView(accountType: "None", accountViewModel: accountViewModel)
         }
         .searchable(text: $searchText)
