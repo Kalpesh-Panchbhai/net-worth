@@ -28,7 +28,7 @@ struct NewIncomeTagView: View {
                 ToolbarItem {
                     Button(action: {
                         Task.init {
-                            await incomeController.addIncomeTag(tag: IncomeTag(name: tagName))
+                            incomeController.addIncomeTag(tag: IncomeTag(name: tagName))
                             await incomeViewModel.getIncomeTagList()
                         }
                         dismiss()

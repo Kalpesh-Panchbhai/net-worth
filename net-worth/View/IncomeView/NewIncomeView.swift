@@ -124,7 +124,7 @@ struct NewIncomeView: View {
                     await incomeViewModel.getIncomeTagList()
                     await incomeViewModel.getIncomeTypeList()
                     incomeTagSelected = incomeViewModel.incomeTagList.filter { item in
-                        item.name == "Un-Tagged"
+                        item.name == "None"
                     }.first ?? IncomeTag()
                     incomeTypeSelected = incomeViewModel.incomeTypeList.filter { item in
                         item.name == "None"

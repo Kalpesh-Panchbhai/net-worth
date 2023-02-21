@@ -28,7 +28,7 @@ struct NewIncomeTypeView: View {
                 ToolbarItem {
                     Button(action: {
                         Task.init {
-                            await incomeController.addIncomeType(tag: IncomeType(name: typeName))
+                            incomeController.addIncomeType(tag: IncomeType(name: typeName))
                             await incomeViewModel.getIncomeTypeList()
                         }
                         dismiss()

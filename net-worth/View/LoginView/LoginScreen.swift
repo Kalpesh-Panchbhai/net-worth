@@ -65,7 +65,9 @@ struct LoginScreen: View {
                             UserDefaults.standard.set(true, forKey: "signIn")
                             UserController().addCurrentUser()
                             Task.init {
+                                try await IncomeController().addDefaultIncomeTag()
                                 try await WatchController().addDefaultWatchList()
+                                try await IncomeController().addDefaultIncomeType()
                             }
                         }
                     }

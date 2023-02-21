@@ -103,7 +103,7 @@ class IncomeController {
         return incomeTagList
     }
     
-    public func addIncomeTag(tag: IncomeTag) async {
+    public func addIncomeTag(tag: IncomeTag) {
         do {
             let documentID = try getIncomeTagCollection()
                 .addDocument(from: tag)
@@ -113,6 +113,18 @@ class IncomeController {
         } catch {
             print(error)
         }
+    }
+    
+    public func addDefaultIncomeTag() async throws {
+        let count = try await getIncomeTagList().count
+        if(count == 0) {
+            let incomeTag = IncomeTag(name: "None")
+            addIncomeTag(tag: incomeTag)
+        }
+    }
+    
+    public func deleteIncomeTags() {
+        CommonController.delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeTagCollectionName))
     }
     
     func getIncomeTypeList() async throws -> [IncomeType] {
@@ -129,7 +141,7 @@ class IncomeController {
         return incomeTypeList
     }
     
-    public func addIncomeType(tag: IncomeType) async {
+    public func addIncomeType(tag: IncomeType) {
         do {
             let documentID = try getIncomeTypeCollection()
                 .addDocument(from: tag)
@@ -139,6 +151,18 @@ class IncomeController {
         } catch {
             print(error)
         }
+    }
+    
+    public func addDefaultIncomeType() async throws {
+        let count = try await getIncomeTypeList().count
+        if(count == 0) {
+            let incomeType = IncomeType(name: "None")
+            addIncomeType(tag: incomeType)
+        }
+    }
+    
+    public func deleteIncomeTypes() {
+        CommonController.delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeTypeCollectionName))
     }
 }
 
