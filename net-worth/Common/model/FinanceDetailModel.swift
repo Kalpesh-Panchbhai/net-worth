@@ -53,7 +53,7 @@ struct FinanceDetailMetaResponse: Decodable {
     
     let meta: FinanceDetailMetaDetailResponse
     
-    let timestamp: [Int]
+    let timestamp: [Int?]
     
     let indicators: FinanceDetailIndicatorResponse
     

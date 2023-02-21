@@ -10,10 +10,11 @@ import SwiftUI
 struct NewIncomeView: View {
     
     @State private var amount: String = "0.0"
-    @State private var incomeType: String = "None"
-    @State private var incomeTagSelected: IncomeTag = IncomeTag(name: "Un-Tagged")
+    @State private var incomeTypeSelected: IncomeType = IncomeType()
+    @State private var incomeTagSelected: IncomeTag = IncomeTag()
     @State private var date = Date()
     @State private var addIncomeTagViewOpen = false
+    @State private var addIncomeTypeViewOpen = false
     
     var incomeTypes =  ["None", "Salary", "Portfolio","Other"]
     
@@ -37,12 +38,12 @@ struct NewIncomeView: View {
         NavigationView {
             Form {
                 Section("Income detail") {
-                    Picker(selection: $incomeType, label: Text("Type")) {
-                        ForEach(incomeTypes, id: \.self) {
-                            Text($0).tag($0)
+                    Picker(selection: $incomeTypeSelected, label: Text("Type")) {
+                        ForEach(incomeViewModel.incomeTypeList, id: \.self) {
+                            Text($0.name).tag($0)
                         }
                     }
-                    .onChange(of: incomeType) { _ in
+                    .onChange(of: incomeTypeSelected) { _ in
                         amount="0.0"
                     }
                     HStack {
@@ -92,7 +93,7 @@ struct NewIncomeView: View {
                 ToolbarItem {
                     Button(action: {
                         Task.init {
-                            await incomeController.addIncome(incometype: incomeType, amount: amount, date: date, currency: currenySelected.code, tag: incomeTagSelected)
+                            await incomeController.addIncome(incometype: incomeTypeSelected, amount: amount, date: date, currency: currenySelected.code, tag: incomeTagSelected)
                             await incomeViewModel.getTotalBalance()
                             await incomeViewModel.getIncomeList()
                         }
@@ -104,7 +105,7 @@ struct NewIncomeView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Menu(content: {
                         Button(action: {
-                            
+                            addIncomeTypeViewOpen.toggle()
                         }, label: {
                             Label("Add Income Type", systemImage: "")
                         })
@@ -121,13 +122,20 @@ struct NewIncomeView: View {
             .onAppear {
                 Task.init {
                     await incomeViewModel.getIncomeTagList()
+                    await incomeViewModel.getIncomeTypeList()
+                    incomeTagSelected = incomeViewModel.incomeTagList.filter { item in
+                        item.name == "Un-Tagged"
+                    }.first ?? IncomeTag()
+                    incomeTypeSelected = incomeViewModel.incomeTypeList.filter { item in
+                        item.name == "None"
+                    }.first ?? IncomeType()
                 }
-                incomeTagSelected = incomeViewModel.incomeTagList.filter { item in
-                    item.name == "Un-Tagged"
-                }.first ?? IncomeTag()
             }
             .sheet(isPresented: $addIncomeTagViewOpen, content: {
                 NewIncomeTagView(incomeViewModel: incomeViewModel)
+            })
+            .sheet(isPresented: $addIncomeTypeViewOpen, content: {
+                NewIncomeTypeView(incomeViewModel: incomeViewModel)
             })
             .navigationTitle("New Income")
             .navigationBarTitleDisplayMode(.inline)
@@ -135,7 +143,7 @@ struct NewIncomeView: View {
     }
     
     private func allFieldsFilled () -> Bool {
-        if incomeType == "Salary" || incomeType == "Portfolio" || incomeType == "Other" {
+        if !incomeTypeSelected.name.isEmpty {
             if amount.isEmpty {
                 return false
             } else {

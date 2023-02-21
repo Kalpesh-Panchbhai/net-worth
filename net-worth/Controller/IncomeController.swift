@@ -21,8 +21,14 @@ class IncomeController {
             .collection(ConstantUtils.incomeTagCollectionName)
     }
     
-    public func addIncome(incometype: String, amount: String, date: Date, currency: String, tag: IncomeTag) async {
-        let newIncome = Income(amount: Double(amount) ?? 0.0, creditedOn: date, currency: currency, incomeType: incometype, tag: tag.name)
+    private func getIncomeTypeCollection() -> CollectionReference {
+        return UserController()
+            .getCurrentUserDocument()
+            .collection(ConstantUtils.incomeTypeCollectionName)
+    }
+    
+    public func addIncome(incometype: IncomeType, amount: String, date: Date, currency: String, tag: IncomeTag) async {
+        let newIncome = Income(amount: Double(amount) ?? 0.0, creditedOn: date, currency: currency, incomeType: incometype.name, tag: tag.name)
         do {
             let documentID = try getIncomeCollection()
                 .addDocument(from: newIncome)
@@ -104,6 +110,32 @@ class IncomeController {
                 .documentID
             
             print("New Income Tag Added : " + documentID)
+        } catch {
+            print(error)
+        }
+    }
+    
+    func getIncomeTypeList() async throws -> [IncomeType] {
+        var incomeTypeList = [IncomeType]()
+        incomeTypeList = try await getIncomeTypeCollection()
+            .order(by: ConstantUtils.incomeTypeKeyName)
+            .getDocuments()
+            .documents
+            .map { doc in
+                return IncomeType(id: doc.documentID,
+                                 name: doc[ConstantUtils.incomeTypeKeyName] as? String ?? "")
+            }
+        
+        return incomeTypeList
+    }
+    
+    public func addIncomeType(tag: IncomeType) async {
+        do {
+            let documentID = try getIncomeTypeCollection()
+                .addDocument(from: tag)
+                .documentID
+            
+            print("New Income Type Added : " + documentID)
         } catch {
             print(error)
         }

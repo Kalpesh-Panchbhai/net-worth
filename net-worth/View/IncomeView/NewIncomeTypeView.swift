@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NewIncomeTagView: View {
+struct NewIncomeTypeView: View {
     
     @Environment(\.dismiss) var dismiss
     
@@ -15,26 +15,26 @@ struct NewIncomeTagView: View {
     
     @ObservedObject var incomeViewModel : IncomeViewModel
     
-    @State private var tagName = ""
+    @State private var typeName = ""
     
     var body: some View {
         NavigationView {
             Form {
-                Section("Income Tag detail") {
-                    TextField("Tag name", text: $tagName)
+                Section("Income Type detail") {
+                    TextField("Type name", text: $typeName)
                 }
             }
             .toolbar {
                 ToolbarItem {
                     Button(action: {
                         Task.init {
-                            await incomeController.addIncomeTag(tag: IncomeTag(name: tagName))
-                            await incomeViewModel.getIncomeTagList()
+                            await incomeController.addIncomeType(tag: IncomeType(name: typeName))
+                            await incomeViewModel.getIncomeTypeList()
                         }
                         dismiss()
                     }, label: {
                         Image(systemName: "checkmark")
-                    }).disabled(tagName.isEmpty)
+                    }).disabled(typeName.isEmpty)
                 }
             }
         }

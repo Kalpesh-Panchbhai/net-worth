@@ -15,6 +15,8 @@ class IncomeViewModel: ObservableObject {
     
     @Published var incomeTagList = [IncomeTag]()
     
+    @Published var incomeTypeList = [IncomeType]()
+    
     @Published var incomeTotalAmount = 0.0
     
     private var incomeController = IncomeController()
@@ -46,6 +48,17 @@ class IncomeViewModel: ObservableObject {
             let list = try await incomeController.getIncomeTagList()
             DispatchQueue.main.async {
                 self.incomeTagList = list
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    func getIncomeTypeList() async {
+        do {
+            let list = try await incomeController.getIncomeTypeList()
+            DispatchQueue.main.async {
+                self.incomeTypeList = list
             }
         } catch {
             print(error)
