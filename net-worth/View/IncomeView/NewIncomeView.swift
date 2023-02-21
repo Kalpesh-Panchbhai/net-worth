@@ -93,7 +93,7 @@ struct NewIncomeView: View {
                 ToolbarItem {
                     Button(action: {
                         Task.init {
-                            await incomeController.addIncome(incometype: incomeTypeSelected, amount: amount, date: date, currency: currenySelected.code, tag: incomeTagSelected)
+                            await incomeController.addIncome(type: incomeTypeSelected, amount: amount, date: date, currency: currenySelected.code, tag: incomeTagSelected)
                             await incomeViewModel.getTotalBalance()
                             await incomeViewModel.getIncomeList()
                         }

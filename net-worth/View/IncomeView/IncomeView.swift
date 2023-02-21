@@ -98,9 +98,12 @@ struct ChildIncomeView: View {
     var body: some View {
         HStack{
             VStack {
-                Text(income.incomeType)
+                Text(income.type)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text(income.creditedOn.getDateAndFormat()).font(.system(size: 10))
+                Text(income.creditedOn.getDateAndFormat()).font(.system(size: 12))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundColor(.gray)
+                Text(income.tag).font(.system(size: 10))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundColor(.gray)
             }

@@ -27,8 +27,8 @@ class IncomeController {
             .collection(ConstantUtils.incomeTypeCollectionName)
     }
     
-    public func addIncome(incometype: IncomeType, amount: String, date: Date, currency: String, tag: IncomeTag) async {
-        let newIncome = Income(amount: Double(amount) ?? 0.0, creditedOn: date, currency: currency, incomeType: incometype.name, tag: tag.name)
+    public func addIncome(type: IncomeType, amount: String, date: Date, currency: String, tag: IncomeTag) async {
+        let newIncome = Income(amount: Double(amount) ?? 0.0, creditedOn: date, currency: currency, type: type.name, tag: tag.name)
         do {
             let documentID = try getIncomeCollection()
                 .addDocument(from: newIncome)
@@ -83,7 +83,7 @@ class IncomeController {
                               amount: doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0,
                               creditedOn: (doc[ConstantUtils.incomeKeyCreditedOn] as? Timestamp)?.dateValue() ?? Date(),
                               currency: doc[ConstantUtils.incomeKeyCurrency] as? String ?? "",
-                              incomeType: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
+                              type: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
                               tag: doc[ConstantUtils.incomeKeyIncomeTag] as? String ?? "")
             }
         return incomeList

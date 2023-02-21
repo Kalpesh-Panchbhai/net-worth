@@ -14,6 +14,6 @@ struct Income: Codable, Hashable {
     var amount: Double
     var creditedOn: Date
     var currency: String
-    var incomeType: String
+    var type: String
     var tag: String
 }

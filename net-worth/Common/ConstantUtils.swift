@@ -30,7 +30,7 @@ class ConstantUtils {
     static var incomeKeyAmount = "amount"
     static var incomeKeyCreditedOn = "creditedOn"
     static var incomeKeyCurrency = "currency"
-    static var incomeKeyIncomeType = "incomeType"
+    static var incomeKeyIncomeType = "type"
     static var incomeKeyIncomeTag = "tag"
     
     static var accountKeyAccountName = "accountName"
