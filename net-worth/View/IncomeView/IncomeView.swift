@@ -35,9 +35,16 @@ struct IncomeView: View {
                 .onDelete(perform: deleteIncome)
             }
             .refreshable {
-                Task.init {
-                    await incomeViewModel.getTotalBalance()
-                    await incomeViewModel.getIncomeList()
+                if(!filterIncomeType.isEmpty || !filterIncomeTag.isEmpty || !filterYear.isEmpty || !filterFinancialYear.isEmpty) {
+                    Task.init {
+                        await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                        await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                    }
+                } else {
+                    Task.init {
+                        await incomeViewModel.getTotalBalance()
+                        await incomeViewModel.getIncomeList()
+                    }
                 }
             }
             .sheet(isPresented: $isOpen) {
