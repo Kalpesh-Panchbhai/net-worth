@@ -70,6 +70,8 @@
 		7DB98808299B8A99004ED6D2 /* AddAccountWatchListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB98807299B8A99004ED6D2 /* AddAccountWatchListView.swift */; };
 		7DC46B4429A4A4B9000E311B /* NewIncomeTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC46B4329A4A4B9000E311B /* NewIncomeTypeView.swift */; };
 		7DC46B4629A4A513000E311B /* IncomeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC46B4529A4A513000E311B /* IncomeType.swift */; };
+		7DC46B4829A4C5A0000E311B /* IncomeTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC46B4729A4C5A0000E311B /* IncomeTypeView.swift */; };
+		7DC46B4A29A4C5B0000E311B /* IncomeTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC46B4929A4C5B0000E311B /* IncomeTagView.swift */; };
 		7DC97A24292216BB003F69D4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A23292216BB003F69D4 /* SettingsView.swift */; };
 		7DC97A2629221990003F69D4 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A2529221990003F69D4 /* SettingsController.swift */; };
 		7DC97A28292236FB003F69D4 /* IncomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A27292236FB003F69D4 /* IncomeView.swift */; };
@@ -174,6 +176,8 @@
 		7DB98807299B8A99004ED6D2 /* AddAccountWatchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAccountWatchListView.swift; sourceTree = "<group>"; };
 		7DC46B4329A4A4B9000E311B /* NewIncomeTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewIncomeTypeView.swift; sourceTree = "<group>"; };
 		7DC46B4529A4A513000E311B /* IncomeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeType.swift; sourceTree = "<group>"; };
+		7DC46B4729A4C5A0000E311B /* IncomeTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTypeView.swift; sourceTree = "<group>"; };
+		7DC46B4929A4C5B0000E311B /* IncomeTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTagView.swift; sourceTree = "<group>"; };
 		7DC97A23292216BB003F69D4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		7DC97A2529221990003F69D4 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		7DC97A27292236FB003F69D4 /* IncomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeView.swift; sourceTree = "<group>"; };
@@ -453,6 +457,8 @@
 				7DC97A2B29223ADB003F69D4 /* NewIncomeView.swift */,
 				7DF4F39829A3A88400E5C1E1 /* NewIncomeTagView.swift */,
 				7DC46B4329A4A4B9000E311B /* NewIncomeTypeView.swift */,
+				7DC46B4729A4C5A0000E311B /* IncomeTypeView.swift */,
+				7DC46B4929A4C5B0000E311B /* IncomeTagView.swift */,
 			);
 			path = IncomeView;
 			sourceTree = "<group>";
@@ -744,6 +750,7 @@
 				7D7AA909298D8DA2004C9776 /* UserController.swift in Sources */,
 				7DF8CCFD299FB86100267C29 /* AccountChartView.swift in Sources */,
 				7D79FA5D291B7431004A2ECF /* net_worth.xcdatamodeld in Sources */,
+				7DC46B4829A4C5A0000E311B /* IncomeTypeView.swift in Sources */,
 				7D9F6F58299CE18000F964EC /* SingleWatchListView.swift in Sources */,
 				7D3636FB292F9CCB0013B4E5 /* NotificationsView.swift in Sources */,
 				7DC97A28292236FB003F69D4 /* IncomeView.swift in Sources */,
@@ -765,6 +772,7 @@
 				7DB98802299B6464004ED6D2 /* WatchController.swift in Sources */,
 				7DB987FE299B6365004ED6D2 /* Watch.swift in Sources */,
 				7D79FA87291B803A004A2ECF /* AccountController.swift in Sources */,
+				7DC46B4A29A4C5B0000E311B /* IncomeTagView.swift in Sources */,
 				7DF8CCF9299F444000267C29 /* WatchListView.swift in Sources */,
 				7DF4F39929A3A88400E5C1E1 /* NewIncomeTagView.swift in Sources */,
 				7D85D032298D2ADD0019F85E /* IncomeViewModel.swift in Sources */,

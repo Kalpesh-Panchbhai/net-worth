@@ -68,6 +68,18 @@ struct SettingsView: View {
                 
                 defaultCurrencyPicker
                 
+                NavigationLink(destination: {
+                    IncomeTypeView()
+                }, label: {
+                    Label("Income Type", systemImage: "")
+                })
+                
+                NavigationLink(destination: {
+                    IncomeTagView()
+                }, label: {
+                    Label("Income Tag", systemImage: "")
+                })
+                
                 Button(action: {
                     isPresentingDataAndAccountDeletionConfirmation.toggle()
                 }, label: {

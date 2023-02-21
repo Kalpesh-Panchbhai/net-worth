@@ -16,19 +16,21 @@ struct NewIncomeTypeView: View {
     @ObservedObject var incomeViewModel : IncomeViewModel
     
     @State private var typeName = ""
+    @State private var isDefault = false
     
     var body: some View {
         NavigationView {
             Form {
                 Section("Income Type detail") {
                     TextField("Type name", text: $typeName)
+                    Toggle("Default Type", isOn: $isDefault)
                 }
             }
             .toolbar {
                 ToolbarItem {
                     Button(action: {
                         Task.init {
-                            incomeController.addIncomeType(tag: IncomeType(name: typeName))
+                            incomeController.addIncomeType(tag: IncomeType(name: typeName, isdefault: isDefault))
                             await incomeViewModel.getIncomeTypeList()
                         }
                         dismiss()

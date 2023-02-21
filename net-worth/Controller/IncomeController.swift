@@ -97,7 +97,8 @@ class IncomeController {
             .documents
             .map { doc in
                 return IncomeTag(id: doc.documentID,
-                                 name: doc[ConstantUtils.incomeTagKeyName] as? String ?? "")
+                                 name: doc[ConstantUtils.incomeTagKeyName] as? String ?? "",
+                                 isdefault: doc[ConstantUtils.incomeTagKeyIsDefault] as? Bool ?? false)
             }
         
         return incomeTagList
@@ -110,16 +111,46 @@ class IncomeController {
                 .documentID
             
             print("New Income Tag Added : " + documentID)
+            
+            makeOtherIncomeTagNonDefault(documentID: documentID)
         } catch {
             print(error)
         }
     }
     
+    public func makeOtherIncomeTagNonDefault(documentID: String) {
+        getIncomeTagCollection()
+            .getDocuments { snapshot, error in
+                if error  == nil {
+                    if let snapshot = snapshot {
+                        snapshot.documents.forEach { doc in
+                            if(!doc.documentID.elementsEqual(documentID) && (doc[ConstantUtils.incomeTagKeyIsDefault] as? Bool ?? false)) {
+                                let updatedIncomeTag = IncomeTag(id: doc.documentID,
+                                                 name: doc[ConstantUtils.incomeTagKeyName] as? String ?? "",
+                                                 isdefault: false)
+                                self.updateIncomeTag(tag: updatedIncomeTag)
+                            }
+                        }
+                    }
+                }
+            }
+    }
+    
     public func addDefaultIncomeTag() async throws {
         let count = try await getIncomeTagList().count
         if(count == 0) {
-            let incomeTag = IncomeTag(name: "None")
+            let incomeTag = IncomeTag(name: "None", isdefault: false)
             addIncomeTag(tag: incomeTag)
+        }
+    }
+    
+    public func updateIncomeTag(tag: IncomeTag) {
+        do {
+            try getIncomeTagCollection()
+                .document(tag.id!)
+                .setData(from: tag, merge: true)
+        } catch {
+            print(error)
         }
     }
     
@@ -135,7 +166,8 @@ class IncomeController {
             .documents
             .map { doc in
                 return IncomeType(id: doc.documentID,
-                                 name: doc[ConstantUtils.incomeTypeKeyName] as? String ?? "")
+                                  name: doc[ConstantUtils.incomeTypeKeyName] as? String ?? "",
+                                  isdefault: doc[ConstantUtils.incomeTagKeyIsDefault] as? Bool ?? false)
             }
         
         return incomeTypeList
@@ -148,16 +180,46 @@ class IncomeController {
                 .documentID
             
             print("New Income Type Added : " + documentID)
+            
+            makeOtherIncomeTypeNonDefault(documentID: documentID)
         } catch {
             print(error)
         }
     }
     
+    public func makeOtherIncomeTypeNonDefault(documentID: String) {
+        getIncomeTypeCollection()
+            .getDocuments { snapshot, error in
+                if error  == nil {
+                    if let snapshot = snapshot {
+                        snapshot.documents.forEach { doc in
+                            if(!doc.documentID.elementsEqual(documentID) && (doc[ConstantUtils.incomeTypeKeyIsDefault] as? Bool ?? false)) {
+                                let updatedIncomeType = IncomeType(id: doc.documentID,
+                                                 name: doc[ConstantUtils.incomeTypeKeyName] as? String ?? "",
+                                                 isdefault: false)
+                                self.updateIncomeType(type: updatedIncomeType)
+                            }
+                        }
+                    }
+                }
+            }
+    }
+    
     public func addDefaultIncomeType() async throws {
         let count = try await getIncomeTypeList().count
         if(count == 0) {
-            let incomeType = IncomeType(name: "None")
+            let incomeType = IncomeType(name: "None", isdefault: false)
             addIncomeType(tag: incomeType)
+        }
+    }
+    
+    public func updateIncomeType(type: IncomeType) {
+        do {
+            try getIncomeTypeCollection()
+                .document(type.id!)
+                .setData(from: type, merge: true)
+        } catch {
+            print(error)
         }
     }
     

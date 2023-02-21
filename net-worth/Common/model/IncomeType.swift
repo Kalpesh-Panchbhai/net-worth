@@ -12,14 +12,17 @@ struct IncomeType: Codable, Hashable {
     
     @DocumentID var id: String?
     var name: String
+    var isdefault: Bool
     
-    init(id: String? = nil, name: String) {
+    init(id: String? = nil, name: String, isdefault: Bool) {
         self.id = id
         self.name = name
+        self.isdefault = isdefault
     }
     
     init() {
-        self.name = ""
         self.id = ""
+        self.name = ""
+        self.isdefault = false
     }
 }

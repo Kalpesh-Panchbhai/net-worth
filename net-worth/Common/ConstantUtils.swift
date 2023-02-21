@@ -49,6 +49,8 @@ class ConstantUtils {
     static var watchKeyAccountID = "accountID"
     
     static var incomeTagKeyName = "name"
+    static var incomeTagKeyIsDefault = "isdefault"
     
     static var incomeTypeKeyName = "name"
+    static var incomeTypeKeyIsDefault = "isdefault"
 }

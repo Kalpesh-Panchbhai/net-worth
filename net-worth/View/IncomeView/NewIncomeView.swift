@@ -121,21 +121,29 @@ struct NewIncomeView: View {
             }
             .onAppear {
                 Task.init {
-                    await incomeViewModel.getIncomeTagList()
                     await incomeViewModel.getIncomeTypeList()
-                    incomeTagSelected = incomeViewModel.incomeTagList.filter { item in
-                        item.name == "None"
-                    }.first ?? IncomeTag()
+                    await incomeViewModel.getIncomeTagList()
                     incomeTypeSelected = incomeViewModel.incomeTypeList.filter { item in
-                        item.name == "None"
+                        item.isdefault
                     }.first ?? IncomeType()
+                    incomeTagSelected = incomeViewModel.incomeTagList.filter { item in
+                        item.isdefault
+                    }.first ?? IncomeTag()
                 }
             }
-            .sheet(isPresented: $addIncomeTagViewOpen, content: {
-                NewIncomeTagView(incomeViewModel: incomeViewModel)
-            })
-            .sheet(isPresented: $addIncomeTypeViewOpen, content: {
+            .sheet(isPresented: $addIncomeTypeViewOpen, onDismiss: {
+                incomeTypeSelected = incomeViewModel.incomeTypeList.filter { item in
+                    item.isdefault
+                }.first ?? IncomeType()
+            }, content: {
                 NewIncomeTypeView(incomeViewModel: incomeViewModel)
+            })
+            .sheet(isPresented: $addIncomeTagViewOpen, onDismiss: {
+                incomeTagSelected = incomeViewModel.incomeTagList.filter { item in
+                    item.isdefault
+                }.first ?? IncomeTag()
+            }, content: {
+                NewIncomeTagView(incomeViewModel: incomeViewModel)
             })
             .navigationTitle("New Income")
             .navigationBarTitleDisplayMode(.inline)
@@ -143,7 +151,7 @@ struct NewIncomeView: View {
     }
     
     private func allFieldsFilled () -> Bool {
-        if !incomeTypeSelected.name.isEmpty {
+        if !incomeTypeSelected.name.isEmpty && !incomeTagSelected.name.isEmpty{
             if amount.isEmpty {
                 return false
             } else {
