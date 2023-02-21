@@ -89,6 +89,66 @@ class IncomeController {
         return incomeList
     }
     
+    func getIncomeList(incomeType: String, incomeTag: String) async throws -> [Income] {
+        var incomeList = [Income]()
+        
+        var query = getIncomeCollection()
+            .order(by: ConstantUtils.incomeKeyCreditedOn, descending: true)
+        
+        if(!incomeType.isEmpty) {
+            query = query
+                .whereField(ConstantUtils.incomeKeyIncomeType, isEqualTo: incomeType)
+        }
+        
+        if(!incomeTag.isEmpty) {
+            query = query
+                .whereField(ConstantUtils.incomeKeyIncomeTag, isEqualTo: incomeTag)
+        }
+        
+        incomeList = try await query
+            .getDocuments()
+            .documents
+            .map { doc in
+                return Income(id: doc.documentID,
+                              amount: doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0,
+                              creditedOn: (doc[ConstantUtils.incomeKeyCreditedOn] as? Timestamp)?.dateValue() ?? Date(),
+                              currency: doc[ConstantUtils.incomeKeyCurrency] as? String ?? "",
+                              type: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
+                              tag: doc[ConstantUtils.incomeKeyIncomeTag] as? String ?? "")
+            }
+        return incomeList
+    }
+    
+    public func fetchTotalAmount(incomeType: String, incomeTag: String) async throws -> Double {
+        var total = 0.0
+        try await withUnsafeThrowingContinuation { continuation in
+            var query = getIncomeCollection()
+                .order(by: ConstantUtils.incomeKeyCreditedOn, descending: true)
+            
+            if(!incomeType.isEmpty) {
+                query = query
+                    .whereField(ConstantUtils.incomeKeyIncomeType, isEqualTo: incomeType)
+            }
+            
+            if(!incomeTag.isEmpty) {
+                query = query
+                    .whereField(ConstantUtils.incomeKeyIncomeTag, isEqualTo: incomeTag)
+            }
+                
+            query.getDocuments { snapshot, error in
+                    if error  == nil {
+                        if let snapshot = snapshot {
+                            snapshot.documents.forEach { doc in
+                                total += doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0
+                            }
+                            continuation.resume()
+                        }
+                    }
+                }
+        }
+        return total
+    }
+    
     func getIncomeTagList() async throws -> [IncomeTag] {
         var incomeTagList = [IncomeTag]()
         incomeTagList = try await getIncomeTagCollection()
@@ -126,8 +186,8 @@ class IncomeController {
                         snapshot.documents.forEach { doc in
                             if(!doc.documentID.elementsEqual(documentID) && (doc[ConstantUtils.incomeTagKeyIsDefault] as? Bool ?? false)) {
                                 let updatedIncomeTag = IncomeTag(id: doc.documentID,
-                                                 name: doc[ConstantUtils.incomeTagKeyName] as? String ?? "",
-                                                 isdefault: false)
+                                                                 name: doc[ConstantUtils.incomeTagKeyName] as? String ?? "",
+                                                                 isdefault: false)
                                 self.updateIncomeTag(tag: updatedIncomeTag)
                             }
                         }
@@ -195,8 +255,8 @@ class IncomeController {
                         snapshot.documents.forEach { doc in
                             if(!doc.documentID.elementsEqual(documentID) && (doc[ConstantUtils.incomeTypeKeyIsDefault] as? Bool ?? false)) {
                                 let updatedIncomeType = IncomeType(id: doc.documentID,
-                                                 name: doc[ConstantUtils.incomeTypeKeyName] as? String ?? "",
-                                                 isdefault: false)
+                                                                   name: doc[ConstantUtils.incomeTypeKeyName] as? String ?? "",
+                                                                   isdefault: false)
                                 self.updateIncomeType(type: updatedIncomeType)
                             }
                         }

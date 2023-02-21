@@ -11,7 +11,10 @@ import CoreData
 struct IncomeView: View {
     
     @ObservedObject var incomeViewModel = IncomeViewModel()
+    
     @State var isOpen: Bool = false
+    @State var filterIncomeType = ""
+    @State var filterIncomeTag = ""
     
     private var incomeController = IncomeController()
     
@@ -39,6 +42,63 @@ struct IncomeView: View {
                 if !incomeViewModel.incomeList.isEmpty {
                     ToolbarItem(placement: .navigationBarLeading) {
                         EditButton()
+                    }
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        if(!filterIncomeType.isEmpty || !filterIncomeTag.isEmpty) {
+                            Button(action: {
+                                filterIncomeType = ""
+                                filterIncomeTag = ""
+                                Task.init {
+                                    await incomeViewModel.getTotalBalance()
+                                    await incomeViewModel.getIncomeList()
+                                }
+                            }, label: {
+                                Text("Clear")
+                            })
+                        }
+                    }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Menu(content: {
+                            Menu(content: {
+                                Menu(content: {
+                                    ForEach(incomeViewModel.incomeTypeList, id: \.self) { item in
+                                        Button(action: {
+                                            filterIncomeType = item.name
+                                            Task.init {
+                                                await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag)
+                                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag)
+                                            }
+                                        }, label: {
+                                            Text(item.name)
+                                        })
+                                    }
+                                }, label: {
+                                    Text("Income Type")
+                                })
+                                
+                                Menu(content: {
+                                    ForEach(incomeViewModel.incomeTagList, id: \.self) { item in
+                                        Button(action: {
+                                            filterIncomeTag = item.name
+                                            Task.init {
+                                                await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag)
+                                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag)
+                                            }
+                                        }, label: {
+                                            Text(item.name)
+                                        })
+                                    }
+                                }, label: {
+                                    Text("Income Tag")
+                                })
+                                
+                            }, label: {
+                                Text("Filter by")
+                            })
+                            
+                        }, label: {
+                            Image(systemName: "ellipsis")
+                        })
                     }
                 }
                 ToolbarItem {
@@ -70,6 +130,8 @@ struct IncomeView: View {
             Task.init {
                 await incomeViewModel.getTotalBalance()
                 await incomeViewModel.getIncomeList()
+                await incomeViewModel.getIncomeTypeList()
+                await incomeViewModel.getIncomeTagList()
             }
         }
     }
