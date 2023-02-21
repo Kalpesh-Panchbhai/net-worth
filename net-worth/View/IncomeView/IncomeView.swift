@@ -15,6 +15,7 @@ struct IncomeView: View {
     @State var isOpen: Bool = false
     @State var filterIncomeType = ""
     @State var filterIncomeTag = ""
+    @State var filterYear = ""
     
     private var incomeController = IncomeController()
     
@@ -44,10 +45,11 @@ struct IncomeView: View {
                         EditButton()
                     }
                     ToolbarItem(placement: .navigationBarLeading) {
-                        if(!filterIncomeType.isEmpty || !filterIncomeTag.isEmpty) {
+                        if(!filterIncomeType.isEmpty || !filterIncomeTag.isEmpty || !filterYear.isEmpty) {
                             Button(action: {
                                 filterIncomeType = ""
                                 filterIncomeTag = ""
+                                filterYear = ""
                                 Task.init {
                                     await incomeViewModel.getTotalBalance()
                                     await incomeViewModel.getIncomeList()
@@ -60,37 +62,59 @@ struct IncomeView: View {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Menu(content: {
                             Menu(content: {
-                                Menu(content: {
-                                    ForEach(incomeViewModel.incomeTypeList, id: \.self) { item in
-                                        Button(action: {
-                                            filterIncomeType = item.name
-                                            Task.init {
-                                                await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag)
-                                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag)
-                                            }
-                                        }, label: {
-                                            Text(item.name)
-                                        })
-                                    }
-                                }, label: {
-                                    Text("Income Type")
-                                })
+                                if(incomeViewModel.incomeTypeList.count > 1) {
+                                    Menu(content: {
+                                        ForEach(incomeViewModel.incomeTypeList, id: \.self) { item in
+                                            Button(action: {
+                                                filterIncomeType = item.name
+                                                Task.init {
+                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear)
+                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear)
+                                                }
+                                            }, label: {
+                                                Text(item.name)
+                                            })
+                                        }
+                                    }, label: {
+                                        Text("Income Type")
+                                    })
+                                }
                                 
-                                Menu(content: {
-                                    ForEach(incomeViewModel.incomeTagList, id: \.self) { item in
-                                        Button(action: {
-                                            filterIncomeTag = item.name
-                                            Task.init {
-                                                await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag)
-                                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag)
-                                            }
-                                        }, label: {
-                                            Text(item.name)
-                                        })
-                                    }
-                                }, label: {
-                                    Text("Income Tag")
-                                })
+                                if(incomeViewModel.incomeTagList.count > 1) {
+                                    Menu(content: {
+                                        ForEach(incomeViewModel.incomeTagList, id: \.self) { item in
+                                            Button(action: {
+                                                filterIncomeTag = item.name
+                                                Task.init {
+                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear)
+                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear)
+                                                }
+                                            }, label: {
+                                                Text(item.name)
+                                            })
+                                        }
+                                    }, label: {
+                                        Text("Income Tag")
+                                    })
+                                }
+                                
+                                if(incomeViewModel.incomeYearList.count > 1) {
+                                    Menu(content: {
+                                        ForEach(incomeViewModel.incomeYearList, id: \.self) { item in
+                                            Button(action: {
+                                                filterYear = item
+                                                Task.init {
+                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear)
+                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear)
+                                                }
+                                            }, label: {
+                                                Text(item)
+                                            })
+                                        }
+                                    }, label: {
+                                        Text("Year")
+                                    })
+                                }
                                 
                             }, label: {
                                 Text("Filter by")
@@ -132,6 +156,7 @@ struct IncomeView: View {
                 await incomeViewModel.getIncomeList()
                 await incomeViewModel.getIncomeTypeList()
                 await incomeViewModel.getIncomeTagList()
+                await incomeViewModel.getIncomeYearList()
             }
         }
     }

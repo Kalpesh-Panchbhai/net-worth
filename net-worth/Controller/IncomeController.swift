@@ -89,7 +89,7 @@ class IncomeController {
         return incomeList
     }
     
-    func getIncomeList(incomeType: String, incomeTag: String) async throws -> [Income] {
+    func getIncomeList(incomeType: String, incomeTag: String, year: String) async throws -> [Income] {
         var incomeList = [Income]()
         
         var query = getIncomeCollection()
@@ -103,6 +103,25 @@ class IncomeController {
         if(!incomeTag.isEmpty) {
             query = query
                 .whereField(ConstantUtils.incomeKeyIncomeTag, isEqualTo: incomeTag)
+        }
+        
+        if(!year.isEmpty) {
+            let calendar = Calendar.current
+            let startDate = DateComponents(
+              calendar: calendar,
+              year: year.integer,
+              month: 1,
+              day: 1)
+            
+            let endDate = DateComponents(
+              calendar: calendar,
+              year: year.integer,
+              month: 12,
+              day: 31)
+            
+            query = query
+                .whereField(ConstantUtils.incomeKeyCreditedOn, isLessThanOrEqualTo: Timestamp.init(date: endDate.date ?? Date()))
+                .whereField(ConstantUtils.incomeKeyCreditedOn, isGreaterThanOrEqualTo: Timestamp.init(date: startDate.date ?? Date()))
         }
         
         incomeList = try await query
@@ -119,7 +138,7 @@ class IncomeController {
         return incomeList
     }
     
-    public func fetchTotalAmount(incomeType: String, incomeTag: String) async throws -> Double {
+    public func fetchTotalAmount(incomeType: String, incomeTag: String, year: String) async throws -> Double {
         var total = 0.0
         try await withUnsafeThrowingContinuation { continuation in
             var query = getIncomeCollection()
@@ -133,6 +152,25 @@ class IncomeController {
             if(!incomeTag.isEmpty) {
                 query = query
                     .whereField(ConstantUtils.incomeKeyIncomeTag, isEqualTo: incomeTag)
+            }
+            
+            if(!year.isEmpty) {
+                let calendar = Calendar.current
+                let startDate = DateComponents(
+                  calendar: calendar,
+                  year: year.integer,
+                  month: 1,
+                  day: 1)
+                
+                let endDate = DateComponents(
+                  calendar: calendar,
+                  year: year.integer,
+                  month: 12,
+                  day: 31)
+                
+                query = query
+                    .whereField(ConstantUtils.incomeKeyCreditedOn, isLessThanOrEqualTo: Timestamp.init(date: endDate.date ?? Date()))
+                    .whereField(ConstantUtils.incomeKeyCreditedOn, isGreaterThanOrEqualTo: Timestamp.init(date: startDate.date ?? Date()))
             }
                 
             query.getDocuments { snapshot, error in
@@ -285,6 +323,26 @@ class IncomeController {
     
     public func deleteIncomeTypes() {
         CommonController.delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeTypeCollectionName))
+    }
+    
+    func getIncomeYearList() async throws -> [String] {
+        var incomeList = [Income]()
+        incomeList = try await getIncomeList()
+        
+        let grouped = Dictionary(grouping: incomeList) { (income) -> Int in
+            let date = Calendar.current.dateComponents([.year], from: income.creditedOn)
+            
+            return date.year ?? 0
+            
+        }
+        return grouped.map({
+            $0.key
+        }).sorted(by: {
+            $0 > $1
+        }).map { value in
+            return String(value).replacingOccurrences(of: ",", with: "")
+        }
+        
     }
 }
 
