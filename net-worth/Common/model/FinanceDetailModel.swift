@@ -46,14 +46,14 @@ struct FinanceDetailIndicatorResponse: Decodable {
 
 struct FinanceDetailQuoteResponse: Decodable {
     
-    let close: [Double?]
+    let close: [Double?]?
 }
 
 struct FinanceDetailMetaResponse: Decodable {
     
     let meta: FinanceDetailMetaDetailResponse
     
-    let timestamp: [Int?]
+    let timestamp: [Int]?
     
     let indicators: FinanceDetailIndicatorResponse
     

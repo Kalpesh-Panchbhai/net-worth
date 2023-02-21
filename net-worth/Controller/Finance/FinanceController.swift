@@ -104,8 +104,8 @@ class FinanceController {
             self.financeDetailModel.chartPreviousClose = response.meta.chartPreviousClose
             self.financeDetailModel.oneDayChange = (self.financeDetailModel.regularMarketPrice ?? 0.0) - (self.financeDetailModel.chartPreviousClose ?? 0.0)
             self.financeDetailModel.oneDayPercentChange = (self.financeDetailModel.oneDayChange ?? 1.0) / (self.financeDetailModel.regularMarketPrice ?? 1.0) * 100
-            self.financeDetailModel.timestamp = response.timestamp
-            self.financeDetailModel.valueAtTimestamp = response.indicators.quote[0].close
+            self.financeDetailModel.timestamp = response.timestamp!
+            self.financeDetailModel.valueAtTimestamp = response.indicators.quote[0].close!
         }
         
         return financeDetailModel
