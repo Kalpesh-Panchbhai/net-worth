@@ -21,6 +21,10 @@ struct FinanceDetailModel: Hashable {
     
     var oneDayPercentChange: Double? = 0.0
     
+    var timestamp: [Int?] = []
+    
+    var valueAtTimestamp: [Double?] = []
+    
 }
 
 struct FinanceDetailModelResponse: Decodable {
@@ -34,9 +38,24 @@ struct FinanceDetailResultResponse: Decodable {
     
 }
 
+struct FinanceDetailIndicatorResponse: Decodable {
+    
+    let quote: [FinanceDetailQuoteResponse]
+    
+}
+
+struct FinanceDetailQuoteResponse: Decodable {
+    
+    let close: [Double?]
+}
+
 struct FinanceDetailMetaResponse: Decodable {
     
     let meta: FinanceDetailMetaDetailResponse
+    
+    let timestamp: [Int]
+    
+    let indicators: FinanceDetailIndicatorResponse
     
 }
 

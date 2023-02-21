@@ -10,18 +10,21 @@ import Charts
 
 struct AccountChartView: View {
     
-    @ObservedObject var accountViewModel: AccountViewModel
+    @StateObject var chartViewModel = ChartViewModel()
+    @StateObject var accountViewModel = AccountViewModel()
     @State var range = "1M"
+    
+    var account: Account
     
     var body: some View {
         VStack {
             HStack {
                 List {
                     Chart {
-                        ForEach(accountViewModel.accountTransactionListWithRange, id: \.self) { item in
+                        ForEach(chartViewModel.chartDataList, id: \.self) { item in
                             LineMark(
-                                x: .value("Mount", item.timestamp),
-                                y: .value("Value", item.balanceChange)
+                                x: .value("Mount", item.date),
+                                y: .value("Value", item.value)
                             )
                         }
                     }
@@ -40,7 +43,8 @@ struct AccountChartView: View {
                     })
                     .onChange(of: range) { value in
                         Task.init {
-                            await accountViewModel.getAccountTransactionListWithRange(id: accountViewModel.account.id!, range: value)
+                            await accountViewModel.getAccountTransactionListWithRange(id: account.id!, range: range)
+                            await chartViewModel.getChartData(account: account, accountViewModel: accountViewModel, range: range)
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
@@ -49,7 +53,8 @@ struct AccountChartView: View {
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getAccountTransactionListWithRange(id: accountViewModel.account.id!, range: range)
+                await accountViewModel.getAccountTransactionListWithRange(id: account.id!, range: range)
+                await chartViewModel.getChartData(account: account, accountViewModel: accountViewModel, range: range)
             }
         }
     }

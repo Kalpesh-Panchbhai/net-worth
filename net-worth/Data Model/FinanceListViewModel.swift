@@ -14,6 +14,8 @@ class FinanceListViewModel: ObservableObject {
     
     @Published var financeDetailModel = FinanceDetailModel()
     
+    @Published var financeDetailModelWithRange = FinanceDetailModel()
+    
     func getAllSymbols(searchTerm: String) async {
         do {
             financeModels = try await FinanceController().getAllSymbols(searchTerm: searchTerm)
@@ -25,6 +27,14 @@ class FinanceListViewModel: ObservableObject {
     func getSymbolDetails(symbol: String) async {
         do {
             financeDetailModel = try await FinanceController().getSymbolDetails(symbol: symbol)
+        } catch {
+            print(error)
+        }
+    }
+    
+    func getSymbolDetailsWithRange(symbol: String) async {
+        do {
+            financeDetailModel = try await FinanceController().getSymbolDetailsWithRange(symbol: symbol)
         } catch {
             print(error)
         }

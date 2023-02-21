@@ -44,7 +44,7 @@ struct AccountDetailView: View {
                 if(tabItem == 1) {
                     TransactionsView(accountViewModel: accountViewModel)
                 } else {
-                    AccountChartView(accountViewModel: accountViewModel)
+                    AccountChartView(account: account)
                 }
             }
         }

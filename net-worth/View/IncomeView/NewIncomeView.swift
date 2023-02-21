@@ -11,7 +11,9 @@ struct NewIncomeView: View {
     
     @State private var amount: String = "0.0"
     @State private var incomeType: String = "None"
+    @State private var incomeTagSelected: IncomeTag = IncomeTag(name: "Un-Tagged")
     @State private var date = Date()
+    @State private var addIncomeTagViewOpen = false
     
     var incomeTypes =  ["None", "Salary", "Portfolio","Other"]
     
@@ -35,7 +37,7 @@ struct NewIncomeView: View {
         NavigationView {
             Form {
                 Section("Income detail") {
-                    Picker(selection: $incomeType, label: Text("Income Type")) {
+                    Picker(selection: $incomeType, label: Text("Type")) {
                         ForEach(incomeTypes, id: \.self) {
                             Text($0).tag($0)
                         }
@@ -79,22 +81,54 @@ struct NewIncomeView: View {
                         DatePicker("Credited on", selection: $date, in: ...Date(), displayedComponents: [.date])
                     }
                     currencyPicker
+                    Picker(selection: $incomeTagSelected, label: Text("Tag")) {
+                        ForEach(incomeViewModel.incomeTagList, id: \.self) {
+                            Text($0.name).tag($0)
+                        }
+                    }
                 }
             }
             .toolbar {
                 ToolbarItem {
                     Button(action: {
                         Task.init {
-                            await incomeController.addIncome(incometype: incomeType, amount: amount, date: date, currency: currenySelected.code)
+                            await incomeController.addIncome(incometype: incomeType, amount: amount, date: date, currency: currenySelected.code, tag: incomeTagSelected)
                             await incomeViewModel.getTotalBalance()
                             await incomeViewModel.getIncomeList()
                         }
                         dismiss()
                     }, label: {
-                        Label("Add Income", systemImage: "checkmark")
+                        Image(systemName: "checkmark")
                     }).disabled(!allFieldsFilled())
                 }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Menu(content: {
+                        Button(action: {
+                            
+                        }, label: {
+                            Label("Add Income Type", systemImage: "")
+                        })
+                        Button(action: {
+                            addIncomeTagViewOpen.toggle()
+                        }, label: {
+                            Label("Add Income Tag", systemImage: "")
+                        })
+                    }, label: {
+                        Image(systemName: "ellipsis")
+                    })
+                }
             }
+            .onAppear {
+                Task.init {
+                    await incomeViewModel.getIncomeTagList()
+                }
+                incomeTagSelected = incomeViewModel.incomeTagList.filter { item in
+                    item.name == "Un-Tagged"
+                }.first ?? IncomeTag()
+            }
+            .sheet(isPresented: $addIncomeTagViewOpen, content: {
+                NewIncomeTagView(incomeViewModel: incomeViewModel)
+            })
             .navigationTitle("New Income")
             .navigationBarTitleDisplayMode(.inline)
         }

@@ -21,6 +21,7 @@ class ConstantUtils {
     
     static var userCollectionName = "users"
     static var incomeCollectionName = "incomes"
+    static var incomeTagCollectionName = "incometags"
     static var accountCollectionName = "accounts"
     static var accountTransactionCollectionName = "accountsTransaction"
     static var watchCollectionName = "watches"
@@ -29,6 +30,7 @@ class ConstantUtils {
     static var incomeKeyCreditedOn = "creditedOn"
     static var incomeKeyCurrency = "currency"
     static var incomeKeyIncomeType = "incomeType"
+    static var incomeKeyIncomeTag = "tag"
     
     static var accountKeyAccountName = "accountName"
     static var accountKeyAccountType = "accountType"
@@ -44,4 +46,6 @@ class ConstantUtils {
     
     static var watchKeyWatchName = "accountName"
     static var watchKeyAccountID = "accountID"
+    
+    static var incomeTagKeyName = "name"
 }

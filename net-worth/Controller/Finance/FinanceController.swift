@@ -81,6 +81,36 @@ class FinanceController {
         return financeDetailModel
     }
     
+    public func getSymbolDetailsWithRange(symbol: String) async throws -> FinanceDetailModel {
+        
+        guard let url = URL(string: "https://query1.finance.yahoo.com/v8/finance/chart/" + symbol + "?interval=1d&range=5y") else {
+            return financeDetailModel
+        }
+        
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            return financeDetailModel
+        }
+        
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let financeDetailModelResponse = try! decoder.decode(FinanceDetailModelResponse.self, from: data)
+        
+        for response in financeDetailModelResponse.chart.result {
+            self.financeDetailModel.currency = response.meta.currency
+            self.financeDetailModel.symbol = response.meta.currency
+            self.financeDetailModel.regularMarketPrice = response.meta.regularMarketPrice
+            self.financeDetailModel.chartPreviousClose = response.meta.chartPreviousClose
+            self.financeDetailModel.oneDayChange = (self.financeDetailModel.regularMarketPrice ?? 0.0) - (self.financeDetailModel.chartPreviousClose ?? 0.0)
+            self.financeDetailModel.oneDayPercentChange = (self.financeDetailModel.oneDayChange ?? 1.0) / (self.financeDetailModel.regularMarketPrice ?? 1.0) * 100
+            self.financeDetailModel.timestamp = response.timestamp
+            self.financeDetailModel.valueAtTimestamp = response.indicators.quote[0].close
+        }
+        
+        return financeDetailModel
+    }
+    
     public func getSymbolDetails(accountCurrency: String) async throws -> FinanceDetailModel {
         
         guard let url = URL(string: "https://query1.finance.yahoo.com/v8/finance/chart/" + accountCurrency + "USD" + "=X") else {

@@ -31,7 +31,7 @@ struct IncomeView: View {
                     await incomeViewModel.getIncomeList()
                 }
             }
-            .halfSheet(showSheet: $isOpen) {
+            .sheet(isPresented: $isOpen) {
                 NewIncomeView(incomeViewModel: incomeViewModel)
             }
             .listStyle(.insetGrouped)

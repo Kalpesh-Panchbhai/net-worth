@@ -15,8 +15,14 @@ class IncomeController {
             .collection(ConstantUtils.incomeCollectionName)
     }
     
-    public func addIncome(incometype: String, amount: String, date: Date, currency: String) async {
-        let newIncome = Income(amount: Double(amount) ?? 0.0, creditedOn: date, currency: currency, incomeType: incometype)
+    private func getIncomeTagCollection() -> CollectionReference {
+        return UserController()
+            .getCurrentUserDocument()
+            .collection(ConstantUtils.incomeTagCollectionName)
+    }
+    
+    public func addIncome(incometype: String, amount: String, date: Date, currency: String, tag: IncomeTag) async {
+        let newIncome = Income(amount: Double(amount) ?? 0.0, creditedOn: date, currency: currency, incomeType: incometype, tag: tag.name)
         do {
             let documentID = try getIncomeCollection()
                 .addDocument(from: newIncome)
@@ -71,10 +77,36 @@ class IncomeController {
                               amount: doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0,
                               creditedOn: (doc[ConstantUtils.incomeKeyCreditedOn] as? Timestamp)?.dateValue() ?? Date(),
                               currency: doc[ConstantUtils.incomeKeyCurrency] as? String ?? "",
-                              incomeType: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "")
+                              incomeType: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
+                              tag: doc[ConstantUtils.incomeKeyIncomeTag] as? String ?? "")
             }
         return incomeList
     }
     
+    func getIncomeTagList() async throws -> [IncomeTag] {
+        var incomeTagList = [IncomeTag]()
+        incomeTagList = try await getIncomeTagCollection()
+            .order(by: ConstantUtils.incomeTagKeyName)
+            .getDocuments()
+            .documents
+            .map { doc in
+                return IncomeTag(id: doc.documentID,
+                                 name: doc[ConstantUtils.incomeTagKeyName] as? String ?? "")
+            }
+        
+        return incomeTagList
+    }
+    
+    public func addIncomeTag(tag: IncomeTag) async {
+        do {
+            let documentID = try getIncomeTagCollection()
+                .addDocument(from: tag)
+                .documentID
+            
+            print("New Income Tag Added : " + documentID)
+        } catch {
+            print(error)
+        }
+    }
 }
 

@@ -15,4 +15,5 @@ struct Income: Codable, Hashable {
     var creditedOn: Date
     var currency: String
     var incomeType: String
+    var tag: String
 }
