@@ -89,7 +89,7 @@ class IncomeController {
         return incomeList
     }
     
-    func getIncomeList(incomeType: String, incomeTag: String, year: String) async throws -> [Income] {
+    func getIncomeList(incomeType: String, incomeTag: String, year: String, financialYear: String) async throws -> [Income] {
         var incomeList = [Income]()
         
         var query = getIncomeCollection()
@@ -108,16 +108,48 @@ class IncomeController {
         if(!year.isEmpty) {
             let calendar = Calendar.current
             let startDate = DateComponents(
-              calendar: calendar,
-              year: year.integer,
-              month: 1,
-              day: 1)
+                calendar: calendar,
+                year: year.integer,
+                month: 1,
+                day: 1,
+                hour: 0,
+                minute: 0,
+                second: 0)
             
             let endDate = DateComponents(
-              calendar: calendar,
-              year: year.integer,
-              month: 12,
-              day: 31)
+                calendar: calendar,
+                year: year.integer,
+                month: 12,
+                day: 31,
+                hour: 23,
+                minute: 59,
+                second: 59)
+            
+            query = query
+                .whereField(ConstantUtils.incomeKeyCreditedOn, isLessThanOrEqualTo: Timestamp.init(date: endDate.date ?? Date()))
+                .whereField(ConstantUtils.incomeKeyCreditedOn, isGreaterThanOrEqualTo: Timestamp.init(date: startDate.date ?? Date()))
+        }
+        
+        if(!financialYear.isEmpty) {
+            let financialYears = financialYear.split(separator: "-")
+            let calendar = Calendar.current
+            let startDate = DateComponents(
+                calendar: calendar,
+                year: financialYears[0].integer,
+                month: 4,
+                day: 1,
+                hour: 0,
+                minute: 0,
+                second: 0)
+            
+            let endDate = DateComponents(
+                calendar: calendar,
+                year: financialYears[1].integer,
+                month: 3,
+                day: 31,
+                hour: 23,
+                minute: 59,
+                second: 59)
             
             query = query
                 .whereField(ConstantUtils.incomeKeyCreditedOn, isLessThanOrEqualTo: Timestamp.init(date: endDate.date ?? Date()))
@@ -138,7 +170,7 @@ class IncomeController {
         return incomeList
     }
     
-    public func fetchTotalAmount(incomeType: String, incomeTag: String, year: String) async throws -> Double {
+    public func fetchTotalAmount(incomeType: String, incomeTag: String, year: String, financialYear: String) async throws -> Double {
         var total = 0.0
         try await withUnsafeThrowingContinuation { continuation in
             var query = getIncomeCollection()
@@ -157,32 +189,64 @@ class IncomeController {
             if(!year.isEmpty) {
                 let calendar = Calendar.current
                 let startDate = DateComponents(
-                  calendar: calendar,
-                  year: year.integer,
-                  month: 1,
-                  day: 1)
+                    calendar: calendar,
+                    year: year.integer,
+                    month: 1,
+                    day: 1,
+                    hour: 0,
+                    minute: 0,
+                    second: 0)
                 
                 let endDate = DateComponents(
-                  calendar: calendar,
-                  year: year.integer,
-                  month: 12,
-                  day: 31)
+                    calendar: calendar,
+                    year: year.integer,
+                    month: 12,
+                    day: 31,
+                    hour: 23,
+                    minute: 59,
+                    second: 59)
                 
                 query = query
                     .whereField(ConstantUtils.incomeKeyCreditedOn, isLessThanOrEqualTo: Timestamp.init(date: endDate.date ?? Date()))
                     .whereField(ConstantUtils.incomeKeyCreditedOn, isGreaterThanOrEqualTo: Timestamp.init(date: startDate.date ?? Date()))
             }
+            
+            if(!financialYear.isEmpty) {
+                let financialYears = financialYear.split(separator: "-")
+                let calendar = Calendar.current
+                let startDate = DateComponents(
+                    calendar: calendar,
+                    year: financialYears[0].integer,
+                    month: 4,
+                    day: 1,
+                    hour: 0,
+                    minute: 0,
+                    second: 0)
                 
+                let endDate = DateComponents(
+                    calendar: calendar,
+                    year: financialYears[1].integer,
+                    month: 3,
+                    day: 31,
+                    hour: 23,
+                    minute: 59,
+                    second: 59)
+                
+                query = query
+                    .whereField(ConstantUtils.incomeKeyCreditedOn, isLessThanOrEqualTo: Timestamp.init(date: endDate.date ?? Date()))
+                    .whereField(ConstantUtils.incomeKeyCreditedOn, isGreaterThanOrEqualTo: Timestamp.init(date: startDate.date ?? Date()))
+            }
+            
             query.getDocuments { snapshot, error in
-                    if error  == nil {
-                        if let snapshot = snapshot {
-                            snapshot.documents.forEach { doc in
-                                total += doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0
-                            }
-                            continuation.resume()
+                if error  == nil {
+                    if let snapshot = snapshot {
+                        snapshot.documents.forEach { doc in
+                            total += doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0
                         }
+                        continuation.resume()
                     }
                 }
+            }
         }
         return total
     }

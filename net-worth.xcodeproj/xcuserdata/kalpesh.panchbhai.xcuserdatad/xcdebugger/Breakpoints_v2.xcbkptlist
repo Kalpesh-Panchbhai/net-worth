@@ -77,8 +77,8 @@
             filePath = "net-worth/Controller/IncomeController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "332"
-            endingLineNumber = "332"
+            startingLineNumber = "396"
+            endingLineNumber = "396"
             landmarkName = "getIncomeYearList()"
             landmarkType = "7">
             <Locations>
@@ -125,42 +125,10 @@
             filePath = "net-worth/Controller/IncomeController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "338"
-            endingLineNumber = "338"
+            startingLineNumber = "402"
+            endingLineNumber = "402"
             landmarkName = "getIncomeYearList()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "FD366EB0-0330-4811-87ED-D477F79FD5B0 - 53068a8d67762fa9"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for net_worth.IncomeController.getIncomeYearList() async throws -&gt; Swift.Array&lt;Swift.String&gt;"
-                  moduleName = "net-worth"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Controller/IncomeController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "319"
-                  endingLineNumber = "319"
-                  offsetFromSymbolStart = "264">
-               </Location>
-               <Location
-                  uuid = "FD366EB0-0330-4811-87ED-D477F79FD5B0 - 61f649a4829483f0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 ((key: Swift.Int, value: Swift.Array&lt;net_worth.Income&gt;)) -&gt; Swift.Int in net_worth.IncomeController.getIncomeYearList() async throws -&gt; Swift.Array&lt;Swift.String&gt;"
-                  moduleName = "net-worth"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Controller/IncomeController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "320"
-                  endingLineNumber = "320"
-                  offsetFromSymbolStart = "52">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -215,15 +183,15 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "47348579-ADC4-498A-92CD-B50351113F58"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "net-worth/Controller/IncomeController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "127"
-            endingLineNumber = "127"
-            landmarkName = "getIncomeList(incomeType:incomeTag:year:)"
+            startingLineNumber = "159"
+            endingLineNumber = "159"
+            landmarkName = "getIncomeList(incomeType:incomeTag:year:financialYear:)"
             landmarkType = "7">
             <Locations>
                <Location
@@ -269,9 +237,25 @@
             filePath = "net-worth/Controller/IncomeController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "138"
-            endingLineNumber = "138"
-            landmarkName = "getIncomeList(incomeType:incomeTag:year:)"
+            startingLineNumber = "170"
+            endingLineNumber = "170"
+            landmarkName = "fetchTotalAmount(incomeType:incomeTag:year:financialYear:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "CFCED7F6-34B0-49E2-B322-5CA449BF98A4"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "net-worth/Controller/IncomeController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "134"
+            endingLineNumber = "134"
+            landmarkName = "getIncomeList(incomeType:incomeTag:year:financialYear:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

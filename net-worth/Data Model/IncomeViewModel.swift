@@ -45,9 +45,9 @@ class IncomeViewModel: ObservableObject {
         }
     }
     
-    func getTotalBalance(incomeType: String, incomeTag: String, year: String) async {
+    func getTotalBalance(incomeType: String, incomeTag: String, year: String, financialYear: String) async {
         do {
-            let amount = try await incomeController.fetchTotalAmount(incomeType: incomeType, incomeTag: incomeTag, year: year)
+            let amount = try await incomeController.fetchTotalAmount(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
             DispatchQueue.main.async {
                 self.incomeTotalAmount = amount
             }
@@ -56,9 +56,9 @@ class IncomeViewModel: ObservableObject {
         }
     }
     
-    func getIncomeList(incomeType: String, incomeTag: String, year: String) async {
+    func getIncomeList(incomeType: String, incomeTag: String, year: String, financialYear: String) async {
         do {
-            let list = try await incomeController.getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year)
+            let list = try await incomeController.getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
             DispatchQueue.main.async {
                 self.incomeList = list
             }

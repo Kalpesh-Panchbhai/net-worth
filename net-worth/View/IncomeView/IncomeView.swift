@@ -16,10 +16,15 @@ struct IncomeView: View {
     @State var filterIncomeType = ""
     @State var filterIncomeTag = ""
     @State var filterYear = ""
+    @State var filterFinancialYear = ""
     
     private var incomeController = IncomeController()
     
     @State private var showingSelectDefaultCurrencyAlert = false
+    
+    fileprivate func financialYear(startYear: String, endYear: String) -> Text {
+        return Text(startYear + "-" + endYear)
+    }
     
     var body: some View {
         NavigationView {
@@ -45,11 +50,12 @@ struct IncomeView: View {
                         EditButton()
                     }
                     ToolbarItem(placement: .navigationBarLeading) {
-                        if(!filterIncomeType.isEmpty || !filterIncomeTag.isEmpty || !filterYear.isEmpty) {
+                        if(!filterIncomeType.isEmpty || !filterIncomeTag.isEmpty || !filterYear.isEmpty || !filterFinancialYear.isEmpty) {
                             Button(action: {
                                 filterIncomeType = ""
                                 filterIncomeTag = ""
                                 filterYear = ""
+                                filterFinancialYear = ""
                                 Task.init {
                                     await incomeViewModel.getTotalBalance()
                                     await incomeViewModel.getIncomeList()
@@ -68,8 +74,8 @@ struct IncomeView: View {
                                             Button(action: {
                                                 filterIncomeType = item.name
                                                 Task.init {
-                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear)
-                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear)
+                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                                                 }
                                             }, label: {
                                                 Text(item.name)
@@ -86,8 +92,8 @@ struct IncomeView: View {
                                             Button(action: {
                                                 filterIncomeTag = item.name
                                                 Task.init {
-                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear)
-                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear)
+                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                                                 }
                                             }, label: {
                                                 Text(item.name)
@@ -103,9 +109,10 @@ struct IncomeView: View {
                                         ForEach(incomeViewModel.incomeYearList, id: \.self) { item in
                                             Button(action: {
                                                 filterYear = item
+                                                filterFinancialYear = ""
                                                 Task.init {
-                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear)
-                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear)
+                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                                                 }
                                             }, label: {
                                                 Text(item)
@@ -113,6 +120,33 @@ struct IncomeView: View {
                                         }
                                     }, label: {
                                         Text("Year")
+                                    })
+                                }
+                                
+                                if(incomeViewModel.incomeYearList.count > 1) {
+                                    Menu(content: {
+                                        ForEach(-1..<incomeViewModel.incomeYearList.count - 1, id: \.self) { item in
+                                            Button(action: {
+                                                if(item == -1) {
+                                                    filterFinancialYear = getFinancialYear(startYear: incomeViewModel.incomeYearList[item + 1], endYear:  String((Int(incomeViewModel.incomeYearList[item + 1]) ?? 0) + 1))
+                                                } else {
+                                                    filterFinancialYear = getFinancialYear(startYear: incomeViewModel.incomeYearList[item + 1], endYear: incomeViewModel.incomeYearList[item])
+                                                }
+                                                filterYear = ""
+                                                Task.init {
+                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                }
+                                            }, label: {
+                                                if(item == -1) {
+                                                    financialYear(startYear: incomeViewModel.incomeYearList[item + 1], endYear: String((Int(incomeViewModel.incomeYearList[item + 1]) ?? 0) + 1))
+                                                } else {
+                                                    financialYear(startYear: incomeViewModel.incomeYearList[item + 1], endYear: incomeViewModel.incomeYearList[item])
+                                                }
+                                            })
+                                        }
+                                    }, label: {
+                                        Text("Financial year")
                                     })
                                 }
                                 
@@ -174,6 +208,10 @@ struct IncomeView: View {
                 }
             }
         }
+    }
+    
+    private func getFinancialYear(startYear: String, endYear: String) -> String {
+        return startYear + "-" + endYear
     }
     
 }
