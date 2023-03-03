@@ -76,13 +76,15 @@ struct SingleWatchListView: View {
             })
         }
         .toolbar {
-            ToolbarItem(content: {
-                Button(action: {
-                    self.addAccountViewOpen.toggle()
-                }, label: {
-                    Image(systemName: "plus")
+            if(watchList.accountName != "All") {
+                ToolbarItem(content: {
+                    Button(action: {
+                        self.addAccountViewOpen.toggle()
+                    }, label: {
+                        Image(systemName: "plus")
+                    })
                 })
-            })
+            }
             
             ToolbarItem(content: {
                 
