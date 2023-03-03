@@ -25,7 +25,7 @@ struct WatchListView: View {
                     }, label: {
                         Text(watchList.accountName)
                     })
-                    .swipeActions(edge: .leading,content: {
+                    .swipeActions(edge: .leading, content: {
                         if(watchList.accountName != "All") {
                             Button("Update") {
                                 Task.init {
@@ -36,9 +36,18 @@ struct WatchListView: View {
                             .tint(.green)
                         }
                     })
+                    .swipeActions(edge: .trailing, content: {
+                        if(watchList.accountName != "All") {
+                            Button("Delete") {
+                                watchController.deleteWatchList(watchList: watchList)
+                                Task.init {
+                                    await watchViewModel.getAllWatchList()
+                                }
+                            }
+                            .tint(.red)
+                        }
+                    })
                 }
-                .onDelete(perform: deleteIncome)
-                
             }
             .toolbar {
                 ToolbarItem(content: {
