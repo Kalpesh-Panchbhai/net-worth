@@ -26,13 +26,15 @@ struct WatchListView: View {
                         Text(watchList.accountName)
                     })
                     .swipeActions(edge: .leading,content: {
-                        Button("Update") {
-                            Task.init {
-                                await watchViewModel.getWatchList(id: watchList.id!)
+                        if(watchList.accountName != "All") {
+                            Button("Update") {
+                                Task.init {
+                                    await watchViewModel.getWatchList(id: watchList.id!)
+                                }
+                                self.updateWatchListViewOpen.toggle()
                             }
-                            self.updateWatchListViewOpen.toggle()
+                            .tint(.green)
                         }
-                        .tint(.green)
                     })
                 }
                 .onDelete(perform: deleteIncome)
