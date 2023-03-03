@@ -51,7 +51,7 @@ class WatchController {
         let count = try await getAllWatchList().count
         if(count == 0) {
             var watchList = Watch()
-            watchList.accountName = "My Watchlist"
+            watchList.accountName = "All"
             addWatchList(watchList: watchList)
         }
     }
