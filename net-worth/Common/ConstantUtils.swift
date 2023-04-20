@@ -14,7 +14,6 @@ class ConstantUtils {
         case saving = "Saving"
         case creditcard = "Credit Card"
         case loan = "Loan"
-        case symbol = "Symbol"
         case other = "Other"
     }
 
