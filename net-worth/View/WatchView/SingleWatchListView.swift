@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SingleWatchListView: View {
     
-    var watchList: Watch
+    var watch: Watch
     @State private var isNewTransactionViewOpen = false
     @State private var addAccountViewOpen = false
     @State private var isAscending = true
@@ -23,7 +23,7 @@ struct SingleWatchListView: View {
             VStack {
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack {
-                        BalanceCardView(accountViewModel: accountViewModel, accountType: watchList.accountName, isWatchListCardView: true, watchList: watchViewModel.watch)
+                        BalanceCardView(accountViewModel: accountViewModel, accountType: watch.accountName, isWatchListCardView: true, watchList: watchViewModel.watch)
                             .frame(width: 360)
                             .cornerRadius(10)
                     }
@@ -34,20 +34,22 @@ struct SingleWatchListView: View {
                             AccountRowView(account: Account(id: account))
                                 .shadow(color: Color.gray, radius: 3)
                                 .contextMenu {
-                                    Button(role: .destructive, action: {
-                                        watchController.deleteAccountFromWatchList(watchList: watchViewModel.watch, accountID: account)
-                                        Task.init {
-                                            await watchViewModel.getWatchList(id: watchList.id!)
-                                            await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
-                                            if(!accountViewModel.accountList.isEmpty) {
-                                                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                                            } else {
-                                                accountViewModel.totalBalance = BalanceModel(currentValue: 0.0)
+                                    if(watch.accountName != "All") {
+                                        Button(role: .destructive, action: {
+                                            watchController.deleteAccountFromWatchList(watchList: watchViewModel.watch, accountID: account)
+                                            Task.init {
+                                                await watchViewModel.getWatchList(id: watch.id!)
+                                                await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
+                                                if(!accountViewModel.accountList.isEmpty) {
+                                                    await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+                                                } else {
+                                                    accountViewModel.totalBalance = BalanceModel(currentValue: 0.0)
+                                                }
                                             }
-                                        }
-                                    }, label: {
-                                        Label("Delete", systemImage: "trash")
-                                    })
+                                        }, label: {
+                                            Label("Delete", systemImage: "trash")
+                                        })
+                                    }
                                     
                                     Button {
                                         Task.init {
@@ -67,7 +69,7 @@ struct SingleWatchListView: View {
                 Task.init {
                     watchViewModel.watch = Watch()
                     
-                    await watchViewModel.getWatchList(id: watchList.id!)
+                    await watchViewModel.getWatchList(id: watch.id!)
                     await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                 }
@@ -76,7 +78,7 @@ struct SingleWatchListView: View {
             })
         }
         .toolbar {
-            if(watchList.accountName != "All") {
+            if(watch.accountName != "All") {
                 ToolbarItem(content: {
                     Button(action: {
                         self.addAccountViewOpen.toggle()
@@ -123,7 +125,7 @@ struct SingleWatchListView: View {
         }
         .sheet(isPresented: $addAccountViewOpen, onDismiss: {
             Task.init {
-                await watchViewModel.getWatchList(id: watchList.id!)
+                await watchViewModel.getWatchList(id: watch.id!)
                 await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
                 watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
                     $0.accountName < $1.accountName
@@ -142,7 +144,7 @@ struct SingleWatchListView: View {
         }
         .onAppear {
             Task.init {
-                await watchViewModel.getWatchList(id: watchList.id!)
+                await watchViewModel.getWatchList(id: watch.id!)
                 await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
                 if(!watchViewModel.watch.accountID.isEmpty) {
                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)

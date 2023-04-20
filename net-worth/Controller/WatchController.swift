@@ -28,6 +28,18 @@ class WatchController {
         return watchList
     }
     
+    public func getDefaultWatchList() async throws -> Watch {
+        var watch = Watch()
+        watch = try await getWatchCollection()
+            .whereField(ConstantUtils.watchKeyWatchName, isEqualTo: "All")
+            .getDocuments()
+            .documents
+            .map { doc in
+                return Watch(doc: doc)
+            }.first!
+        return watch
+    }
+    
     public func getWatchList(id: String) async throws -> Watch {
         var watch = Watch()
         watch = try await getWatchCollection()

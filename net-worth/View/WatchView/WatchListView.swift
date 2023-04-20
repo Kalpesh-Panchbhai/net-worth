@@ -21,7 +21,7 @@ struct WatchListView: View {
             List {
                 ForEach(watchViewModel.watchList, id: \.self) { watchList in
                     NavigationLink(destination: {
-                        SingleWatchListView(watchList: watchList)
+                        SingleWatchListView(watch: watchList)
                     }, label: {
                         Text(watchList.accountName)
                     })

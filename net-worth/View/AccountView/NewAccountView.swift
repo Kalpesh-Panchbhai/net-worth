@@ -112,6 +112,9 @@ struct NewAccountView: View {
                             watchController.addAccountToWatchList(watch: selectedWatchList)
                         }
                         Task.init {
+                            var watch = try await watchController.getDefaultWatchList()
+                            watch.accountID.append(accountID)
+                            watchController.addAccountToWatchList(watch: watch)
                             await accountViewModel.getAccountList()
                             await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                         }
@@ -166,7 +169,9 @@ struct NewAccountView: View {
         Picker(selection: $selectedWatchList, label: Text("Watch List")) {
             Text("Select").tag(Watch())
             ForEach(watchViewModel.watchList, id: \.self) { data in
-                Text(data.accountName).tag(data)
+                if(data.accountName != "All") {
+                    Text(data.accountName).tag(data)
+                }
             }
         }
     }
