@@ -41,24 +41,12 @@ struct AccountRowView: View {
             }
             Spacer()
             HStack {
-                if(!accountViewModel.account.symbol.isEmpty) {
-                    Text("\(accountViewModel.account.totalShares.withCommas(decimalPlace: 2)) Units")
-                        .foregroundColor(.white)
-                        .font(.caption.bold())
-                }
-                Spacer()
                 Text(accountViewModel.account.currency)
                     .foregroundColor(.white)
                     .font(.caption)
-                if(!accountViewModel.account.symbol.isEmpty) {
-                    Text("\(getCurrentBalanceForSymbol().withCommas(decimalPlace: 2))")
-                        .foregroundColor(.white)
-                        .font(.caption.bold())
-                } else {
-                    Text("\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 2))")
-                        .foregroundColor(.white)
-                        .font(.caption.bold())
-                }
+                Text("\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 2))")
+                    .foregroundColor(.white)
+                    .font(.caption.bold())
             }
             Spacer()
             HStack {
@@ -68,46 +56,24 @@ struct AccountRowView: View {
                         .font(.caption.bold())
                 }
                 Spacer()
-                if(!accountViewModel.account.symbol.isEmpty) {
-                    if(getTotalChangeForSymbol() >= 0) {
-                        Text("\(getTotalChangeForSymbol().withCommas(decimalPlace: 2))")
-                            .foregroundColor(.green)
-                            .font(.caption)
-                            .padding(.bottom)
-                        Text("(\(getOneDayPercentageChangeForSymbol().withCommas(decimalPlace: 2))%)")
-                            .foregroundColor(.green)
-                            .font(.caption)
-                            .padding(.bottom)
-                    } else {
-                        Text("\(getTotalChangeForSymbol().withCommas(decimalPlace: 2))")
-                            .foregroundColor(.red)
-                            .font(.caption)
-                            .padding(.bottom)
-                        Text("(\(getOneDayPercentageChangeForSymbol().withCommas(decimalPlace: 2))%)")
-                            .foregroundColor(.red)
-                            .font(.caption)
-                            .padding(.bottom)
-                    }
+                if(getTotalChangeForNonSymbol() >= 0) {
+                    Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
+                        .foregroundColor(.green)
+                        .font(.caption)
+                        .padding(.bottom)
+                    Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
+                        .foregroundColor(.green)
+                        .font(.caption)
+                        .padding(.bottom)
                 } else {
-                    if(getTotalChangeForNonSymbol() >= 0) {
-                        Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
-                            .foregroundColor(.green)
-                            .font(.caption)
-                            .padding(.bottom)
-                        Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
-                            .foregroundColor(.green)
-                            .font(.caption)
-                            .padding(.bottom)
-                    } else {
-                        Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
-                            .foregroundColor(.red)
-                            .font(.caption)
-                            .padding(.bottom)
-                        Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
-                            .foregroundColor(.red)
-                            .font(.caption)
-                            .padding(.bottom)
-                    }
+                    Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
+                        .foregroundColor(.red)
+                        .font(.caption)
+                        .padding(.bottom)
+                    Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
+                        .foregroundColor(.red)
+                        .font(.caption)
+                        .padding(.bottom)
                 }
             }
         }
@@ -121,18 +87,6 @@ struct AccountRowView: View {
         .padding(.horizontal)
         .background(Color(.black))
         .cornerRadius(10)
-    }
-    
-    func getTotalChangeForSymbol() -> Double {
-        return (financeListViewModel.financeDetailModel.oneDayChange ?? 0.0) * accountViewModel.account.totalShares
-    }
-    
-    func getCurrentBalanceForSymbol() -> Double {
-        return (financeListViewModel.financeDetailModel.regularMarketPrice ?? 0.0) * accountViewModel.account.totalShares
-    }
-    
-    func getOneDayPercentageChangeForSymbol() -> Double {
-        return financeListViewModel.financeDetailModel.oneDayPercentChange ?? 0.0
     }
     
     func getTotalChangeForNonSymbol() -> Double {

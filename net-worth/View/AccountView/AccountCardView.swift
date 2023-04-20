@@ -40,69 +40,33 @@ struct AccountCardView: View {
                 }
             }
             Spacer()
-            HStack {
-                if(!account.symbol.isEmpty) {
-                    Text("\(account.totalShares.withCommas(decimalPlace: 2)) Units")
-                        .foregroundColor(.white)
-                        .font(.caption)
-                }
-            }
-            Spacer()
             HStack(alignment: .center) {
                 Text(account.currency)
                     .foregroundColor(.white)
                     .font(.caption.bold())
-                if(!account.symbol.isEmpty) {
-                    Text("\(getCurrentBalanceForSymbol().withCommas(decimalPlace: 2))")
-                        .foregroundColor(.white)
-                        .font(.caption.bold())
-                } else {
-                    Text("\(account.currentBalance.withCommas(decimalPlace: 2))")
-                        .foregroundColor(.white)
-                        .font(.caption.bold())
-                }
+                Text("\(account.currentBalance.withCommas(decimalPlace: 2))")
+                    .foregroundColor(.white)
+                    .font(.caption.bold())
             }
             HStack {
-                if(!account.symbol.isEmpty) {
-                    if(getTotalChangeForSymbol() >= 0) {
-                        Text("\(getTotalChangeForSymbol().withCommas(decimalPlace: 2))")
-                            .foregroundColor(.green)
-                            .font(.system(size: 11))
-                            .padding(.bottom)
-                        Text("(\(getOneDayPercentageChangeForSymbol().withCommas(decimalPlace: 2))%)")
-                            .foregroundColor(.green)
-                            .font(.system(size: 11))
-                            .padding(.bottom)
-                    } else {
-                        Text("\(getTotalChangeForSymbol().withCommas(decimalPlace: 2))")
-                            .foregroundColor(.red)
-                            .font(.system(size: 11))
-                            .padding(.bottom)
-                        Text("(\(getOneDayPercentageChangeForSymbol().withCommas(decimalPlace: 2))%)")
-                            .foregroundColor(.red)
-                            .font(.system(size: 11))
-                            .padding(.bottom)
-                    }
+                if(getTotalChangeForNonSymbol() >= 0) {
+                    Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
+                        .foregroundColor(.green)
+                        .font(.system(size: 11))
+                        .padding(.bottom)
+                    Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
+                        .foregroundColor(.green)
+                        .font(.system(size: 11))
+                        .padding(.bottom)
                 } else {
-                    if(getTotalChangeForNonSymbol() >= 0) {
-                        Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
-                            .foregroundColor(.green)
-                            .font(.system(size: 11))
-                            .padding(.bottom)
-                        Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
-                            .foregroundColor(.green)
-                            .font(.system(size: 11))
-                            .padding(.bottom)
-                    } else {
-                        Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
-                            .foregroundColor(.red)
-                            .font(.system(size: 11))
-                            .padding(.bottom)
-                        Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
-                            .foregroundColor(.red)
-                            .font(.system(size: 11))
-                            .padding(.bottom)
-                    }
+                    Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
+                        .foregroundColor(.red)
+                        .font(.system(size: 11))
+                        .padding(.bottom)
+                    Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
+                        .foregroundColor(.red)
+                        .font(.system(size: 11))
+                        .padding(.bottom)
                 }
             }
         }
@@ -116,18 +80,6 @@ struct AccountCardView: View {
         .padding(8)
         .background(Color(.black))
         .cornerRadius(10)
-    }
-    
-    func getTotalChangeForSymbol() -> Double {
-        return (financeListViewModel.financeDetailModel.oneDayChange ?? 0.0) * account.totalShares
-    }
-    
-    func getCurrentBalanceForSymbol() -> Double {
-        return (financeListViewModel.financeDetailModel.regularMarketPrice ?? 0.0) * account.totalShares
-    }
-    
-    func getOneDayPercentageChangeForSymbol() -> Double {
-        return financeListViewModel.financeDetailModel.oneDayPercentChange ?? 0.0
     }
     
     func getTotalChangeForNonSymbol() -> Double {

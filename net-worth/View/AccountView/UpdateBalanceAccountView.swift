@@ -38,12 +38,8 @@ struct UpdateBalanceAccountView: View {
                     Button(action: {
                         var updatedAccount = accountViewModel.account
                         amount = isPlus ? amount : amount * -1
-                        if(accountViewModel.account.accountType == "Saving" || accountViewModel.account.accountType == "Credit Card" || accountViewModel.account.accountType == "Loan" || accountViewModel.account.accountType == "Other") {
-                            updatedAccount.currentBalance = amount
-                        } else {
-                            updatedAccount.totalShares = amount
-                        }
-
+                        updatedAccount.currentBalance = amount
+                        
                         accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount)
                         accountController.updateAccount(account: updatedAccount)
                         dismiss()
@@ -56,12 +52,8 @@ struct UpdateBalanceAccountView: View {
                     Button(action: {
                         var updatedAccount = accountViewModel.account
                         amount = isPlus ? amount : amount * -1
-                        if(accountViewModel.account.accountType == "Saving" || accountViewModel.account.accountType == "Credit Card" || accountViewModel.account.accountType == "Loan" || accountViewModel.account.accountType == "Other") {
-                            updatedAccount.currentBalance = updatedAccount.currentBalance + amount
-                        } else {
-                            updatedAccount.totalShares = updatedAccount.totalShares + amount
-                        }
-
+                        updatedAccount.currentBalance = updatedAccount.currentBalance + amount
+                        
                         accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount)
                         accountController.updateAccount(account: updatedAccount)
                         dismiss()

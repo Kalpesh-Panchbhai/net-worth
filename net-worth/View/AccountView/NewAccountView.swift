@@ -20,11 +20,6 @@ struct NewAccountView: View {
     @State  var financeModel = [FinanceModel]()
     @State  var financeSelected = FinanceModel()
     
-    //Mutual fund and Stock fields
-    @State  var totalShares: Double = 0.0
-    @State  var currentRateShare: Double = 0.0
-    @State  var symbol: String = ""
-    
     @State  var currentBalance: Double = 0.0
     @State  var paymentReminder = false
     @State  var paymentDate = 1
@@ -56,8 +51,6 @@ struct NewAccountView: View {
                     }
                     .onChange(of: accountType) { _ in
                         accountName=""
-                        totalShares = 0.0
-                        currentRateShare = 0.0
                         currentBalance = 0.0
                         paymentDate = 1
                         paymentReminder = false
@@ -89,18 +82,6 @@ struct NewAccountView: View {
                             paymentDateField(labelName: "Select a payment date")
                         }
                         watchListPicker
-                    }
-                    else if(accountType == "Symbol") {
-                        symbolPicker
-                        
-                        totalField(labelName: "Total Units")
-                        currentRateField(labelName: "Current rate of a unit")
-                        totalValueField()
-                        enablePaymentReminderField(labelName: "Enable SIP Reminder")
-                        if(paymentReminder) {
-                            paymentDateField(labelName: "Select a SIP date")
-                        }
-                        watchListPicker
                     } else if(accountType == "Other") {
                         nameField(labelName: "Account Name")
                         currentBalanceField()
@@ -119,15 +100,8 @@ struct NewAccountView: View {
                         var newAccount = Account()
                         newAccount.accountType = accountType
                         newAccount.accountName = accountName
-                        if(accountType != "Symbol") {
-                            newAccount.currentBalance = isPlus ? currentBalance : currentBalance * -1
-                            newAccount.currency = currenySelected.code
-                        }else {
-                            newAccount.accountType = symbolType
-                            newAccount.totalShares = totalShares
-                            newAccount.symbol = symbol
-                            newAccount.currency = financeSelected.financeDetailModel?.currency ?? ""
-                        }
+                        newAccount.currentBalance = isPlus ? currentBalance : currentBalance * -1
+                        newAccount.currency = currenySelected.code
                         newAccount.paymentReminder = paymentReminder
                         
                         if(paymentReminder) {
@@ -217,12 +191,6 @@ struct NewAccountView: View {
             } else {
                 return true
             }
-        }else if accountType == "Symbol" {
-            if accountName.isEmpty || totalShares.isZero || currentRateShare.isZero {
-                return false
-            } else {
-                return true
-            }
         }else if accountType == "Other" {
             if accountName.isEmpty || currenySelected.name.isEmpty  {
                 return false
@@ -237,38 +205,6 @@ struct NewAccountView: View {
     private func nameField(labelName: String) -> HStack<(TextField<Text>)> {
         return HStack {
             TextField(labelName, text: $accountName)
-        }
-    }
-    
-    private func totalField(labelName: String) -> HStack<(some View)> {
-        return HStack {
-            TextField(labelName, value: $totalShares, formatter: Double().formatter())
-                .keyboardType(.decimalPad)
-                .onChange(of: [totalShares, currentRateShare], perform: { _ in
-                    currentBalance = totalShares * currentRateShare
-                })
-        }
-    }
-    
-    private func currentRateField(labelName: String) -> HStack<TupleView<(Text, Spacer, some View)>> {
-        return HStack {
-            Text(labelName)
-            Spacer()
-            Text("\(currentRateShare.withCommas(decimalPlace: 4))")
-                .onChange(of: [totalShares, currentRateShare], perform: { _ in
-                    currentBalance = totalShares * currentRateShare
-                })
-        }
-    }
-    
-    private func totalValueField() -> HStack<TupleView<(Text, Spacer, some View)>> {
-        return HStack {
-            Text("Total Value")
-            Spacer()
-            Text("\(currentBalance.withCommas(decimalPlace: 2))")
-                .onChange(of: [totalShares, currentRateShare], perform: { _ in
-                    currentBalance = totalShares * currentRateShare
-                })
         }
     }
     
@@ -302,42 +238,7 @@ struct NewAccountView: View {
             }
         }
     }
-    
-    var symbolPicker: some View {
-        Picker("", selection: $financeSelected) {
-            SearchBar(text: $searchTerm, placeholder: "Search MutualFund,Stocks,ETF,Crypto")
-            ForEach(financeListVM.financeModels, id: \.self) { (data) in
-                HStack {
-                    VStack {
-                        SymbolPickerLeftVerticalViewer(financeModel: data)
-                    }
-                    VStack {
-                        SymbolPickerRightVerticalViewer(financeDetailModel: data.financeDetailModel ?? FinanceDetailModel())
-                    }
-                }
-                .tag(data)
-            }
-        }
-        .edgesIgnoringSafeArea(.all)
-        .onChange(of: searchTerm) { (data) in
-            Task.init {
-                if(!data.isEmpty) {
-                    await financeListVM.getAllSymbols(searchTerm: data)
-                } else {
-                    financeListVM.financeModels.removeAll()
-                }
-            }
-        }
-        .onChange(of: financeSelected) { (data) in
-            accountName = data.longname ?? data.shortname ?? " "
-            symbolType = data.quoteType ?? " "
-            symbol = data.symbol ?? " "
-            currentRateShare = data.financeDetailModel?.regularMarketPrice ?? 0.0
-            
-            currentBalance = totalShares * currentRateShare
-        }
-        .pickerStyle(.navigationLink)
-    }
+
 }
 
 struct SymbolPickerLeftVerticalViewer: View {

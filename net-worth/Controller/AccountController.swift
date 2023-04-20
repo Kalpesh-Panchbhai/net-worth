@@ -104,11 +104,7 @@ class AccountController {
     
     public func addTransaction(accountID: String, account: Account) {
         var balanceChange = 0.0
-        if(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other") {
-            balanceChange = account.currentBalance
-        } else {
-            balanceChange = account.totalShares
-        }
+        balanceChange = account.currentBalance
         
         let newTransaction = AccountTransaction(timestamp: Date(), balanceChange: balanceChange)
         
@@ -220,38 +216,22 @@ class AccountController {
             var balance = BalanceModel(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
             
             for account in accounts {
-                if(!(account.accountType == "Saving" || account.accountType == "Credit Card" || account.accountType == "Loan" || account.accountType == "Other")) {
-                    group.addTask {
-                        var balanceModel = BalanceModel()
-                        if(account.currency != SettingsController().getDefaultCurrency().code) {
-                            let financeDetailModel = try await FinanceController().getSymbolDetails(accountCurrency: account.currency)
-                            balanceModel.currentValue = financeDetailModel.regularMarketPrice ?? 0.0
-                            balanceModel.previousDayValue = financeDetailModel.chartPreviousClose ?? 0.0
-                        }
-                        let financeDetailModel = try await FinanceController().getSymbolDetails(symbol: account.symbol)
-                        balanceModel.currentValue = balanceModel.currentValue * account.totalShares * (financeDetailModel.regularMarketPrice ?? 1.0)
-                        balanceModel.previousDayValue = balanceModel.previousDayValue * account.totalShares * (financeDetailModel.chartPreviousClose ?? 1.0)
-                        balanceModel.oneDayChange = balanceModel.currentValue - balanceModel.previousDayValue
-                        return balanceModel
+                group.addTask {
+                    var balanceModel = BalanceModel()
+                    if(account.currency != SettingsController().getDefaultCurrency().code) {
+                        let financeDetailModel =  try await FinanceController().getSymbolDetails(accountCurrency: account.currency)
+                        balanceModel.currentValue = financeDetailModel.regularMarketPrice ?? 0.0
+                        balanceModel.previousDayValue = financeDetailModel.chartPreviousClose ?? 0.0
                     }
-                } else {
-                    group.addTask {
-                        var balanceModel = BalanceModel()
-                        if(account.currency != SettingsController().getDefaultCurrency().code) {
-                            let financeDetailModel =  try await FinanceController().getSymbolDetails(accountCurrency: account.currency)
-                            balanceModel.currentValue = financeDetailModel.regularMarketPrice ?? 0.0
-                            balanceModel.previousDayValue = financeDetailModel.chartPreviousClose ?? 0.0
-                        }
-                        let accountTransaction = try await self.getLastTwoAccountTransactionList(id: account.id!)
-                        balanceModel.currentValue = balanceModel.currentValue * account.currentBalance
-                        if(accountTransaction.count > 1) {
-                            balanceModel.previousDayValue = balanceModel.previousDayValue * accountTransaction[1].balanceChange
-                        } else {
-                            balanceModel.previousDayValue = balanceModel.previousDayValue * account.currentBalance
-                        }
-                        balanceModel.oneDayChange = balanceModel.currentValue - balanceModel.previousDayValue
-                        return balanceModel
+                    let accountTransaction = try await self.getLastTwoAccountTransactionList(id: account.id!)
+                    balanceModel.currentValue = balanceModel.currentValue * account.currentBalance
+                    if(accountTransaction.count > 1) {
+                        balanceModel.previousDayValue = balanceModel.previousDayValue * accountTransaction[1].balanceChange
+                    } else {
+                        balanceModel.previousDayValue = balanceModel.previousDayValue * account.currentBalance
                     }
+                    balanceModel.oneDayChange = balanceModel.currentValue - balanceModel.previousDayValue
+                    return balanceModel
                 }
             }
             
