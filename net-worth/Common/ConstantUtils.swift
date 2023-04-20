@@ -39,7 +39,6 @@ class ConstantUtils {
     static var accountKeyPaymentDate = "paymentDate"
     static var accountKeyPaymentReminder = "paymentReminder"
     static var accountKeySymbol = "symbol"
-    static var accountKeyTotalShares = "totalShares"
     
     static var accountTransactionKeyBalanceChange = "balanceChange"
     static var accountTransactionKeytimestamp = "timestamp"
