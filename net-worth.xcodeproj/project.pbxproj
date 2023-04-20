@@ -88,7 +88,6 @@
 		7DF9DB91298F978600831494 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF9DB90298F978600831494 /* Account.swift */; };
 		7DF9DB93298F98A800831494 /* AccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF9DB92298F98A800831494 /* AccountViewModel.swift */; };
 		7DF9DB95298F9C2600831494 /* AccountTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF9DB94298F9C2600831494 /* AccountTransaction.swift */; };
-		7DFC6D042938E38E002F847C /* FinanceListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DFC6D032938E38E002F847C /* FinanceListViewModel.swift */; };
 		A1F5E8ECAEDA6710B8D6EA11 /* Pods_net_worth_net_worthUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D5576F40F828E2D89BA00A0 /* Pods_net_worth_net_worthUITests.framework */; };
 /* End PBXBuildFile section */
 
@@ -193,7 +192,6 @@
 		7DF9DB90298F978600831494 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		7DF9DB92298F98A800831494 /* AccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewModel.swift; sourceTree = "<group>"; };
 		7DF9DB94298F9C2600831494 /* AccountTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTransaction.swift; sourceTree = "<group>"; };
-		7DFC6D032938E38E002F847C /* FinanceListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceListViewModel.swift; sourceTree = "<group>"; };
 		86BAD84AC94BC1625CDE7E79 /* Pods-net-worthTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worthTests.debug.xcconfig"; path = "Target Support Files/Pods-net-worthTests/Pods-net-worthTests.debug.xcconfig"; sourceTree = "<group>"; };
 		BC5CC7014F51AC0DAEF83346 /* Pods_net_worth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_net_worth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC6C9A84CDBFBA61E9B153E4 /* Pods_net_worthTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_net_worthTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -369,7 +367,6 @@
 			isa = PBXGroup;
 			children = (
 				7D79FA5B291B7431004A2ECF /* net_worth.xcdatamodeld */,
-				7DFC6D032938E38E002F847C /* FinanceListViewModel.swift */,
 				7D79FA59291B7431004A2ECF /* Persistence.swift */,
 				7D85D031298D2ADD0019F85E /* IncomeViewModel.swift */,
 				7DF9DB92298F98A800831494 /* AccountViewModel.swift */,
@@ -734,7 +731,6 @@
 				7DB58AB529967B2E00B93592 /* AccountListView.swift in Sources */,
 				7D65547629A107DC0008A8E2 /* ChartData.swift in Sources */,
 				7DB98808299B8A99004ED6D2 /* AddAccountWatchListView.swift in Sources */,
-				7DFC6D042938E38E002F847C /* FinanceListViewModel.swift in Sources */,
 				7DC97A2C29223ADB003F69D4 /* NewIncomeView.swift in Sources */,
 				7DF9DB95298F9C2600831494 /* AccountTransaction.swift in Sources */,
 				7DEC3B802938A38B002E9C8B /* FinanceDetailModel.swift in Sources */,

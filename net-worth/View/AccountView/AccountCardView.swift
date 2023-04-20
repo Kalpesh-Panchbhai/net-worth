@@ -10,8 +10,7 @@ import SwiftUI
 struct AccountCardView: View {
     
     private var account: Account
-    
-    @StateObject var financeListViewModel = FinanceListViewModel()
+
     @StateObject var accountViewModel = AccountViewModel()
     
     init(account: Account) {
