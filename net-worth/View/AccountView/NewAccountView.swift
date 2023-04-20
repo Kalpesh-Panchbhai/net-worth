@@ -34,7 +34,6 @@ struct NewAccountView: View {
     @Environment(\.dismiss) var dismiss
     
     @State var searchTerm: String = ""
-    @StateObject var financeListVM = FinanceListViewModel()
     @StateObject var watchViewModel = WatchViewModel()
     
     @ObservedObject var accountViewModel : AccountViewModel
