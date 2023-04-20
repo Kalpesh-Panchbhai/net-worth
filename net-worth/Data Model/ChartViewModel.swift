@@ -12,12 +12,12 @@ class ChartViewModel: ObservableObject {
     @Published var chartDataList = [ChartData]()
     
     func getChartData(account: Account, accountViewModel: AccountViewModel,range: String) async {
-//        print(accountViewModel.accountTransactionListWithRange.last ?? <#default value#>)
-        
-        let dateComponentsFormatter = DateComponentsFormatter()
-        dateComponentsFormatter.allowedUnits = [.second, .minute, .hour, .day, .weekOfMonth, .month, .year]
-        dateComponentsFormatter.maximumUnitCount = 1
-        dateComponentsFormatter.unitsStyle = .full
-        dateComponentsFormatter.string(from: Date(), to: accountViewModel.accountTransactionListWithRange.last?.timestamp ?? Date())  // "1 month"
+        DispatchQueue.main.async {
+            var chartDataListResponse = [ChartData]()
+            for account in accountViewModel.accountTransactionListWithRange {
+                chartDataListResponse.append(ChartData(date: account.timestamp, value: account.balanceChange))
+            }
+            self.chartDataList = chartDataListResponse
+        }
     }
 }
