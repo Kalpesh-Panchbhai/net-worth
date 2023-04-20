@@ -10,19 +10,9 @@ import Foundation
 @MainActor
 class FinanceListViewModel: ObservableObject {
     
-    @Published var financeModels: [FinanceModel] = []
-    
     @Published var financeDetailModel = FinanceDetailModel()
     
     @Published var financeDetailModelWithRange = FinanceDetailModel()
-    
-    func getAllSymbols(searchTerm: String) async {
-        do {
-            financeModels = try await FinanceController().getAllSymbols(searchTerm: searchTerm)
-        } catch {
-            print(error)
-        }
-    }
     
     func getSymbolDetails(symbol: String) async {
         do {
