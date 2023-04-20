@@ -11,7 +11,6 @@ struct AccountRowView: View {
     
     private var account: Account
     
-    @StateObject var financeListViewModel = FinanceListViewModel()
     @StateObject var accountViewModel = AccountViewModel()
     
     init(account: Account) {
@@ -81,7 +80,6 @@ struct AccountRowView: View {
             Task.init {
                 await accountViewModel.getAccount(id: account.id!)
                 await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
-                await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
             }
         }
         .padding(.horizontal)

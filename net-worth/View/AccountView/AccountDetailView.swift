@@ -19,7 +19,6 @@ struct AccountDetailView: View {
     @State var tabItem = 1
     
     @ObservedObject var accountViewModel: AccountViewModel
-    @StateObject var financeListViewModel = FinanceListViewModel()
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -31,7 +30,7 @@ struct AccountDetailView: View {
     var body: some View {
         VStack {
             VStack {
-                AccountDetailCardView(financeListViewModel: financeListViewModel, accountViewModel: accountViewModel)
+                AccountDetailCardView(accountViewModel: accountViewModel)
                     .cornerRadius(10)
                     .shadow(color: Color.gray, radius: 3)
                 Picker(selection: $tabItem, content: {
@@ -117,7 +116,6 @@ struct AccountDetailView: View {
         }
         .onAppear {
             Task.init {
-                await financeListViewModel.getSymbolDetails(symbol: account.symbol)
                 await accountViewModel.getAccount(id: account.id!)
                 paymentDate = accountViewModel.account.paymentDate
                 await accountViewModel.getAccountTransactionList(id: account.id!)
@@ -129,7 +127,6 @@ struct AccountDetailView: View {
                 await accountViewModel.getAccount(id: accountViewModel.account.id!)
                 await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
                 await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
-                await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
                 await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
             }

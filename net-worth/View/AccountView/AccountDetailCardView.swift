@@ -9,11 +9,9 @@ import SwiftUI
 
 struct AccountDetailCardView: View {
     
-    @ObservedObject var financeListViewModel: FinanceListViewModel
     @ObservedObject var accountViewModel: AccountViewModel
     
-    init(financeListViewModel: FinanceListViewModel, accountViewModel: AccountViewModel) {
-        self.financeListViewModel = financeListViewModel
+    init(accountViewModel: AccountViewModel) {
         self.accountViewModel = accountViewModel
     }
     

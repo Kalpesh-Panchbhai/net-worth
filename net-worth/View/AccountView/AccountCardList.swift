@@ -16,7 +16,6 @@ struct AccountCardList: View {
     @State private var searchText = ""
     
     @StateObject var accountViewModel = AccountViewModel()
-    @StateObject var financeListViewModel = FinanceListViewModel()
     
     private var accountController = AccountController()
     
@@ -104,7 +103,6 @@ struct AccountCardList: View {
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             Task.init {
                 await accountViewModel.getAccount(id: accountViewModel.account.id!)
-                await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
                 accountViewModel.accountList = [Account]()
                 await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)

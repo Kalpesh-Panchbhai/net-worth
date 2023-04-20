@@ -72,7 +72,6 @@ struct AccountCardView: View {
         }
         .onAppear {
             Task.init {
-                await financeListViewModel.getSymbolDetails(symbol: account.symbol)
                 await accountViewModel.getLastTwoAccountTransactionList(id: account.id ?? "")
             }
         }

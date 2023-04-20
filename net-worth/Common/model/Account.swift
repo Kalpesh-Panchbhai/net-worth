@@ -17,7 +17,6 @@ struct Account: Codable, Hashable {
     var currentBalance: Double
     var paymentReminder: Bool
     var paymentDate: Int
-    var symbol: String
     var currency: String
     
     init() {
@@ -26,7 +25,6 @@ struct Account: Codable, Hashable {
         self.currentBalance = 0.0
         self.paymentReminder = false
         self.paymentDate = 0
-        self.symbol = ""
         self.currency = ""
     }
     
@@ -37,7 +35,6 @@ struct Account: Codable, Hashable {
         self.currentBalance = 0.0
         self.paymentReminder = false
         self.paymentDate = 0
-        self.symbol = ""
         self.currency = ""
     }
     
@@ -49,7 +46,6 @@ struct Account: Codable, Hashable {
         self.currentBalance = try container.decode(Double.self, forKey: .currentBalance)
         self.paymentReminder = try container.decode(Bool.self, forKey: .paymentReminder)
         self.paymentDate = try container.decode(Int.self, forKey: .paymentDate)
-        self.symbol = try container.decode(String.self, forKey: .symbol)
         self.currency = try container.decode(String.self, forKey: .currency)
     }
     
@@ -60,17 +56,15 @@ struct Account: Codable, Hashable {
         currentBalance = doc[ConstantUtils.accountKeyCurrentBalance] as? Double ?? 0.0
         paymentReminder = doc[ConstantUtils.accountKeyPaymentReminder] as? Bool ?? false
         paymentDate = doc[ConstantUtils.accountKeyPaymentDate] as? Int ?? 0
-        symbol = doc[ConstantUtils.accountKeySymbol] as? String ?? ""
         currency = doc[ConstantUtils.accountKeyCurrency] as? String ?? ""
     }
     
-    init(accountType: String, accountName: String, currentBalance: Double, paymentReminder: Bool, paymentDate: Int, symbol: String, currency: String) {
+    init(accountType: String, accountName: String, currentBalance: Double, paymentReminder: Bool, paymentDate: Int, currency: String) {
         self.accountType = accountType
         self.accountName = accountName
         self.currentBalance = currentBalance
         self.paymentReminder = paymentReminder
         self.paymentDate = paymentDate
-        self.symbol = symbol
         self.currency = currency
     }
     

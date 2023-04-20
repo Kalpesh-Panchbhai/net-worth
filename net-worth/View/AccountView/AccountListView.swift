@@ -15,7 +15,6 @@ struct AccountListView: View {
     @State private var isNewTransactionViewOpen = false
     
     @StateObject var accountViewModel = AccountViewModel()
-    @StateObject var financeListViewModel = FinanceListViewModel()
     
     var accountController = AccountController()
     
@@ -72,7 +71,6 @@ struct AccountListView: View {
                 await accountViewModel.getAccount(id: accountViewModel.account.id!)
                 await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
                 await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
-                await financeListViewModel.getSymbolDetails(symbol: accountViewModel.account.symbol)
                 await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
             }
