@@ -75,7 +75,7 @@ class IncomeController {
     func getIncomeList() async throws -> [Income] {
         var incomeList = [Income]()
         incomeList = try await getIncomeCollection()
-            .order(by: ConstantUtils.incomeKeyCreditedOn, descending: true)
+            .order(by: ConstantUtils.incomeKeyCreditedOn)
             .getDocuments()
             .documents
             .map { doc in
@@ -86,6 +86,23 @@ class IncomeController {
                               type: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
                               tag: doc[ConstantUtils.incomeKeyIncomeTag] as? String ?? "")
             }
+        incomeList = incomeList.map { value1 in
+            var sum = 0.0
+            var totalMonth = 0.0
+            incomeList.forEach { value2 in
+                if(value1.creditedOn >= value2.creditedOn) {
+                    sum = sum + value2.amount
+                    totalMonth+=1
+                }
+            }
+            return Income(id: value1.id,
+                          amount: value1.amount,
+                          creditedOn: value1.creditedOn,
+                          currency: value1.currency,
+                          type: value1.type,
+                          tag: value1.tag,
+                          avg: sum / totalMonth)
+        }.reversed()
         return incomeList
     }
     

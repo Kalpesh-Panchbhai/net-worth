@@ -16,4 +16,6 @@ struct Income: Codable, Hashable {
     var currency: String
     var type: String
     var tag: String
+    
+    var avg: Double = 0.0
 }
