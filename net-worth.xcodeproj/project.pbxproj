@@ -19,6 +19,7 @@
 		7D5B9F93299A896300D0477B /* BalanceCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5B9F92299A896300D0477B /* BalanceCardView.swift */; };
 		7D65547429A107950008A8E2 /* ChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D65547329A107950008A8E2 /* ChartViewModel.swift */; };
 		7D65547629A107DC0008A8E2 /* ChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D65547529A107DC0008A8E2 /* ChartData.swift */; };
+		7D69CB4329F2B971006B5A4E /* IncomeChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D69CB4229F2B971006B5A4E /* IncomeChartView.swift */; };
 		7D69DD732932312400F024A6 /* ConstantUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D69DD722932312400F024A6 /* ConstantUtils.swift */; };
 		7D730E1129937D370002E0ED /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D730E1029937D370002E0ED /* OnboardingView.swift */; };
 		7D76290529A385EA00F71D7C /* IncomeTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D76290429A385EA00F71D7C /* IncomeTag.swift */; };
@@ -124,6 +125,7 @@
 		7D5B9F92299A896300D0477B /* BalanceCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceCardView.swift; sourceTree = "<group>"; };
 		7D65547329A107950008A8E2 /* ChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewModel.swift; sourceTree = "<group>"; };
 		7D65547529A107DC0008A8E2 /* ChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartData.swift; sourceTree = "<group>"; };
+		7D69CB4229F2B971006B5A4E /* IncomeChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeChartView.swift; sourceTree = "<group>"; };
 		7D69DD722932312400F024A6 /* ConstantUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstantUtils.swift; sourceTree = "<group>"; };
 		7D730E1029937D370002E0ED /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		7D76290429A385EA00F71D7C /* IncomeTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTag.swift; sourceTree = "<group>"; };
@@ -454,6 +456,7 @@
 				7DC46B4329A4A4B9000E311B /* NewIncomeTypeView.swift */,
 				7DC46B4729A4C5A0000E311B /* IncomeTypeView.swift */,
 				7DC46B4929A4C5B0000E311B /* IncomeTagView.swift */,
+				7D69CB4229F2B971006B5A4E /* IncomeChartView.swift */,
 			);
 			path = IncomeView;
 			sourceTree = "<group>";
@@ -737,6 +740,7 @@
 				7DC46B4429A4A4B9000E311B /* NewIncomeTypeView.swift in Sources */,
 				7D596278294105A40008A6B9 /* BalanceModel.swift in Sources */,
 				7D921C66298684790014AC9E /* +View.swift in Sources */,
+				7D69CB4329F2B971006B5A4E /* IncomeChartView.swift in Sources */,
 				7DA63A492995FACA00568FCA /* AccountDetailCardView.swift in Sources */,
 				7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */,
 				7D5B9F93299A896300D0477B /* BalanceCardView.swift in Sources */,

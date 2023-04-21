@@ -13,6 +13,7 @@ struct IncomeView: View {
     @ObservedObject var incomeViewModel = IncomeViewModel()
     
     @State var isOpen: Bool = false
+    @State var isChartViewOpen: Bool = false
     @State var filterIncomeType = ""
     @State var filterIncomeTag = ""
     @State var filterYear = ""
@@ -24,6 +25,10 @@ struct IncomeView: View {
     
     fileprivate func financialYear(startYear: String, endYear: String) -> Text {
         return Text(startYear + "-" + endYear)
+    }
+    
+    private func getFinancialYear(startYear: String, endYear: String) -> String {
+        return startYear + "-" + endYear
     }
     
     var body: some View {
@@ -49,6 +54,9 @@ struct IncomeView: View {
             }
             .sheet(isPresented: $isOpen) {
                 NewIncomeView(incomeViewModel: incomeViewModel)
+            }
+            .sheet(isPresented: $isChartViewOpen) {
+                IncomeChartView()
             }
             .listStyle(.insetGrouped)
             .toolbar {
@@ -180,6 +188,13 @@ struct IncomeView: View {
                         Button("OK", role: .cancel) { }
                     }
                 }
+                ToolbarItem {
+                    Button(action: {
+                        self.isChartViewOpen.toggle()
+                    }, label: {
+                        Label("Income Chart", systemImage: "chart.line.uptrend.xyaxis")
+                    })
+                }
                 ToolbarItem(placement: .bottomBar){
                     let balance = incomeViewModel.incomeTotalAmount
                     HStack {
@@ -215,10 +230,6 @@ struct IncomeView: View {
                 }
             }
         }
-    }
-    
-    private func getFinancialYear(startYear: String, endYear: String) -> String {
-        return startYear + "-" + endYear
     }
     
 }
