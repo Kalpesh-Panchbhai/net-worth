@@ -96,6 +96,10 @@ struct NewIncomeView: View {
                             await incomeController.addIncome(type: incomeTypeSelected, amount: amount, date: date, currency: currenySelected.code, tag: incomeTagSelected)
                             await incomeViewModel.getTotalBalance()
                             await incomeViewModel.getIncomeList()
+                            await incomeViewModel.getIncomeTagList()
+                            await incomeViewModel.getIncomeTypeList()
+                            await incomeViewModel.getIncomeYearList()
+                            await incomeViewModel.getIncomeFinancialYearList()
                         }
                         dismiss()
                     }, label: {

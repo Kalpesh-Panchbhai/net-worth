@@ -83,6 +83,7 @@ struct IncomeChartView: View {
                     await incomeViewModel.getIncomeTypeList()
                     await incomeViewModel.getIncomeTagList()
                     await incomeViewModel.getIncomeYearList()
+                    await incomeViewModel.getIncomeFinancialYearList()
                 }
             }
             .toolbar {
@@ -156,29 +157,21 @@ struct IncomeChartView: View {
                                 })
                             }
                             
-                            if(incomeViewModel.incomeYearList.count > 1) {
+                            if(incomeViewModel.incomeFinancialYearList.count > 1) {
                                 Menu(content: {
-                                    ForEach(-1..<incomeViewModel.incomeYearList.count - 1, id: \.self) { item in
+                                    ForEach(incomeViewModel.incomeFinancialYearList, id: \.self) { item in
                                         Button(action: {
-                                            if(item == -1) {
-                                                filterFinancialYear = getFinancialYear(startYear: incomeViewModel.incomeYearList[item + 1], endYear:  String((Int(incomeViewModel.incomeYearList[item + 1]) ?? 0) + 1))
-                                            } else {
-                                                filterFinancialYear = getFinancialYear(startYear: incomeViewModel.incomeYearList[item + 1], endYear: incomeViewModel.incomeYearList[item])
-                                            }
                                             filterYear = ""
+                                            filterFinancialYear = item
                                             Task.init {
                                                 await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                                             }
                                         }, label: {
-                                            if(item == -1) {
-                                                financialYear(startYear: incomeViewModel.incomeYearList[item + 1], endYear: String((Int(incomeViewModel.incomeYearList[item + 1]) ?? 0) + 1))
-                                            } else {
-                                                financialYear(startYear: incomeViewModel.incomeYearList[item + 1], endYear: incomeViewModel.incomeYearList[item])
-                                            }
+                                            Text(item)
                                         })
                                     }
                                 }, label: {
-                                    Text("Financial year")
+                                    Text("Financial Year")
                                 })
                             }
                             

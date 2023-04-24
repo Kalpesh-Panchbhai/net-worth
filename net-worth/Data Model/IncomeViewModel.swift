@@ -19,6 +19,8 @@ class IncomeViewModel: ObservableObject {
     
     @Published var incomeYearList = [String]()
     
+    @Published var incomeFinancialYearList = [String]()
+    
     @Published var incomeTotalAmount = 0.0
     
     private var incomeController = IncomeController()
@@ -94,6 +96,17 @@ class IncomeViewModel: ObservableObject {
             let list = try await incomeController.getIncomeYearList()
             DispatchQueue.main.async {
                 self.incomeYearList = list
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    func getIncomeFinancialYearList() async {
+        do {
+            let list = try await incomeController.getIncomeFinancialYearList()
+            DispatchQueue.main.async {
+                self.incomeFinancialYearList = list
             }
         } catch {
             print(error)
