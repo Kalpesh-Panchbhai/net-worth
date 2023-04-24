@@ -23,11 +23,11 @@ struct AccountDetailCardView: View {
                     .foregroundColor(.white)
                     .font(.headline.bold())
                 Spacer()
-                if(accountViewModel.account.paymentReminder) {
+                if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
                     Label("", systemImage: "bell.fill")
                         .foregroundColor(.white)
                         .font(.caption.bold())
-                } else {
+                } else if(accountViewModel.account.accountType != "Saving") {
                     Label("", systemImage: "bell.slash.fill")
                         .foregroundColor(.white)
                         .font(.caption.bold())
