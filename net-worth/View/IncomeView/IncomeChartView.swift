@@ -47,6 +47,26 @@ struct IncomeChartView: View {
                             }
                         }
                         .frame(height: 250)
+                        HStack {
+                            Text("Income Tag")
+                            Spacer()
+                            Text(filterIncomeTag.isEmpty ? "All" : filterIncomeTag)
+                        }
+                        HStack {
+                            Text("Income Type")
+                            Spacer()
+                            Text(filterIncomeType.isEmpty ? "All" : filterIncomeType)
+                        }
+                        HStack {
+                            Text("Year")
+                            Spacer()
+                            Text(filterYear.isEmpty ? "All" : filterYear)
+                        }
+                        HStack {
+                            Text("Financial Year")
+                            Spacer()
+                            Text(filterFinancialYear.isEmpty ? "All" : filterFinancialYear)
+                        }
                     }
                 }
             }
