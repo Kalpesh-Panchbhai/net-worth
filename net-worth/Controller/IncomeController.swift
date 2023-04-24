@@ -86,9 +86,11 @@ class IncomeController {
                               type: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
                               tag: doc[ConstantUtils.incomeKeyIncomeTag] as? String ?? "")
             }
+        var cum = 0.0
         incomeList = incomeList.map { value1 in
             var sum = 0.0
             var totalMonth = 0.0
+            cum = cum + value1.amount
             incomeList.forEach { value2 in
                 if(value1.creditedOn >= value2.creditedOn) {
                     sum = sum + value2.amount
@@ -101,7 +103,8 @@ class IncomeController {
                           currency: value1.currency,
                           type: value1.type,
                           tag: value1.tag,
-                          avg: sum / totalMonth)
+                          avg: sum / totalMonth,
+                          cumulative: cum)
         }.reversed()
         return incomeList
     }
@@ -184,10 +187,11 @@ class IncomeController {
                               type: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
                               tag: doc[ConstantUtils.incomeKeyIncomeTag] as? String ?? "")
             }
-        
+        var cum = 0.0
         incomeList = incomeList.map { value1 in
             var sum = 0.0
             var totalMonth = 0.0
+            cum = cum + value1.amount
             incomeList.forEach { value2 in
                 if(value1.creditedOn >= value2.creditedOn) {
                     sum = sum + value2.amount
@@ -200,7 +204,8 @@ class IncomeController {
                           currency: value1.currency,
                           type: value1.type,
                           tag: value1.tag,
-                          avg: sum / totalMonth)
+                          avg: sum / totalMonth,
+                          cumulative: cum)
         }.reversed()
         return incomeList
     }

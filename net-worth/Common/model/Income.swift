@@ -18,4 +18,5 @@ struct Income: Codable, Hashable {
     var tag: String
     
     var avg: Double = 0.0
+    var cumulative: Double = 0.0
 }

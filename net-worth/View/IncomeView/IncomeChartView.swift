@@ -17,6 +17,8 @@ struct IncomeChartView: View {
     @State var filterYear = ""
     @State var filterFinancialYear = ""
     
+    @State var cumulative = false
+    
     fileprivate func financialYear(startYear: String, endYear: String) -> Text {
         return Text(startYear + "-" + endYear)
     }
@@ -30,11 +32,17 @@ struct IncomeChartView: View {
             VStack {
                 HStack {
                     List {
+                        Toggle("Cumulative", isOn: $cumulative)
+                            .onChange(of: cumulative) { newValue in
+                                Task.init {
+                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                }
+                            }
                         Chart {
                             ForEach(incomeViewModel.incomeList, id: \.self) { item in
                                 LineMark(
                                     x: .value("Mount", item.creditedOn),
-                                    y: .value("Value", item.amount)
+                                    y: cumulative ? .value("Value", item.cumulative) : .value("Value", item.amount)
                                 )
                             }
                         }
@@ -75,7 +83,6 @@ struct IncomeChartView: View {
                                         Button(action: {
                                             filterIncomeType = item.name
                                             Task.init {
-                                                await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                                                 await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                                             }
                                         }, label: {
@@ -93,7 +100,6 @@ struct IncomeChartView: View {
                                         Button(action: {
                                             filterIncomeTag = item.name
                                             Task.init {
-                                                await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                                                 await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                                             }
                                         }, label: {
@@ -112,7 +118,6 @@ struct IncomeChartView: View {
                                             filterYear = item
                                             filterFinancialYear = ""
                                             Task.init {
-                                                await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                                                 await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                                             }
                                         }, label: {
@@ -135,7 +140,6 @@ struct IncomeChartView: View {
                                             }
                                             filterYear = ""
                                             Task.init {
-                                                await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                                                 await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                                             }
                                         }, label: {
