@@ -45,6 +45,8 @@ struct IncomeChartView: View {
                                     y: cumulative ? .value("Value", item.cumulative) : .value("Value", item.amount)
                                 )
                             }
+                            RuleMark(y: .value("Value", incomeViewModel.incomeList.first?.avg ?? 0.0))
+                                        .foregroundStyle(.red)
                         }
                         .frame(height: 250)
                         HStack {
@@ -66,6 +68,11 @@ struct IncomeChartView: View {
                             Text("Financial Year")
                             Spacer()
                             Text(filterFinancialYear.isEmpty ? "All" : filterFinancialYear)
+                        }
+                        HStack {
+                            Text("Average")
+                            Spacer()
+                            Text("\((incomeViewModel.incomeList.first?.avg ?? 0.0).withCommas(decimalPlace: 2))")
                         }
                     }
                 }
