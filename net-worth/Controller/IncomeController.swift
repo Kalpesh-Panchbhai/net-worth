@@ -27,8 +27,8 @@ class IncomeController {
             .collection(ConstantUtils.incomeTypeCollectionName)
     }
     
-    public func addIncome(type: IncomeType, amount: String, date: Date, currency: String, tag: IncomeTag) async {
-        let newIncome = Income(amount: Double(amount) ?? 0.0, creditedOn: date, currency: currency, type: type.name, tag: tag.name)
+    public func addIncome(type: IncomeType, amount: String, date: Date, taxPaid: String, currency: String, tag: IncomeTag) async {
+        let newIncome = Income(amount: Double(amount) ?? 0.0, taxPaid: Double(taxPaid) ?? 0.0, creditedOn: date, currency: currency, type: type.name, tag: tag.name)
         do {
             let documentID = try getIncomeCollection()
                 .addDocument(from: newIncome)
@@ -81,6 +81,7 @@ class IncomeController {
             .map { doc in
                 return Income(id: doc.documentID,
                               amount: doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0,
+                              taxPaid: doc[ConstantUtils.incomeKeyTaxPaid] as? Double ?? 0.0,
                               creditedOn: (doc[ConstantUtils.incomeKeyCreditedOn] as? Timestamp)?.dateValue() ?? Date(),
                               currency: doc[ConstantUtils.incomeKeyCurrency] as? String ?? "",
                               type: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
@@ -99,6 +100,7 @@ class IncomeController {
             }
             return Income(id: value1.id,
                           amount: value1.amount,
+                          taxPaid: value1.taxPaid,
                           creditedOn: value1.creditedOn,
                           currency: value1.currency,
                           type: value1.type,
@@ -182,6 +184,7 @@ class IncomeController {
             .map { doc in
                 return Income(id: doc.documentID,
                               amount: doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0,
+                              taxPaid: doc[ConstantUtils.incomeKeyTaxPaid] as? Double ?? 0.0,
                               creditedOn: (doc[ConstantUtils.incomeKeyCreditedOn] as? Timestamp)?.dateValue() ?? Date(),
                               currency: doc[ConstantUtils.incomeKeyCurrency] as? String ?? "",
                               type: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
@@ -200,6 +203,7 @@ class IncomeController {
             }
             return Income(id: value1.id,
                           amount: value1.amount,
+                          taxPaid: value1.taxPaid,
                           creditedOn: value1.creditedOn,
                           currency: value1.currency,
                           type: value1.type,

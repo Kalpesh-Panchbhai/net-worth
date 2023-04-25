@@ -27,6 +27,7 @@ class ConstantUtils {
     static var watchCollectionName = "watches"
     
     static var incomeKeyAmount = "amount"
+    static var incomeKeyTaxPaid = "taxpaid"
     static var incomeKeyCreditedOn = "creditedOn"
     static var incomeKeyCurrency = "currency"
     static var incomeKeyIncomeType = "type"

@@ -10,6 +10,7 @@ import SwiftUI
 struct NewIncomeView: View {
     
     @State private var amount: String = "0.0"
+    @State private var taxPaid: String = "0.0"
     @State private var incomeTypeSelected: IncomeType = IncomeType()
     @State private var incomeTagSelected: IncomeTag = IncomeTag()
     @State private var date = Date()
@@ -78,6 +79,38 @@ struct NewIncomeView: View {
                                 }
                             })
                     }
+                    HStack {
+                        Text("Tax Paid")
+                        Spacer()
+                        TextField("Tax Paid", text: $taxPaid)
+                            .keyboardType(.decimalPad)
+                            .onChange(of: taxPaid, perform: {_ in
+                                let filtered = taxPaid.filter {"0123456789.".contains($0)}
+                                
+                                if filtered.contains(".") {
+                                    let splitted = filtered.split(separator: ".")
+                                    if splitted.count >= 2 {
+                                        let preDecimal = String(splitted[0])
+                                        if String(splitted[1]).count == 3 {
+                                            let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
+                                            taxPaid = "\(preDecimal).\(afterDecimal)"
+                                        }else {
+                                            let afterDecimal = String(splitted[1])
+                                            taxPaid = "\(preDecimal).\(afterDecimal)"
+                                        }
+                                    }else if splitted.count == 1 {
+                                        let preDecimal = String(splitted[0])
+                                        taxPaid = "\(preDecimal)."
+                                    }else {
+                                        taxPaid = "0."
+                                    }
+                                } else if filtered.isEmpty && !taxPaid.isEmpty {
+                                    taxPaid = ""
+                                } else if !filtered.isEmpty {
+                                    taxPaid = filtered
+                                }
+                            })
+                    }
                     HStack{
                         DatePicker("Credited on", selection: $date, in: ...Date(), displayedComponents: [.date])
                     }
@@ -93,7 +126,7 @@ struct NewIncomeView: View {
                 ToolbarItem {
                     Button(action: {
                         Task.init {
-                            await incomeController.addIncome(type: incomeTypeSelected, amount: amount, date: date, currency: currenySelected.code, tag: incomeTagSelected)
+                            await incomeController.addIncome(type: incomeTypeSelected, amount: amount, date: date, taxPaid: taxPaid, currency: currenySelected.code, tag: incomeTagSelected)
                             await incomeViewModel.getTotalBalance()
                             await incomeViewModel.getIncomeList()
                             await incomeViewModel.getIncomeTagList()
