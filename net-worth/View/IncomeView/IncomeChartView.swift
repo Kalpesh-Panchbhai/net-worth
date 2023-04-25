@@ -48,24 +48,68 @@ struct IncomeChartView: View {
                         }
                         .frame(height: 250)
                         HStack {
-                            Text("Income Tag")
-                            Spacer()
-                            Text(filterIncomeTag.isEmpty ? "All" : filterIncomeTag)
+                            Picker(selection: $filterIncomeTag, label: Text("Income Tag")) {
+                                Text("All").tag("All")
+                                ForEach(incomeViewModel.incomeTagList, id: \.self) {
+                                    Text($0.name).tag($0.name)
+                                }
+                            }
+                            .onChange(of: filterIncomeTag) { value in
+                                Task.init {
+                                    if(value == "All") {
+                                        filterIncomeTag = ""
+                                    }
+                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                }
+                            }
                         }
                         HStack {
-                            Text("Income Type")
-                            Spacer()
-                            Text(filterIncomeType.isEmpty ? "All" : filterIncomeType)
+                            Picker(selection: $filterIncomeType, label: Text("Income Type")) {
+                                Text("All").tag("All")
+                                ForEach(incomeViewModel.incomeTypeList, id: \.self) {
+                                    Text($0.name).tag($0.name)
+                                }
+                            }
+                            .onChange(of: filterIncomeType) { value in
+                                Task.init {
+                                    if(value == "All") {
+                                        filterIncomeType = ""
+                                    }
+                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                }
+                            }
                         }
                         HStack {
-                            Text("Year")
-                            Spacer()
-                            Text(filterYear.isEmpty ? "All" : filterYear)
+                            Picker(selection: $filterYear, label: Text("Year")) {
+                                Text("All").tag("All")
+                                ForEach(incomeViewModel.incomeYearList, id: \.self) {
+                                    Text($0).tag($0)
+                                }
+                            }
+                            .onChange(of: filterYear) { value in
+                                Task.init {
+                                    if(value == "All") {
+                                        filterYear = ""
+                                    }
+                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                }
+                            }
                         }
                         HStack {
-                            Text("Financial Year")
-                            Spacer()
-                            Text(filterFinancialYear.isEmpty ? "All" : filterFinancialYear)
+                            Picker(selection: $filterFinancialYear, label: Text("Financial Year")) {
+                                Text("All").tag("All")
+                                ForEach(incomeViewModel.incomeFinancialYearList, id: \.self) {
+                                    Text($0).tag($0)
+                                }
+                            }
+                            .onChange(of: filterFinancialYear) { value in
+                                Task.init {
+                                    if(value == "All") {
+                                        filterFinancialYear = ""
+                                    }
+                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                }
+                            }
                         }
                         HStack {
                             Text("Total Amount")
@@ -117,80 +161,6 @@ struct IncomeChartView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu(content: {
-                        Menu(content: {
-                            if(incomeViewModel.incomeTypeList.count > 1) {
-                                Menu(content: {
-                                    ForEach(incomeViewModel.incomeTypeList, id: \.self) { item in
-                                        Button(action: {
-                                            filterIncomeType = item.name
-                                            Task.init {
-                                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                            }
-                                        }, label: {
-                                            Text(item.name)
-                                        })
-                                    }
-                                }, label: {
-                                    Text("Income Type")
-                                })
-                            }
-                            
-                            if(incomeViewModel.incomeTagList.count > 1) {
-                                Menu(content: {
-                                    ForEach(incomeViewModel.incomeTagList, id: \.self) { item in
-                                        Button(action: {
-                                            filterIncomeTag = item.name
-                                            Task.init {
-                                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                            }
-                                        }, label: {
-                                            Text(item.name)
-                                        })
-                                    }
-                                }, label: {
-                                    Text("Income Tag")
-                                })
-                            }
-                            
-                            if(incomeViewModel.incomeYearList.count > 1) {
-                                Menu(content: {
-                                    ForEach(incomeViewModel.incomeYearList, id: \.self) { item in
-                                        Button(action: {
-                                            filterYear = item
-                                            filterFinancialYear = ""
-                                            Task.init {
-                                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                            }
-                                        }, label: {
-                                            Text(item)
-                                        })
-                                    }
-                                }, label: {
-                                    Text("Year")
-                                })
-                            }
-                            
-                            if(incomeViewModel.incomeFinancialYearList.count > 1) {
-                                Menu(content: {
-                                    ForEach(incomeViewModel.incomeFinancialYearList, id: \.self) { item in
-                                        Button(action: {
-                                            filterYear = ""
-                                            filterFinancialYear = item
-                                            Task.init {
-                                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                            }
-                                        }, label: {
-                                            Text(item)
-                                        })
-                                    }
-                                }, label: {
-                                    Text("Financial Year")
-                                })
-                            }
-                            
-                        }, label: {
-                            Text("Filter by")
-                        })
                         Menu(content: {
                             Toggle("Cumulative Amount", isOn: $cumulativeAmount)
                             Toggle("Tax Paid", isOn: $showTaxPaid)
