@@ -20,14 +20,6 @@ struct IncomeChartView: View {
     @State var cumulativeAmount = false
     @State var showTaxPaid = false
     
-    fileprivate func financialYear(startYear: String, endYear: String) -> Text {
-        return Text(startYear + "-" + endYear)
-    }
-    
-    private func getFinancialYear(startYear: String, endYear: String) -> String {
-        return startYear + "-" + endYear
-    }
-    
     var body: some View {
         NavigationView {
             VStack {
