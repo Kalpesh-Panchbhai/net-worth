@@ -35,7 +35,11 @@ struct IncomeView: View {
         NavigationView {
             List {
                 ForEach(incomeViewModel.incomeList, id: \.self) { income in
-                    ChildIncomeView(income: income)
+                    NavigationLink(destination: {
+                        IncomeDetailView(income: income)
+                    }, label: {
+                        ChildIncomeView(income: income)
+                    })
                 }
                 .onDelete(perform: deleteIncome)
             }
