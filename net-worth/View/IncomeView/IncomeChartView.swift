@@ -17,7 +17,8 @@ struct IncomeChartView: View {
     @State var filterYear = ""
     @State var filterFinancialYear = ""
     
-    @State var cumulative = false
+    @State var cumulativeAmount = false
+    @State var showTaxPaid = false
     
     fileprivate func financialYear(startYear: String, endYear: String) -> Text {
         return Text(startYear + "-" + endYear)
@@ -32,21 +33,18 @@ struct IncomeChartView: View {
             VStack {
                 HStack {
                     List {
-                        Toggle("Cumulative", isOn: $cumulative)
-                            .onChange(of: cumulative) { newValue in
-                                Task.init {
-                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                }
-                            }
                         Chart {
                             ForEach(incomeViewModel.incomeList, id: \.self) { item in
                                 LineMark(
                                     x: .value("Mount", item.creditedOn),
-                                    y: cumulative ? .value("Value", item.cumulative) : .value("Value", item.amount)
-                                )
+                                    y: cumulativeAmount ? (showTaxPaid ? .value("Value", item.cumulativeTaxPaid) : .value("Value", item.cumulativeAmount)) : (showTaxPaid ? .value("Value", item.taxPaid) : .value("Value", item.amount))
+                                ).foregroundStyle(.green)
                             }
-                            RuleMark(y: .value("Value", incomeViewModel.incomeList.first?.avg ?? 0.0))
-                                        .foregroundStyle(.red)
+                            RuleMark(y: .value("Value", incomeViewModel.incomeList.first?.avgAmount ?? 0.0))
+                                .foregroundStyle(.red)
+                            
+                            RuleMark(y: .value("Value", incomeViewModel.incomeList.first?.avgTaxPaid ?? 0.0))
+                                .foregroundStyle(.purple)
                         }
                         .frame(height: 250)
                         HStack {
@@ -70,9 +68,24 @@ struct IncomeChartView: View {
                             Text(filterFinancialYear.isEmpty ? "All" : filterFinancialYear)
                         }
                         HStack {
-                            Text("Average")
+                            Text("Total Amount")
                             Spacer()
-                            Text("\((incomeViewModel.incomeList.first?.avg ?? 0.0).withCommas(decimalPlace: 2))")
+                            Text("\((incomeViewModel.incomeList.first?.cumulativeAmount ?? 0.0).withCommas(decimalPlace: 2))")
+                        }
+                        HStack {
+                            Text("Average Amount")
+                            Spacer()
+                            Text("\((incomeViewModel.incomeList.first?.avgAmount ?? 0.0).withCommas(decimalPlace: 2))")
+                        }
+                        HStack {
+                            Text("Total Tax Paid")
+                            Spacer()
+                            Text("\((incomeViewModel.incomeList.first?.cumulativeTaxPaid ?? 0.0).withCommas(decimalPlace: 2))")
+                        }
+                        HStack {
+                            Text("Average Tax Paid")
+                            Spacer()
+                            Text("\((incomeViewModel.incomeList.first?.avgTaxPaid ?? 0.0).withCommas(decimalPlace: 2))")
                         }
                     }
                 }
@@ -177,6 +190,12 @@ struct IncomeChartView: View {
                             
                         }, label: {
                             Text("Filter by")
+                        })
+                        Menu(content: {
+                            Toggle("Cumulative Amount", isOn: $cumulativeAmount)
+                            Toggle("Tax Paid", isOn: $showTaxPaid)
+                        }, label: {
+                            Text("Show by")
                         })
                         
                     }, label: {

@@ -87,11 +87,13 @@ class IncomeController {
                               type: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
                               tag: doc[ConstantUtils.incomeKeyIncomeTag] as? String ?? "")
             }
-        var cum = 0.0
+        var cumAmount = 0.0
+        var cumTaxPaid = 0.0
         incomeList = incomeList.map { value1 in
             var sum = 0.0
             var totalMonth = 0.0
-            cum = cum + value1.amount
+            cumAmount = cumAmount + value1.amount
+            cumTaxPaid = cumTaxPaid + value1.taxPaid
             incomeList.forEach { value2 in
                 if(value1.creditedOn >= value2.creditedOn) {
                     sum = sum + value2.amount
@@ -105,8 +107,10 @@ class IncomeController {
                           currency: value1.currency,
                           type: value1.type,
                           tag: value1.tag,
-                          avg: sum / totalMonth,
-                          cumulative: cum)
+                          avgAmount: sum / totalMonth,
+                          avgTaxPaid: cumTaxPaid / Double(incomeList.count),
+                          cumulativeAmount: cumAmount,
+                          cumulativeTaxPaid: cumTaxPaid)
         }.reversed()
         return incomeList
     }
@@ -190,11 +194,13 @@ class IncomeController {
                               type: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
                               tag: doc[ConstantUtils.incomeKeyIncomeTag] as? String ?? "")
             }
-        var cum = 0.0
+        var cumAmount = 0.0
+        var cumTaxPaid = 0.0
         incomeList = incomeList.map { value1 in
             var sum = 0.0
             var totalMonth = 0.0
-            cum = cum + value1.amount
+            cumAmount = cumAmount + value1.amount
+            cumTaxPaid = cumTaxPaid + value1.taxPaid
             incomeList.forEach { value2 in
                 if(value1.creditedOn >= value2.creditedOn) {
                     sum = sum + value2.amount
@@ -208,8 +214,10 @@ class IncomeController {
                           currency: value1.currency,
                           type: value1.type,
                           tag: value1.tag,
-                          avg: sum / totalMonth,
-                          cumulative: cum)
+                          avgAmount: sum / totalMonth,
+                          avgTaxPaid: cumTaxPaid / Double(incomeList.count),
+                          cumulativeAmount: cumAmount,
+                          cumulativeTaxPaid: cumTaxPaid)
         }.reversed()
         return incomeList
     }
@@ -460,7 +468,7 @@ class IncomeController {
         var financialYearAvailable = true
         let firstYear = Calendar.current.dateComponents([.year], from: incomeList.last!.creditedOn).year!
         var nextYear = firstYear + 1
-        var firstFinancialyear = String(firstYear) + "-" + String(nextYear)
+        let firstFinancialyear = String(firstYear) + "-" + String(nextYear)
         returnResponse.insert(firstFinancialyear, at: 0)
         let grouped = Dictionary(grouping: incomeList) { (income) -> String in
             let date = Calendar.current.dateComponents([.year, .month], from: income.creditedOn)
@@ -474,9 +482,9 @@ class IncomeController {
             })
             
             if(financialYearAvailable) {
-                var firstYear = nextYear
+                let firstYear = nextYear
                 nextYear = nextYear + 1
-                var financialyear = String(firstYear) + "-" + String(nextYear)
+                let financialyear = String(firstYear) + "-" + String(nextYear)
                 returnResponse.insert(financialyear, at: 0)
             }
         }

@@ -252,7 +252,7 @@ struct ChildIncomeView: View {
             VStack {
                 Text("\(income.currency) " + income.amount.withCommas(decimalPlace: 2))
                     .frame(maxWidth: .infinity, alignment: .trailing)
-                Text("\(income.currency) \(income.avg.withCommas(decimalPlace: 2))").font(.system(size: 12))
+                Text("\(income.currency) \(income.avgAmount.withCommas(decimalPlace: 2))").font(.system(size: 12))
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .foregroundColor(.gray)
             }
