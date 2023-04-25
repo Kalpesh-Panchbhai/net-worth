@@ -30,13 +30,13 @@ struct IncomeChartView: View {
                                 LineMark(
                                     x: .value("Mount", item.creditedOn),
                                     y: cumulativeAmount ? (showTaxPaid ? .value("Value", item.cumulativeTaxPaid) : .value("Value", item.cumulativeAmount)) : (showTaxPaid ? .value("Value", item.taxPaid) : .value("Value", item.amount))
-                                ).foregroundStyle(.green)
+                                )
                             }
                             RuleMark(y: .value("Value", incomeViewModel.incomeList.first?.avgAmount ?? 0.0))
-                                .foregroundStyle(.red)
+                                .foregroundStyle(.green)
                             
                             RuleMark(y: .value("Value", incomeViewModel.incomeList.first?.avgTaxPaid ?? 0.0))
-                                .foregroundStyle(.purple)
+                                .foregroundStyle(.red)
                         }
                         .frame(height: 250)
                         HStack {
