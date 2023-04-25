@@ -457,7 +457,7 @@ class IncomeController {
         let firstYear = Calendar.current.dateComponents([.year], from: incomeList.last!.creditedOn).year!
         var nextYear = firstYear + 1
         var firstFinancialyear = String(firstYear) + "-" + String(nextYear)
-        returnResponse.append(firstFinancialyear)
+        returnResponse.insert(firstFinancialyear, at: 0)
         let grouped = Dictionary(grouping: incomeList) { (income) -> String in
             let date = Calendar.current.dateComponents([.year, .month], from: income.creditedOn)
             
@@ -473,7 +473,7 @@ class IncomeController {
                 var firstYear = nextYear
                 nextYear = nextYear + 1
                 var financialyear = String(firstYear) + "-" + String(nextYear)
-                returnResponse.append(financialyear)
+                returnResponse.insert(financialyear, at: 0)
             }
         }
         return returnResponse
