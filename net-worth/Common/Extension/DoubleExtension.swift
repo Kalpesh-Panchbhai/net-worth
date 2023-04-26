@@ -26,4 +26,15 @@ extension Double {
         numberFormatter.paddingCharacter = "0"
         return numberFormatter
     }
+    
+    var stringFormat: String {
+        if self > 10000 && self < 999999 {
+            return String(format: "%.2fK", self / 1000).replacingOccurrences(of: ".0", with: "")
+        }
+        if self > 999999 {
+            return String(format: "%.2fM", self / 1000000).replacingOccurrences(of: ".0", with: "")
+        }
+        
+        return String(format: "%.0f", self)
+    }
 }

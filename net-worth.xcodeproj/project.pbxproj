@@ -22,6 +22,7 @@
 		7D65547629A107DC0008A8E2 /* ChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D65547529A107DC0008A8E2 /* ChartData.swift */; };
 		7D69CB4329F2B971006B5A4E /* IncomeChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D69CB4229F2B971006B5A4E /* IncomeChartView.swift */; };
 		7D69DD732932312400F024A6 /* ConstantUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D69DD722932312400F024A6 /* ConstantUtils.swift */; };
+		7D6F885229F8FBFB000AE48A /* NewIncomeChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6F885129F8FBFB000AE48A /* NewIncomeChartView.swift */; };
 		7D730E1129937D370002E0ED /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D730E1029937D370002E0ED /* OnboardingView.swift */; };
 		7D76290529A385EA00F71D7C /* IncomeTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D76290429A385EA00F71D7C /* IncomeTag.swift */; };
 		7D79FA51291B7430004A2ECF /* net_worthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA50291B7430004A2ECF /* net_worthApp.swift */; };
@@ -129,6 +130,7 @@
 		7D65547529A107DC0008A8E2 /* ChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartData.swift; sourceTree = "<group>"; };
 		7D69CB4229F2B971006B5A4E /* IncomeChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeChartView.swift; sourceTree = "<group>"; };
 		7D69DD722932312400F024A6 /* ConstantUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstantUtils.swift; sourceTree = "<group>"; };
+		7D6F885129F8FBFB000AE48A /* NewIncomeChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewIncomeChartView.swift; sourceTree = "<group>"; };
 		7D730E1029937D370002E0ED /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		7D76290429A385EA00F71D7C /* IncomeTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTag.swift; sourceTree = "<group>"; };
 		7D79FA4D291B7430004A2ECF /* net-worth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "net-worth.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -460,6 +462,7 @@
 				7DC46B4929A4C5B0000E311B /* IncomeTagView.swift */,
 				7D69CB4229F2B971006B5A4E /* IncomeChartView.swift */,
 				7D4E671229F7D4C900EB6B24 /* IncomeDetailView.swift */,
+				7D6F885129F8FBFB000AE48A /* NewIncomeChartView.swift */,
 			);
 			path = IncomeView;
 			sourceTree = "<group>";
@@ -742,6 +745,7 @@
 				7DEC3B802938A38B002E9C8B /* FinanceDetailModel.swift in Sources */,
 				7DC46B4429A4A4B9000E311B /* NewIncomeTypeView.swift in Sources */,
 				7D596278294105A40008A6B9 /* BalanceModel.swift in Sources */,
+				7D6F885229F8FBFB000AE48A /* NewIncomeChartView.swift in Sources */,
 				7D921C66298684790014AC9E /* +View.swift in Sources */,
 				7D69CB4329F2B971006B5A4E /* IncomeChartView.swift in Sources */,
 				7DA63A492995FACA00568FCA /* AccountDetailCardView.swift in Sources */,
