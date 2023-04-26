@@ -20,6 +20,8 @@ struct NewIncomeChartView: View {
     @State var filterYear = ""
     @State var filterFinancialYear = ""
     
+    @State var cumulativeView = false
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -178,6 +180,12 @@ struct NewIncomeChartView: View {
                             Text("Filter by")
                         })
                         
+                        Menu(content: {
+                            Toggle("Cumulative", isOn: $cumulativeView)
+                        }, label: {
+                            Text("Change view")
+                        })
+                        
                     }, label: {
                         Image(systemName: "ellipsis")
                     })
@@ -188,22 +196,19 @@ struct NewIncomeChartView: View {
     
     @ViewBuilder
     func AnimatedChart() -> some View {
-        let max = incomeViewModel.incomeList.max { item1, item2 in
-            item2.amount > item1.amount
-        }?.amount ?? 0.0
         Chart {
             ForEach(incomeViewModel.incomeList, id: \.id) { income in
                 // MARK: Line Graph
                 LineMark(
                     x: .value("Time", income.creditedOn),
-                    y: .value("Amount",income.animate ? income.amount : 0.0)
+                    y: .value("Amount",income.animate ? (cumulativeView ? income.cumulativeAmount : income.amount) : 0.0)
                 )
                 .foregroundStyle(Color.blue.gradient)
                 .interpolationMethod(.catmullRom)
                 
                 AreaMark(
                     x: .value("Time", income.creditedOn),
-                    y: .value("Amount",income.animate ? income.amount : 0.0)
+                    y: .value("Amount",income.animate ? (cumulativeView ? income.cumulativeAmount : income.amount) : 0.0)
                 )
                 .foregroundStyle(Color.blue.opacity(0.1).gradient)
                 .interpolationMethod(.catmullRom)
@@ -239,7 +244,7 @@ struct NewIncomeChartView: View {
             }
         }
         // MARK: Customizing Y-AXIS Length
-        .chartYScale(domain: 0...(max * 1.5))
+        .chartYScale(domain: 0...(getMaxYScale() * 1.5))
         // MARK: Gesture to Highlight Current Bar
         .chartOverlay(content: { proxy in
             GeometryReader { innerProxy in
@@ -317,5 +322,17 @@ struct NewIncomeChartView: View {
             }
         }
         return returnString
+    }
+    
+    func getMaxYScale() -> Double {
+        var max = 0.0
+        if(cumulativeView) {
+            max = incomeViewModel.incomeList.first?.cumulativeAmount ?? 0.0
+        } else {
+            max = incomeViewModel.incomeList.max { item1, item2 in
+                item2.amount > item1.amount
+            }?.amount ?? 0.0
+        }
+        return max
     }
 }
