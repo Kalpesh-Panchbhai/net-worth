@@ -21,6 +21,7 @@ struct IncomeChartView: View {
     @State var filterFinancialYear = ""
     
     @State var cumulativeView = false
+    @State var taxPaidView = false
     
     var body: some View {
         NavigationStack {
@@ -33,12 +34,32 @@ struct IncomeChartView: View {
                         }
                     }
                     
-                    let totalValue = incomeViewModel.incomeList.reduce(0.0) { partialResult, item in
+                    let totalAmount = incomeViewModel.incomeList.reduce(0.0) { partialResult, item in
                         item.amount + partialResult
                     }
                     
-                    Text(totalValue.stringFormat)
-                        .font(.largeTitle.bold())
+                    let totalTaxPaid = incomeViewModel.incomeList.reduce(0.0) { partialResult, item in
+                        item.taxPaid + partialResult
+                    }
+                    
+                    HStack {
+                        if(taxPaidView) {
+                            Text(totalTaxPaid.stringFormat)
+                                .font(.title3.bold())
+                        } else {
+                            Text(totalAmount.stringFormat)
+                                .font(.title3.bold())
+                        }
+                        Spacer()
+                        Button("Cumulative") {
+                            self.cumulativeView.toggle()
+                        }.buttonStyle(.borderedProminent)
+                            .tint(self.cumulativeView ? .green : .blue)
+                        Button("Tax Paid") {
+                            self.taxPaidView.toggle()
+                        }.buttonStyle(.borderedProminent)
+                            .tint(self.taxPaidView ? .green : .blue)
+                    }
                     
                     AnimatedChart()
                     
@@ -179,13 +200,6 @@ struct IncomeChartView: View {
                         }, label: {
                             Text("Filter by")
                         })
-                        
-                        Menu(content: {
-                            Toggle("Cumulative", isOn: $cumulativeView)
-                        }, label: {
-                            Text("Change view")
-                        })
-                        
                     }, label: {
                         Image(systemName: "ellipsis")
                     })
@@ -201,14 +215,14 @@ struct IncomeChartView: View {
                 // MARK: Line Graph
                 LineMark(
                     x: .value("Time", income.creditedOn),
-                    y: .value("Amount",income.animate ? (cumulativeView ? income.cumulativeAmount : income.amount) : 0.0)
+                    y: .value("Amount",income.animate ? (cumulativeView ? (taxPaidView ? income.cumulativeTaxPaid : income.cumulativeAmount) : (taxPaidView ? income.taxPaid : income.amount)) : 0.0)
                 )
                 .foregroundStyle(Color.blue.gradient)
                 .interpolationMethod(.catmullRom)
                 
                 AreaMark(
                     x: .value("Time", income.creditedOn),
-                    y: .value("Amount",income.animate ? (cumulativeView ? income.cumulativeAmount : income.amount) : 0.0)
+                    y: .value("Amount",income.animate ? (cumulativeView ? (taxPaidView ? income.cumulativeTaxPaid : income.cumulativeAmount) : (taxPaidView ? income.taxPaid : income.amount)) : 0.0)
                 )
                 .foregroundStyle(Color.blue.opacity(0.1).gradient)
                 .interpolationMethod(.catmullRom)
@@ -223,9 +237,15 @@ struct IncomeChartView: View {
                                     .font(.caption)
                                     .foregroundColor(.gray)
                                 
-                                Text(currentActiveIncome.amount.stringFormat)
-                                    .font(.title3.bold())
-                                    .foregroundColor(.gray)
+                                if(taxPaidView) {
+                                    Text(currentActiveIncome.taxPaid.stringFormat)
+                                        .font(.title3.bold())
+                                        .foregroundColor(.gray)
+                                } else {
+                                    Text(currentActiveIncome.amount.stringFormat)
+                                        .font(.title3.bold())
+                                        .foregroundColor(.gray)
+                                }
                                 Text(currentActiveIncome.tag)
                                     .font(.title3.bold())
                                     .foregroundColor(.gray)
@@ -326,12 +346,18 @@ struct IncomeChartView: View {
     
     func getMaxYScale() -> Double {
         var max = 0.0
-        if(cumulativeView) {
+        if(cumulativeView && !taxPaidView) {
             max = incomeViewModel.incomeList.first?.cumulativeAmount ?? 0.0
-        } else {
+        } else if(!cumulativeView && !taxPaidView) {
             max = incomeViewModel.incomeList.max { item1, item2 in
                 item2.amount > item1.amount
             }?.amount ?? 0.0
+        } else if(cumulativeView && taxPaidView) {
+            max = incomeViewModel.incomeList.first?.cumulativeTaxPaid ?? 0.0
+        } else {
+            max = incomeViewModel.incomeList.max { item1, item2 in
+                item2.taxPaid > item1.taxPaid
+            }?.taxPaid ?? 0.0
         }
         return max
     }
