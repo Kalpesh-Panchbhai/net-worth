@@ -25,8 +25,10 @@ struct NewIncomeChartView: View {
             VStack {
                 VStack(alignment: .leading,spacing: 12) {
                     HStack {
-                        Text("Views")
-                            .fontWeight(.semibold)
+                        if(!(filterIncomeType.isEmpty && filterIncomeTag.isEmpty && filterYear.isEmpty && filterFinancialYear.isEmpty)) {
+                            Text(getAppliedFilter())
+                                .fontWeight(.semibold)
+                        }
                     }
                     
                     let totalValue = incomeViewModel.incomeList.reduce(0.0) { partialResult, item in
@@ -44,95 +46,143 @@ struct NewIncomeChartView: View {
                     RoundedRectangle(cornerRadius: 10, style: .continuous)
                         .fill(.black.shadow(.drop(radius: 2)))
                 }
-                
-                Picker(selection: $filterIncomeTag, label: Text("Income Tag")) {
-                    Text("All").tag("All")
-                    ForEach(incomeViewModel.incomeTagList, id: \.self) {
-                        Text($0.name).tag($0.name)
-                    }
-                }
-                .onChange(of: filterIncomeTag) { value in
-                    Task.init {
-                        if(value == "All") {
-                            filterIncomeTag = ""
-                        }
-                        await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                        for(index,_) in incomeViewModel.incomeList.enumerated() {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
-                                withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
-                                    incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
-                                }
-                            }
-                        }
-                    }
-                }
-                Picker(selection: $filterIncomeType, label: Text("Income Type")) {
-                    Text("All").tag("All")
-                    ForEach(incomeViewModel.incomeTypeList, id: \.self) {
-                        Text($0.name).tag($0.name)
-                    }
-                }
-                .onChange(of: filterIncomeType) { value in
-                    Task.init {
-                        if(value == "All") {
-                            filterIncomeType = ""
-                        }
-                        await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                        for(index,_) in incomeViewModel.incomeList.enumerated() {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
-                                withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
-                                    incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
-                                }
-                            }
-                        }
-                    }
-                }
-                Picker(selection: $filterYear, label: Text("Year")) {
-                    Text("All").tag("All")
-                    ForEach(incomeViewModel.incomeYearList, id: \.self) {
-                        Text($0).tag($0)
-                    }
-                }
-                .onChange(of: filterYear) { value in
-                    Task.init {
-                        if(value == "All") {
-                            filterYear = ""
-                        }
-                        await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                        for(index,_) in incomeViewModel.incomeList.enumerated() {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
-                                withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
-                                    incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
-                                }
-                            }
-                        }
-                    }
-                }
-                Picker(selection: $filterFinancialYear, label: Text("Financial Year")) {
-                    Text("All").tag("All")
-                    ForEach(incomeViewModel.incomeFinancialYearList, id: \.self) {
-                        Text($0).tag($0)
-                    }
-                }
-                .onChange(of: filterFinancialYear) { value in
-                    Task.init {
-                        if(value == "All") {
-                            filterFinancialYear = ""
-                        }
-                        await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                        for(index,_) in incomeViewModel.incomeList.enumerated() {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
-                                withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
-                                    incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
-                                }
-                            }
-                        }
-                    }
-                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .padding()
-            .navigationTitle("Swift Charts")
+            .navigationTitle("Income Charts")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    if(!filterIncomeType.isEmpty || !filterIncomeTag.isEmpty || !filterYear.isEmpty || !filterFinancialYear.isEmpty) {
+                        Button(action: {
+                            filterIncomeType = ""
+                            filterIncomeTag = ""
+                            filterYear = ""
+                            filterFinancialYear = ""
+                            Task.init {
+                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                for(index,_) in incomeViewModel.incomeList.enumerated() {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
+                                        withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
+                                            incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
+                                        }
+                                    }
+                                }
+                            }
+                        }, label: {
+                            Text("Clear")
+                        })
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu(content: {
+                        Menu(content: {
+                            if(incomeViewModel.incomeTypeList.count > 0) {
+                                Menu(content: {
+                                    ForEach(incomeViewModel.incomeTypeList, id: \.self) { item in
+                                        Button(action: {
+                                            filterIncomeType = item.name
+                                            Task.init {
+                                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                for(index,_) in incomeViewModel.incomeList.enumerated() {
+                                                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
+                                                        withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
+                                                            incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }, label: {
+                                            Text(item.name)
+                                        })
+                                    }
+                                }, label: {
+                                    Text("Income Type")
+                                })
+                            }
+                            
+                            if(incomeViewModel.incomeTagList.count > 0) {
+                                Menu(content: {
+                                    ForEach(incomeViewModel.incomeTagList, id: \.self) { item in
+                                        Button(action: {
+                                            filterIncomeTag = item.name
+                                            Task.init {
+                                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                for(index,_) in incomeViewModel.incomeList.enumerated() {
+                                                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
+                                                        withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
+                                                            incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }, label: {
+                                            Text(item.name)
+                                        })
+                                    }
+                                }, label: {
+                                    Text("Income Tag")
+                                })
+                            }
+                            
+                            if(incomeViewModel.incomeYearList.count > 0) {
+                                Menu(content: {
+                                    ForEach(incomeViewModel.incomeYearList, id: \.self) { item in
+                                        Button(action: {
+                                            filterYear = item
+                                            filterFinancialYear = ""
+                                            Task.init {
+                                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                for(index,_) in incomeViewModel.incomeList.enumerated() {
+                                                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
+                                                        withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
+                                                            incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }, label: {
+                                            Text(item)
+                                        })
+                                    }
+                                }, label: {
+                                    Text("Year")
+                                })
+                            }
+                            
+                            if(incomeViewModel.incomeFinancialYearList.count > 0) {
+                                Menu(content: {
+                                    ForEach(incomeViewModel.incomeFinancialYearList, id: \.self) { item in
+                                        Button(action: {
+                                            filterYear = ""
+                                            filterFinancialYear = item
+                                            Task.init {
+                                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                for(index,_) in incomeViewModel.incomeList.enumerated() {
+                                                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
+                                                        withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
+                                                            incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }, label: {
+                                            Text(item)
+                                        })
+                                    }
+                                }, label: {
+                                    Text("Financial year")
+                                })
+                            }
+                            
+                        }, label: {
+                            Text("Filter by")
+                        })
+                        
+                    }, label: {
+                        Image(systemName: "ellipsis")
+                    })
+                }
+            }
         }
     }
     
@@ -234,5 +284,38 @@ struct NewIncomeChartView: View {
                 }
             }
         }
+    }
+    
+    func getAppliedFilter() -> String {
+        var returnString = ""
+        var filterAlreadyApplied = false
+        if(!filterIncomeType.isEmpty) {
+            returnString = "Applied Filter: " + filterIncomeType
+            filterAlreadyApplied = true
+        }
+        if(!filterIncomeTag.isEmpty) {
+            if(filterAlreadyApplied) {
+                returnString = returnString + "," + filterIncomeTag
+            } else {
+                returnString = "Applied Filter: " + filterIncomeTag
+                filterAlreadyApplied = true
+            }
+        }
+        if(!filterYear.isEmpty) {
+            if(filterAlreadyApplied) {
+                returnString = returnString + "," + filterYear
+            } else {
+                returnString = "Applied Filter: " + filterYear
+                filterAlreadyApplied = true
+            }
+        }
+        if(!filterFinancialYear.isEmpty) {
+            if(filterAlreadyApplied) {
+                returnString = returnString + "," + filterFinancialYear
+            } else {
+                returnString = "Applied Filter: " + filterFinancialYear
+            }
+        }
+        return returnString
     }
 }
