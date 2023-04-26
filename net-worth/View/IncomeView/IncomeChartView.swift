@@ -55,10 +55,12 @@ struct IncomeChartView: View {
                             self.cumulativeView.toggle()
                         }.buttonStyle(.borderedProminent)
                             .tint(self.cumulativeView ? .green : .blue)
+                            .font(.system(size: 13))
                         Button("Tax Paid") {
                             self.taxPaidView.toggle()
                         }.buttonStyle(.borderedProminent)
                             .tint(self.taxPaidView ? .green : .blue)
+                            .font(.system(size: 13))
                     }
                     
                     AnimatedChart()
@@ -265,6 +267,7 @@ struct IncomeChartView: View {
         }
         // MARK: Customizing Y-AXIS Length
         .chartYScale(domain: 0...(getMaxYScale() * 1.5))
+        .chartXScale(domain: Date.now.addingTimeInterval(1)...Date.now.addingTimeInterval(5), type: .date)
         // MARK: Gesture to Highlight Current Bar
         .chartOverlay(content: { proxy in
             GeometryReader { innerProxy in
