@@ -53,11 +53,31 @@ struct IncomeChartView: View {
                         Spacer()
                         Button("Cumulative") {
                             self.cumulativeView.toggle()
+                            Task.init {
+                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                for(index,_) in incomeViewModel.incomeList.enumerated() {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
+                                        withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
+                                            incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
+                                        }
+                                    }
+                                }
+                            }
                         }.buttonStyle(.borderedProminent)
                             .tint(self.cumulativeView ? .green : .blue)
                             .font(.system(size: 13))
                         Button("Tax Paid") {
                             self.taxPaidView.toggle()
+                            Task.init {
+                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                for(index,_) in incomeViewModel.incomeList.enumerated() {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
+                                        withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
+                                            incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
+                                        }
+                                    }
+                                }
+                            }
                         }.buttonStyle(.borderedProminent)
                             .tint(self.taxPaidView ? .green : .blue)
                             .font(.system(size: 13))
