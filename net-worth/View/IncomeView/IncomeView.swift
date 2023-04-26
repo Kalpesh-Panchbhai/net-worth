@@ -60,7 +60,7 @@ struct IncomeView: View {
                 NewIncomeView(incomeViewModel: incomeViewModel)
             }
             .sheet(isPresented: $isChartViewOpen) {
-                NewIncomeChartView()
+                IncomeChartView()
             }
             .listStyle(.insetGrouped)
             .toolbar {
