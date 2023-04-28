@@ -39,7 +39,7 @@ struct IncomeChartView: View {
                     }
                     
                     let totalTaxPaid = incomeViewModel.incomeList.reduce(0.0) { partialResult, item in
-                        item.taxPaid + partialResult
+                        item.taxpaid + partialResult
                     }
                     
                     HStack {
@@ -237,14 +237,14 @@ struct IncomeChartView: View {
                 // MARK: Line Graph
                 LineMark(
                     x: .value("Time", income.creditedOn),
-                    y: .value("Amount",income.animate ? (cumulativeView ? (taxPaidView ? income.cumulativeTaxPaid : income.cumulativeAmount) : (taxPaidView ? income.taxPaid : income.amount)) : 0.0)
+                    y: .value("Amount",income.animate ? (cumulativeView ? (taxPaidView ? income.cumulativeTaxPaid : income.cumulativeAmount) : (taxPaidView ? income.taxpaid : income.amount)) : 0.0)
                 )
                 .foregroundStyle(Color.blue.gradient)
                 .interpolationMethod(.catmullRom)
                 
                 AreaMark(
                     x: .value("Time", income.creditedOn),
-                    y: .value("Amount",income.animate ? (cumulativeView ? (taxPaidView ? income.cumulativeTaxPaid : income.cumulativeAmount) : (taxPaidView ? income.taxPaid : income.amount)) : 0.0)
+                    y: .value("Amount",income.animate ? (cumulativeView ? (taxPaidView ? income.cumulativeTaxPaid : income.cumulativeAmount) : (taxPaidView ? income.taxpaid : income.amount)) : 0.0)
                 )
                 .foregroundStyle(Color.blue.opacity(0.1).gradient)
                 .interpolationMethod(.catmullRom)
@@ -260,7 +260,7 @@ struct IncomeChartView: View {
                                     .foregroundColor(.gray)
                                 
                                 if(taxPaidView) {
-                                    Text(currentActiveIncome.taxPaid.stringFormat)
+                                    Text(currentActiveIncome.taxpaid.stringFormat)
                                         .font(.title3.bold())
                                         .foregroundColor(.gray)
                                 } else {
@@ -378,8 +378,8 @@ struct IncomeChartView: View {
             max = incomeViewModel.incomeList.first?.cumulativeTaxPaid ?? 0.0
         } else {
             max = incomeViewModel.incomeList.max { item1, item2 in
-                item2.taxPaid > item1.taxPaid
-            }?.taxPaid ?? 0.0
+                item2.taxpaid > item1.taxpaid
+            }?.taxpaid ?? 0.0
         }
         return max
     }

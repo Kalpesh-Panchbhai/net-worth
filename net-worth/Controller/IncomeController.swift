@@ -28,7 +28,7 @@ class IncomeController {
     }
     
     public func addIncome(type: IncomeType, amount: String, date: Date, taxPaid: String, currency: String, tag: IncomeTag) async {
-        let newIncome = Income(amount: Double(amount) ?? 0.0, taxPaid: Double(taxPaid) ?? 0.0, creditedOn: date, currency: currency, type: type.name, tag: tag.name)
+        let newIncome = Income(amount: Double(amount) ?? 0.0, taxpaid: Double(taxPaid) ?? 0.0, creditedOn: date, currency: currency, type: type.name, tag: tag.name)
         do {
             let documentID = try getIncomeCollection()
                 .addDocument(from: newIncome)
@@ -81,7 +81,7 @@ class IncomeController {
             .map { doc in
                 return Income(id: doc.documentID,
                               amount: doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0,
-                              taxPaid: doc[ConstantUtils.incomeKeyTaxPaid] as? Double ?? 0.0,
+                              taxpaid: doc[ConstantUtils.incomeKeyTaxPaid] as? Double ?? 0.0,
                               creditedOn: (doc[ConstantUtils.incomeKeyCreditedOn] as? Timestamp)?.dateValue() ?? Date(),
                               currency: doc[ConstantUtils.incomeKeyCurrency] as? String ?? "",
                               type: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
@@ -93,7 +93,7 @@ class IncomeController {
             var sum = 0.0
             var totalMonth = 0.0
             cumAmount = cumAmount + value1.amount
-            cumTaxPaid = cumTaxPaid + value1.taxPaid
+            cumTaxPaid = cumTaxPaid + value1.taxpaid
             incomeList.forEach { value2 in
                 if(value1.creditedOn >= value2.creditedOn) {
                     sum = sum + value2.amount
@@ -102,7 +102,7 @@ class IncomeController {
             }
             return Income(id: value1.id,
                           amount: value1.amount,
-                          taxPaid: value1.taxPaid,
+                          taxpaid: value1.taxpaid,
                           creditedOn: value1.creditedOn,
                           currency: value1.currency,
                           type: value1.type,
@@ -188,7 +188,7 @@ class IncomeController {
             .map { doc in
                 return Income(id: doc.documentID,
                               amount: doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0,
-                              taxPaid: doc[ConstantUtils.incomeKeyTaxPaid] as? Double ?? 0.0,
+                              taxpaid: doc[ConstantUtils.incomeKeyTaxPaid] as? Double ?? 0.0,
                               creditedOn: (doc[ConstantUtils.incomeKeyCreditedOn] as? Timestamp)?.dateValue() ?? Date(),
                               currency: doc[ConstantUtils.incomeKeyCurrency] as? String ?? "",
                               type: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
@@ -200,7 +200,7 @@ class IncomeController {
             var sum = 0.0
             var totalMonth = 0.0
             cumAmount = cumAmount + value1.amount
-            cumTaxPaid = cumTaxPaid + value1.taxPaid
+            cumTaxPaid = cumTaxPaid + value1.taxpaid
             incomeList.forEach { value2 in
                 if(value1.creditedOn >= value2.creditedOn) {
                     sum = sum + value2.amount
@@ -209,7 +209,7 @@ class IncomeController {
             }
             return Income(id: value1.id,
                           amount: value1.amount,
-                          taxPaid: value1.taxPaid,
+                          taxpaid: value1.taxpaid,
                           creditedOn: value1.creditedOn,
                           currency: value1.currency,
                           type: value1.type,

@@ -32,7 +32,7 @@ struct IncomeDetailView: View {
                 HStack {
                     Text("Tax Paid")
                     Spacer()
-                    Text("\(income.taxPaid.withCommas(decimalPlace: 2))")
+                    Text("\(income.taxpaid.withCommas(decimalPlace: 2))")
                 }
                 HStack {
                     Text("Credited On")
