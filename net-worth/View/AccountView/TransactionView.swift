@@ -15,6 +15,7 @@ struct TransactionsView: View {
     
     private var accountTransactionList = [AccountTransaction]()
     
+    private var accountController = AccountController()
     
     init(accountViewModel: AccountViewModel) {
         self.accountViewModel = accountViewModel
@@ -58,6 +59,25 @@ struct TransactionsView: View {
                                             .foregroundColor(.red)
                                     }
                                 }
+                            }
+                        }
+                        .contextMenu {
+                            if(i == 0 && accountViewModel.accountTransactionList.count > 1) {
+                                Button(role: .destructive, action: {
+                                    var account = accountViewModel.account
+                                    let accountTransactionID = accountViewModel.accountTransactionList[i].id!
+                                    let newCurrentBalance = accountViewModel.accountTransactionList[1].balanceChange
+                                    Task.init {
+                                        try await accountController.deleteAccountLastTransaction(accountID: account.id!, accountTransactionID: accountTransactionID)
+                                        account.currentBalance = newCurrentBalance
+                                        accountController.updateAccount(account: account)
+                                        await accountViewModel.getAccountTransactionList(id: account.id!)
+                                        await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
+                                        await accountViewModel.getAccount(id: account.id!)
+                                    }
+                                }, label: {
+                                    Label("Delete", systemImage: "trash")
+                                })
                             }
                         }
                         .padding(.horizontal)

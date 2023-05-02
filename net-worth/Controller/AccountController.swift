@@ -202,6 +202,14 @@ class AccountController {
         return accountTransactionList
     }
     
+    public func deleteAccountLastTransaction(accountID: String, accountTransactionID: String) async throws {
+        try await getAccountCollection()
+            .document(accountID)
+            .collection(ConstantUtils.accountTransactionCollectionName)
+            .document(accountTransactionID)
+            .delete()
+    }
+    
     
     public func fetchTotalBalance(accountList: [Account]) async throws -> BalanceModel {
         var accounts: [Account] = []
