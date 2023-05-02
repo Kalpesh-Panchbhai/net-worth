@@ -153,72 +153,74 @@ struct SingleWatchListView: View {
                 })
             }
             
-            ToolbarItem(content: {
-                
-                Menu(content: {
+            if(watchViewModel.watch.accountID.count > 0) {
+                ToolbarItem(content: {
+                    
                     Menu(content: {
-                        Button(action: {
-                            if(isAscendingByAlphabet) {
-                                watchViewModel.watch.accountID = accountViewModel
-                                    .accountList
-                                    .sorted(by: {
-                                        $0.accountName > $1.accountName
-                                    }).map({
-                                        $0.id!
-                                    })
-                                self.isAscendingByAlphabet.toggle()
-                                self.isAscendingByAlphabetEnabled = true
-                                self.isAscendingByAmountEnabled = false
-                            } else {
-                                watchViewModel.watch.accountID = accountViewModel
-                                    .accountList
-                                    .sorted(by: {
-                                        $0.accountName < $1.accountName
-                                    }).map({
-                                        $0.id!
-                                    })
-                                self.isAscendingByAlphabet.toggle()
-                                self.isAscendingByAlphabetEnabled = true
-                                self.isAscendingByAmountEnabled = false
-                            }
+                        Menu(content: {
+                            Button(action: {
+                                if(isAscendingByAlphabet) {
+                                    watchViewModel.watch.accountID = accountViewModel
+                                        .accountList
+                                        .sorted(by: {
+                                            $0.accountName > $1.accountName
+                                        }).map({
+                                            $0.id!
+                                        })
+                                    self.isAscendingByAlphabet.toggle()
+                                    self.isAscendingByAlphabetEnabled = true
+                                    self.isAscendingByAmountEnabled = false
+                                } else {
+                                    watchViewModel.watch.accountID = accountViewModel
+                                        .accountList
+                                        .sorted(by: {
+                                            $0.accountName < $1.accountName
+                                        }).map({
+                                            $0.id!
+                                        })
+                                    self.isAscendingByAlphabet.toggle()
+                                    self.isAscendingByAlphabetEnabled = true
+                                    self.isAscendingByAmountEnabled = false
+                                }
+                            }, label: {
+                                Text("Alphabet")
+                            })
+                            
+                            Button(action: {
+                                if(isAscendingByAmount) {
+                                    watchViewModel.watch.accountID = accountViewModel
+                                        .accountList
+                                        .sorted(by: {
+                                            $0.currentBalance > $1.currentBalance
+                                        }).map({
+                                            $0.id!
+                                        })
+                                    self.isAscendingByAmount.toggle()
+                                    self.isAscendingByAmountEnabled = true
+                                    self.isAscendingByAlphabetEnabled = false
+                                } else {
+                                    watchViewModel.watch.accountID = accountViewModel
+                                        .accountList
+                                        .sorted(by: {
+                                            $0.currentBalance < $1.currentBalance
+                                        }).map({
+                                            $0.id!
+                                        })
+                                    self.isAscendingByAmount.toggle()
+                                    self.isAscendingByAmountEnabled = true
+                                    self.isAscendingByAlphabetEnabled = false
+                                }
+                            }, label: {
+                                Text("Amount")
+                            })
                         }, label: {
-                            Text("Alphabet")
-                        })
-                        
-                        Button(action: {
-                            if(isAscendingByAmount) {
-                                watchViewModel.watch.accountID = accountViewModel
-                                    .accountList
-                                    .sorted(by: {
-                                        $0.currentBalance > $1.currentBalance
-                                    }).map({
-                                        $0.id!
-                                    })
-                                self.isAscendingByAmount.toggle()
-                                self.isAscendingByAmountEnabled = true
-                                self.isAscendingByAlphabetEnabled = false
-                            } else {
-                                watchViewModel.watch.accountID = accountViewModel
-                                    .accountList
-                                    .sorted(by: {
-                                        $0.currentBalance < $1.currentBalance
-                                    }).map({
-                                        $0.id!
-                                    })
-                                self.isAscendingByAmount.toggle()
-                                self.isAscendingByAmountEnabled = true
-                                self.isAscendingByAlphabetEnabled = false
-                            }
-                        }, label: {
-                            Text("Amount")
+                            Text("Sort by")
                         })
                     }, label: {
-                        Text("Sort by")
+                        Image(systemName: "ellipsis")
                     })
-                }, label: {
-                    Image(systemName: "ellipsis")
                 })
-            })
+            }
         }
         .sheet(isPresented: $addAccountViewOpen, onDismiss: {
             Task.init {
