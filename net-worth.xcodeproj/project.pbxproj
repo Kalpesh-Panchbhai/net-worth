@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0A72F69C86303305F6631476 /* Pods_net_worthTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC6C9A84CDBFBA61E9B153E4 /* Pods_net_worthTests.framework */; };
+		7D05321A2A010F790052E739 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0532192A010F790052E739 /* NotificationView.swift */; };
 		7D237BED292B672900DEF91D /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D237BEC292B672800DEF91D /* DoubleExtension.swift */; };
 		7D3636FB292F9CCB0013B4E5 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */; };
 		7D3D5244299105A50021047B /* CommonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D5243299105A50021047B /* CommonController.swift */; };
@@ -116,6 +117,7 @@
 		4A82A05E6B99AAC450872690 /* Pods-net-worth-net-worthUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth-net-worthUITests.release.xcconfig"; path = "Target Support Files/Pods-net-worth-net-worthUITests/Pods-net-worth-net-worthUITests.release.xcconfig"; sourceTree = "<group>"; };
 		4F8D72CD718DA6F209092935 /* Pods-net-worth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth.release.xcconfig"; path = "Target Support Files/Pods-net-worth/Pods-net-worth.release.xcconfig"; sourceTree = "<group>"; };
 		6191CD53E4B147B0F4457D7D /* Pods-net-worth.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth.debug.xcconfig"; path = "Target Support Files/Pods-net-worth/Pods-net-worth.debug.xcconfig"; sourceTree = "<group>"; };
+		7D0532192A010F790052E739 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		7D237BEC292B672800DEF91D /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
 		7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
 		7D3D5243299105A50021047B /* CommonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonController.swift; sourceTree = "<group>"; };
@@ -246,6 +248,14 @@
 				F904EDF3AA3AE3C4B4DC832D /* Pods-net-worthTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		7D0532182A010F620052E739 /* NotificationView */ = {
+			isa = PBXGroup;
+			children = (
+				7D0532192A010F790052E739 /* NotificationView.swift */,
+			);
+			path = NotificationView;
 			sourceTree = "<group>";
 		};
 		7D0D14B82937228A00AC30A3 /* model */ = {
@@ -398,6 +408,7 @@
 		7D79FA88291B9C6E004A2ECF /* View */ = {
 			isa = PBXGroup;
 			children = (
+				7D0532182A010F620052E739 /* NotificationView */,
 				7D730E0F299375AD0002E0ED /* OnboardingView */,
 				7D921C58298682FB0014AC9E /* LoginView */,
 				7DAC70A8294086890033050C /* CustomView */,
@@ -740,6 +751,7 @@
 				7DC97A2C29223ADB003F69D4 /* NewIncomeView.swift in Sources */,
 				7DF9DB95298F9C2600831494 /* AccountTransaction.swift in Sources */,
 				7DEC3B802938A38B002E9C8B /* FinanceDetailModel.swift in Sources */,
+				7D05321A2A010F790052E739 /* NotificationView.swift in Sources */,
 				7DC46B4429A4A4B9000E311B /* NewIncomeTypeView.swift in Sources */,
 				7D596278294105A40008A6B9 /* BalanceModel.swift in Sources */,
 				7D6F885229F8FBFB000AE48A /* IncomeChartView.swift in Sources */,

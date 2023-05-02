@@ -20,14 +20,19 @@ struct MainScreenView: View {
                         }.tag("account_view")
                     WatchListView()
                         .tabItem {
-                            Image(systemName: "list.bullet.below.rectangle")
-                            Text("Watch List")
+                            Image(systemName: "list.bullet.clipboard.fill")
+                            Text("Watch Lists")
                         }.tag("watch_view")
                     IncomeView()
                         .tabItem{
                             Image(systemName: "indianrupeesign.circle.fill")
-                            Text("Income")
+                            Text("Incomes")
                         }.tag("income_view")
+                    NotificationView()
+                        .tabItem{
+                            Image(systemName: "bell.badge.fill")
+                            Text("Notifications")
+                        }.tag("notification_view")
                     SettingsView()
                         .tabItem{
                             Image(systemName: "slider.horizontal.3")
