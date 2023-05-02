@@ -12,7 +12,10 @@ struct SingleWatchListView: View {
     var watch: Watch
     @State private var isNewTransactionViewOpen = false
     @State private var addAccountViewOpen = false
-    @State private var isAscending = true
+    @State private var isAscendingByAlphabet = true
+    @State private var isAscendingByAlphabetEnabled = false
+    @State private var isAscendingByAmount = true
+    @State private var isAscendingByAmountEnabled = false
     var watchController = WatchController()
     
     @StateObject var accountViewModel = AccountViewModel()
@@ -40,18 +43,36 @@ struct SingleWatchListView: View {
                                             Task.init {
                                                 await watchViewModel.getWatchList(id: watch.id!)
                                                 await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
-                                                if(isAscending) {
-                                                    watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                                        $0.accountName < $1.accountName
-                                                    }).map({
-                                                        $0.id!
-                                                    })
-                                                } else {
-                                                    watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                                        $0.accountName > $1.accountName
-                                                    }).map({
-                                                        $0.id!
-                                                    })
+                                                if(isAscendingByAlphabetEnabled) {
+                                                    if(isAscendingByAlphabet) {
+                                                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                                            $0.accountName < $1.accountName
+                                                        }).map({
+                                                            $0.id!
+                                                        })
+                                                    } else {
+                                                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                                            $0.accountName > $1.accountName
+                                                        }).map({
+                                                            $0.id!
+                                                        })
+                                                    }
+                                                    self.isAscendingByAmountEnabled = false
+                                                } else if(isAscendingByAmountEnabled) {
+                                                    if(isAscendingByAmount) {
+                                                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                                            $0.currentBalance < $1.currentBalance
+                                                        }).map({
+                                                            $0.id!
+                                                        })
+                                                    } else {
+                                                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                                            $0.currentBalance > $1.currentBalance
+                                                        }).map({
+                                                            $0.id!
+                                                        })
+                                                    }
+                                                    self.isAscendingByAlphabetEnabled = false
                                                 }
                                                 if(!accountViewModel.accountList.isEmpty) {
                                                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
@@ -84,18 +105,36 @@ struct SingleWatchListView: View {
                     
                     await watchViewModel.getWatchList(id: watch.id!)
                     await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
-                    if(isAscending) {
-                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                            $0.accountName < $1.accountName
-                        }).map({
-                            $0.id!
-                        })
-                    } else {
-                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                            $0.accountName > $1.accountName
-                        }).map({
-                            $0.id!
-                        })
+                    if(isAscendingByAlphabetEnabled) {
+                        if(isAscendingByAlphabet) {
+                            watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                $0.accountName < $1.accountName
+                            }).map({
+                                $0.id!
+                            })
+                        } else {
+                            watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                $0.accountName > $1.accountName
+                            }).map({
+                                $0.id!
+                            })
+                        }
+                        self.isAscendingByAmountEnabled = false
+                    } else if(isAscendingByAmountEnabled) {
+                        if(isAscendingByAmount) {
+                            watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                $0.currentBalance < $1.currentBalance
+                            }).map({
+                                $0.id!
+                            })
+                        } else {
+                            watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                $0.currentBalance > $1.currentBalance
+                            }).map({
+                                $0.id!
+                            })
+                        }
+                        self.isAscendingByAlphabetEnabled = false
                     }
                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                 }
@@ -119,7 +158,7 @@ struct SingleWatchListView: View {
                 Menu(content: {
                     Menu(content: {
                         Button(action: {
-                            if(isAscending) {
+                            if(isAscendingByAlphabet) {
                                 watchViewModel.watch.accountID = accountViewModel
                                     .accountList
                                     .sorted(by: {
@@ -127,7 +166,9 @@ struct SingleWatchListView: View {
                                     }).map({
                                         $0.id!
                                     })
-                                self.isAscending.toggle()
+                                self.isAscendingByAlphabet.toggle()
+                                self.isAscendingByAlphabetEnabled = true
+                                self.isAscendingByAmountEnabled = false
                             } else {
                                 watchViewModel.watch.accountID = accountViewModel
                                     .accountList
@@ -136,10 +177,40 @@ struct SingleWatchListView: View {
                                     }).map({
                                         $0.id!
                                     })
-                                self.isAscending.toggle()
+                                self.isAscendingByAlphabet.toggle()
+                                self.isAscendingByAlphabetEnabled = true
+                                self.isAscendingByAmountEnabled = false
                             }
                         }, label: {
                             Text("Alphabet")
+                        })
+                        
+                        Button(action: {
+                            if(isAscendingByAmount) {
+                                watchViewModel.watch.accountID = accountViewModel
+                                    .accountList
+                                    .sorted(by: {
+                                        $0.currentBalance > $1.currentBalance
+                                    }).map({
+                                        $0.id!
+                                    })
+                                self.isAscendingByAmount.toggle()
+                                self.isAscendingByAmountEnabled = true
+                                self.isAscendingByAlphabetEnabled = false
+                            } else {
+                                watchViewModel.watch.accountID = accountViewModel
+                                    .accountList
+                                    .sorted(by: {
+                                        $0.currentBalance < $1.currentBalance
+                                    }).map({
+                                        $0.id!
+                                    })
+                                self.isAscendingByAmount.toggle()
+                                self.isAscendingByAmountEnabled = true
+                                self.isAscendingByAlphabetEnabled = false
+                            }
+                        }, label: {
+                            Text("Amount")
                         })
                     }, label: {
                         Text("Sort by")
@@ -153,11 +224,37 @@ struct SingleWatchListView: View {
             Task.init {
                 await watchViewModel.getWatchList(id: watch.id!)
                 await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
-                watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                    $0.accountName < $1.accountName
-                }).map({
-                    $0.id!
-                })
+                if(isAscendingByAlphabetEnabled) {
+                    if(isAscendingByAlphabet) {
+                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                            $0.accountName < $1.accountName
+                        }).map({
+                            $0.id!
+                        })
+                    } else {
+                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                            $0.accountName > $1.accountName
+                        }).map({
+                            $0.id!
+                        })
+                    }
+                    self.isAscendingByAmountEnabled = false
+                } else if(isAscendingByAmountEnabled) {
+                    if(isAscendingByAmount) {
+                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                            $0.currentBalance < $1.currentBalance
+                        }).map({
+                            $0.id!
+                        })
+                    } else {
+                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                            $0.currentBalance > $1.currentBalance
+                        }).map({
+                            $0.id!
+                        })
+                    }
+                    self.isAscendingByAlphabetEnabled = false
+                }
                 if(!watchViewModel.watch.accountID.isEmpty) {
                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                 } else {
@@ -177,6 +274,7 @@ struct SingleWatchListView: View {
                 }).map({
                     $0.id!
                 })
+                self.isAscendingByAlphabetEnabled.toggle()
                 if(!watchViewModel.watch.accountID.isEmpty) {
                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                 } else {
