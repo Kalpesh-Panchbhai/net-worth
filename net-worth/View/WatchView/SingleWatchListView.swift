@@ -153,7 +153,7 @@ struct SingleWatchListView: View {
                 })
             }
             
-            if(watchViewModel.watch.accountID.count > 0) {
+            if(watchViewModel.watch.accountID.count > 1) {
                 ToolbarItem(content: {
                     
                     Menu(content: {
