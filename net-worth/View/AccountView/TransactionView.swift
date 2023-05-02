@@ -23,7 +23,6 @@ struct TransactionsView: View {
     
     var body: some View {
         VStack {
-//            TransactionsHeader()
             ScrollView(.vertical) {
                 LazyVStack {
                     ForEach(0..<accountViewModel.accountTransactionList.count, id: \.self) { i in
