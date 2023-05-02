@@ -465,6 +465,9 @@ class IncomeController {
         var incomeList = [Income]()
         incomeList = try await getIncomeList()
         var returnResponse = [String]()
+        if(incomeList.isEmpty) {
+            return returnResponse
+        }
         var financialYearAvailable = true
         let firstYear = Calendar.current.dateComponents([.year], from: incomeList.last!.creditedOn).year!
         var nextYear = firstYear + 1

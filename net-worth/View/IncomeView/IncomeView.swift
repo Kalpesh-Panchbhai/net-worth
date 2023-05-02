@@ -87,7 +87,7 @@ struct IncomeView: View {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Menu(content: {
                             Menu(content: {
-                                if(incomeViewModel.incomeTypeList.count > 1) {
+                                if(incomeViewModel.incomeTypeList.count > 0) {
                                     Menu(content: {
                                         ForEach(incomeViewModel.incomeTypeList, id: \.self) { item in
                                             Button(action: {
@@ -105,7 +105,7 @@ struct IncomeView: View {
                                     })
                                 }
                                 
-                                if(incomeViewModel.incomeTagList.count > 1) {
+                                if(incomeViewModel.incomeTagList.count > 0) {
                                     Menu(content: {
                                         ForEach(incomeViewModel.incomeTagList, id: \.self) { item in
                                             Button(action: {
@@ -123,7 +123,7 @@ struct IncomeView: View {
                                     })
                                 }
                                 
-                                if(incomeViewModel.incomeYearList.count > 1) {
+                                if(incomeViewModel.incomeYearList.count > 0) {
                                     Menu(content: {
                                         ForEach(incomeViewModel.incomeYearList, id: \.self) { item in
                                             Button(action: {
