@@ -40,6 +40,19 @@ struct SingleWatchListView: View {
                                             Task.init {
                                                 await watchViewModel.getWatchList(id: watch.id!)
                                                 await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
+                                                if(isAscending) {
+                                                    watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                                        $0.accountName < $1.accountName
+                                                    }).map({
+                                                        $0.id!
+                                                    })
+                                                } else {
+                                                    watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                                        $0.accountName > $1.accountName
+                                                    }).map({
+                                                        $0.id!
+                                                    })
+                                                }
                                                 if(!accountViewModel.accountList.isEmpty) {
                                                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                                                 } else {
@@ -71,6 +84,19 @@ struct SingleWatchListView: View {
                     
                     await watchViewModel.getWatchList(id: watch.id!)
                     await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
+                    if(isAscending) {
+                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                            $0.accountName < $1.accountName
+                        }).map({
+                            $0.id!
+                        })
+                    } else {
+                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                            $0.accountName > $1.accountName
+                        }).map({
+                            $0.id!
+                        })
+                    }
                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                 }
             }, content: {
@@ -146,6 +172,11 @@ struct SingleWatchListView: View {
             Task.init {
                 await watchViewModel.getWatchList(id: watch.id!)
                 await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
+                watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                    $0.accountName < $1.accountName
+                }).map({
+                    $0.id!
+                })
                 if(!watchViewModel.watch.accountID.isEmpty) {
                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                 } else {
