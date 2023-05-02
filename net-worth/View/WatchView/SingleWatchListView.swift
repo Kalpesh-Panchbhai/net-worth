@@ -143,7 +143,7 @@ struct SingleWatchListView: View {
             })
         }
         .toolbar {
-            if(watch.accountName != "All") {
+            if(watch.accountName != "All" && accountViewModel.originalAccountList.count > 0) {
                 ToolbarItem(content: {
                     Button(action: {
                         self.addAccountViewOpen.toggle()
@@ -269,6 +269,7 @@ struct SingleWatchListView: View {
         }
         .onAppear {
             Task.init {
+                await accountViewModel.getAccountList()
                 await watchViewModel.getWatchList(id: watch.id!)
                 await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
                 watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
