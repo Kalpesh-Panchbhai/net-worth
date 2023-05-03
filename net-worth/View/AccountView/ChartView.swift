@@ -43,7 +43,10 @@ struct ChartView: View {
                     .onChange(of: range) { value in
                         Task.init {
                             await accountViewModel.getAccountTransactionListWithRangeMultipleAccounts(accountList: accountList, range: range)
-                            await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel)
+                            if(!range.elementsEqual("All")) {
+                                await accountViewModel.getAccountLastTransactionBelowRange(accountList: accountList, range: range)
+                            }
+                            await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel, range: range)
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
@@ -53,7 +56,10 @@ struct ChartView: View {
         .onAppear {
             Task.init {
                 await accountViewModel.getAccountTransactionListWithRangeMultipleAccounts(accountList: accountList, range: range)
-                await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel)
+                if(!range.elementsEqual("All")) {
+                    await accountViewModel.getAccountLastTransactionBelowRange(accountList: accountList, range: range)
+                }
+                await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel, range: range)
             }
         }
     }
