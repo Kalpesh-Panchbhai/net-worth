@@ -3,4 +3,210 @@
    uuid = "41AC9B6B-8FF3-459F-B78F-47BA6DFFA93A"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D323E7CE-096D-421D-855A-F729B36CD4C9"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "net-worth/Data Model/ChartViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
+            landmarkName = "getChartDataForAccounts(accountViewModel:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D323E7CE-096D-421D-855A-F729B36CD4C9 - 9c5d9a1260e96d79"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor @Sendable () -&gt; () in net_worth.ChartViewModel.getChartDataForAccounts(accountViewModel: net_worth.AccountViewModel) async -&gt; ()"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/ChartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "36"
+                  endingLineNumber = "36"
+                  offsetFromSymbolStart = "844">
+               </Location>
+               <Location
+                  uuid = "D323E7CE-096D-421D-855A-F729B36CD4C9 - 9c5d9a1260e96d79"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor @Sendable () -&gt; () in net_worth.ChartViewModel.getChartDataForAccounts(accountViewModel: net_worth.AccountViewModel) async -&gt; ()"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/ChartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "36"
+                  endingLineNumber = "36"
+                  offsetFromSymbolStart = "936">
+               </Location>
+               <Location
+                  uuid = "D323E7CE-096D-421D-855A-F729B36CD4C9 - 9c5d9a1260e96d79"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor @Sendable () -&gt; () in net_worth.ChartViewModel.getChartDataForAccounts(accountViewModel: net_worth.AccountViewModel) async -&gt; ()"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/ChartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "36"
+                  endingLineNumber = "36"
+                  offsetFromSymbolStart = "944">
+               </Location>
+               <Location
+                  uuid = "D323E7CE-096D-421D-855A-F729B36CD4C9 - 9c5d9a1260e96d79"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor @Sendable () -&gt; () in net_worth.ChartViewModel.getChartDataForAccounts(accountViewModel: net_worth.AccountViewModel) async -&gt; ()"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/ChartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "36"
+                  endingLineNumber = "36"
+                  offsetFromSymbolStart = "960">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3AA69CE0-2F11-4EAA-B630-C8C2B5FF1919"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "net-worth/Data Model/ChartViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "getChartDataForAccounts(accountViewModel:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "3AA69CE0-2F11-4EAA-B630-C8C2B5FF1919 - 9c5d9a1260e96fa8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor @Sendable () -&gt; () in net_worth.ChartViewModel.getChartDataForAccounts(accountViewModel: net_worth.AccountViewModel) async -&gt; ()"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/ChartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "53"
+                  endingLineNumber = "53"
+                  offsetFromSymbolStart = "3208">
+               </Location>
+               <Location
+                  uuid = "3AA69CE0-2F11-4EAA-B630-C8C2B5FF1919 - 9c5d9a1260e96fea"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor @Sendable () -&gt; () in net_worth.ChartViewModel.getChartDataForAccounts(accountViewModel: net_worth.AccountViewModel) async -&gt; ()"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/ChartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "55"
+                  endingLineNumber = "55"
+                  offsetFromSymbolStart = "3216">
+               </Location>
+               <Location
+                  uuid = "3AA69CE0-2F11-4EAA-B630-C8C2B5FF1919 - 9c5d9a1260e96824"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor @Sendable () -&gt; () in net_worth.ChartViewModel.getChartDataForAccounts(accountViewModel: net_worth.AccountViewModel) async -&gt; ()"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/ChartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "57"
+                  endingLineNumber = "57"
+                  offsetFromSymbolStart = "3372">
+               </Location>
+               <Location
+                  uuid = "3AA69CE0-2F11-4EAA-B630-C8C2B5FF1919 - 9c5d9a1260e96881"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor @Sendable () -&gt; () in net_worth.ChartViewModel.getChartDataForAccounts(accountViewModel: net_worth.AccountViewModel) async -&gt; ()"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/ChartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "60"
+                  endingLineNumber = "60"
+                  offsetFromSymbolStart = "3740">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9AFE2EB6-D170-45B8-8924-1070F39890FF"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "net-worth/Data Model/ChartViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
+            landmarkName = "getChartDataForAccounts(accountViewModel:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "9AFE2EB6-D170-45B8-8924-1070F39890FF - 9c5d9a1260e96fa8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor @Sendable () -&gt; () in net_worth.ChartViewModel.getChartDataForAccounts(accountViewModel: net_worth.AccountViewModel) async -&gt; ()"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/ChartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "53"
+                  endingLineNumber = "53"
+                  offsetFromSymbolStart = "2464">
+               </Location>
+               <Location
+                  uuid = "9AFE2EB6-D170-45B8-8924-1070F39890FF - 9c5d9a1260e96eb3"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor @Sendable () -&gt; () in net_worth.ChartViewModel.getChartDataForAccounts(accountViewModel: net_worth.AccountViewModel) async -&gt; ()"
+                  moduleName = "net-worth"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/xcode/net-worth/net-worth/Data%20Model/ChartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "46"
+                  endingLineNumber = "46"
+                  offsetFromSymbolStart = "1900">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

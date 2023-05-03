@@ -36,10 +36,10 @@ class ChartViewModel: ObservableObject {
             while(startDate <= Date.now) {
                 for account in accountViewModel.accountTransactionListWithRangeMultipleAccounts {
                     if(account.contains(where: { value in
-                        value.timestamp.getDateAndFormat().elementsEqual(startDate.getDateAndFormat())
+                        value.timestamp.removeTimeStamp() == startDate.removeTimeStamp()
                     })) {
                         list.updateValue(account.filter({ value in
-                            value.timestamp.getDateAndFormat().elementsEqual(startDate.getDateAndFormat())
+                            value.timestamp.removeTimeStamp() == startDate.removeTimeStamp()
                         }).first!.balanceChange, forKey: (account.first?.id)!)
                     }
                 }
