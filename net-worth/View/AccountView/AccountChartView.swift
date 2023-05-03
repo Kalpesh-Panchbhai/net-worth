@@ -44,7 +44,7 @@ struct AccountChartView: View {
                     .onChange(of: range) { value in
                         Task.init {
                             await accountViewModel.getAccountTransactionListWithRange(id: account.id!, range: range)
-                            await chartViewModel.getChartData(account: account, accountViewModel: accountViewModel, range: range)
+                            await chartViewModel.getChartData(accountViewModel: accountViewModel)
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
@@ -54,7 +54,7 @@ struct AccountChartView: View {
         .onAppear {
             Task.init {
                 await accountViewModel.getAccountTransactionListWithRange(id: account.id!, range: range)
-                await chartViewModel.getChartData(account: account, accountViewModel: accountViewModel, range: range)
+                await chartViewModel.getChartData(accountViewModel: accountViewModel)
             }
         }
     }

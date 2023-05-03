@@ -12,7 +12,7 @@ class ChartViewModel: ObservableObject {
     
     @Published var chartDataList = [ChartData]()
     
-    func getChartData(account: Account, accountViewModel: AccountViewModel, range: String) async {
+    func getChartData(accountViewModel: AccountViewModel) async {
         DispatchQueue.main.async {
             var chartDataListResponse = [ChartData]()
             for account in accountViewModel.accountTransactionListWithRange {
@@ -22,7 +22,7 @@ class ChartViewModel: ObservableObject {
         }
     }
     
-    func getChartDataForAccounts(accountViewModel: AccountViewModel, range: String) async {
+    func getChartDataForAccounts(accountViewModel: AccountViewModel) async {
         DispatchQueue.main.async {
             var chartDataListResponse = [ChartData]()
             var list = [String: Double]()
