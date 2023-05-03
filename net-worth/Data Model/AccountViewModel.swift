@@ -158,6 +158,9 @@ class AccountViewModel: ObservableObject {
     
     func getAccountTransactionListWithRangeMultipleAccounts(accountList: [Account], range: String) async {
         do {
+            DispatchQueue.main.async {
+                self.accountTransactionListWithRangeMultipleAccounts = [[AccountTransaction]()]
+            }
             for account in accountList {
                 let list = try await accountController.getAccountTransactionListWithRange(id: account.id!, range: range)
                 DispatchQueue.main.async {
