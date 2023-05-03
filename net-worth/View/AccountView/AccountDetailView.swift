@@ -62,7 +62,7 @@ struct AccountDetailView: View {
                     Button(action: {
                         self.isNewTransactionViewOpen.toggle()
                     }, label: {
-                        Label("Add Transaction", systemImage: "square.and.pencil")
+                        Label("New Transaction", systemImage: "square.and.pencil")
                     })
                     
                     if(accountViewModel.account.accountType != "Saving") {
