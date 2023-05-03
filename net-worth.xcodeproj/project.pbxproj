@@ -39,6 +39,7 @@
 		7D79FA8C291BA152004A2ECF /* NewAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA8B291BA152004A2ECF /* NewAccountView.swift */; };
 		7D7AA909298D8DA2004C9776 /* UserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7AA908298D8DA2004C9776 /* UserController.swift */; };
 		7D80ECF0291CE0C500A22496 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D80ECEF291CE0C500A22496 /* LaunchScreen.storyboard */; };
+		7D8107072A0294780028CE61 /* AddTransactionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8107062A0294780028CE61 /* AddTransactionHistoryView.swift */; };
 		7D85D030298D29BE0019F85E /* Income.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D85D02F298D29BE0019F85E /* Income.swift */; };
 		7D85D032298D2ADD0019F85E /* IncomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D85D031298D2ADD0019F85E /* IncomeViewModel.swift */; };
 		7D85D068298D2CCF0019F85E /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 7D85D067298D2CCF0019F85E /* FirebaseFirestore */; };
@@ -152,6 +153,7 @@
 		7D79FA8B291BA152004A2ECF /* NewAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAccountView.swift; sourceTree = "<group>"; };
 		7D7AA908298D8DA2004C9776 /* UserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserController.swift; sourceTree = "<group>"; };
 		7D80ECEF291CE0C500A22496 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		7D8107062A0294780028CE61 /* AddTransactionHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionHistoryView.swift; sourceTree = "<group>"; };
 		7D85D02F298D29BE0019F85E /* Income.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Income.swift; sourceTree = "<group>"; };
 		7D85D031298D2ADD0019F85E /* IncomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeViewModel.swift; sourceTree = "<group>"; };
 		7D85D06B298D2D650019F85E /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -493,6 +495,7 @@
 				7D5B9F92299A896300D0477B /* BalanceCardView.swift */,
 				7DF8CCFC299FB86100267C29 /* AccountChartView.swift */,
 				7D14A8EF2A0253A9002FC324 /* ChartView.swift */,
+				7D8107062A0294780028CE61 /* AddTransactionHistoryView.swift */,
 			);
 			path = AccountView;
 			sourceTree = "<group>";
@@ -775,6 +778,7 @@
 				7DC97A2629221990003F69D4 /* SettingsController.swift in Sources */,
 				7DB98806299B708C004ED6D2 /* UpdateWatchView.swift in Sources */,
 				7D79FA8A291B9CE6004A2ECF /* MainScreenView.swift in Sources */,
+				7D8107072A0294780028CE61 /* AddTransactionHistoryView.swift in Sources */,
 				7D921C5E2986835C0014AC9E /* GoogleSiginBtn.swift in Sources */,
 				7D921C5C298683370014AC9E /* CustomTextField.swift in Sources */,
 				7D79FA5A291B7431004A2ECF /* Persistence.swift in Sources */,

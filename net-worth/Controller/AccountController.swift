@@ -24,7 +24,7 @@ class AccountController {
         do {
             let accountID = try getAccountCollection()
                 .addDocument(from: newAccount).documentID
-            addTransaction(accountID: accountID, account: newAccount)
+            addTransaction(accountID: accountID, account: newAccount, timestamp: Date())
             return accountID
         } catch {
             print(error)
@@ -102,11 +102,11 @@ class AccountController {
         return accountList
     }
     
-    public func addTransaction(accountID: String, account: Account) {
+    public func addTransaction(accountID: String, account: Account, timestamp: Date) {
         var balanceChange = 0.0
         balanceChange = account.currentBalance
         
-        let newTransaction = AccountTransaction(timestamp: Date(), balanceChange: balanceChange)
+        let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: balanceChange)
         
         do {
             let documentID = try getAccountCollection()

@@ -11,6 +11,7 @@ struct AccountCardList: View {
     
     @State private var isNewAccountAccountViewOpen = false
     @State private var isNewTransactionViewOpen = false
+    @State private var isAddTransactionHistoryViewOpen = false
     @State private var accountTypeSelected = "None"
     @State private var selectedAccount = Account()
     @State private var searchText = ""
@@ -75,6 +76,15 @@ struct AccountCardList: View {
                                                             } label: {
                                                                 Label("New Transaction", systemImage: "square.and.pencil")
                                                             }
+                                                            
+                                                            Button {
+                                                                Task.init {
+                                                                    await accountViewModel.getAccount(id: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].id!)
+                                                                }
+                                                                isAddTransactionHistoryViewOpen.toggle()
+                                                            } label: {
+                                                                Label("Add Transaction History", systemImage: "square.and.pencil")
+                                                            }
                                                         }
                                                 }
                                             }
@@ -109,6 +119,16 @@ struct AccountCardList: View {
             }
         }, content: {
             UpdateBalanceAccountView(accountViewModel: accountViewModel)
+        })
+        .sheet(isPresented: $isAddTransactionHistoryViewOpen, onDismiss: {
+            Task.init {
+                await accountViewModel.getAccount(id: accountViewModel.account.id!)
+                accountViewModel.accountList = [Account]()
+                await accountViewModel.getAccountList()
+                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+            }
+        }, content: {
+            AddTransactionHistoryView(accountViewModel: accountViewModel)
         })
         .sheet(isPresented: $isNewAccountAccountViewOpen) {
             NewAccountView(accountType: "None", accountViewModel: accountViewModel)

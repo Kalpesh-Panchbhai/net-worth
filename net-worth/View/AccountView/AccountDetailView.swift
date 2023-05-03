@@ -15,6 +15,7 @@ struct AccountDetailView: View {
     
     @State private var show = false
     @State var isNewTransactionViewOpen = false
+    @State var isAddTransactionHistoryViewOpen = false
     @State var paymentDate = 0
     @State var tabItem = 1
     
@@ -63,6 +64,12 @@ struct AccountDetailView: View {
                         self.isNewTransactionViewOpen.toggle()
                     }, label: {
                         Label("New Transaction", systemImage: "square.and.pencil")
+                    })
+                    
+                    Button(action: {
+                        self.isAddTransactionHistoryViewOpen.toggle()
+                    }, label: {
+                        Label("Add Transaction History", systemImage: "square.and.pencil")
                     })
                     
                     if(accountViewModel.account.accountType != "Saving") {
@@ -132,6 +139,17 @@ struct AccountDetailView: View {
             }
         }, content: {
             UpdateBalanceAccountView(accountViewModel: accountViewModel)
+        })
+        .sheet(isPresented: $isAddTransactionHistoryViewOpen, onDismiss: {
+            Task.init {
+                await accountViewModel.getAccount(id: accountViewModel.account.id!)
+                await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
+                await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
+                await accountViewModel.getAccountList()
+                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+            }
+        }, content: {
+            AddTransactionHistoryView(accountViewModel: accountViewModel)
         })
         .background(.black)
     }

@@ -1,17 +1,17 @@
 //
-//  AddNewBalanceAccountView.swift
+//  AddTransactionHistoryView.swift
 //  net-worth
 //
-//  Created by Kalpesh Panchbhai on 28/11/22.
+//  Created by Kalpesh Panchbhai on 03/05/23.
 //
 
 import SwiftUI
 
-struct UpdateBalanceAccountView: View {
-    
+struct AddTransactionHistoryView: View {
     private var accountController = AccountController()
     
     @State private var amount: Double = 0.0
+    @State private var date = Date()
     
     @State var isPlus = true;
     
@@ -27,6 +27,7 @@ struct UpdateBalanceAccountView: View {
         NavigationView {
             Form {
                 currentBalanceField()
+                DatePicker("Payment on", selection: $date, in: ...Date(), displayedComponents: [.date, .hourAndMinute])
             }
             .toolbar {
                 ToolbarItem {
@@ -35,22 +36,7 @@ struct UpdateBalanceAccountView: View {
                         amount = isPlus ? amount : amount * -1
                         updatedAccount.currentBalance = amount
                         
-                        accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: Date())
-                        accountController.updateAccount(account: updatedAccount)
-                        dismiss()
-                    }, label: {
-                        Text("Update")
-                    })
-                }
-                
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        var updatedAccount = accountViewModel.account
-                        amount = isPlus ? amount : amount * -1
-                        updatedAccount.currentBalance = updatedAccount.currentBalance + amount
-                        
-                        accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: Date())
-                        accountController.updateAccount(account: updatedAccount)
+                        accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date)
                         dismiss()
                     }, label: {
                         Text("Add")
