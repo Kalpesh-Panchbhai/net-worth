@@ -11,6 +11,7 @@ struct SingleWatchListView: View {
     
     var watch: Watch
     @State private var isNewTransactionViewOpen = false
+    @State private var isChartViewOpen = false
     @State private var addAccountViewOpen = false
     @State private var isAscendingByAlphabet = true
     @State private var isAscendingByAlphabetEnabled = false
@@ -153,6 +154,16 @@ struct SingleWatchListView: View {
                 })
             }
             
+            if(accountViewModel.originalAccountList.count > 0) {
+                ToolbarItem(content: {
+                    Button(action: {
+                        self.isChartViewOpen.toggle()
+                    }, label: {
+                        Label("Watch Chart", systemImage: "chart.line.uptrend.xyaxis")
+                    })
+                })
+            }
+            
             if(watchViewModel.watch.accountID.count > 1) {
                 ToolbarItem(content: {
                     
@@ -267,6 +278,9 @@ struct SingleWatchListView: View {
         }) {
             AddAccountWatchListView(watch: watchViewModel.watch)
         }
+        .sheet(isPresented: $isChartViewOpen, content: {
+            ChartView(accountList: accountViewModel.accountList)
+        })
         .onAppear {
             Task.init {
                 await accountViewModel.getAccountList()

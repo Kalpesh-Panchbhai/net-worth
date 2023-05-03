@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0A72F69C86303305F6631476 /* Pods_net_worthTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC6C9A84CDBFBA61E9B153E4 /* Pods_net_worthTests.framework */; };
 		7D05321A2A010F790052E739 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0532192A010F790052E739 /* NotificationView.swift */; };
+		7D14A8F02A0253A9002FC324 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D14A8EF2A0253A9002FC324 /* ChartView.swift */; };
 		7D237BED292B672900DEF91D /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D237BEC292B672800DEF91D /* DoubleExtension.swift */; };
 		7D3636FB292F9CCB0013B4E5 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */; };
 		7D3D5244299105A50021047B /* CommonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D5243299105A50021047B /* CommonController.swift */; };
@@ -118,6 +119,7 @@
 		4F8D72CD718DA6F209092935 /* Pods-net-worth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth.release.xcconfig"; path = "Target Support Files/Pods-net-worth/Pods-net-worth.release.xcconfig"; sourceTree = "<group>"; };
 		6191CD53E4B147B0F4457D7D /* Pods-net-worth.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth.debug.xcconfig"; path = "Target Support Files/Pods-net-worth/Pods-net-worth.debug.xcconfig"; sourceTree = "<group>"; };
 		7D0532192A010F790052E739 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
+		7D14A8EF2A0253A9002FC324 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		7D237BEC292B672800DEF91D /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
 		7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
 		7D3D5243299105A50021047B /* CommonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonController.swift; sourceTree = "<group>"; };
@@ -490,6 +492,7 @@
 				7DB58AB429967B2E00B93592 /* AccountListView.swift */,
 				7D5B9F92299A896300D0477B /* BalanceCardView.swift */,
 				7DF8CCFC299FB86100267C29 /* AccountChartView.swift */,
+				7D14A8EF2A0253A9002FC324 /* ChartView.swift */,
 			);
 			path = AccountView;
 			sourceTree = "<group>";
@@ -746,6 +749,7 @@
 				7DE766F32928B62900EFBD2D /* NotificationController.swift in Sources */,
 				7DF9DB91298F978600831494 /* Account.swift in Sources */,
 				7DB58AB529967B2E00B93592 /* AccountListView.swift in Sources */,
+				7D14A8F02A0253A9002FC324 /* ChartView.swift in Sources */,
 				7D65547629A107DC0008A8E2 /* ChartData.swift in Sources */,
 				7DB98808299B8A99004ED6D2 /* AddAccountWatchListView.swift in Sources */,
 				7DC97A2C29223ADB003F69D4 /* NewIncomeView.swift in Sources */,

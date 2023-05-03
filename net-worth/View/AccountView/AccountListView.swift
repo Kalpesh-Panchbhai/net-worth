@@ -13,6 +13,7 @@ struct AccountListView: View {
     
     @State private var searchText = ""
     @State private var isNewTransactionViewOpen = false
+    @State private var isChartViewOpen = false
     
     @StateObject var accountViewModel = AccountViewModel()
     
@@ -66,6 +67,15 @@ struct AccountListView: View {
             }
             .padding(10)
         }
+        .toolbar {
+            ToolbarItem(content: {
+                Button(action: {
+                    self.isChartViewOpen.toggle()
+                }, label: {
+                    Label("Watch Chart", systemImage: "chart.line.uptrend.xyaxis")
+                })
+            })
+        }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             Task.init {
                 await accountViewModel.getAccount(id: accountViewModel.account.id!)
@@ -76,6 +86,9 @@ struct AccountListView: View {
             }
         }, content: {
             UpdateBalanceAccountView(accountViewModel: accountViewModel)
+        })
+        .sheet(isPresented: $isChartViewOpen, content: {
+            ChartView(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
         })
         .searchable(text: $searchText)
         .onAppear {

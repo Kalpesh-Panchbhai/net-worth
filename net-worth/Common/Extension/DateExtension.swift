@@ -27,4 +27,9 @@ extension Date {
         formatter.timeStyle = .medium
         return formatter.string(from: self)
     }
+    
+    func removeTimeStamp() -> Date {
+        let date = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month, .day], from: self))
+        return date ?? Date()
+    }
 }

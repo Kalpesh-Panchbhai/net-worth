@@ -14,6 +14,7 @@ class AccountViewModel: ObservableObject {
     @Published var account = Account()
     @Published var accountTransactionList = [AccountTransaction]()
     @Published var accountTransactionListWithRange = [AccountTransaction]()
+    @Published var accountTransactionListWithRangeMultipleAccounts = [[AccountTransaction]()]
     @Published var accountLastTwoTransactionList = [AccountTransaction]()
     @Published var totalBalance = BalanceModel(currentValue: 0.0)
     @Published var grouping: Grouping = .accountType
@@ -149,6 +150,19 @@ class AccountViewModel: ObservableObject {
             let list = try await accountController.getAccountTransactionListWithRange(id: id, range: range)
             DispatchQueue.main.async {
                 self.accountTransactionListWithRange = list
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    func getAccountTransactionListWithRangeMultipleAccounts(accountList: [Account], range: String) async {
+        do {
+            for account in accountList {
+                let list = try await accountController.getAccountTransactionListWithRange(id: account.id!, range: range)
+                DispatchQueue.main.async {
+                    self.accountTransactionListWithRangeMultipleAccounts.append(list)
+                }
             }
         } catch {
             print(error)
