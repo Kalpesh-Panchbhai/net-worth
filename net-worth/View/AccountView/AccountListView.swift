@@ -24,13 +24,15 @@ struct AccountListView: View {
         ZStack {
             Color.black.ignoresSafeArea()
             ScrollView(.vertical, showsIndicators: false) {
-                VStack {
-                    BalanceCardView(accountViewModel: accountViewModel, accountType: accountType, isWatchListCardView: false, watchList: Watch())
-                        .frame(width: 360)
-                        .cornerRadius(10)
+                if(!accountType.elementsEqual("Inactive Account")) {
+                    VStack {
+                        BalanceCardView(accountViewModel: accountViewModel, accountType: accountType, isWatchListCardView: false, watchList: Watch())
+                            .frame(width: 360)
+                            .cornerRadius(10)
+                    }
+                    .padding(.top, 5)
+                    .shadow(color: Color.gray, radius: 3)
                 }
-                .padding(.top, 5)
-                .shadow(color: Color.gray, radius: 3)
                 LazyVStack {
                     ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
                         NavigationLink(destination: {
