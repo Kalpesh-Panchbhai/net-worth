@@ -12,17 +12,32 @@ struct AddAccountWatchListView: View {
     @ObservedObject var accountViewModel = AccountViewModel()
     @State var watch: Watch
     
+    @State private var searchText = ""
+    
     var body: some View {
-        VStack {
-            Spacer(minLength: 20)
-            ScrollView(.vertical) {
-                LazyVStack {
-                    ForEach(accountViewModel.accountList, id: \.self) { account in
-                        AddAccountWatchView(account: account, watch: $watch, isAdded: watch.accountID.contains(account.id!))
+        NavigationView {
+            VStack {
+                Spacer(minLength: 20)
+                ScrollView(.vertical) {
+                    LazyVStack {
+                        ForEach(accountViewModel.sectionHeaders, id: \.self) { accountType in
+                            if(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 0) {
+                                HStack {
+                                    Text(accountType.uppercased())
+                                        .bold()
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 15))
+                                }
+                                ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
+                                    AddAccountWatchView(account: account, watch: $watch, isAdded: watch.accountID.contains(account.id!))
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
+        .searchable(text: $searchText)
         .onAppear {
             Task.init {
                 await accountViewModel.getAccountList()
@@ -43,9 +58,6 @@ struct AddAccountWatchView: View {
         HStack {
             VStack(alignment: .leading) {
                 Text(account.accountName)
-                Text(account.accountType)
-                    .font(.system(size: 10))
-                    .foregroundColor(.gray)
             }
             .padding()
             Spacer()
