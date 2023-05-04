@@ -18,9 +18,7 @@ struct AddAccountWatchListView: View {
             ScrollView(.vertical) {
                 LazyVStack {
                     ForEach(accountViewModel.accountList, id: \.self) { account in
-                        if(account.active) {
-                            AddAccountWatchView(account: account, watch: $watch, isAdded: watch.accountID.contains(account.id!))
-                        }
+                        AddAccountWatchView(account: account, watch: $watch, isAdded: watch.accountID.contains(account.id!))
                     }
                 }
             }

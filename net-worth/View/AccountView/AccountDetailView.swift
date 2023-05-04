@@ -86,18 +86,10 @@ struct AccountDetailView: View {
                                 accountController.updateAccount(account: accountViewModel.account)
                                 NotificationController().removeNotification(id: accountViewModel.account.id!)
                                 paymentDate = 0
-                                Task.init {
-                                    try await accountController.deleteInActiveAccountFromWatchList(account: accountViewModel.account)
-                                }
                             }
                         } else {
                             accountViewModel.account.active = isActive
                             accountController.updateAccount(account: accountViewModel.account)
-                            Task.init {
-                                var watch = try await WatchController().getDefaultWatchList()
-                                watch.accountID.append(accountViewModel.account.id!)
-                                WatchController().addAccountToWatchList(watch: watch)
-                            }
                         }
                     })
                     
