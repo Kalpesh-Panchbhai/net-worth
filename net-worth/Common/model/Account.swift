@@ -18,6 +18,7 @@ struct Account: Codable, Hashable {
     var paymentReminder: Bool
     var paymentDate: Int
     var currency: String
+    var active: Bool
     
     init() {
         self.accountType = ""
@@ -26,6 +27,7 @@ struct Account: Codable, Hashable {
         self.paymentReminder = false
         self.paymentDate = 0
         self.currency = ""
+        self.active = true
     }
     
     init(id: String) {
@@ -36,6 +38,7 @@ struct Account: Codable, Hashable {
         self.paymentReminder = false
         self.paymentDate = 0
         self.currency = ""
+        self.active = true
     }
     
     init(from decoder: Decoder) throws {
@@ -47,6 +50,7 @@ struct Account: Codable, Hashable {
         self.paymentReminder = try container.decode(Bool.self, forKey: .paymentReminder)
         self.paymentDate = try container.decode(Int.self, forKey: .paymentDate)
         self.currency = try container.decode(String.self, forKey: .currency)
+        self.active = try container.decode(Bool.self, forKey: .active)
     }
     
     init(doc: QueryDocumentSnapshot) {
@@ -57,15 +61,17 @@ struct Account: Codable, Hashable {
         paymentReminder = doc[ConstantUtils.accountKeyPaymentReminder] as? Bool ?? false
         paymentDate = doc[ConstantUtils.accountKeyPaymentDate] as? Int ?? 0
         currency = doc[ConstantUtils.accountKeyCurrency] as? String ?? ""
+        active =  doc[ConstantUtils.accountKeyActive] as? Bool ?? true
     }
     
-    init(accountType: String, accountName: String, currentBalance: Double, paymentReminder: Bool, paymentDate: Int, currency: String) {
+    init(accountType: String, accountName: String, currentBalance: Double, paymentReminder: Bool, paymentDate: Int, currency: String, active: Bool) {
         self.accountType = accountType
         self.accountName = accountName
         self.currentBalance = currentBalance
         self.paymentReminder = paymentReminder
         self.paymentDate = paymentDate
         self.currency = currency
+        self.active = active
     }
     
 }

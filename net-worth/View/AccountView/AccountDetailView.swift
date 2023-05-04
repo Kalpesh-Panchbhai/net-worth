@@ -17,7 +17,9 @@ struct AccountDetailView: View {
     @State var isNewTransactionViewOpen = false
     @State var isAddTransactionHistoryViewOpen = false
     @State var paymentDate = 0
+    @State var isActive = true
     @State var tabItem = 1
+    @State var showZeroAlert = false
     
     @ObservedObject var accountViewModel: AccountViewModel
     
@@ -38,7 +40,7 @@ struct AccountDetailView: View {
                     Text("Transactions").tag(1)
                     Text("Charts").tag(2)
                 }, label: {
-                    Label("CCC", systemImage: "")
+                    Label("", systemImage: "")
                 })
                 .pickerStyle(SegmentedPickerStyle())
                 if(tabItem == 1) {
@@ -47,6 +49,9 @@ struct AccountDetailView: View {
                     AccountChartView(account: account)
                 }
             }
+        }
+        .alert(isPresented: $showZeroAlert) {
+            Alert(title: Text("Current Balance should be equal to zero to make it inactive!"))
         }
         .toolbar {
             ToolbarItem(content: {
@@ -61,58 +66,85 @@ struct AccountDetailView: View {
                     })
                     
                     Button(action: {
-                        self.isNewTransactionViewOpen.toggle()
+                        self.isActive.toggle()
                     }, label: {
-                        Label("New Transaction", systemImage: "square.and.pencil")
-                    })
-                    
-                    Button(action: {
-                        self.isAddTransactionHistoryViewOpen.toggle()
-                    }, label: {
-                        Label("Add Transaction History", systemImage: "square.and.pencil")
-                    })
-                    
-                    if(accountViewModel.account.accountType != "Saving") {
-                        if(!accountViewModel.account.paymentReminder) {
-                            Picker(selection: $paymentDate, content: {
-                                ForEach(dates, id: \.self) {
-                                    Text("\($0.formatted(.number.grouping(.never)))").tag($0)
-                                }
-                            }, label: {
-                                Label("Enable Notification", systemImage: "speaker.wave.1.fill")
-                            })
-                            .onChange(of: paymentDate) { _ in
-                                accountViewModel.account.paymentReminder = true
-                                accountViewModel.account.paymentDate = paymentDate
-                                accountController.updateAccount(account: accountViewModel.account)
-                                NotificationController().enableNotification(account: accountViewModel.account)
-                            }
-                            .pickerStyle(MenuPickerStyle())
+                        if(isActive) {
+                            Label("Make Inactive", systemImage: "square.and.pencil")
                         } else {
-                            Button(action: {
-                                accountViewModel.account.paymentReminder = false
-                                accountViewModel.account.paymentDate = 0
+                            Label("Make Active", systemImage: "square.and.pencil")
+                        }
+                    })
+                    .onChange(of: isActive, perform: { isActive in
+                        if(!isActive) {
+                            if(!accountViewModel.account.currentBalance.isZero) {
+                                self.showZeroAlert.toggle()
+                                self.isActive.toggle()
+                            } else {
+                                accountViewModel.account.active = isActive
                                 accountController.updateAccount(account: accountViewModel.account)
-                                NotificationController().removeNotification(id: accountViewModel.account.id!)
-                                paymentDate = 0
-                            }, label: {
-                                Label("Disable Notification", systemImage: "speaker.slash.fill")
-                            })
-                            
-                            Picker(selection: $paymentDate, content: {
-                                ForEach(dates, id: \.self) {
-                                    Text("\($0.formatted(.number.grouping(.never)))").tag($0)
-                                }
-                            }, label: {
-                                Label("Change Date", systemImage: "calendar.circle.fill")
-                            })
-                            .onChange(of: paymentDate) { _ in
-                                accountViewModel.account.paymentReminder = true
-                                accountViewModel.account.paymentDate = paymentDate
-                                accountController.updateAccount(account: accountViewModel.account)
-                                NotificationController().enableNotification(account: accountViewModel.account)
                             }
-                            .pickerStyle(MenuPickerStyle())
+                        } else {
+                            accountViewModel.account.active = isActive
+                            accountController.updateAccount(account: accountViewModel.account)
+                        }
+                    })
+                    
+                    if(isActive) {
+                        Button(action: {
+                            self.isNewTransactionViewOpen.toggle()
+                        }, label: {
+                            Label("New Transaction", systemImage: "square.and.pencil")
+                        })
+                        
+                        Button(action: {
+                            self.isAddTransactionHistoryViewOpen.toggle()
+                        }, label: {
+                            Label("Add Transaction History", systemImage: "square.and.pencil")
+                        })
+                        
+                        
+                        if(accountViewModel.account.accountType != "Saving") {
+                            if(!accountViewModel.account.paymentReminder) {
+                                Picker(selection: $paymentDate, content: {
+                                    ForEach(dates, id: \.self) {
+                                        Text("\($0.formatted(.number.grouping(.never)))").tag($0)
+                                    }
+                                }, label: {
+                                    Label("Enable Notification", systemImage: "speaker.wave.1.fill")
+                                })
+                                .onChange(of: paymentDate) { _ in
+                                    accountViewModel.account.paymentReminder = true
+                                    accountViewModel.account.paymentDate = paymentDate
+                                    accountController.updateAccount(account: accountViewModel.account)
+                                    NotificationController().enableNotification(account: accountViewModel.account)
+                                }
+                                .pickerStyle(MenuPickerStyle())
+                            } else {
+                                Button(action: {
+                                    accountViewModel.account.paymentReminder = false
+                                    accountViewModel.account.paymentDate = 0
+                                    accountController.updateAccount(account: accountViewModel.account)
+                                    NotificationController().removeNotification(id: accountViewModel.account.id!)
+                                    paymentDate = 0
+                                }, label: {
+                                    Label("Disable Notification", systemImage: "speaker.slash.fill")
+                                })
+                                
+                                Picker(selection: $paymentDate, content: {
+                                    ForEach(dates, id: \.self) {
+                                        Text("\($0.formatted(.number.grouping(.never)))").tag($0)
+                                    }
+                                }, label: {
+                                    Label("Change Date", systemImage: "calendar.circle.fill")
+                                })
+                                .onChange(of: paymentDate) { _ in
+                                    accountViewModel.account.paymentReminder = true
+                                    accountViewModel.account.paymentDate = paymentDate
+                                    accountController.updateAccount(account: accountViewModel.account)
+                                    NotificationController().enableNotification(account: accountViewModel.account)
+                                }
+                                .pickerStyle(MenuPickerStyle())
+                            }
                         }
                     }
                     
@@ -125,6 +157,7 @@ struct AccountDetailView: View {
             Task.init {
                 await accountViewModel.getAccount(id: account.id!)
                 paymentDate = accountViewModel.account.paymentDate
+                isActive = accountViewModel.account.active
                 await accountViewModel.getAccountTransactionList(id: account.id!)
                 await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
             }
