@@ -68,22 +68,24 @@ struct AccountCardList: View {
                                                                 Label("Delete", systemImage: "trash")
                                                             })
                                                             
-                                                            Button {
-                                                                Task.init {
-                                                                    await accountViewModel.getAccount(id: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].id!)
+                                                            if(accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].active) {
+                                                                Button {
+                                                                    Task.init {
+                                                                        await accountViewModel.getAccount(id: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].id!)
+                                                                    }
+                                                                    isNewTransactionViewOpen.toggle()
+                                                                } label: {
+                                                                    Label("New Transaction", systemImage: "square.and.pencil")
                                                                 }
-                                                                isNewTransactionViewOpen.toggle()
-                                                            } label: {
-                                                                Label("New Transaction", systemImage: "square.and.pencil")
-                                                            }
-                                                            
-                                                            Button {
-                                                                Task.init {
-                                                                    await accountViewModel.getAccount(id: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].id!)
+                                                                
+                                                                Button {
+                                                                    Task.init {
+                                                                        await accountViewModel.getAccount(id: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].id!)
+                                                                    }
+                                                                    isAddTransactionHistoryViewOpen.toggle()
+                                                                } label: {
+                                                                    Label("Add Transaction History", systemImage: "square.and.pencil")
                                                                 }
-                                                                isAddTransactionHistoryViewOpen.toggle()
-                                                            } label: {
-                                                                Label("Add Transaction History", systemImage: "square.and.pencil")
                                                             }
                                                         }
                                                 }

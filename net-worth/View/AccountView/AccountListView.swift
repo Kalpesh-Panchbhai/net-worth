@@ -51,22 +51,24 @@ struct AccountListView: View {
                                         Label("Delete", systemImage: "trash")
                                     })
                                     
-                                    Button {
-                                        Task.init {
-                                            await accountViewModel.getAccount(id: account.id!)
+                                    if(account.active) {
+                                        Button {
+                                            Task.init {
+                                                await accountViewModel.getAccount(id: account.id!)
+                                            }
+                                            isNewTransactionViewOpen.toggle()
+                                        } label: {
+                                            Label("New Transaction", systemImage: "square.and.pencil")
                                         }
-                                        isNewTransactionViewOpen.toggle()
-                                    } label: {
-                                        Label("New Transaction", systemImage: "square.and.pencil")
-                                    }
-                                    
-                                    Button {
-                                        Task.init {
-                                            await accountViewModel.getAccount(id: account.id!)
+                                        
+                                        Button {
+                                            Task.init {
+                                                await accountViewModel.getAccount(id: account.id!)
+                                            }
+                                            isAddTransactionHistoryViewOpen.toggle()
+                                        } label: {
+                                            Label("Add Transaction History", systemImage: "square.and.pencil")
                                         }
-                                        isAddTransactionHistoryViewOpen.toggle()
-                                    } label: {
-                                        Label("Add Transaction History", systemImage: "square.and.pencil")
                                     }
                                 }
                             Divider()
