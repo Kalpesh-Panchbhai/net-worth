@@ -16,6 +16,7 @@ struct AccountDetailView: View {
     @State private var show = false
     @State var isNewTransactionViewOpen = false
     @State var isAddTransactionHistoryViewOpen = false
+    @State var isPresentingAccountDeleteConfirm = false
     @State var paymentDate = 0
     @State var isActive = true
     @State var tabItem = 1
@@ -49,18 +50,24 @@ struct AccountDetailView: View {
                     AccountChartView(account: account)
                 }
             }
-        }
-        .alert(isPresented: $showZeroAlert) {
-            Alert(title: Text("Current Balance should be equal to zero to make it inactive!"))
+            .alert(isPresented: $showZeroAlert) {
+                Alert(title: Text("Current Balance should be equal to zero to make it inactive!"))
+            }
+            .confirmationDialog("Are you sure?",
+                                isPresented: $isPresentingAccountDeleteConfirm) {
+                Button("Delete account " + account.accountName + "?", role: .destructive) {
+                    Task.init {
+                        try await accountController.deleteAccount(account: account)
+                    }
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            }
         }
         .toolbar {
             ToolbarItem(content: {
                 Menu(content: {
                     Button(role: .destructive, action: {
-                        Task.init {
-                            try await accountController.deleteAccount(account: account)
-                        }
-                        self.presentationMode.wrappedValue.dismiss()
+                        isPresentingAccountDeleteConfirm.toggle()
                     }, label: {
                         Label("Delete", systemImage: "trash")
                     })

@@ -41,7 +41,7 @@ struct SettingsView: View {
                             .clipShape(Circle())
                             .shadow(color: .white, radius: 3)
                             .frame(width: 100, height: 100)
-    
+                        
                         Text(Auth.auth().currentUser?.displayName ?? "")
                             .font(.system(size: 25))
                             .bold()

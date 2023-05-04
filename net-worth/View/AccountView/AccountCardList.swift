@@ -15,6 +15,7 @@ struct AccountCardList: View {
     @State private var accountTypeSelected = "None"
     @State private var selectedAccount = Account()
     @State private var searchText = ""
+    @State private var isPresentingAccountDeleteConfirm = false
     
     @StateObject var accountViewModel = AccountViewModel()
     
@@ -59,11 +60,7 @@ struct AccountCardList: View {
                                                         .shadow(color: Color.gray, radius: 3)
                                                         .contextMenu {
                                                             Button(role: .destructive, action: {
-                                                                Task.init {
-                                                                    try await accountController.deleteAccount(account: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i])
-                                                                    await accountViewModel.getAccountList()
-                                                                    await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                                                                }
+                                                                isPresentingAccountDeleteConfirm.toggle()
                                                             }, label: {
                                                                 Label("Delete", systemImage: "trash")
                                                             })
@@ -88,6 +85,16 @@ struct AccountCardList: View {
                                                                 }
                                                             }
                                                         }
+                                                }
+                                            }
+                                            .confirmationDialog("Are you sure?",
+                                                                  isPresented: $isPresentingAccountDeleteConfirm) {
+                                                Button("Delete account " + accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].accountName + "?", role: .destructive) {
+                                                    Task.init {
+                                                        try await accountController.deleteAccount(account: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i])
+                                                        await accountViewModel.getAccountList()
+                                                        await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+                                                    }
                                                 }
                                             }
                                         }
