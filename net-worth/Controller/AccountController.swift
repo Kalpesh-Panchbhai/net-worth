@@ -32,6 +32,15 @@ class AccountController {
         return ""
     }
     
+    public func deleteInActiveAccountFromWatchList(account: Account) async throws {
+        let watchList = try await watchController.getAllWatchList()
+        watchList.forEach { watch in
+            if(watch.accountID.contains(account.id!)) {
+                watchController.deleteAccountFromWatchList(watchList: watch, accountID: account.id!)
+            }
+        }
+    }
+    
     public func deleteAccount(account: Account) async throws {
         let watchList = try await watchController.getAllWatchList()
         watchList.forEach { watch in
