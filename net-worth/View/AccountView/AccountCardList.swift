@@ -47,7 +47,7 @@ struct AccountCardList: View {
                                     NavigationLink(destination: {
                                         AccountListView(accountType: accountType)
                                     }, label: {
-                                        Label("See all", systemImage: "")
+                                        Text("See all")
                                             .foregroundColor(.green)
                                             .bold()
                                             .font(.system(size: 15))

@@ -144,12 +144,12 @@ struct NewIncomeView: View {
                         Button(action: {
                             addIncomeTypeViewOpen.toggle()
                         }, label: {
-                            Label("Add Income Type", systemImage: "")
+                            Label("Add Income Type", systemImage: "tray.and.arrow.down")
                         })
                         Button(action: {
                             addIncomeTagViewOpen.toggle()
                         }, label: {
-                            Label("Add Income Tag", systemImage: "")
+                            Label("Add Income Tag", systemImage: "tag.square")
                         })
                     }, label: {
                         Image(systemName: "ellipsis")

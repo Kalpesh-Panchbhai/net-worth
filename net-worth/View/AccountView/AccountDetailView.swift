@@ -37,11 +37,9 @@ struct AccountDetailView: View {
                 AccountDetailCardView(accountViewModel: accountViewModel)
                     .cornerRadius(10)
                     .shadow(color: Color.gray, radius: 3)
-                Picker(selection: $tabItem, content: {
+                Picker("Kalpesh", selection: $tabItem, content: {
                     Text("Transactions").tag(1)
                     Text("Charts").tag(2)
-                }, label: {
-                    Label("", systemImage: "")
                 })
                 .pickerStyle(SegmentedPickerStyle())
                 if(tabItem == 1) {

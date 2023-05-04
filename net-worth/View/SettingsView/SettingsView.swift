@@ -71,13 +71,13 @@ struct SettingsView: View {
                 NavigationLink(destination: {
                     IncomeTypeView()
                 }, label: {
-                    Label("Income Type", systemImage: "")
+                    Label("Income Type", systemImage: "tray.and.arrow.down")
                 })
                 
                 NavigationLink(destination: {
                     IncomeTagView()
                 }, label: {
-                    Label("Income Tag", systemImage: "")
+                    Label("Income Tag", systemImage: "tag.square")
                 })
                 
                 Button(action: {
