@@ -104,7 +104,7 @@ struct IncomeView: View {
                                             })
                                         }
                                     }, label: {
-                                        Text("Income Type")
+                                        Label("Income Type", systemImage: "tray.and.arrow.down")
                                     })
                                 }
                                 
@@ -122,7 +122,7 @@ struct IncomeView: View {
                                             })
                                         }
                                     }, label: {
-                                        Text("Income Tag")
+                                        Label("Income Tag", systemImage: "tag.square")
                                     })
                                 }
                                 
@@ -141,7 +141,7 @@ struct IncomeView: View {
                                             })
                                         }
                                     }, label: {
-                                        Text("Year")
+                                        Label("Year", systemImage: "calendar.badge.clock")
                                     })
                                 }
                                 
@@ -160,12 +160,12 @@ struct IncomeView: View {
                                             })
                                         }
                                     }, label: {
-                                        Text("Financial year")
+                                        Label("Financial year", systemImage: "calendar.badge.clock")
                                     })
                                 }
                                 
                             }, label: {
-                                Text("Filter by")
+                                Label("Filter by", systemImage: "line.3.horizontal.decrease.circle")
                             })
                             
                         }, label: {
