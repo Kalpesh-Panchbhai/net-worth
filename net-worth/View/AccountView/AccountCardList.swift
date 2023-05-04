@@ -21,6 +21,8 @@ struct AccountCardList: View {
     
     private var accountController = AccountController()
     
+    @State private var deletedAccount = Account()
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -61,6 +63,7 @@ struct AccountCardList: View {
                                                         .contextMenu {
                                                             Button(role: .destructive, action: {
                                                                 isPresentingAccountDeleteConfirm.toggle()
+                                                                deletedAccount = accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i];
                                                             }, label: {
                                                                 Label("Delete", systemImage: "trash")
                                                             })
@@ -89,9 +92,9 @@ struct AccountCardList: View {
                                             }
                                             .confirmationDialog("Are you sure?",
                                                                   isPresented: $isPresentingAccountDeleteConfirm) {
-                                                Button("Delete account " + accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].accountName + "?", role: .destructive) {
+                                                Button("Delete account " + deletedAccount.accountName + "?", role: .destructive) {
                                                     Task.init {
-                                                        try await accountController.deleteAccount(account: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i])
+                                                        try await accountController.deleteAccount(account: deletedAccount)
                                                         await accountViewModel.getAccountList()
                                                         await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                                                     }
