@@ -106,4 +106,20 @@ class WatchController {
         }
         updateWatchList(watchList: watchList)
     }
+    
+    public func getWatchListByAccount(accountID: String) async throws -> [Watch] {
+        var watch = [Watch]()
+        watch = try await getWatchCollection()
+            .getDocuments()
+            .documents
+            .map { doc in
+                return Watch(doc: doc)
+            }
+        watch = watch.filter { item in
+            item.accountID.contains(accountID)
+        }.sorted(by: { item1, item2 in
+            item1.accountName < item2.accountName
+        })
+        return watch
+    }
 }

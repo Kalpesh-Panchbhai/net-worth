@@ -35,4 +35,15 @@ class WatchViewModel: ObservableObject {
             print(error)
         }
     }
+    
+    func getWatchListByAccount(accountID: String) async {
+        do {
+            let list = try await watchController.getWatchListByAccount(accountID: accountID)
+            DispatchQueue.main.async {
+                self.watchList = list
+            }
+        } catch {
+            print(error)
+        }
+    }
 }

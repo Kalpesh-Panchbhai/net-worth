@@ -37,15 +37,20 @@ struct AccountDetailView: View {
                 AccountDetailCardView(accountViewModel: accountViewModel)
                     .cornerRadius(10)
                     .shadow(color: Color.gray, radius: 3)
-                Picker("Kalpesh", selection: $tabItem, content: {
+                Picker(selection: $tabItem, content: {
                     Text("Transactions").tag(1)
                     Text("Charts").tag(2)
+                    Text("WatchLists").tag(3)
+                }, label: {
+                    Text("Account Tab View")
                 })
                 .pickerStyle(SegmentedPickerStyle())
                 if(tabItem == 1) {
                     TransactionsView(accountViewModel: accountViewModel)
-                } else {
+                } else if(tabItem == 2) {
                     AccountChartView(account: account)
+                } else {
+                    AccountWatchListView(account: account)
                 }
             }
             .alert(isPresented: $showZeroAlert) {
