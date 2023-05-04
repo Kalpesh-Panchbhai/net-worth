@@ -42,6 +42,8 @@ struct SingleWatchListView: View {
                                 AccountRowView(account: Account(id: account))
                                     .shadow(color: Color.gray, radius: 3)
                                     .contextMenu {
+                                        Label(account, systemImage: "info.square")
+                                        
                                         if(watch.accountName != "All") {
                                             Button(role: .destructive, action: {
                                                 watchController.deleteAccountFromWatchList(watchList: watchViewModel.watch, accountID: account)

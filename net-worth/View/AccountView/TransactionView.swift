@@ -62,6 +62,8 @@ struct TransactionsView: View {
                             }
                         }
                         .contextMenu {
+                            Label(accountViewModel.accountTransactionList[i].id!, systemImage: "info.square")
+                            
                             if(i == 0 && accountViewModel.accountTransactionList.count > 1) {
                                 Button(role: .destructive, action: {
                                     var account = accountViewModel.account

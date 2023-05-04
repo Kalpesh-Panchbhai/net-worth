@@ -40,6 +40,9 @@ struct IncomeView: View {
                     }, label: {
                         ChildIncomeView(income: income)
                     })
+                    .contextMenu {
+                        Label(income.id!, systemImage: "info.square")
+                    }
                 }
                 .onDelete(perform: deleteIncome)
             }

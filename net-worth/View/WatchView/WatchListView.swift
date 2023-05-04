@@ -25,6 +25,9 @@ struct WatchListView: View {
                     }, label: {
                         Text(watchList.accountName)
                     })
+                    .contextMenu {
+                        Label(watchList.id!, systemImage: "info.square")
+                    }
                     .swipeActions(edge: .leading, content: {
                         if(watchList.accountName != "All") {
                             Button("Update") {

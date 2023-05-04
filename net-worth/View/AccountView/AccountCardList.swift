@@ -61,6 +61,9 @@ struct AccountCardList: View {
                                                     AccountCardView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i])
                                                         .shadow(color: Color.gray, radius: 3)
                                                         .contextMenu {
+                                                            
+                                                            Label(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i].id!, systemImage: "info.square")
+                                                            
                                                             Button(role: .destructive, action: {
                                                                 isPresentingAccountDeleteConfirm.toggle()
                                                                 deletedAccount = accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i];

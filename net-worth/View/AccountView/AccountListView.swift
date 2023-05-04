@@ -41,6 +41,9 @@ struct AccountListView: View {
                             AccountRowView(account: account)
                                 .shadow(color: Color.gray, radius: 3)
                                 .contextMenu {
+                                    
+                                    Label(account.id!, systemImage: "info.square")
+                                    
                                     Button(role: .destructive, action: {
                                         Task.init {
                                             try await accountController.deleteAccount(account: account)
