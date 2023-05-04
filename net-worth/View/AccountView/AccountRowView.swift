@@ -49,11 +49,6 @@ struct AccountRowView: View {
             }
             Spacer()
             HStack {
-                if(accountViewModel.account.paymentReminder) {
-                    Text("\(accountViewModel.account.paymentDate)")
-                        .foregroundColor(.white)
-                        .font(.caption.bold())
-                }
                 Spacer()
                 if(getTotalChangeForNonSymbol() >= 0) {
                     Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
