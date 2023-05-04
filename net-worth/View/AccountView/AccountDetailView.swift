@@ -76,9 +76,9 @@ struct AccountDetailView: View {
                         self.isActive.toggle()
                     }, label: {
                         if(isActive) {
-                            Label("Make Inactive", systemImage: "square.and.pencil")
+                            Label("Make Inactive", systemImage: "xmark.shield")
                         } else {
-                            Label("Make Active", systemImage: "square.and.pencil")
+                            Label("Make Active", systemImage: "checkmark.shield")
                         }
                     })
                     .onChange(of: isActive, perform: { isActive in
