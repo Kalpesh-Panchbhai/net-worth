@@ -35,7 +35,13 @@ class AccountViewModel: ObservableObject {
     var groupedAccount: [String: [Account]] {
         switch grouping {
         case .accountType:
-            return Dictionary(grouping: accountList) { $0.accountType }
+            return Dictionary(grouping: accountList) {
+                if($0.active) {
+                    return $0.accountType
+                } else {
+                    return "Inactive Account"
+                }
+            }
         case .currency:
             return Dictionary(grouping: accountList) { $0.currency }
         }
@@ -44,7 +50,24 @@ class AccountViewModel: ObservableObject {
     var sectionHeaders: [String] {
         switch grouping {
         case .accountType:
-            return Array(Set(accountList.map{$0.accountType})).sorted(by: <)
+            let array = Array(Set(accountList.map {
+                if($0.active) {
+                    return $0.accountType
+                } else {
+                    return "Inactive Account"
+                }
+            })).sorted(by: <)
+            
+            var returnList = array.filter { value in
+                !value.elementsEqual("Inactive Account")
+            }
+            let inactiveAccount = array.filter { value in
+                value.elementsEqual("Inactive Account")
+            }
+            if(!inactiveAccount.isEmpty) {
+                returnList.append(inactiveAccount[0])
+            }
+            return returnList
         case .currency:
             return Array(Set(accountList.map{$0.currency})).sorted(by: <)
         }

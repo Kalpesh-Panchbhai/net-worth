@@ -81,7 +81,11 @@ struct AccountDetailView: View {
                                 self.isActive.toggle()
                             } else {
                                 accountViewModel.account.active = isActive
+                                accountViewModel.account.paymentReminder = false
+                                accountViewModel.account.paymentDate = 0
                                 accountController.updateAccount(account: accountViewModel.account)
+                                NotificationController().removeNotification(id: accountViewModel.account.id!)
+                                paymentDate = 0
                             }
                         } else {
                             accountViewModel.account.active = isActive
