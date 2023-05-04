@@ -84,7 +84,7 @@ struct AccountListView: View {
                 Button(action: {
                     self.isChartViewOpen.toggle()
                 }, label: {
-                    Label("Watch Chart", systemImage: "chart.line.uptrend.xyaxis")
+                    Label("Account List Chart", systemImage: "chart.line.uptrend.xyaxis")
                 })
             })
         }
