@@ -57,18 +57,45 @@ struct TransactionsView: View {
                         .contextMenu {
                             Label(accountViewModel.accountTransactionList[i].id!, systemImage: "info.square")
                             
-                            if(i == 0 && accountViewModel.accountTransactionList.count > 1) {
+                            if(accountViewModel.accountTransactionList.count > 1) {
                                 Button(role: .destructive, action: {
-                                    var account = accountViewModel.account
-                                    let accountTransactionID = accountViewModel.accountTransactionList[i].id!
-                                    let newCurrentBalance = accountViewModel.accountTransactionList[1].currentBalance
-                                    Task.init {
-                                        try await accountController.deleteAccountLastTransaction(accountID: account.id!, accountTransactionID: accountTransactionID)
-                                        account.currentBalance = newCurrentBalance
-                                        accountController.updateAccount(account: account)
-                                        await accountViewModel.getAccountTransactionList(id: account.id!)
-                                        await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
-                                        await accountViewModel.getAccount(id: account.id!)
+                                    if(i==0) {
+                                        var account = accountViewModel.account
+                                        let accountTransactionID = accountViewModel.accountTransactionList[i].id!
+                                        let newCurrentBalance = accountViewModel.accountTransactionList[1].currentBalance
+                                        Task.init {
+                                            try await accountController.deleteAccountTransaction(accountID: account.id!, accountTransactionID: accountTransactionID)
+                                            account.currentBalance = newCurrentBalance
+                                            accountController.updateAccount(account: account)
+                                            await accountViewModel.getAccountTransactionList(id: account.id!)
+                                            await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
+                                            await accountViewModel.getAccount(id: account.id!)
+                                        }
+                                    } else if(i == accountViewModel.accountTransactionList.count - 1) {
+                                        var account = accountViewModel.account
+                                        let accountTransactionID = accountViewModel.accountTransactionList[i].id!
+                                        var currentLastTransaction = accountViewModel.accountTransactionList[i - 1]
+                                        currentLastTransaction.balanceChange = currentLastTransaction.currentBalance
+                                        Task.init {
+                                            try await accountController.deleteAccountTransaction(accountID: account.id!, accountTransactionID: accountTransactionID)
+                                            accountController.updateAccountTransaction(accountTransaction: currentLastTransaction, accountID: account.id!)
+                                            await accountViewModel.getAccountTransactionList(id: account.id!)
+                                            await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
+                                            await accountViewModel.getAccount(id: account.id!)
+                                        }
+                                    } else {
+                                        var account = accountViewModel.account
+                                        let accountTransactionID = accountViewModel.accountTransactionList[i].id!
+                                        var currentLastTransaction = accountViewModel.accountTransactionList[i - 1]
+                                        var currentFirstTransaction = accountViewModel.accountTransactionList[i + 1]
+                                        currentLastTransaction.balanceChange = currentLastTransaction.currentBalance - currentFirstTransaction.currentBalance
+                                        Task.init {
+                                            try await accountController.deleteAccountTransaction(accountID: account.id!, accountTransactionID: accountTransactionID)
+                                            accountController.updateAccountTransaction(accountTransaction: currentLastTransaction, accountID: account.id!)
+                                            await accountViewModel.getAccountTransactionList(id: account.id!)
+                                            await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
+                                            await accountViewModel.getAccount(id: account.id!)
+                                        }
                                     }
                                 }, label: {
                                     Label("Delete", systemImage: "trash")

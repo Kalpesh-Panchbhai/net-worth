@@ -337,7 +337,7 @@ class AccountController {
         return accountTransactionList
     }
     
-    public func deleteAccountLastTransaction(accountID: String, accountTransactionID: String) async throws {
+    public func deleteAccountTransaction(accountID: String, accountTransactionID: String) async throws {
         try await getAccountCollection()
             .document(accountID)
             .collection(ConstantUtils.accountTransactionCollectionName)
