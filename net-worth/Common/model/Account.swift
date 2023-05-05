@@ -13,6 +13,7 @@ struct Account: Codable, Hashable {
     
     @DocumentID var id: String?
     var accountType: String
+    var loanType: String
     var accountName: String
     var currentBalance: Double
     var paymentReminder: Bool
@@ -22,6 +23,7 @@ struct Account: Codable, Hashable {
     
     init() {
         self.accountType = ""
+        self.loanType = ""
         self.accountName = ""
         self.currentBalance = 0.0
         self.paymentReminder = false
@@ -33,6 +35,7 @@ struct Account: Codable, Hashable {
     init(id: String) {
         self.id = id
         self.accountType = ""
+        self.loanType = ""
         self.accountName = ""
         self.currentBalance = 0.0
         self.paymentReminder = false
@@ -45,6 +48,7 @@ struct Account: Codable, Hashable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self._id = try container.decode(DocumentID<String>.self, forKey: .id)
         self.accountType = try container.decode(String.self, forKey: .accountType)
+        self.loanType = try container.decode(String.self, forKey: .loanType)
         self.accountName = try container.decode(String.self, forKey: .accountName)
         self.currentBalance = try container.decode(Double.self, forKey: .currentBalance)
         self.paymentReminder = try container.decode(Bool.self, forKey: .paymentReminder)
@@ -56,6 +60,7 @@ struct Account: Codable, Hashable {
     init(doc: QueryDocumentSnapshot) {
         id = doc.documentID
         accountType = doc[ConstantUtils.accountKeyAccountType] as? String ?? ""
+        loanType = doc[ConstantUtils.accountKeyLoanType] as? String ?? ""
         accountName = doc[ConstantUtils.accountKeyAccountName] as? String ?? ""
         currentBalance = doc[ConstantUtils.accountKeyCurrentBalance] as? Double ?? 0.0
         paymentReminder = doc[ConstantUtils.accountKeyPaymentReminder] as? Bool ?? false
@@ -64,8 +69,9 @@ struct Account: Codable, Hashable {
         active =  doc[ConstantUtils.accountKeyActive] as? Bool ?? true
     }
     
-    init(accountType: String, accountName: String, currentBalance: Double, paymentReminder: Bool, paymentDate: Int, currency: String, active: Bool) {
+    init(accountType: String, loanType: String, accountName: String, currentBalance: Double, paymentReminder: Bool, paymentDate: Int, currency: String, active: Bool) {
         self.accountType = accountType
+        self.loanType = loanType
         self.accountName = accountName
         self.currentBalance = currentBalance
         self.paymentReminder = paymentReminder

@@ -10,6 +10,7 @@ import SwiftUI
 struct NewAccountView: View {
     
     @State var accountType: String
+    @State var loanType: String = "Consumer"
     @State var symbolType: String = "None"
     @State var accountName: String = ""
     @State var currenySelected: Currency = Currency()
@@ -21,8 +22,10 @@ struct NewAccountView: View {
     @State  var financeSelected = FinanceModel()
     
     @State  var currentBalance: Double = 0.0
+    @State  var monthlyEmi: Double = 0.0
     @State  var paymentReminder = false
     @State  var paymentDate = 1
+    @State  var loanPaymentDate = 1
     @State var dates = Array(1...28)
     @State private var accountOpenedDate = Date()
     
@@ -76,8 +79,16 @@ struct NewAccountView: View {
                         accountOpenedDatePicker
                     }
                     else if(accountType == "Loan") {
+                        Picker(selection: $loanType, label: Text("Loan Type")) {
+                            Text("Consumer").tag("Consumer")
+                            Text("Non Consumer").tag("Non Consumer")
+                        }
                         nameField(labelName: "Loan Name")
                         currentBalanceField()
+                        if(loanType.elementsEqual("Consumer")) {
+                            monthlyEMIField()
+                            loanPaymentDateField(labelName: "Select a loan payment date")
+                        }
                         currencyPicker
                         enablePaymentReminderField(labelName: "Enable Loan Payment Reminder")
                         if(paymentReminder) {
@@ -103,6 +114,9 @@ struct NewAccountView: View {
                     Button(action: {
                         var newAccount = Account()
                         newAccount.accountType = accountType
+                        if(accountType.elementsEqual("Loan")) {
+                            newAccount.loanType = loanType
+                        }
                         newAccount.accountName = accountName
                         newAccount.currentBalance = isPlus ? currentBalance : currentBalance * -1
                         newAccount.currency = currenySelected.code
@@ -113,6 +127,7 @@ struct NewAccountView: View {
                         }
                         Task.init {
                             let accountID = await accountController.addAccount(newAccount: newAccount, accountOpenedDate: accountOpenedDate)
+                            newAccount.id = accountID
                             if(selectedWatchList.id != "") {
                                 selectedWatchList.accountID.append(accountID)
                                 watchController.addAccountToWatchList(watch: selectedWatchList)
@@ -122,6 +137,7 @@ struct NewAccountView: View {
                             watchController.addAccountToWatchList(watch: watch)
                             await accountViewModel.getAccountList()
                             await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+                            accountController.addLoanAccountEMITransaction(account: newAccount, emiDate: loanPaymentDate, accountOpenedDate: accountOpenedDate, monthlyEmiAmount: monthlyEmi)
                         }
                         dismiss()
                     }, label: {
@@ -240,12 +256,29 @@ struct NewAccountView: View {
         }
     }
     
+    private func monthlyEMIField() -> HStack<TupleView<(Text, Spacer, some View)>> {
+        return HStack {
+            Text("Monthly EMI")
+            Spacer()
+            TextField("Monthly EMI", value: $monthlyEmi, formatter: Double().formatter())
+                .keyboardType(.decimalPad)
+        }
+    }
+    
     private func enablePaymentReminderField(labelName: String) -> Toggle<Text> {
         return Toggle(labelName, isOn: $paymentReminder)
     }
     
     private func paymentDateField(labelName: String) -> Picker<Text, Int, ForEach<[Int], Int, some View>> {
         return Picker(labelName, selection: $paymentDate) {
+            ForEach(dates, id: \.self) {
+                Text("\($0.formatted(.number.grouping(.never)))").tag($0)
+            }
+        }
+    }
+    
+    private func loanPaymentDateField(labelName: String) -> Picker<Text, Int, ForEach<[Int], Int, some View>> {
+        return Picker(labelName, selection: $loanPaymentDate) {
             ForEach(dates, id: \.self) {
                 Text("\($0.formatted(.number.grouping(.never)))").tag($0)
             }

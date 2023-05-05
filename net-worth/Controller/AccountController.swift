@@ -206,6 +206,39 @@ class AccountController {
         }
     }
     
+    public func addLoanAccountEMITransaction(account: Account, emiDate: Int, accountOpenedDate: Date, monthlyEmiAmount: Double) {
+        var currentBalance = account.currentBalance
+        var monthlyEmiAmount = monthlyEmiAmount
+        var calendarDate = Calendar.current.dateComponents([.year, .month, .day], from: accountOpenedDate)
+        calendarDate.day = emiDate
+        while(currentBalance<0.0) {
+            if((currentBalance + monthlyEmiAmount) > 0) {
+                monthlyEmiAmount = currentBalance
+                currentBalance = 0.0
+            } else {
+                currentBalance = currentBalance + monthlyEmiAmount
+            }
+            calendarDate.month!+=1
+            if(calendarDate.month! > 12) {
+                calendarDate.month!=1
+                calendarDate.year!+=1
+            }
+            let paymentDate = Calendar.current.date(from: calendarDate)
+            let newTransaction = AccountTransaction(timestamp: paymentDate!, balanceChange: monthlyEmiAmount, currentBalance: currentBalance, paid: false)
+            
+            do {
+                let documentID = try getAccountCollection()
+                    .document(account.id!)
+                    .collection(ConstantUtils.accountTransactionCollectionName)
+                    .addDocument(from: newTransaction).documentID
+                
+                print("New Account transaction added : " + documentID)
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
     public func updateAccountTransaction(accountTransaction: AccountTransaction, accountID: String) {
         do {
             try getAccountCollection()
@@ -230,7 +263,8 @@ class AccountController {
                 return AccountTransaction(id: doc.documentID,
                                           timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
                                           balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0,
-                                          currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0)
+                                          currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0,
+                                          paid: doc[ConstantUtils.accountTransactionKeyPaid] as? Bool ?? true)
             }
         
         return accountTransactionList

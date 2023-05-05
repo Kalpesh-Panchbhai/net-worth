@@ -32,9 +32,20 @@ struct TransactionsView: View {
                                 Text("\(accountViewModel.accountTransactionList[i].timestamp.getDateAndFormat())")
                                     .font(.headline)
                                     .foregroundColor(.white)
-                                Text("\(accountViewModel.accountTransactionList[i].timestamp.getTimeAndFormat())")
-                                    .font(.system(size: 12))
-                                    .foregroundColor(.white)
+                                HStack {
+                                    Text("\(accountViewModel.accountTransactionList[i].timestamp.getTimeAndFormat())")
+                                        .font(.system(size: 12))
+                                        .foregroundColor(.white)
+                                    if(accountViewModel.accountTransactionList[i].paid) {
+                                        Text("Paid")
+                                            .font(.system(size: 12))
+                                            .foregroundColor(.green)
+                                    } else {
+                                        Text("Not Paid")
+                                            .font(.system(size: 12))
+                                            .foregroundColor(.red)
+                                    }
+                                }
                             }
                             Spacer()
                             VStack(alignment: .trailing) {
@@ -57,7 +68,7 @@ struct TransactionsView: View {
                         .contextMenu {
                             Label(accountViewModel.accountTransactionList[i].id!, systemImage: "info.square")
                             
-                            if(accountViewModel.accountTransactionList.count > 1) {
+                            if(accountViewModel.accountTransactionList.count > 1 && !accountViewModel.account.loanType.elementsEqual("Consumer")) {
                                 Button(role: .destructive, action: {
                                     if(i==0) {
                                         var account = accountViewModel.account
@@ -100,6 +111,26 @@ struct TransactionsView: View {
                                 }, label: {
                                     Label("Delete", systemImage: "trash")
                                 })
+                            } else if(accountViewModel.account.loanType.elementsEqual("Consumer")) {
+                                if( i == (accountViewModel.accountTransactionList.count - accountViewModel.accountTransactionList.filter { item in
+                                    item.paid
+                                }.count) - 1) {
+                                    Button(action: {
+                                        var account = accountViewModel.account
+                                        var accountTransaction = accountViewModel.accountTransactionList[i]
+                                        accountTransaction.paid = true
+                                        account.currentBalance = accountTransaction.currentBalance
+                                        Task.init {
+                                            accountController.updateAccountTransaction(accountTransaction: accountTransaction, accountID: account.id!)
+                                            accountController.updateAccount(account: account)
+                                            await accountViewModel.getAccountTransactionList(id: account.id!)
+                                            await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
+                                            await accountViewModel.getAccount(id:account.id!)
+                                        }
+                                    }, label: {
+                                        Label("Pay", systemImage: "indianrupeesign")
+                                    })
+                                }
                             }
                         }
                         .padding(.horizontal)

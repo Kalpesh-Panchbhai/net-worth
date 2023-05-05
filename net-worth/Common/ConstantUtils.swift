@@ -35,6 +35,7 @@ class ConstantUtils {
     
     static var accountKeyAccountName = "accountName"
     static var accountKeyAccountType = "accountType"
+    static var accountKeyLoanType = "loanType"
     static var accountKeyCurrency = "currency"
     static var accountKeyCurrentBalance = "currentBalance"
     static var accountKeyPaymentDate = "paymentDate"
@@ -45,6 +46,7 @@ class ConstantUtils {
     static var accountTransactionKeyBalanceChange = "balanceChange"
     static var accountTransactionKeytimestamp = "timestamp"
     static var accountTransactionKeyCurrentBalance = "currentBalance"
+    static var accountTransactionKeyPaid = "paid"
     
     static var watchKeyWatchName = "accountName"
     static var watchKeyAccountID = "accountID"

@@ -14,4 +14,6 @@ struct AccountTransaction: Codable, Hashable {
     var timestamp: Date
     var balanceChange: Double
     var currentBalance: Double
+    
+    var paid: Bool = true
 }
