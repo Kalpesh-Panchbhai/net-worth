@@ -38,7 +38,7 @@ struct AccountDetailView: View {
                     .shadow(color: Color.gray, radius: 3)
                 Picker(selection: $tabItem, content: {
                     Text("Transactions").tag(1)
-                    Text("Charts").tag(2)
+                    Text("Chart").tag(2)
                     Text("WatchLists").tag(3)
                 }, label: {
                     Text("Account Tab View")
