@@ -61,7 +61,7 @@ struct TransactionsView: View {
                                 Button(role: .destructive, action: {
                                     var account = accountViewModel.account
                                     let accountTransactionID = accountViewModel.accountTransactionList[i].id!
-                                    let newCurrentBalance = accountViewModel.accountTransactionList[1].balanceChange
+                                    let newCurrentBalance = accountViewModel.accountTransactionList[1].currentBalance
                                     Task.init {
                                         try await accountController.deleteAccountLastTransaction(accountID: account.id!, accountTransactionID: accountTransactionID)
                                         account.currentBalance = newCurrentBalance
