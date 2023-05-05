@@ -38,23 +38,16 @@ struct TransactionsView: View {
                             }
                             Spacer()
                             VStack(alignment: .trailing) {
-                                if(self.accountViewModel.account.accountType == "Saving" || self.accountViewModel.account.accountType == "Credit Card" || self.accountViewModel.account.accountType == "Loan" || self.accountViewModel.account.accountType == "Other") {
-                                    Text((accountViewModel.account.currency) + " \(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 4))")
-                                        .font(.headline)
-                                        .foregroundColor(.white)
-                                }
-                                else {
-                                    Text(" \(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 4))")
-                                        .font(.headline)
-                                        .foregroundColor(.white)
-                                }
-                                if( i < accountViewModel.accountTransactionList.count - 1) {
-                                    if((accountViewModel.accountTransactionList[i].balanceChange - accountViewModel.accountTransactionList[i + 1].balanceChange) > 0 ) {
-                                        Text("+\((accountViewModel.accountTransactionList[i].balanceChange - accountViewModel.accountTransactionList[i + 1].balanceChange).withCommas(decimalPlace: 2))")
+                                Text((accountViewModel.account.currency) + " \(accountViewModel.accountTransactionList[i].currentBalance.withCommas(decimalPlace: 4))")
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                                if( i < accountViewModel.accountTransactionList.count) {
+                                    if(accountViewModel.accountTransactionList[i].balanceChange > 0) {
+                                        Text("+\(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 2))")
                                             .font(.system(size: 12))
                                             .foregroundColor(.green)
-                                    } else if((accountViewModel.accountTransactionList[i].balanceChange - accountViewModel.accountTransactionList[i + 1].balanceChange) < 0 ) {
-                                        Text("\((accountViewModel.accountTransactionList[i].balanceChange - accountViewModel.accountTransactionList[i + 1].balanceChange).withCommas(decimalPlace: 2))")
+                                    } else if(accountViewModel.accountTransactionList[i].balanceChange < 0) {
+                                        Text("\(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 2))")
                                             .font(.system(size: 12))
                                             .foregroundColor(.red)
                                     }

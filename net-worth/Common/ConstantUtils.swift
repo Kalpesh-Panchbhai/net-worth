@@ -44,6 +44,7 @@ class ConstantUtils {
     
     static var accountTransactionKeyBalanceChange = "balanceChange"
     static var accountTransactionKeytimestamp = "timestamp"
+    static var accountTransactionKeyCurrentBalance = "currentBalance"
     
     static var watchKeyWatchName = "accountName"
     static var watchKeyAccountID = "accountID"

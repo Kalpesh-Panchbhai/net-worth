@@ -12,6 +12,7 @@ struct UpdateBalanceAccountView: View {
     private var accountController = AccountController()
     
     @State private var amount: Double = 0.0
+    @State private var date = Date()
     
     @State var isPlus = true;
     
@@ -27,6 +28,7 @@ struct UpdateBalanceAccountView: View {
         NavigationView {
             Form {
                 currentBalanceField()
+                DatePicker("Transaction date", selection: $date, in: ...Date(), displayedComponents: [.date, .hourAndMinute])
             }
             .toolbar {
                 ToolbarItem {
@@ -34,9 +36,9 @@ struct UpdateBalanceAccountView: View {
                         var updatedAccount = accountViewModel.account
                         amount = isPlus ? amount : amount * -1
                         updatedAccount.currentBalance = amount
-                        
-                        accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: Date())
-                        accountController.updateAccount(account: updatedAccount)
+                        Task.init {
+                                try await accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Update")
+                        }
                         dismiss()
                     }, label: {
                         Text("Update")
@@ -47,10 +49,10 @@ struct UpdateBalanceAccountView: View {
                     Button(action: {
                         var updatedAccount = accountViewModel.account
                         amount = isPlus ? amount : amount * -1
-                        updatedAccount.currentBalance = updatedAccount.currentBalance + amount
-                        
-                        accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: Date())
-                        accountController.updateAccount(account: updatedAccount)
+                        updatedAccount.currentBalance = amount
+                        Task.init {
+                                try await accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Add")
+                        }
                         dismiss()
                     }, label: {
                         Text("Add")

@@ -11,7 +11,6 @@ struct SingleWatchListView: View {
     
     var watch: Watch
     @State private var isNewTransactionViewOpen = false
-    @State private var isAddTransactionHistoryViewOpen = false
     @State private var isChartViewOpen = false
     @State private var addAccountViewOpen = false
     @State private var isAscendingByAlphabet = true
@@ -101,15 +100,6 @@ struct SingleWatchListView: View {
                                             } label: {
                                                 Label("New Transaction", systemImage: "square.and.pencil")
                                             }
-                                            
-                                            Button {
-                                                Task.init {
-                                                    await accountViewModel.getAccount(id: account)
-                                                }
-                                                isAddTransactionHistoryViewOpen.toggle()
-                                            } label: {
-                                                Label("Add Transaction History", systemImage: "square.and.pencil")
-                                            }
                                         }
                                 })
                             }
@@ -159,48 +149,6 @@ struct SingleWatchListView: View {
                 }
             }, content: {
                 UpdateBalanceAccountView(accountViewModel: accountViewModel)
-            })
-            .sheet(isPresented: $isAddTransactionHistoryViewOpen, onDismiss: {
-                Task.init {
-                    watchViewModel.watch = Watch()
-                    
-                    await watchViewModel.getWatchList(id: watch.id!)
-                    await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
-                    if(isAscendingByAlphabetEnabled) {
-                        if(isAscendingByAlphabet) {
-                            watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                $0.accountName < $1.accountName
-                            }).map({
-                                $0.id!
-                            })
-                        } else {
-                            watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                $0.accountName > $1.accountName
-                            }).map({
-                                $0.id!
-                            })
-                        }
-                        self.isAscendingByAmountEnabled = false
-                    } else if(isAscendingByAmountEnabled) {
-                        if(isAscendingByAmount) {
-                            watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                $0.currentBalance < $1.currentBalance
-                            }).map({
-                                $0.id!
-                            })
-                        } else {
-                            watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                $0.currentBalance > $1.currentBalance
-                            }).map({
-                                $0.id!
-                            })
-                        }
-                        self.isAscendingByAlphabetEnabled = false
-                    }
-                    await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                }
-            }, content: {
-                AddTransactionHistoryView(accountViewModel: accountViewModel)
             })
         }
         .toolbar {

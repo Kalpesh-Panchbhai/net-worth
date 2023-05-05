@@ -13,4 +13,5 @@ struct AccountTransaction: Codable, Hashable {
     @DocumentID var id: String?
     var timestamp: Date
     var balanceChange: Double
+    var currentBalance: Double
 }

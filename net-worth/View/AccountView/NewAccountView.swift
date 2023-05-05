@@ -24,6 +24,7 @@ struct NewAccountView: View {
     @State  var paymentReminder = false
     @State  var paymentDate = 1
     @State var dates = Array(1...28)
+    @State private var accountOpenedDate = Date()
     
     @State var isPlus = true
     
@@ -61,6 +62,7 @@ struct NewAccountView: View {
                         currentBalanceField()
                         currencyPicker
                         watchListPicker
+                        accountOpenedDatePicker
                     }
                     else if(accountType == "Credit Card") {
                         nameField(labelName: "Credit Card Name")
@@ -71,6 +73,7 @@ struct NewAccountView: View {
                             paymentDateField(labelName: "Select a payment date")
                         }
                         watchListPicker
+                        accountOpenedDatePicker
                     }
                     else if(accountType == "Loan") {
                         nameField(labelName: "Loan Name")
@@ -81,6 +84,7 @@ struct NewAccountView: View {
                             paymentDateField(labelName: "Select a payment date")
                         }
                         watchListPicker
+                        accountOpenedDatePicker
                     } else if(accountType == "Other") {
                         nameField(labelName: "Account Name")
                         currentBalanceField()
@@ -90,6 +94,7 @@ struct NewAccountView: View {
                             paymentDateField(labelName: "Select a payment date")
                         }
                         watchListPicker
+                        accountOpenedDatePicker
                     }
                 }
             }
@@ -106,12 +111,12 @@ struct NewAccountView: View {
                         if(paymentReminder) {
                             newAccount.paymentDate = paymentDate
                         }
-                        let accountID = accountController.addAccount(newAccount: newAccount)
-                        if(selectedWatchList.id != "") {
-                            selectedWatchList.accountID.append(accountID)
-                            watchController.addAccountToWatchList(watch: selectedWatchList)
-                        }
                         Task.init {
+                            let accountID = await accountController.addAccount(newAccount: newAccount, accountOpenedDate: accountOpenedDate)
+                            if(selectedWatchList.id != "") {
+                                selectedWatchList.accountID.append(accountID)
+                                watchController.addAccountToWatchList(watch: selectedWatchList)
+                            }
                             var watch = try await watchController.getDefaultWatchList()
                             watch.accountID.append(accountID)
                             watchController.addAccountToWatchList(watch: watch)
@@ -174,6 +179,10 @@ struct NewAccountView: View {
                 }
             }
         }
+    }
+    
+    var accountOpenedDatePicker: some View {
+        DatePicker("Opened date", selection: $accountOpenedDate, in: ...Date(), displayedComponents: [.date, .hourAndMinute])
     }
     
     private func allFieldsFilled () -> Bool {
@@ -242,5 +251,5 @@ struct NewAccountView: View {
             }
         }
     }
-
+    
 }
