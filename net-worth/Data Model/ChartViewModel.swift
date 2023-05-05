@@ -16,7 +16,7 @@ class ChartViewModel: ObservableObject {
         DispatchQueue.main.async {
             var chartDataListResponse = [ChartData]()
             for account in accountViewModel.accountTransactionListWithRange {
-                chartDataListResponse.append(ChartData(date: account.timestamp, value: account.balanceChange))
+                chartDataListResponse.append(ChartData(date: account.timestamp, value: account.currentBalance))
             }
             self.chartDataList = chartDataListResponse
         }
