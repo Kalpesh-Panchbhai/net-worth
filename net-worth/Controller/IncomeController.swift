@@ -326,7 +326,9 @@ class IncomeController {
             
             print("New Income Tag Added : " + documentID)
             
-            makeOtherIncomeTagNonDefault(documentID: documentID)
+            if(tag.isdefault) {
+                makeOtherIncomeTagNonDefault(documentID: documentID)
+            }
         } catch {
             print(error)
         }
@@ -387,15 +389,17 @@ class IncomeController {
         return incomeTypeList
     }
     
-    public func addIncomeType(tag: IncomeType) {
+    public func addIncomeType(type: IncomeType) {
         do {
             let documentID = try getIncomeTypeCollection()
-                .addDocument(from: tag)
+                .addDocument(from: type)
                 .documentID
             
             print("New Income Type Added : " + documentID)
             
-            makeOtherIncomeTypeNonDefault(documentID: documentID)
+            if(type.isdefault) {
+                makeOtherIncomeTypeNonDefault(documentID: documentID)
+            }
         } catch {
             print(error)
         }
@@ -423,7 +427,7 @@ class IncomeController {
         let count = try await getIncomeTypeList().count
         if(count == 0) {
             let incomeType = IncomeType(name: "None", isdefault: false)
-            addIncomeType(tag: incomeType)
+            addIncomeType(type: incomeType)
         }
     }
     

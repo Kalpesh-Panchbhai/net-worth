@@ -18,9 +18,11 @@ struct IncomeTypeView: View {
             ForEach(incomeViewModel.incomeTypeList, id: \.self) { item in
                 VStack(alignment: .leading) {
                     Text(item.name)
-                    Text(item.isdefault ? "DEFAULT" : "")
-                        .font(.system(size: 10))
-                        .foregroundColor(.gray)
+                    if(item.isdefault) {
+                        Text("DEFAULT")
+                            .font(.system(size: 10))
+                            .foregroundColor(.gray)
+                    }
                 }
                 .contextMenu {
                     if(!item.isdefault) {
