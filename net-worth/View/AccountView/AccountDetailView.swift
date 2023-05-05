@@ -71,7 +71,11 @@ struct AccountDetailView: View {
                 Button(action: {
                     self.showAddWatchListView.toggle()
                 }, label: {
-                    Image(systemName: "bookmark.fill")
+                    if(watchViewModel.watchListForAccount.count > 1) {
+                        Image(systemName: "bookmark.fill")
+                    } else {
+                        Image(systemName: "bookmark")
+                    }
                 })
             })
             

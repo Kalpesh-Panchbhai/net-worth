@@ -11,8 +11,6 @@ struct AddWatchListAccountView: View {
     
     @ObservedObject var watchViewModel: WatchViewModel
     
-    @State private var searchText = ""
-    
     var account: Account
     
     var body: some View {
@@ -28,7 +26,6 @@ struct AddWatchListAccountView: View {
                 }
             }
         }
-        .searchable(text: $searchText)
         .onAppear {
             Task.init {
                 await watchViewModel.getAllWatchList()
