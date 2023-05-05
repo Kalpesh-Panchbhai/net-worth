@@ -13,7 +13,7 @@ struct AccountDetailView: View {
     private var account: Account
     private var accountController = AccountController()
     
-    @State private var show = false
+    @State private var showAddWatchListView = false
     @State var isNewTransactionViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
     @State var paymentDate = 0
@@ -22,6 +22,7 @@ struct AccountDetailView: View {
     @State var showZeroAlert = false
     
     @ObservedObject var accountViewModel: AccountViewModel
+    @StateObject var watchViewModel = WatchViewModel()
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -49,7 +50,7 @@ struct AccountDetailView: View {
                 } else if(tabItem == 2) {
                     AccountChartView(account: account)
                 } else {
-                    AccountWatchListView(account: account)
+                    AccountWatchListView(account: account, watchViewModel: watchViewModel)
                 }
             }
             .alert(isPresented: $showZeroAlert) {
@@ -66,6 +67,14 @@ struct AccountDetailView: View {
             }
         }
         .toolbar {
+            ToolbarItem(content: {
+                Button(action: {
+                    self.showAddWatchListView.toggle()
+                }, label: {
+                    Image(systemName: "bookmark.fill")
+                })
+            })
+            
             ToolbarItem(content: {
                 Menu(content: {
                     Button(role: .destructive, action: {
@@ -166,6 +175,7 @@ struct AccountDetailView: View {
                 isActive = accountViewModel.account.active
                 await accountViewModel.getAccountTransactionList(id: account.id!)
                 await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
+                await watchViewModel.getWatchListByAccount(accountID: account.id!)
             }
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
@@ -178,6 +188,13 @@ struct AccountDetailView: View {
             }
         }, content: {
             UpdateBalanceAccountView(accountViewModel: accountViewModel)
+        })
+        .sheet(isPresented: $showAddWatchListView, onDismiss: {
+            Task.init {
+                await watchViewModel.getWatchListByAccount(accountID: account.id!)
+            }
+        }, content: {
+            AddWatchListAccountView(watchViewModel: watchViewModel, account: account)
         })
         .background(.black)
     }

@@ -24,8 +24,16 @@ class WatchController {
             .documents
             .map { doc in
                 return Watch(doc: doc)
-            }
-        return watchList
+            }.sorted(by: { item1, item2 in
+                item1.accountName < item2.accountName
+            })
+        var returnWatchList = watchList.filter { item in
+            !item.accountName.elementsEqual("All")
+        }
+        returnWatchList.insert(contentsOf: watchList.filter { item in
+            item.accountName.elementsEqual("All")
+        }, at: 0)
+        return returnWatchList
     }
     
     public func getDefaultWatchList() async throws -> Watch {
@@ -120,6 +128,12 @@ class WatchController {
         }.sorted(by: { item1, item2 in
             item1.accountName < item2.accountName
         })
-        return watch
+        var returnWatchList = watch.filter { item in
+            !item.accountName.elementsEqual("All")
+        }
+        returnWatchList.insert(contentsOf: watch.filter { item in
+            item.accountName.elementsEqual("All")
+        }, at: 0)
+        return returnWatchList
     }
 }

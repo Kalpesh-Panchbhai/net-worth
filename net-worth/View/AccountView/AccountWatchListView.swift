@@ -11,24 +11,19 @@ struct AccountWatchListView: View {
     
     var account: Account
     
-    @ObservedObject var watchViewModel = WatchViewModel()
+    @ObservedObject var watchViewModel: WatchViewModel
     
     var body: some View {
         VStack {
             HStack {
                 List {
-                    ForEach(watchViewModel.watchList, id: \.self, content: { watch in
+                    ForEach(watchViewModel.watchListForAccount, id: \.self, content: { watch in
                         Text(watch.accountName)
                             .contextMenu {
                                 Label(watch.id!, systemImage: "info.square")
                             }
                     })
                 }
-            }
-        }
-        .onAppear {
-            Task.init {
-                await watchViewModel.getWatchListByAccount(accountID: account.id!)
             }
         }
     }
