@@ -14,15 +14,21 @@ struct AccountWatchListView: View {
     @ObservedObject var watchViewModel: WatchViewModel
     
     var body: some View {
-        VStack {
-            HStack {
-                List {
-                    ForEach(watchViewModel.watchListForAccount, id: \.self, content: { watch in
-                        Text(watch.accountName)
+        NavigationView {
+            VStack {
+                HStack {
+                    List {
+                        ForEach(watchViewModel.watchListForAccount, id: \.self, content: { watch in
+                            NavigationLink(destination: {
+                                SingleWatchListView(watch: watch)
+                            }, label: {
+                                Text(watch.accountName)
+                            })
                             .contextMenu {
                                 Label(watch.id!, systemImage: "info.square")
                             }
-                    })
+                        })
+                    }
                 }
             }
         }
