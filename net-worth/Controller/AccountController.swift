@@ -369,9 +369,9 @@ class AccountController {
                     let accountTransaction = try await self.getLastTwoAccountTransactionList(id: account.id!)
                     balanceModel.currentValue = balanceModel.currentValue * account.currentBalance
                     if(accountTransaction.count > 1 && accountTransaction[0].timestamp.timeIntervalSince(Date()) > -86400) {
-                        balanceModel.previousDayValue = balanceModel.previousDayValue * accountTransaction[1].balanceChange
+                        balanceModel.previousDayValue = balanceModel.previousDayValue * accountTransaction[1].currentBalance
                     } else if(accountTransaction.count == 1 && accountTransaction[0].timestamp.timeIntervalSince(Date()) > -86400) {
-                        balanceModel.currentValue = balanceModel.previousDayValue * accountTransaction[0].balanceChange
+                        balanceModel.currentValue = balanceModel.previousDayValue * accountTransaction[0].currentBalance
                         balanceModel.previousDayValue = 0
                     } else {
                         balanceModel.previousDayValue = balanceModel.previousDayValue * account.currentBalance
