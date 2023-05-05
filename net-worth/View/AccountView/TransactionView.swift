@@ -72,7 +72,7 @@ struct TransactionsView: View {
                                             await accountViewModel.getAccount(id: account.id!)
                                         }
                                     } else if(i == accountViewModel.accountTransactionList.count - 1) {
-                                        var account = accountViewModel.account
+                                        let account = accountViewModel.account
                                         let accountTransactionID = accountViewModel.accountTransactionList[i].id!
                                         var currentLastTransaction = accountViewModel.accountTransactionList[i - 1]
                                         currentLastTransaction.balanceChange = currentLastTransaction.currentBalance
@@ -84,7 +84,7 @@ struct TransactionsView: View {
                                             await accountViewModel.getAccount(id: account.id!)
                                         }
                                     } else {
-                                        var account = accountViewModel.account
+                                        let account = accountViewModel.account
                                         let accountTransactionID = accountViewModel.accountTransactionList[i].id!
                                         var currentLastTransaction = accountViewModel.accountTransactionList[i - 1]
                                         var currentFirstTransaction = accountViewModel.accountTransactionList[i + 1]
