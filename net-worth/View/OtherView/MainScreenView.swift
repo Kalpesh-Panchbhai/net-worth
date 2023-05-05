@@ -28,11 +28,6 @@ struct MainScreenView: View {
                             Image(systemName: "indianrupeesign.circle.fill")
                             Text("Incomes")
                         }.tag("income_view")
-                    UpdateView()
-                        .tabItem{
-                            Image(systemName: "bell.badge.fill")
-                            Text("Updates")
-                        }.tag("update")
                     SettingsView()
                         .tabItem{
                             Image(systemName: "slider.horizontal.3")
