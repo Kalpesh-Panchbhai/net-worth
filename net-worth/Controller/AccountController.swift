@@ -296,7 +296,8 @@ class AccountController {
                     return AccountTransaction(id: doc.documentID,
                                               timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
                                               balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0,
-                                              currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0)
+                                              currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0,
+                                              paid: doc[ConstantUtils.accountTransactionKeyPaid] as? Bool ?? true)
                 }
             
             return accountTransactionList
@@ -313,7 +314,8 @@ class AccountController {
                 return AccountTransaction(id: doc.documentID,
                                           timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
                                           balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0,
-                                          currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0)
+                                          currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0,
+                                          paid: doc[ConstantUtils.accountTransactionKeyPaid] as? Bool ?? true)
             }
         
         return accountTransactionList
@@ -346,7 +348,8 @@ class AccountController {
                 return AccountTransaction(id: doc.documentID,
                                           timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
                                           balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0,
-                                          currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0)
+                                          currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0,
+                                          paid: doc[ConstantUtils.accountTransactionKeyPaid] as? Bool ?? true)
             }
         
         return accountTransactionList
@@ -357,6 +360,7 @@ class AccountController {
         accountTransactionList = try await getAccountCollection()
             .document(id)
             .collection(ConstantUtils.accountTransactionCollectionName)
+            .whereField(ConstantUtils.accountTransactionKeyPaid, isEqualTo: true)
             .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
             .limit(to: 2)
             .getDocuments()
@@ -365,7 +369,8 @@ class AccountController {
                 return AccountTransaction(id: doc.documentID,
                                           timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
                                           balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0,
-                                          currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0)
+                                          currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0,
+                                          paid: doc[ConstantUtils.accountTransactionKeyPaid] as? Bool ?? true)
             }
         
         return accountTransactionList

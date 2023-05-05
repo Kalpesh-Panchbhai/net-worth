@@ -36,14 +36,16 @@ struct TransactionsView: View {
                                     Text("\(accountViewModel.accountTransactionList[i].timestamp.getTimeAndFormat())")
                                         .font(.system(size: 12))
                                         .foregroundColor(.white)
-                                    if(accountViewModel.accountTransactionList[i].paid) {
-                                        Text("Paid")
-                                            .font(.system(size: 12))
-                                            .foregroundColor(.green)
-                                    } else {
-                                        Text("Not Paid")
-                                            .font(.system(size: 12))
-                                            .foregroundColor(.red)
+                                    if(accountViewModel.account.loanType.elementsEqual("Consumer")) {
+                                        if(accountViewModel.accountTransactionList[i].paid) {
+                                            Text("Paid")
+                                                .font(.system(size: 12))
+                                                .foregroundColor(.green)
+                                        } else {
+                                            Text("Not Paid")
+                                                .font(.system(size: 12))
+                                                .foregroundColor(.red)
+                                        }
                                     }
                                 }
                             }
