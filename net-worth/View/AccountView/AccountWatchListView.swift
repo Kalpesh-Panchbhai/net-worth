@@ -19,6 +19,9 @@ struct AccountWatchListView: View {
                 List {
                     ForEach(watchViewModel.watchList, id: \.self, content: { watch in
                         Text(watch.accountName)
+                            .contextMenu {
+                                Label(watch.id!, systemImage: "info.square")
+                            }
                     })
                 }
             }
