@@ -37,7 +37,7 @@ class ChartViewModel: ObservableObject {
             if(!range.elementsEqual("All")) {
                 startDate = startDate.addingTimeInterval(-86400)
                 for account in accountViewModel.accountTransactionLastTransactionBelowRange {
-                    list.updateValue(account.first?.balanceChange ?? 0.0, forKey: accountUniqueIndex)
+                    list.updateValue(account.first?.currentBalance ?? 0.0, forKey: accountUniqueIndex)
                     accountUniqueIndex+=1
                 }
                 var totalAmountForEachDate = 0.0
@@ -55,7 +55,7 @@ class ChartViewModel: ObservableObject {
                     })) {
                         list.updateValue(account.filter({ value in
                             value.timestamp.removeTimeStamp() == startDate.removeTimeStamp()
-                        }).first!.balanceChange, forKey: accountUniqueIndex)
+                        }).first!.currentBalance, forKey: accountUniqueIndex)
                     }
                     accountUniqueIndex+=1
                 }
