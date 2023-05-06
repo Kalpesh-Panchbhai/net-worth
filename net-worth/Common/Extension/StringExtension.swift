@@ -20,7 +20,7 @@ extension String {
     
     func toDate() -> Date {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyddMMHHmmss"
+        dateFormatter.dateFormat = "yyyyMMddHHmmss"
         return dateFormatter.date(from: self)!
     }
 }

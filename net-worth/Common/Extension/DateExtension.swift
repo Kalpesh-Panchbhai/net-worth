@@ -16,6 +16,12 @@ extension Date {
         return formatter.string(from: self)
     }
     
+    func formatImportExportTimeStamp() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMddHHmmss"
+        return dateFormatter.string(from: self)
+    }
+    
     func getDateAndFormat() -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium

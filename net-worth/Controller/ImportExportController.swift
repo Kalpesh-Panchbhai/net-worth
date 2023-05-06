@@ -27,7 +27,7 @@ class ImportExportController {
                 at: documentDirectory,
                 includingPropertiesForKeys: nil
             )
-        
+            
             let backupList = directoryContents.filter {
                 $0.lastPathComponent.starts(with: "Backup_")
             }
@@ -41,8 +41,25 @@ class ImportExportController {
         }
         
         return [Date]()
-
+        
     }
+    
+    public func importLocal(date: Date) {
+        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        let pathWithFileName = documentDirectory!.appendingPathComponent("Backup_" + date.formatImportExportTimeStamp())
+        
+        var data = Data()
+        do {
+            let jsonString = try String(contentsOf: pathWithFileName, encoding: .utf8)
+            if let dataFromJsonString = jsonString.data(using: .utf8) {
+                data = try JSONDecoder().decode(Data.self,
+                                                            from: dataFromJsonString)
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
     
     public func exportLocal() async {
         await exportIncomeTag()
@@ -74,7 +91,7 @@ class ImportExportController {
     private func getCurrentDateTimeStamp() -> String {
         let date = Date.now
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyddMMHHmmss"
+        dateFormatter.dateFormat = "yyyyMMddHHmmss"
         return dateFormatter.string(from: date)
     }
     

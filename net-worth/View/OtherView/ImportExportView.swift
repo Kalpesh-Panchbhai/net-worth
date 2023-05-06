@@ -17,15 +17,24 @@ struct ImportExportView: View {
         NavigationView {
             List {
                 ForEach(0..<importExportViewModel.backupList.count, id: \.self, content: { i in
-                    if(i == 0) {
-                        HStack {
+                    HStack {
+                        if(i == 0) {
+                            
                             Text(importExportViewModel.backupList[i].getDateAndFormat() + " at " + importExportViewModel.backupList[i].getTimeAndFormat())
                             Spacer()
                             Text("Latest")
                                 .foregroundColor(.green)
+                        } else {
+                            Text(importExportViewModel.backupList[i].getDateAndFormat() + " at " + importExportViewModel.backupList[i].getTimeAndFormat())
+                            
                         }
-                    } else {
-                        Text(importExportViewModel.backupList[i].getDateAndFormat() + " at " + importExportViewModel.backupList[i].getTimeAndFormat())
+                    }
+                    .contextMenu {
+                        Button(action: {
+                            importExportController.importLocal(date: importExportViewModel.backupList[i])
+                        }, label: {
+                            Text("Import")
+                        })
                     }
                 })
             }
