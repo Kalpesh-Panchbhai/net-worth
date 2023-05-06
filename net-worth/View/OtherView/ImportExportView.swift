@@ -31,7 +31,10 @@ struct ImportExportView: View {
                     }
                     .contextMenu {
                         Button(action: {
-                            importExportController.importLocal(date: importExportViewModel.backupList[i])
+                            let date = importExportViewModel.backupList[i]
+                            Task.init {
+                                await importExportController.importLocal(date: date)
+                            }
                         }, label: {
                             Text("Import")
                         })

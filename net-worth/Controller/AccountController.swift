@@ -24,7 +24,7 @@ class AccountController {
         do {
             let accountID = try getAccountCollection()
                 .addDocument(from: newAccount).documentID
-            try await addTransaction(accountID: accountID, account: newAccount, timestamp: accountOpenedDate, operation: "New")
+            try await addTransaction(accountID: accountID, account: newAccount, timestamp: accountOpenedDate)
             return accountID
         } catch {
             print(error)
@@ -102,32 +102,76 @@ class AccountController {
         return accountList
     }
     
-    public func addTransaction(accountID: String, account: Account, timestamp: Date, operation: String) async throws {
+    public func addAccount(newAccount: Account) async -> String {
+        do {
+            let accountID = try getAccountCollection()
+                .addDocument(from: newAccount).documentID
+            return accountID
+        } catch {
+            print(error)
+        }
+        return ""
+    }
+    
+    public func addTransaction(accountID: String, account: Account, timestamp: Date) async throws {
+        let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: account.currentBalance, currentBalance: account.currentBalance)
         
-        if(operation.elementsEqual("New")) {
-            let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: account.currentBalance, currentBalance: account.currentBalance)
+        do {
+            let documentID = try getAccountCollection()
+                .document(accountID)
+                .collection(ConstantUtils.accountTransactionCollectionName)
+                .addDocument(from: newTransaction).documentID
             
-            do {
-                let documentID = try getAccountCollection()
-                    .document(accountID)
-                    .collection(ConstantUtils.accountTransactionCollectionName)
-                    .addDocument(from: newTransaction).documentID
+            print("New Account transaction added : " + documentID)
+        } catch {
+            print(error)
+        }
+    }
+    
+    public func addTransaction(accountID: String, accountTransaction: AccountTransaction) async throws { 
+        do {
+            let documentID = try getAccountCollection()
+                .document(accountID)
+                .collection(ConstantUtils.accountTransactionCollectionName)
+                .addDocument(from: accountTransaction).documentID
+            
+            print("New Account transaction added : " + documentID)
+        } catch {
+            print(error)
+        }
+    }
+    
+    public func addTransaction(accountID: String, account: Account, timestamp: Date, operation: String) async throws {
+        let accountTransactionsList = try await getAccountTransactionList(id: accountID)
+        if(accountTransactionsList.count > 0) {
+            if(accountTransactionsList.last!.timestamp > timestamp) {
+                // Transaction Start
+                var start = accountTransactionsList.last!
+                start.balanceChange = start.currentBalance - account.currentBalance
                 
-                print("New Account transaction added : " + documentID)
-            } catch {
-                print(error)
-            }
-        } else {
-            let accountTransactionsList = try await getAccountTransactionList(id: accountID)
-            if(accountTransactionsList.count > 0) {
-                if(accountTransactionsList.last!.timestamp > timestamp) {
-                    // Transaction Start
-                    var start = accountTransactionsList.last!
-                    start.balanceChange = start.currentBalance - account.currentBalance
+                updateAccountTransaction(accountTransaction: start, accountID: accountID)
+                
+                let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: account.currentBalance, currentBalance: account.currentBalance)
+                
+                do {
+                    let documentID = try getAccountCollection()
+                        .document(accountID)
+                        .collection(ConstantUtils.accountTransactionCollectionName)
+                        .addDocument(from: newTransaction).documentID
                     
-                    updateAccountTransaction(accountTransaction: start, accountID: accountID)
-                    
-                    let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: account.currentBalance, currentBalance: account.currentBalance)
+                    print("New Account transaction added : " + documentID)
+                } catch {
+                    print(error)
+                }
+                
+            } else if(accountTransactionsList.first!.timestamp < timestamp) {
+                // Transaction Last
+                if(operation.elementsEqual("Add")) {
+                    let currentBalance = account.currentBalance + accountTransactionsList.first!.currentBalance
+                    let balanceChange = currentBalance - accountTransactionsList.first!.currentBalance
+                    var updatedAccount = account
+                    updatedAccount.currentBalance = currentBalance
+                    let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: balanceChange, currentBalance: currentBalance)
                     
                     do {
                         let documentID = try getAccountCollection()
@@ -139,56 +183,9 @@ class AccountController {
                     } catch {
                         print(error)
                     }
-                    
-                } else if(accountTransactionsList.first!.timestamp < timestamp) {
-                    // Transaction Last
-                    if(operation.elementsEqual("Add")) {
-                        let currentBalance = account.currentBalance + accountTransactionsList.first!.currentBalance
-                        let balanceChange = currentBalance - accountTransactionsList.first!.currentBalance
-                        var updatedAccount = account
-                        updatedAccount.currentBalance = currentBalance
-                        let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: balanceChange, currentBalance: currentBalance)
-                        
-                        do {
-                            let documentID = try getAccountCollection()
-                                .document(accountID)
-                                .collection(ConstantUtils.accountTransactionCollectionName)
-                                .addDocument(from: newTransaction).documentID
-                            
-                            print("New Account transaction added : " + documentID)
-                        } catch {
-                            print(error)
-                        }
-                        updateAccount(account: updatedAccount)
-                    } else {
-                        let balanceChange = account.currentBalance - accountTransactionsList.first!.currentBalance
-                        let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: balanceChange, currentBalance: account.currentBalance)
-                        
-                        do {
-                            let documentID = try getAccountCollection()
-                                .document(accountID)
-                                .collection(ConstantUtils.accountTransactionCollectionName)
-                                .addDocument(from: newTransaction).documentID
-                            
-                            print("New Account transaction added : " + documentID)
-                        } catch {
-                            print(error)
-                        }
-                        updateAccount(account: account)
-                    }
+                    updateAccount(account: updatedAccount)
                 } else {
-                    var first = AccountTransaction(timestamp: Date(), balanceChange: 0.0, currentBalance: 0.0)
-                    var last = AccountTransaction(timestamp: Date(), balanceChange: 0.0, currentBalance: 0.0)
-                    for i in 0..<accountTransactionsList.count - 1 {
-                        if(accountTransactionsList[i].timestamp > timestamp && accountTransactionsList[i + 1].timestamp < timestamp) {
-                            first = accountTransactionsList[i]
-                            last = accountTransactionsList[i + 1]
-                            break
-                        }
-                    }
-                    first.balanceChange = first.currentBalance - account.currentBalance
-                    updateAccountTransaction(accountTransaction: first, accountID: accountID)
-                    let balanceChange = account.currentBalance - last.currentBalance
+                    let balanceChange = account.currentBalance - accountTransactionsList.first!.currentBalance
                     let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: balanceChange, currentBalance: account.currentBalance)
                     
                     do {
@@ -201,6 +198,32 @@ class AccountController {
                     } catch {
                         print(error)
                     }
+                    updateAccount(account: account)
+                }
+            } else {
+                var first = AccountTransaction(timestamp: Date(), balanceChange: 0.0, currentBalance: 0.0)
+                var last = AccountTransaction(timestamp: Date(), balanceChange: 0.0, currentBalance: 0.0)
+                for i in 0..<accountTransactionsList.count - 1 {
+                    if(accountTransactionsList[i].timestamp > timestamp && accountTransactionsList[i + 1].timestamp < timestamp) {
+                        first = accountTransactionsList[i]
+                        last = accountTransactionsList[i + 1]
+                        break
+                    }
+                }
+                first.balanceChange = first.currentBalance - account.currentBalance
+                updateAccountTransaction(accountTransaction: first, accountID: accountID)
+                let balanceChange = account.currentBalance - last.currentBalance
+                let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: balanceChange, currentBalance: account.currentBalance)
+                
+                do {
+                    let documentID = try getAccountCollection()
+                        .document(accountID)
+                        .collection(ConstantUtils.accountTransactionCollectionName)
+                        .addDocument(from: newTransaction).documentID
+                    
+                    print("New Account transaction added : " + documentID)
+                } catch {
+                    print(error)
                 }
             }
         }
