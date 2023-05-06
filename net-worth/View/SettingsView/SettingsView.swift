@@ -92,6 +92,13 @@ struct SettingsView: View {
                         }
                     }
                 }.foregroundColor(.red)
+                
+                NavigationLink(destination: {
+                    ImportExportView()
+                }, label: {
+                    Label("Import and Export", systemImage: "tag.square")
+                })
+                
                 Button(action: {
                     isPresentingLogoutConfirm.toggle()
                 }, label: {
