@@ -213,7 +213,7 @@ class AccountController {
         calendarDate.day = emiDate
         while(currentBalance<0.0) {
             if((currentBalance + monthlyEmiAmount) > 0) {
-                monthlyEmiAmount = currentBalance
+                monthlyEmiAmount = currentBalance * -1.0
                 currentBalance = 0.0
             } else {
                 currentBalance = currentBalance + monthlyEmiAmount

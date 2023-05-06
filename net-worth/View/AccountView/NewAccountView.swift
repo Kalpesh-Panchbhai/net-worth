@@ -137,7 +137,9 @@ struct NewAccountView: View {
                             watchController.addAccountToWatchList(watch: watch)
                             await accountViewModel.getAccountList()
                             await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                            accountController.addLoanAccountEMITransaction(account: newAccount, emiDate: loanPaymentDate, accountOpenedDate: accountOpenedDate, monthlyEmiAmount: monthlyEmi)
+                            if(accountType.elementsEqual("Loan") && loanType.elementsEqual("Consumer")) {
+                                accountController.addLoanAccountEMITransaction(account: newAccount, emiDate: loanPaymentDate, accountOpenedDate: accountOpenedDate, monthlyEmiAmount: monthlyEmi)
+                            }
                         }
                         dismiss()
                     }, label: {
