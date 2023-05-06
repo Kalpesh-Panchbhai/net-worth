@@ -116,12 +116,12 @@ class ImportExportController {
             let accountList = try await accountController.getAccountList()
             var accountTransactionList = [String: [AccountTransaction]]()
             for account in accountList {
-                var accountTransactions = try await accountController.getAccountTransactionList(id: account.id!)
+                let accountTransactions = try await accountController.getAccountTransactionList(id: account.id!)
                 accountTransactionList.updateValue(accountTransactions, forKey: account.id!)
             }
             
             data.account = accountList.map { account in
-                var accountTransaction = accountTransactionList.filter {
+                let accountTransaction = accountTransactionList.filter {
                     $0.key.elementsEqual(account.id!)
                 }.first?.value.map { accountTransaction in
                     return AccountTransactionData(timestamp: accountTransaction.timestamp, balanceChange: accountTransaction.balanceChange, currentBalance: accountTransaction.currentBalance, paid: accountTransaction.paid)
@@ -138,7 +138,7 @@ class ImportExportController {
             let watchList = try await watchController.getAllWatchList()
             let accountList = try await accountController.getAccountList()
             data.watch = watchList.map { watch in
-                var accounts = watch.accountID.map { accountID in
+                let accounts = watch.accountID.map { accountID in
                     accountList.filter { account in
                         account.id!.elementsEqual(accountID)
                     }.first!.accountName
