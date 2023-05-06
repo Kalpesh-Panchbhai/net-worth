@@ -44,7 +44,7 @@ class ImportExportController {
         
     }
     
-    public func importLocal(date: Date) async {
+    public func importLocal(date: Date, importType: String) async {
         let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         let pathWithFileName = documentDirectory!.appendingPathComponent("Backup_" + date.formatImportExportTimeStamp())
         
@@ -57,32 +57,27 @@ class ImportExportController {
         } catch {
             print(error)
         }
-        
-        importIncomeTag()
-        importIncomeType()
-        await importIncome()
-        do {
-            try await Task.sleep(for: Duration.seconds(5))
-        } catch {
-            print(error)
+        if(importType.elementsEqual("Account")) {
+            await importAccount()
+        } else if(importType.elementsEqual("WatchList")) {
+            await importWatch()
+        } else if(importType.elementsEqual("Tag")) {
+            await importIncomeTag()
+        } else if(importType.elementsEqual("Type")) {
+            await importIncomeType()
+        } else if(importType.elementsEqual("Income")) {
+            await importIncome()
         }
-        await importAccount()
-        do {
-            try await Task.sleep(for: Duration.seconds(5))
-        } catch {
-            print(error)
-        }
-        await importWatch()
     }
     
-    private func importIncomeTag() {
+    private func importIncomeTag() async {
         for tag in data.incomeTag {
             let incomeTag = IncomeTag(name: tag.name, isdefault: tag.isdefault)
             incomeController.addIncomeTag(tag: incomeTag)
         }
     }
     
-    private func importIncomeType() {
+    private func importIncomeType() async {
         for type in data.incomeType {
             let incomeType = IncomeType(name: type.name, isdefault: type.isdefault)
             incomeController.addIncomeType(type: incomeType)
@@ -98,7 +93,7 @@ class ImportExportController {
     private func importAccount() async {
         for account in data.account {
             let newAccount = Account(accountType: account.accountType, loanType: account.loanType, accountName: account.accountName, currentBalance: account.currentBalance, paymentReminder: account.paymentReminder, paymentDate: account.paymentDate, currency: account.currency, active: account.active)
-            var accountTransaction = account.accountTransaction.sorted(by: {
+            let accountTransaction = account.accountTransaction.sorted(by: {
                 $0.timestamp < $1.timestamp
             })
             let accountID = await accountController.addAccount(newAccount: newAccount)
@@ -233,6 +228,18 @@ class ImportExportController {
                 }
                 return WatchData(accountName: watch.accountName, accountID: accounts)
             }
+        } catch {
+            print(error)
+        }
+    }
+    
+    func deleteData() async {
+        do {
+            try await AccountController().deleteAccounts()
+            IncomeController().deleteIncomes()
+            try await WatchController().deleteWatchLists()
+            IncomeController().deleteIncomeTags()
+            IncomeController().deleteIncomeTypes()
         } catch {
             print(error)
         }

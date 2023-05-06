@@ -33,10 +33,46 @@ struct ImportExportView: View {
                         Button(action: {
                             let date = importExportViewModel.backupList[i]
                             Task.init {
-                                await importExportController.importLocal(date: date)
+                                await importExportController.importLocal(date: date, importType: "Account")
                             }
                         }, label: {
-                            Text("Import")
+                            Text("Import Accounts")
+                        })
+                        
+                        Button(action: {
+                            let date = importExportViewModel.backupList[i]
+                            Task.init {
+                                await importExportController.importLocal(date: date, importType: "Income")
+                            }
+                        }, label: {
+                            Text("Import Incomes")
+                        })
+                        
+                        Button(action: {
+                            let date = importExportViewModel.backupList[i]
+                            Task.init {
+                                await importExportController.importLocal(date: date, importType: "Tag")
+                            }
+                        }, label: {
+                            Text("Import Income tags")
+                        })
+                        
+                        Button(action: {
+                            let date = importExportViewModel.backupList[i]
+                            Task.init {
+                                await importExportController.importLocal(date: date, importType: "Type")
+                            }
+                        }, label: {
+                            Text("Import Income types")
+                        })
+                        
+                        Button(action: {
+                            let date = importExportViewModel.backupList[i]
+                            Task.init {
+                                await importExportController.importLocal(date: date, importType: "WatchList")
+                            }
+                        }, label: {
+                            Text("Import Watchlists")
                         })
                     }
                 })
