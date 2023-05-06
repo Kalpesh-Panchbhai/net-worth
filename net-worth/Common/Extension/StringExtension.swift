@@ -17,4 +17,10 @@ extension String {
     func toDouble() -> Double? {
         return NumberFormatter().number(from: self)?.doubleValue
     }
+    
+    func toDate() -> Date {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyddMMHHmmss"
+        return dateFormatter.date(from: self)!
+    }
 }

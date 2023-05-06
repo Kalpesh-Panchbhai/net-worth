@@ -15,7 +15,7 @@ class ImportExportController {
     
     private var data = Data()
     
-    public func getAllLocalBackup() -> [String] {
+    public func getAllLocalBackup() -> [Date] {
         do {
             let documentDirectory = try FileManager.default.url(
                 for: .documentDirectory,
@@ -33,14 +33,14 @@ class ImportExportController {
             }
             
             return backupList.map {
-                $0.lastPathComponent
-            }
+                $0.lastPathComponent.replacingOccurrences(of: "Backup_", with: "").toDate()
+            }.sorted().reversed()
             
         } catch {
             print(error)
         }
         
-        return [String]()
+        return [Date]()
 
     }
     
@@ -73,9 +73,9 @@ class ImportExportController {
     
     private func getCurrentDateTimeStamp() -> String {
         let date = Date.now
-        let dateFormmater = DateFormatter()
-        dateFormmater.dateFormat = "yyyyddMMHHmmss"
-        return dateFormmater.string(from: date)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyddMMHHmmss"
+        return dateFormatter.string(from: date)
     }
     
     private func exportIncomeTag() async {

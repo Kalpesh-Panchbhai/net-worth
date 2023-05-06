@@ -16,8 +16,17 @@ struct ImportExportView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(importExportViewModel.backupList, id: \.self, content: { item in
-                    Text(item)
+                ForEach(0..<importExportViewModel.backupList.count, id: \.self, content: { i in
+                    if(i == 0) {
+                        HStack {
+                            Text(importExportViewModel.backupList[i].getDateAndFormat() + " at " + importExportViewModel.backupList[i].getTimeAndFormat())
+                            Spacer()
+                            Text("Latest")
+                                .foregroundColor(.green)
+                        }
+                    } else {
+                        Text(importExportViewModel.backupList[i].getDateAndFormat() + " at " + importExportViewModel.backupList[i].getTimeAndFormat())
+                    }
                 })
             }
         }
