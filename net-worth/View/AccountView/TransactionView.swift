@@ -114,9 +114,9 @@ struct TransactionsView: View {
                                     Label("Delete", systemImage: "trash")
                                 })
                             } else if(accountViewModel.account.loanType.elementsEqual("Consumer")) {
-                                if( i == (accountViewModel.accountTransactionList.count - accountViewModel.accountTransactionList.filter { item in
+                                if((i == (accountViewModel.accountTransactionList.count - accountViewModel.accountTransactionList.filter { item in
                                     item.paid
-                                }.count) - 1) {
+                                }.count) - 1) && accountViewModel.accountTransactionList[i].timestamp<=Date.now) {
                                     Button(action: {
                                         var account = accountViewModel.account
                                         var accountTransaction = accountViewModel.accountTransactionList[i]
