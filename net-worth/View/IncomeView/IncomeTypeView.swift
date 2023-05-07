@@ -61,5 +61,6 @@ struct IncomeTypeView: View {
                 await incomeViewModel.getIncomeTypeList()
             }
         }
+        .navigationTitle("Income Type")
     }
 }

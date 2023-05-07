@@ -104,5 +104,6 @@ struct ImportExportView: View {
                 })
             })
         }
+        .navigationTitle("Import and Export")
     }
 }
