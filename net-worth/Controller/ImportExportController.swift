@@ -233,6 +233,28 @@ class ImportExportController {
         }
     }
     
+    public func deleteBackup(backupDate: Date) {
+        do {
+            let documentDirectory = try FileManager.default.url(
+                for: .documentDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+            )
+            let directoryContents = try FileManager.default.contentsOfDirectory(
+                at: documentDirectory,
+                includingPropertiesForKeys: nil
+            )
+
+            var backupList = directoryContents.filter {
+                $0.lastPathComponent.elementsEqual("Backup_" + backupDate.formatImportExportTimeStamp())
+            }
+            try FileManager.default.removeItem(at: backupList[0])
+        } catch {
+            print(error)
+        }
+    }
+    
     func deleteData() async {
         do {
             try await AccountController().deleteAccounts()

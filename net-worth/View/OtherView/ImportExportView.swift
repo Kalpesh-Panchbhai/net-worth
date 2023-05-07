@@ -30,6 +30,15 @@ struct ImportExportView: View {
                         }
                     }
                     .contextMenu {
+                        Button(role: .destructive, action: {
+                            importExportController.deleteBackup(backupDate: importExportViewModel.backupList[i])
+                            Task.init {
+                                await importExportViewModel.getAllBackup()
+                            }
+                        }, label: {
+                            Label("Delete", systemImage: "trash")
+                        })
+                        
                         Button(action: {
                             let date = importExportViewModel.backupList[i]
                             Task.init {
