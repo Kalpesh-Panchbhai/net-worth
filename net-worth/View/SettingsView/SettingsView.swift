@@ -139,13 +139,15 @@ struct SettingsView: View {
     }
     
     var defaultCurrencyPicker: some View {
-        Picker("Default Currency", selection: $currenySelected) {
+        Picker(selection: $currenySelected, content: {
             SearchBar(text: $searchTerm, placeholder: "Search currency")
             ForEach(filterCurrencyList, id: \.self) { (data) in
                 defaultCurrencyPickerRightVersionView(currency: data)
                     .tag(data)
             }
-        }
+        }, label: {
+            Label("", systemImage: "indianrupeesign.square")
+        })
         .onChange(of: searchTerm) { (data) in
             if(!data.isEmpty) {
                 filterCurrencyList = currencyList.filter({
