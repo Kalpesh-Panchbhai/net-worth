@@ -11,6 +11,8 @@ struct IncomeTagView: View {
     
     @ObservedObject var incomeViewModel = IncomeViewModel()
     
+    @State var addNewIncomeTagOpenView = false
+    
     private var incomeController = IncomeController()
     
     var body: some View {
@@ -42,6 +44,18 @@ struct IncomeTagView: View {
                 }
             }
         }
+        .toolbar {
+            ToolbarItem {
+                Button(action: {
+                    self.addNewIncomeTagOpenView.toggle()
+                }, label: {
+                    Label("Add Income Tag", systemImage: "plus")
+                })
+            }
+        }
+        .sheet(isPresented: $addNewIncomeTagOpenView, content: {
+            NewIncomeTagView(incomeViewModel: incomeViewModel)
+        })
         .onAppear {
             Task.init {
                 await incomeViewModel.getIncomeTagList()
