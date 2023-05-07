@@ -100,7 +100,7 @@ struct ImportExportView: View {
                         await importExportViewModel.getAllBackup()
                     }
                 }, label: {
-                    Label("Backup", systemImage: "plus")
+                    Label("Backup", systemImage: "tray.and.arrow.down.fill")
                 })
             })
         }

@@ -80,6 +80,12 @@ struct SettingsView: View {
                     Label("Income Tag", systemImage: "tag.square")
                 })
                 
+                NavigationLink(destination: {
+                    ImportExportView()
+                }, label: {
+                    Label("Import and Export", systemImage: "folder")
+                })
+                
                 Button(action: {
                     isPresentingDataAndAccountDeletionConfirmation.toggle()
                 }, label: {
@@ -92,12 +98,6 @@ struct SettingsView: View {
                         }
                     }
                 }.foregroundColor(.red)
-                
-                NavigationLink(destination: {
-                    ImportExportView()
-                }, label: {
-                    Label("Import and Export", systemImage: "tag.square")
-                })
                 
                 Button(action: {
                     isPresentingLogoutConfirm.toggle()
