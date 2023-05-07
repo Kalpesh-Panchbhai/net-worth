@@ -246,7 +246,7 @@ class ImportExportController {
                 includingPropertiesForKeys: nil
             )
 
-            var backupList = directoryContents.filter {
+            let backupList = directoryContents.filter {
                 $0.lastPathComponent.elementsEqual("Backup_" + backupDate.formatImportExportTimeStamp())
             }
             try FileManager.default.removeItem(at: backupList[0])
