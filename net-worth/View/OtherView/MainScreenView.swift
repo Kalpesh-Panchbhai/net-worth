@@ -51,6 +51,7 @@ struct MainScreenView: View {
                             }
                             Text("Incomes")
                         }.tag(2)
+                        .badge(incomeViewModel.incomeList.count)
                     SettingsView()
                         .tabItem{
                             if(tabViewSelection==3) {
