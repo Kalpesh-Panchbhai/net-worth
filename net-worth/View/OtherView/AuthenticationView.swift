@@ -53,7 +53,6 @@ struct AuthenticationView: View {
         }
     }
     
-    
     private func authenticate() {
         let context = LAContext()
         var error: NSError?
@@ -68,10 +67,4 @@ struct AuthenticationView: View {
         }
     }
     
-}
-
-struct AuthenticationView_Previews: PreviewProvider {
-    static var previews: some View {
-        AuthenticationView()
-    }
 }
