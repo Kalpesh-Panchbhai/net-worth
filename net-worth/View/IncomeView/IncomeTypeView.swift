@@ -16,30 +16,42 @@ struct IncomeTypeView: View {
     private var incomeController = IncomeController()
     
     var body: some View {
-        List {
-            ForEach(incomeViewModel.incomeTypeList, id: \.self) { item in
-                VStack(alignment: .leading) {
-                    Text(item.name)
-                    if(item.isdefault) {
-                        Text("DEFAULT")
-                            .font(.system(size: 10))
-                            .foregroundColor(.gray)
+        NavigationView {
+            if(incomeViewModel.incomeTypeList.count == 0) {
+                ZStack {
+                    HStack {
+                        Text("Click on ")
+                        Image(systemName: "plus")
+                        Text(" Icon to add new Income Type.")
                     }
                 }
-                .contextMenu {
-                    if(!item.isdefault) {
-                        Button(action: {
-                            incomeController.makeOtherIncomeTypeNonDefault(documentID: item.id!)
-                            var updatedIncomeType = item
-                            updatedIncomeType.isdefault = true
-                            incomeController.updateIncomeType(type: updatedIncomeType)
-                            Task.init {
-                                incomeViewModel.incomeTypeList = [IncomeType]()
-                                await incomeViewModel.getIncomeTypeList()
+            } else {
+                List {
+                    ForEach(incomeViewModel.incomeTypeList, id: \.self) { item in
+                        VStack(alignment: .leading) {
+                            Text(item.name)
+                            if(item.isdefault) {
+                                Text("DEFAULT")
+                                    .font(.system(size: 10))
+                                    .foregroundColor(.gray)
                             }
-                        }, label: {
-                            Text("Make default")
-                        })
+                        }
+                        .contextMenu {
+                            if(!item.isdefault) {
+                                Button(action: {
+                                    incomeController.makeOtherIncomeTypeNonDefault(documentID: item.id!)
+                                    var updatedIncomeType = item
+                                    updatedIncomeType.isdefault = true
+                                    incomeController.updateIncomeType(type: updatedIncomeType)
+                                    Task.init {
+                                        incomeViewModel.incomeTypeList = [IncomeType]()
+                                        await incomeViewModel.getIncomeTypeList()
+                                    }
+                                }, label: {
+                                    Text("Make default")
+                                })
+                            }
+                        }
                     }
                 }
             }
