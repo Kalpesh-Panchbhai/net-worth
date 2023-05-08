@@ -29,7 +29,7 @@ struct AddAccountWatchListView: View {
                                         .font(.system(size: 15))
                                 }
                                 ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
-                                    AddAccountWatchView(account: account, watch: $watch, isAdded: watch.accountID.contains(account.id!))
+                                    AddAccountWatchView(account: account, watch: $watch, isAdded: watch.accountID.contains(account.id!), accountViewModel: accountViewModel)
                                 }
                             }
                         }
@@ -54,6 +54,8 @@ struct AddAccountWatchView: View {
     @Binding var watch: Watch
     @State var isAdded: Bool
     
+    @ObservedObject var accountViewModel: AccountViewModel
+    
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
@@ -77,6 +79,13 @@ struct AddAccountWatchView: View {
                         .onTapGesture {
                             isAdded.toggle()
                             self.watch.accountID.append(account.id!)
+                            self.watch.accountID.sort(by: { item1, item2 in
+                                accountViewModel.accountList.filter { account1 in
+                                    account1.id!.elementsEqual(item1)
+                                }.first!.accountName <= accountViewModel.accountList.filter { account2 in
+                                    account2.id!.elementsEqual(item2)
+                                }.first!.accountName
+                            })
                             watchController.addAccountToWatchList(watch: watch)
                         }
                 }

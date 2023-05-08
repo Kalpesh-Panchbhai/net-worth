@@ -128,14 +128,28 @@ struct NewAccountView: View {
                         Task.init {
                             let accountID = await accountController.addAccount(newAccount: newAccount, accountOpenedDate: accountOpenedDate)
                             newAccount.id = accountID
+                            await accountViewModel.getAccountList()
                             if(selectedWatchList.id != "") {
                                 selectedWatchList.accountID.append(accountID)
+                                selectedWatchList.accountID.sort(by: { item1, item2 in
+                                    accountViewModel.accountList.filter { account1 in
+                                        account1.id!.elementsEqual(item1)
+                                    }.first!.accountName <= accountViewModel.accountList.filter { account2 in
+                                        account2.id!.elementsEqual(item2)
+                                    }.first!.accountName
+                                })
                                 watchController.addAccountToWatchList(watch: selectedWatchList)
                             }
                             var watch = try await watchController.getDefaultWatchList()
                             watch.accountID.append(accountID)
+                            watch.accountID.sort(by: { item1, item2 in
+                                accountViewModel.accountList.filter { account1 in
+                                    account1.id!.elementsEqual(item1)
+                                }.first!.accountName <= accountViewModel.accountList.filter { account2 in
+                                    account2.id!.elementsEqual(item2)
+                                }.first!.accountName
+                            })
                             watchController.addAccountToWatchList(watch: watch)
-                            await accountViewModel.getAccountList()
                             await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                             if(accountType.elementsEqual("Loan") && loanType.elementsEqual("Consumer")) {
                                 accountController.addLoanAccountEMITransaction(account: newAccount, emiDate: loanPaymentDate, accountOpenedDate: accountOpenedDate, monthlyEmiAmount: monthlyEmi)
