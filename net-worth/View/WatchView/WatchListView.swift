@@ -23,7 +23,12 @@ struct WatchListView: View {
                     NavigationLink(destination: {
                         SingleWatchListView(watch: watchList)
                     }, label: {
-                        Text(watchList.accountName)
+                        HStack {
+                            Text(watchList.accountName)
+                            Spacer()
+                            Text("\(watchList.accountID.count)")
+                                .font(.system(size: 12))
+                        }
                     })
                     .contextMenu {
                         Label(watchList.id!, systemImage: "info.square")
