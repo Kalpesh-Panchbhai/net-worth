@@ -11,14 +11,15 @@ struct MainScreenView: View {
     
     @State public var tabViewSelection = 0
     
-    @ObservedObject private var accountViewModel = AccountViewModel()
-    @ObservedObject private var watchViewModel = WatchViewModel()
+    @StateObject private var accountViewModel = AccountViewModel()
+    @StateObject private var watchViewModel = WatchViewModel()
+    @StateObject private var incomeViewModel = IncomeViewModel()
     
     var body: some View {
         NavigationStack {
             ZStack {
                 TabView(selection: $tabViewSelection) {
-                    AccountCardList()
+                    AccountCardList(accountViewModel: accountViewModel)
                         .tabItem{
                             if(tabViewSelection==0) {
                                 Image(systemName: "star.circle.fill")
@@ -29,7 +30,7 @@ struct MainScreenView: View {
                             Text("Accounts")
                         }.tag(0)
                         .badge(accountViewModel.accountList.count)
-                    WatchListView()
+                    WatchListView(watchViewModel: watchViewModel)
                         .tabItem {
                             if(tabViewSelection==1) {
                                 Image(systemName: "list.bullet.circle.fill")
@@ -40,7 +41,7 @@ struct MainScreenView: View {
                             Text("Watch Lists")
                         }.tag(1)
                         .badge(watchViewModel.watchList.count)
-                    IncomeView()
+                    IncomeView(incomeViewModel: incomeViewModel)
                         .tabItem{
                             if(tabViewSelection==2) {
                                 Image(systemName: "indianrupeesign.circle.fill")
@@ -64,7 +65,16 @@ struct MainScreenView: View {
                 .onAppear {
                     Task.init {
                         await accountViewModel.getAccountList()
+                        await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+                        
                         await watchViewModel.getAllWatchList()
+                        
+                        await incomeViewModel.getTotalBalance()
+                        await incomeViewModel.getIncomeList()
+                        await incomeViewModel.getIncomeTypeList()
+                        await incomeViewModel.getIncomeTagList()
+                        await incomeViewModel.getIncomeYearList()
+                        await incomeViewModel.getIncomeFinancialYearList()
                     }
                 }
             }

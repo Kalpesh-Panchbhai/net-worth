@@ -10,7 +10,7 @@ import CoreData
 
 struct IncomeView: View {
     
-    @ObservedObject var incomeViewModel = IncomeViewModel()
+    @StateObject var incomeViewModel: IncomeViewModel
     
     @State var isOpen: Bool = false
     @State var isChartViewOpen: Bool = false
@@ -19,7 +19,7 @@ struct IncomeView: View {
     @State var filterYear = ""
     @State var filterFinancialYear = ""
     
-    private var incomeController = IncomeController()
+    var incomeController = IncomeController()
     
     @State private var showingSelectDefaultCurrencyAlert = false
     
@@ -211,16 +211,6 @@ struct IncomeView: View {
                 NewIncomeView(incomeViewModel: incomeViewModel)
             })
             .navigationTitle("Income")
-        }
-        .onAppear {
-            Task.init {
-                await incomeViewModel.getTotalBalance()
-                await incomeViewModel.getIncomeList()
-                await incomeViewModel.getIncomeTypeList()
-                await incomeViewModel.getIncomeTagList()
-                await incomeViewModel.getIncomeYearList()
-                await incomeViewModel.getIncomeFinancialYearList()
-            }
         }
     }
     

@@ -16,9 +16,9 @@ struct AccountCardList: View {
     @State private var searchText = ""
     @State private var isPresentingAccountDeleteConfirm = false
     
-    @StateObject var accountViewModel = AccountViewModel()
+    @StateObject var accountViewModel: AccountViewModel
     
-    private var accountController = AccountController()
+    var accountController = AccountController()
     
     @State private var deletedAccount = Account()
     

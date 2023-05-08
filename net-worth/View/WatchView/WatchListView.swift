@@ -9,12 +9,12 @@ import SwiftUI
 
 struct WatchListView: View {
     
-    @StateObject var watchViewModel = WatchViewModel()
+    @StateObject var watchViewModel: WatchViewModel
     
     @State private var newWatchListViewOpen = false
     @State private var updateWatchListViewOpen = false
     
-    private var watchController = WatchController()
+    var watchController = WatchController()
     
     var body: some View {
         NavigationView {
@@ -73,28 +73,7 @@ struct WatchListView: View {
             .halfSheet(showSheet: $updateWatchListViewOpen) {
                 UpdateWatchView(watchViewModel: watchViewModel)
             }
-            .onAppear {
-                Task.init {
-                    await watchViewModel.getAllWatchList()
-                }
-            }
             .navigationTitle("Watch List")
-        }
-    }
-    
-    private func deleteIncome(offsets: IndexSet) {
-        var id = ""
-        withAnimation {
-            offsets.map {
-                id = watchViewModel.watchList[$0].id!
-            }.forEach {
-                var watch = Watch()
-                watch.id = id
-                watchController.deleteWatchList(watchList: watch)
-                Task.init {
-                    await watchViewModel.getAllWatchList()
-                }
-            }
         }
     }
 }
