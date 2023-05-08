@@ -33,176 +33,183 @@ struct IncomeView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(incomeViewModel.incomeList, id: \.self) { income in
-                    NavigationLink(destination: {
-                        IncomeDetailView(income: income)
-                    }, label: {
-                        ChildIncomeView(income: income)
-                    })
-                    .contextMenu {
-                        Label(income.id!, systemImage: "info.square")
-                    }
-                }
-                .onDelete(perform: deleteIncome)
-            }
-            .refreshable {
-                if(!filterIncomeType.isEmpty || !filterIncomeTag.isEmpty || !filterYear.isEmpty || !filterFinancialYear.isEmpty) {
-                    Task.init {
-                        await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                        await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+            ZStack {
+                if(incomeViewModel.incomeList.count == 0) {
+                    ZStack {
+                        HStack {
+                            Text("Click on")
+                            Image(systemName: "plus")
+                            Text("Icon to add new Income.")
+                        }
                     }
                 } else {
-                    Task.init {
-                        await incomeViewModel.getTotalBalance()
-                        await incomeViewModel.getIncomeList()
-                    }
-                }
-            }
-            .sheet(isPresented: $isOpen) {
-                NewIncomeView(incomeViewModel: incomeViewModel)
-            }
-            .sheet(isPresented: $isChartViewOpen) {
-                IncomeChartView()
-            }
-            .listStyle(.insetGrouped)
-            .toolbar {
-                if !incomeViewModel.incomeList.isEmpty {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        EditButton()
-                    }
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        if(!filterIncomeType.isEmpty || !filterIncomeTag.isEmpty || !filterYear.isEmpty || !filterFinancialYear.isEmpty) {
-                            Button(action: {
-                                filterIncomeType = ""
-                                filterIncomeTag = ""
-                                filterYear = ""
-                                filterFinancialYear = ""
-                                Task.init {
-                                    await incomeViewModel.getTotalBalance()
-                                    await incomeViewModel.getIncomeList()
-                                }
+                    List {
+                        ForEach(incomeViewModel.incomeList, id: \.self) { income in
+                            NavigationLink(destination: {
+                                IncomeDetailView(income: income)
                             }, label: {
-                                Text("Clear")
+                                ChildIncomeView(income: income)
                             })
+                            .contextMenu {
+                                Label(income.id!, systemImage: "info.square")
+                            }
+                        }
+                        .onDelete(perform: deleteIncome)
+                    }
+                    .refreshable {
+                        if(!filterIncomeType.isEmpty || !filterIncomeTag.isEmpty || !filterYear.isEmpty || !filterFinancialYear.isEmpty) {
+                            Task.init {
+                                await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                            }
+                        } else {
+                            Task.init {
+                                await incomeViewModel.getTotalBalance()
+                                await incomeViewModel.getIncomeList()
+                            }
                         }
                     }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Menu(content: {
-                            Menu(content: {
-                                if(incomeViewModel.incomeTypeList.count > 0) {
-                                    Menu(content: {
-                                        ForEach(incomeViewModel.incomeTypeList, id: \.self) { item in
-                                            Button(action: {
-                                                filterIncomeType = item.name
-                                                Task.init {
-                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                                }
-                                            }, label: {
-                                                Text(item.name)
-                                            })
+                    .sheet(isPresented: $isChartViewOpen) {
+                        IncomeChartView()
+                    }
+                    .listStyle(.insetGrouped)
+                    .toolbar {
+                        if !incomeViewModel.incomeList.isEmpty {
+                            ToolbarItem(placement: .navigationBarLeading) {
+                                EditButton()
+                            }
+                            ToolbarItem(placement: .navigationBarLeading) {
+                                if(!filterIncomeType.isEmpty || !filterIncomeTag.isEmpty || !filterYear.isEmpty || !filterFinancialYear.isEmpty) {
+                                    Button(action: {
+                                        filterIncomeType = ""
+                                        filterIncomeTag = ""
+                                        filterYear = ""
+                                        filterFinancialYear = ""
+                                        Task.init {
+                                            await incomeViewModel.getTotalBalance()
+                                            await incomeViewModel.getIncomeList()
                                         }
                                     }, label: {
-                                        Label("Income Type", systemImage: "tray.and.arrow.down")
+                                        Text("Clear")
                                     })
                                 }
-                                
-                                if(incomeViewModel.incomeTagList.count > 0) {
+                            }
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                Menu(content: {
                                     Menu(content: {
-                                        ForEach(incomeViewModel.incomeTagList, id: \.self) { item in
-                                            Button(action: {
-                                                filterIncomeTag = item.name
-                                                Task.init {
-                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                        if(incomeViewModel.incomeTypeList.count > 0) {
+                                            Menu(content: {
+                                                ForEach(incomeViewModel.incomeTypeList, id: \.self) { item in
+                                                    Button(action: {
+                                                        filterIncomeType = item.name
+                                                        Task.init {
+                                                            await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                        }
+                                                    }, label: {
+                                                        Text(item.name)
+                                                    })
                                                 }
                                             }, label: {
-                                                Text(item.name)
+                                                Label("Income Type", systemImage: "tray.and.arrow.down")
                                             })
                                         }
-                                    }, label: {
-                                        Label("Income Tag", systemImage: "tag.square")
-                                    })
-                                }
-                                
-                                if(incomeViewModel.incomeYearList.count > 0) {
-                                    Menu(content: {
-                                        ForEach(incomeViewModel.incomeYearList, id: \.self) { item in
-                                            Button(action: {
-                                                filterYear = item
-                                                filterFinancialYear = ""
-                                                Task.init {
-                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                        
+                                        if(incomeViewModel.incomeTagList.count > 0) {
+                                            Menu(content: {
+                                                ForEach(incomeViewModel.incomeTagList, id: \.self) { item in
+                                                    Button(action: {
+                                                        filterIncomeTag = item.name
+                                                        Task.init {
+                                                            await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                        }
+                                                    }, label: {
+                                                        Text(item.name)
+                                                    })
                                                 }
                                             }, label: {
-                                                Text(item)
+                                                Label("Income Tag", systemImage: "tag.square")
                                             })
                                         }
-                                    }, label: {
-                                        Label("Year", systemImage: "calendar.badge.clock")
-                                    })
-                                }
-                                
-                                if(incomeViewModel.incomeFinancialYearList.count > 0) {
-                                    Menu(content: {
-                                        ForEach(incomeViewModel.incomeFinancialYearList, id: \.self) { item in
-                                            Button(action: {
-                                                filterYear = ""
-                                                filterFinancialYear = item
-                                                Task.init {
-                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                        
+                                        if(incomeViewModel.incomeYearList.count > 0) {
+                                            Menu(content: {
+                                                ForEach(incomeViewModel.incomeYearList, id: \.self) { item in
+                                                    Button(action: {
+                                                        filterYear = item
+                                                        filterFinancialYear = ""
+                                                        Task.init {
+                                                            await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                        }
+                                                    }, label: {
+                                                        Text(item)
+                                                    })
                                                 }
                                             }, label: {
-                                                Text(item)
+                                                Label("Year", systemImage: "calendar.badge.clock")
                                             })
                                         }
+                                        
+                                        if(incomeViewModel.incomeFinancialYearList.count > 0) {
+                                            Menu(content: {
+                                                ForEach(incomeViewModel.incomeFinancialYearList, id: \.self) { item in
+                                                    Button(action: {
+                                                        filterYear = ""
+                                                        filterFinancialYear = item
+                                                        Task.init {
+                                                            await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                        }
+                                                    }, label: {
+                                                        Text(item)
+                                                    })
+                                                }
+                                            }, label: {
+                                                Label("Financial year", systemImage: "calendar.badge.clock")
+                                            })
+                                        }
+                                        
                                     }, label: {
-                                        Label("Financial year", systemImage: "calendar.badge.clock")
+                                        Label("Filter by", systemImage: "line.3.horizontal.decrease.circle")
                                     })
-                                }
-                                
-                            }, label: {
-                                Label("Filter by", systemImage: "line.3.horizontal.decrease.circle")
-                            })
-                            
-                        }, label: {
-                            Image(systemName: "ellipsis")
-                        })
+                                    
+                                }, label: {
+                                    Image(systemName: "ellipsis")
+                                })
+                            }
+                            ToolbarItem {
+                                Button(action: {
+                                    self.isChartViewOpen.toggle()
+                                }, label: {
+                                    Label("Income Chart", systemImage: "chart.line.uptrend.xyaxis")
+                                })
+                            }
+                        }
+                        ToolbarItem(placement: .bottomBar){
+                            let balance = incomeViewModel.incomeTotalAmount
+                            HStack {
+                                Text("Total Income: \(SettingsController().getDefaultCurrency().code) \(balance.withCommas(decimalPlace: 2))")
+                                    .foregroundColor(.blue)
+                                    .font(.title2)
+                            }
+                        }
                     }
                 }
+            }
+            .toolbar {
                 ToolbarItem {
                     Button(action: {
-                        if(SettingsController().getDefaultCurrency().name == "") {
-                            showingSelectDefaultCurrencyAlert = true
-                        } else {
-                            self.isOpen.toggle()
-                        }
+                        self.isOpen.toggle()
                     }, label: {
                         Label("Add Income", systemImage: "plus")
                     })
-                    .alert("Please select the default currency in the settings tab to add an Income.", isPresented: $showingSelectDefaultCurrencyAlert) {
-                        Button("OK", role: .cancel) { }
-                    }
-                }
-                ToolbarItem {
-                    Button(action: {
-                        self.isChartViewOpen.toggle()
-                    }, label: {
-                        Label("Income Chart", systemImage: "chart.line.uptrend.xyaxis")
-                    })
-                }
-                ToolbarItem(placement: .bottomBar){
-                    let balance = incomeViewModel.incomeTotalAmount
-                    HStack {
-                        Text("Total Income: \(SettingsController().getDefaultCurrency().code) \(balance.withCommas(decimalPlace: 2))")
-                            .foregroundColor(.blue)
-                            .font(.title2)
-                    }
                 }
             }
+            .sheet(isPresented: $isOpen, content: {
+                NewIncomeView(incomeViewModel: incomeViewModel)
+            })
             .navigationTitle("Income")
         }
         .onAppear {
