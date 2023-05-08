@@ -20,9 +20,9 @@ struct IncomeTypeView: View {
             if(incomeViewModel.incomeTypeList.count == 0) {
                 ZStack {
                     HStack {
-                        Text("Click on ")
+                        Text("Click on")
                         Image(systemName: "plus")
-                        Text(" Icon to add new Income Type.")
+                        Text("Icon to add new Income Type.")
                     }
                 }
             } else {

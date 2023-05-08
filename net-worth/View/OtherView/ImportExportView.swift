@@ -18,9 +18,9 @@ struct ImportExportView: View {
             if(importExportViewModel.backupList.count == 0) {
                 ZStack {
                     HStack {
-                        Text("Click on ")
+                        Text("Click on")
                         Image(systemName: "tray.and.arrow.down.fill")
-                        Text(" Icon to backup data.")
+                        Text("Icon to backup data.")
                     }
                 }
             } else {
