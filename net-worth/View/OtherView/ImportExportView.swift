@@ -15,7 +15,7 @@ struct ImportExportView: View {
     
     var body: some View {
         NavigationView {
-            if(importExportViewModel.backupList.count == 0) {
+            if(importExportViewModel.backupList.isEmpty) {
                 ZStack {
                     HStack {
                         Text("Click on")

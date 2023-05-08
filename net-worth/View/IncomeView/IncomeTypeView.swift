@@ -17,7 +17,7 @@ struct IncomeTypeView: View {
     
     var body: some View {
         NavigationView {
-            if(incomeViewModel.incomeTypeList.count == 0) {
+            if(incomeViewModel.incomeTypeList.isEmpty) {
                 ZStack {
                     HStack {
                         Text("Click on")
