@@ -129,7 +129,7 @@ struct AccountCardList: View {
                     })
                 })
             }
-            .navigationTitle("Account")
+//            .navigationTitle("Account")
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             Task.init {
