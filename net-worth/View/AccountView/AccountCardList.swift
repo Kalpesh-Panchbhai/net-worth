@@ -17,6 +17,7 @@ struct AccountCardList: View {
     @State private var isPresentingAccountDeleteConfirm = false
     
     @StateObject var accountViewModel: AccountViewModel
+    @ObservedObject var watchViewModel: WatchViewModel
     
     var accountController = AccountController()
     
@@ -100,6 +101,7 @@ struct AccountCardList: View {
                                                                 Task.init {
                                                                     try await accountController.deleteAccount(account: deletedAccount)
                                                                     await accountViewModel.getAccountList()
+                                                                    await watchViewModel.getAllWatchList()
                                                                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                                                                 }
                                                             }
@@ -141,14 +143,12 @@ struct AccountCardList: View {
         }, content: {
             UpdateBalanceAccountView(accountViewModel: accountViewModel)
         })
-        .sheet(isPresented: $isNewAccountAccountViewOpen) {
-            NewAccountView(accountType: "None", accountViewModel: accountViewModel)
-        }
-        .onAppear {
+        .sheet(isPresented: $isNewAccountAccountViewOpen, onDismiss: {
             Task.init {
-                await accountViewModel.getAccountList()
-                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+                await watchViewModel.getAllWatchList()
             }
-        }
+        }, content: {
+            NewAccountView(accountType: "None", accountViewModel: accountViewModel)
+        })
     }
 }

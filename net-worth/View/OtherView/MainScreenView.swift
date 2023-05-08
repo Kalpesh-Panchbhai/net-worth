@@ -19,7 +19,7 @@ struct MainScreenView: View {
         NavigationStack {
             ZStack {
                 TabView(selection: $tabViewSelection) {
-                    AccountCardList(accountViewModel: accountViewModel)
+                    AccountCardList(accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                         .tabItem{
                             if(tabViewSelection==0) {
                                 Image(systemName: "star.circle.fill")
