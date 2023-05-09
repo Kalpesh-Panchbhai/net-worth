@@ -51,7 +51,7 @@ public struct PieChartView: View {
                     ForEach(0..<self.values.count, id: \.self){ i in
                         PieSliceView(pieSliceData: self.slices[i])
                             .scaleEffect(self.activeIndex == i ? 1.03 : 1)
-                            .animation(Animation.spring())
+                            .animation(Animation.spring(), value: self.activeIndex == i ? 1.03 : 1)
                     }
                     .frame(width: widthFraction * geometry.size.width, height: widthFraction * geometry.size.width)
                     .gesture(

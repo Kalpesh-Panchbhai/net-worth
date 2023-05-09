@@ -25,31 +25,31 @@ struct ChartView: View {
     
     @ObservedObject var accountViewModel: AccountViewModel
     
+    @State var watchListSelected = Watch()
+    
     var body: some View {
-        NavigationView {
-            ScrollView {
-                PieChartView(
-                    values: accountViewModel.accountList.filter {
-                        $0.currentBalance >= 0
-                    }.sorted(by: {
-                        $0.currentBalance > $1.currentBalance
-                    }).map {
-                        $0.currentBalance
-                    },
-                    names: accountViewModel.accountList.filter {
-                        $0.currentBalance >= 0
-                    }.sorted(by: {
-                        $0.currentBalance > $1.currentBalance
-                    }).map {
-                        $0.accountName
-                    },
-                    formatter: {value in String(format: "%.2f", value)},
-                    colors: accountViewModel.accountList.filter {
-                        $0.currentBalance >= 0
-                    }.map { _ in
-                            .random
-                    })
-            }
+        ScrollView {
+            Picker("Watch List", selection: $watchListSelected, content: {
+                ForEach(watchViewModel.watchList, id: \.self, content: {
+                    Text($0.accountName).tag($0)
+                })
+            })
+            .onChange(of: watchListSelected, perform: { watch in
+                Task.init {
+                    await accountViewModel.getAccountsForWatchList(accountID: watchListSelected.accountID)
+                }
+            })
+            PieChartView(
+                values: accountViewModel.accountList.map {
+                    $0.currentBalance
+                },
+                names: accountViewModel.accountList.map {
+                    $0.accountName
+                },
+                formatter: {value in String(format: "%.2f", value)},
+                colors: accountViewModel.accountList.map { _ in
+                        .random
+                })
         }
     }
 }
