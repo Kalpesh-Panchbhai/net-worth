@@ -198,7 +198,7 @@ struct AccountDetailView: View {
                 await watchViewModel.getWatchListByAccount(accountID: account.id!)
             }
         }, content: {
-            AddWatchListAccountView(watchViewModel: watchViewModel, account: account)
+            AddWatchListToAccountView(watchViewModel: watchViewModel, account: account)
         })
         .background(.black)
     }
