@@ -52,16 +52,29 @@ struct MainScreenView: View {
                             Text("Incomes")
                         }.tag(2)
                         .badge(incomeViewModel.incomeList.count)
+                    PieChartView(
+                        values: [1500, 500, 300],
+                        names: ["Rent", "Transport", "Education"],
+                        formatter: {value in String(format: "$%.2f", value)})
+                    .tabItem {
+                        if(tabViewSelection == 3) {
+                            Image(systemName: "chart.line.uptrend.xyaxis.circle.fill")
+                        } else {
+                            Image(systemName: "chart.line.uptrend.xyaxis.circle")
+                                .environment(\.symbolVariants, .none)
+                        }
+                        Text("Charts")
+                    }.tag(3)
                     SettingsView()
                         .tabItem{
-                            if(tabViewSelection==3) {
+                            if(tabViewSelection==4) {
                                 Image(systemName: "gearshape.fill")
                             } else {
                                 Image(systemName: "gearshape")
                                     .environment(\.symbolVariants, .none)
                             }
                             Text("Settings")
-                        }.tag(3)
+                        }.tag(4)
                 }
                 .onAppear {
                     Task.init {

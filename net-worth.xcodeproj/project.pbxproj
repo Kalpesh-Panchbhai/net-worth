@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0A72F69C86303305F6631476 /* Pods_net_worthTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC6C9A84CDBFBA61E9B153E4 /* Pods_net_worthTests.framework */; };
 		7D1188362A03F3000005EA32 /* AccountWatchListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1188352A03F3000005EA32 /* AccountWatchListView.swift */; };
+		7D11D0052A0A551300897B08 /* PieSliceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D11D0042A0A551300897B08 /* PieSliceView.swift */; };
+		7D11D0072A0A56D700897B08 /* PieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D11D0062A0A56D700897B08 /* PieChartView.swift */; };
 		7D14A8F02A0253A9002FC324 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D14A8EF2A0253A9002FC324 /* ChartView.swift */; };
 		7D1C72642A06549B00022FCB /* ImportExportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1C72632A06549B00022FCB /* ImportExportViewModel.swift */; };
 		7D237BED292B672900DEF91D /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D237BEC292B672800DEF91D /* DoubleExtension.swift */; };
@@ -130,6 +132,8 @@
 		4F8D72CD718DA6F209092935 /* Pods-net-worth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth.release.xcconfig"; path = "Target Support Files/Pods-net-worth/Pods-net-worth.release.xcconfig"; sourceTree = "<group>"; };
 		6191CD53E4B147B0F4457D7D /* Pods-net-worth.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth.debug.xcconfig"; path = "Target Support Files/Pods-net-worth/Pods-net-worth.debug.xcconfig"; sourceTree = "<group>"; };
 		7D1188352A03F3000005EA32 /* AccountWatchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountWatchListView.swift; sourceTree = "<group>"; };
+		7D11D0042A0A551300897B08 /* PieSliceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieSliceView.swift; sourceTree = "<group>"; };
+		7D11D0062A0A56D700897B08 /* PieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartView.swift; sourceTree = "<group>"; };
 		7D14A8EF2A0253A9002FC324 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		7D1C72632A06549B00022FCB /* ImportExportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExportViewModel.swift; sourceTree = "<group>"; };
 		7D237BEC292B672800DEF91D /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
@@ -527,6 +531,8 @@
 			children = (
 				7D14A8EF2A0253A9002FC324 /* ChartView.swift */,
 				7D6F885129F8FBFB000AE48A /* IncomeChartView.swift */,
+				7D11D0042A0A551300897B08 /* PieSliceView.swift */,
+				7D11D0062A0A56D700897B08 /* PieChartView.swift */,
 			);
 			path = ChartView;
 			sourceTree = "<group>";
@@ -770,6 +776,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D11D0072A0A56D700897B08 /* PieChartView.swift in Sources */,
 				7DB98804299B682F004ED6D2 /* NewWatchView.swift in Sources */,
 				7DE766F32928B62900EFBD2D /* NotificationController.swift in Sources */,
 				7DF9DB91298F978600831494 /* Account.swift in Sources */,
@@ -792,6 +799,7 @@
 				7DD8E5C12A06427300245A98 /* WatchData.swift in Sources */,
 				7DA63A492995FACA00568FCA /* AccountDetailCardView.swift in Sources */,
 				7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */,
+				7D11D0052A0A551300897B08 /* PieSliceView.swift in Sources */,
 				7D5B9F93299A896300D0477B /* BalanceCardView.swift in Sources */,
 				7D7AA909298D8DA2004C9776 /* UserController.swift in Sources */,
 				7DF8CCFD299FB86100267C29 /* AccountChartView.swift in Sources */,
