@@ -141,7 +141,6 @@ struct TransactionsView: View {
                 }
             }
             .background(Color.black)
-            .cornerRadius(10)
         }
         .background(Color.black)
     }
