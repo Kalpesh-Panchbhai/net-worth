@@ -66,6 +66,8 @@ struct AccountDetailView: View {
                 }
             }
         }
+        .navigationTitle(accountViewModel.account.accountName)
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(content: {
                 Button(action: {

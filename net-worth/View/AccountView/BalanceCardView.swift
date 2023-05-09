@@ -20,10 +20,6 @@ struct BalanceCardView: View {
             Color.black
             VStack(alignment: .center) {
                 Spacer()
-                Text("Total " + accountType.localizedCapitalized + " Balance")
-                    .foregroundColor(.white)
-                    .bold()
-                    .padding()
                 HStack {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(.white)

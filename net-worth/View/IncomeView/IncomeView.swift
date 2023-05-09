@@ -47,6 +47,7 @@ struct IncomeView: View {
                         ForEach(incomeViewModel.incomeList, id: \.self) { income in
                             NavigationLink(destination: {
                                 IncomeDetailView(income: income)
+                                    .toolbarRole(.editor)
                             }, label: {
                                 ChildIncomeView(income: income)
                             })

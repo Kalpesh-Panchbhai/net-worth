@@ -151,6 +151,8 @@ struct SingleWatchListView: View {
                 UpdateBalanceAccountView(accountViewModel: accountViewModel)
             })
         }
+        .navigationTitle(watch.accountName)
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             if(watch.accountName != "All" && accountViewModel.originalAccountList.count > 0) {
                 ToolbarItem(content: {

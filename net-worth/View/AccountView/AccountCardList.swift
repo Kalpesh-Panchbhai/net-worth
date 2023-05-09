@@ -57,6 +57,7 @@ struct AccountCardList: View {
                                                 Spacer()
                                                 NavigationLink(destination: {
                                                     AccountListView(accountType: accountType)
+                                                        .toolbarRole(.editor)
                                                 }, label: {
                                                     Text("See all")
                                                         .foregroundColor(.green)
@@ -68,7 +69,10 @@ struct AccountCardList: View {
                                                 LazyHStack {
                                                     ForEach(0..<((accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 5) ? 5 : accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count), id: \.self) { i in
                                                         VStack {
-                                                            NavigationLink(destination: AccountDetailView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i],accountViewModel:  accountViewModel)) {
+                                                            NavigationLink(destination: {
+                                                                AccountDetailView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i],accountViewModel:  accountViewModel)
+                                                                    .toolbarRole(.editor)
+                                                            }) {
                                                                 AccountCardView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i])
                                                                     .shadow(color: Color.gray, radius: 3)
                                                                     .contextMenu {

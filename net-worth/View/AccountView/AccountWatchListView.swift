@@ -21,6 +21,7 @@ struct AccountWatchListView: View {
                         ForEach(watchViewModel.watchListForAccount, id: \.self, content: { watch in
                             NavigationLink(destination: {
                                 SingleWatchListView(watch: watch)
+                                    .toolbarRole(.editor)
                             }, label: {
                                 HStack {
                                     Text(watch.accountName)

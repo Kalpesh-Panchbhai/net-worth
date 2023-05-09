@@ -61,6 +61,7 @@ struct ChartView: View {
                     })
                 .frame(minHeight: 600)
             }
+            .navigationTitle("Chart")
         }
         .onAppear {
             watchListSelected = watchViewModel.watchList.filter {

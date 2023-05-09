@@ -74,6 +74,8 @@ struct AccountListView: View {
             }
             .padding(10)
         }
+        .navigationTitle(accountType)
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(content: {
                 Button(action: {
