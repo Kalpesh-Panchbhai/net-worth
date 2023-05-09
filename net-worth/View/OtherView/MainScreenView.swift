@@ -52,7 +52,7 @@ struct MainScreenView: View {
                             Text("Incomes")
                         }.tag(2)
                         .badge(incomeViewModel.incomeList.count)
-                    ChartView()
+                    ChartView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
                     .tabItem {
                         if(tabViewSelection == 3) {
                             Image(systemName: "chart.line.uptrend.xyaxis.circle.fill")

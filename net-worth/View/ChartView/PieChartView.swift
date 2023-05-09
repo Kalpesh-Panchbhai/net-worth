@@ -117,7 +117,7 @@ struct PieChartRows: View {
                     Text(self.names[i])
                     Spacer()
                     VStack(alignment: .trailing) {
-                        Text(self.values[i])
+                        Text((Double(self.values[i])?.withCommas(decimalPlace: 2))!)
                         Text(self.percents[i])
                             .foregroundColor(Color.gray)
                     }
