@@ -62,5 +62,10 @@ struct ChartView: View {
                 .frame(minHeight: 600)
             }
         }
+        .onAppear {
+            watchListSelected = watchViewModel.watchList.filter {
+                $0.accountName.elementsEqual("All")
+            }.first!
+        }
     }
 }
