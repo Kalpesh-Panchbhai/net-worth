@@ -38,6 +38,7 @@ struct SingleWatchListView: View {
                             ForEach(watchViewModel.watch.accountID, id: \.self) { account in
                                 NavigationLink(destination: {
                                     AccountDetailView(account: Account(id: account), accountViewModel: accountViewModel)
+                                        .toolbarRole(.editor)
                                 }, label: {
                                     AccountRowView(account: Account(id: account))
                                         .shadow(color: Color.gray, radius: 3)
