@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AddAccountWatchListView: View {
+struct AddAccountToWatchListView: View {
     
     @ObservedObject var accountViewModel = AccountViewModel()
     @State var watch: Watch

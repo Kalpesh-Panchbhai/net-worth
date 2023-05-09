@@ -284,7 +284,7 @@ struct SingleWatchListView: View {
                 
             }
         }) {
-            AddAccountWatchListView(watch: watchViewModel.watch)
+            AddAccountToWatchListView(watch: watchViewModel.watch)
         }
         .sheet(isPresented: $isChartViewOpen, content: {
             ChartView(accountList: accountViewModel.accountList)
