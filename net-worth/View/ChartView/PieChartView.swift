@@ -48,7 +48,7 @@ public struct PieChartView: View {
         GeometryReader { geometry in
             VStack{
                 ZStack{
-                    ForEach(0..<self.values.count){ i in
+                    ForEach(0..<self.values.count, id: \.self){ i in
                         PieSliceView(pieSliceData: self.slices[i])
                             .scaleEffect(self.activeIndex == i ? 1.03 : 1)
                             .animation(Animation.spring())
@@ -109,7 +109,7 @@ struct PieChartRows: View {
     
     var body: some View {
         VStack{
-            ForEach(0..<self.values.count){ i in
+            ForEach(0..<self.values.count, id: \.self){ i in
                 HStack {
                     RoundedRectangle(cornerRadius: 5.0)
                         .fill(self.colors[i])

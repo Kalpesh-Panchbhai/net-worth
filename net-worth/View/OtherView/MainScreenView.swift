@@ -52,10 +52,7 @@ struct MainScreenView: View {
                             Text("Incomes")
                         }.tag(2)
                         .badge(incomeViewModel.incomeList.count)
-                    PieChartView(
-                        values: [1500, 500, 300],
-                        names: ["Rent", "Transport", "Education"],
-                        formatter: {value in String(format: "$%.2f", value)})
+                    ChartView()
                     .tabItem {
                         if(tabViewSelection == 3) {
                             Image(systemName: "chart.line.uptrend.xyaxis.circle.fill")
