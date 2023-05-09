@@ -27,7 +27,7 @@ public struct PieChartView: View {
         
         for (i, value) in values.enumerated() {
             let degrees: Double = value * 360 / sum
-            if(endDeg >= 314) {
+            if(endDeg >= 314 && endDeg != 360) {
                 tempSlices.append(PieSliceData(startAngle: Angle(degrees: endDeg), endAngle: Angle(degrees: 360), text: String(format: "%.0f%%", ((360 - endDeg) / 360) * 100), color: self.colors[i]))
                 break
             } else {
