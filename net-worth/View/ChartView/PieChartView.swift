@@ -18,6 +18,7 @@ public struct PieChartView: View {
     public var widthFraction: CGFloat
     public var innerRadiusFraction: CGFloat
     
+    @State private var otherIndex = -1
     @State private var activeIndex: Int = -1
     
     var slices: [PieSliceData] {
@@ -76,7 +77,12 @@ public struct PieChartView: View {
                                 
                                 for (i, slice) in slices.enumerated() {
                                     if (radians < slice.endAngle.radians) {
-                                        self.activeIndex = i
+                                        if(i == slices.count - 1) {
+                                            self.activeIndex = -2
+                                            self.otherIndex = i
+                                        } else {
+                                            self.activeIndex = i
+                                        }
                                         break
                                     }
                                 }
@@ -90,10 +96,10 @@ public struct PieChartView: View {
                         .frame(width: widthFraction * geometry.size.width * innerRadiusFraction, height: widthFraction * geometry.size.width * innerRadiusFraction)
                     
                     VStack {
-                        Text(self.activeIndex == -1 ? "Total" : names[self.activeIndex])
+                        Text(self.activeIndex == -1 ? "Total" : self.activeIndex == -2 ? "Other" : names[self.activeIndex])
                             .font(.title)
                             .foregroundColor(Color.gray)
-                        Text(self.formatter(self.activeIndex == -1 ? values.reduce(0, +) : values[self.activeIndex]))
+                        Text(self.formatter(self.activeIndex == -1 ? values.reduce(0, +) : self.activeIndex == -2 ? getOtherTotal() : values[self.activeIndex]))
                             .font(.title)
                     }
                     
@@ -103,6 +109,16 @@ public struct PieChartView: View {
             .background(self.backgroundColor)
             .foregroundColor(Color.white)
         }
+    }
+    
+    private func getOtherTotal() -> Double {
+        var otherTotal = 0.0
+        for i in 0..<values.count {
+            if i >= otherIndex {
+                otherTotal += values[i]
+            }
+        }
+        return otherTotal
     }
 }
 
