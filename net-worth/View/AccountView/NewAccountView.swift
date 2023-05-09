@@ -15,17 +15,14 @@ struct NewAccountView: View {
     @State var accountName: String = ""
     @State var currenySelected: Currency = Currency()
     var currencyList = CurrencyList().currencyList
-    @State  var filterCurrencyList = CurrencyList().currencyList
-    @State  var currencyChanged = false
+    @State var filterCurrencyList = CurrencyList().currencyList
+    @State var currencyChanged = false
     
-    @State  var financeModel = [FinanceModel]()
-    @State  var financeSelected = FinanceModel()
-    
-    @State  var currentBalance: Double = 0.0
-    @State  var monthlyEmi: Double = 0.0
-    @State  var paymentReminder = false
-    @State  var paymentDate = 1
-    @State  var loanPaymentDate = 1
+    @State var currentBalance: Double = 0.0
+    @State var monthlyEmi: Double = 0.0
+    @State var paymentReminder = false
+    @State var paymentDate = 1
+    @State var loanPaymentDate = 1
     @State var dates = Array(1...28)
     @State private var accountOpenedDate = Date()
     
