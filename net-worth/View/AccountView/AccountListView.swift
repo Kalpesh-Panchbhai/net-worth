@@ -95,7 +95,7 @@ struct AccountListView: View {
             UpdateBalanceAccountView(accountViewModel: accountViewModel)
         })
         .sheet(isPresented: $isChartViewOpen, content: {
-            ChartView(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
+            AccountWatchListChartView(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
         })
         .searchable(text: $searchText)
         .onAppear {

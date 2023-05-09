@@ -287,7 +287,7 @@ struct SingleWatchListView: View {
             AddAccountToWatchListView(watch: watchViewModel.watch)
         }
         .sheet(isPresented: $isChartViewOpen, content: {
-            ChartView(accountList: accountViewModel.accountList)
+            AccountWatchListChartView(accountList: accountViewModel.accountList)
         })
         .onAppear {
             Task.init {

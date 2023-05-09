@@ -8,7 +8,7 @@
 import SwiftUI
 import Charts
 
-struct ChartView: View {
+struct AccountWatchListChartView: View {
     @StateObject var chartViewModel = ChartViewModel()
     @StateObject var accountViewModel = AccountViewModel()
     @State var range = "1M"
