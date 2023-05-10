@@ -93,9 +93,9 @@ struct SettingsView: View {
                 .listRowBackground(Color.white)
                 
                 NavigationLink(destination: {
-                    ImportExportView()
+                    BackupView()
                 }, label: {
-                    Label("Import and Export", systemImage: "folder")
+                    Label("Backup", systemImage: "folder")
                 })
                 .foregroundColor(Color.navyBlue)
                 .listRowBackground(Color.white)

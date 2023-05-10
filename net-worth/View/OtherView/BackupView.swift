@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ImportExportView: View {
+struct BackupView: View {
     
     private var importExportController = ImportExportController()
     
@@ -124,6 +124,6 @@ struct ImportExportView: View {
                 .font(.system(size: 14).bold())
             })
         }
-        .navigationTitle("Import and Export")
+        .navigationTitle("Backup")
     }
 }
