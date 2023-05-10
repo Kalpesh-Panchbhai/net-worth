@@ -37,7 +37,7 @@ struct TransactionsView: View {
                                     Text("\(accountViewModel.accountTransactionList[i].timestamp.getTimeAndFormat())")
                                         .font(.system(size: 12))
                                         .foregroundColor(.black)
-                                        .padding(.horizontal)
+                                        .padding(.leading)
                                     if(accountViewModel.account.loanType.elementsEqual("Consumer")) {
                                         if(accountViewModel.accountTransactionList[i].paid) {
                                             Text("Paid")
@@ -53,7 +53,7 @@ struct TransactionsView: View {
                             }
                             Spacer()
                             VStack(alignment: .trailing) {
-                                Text((accountViewModel.account.currency) + " \(accountViewModel.accountTransactionList[i].currentBalance.withCommas(decimalPlace: 4))")
+                                Text((accountViewModel.account.currency) + " \(accountViewModel.accountTransactionList[i].currentBalance.withCommas(decimalPlace: 2))")
                                     .font(.headline)
                                     .foregroundColor(.black)
                                     .padding(.horizontal)
