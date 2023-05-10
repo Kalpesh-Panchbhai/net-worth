@@ -30,6 +30,9 @@ struct MainScreenView: View {
                             Text("Accounts")
                         }.tag(0)
                         .badge(accountViewModel.accountList.count)
+                        .toolbarBackground(
+                                Color.navyBlue,
+                                for: .tabBar)
                     WatchListView(watchViewModel: watchViewModel)
                         .tabItem {
                             if(tabViewSelection==1) {
@@ -41,6 +44,9 @@ struct MainScreenView: View {
                             Text("Watch Lists")
                         }.tag(1)
                         .badge(watchViewModel.watchList.count)
+                        .toolbarBackground(
+                                Color.navyBlue,
+                                for: .tabBar)
                     IncomeView(incomeViewModel: incomeViewModel)
                         .tabItem{
                             if(tabViewSelection==2) {
@@ -52,6 +58,9 @@ struct MainScreenView: View {
                             Text("Incomes")
                         }.tag(2)
                         .badge(incomeViewModel.incomeList.count)
+                        .toolbarBackground(
+                                Color.navyBlue,
+                                for: .tabBar)
                     ChartView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
                     .tabItem {
                         if(tabViewSelection == 3) {
@@ -61,7 +70,11 @@ struct MainScreenView: View {
                                 .environment(\.symbolVariants, .none)
                         }
                         Text("Charts")
+                        
                     }.tag(3)
+                        .toolbarBackground(
+                                Color.navyBlue,
+                                for: .tabBar)
                     SettingsView()
                         .tabItem{
                             if(tabViewSelection==4) {
@@ -72,7 +85,11 @@ struct MainScreenView: View {
                             }
                             Text("Settings")
                         }.tag(4)
+                        .toolbarBackground(
+                                Color.navyBlue,
+                                for: .tabBar)
                 }
+                .accentColor(Color.lightBlue)
                 .onAppear {
                     Task.init {
                         await accountViewModel.getAccountList()
