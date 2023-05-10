@@ -31,11 +31,13 @@ struct TransactionsView: View {
                             VStack(alignment: .leading) {
                                 Text("\(accountViewModel.accountTransactionList[i].timestamp.getDateAndFormat())")
                                     .font(.headline)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(.black)
+                                    .padding(.horizontal)
                                 HStack {
                                     Text("\(accountViewModel.accountTransactionList[i].timestamp.getTimeAndFormat())")
                                         .font(.system(size: 12))
-                                        .foregroundColor(.white)
+                                        .foregroundColor(.black)
+                                        .padding(.horizontal)
                                     if(accountViewModel.account.loanType.elementsEqual("Consumer")) {
                                         if(accountViewModel.accountTransactionList[i].paid) {
                                             Text("Paid")
@@ -53,16 +55,19 @@ struct TransactionsView: View {
                             VStack(alignment: .trailing) {
                                 Text((accountViewModel.account.currency) + " \(accountViewModel.accountTransactionList[i].currentBalance.withCommas(decimalPlace: 4))")
                                     .font(.headline)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(.black)
+                                    .padding(.horizontal)
                                 if( i < accountViewModel.accountTransactionList.count) {
                                     if(accountViewModel.accountTransactionList[i].balanceChange > 0) {
                                         Text("+\(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 2))")
                                             .font(.system(size: 12))
                                             .foregroundColor(.green)
+                                            .padding(.horizontal)
                                     } else if(accountViewModel.accountTransactionList[i].balanceChange < 0) {
                                         Text("\(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 2))")
                                             .font(.system(size: 12))
                                             .foregroundColor(.red)
+                                            .padding(.horizontal)
                                     }
                                 }
                             }
@@ -135,13 +140,15 @@ struct TransactionsView: View {
                                 }
                             }
                         }
-                        .padding(.horizontal)
                         .padding(8)
+                        .background(Color(#colorLiteral(red: 0.9058823529, green: 0.9490196078, blue: 0.9803921569, alpha: 1)))
+                        .cornerRadius(10)
+                        .shadow(color: Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)), radius: 3)
                     }
                 }
             }
-            .background(Color.black)
+            .padding(8)
+            .background(Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)))
         }
-        .background(Color.black)
     }
 }

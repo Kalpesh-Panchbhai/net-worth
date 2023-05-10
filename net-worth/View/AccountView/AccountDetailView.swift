@@ -75,8 +75,12 @@ struct AccountDetailView: View {
                 }, label: {
                     if(watchViewModel.watchListForAccount.count > 1) {
                         Image(systemName: "bookmark.fill")
+                            .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
+                            .bold()
                     } else {
                         Image(systemName: "bookmark")
+                            .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
+                            .bold()
                     }
                 })
             })
@@ -171,6 +175,8 @@ struct AccountDetailView: View {
                     
                 }, label: {
                     Image(systemName: "ellipsis")
+                        .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
+                        .bold()
                 })
             })
         }
@@ -202,6 +208,6 @@ struct AccountDetailView: View {
         }, content: {
             AddWatchListToAccountView(watchViewModel: watchViewModel, account: account)
         })
-        .background(.black)
+        .background(Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)))
     }
 }

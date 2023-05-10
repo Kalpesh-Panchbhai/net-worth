@@ -37,4 +37,8 @@ extension Double {
         
         return String(format: "%.0f", self)
     }
+    
+    static var random: Double {
+        return Double(arc4random()) / Double(UInt32.max)
+    }
 }

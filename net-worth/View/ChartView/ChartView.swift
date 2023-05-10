@@ -7,18 +7,6 @@
 
 import SwiftUI
 
-extension Double {
-    static var random: Double {
-        return Double(arc4random()) / Double(UInt32.max)
-    }
-}
-
-extension Color {
-    static var random: Color {
-        return Color(red: .random, green: .random, blue: .random)
-    }
-}
-
 struct ChartView: View {
     
     @ObservedObject var watchViewModel: WatchViewModel
