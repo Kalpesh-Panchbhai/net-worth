@@ -47,8 +47,11 @@ struct NewAccountView: View {
                     Picker(selection: $accountType, label: Text("Account Type")) {
                         ForEach(ConstantUtils.AccountType.allCases, id: \.rawValue) { accountType in
                             Text(accountType.rawValue).tag(accountType.rawValue)
+                                .foregroundColor(Color.navyBlue)
                         }
+                        .foregroundColor(Color.navyBlue)
                     }
+                    .foregroundColor(Color.navyBlue)
                     .onChange(of: accountType) { _ in
                         accountName=""
                         currentBalance = 0.0
@@ -59,52 +62,82 @@ struct NewAccountView: View {
                     }
                     if(accountType == "Saving") {
                         nameField(labelName: "Account Name")
+                            .foregroundColor(Color.navyBlue)
                         currentBalanceField()
+                            .foregroundColor(Color.navyBlue)
                         currencyPicker
+                            .foregroundColor(Color.navyBlue)
                         watchListPicker
+                            .foregroundColor(Color.navyBlue)
                         accountOpenedDatePicker
+                            .foregroundColor(Color.navyBlue)
                     }
                     else if(accountType == "Credit Card") {
                         nameField(labelName: "Credit Card Name")
+                            .foregroundColor(Color.navyBlue)
                         currentBalanceField()
+                            .foregroundColor(Color.navyBlue)
                         currencyPicker
+                            .foregroundColor(Color.navyBlue)
                         enablePaymentReminderField(labelName: "Enable Payment Reminder")
+                            .foregroundColor(Color.navyBlue)
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
+                                .foregroundColor(Color.navyBlue)
                         }
                         watchListPicker
+                            .foregroundColor(Color.navyBlue)
                         accountOpenedDatePicker
+                            .foregroundColor(Color.navyBlue)
                     }
                     else if(accountType == "Loan") {
                         Picker(selection: $loanType, label: Text("Loan Type")) {
                             Text("Consumer").tag("Consumer")
                             Text("Non Consumer").tag("Non Consumer")
                         }
+                        .foregroundColor(Color.navyBlue)
                         nameField(labelName: "Loan Name")
+                            .foregroundColor(Color.navyBlue)
                         currentBalanceField()
+                            .foregroundColor(Color.navyBlue)
                         if(loanType.elementsEqual("Consumer")) {
                             monthlyEMIField()
+                                .foregroundColor(Color.navyBlue)
                             loanPaymentDateField(labelName: "Select a loan payment date")
+                                .foregroundColor(Color.navyBlue)
                         }
                         currencyPicker
+                            .foregroundColor(Color.navyBlue)
                         enablePaymentReminderField(labelName: "Enable Loan Payment Reminder")
+                            .foregroundColor(Color.navyBlue)
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
+                                .foregroundColor(Color.navyBlue)
                         }
                         watchListPicker
+                            .foregroundColor(Color.navyBlue)
                         accountOpenedDatePicker
+                            .foregroundColor(Color.navyBlue)
                     } else if(accountType == "Other") {
                         nameField(labelName: "Account Name")
+                            .foregroundColor(Color.navyBlue)
                         currentBalanceField()
+                            .foregroundColor(Color.navyBlue)
                         currencyPicker
+                            .foregroundColor(Color.navyBlue)
                         enablePaymentReminderField(labelName: "Enable Payment Reminder")
+                            .foregroundColor(Color.navyBlue)
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
+                                .foregroundColor(Color.navyBlue)
                         }
                         watchListPicker
+                            .foregroundColor(Color.navyBlue)
                         accountOpenedDatePicker
+                            .foregroundColor(Color.navyBlue)
                     }
                 }
+                .listRowBackground(Color.white)
             }
             .toolbar {
                 ToolbarItem {
@@ -154,13 +187,18 @@ struct NewAccountView: View {
                         }
                         dismiss()
                     }, label: {
-                        Label("Add Account", systemImage: "checkmark")
+                        Image(systemName: "checkmark")
+                            .foregroundColor(Color.lightBlue)
+                            .bold()
                     })
+                    .font(.system(size: 14).bold())
                     .disabled(!allFieldsFilled())
                 }
             }
             .navigationTitle("New Account")
             .navigationBarTitleDisplayMode(.inline)
+            .background(Color.navyBlue)
+            .scrollContentBackground(.hidden)
         }
         .onAppear {
             Task.init {
