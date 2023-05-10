@@ -36,11 +36,14 @@ struct IncomeView: View {
             ZStack {
                 if(incomeViewModel.incomeList.isEmpty) {
                     ZStack {
+                        Color.navyBlue.ignoresSafeArea()
                         HStack {
                             Text("Click on")
                             Image(systemName: "plus")
                             Text("Icon to add new Income.")
                         }
+                        .foregroundColor(Color.lightBlue)
+                        .bold()
                     }
                 } else {
                     List {
@@ -56,6 +59,8 @@ struct IncomeView: View {
                             }
                         }
                         .onDelete(perform: deleteIncome)
+                        .listRowBackground(Color.white)
+                        .foregroundColor(Color.navyBlue)
                     }
                     .refreshable {
                         if(!filterIncomeType.isEmpty || !filterIncomeTag.isEmpty || !filterYear.isEmpty || !filterFinancialYear.isEmpty) {
@@ -77,7 +82,14 @@ struct IncomeView: View {
                     .toolbar {
                         if !incomeViewModel.incomeList.isEmpty {
                             ToolbarItem(placement: .navigationBarLeading) {
-                                EditButton()
+                                Button(action: {
+                                    self.isChartViewOpen.toggle()
+                                }, label: {
+                                    Label("Income Chart", systemImage: "chart.line.uptrend.xyaxis")
+                                        .foregroundColor(Color.lightBlue)
+                                        .bold()
+                                })
+                                .font(.system(size: 14).bold())
                             }
                             ToolbarItem(placement: .navigationBarLeading) {
                                 if(!filterIncomeType.isEmpty || !filterIncomeTag.isEmpty || !filterYear.isEmpty || !filterFinancialYear.isEmpty) {
@@ -92,7 +104,10 @@ struct IncomeView: View {
                                         }
                                     }, label: {
                                         Text("Clear")
+                                            .foregroundColor(Color.lightBlue)
+                                            .bold()
                                     })
+                                    .font(.system(size: 14).bold())
                                 }
                             }
                             ToolbarItem(placement: .navigationBarTrailing) {
@@ -178,14 +193,10 @@ struct IncomeView: View {
                                     
                                 }, label: {
                                     Image(systemName: "ellipsis")
+                                        .foregroundColor(Color.lightBlue)
+                                        .bold()
                                 })
-                            }
-                            ToolbarItem {
-                                Button(action: {
-                                    self.isChartViewOpen.toggle()
-                                }, label: {
-                                    Label("Income Chart", systemImage: "chart.line.uptrend.xyaxis")
-                                })
+                                .font(.system(size: 14).bold())
                             }
                         }
                         ToolbarItem(placement: .bottomBar){
@@ -197,6 +208,8 @@ struct IncomeView: View {
                             }
                         }
                     }
+                    .background(Color.navyBlue)
+                    .scrollContentBackground(.hidden)
                 }
             }
             .toolbar {
@@ -204,8 +217,11 @@ struct IncomeView: View {
                     Button(action: {
                         self.isOpen.toggle()
                     }, label: {
-                        Label("Add Income", systemImage: "plus")
+                        Image(systemName: "plus")
+                            .foregroundColor(Color.lightBlue)
+                            .bold()
                     })
+                    .font(.system(size: 14).bold())
                 }
             }
             .sheet(isPresented: $isOpen, content: {
@@ -246,17 +262,17 @@ struct ChildIncomeView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text(income.creditedOn.getDateAndFormat()).font(.system(size: 12))
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundColor(.gray)
+                    .foregroundColor(Color.navyBlue.opacity(0.9))
                 Text(income.tag).font(.system(size: 10))
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundColor(.gray)
+                    .foregroundColor(Color.navyBlue.opacity(0.9))
             }
             VStack {
                 Text("\(income.currency) " + income.amount.withCommas(decimalPlace: 2))
                     .frame(maxWidth: .infinity, alignment: .trailing)
                 Text("\(income.currency) \(income.avgAmount.withCommas(decimalPlace: 2))").font(.system(size: 12))
                     .frame(maxWidth: .infinity, alignment: .trailing)
-                    .foregroundColor(.gray)
+                    .foregroundColor(Color.navyBlue.opacity(0.9))
             }
         }
     }
