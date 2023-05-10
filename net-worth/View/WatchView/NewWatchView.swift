@@ -23,7 +23,10 @@ struct NewWatchView: View {
             Form {
                 Section("New Watch List") {
                     TextField("Watch List name", text: $watchListName)
+                        .listRowBackground(Color.white)
+                        .foregroundColor(Color.navyBlue)
                 }
+                .foregroundColor(Color.lightBlue)
             }
             VStack {
                 Text("Submit")
@@ -47,6 +50,8 @@ struct NewWatchView: View {
                 }
             Spacer()
         }
+        .background(Color.navyBlue)
+        .scrollContentBackground(.hidden)
         .alert(isPresented: $isFieldEmpty) {
             Alert(title: Text("Watch List Name cannot be empty"))
         }

@@ -138,6 +138,7 @@ struct NewAccountView: View {
                     }
                 }
                 .listRowBackground(Color.white)
+                .foregroundColor(Color.lightBlue)
             }
             .toolbar {
                 ToolbarItem {

@@ -20,9 +20,12 @@ struct UpdateWatchView: View {
     var body: some View {
         VStack {
             Form {
-                Section("New Watch List") {
+                Section("Update Watch List") {
                     TextField("Watch List name", text: $watchViewModel.watch.accountName)
+                        .listRowBackground(Color.white)
+                        .foregroundColor(Color.navyBlue)
                 }
+                .foregroundColor(Color.lightBlue)
             }
             VStack {
                 Text("Update")
@@ -44,6 +47,8 @@ struct UpdateWatchView: View {
                 }
             Spacer()
         }
+        .background(Color.navyBlue)
+        .scrollContentBackground(.hidden)
         .alert(isPresented: $isFieldEmpty) {
             Alert(title: Text("Watch List Name cannot be empty"))
         }
