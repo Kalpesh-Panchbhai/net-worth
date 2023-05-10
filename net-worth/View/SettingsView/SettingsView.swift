@@ -45,9 +45,10 @@ struct SettingsView: View {
                         Text(Auth.auth().currentUser?.displayName ?? "")
                             .font(.system(size: 25))
                             .bold()
+                            .foregroundColor(Color.lightBlue)
                         Text(Auth.auth().currentUser?.email ?? "")
                             .font(.system(size: 15))
-                            .foregroundColor(Color.gray)
+                            .foregroundColor(Color.lightBlue)
                         
                     }
                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -60,31 +61,44 @@ struct SettingsView: View {
                 }).onChange(of: isAuthenticationRequired) { newValue in
                     settingsController.setAuthentication(newValue: newValue)
                 }
+                .foregroundColor(Color.navyBlue)
+                .listRowBackground(Color.white)
+                
                 NavigationLink(destination: {
                     NotificationsView()
                 }, label: {
                     Label("Notifications", systemImage: "play.square")
                 })
+                .foregroundColor(Color.navyBlue)
+                .listRowBackground(Color.white)
                 
                 defaultCurrencyPicker
+                    .foregroundColor(Color.navyBlue)
+                    .listRowBackground(Color.white)
                 
                 NavigationLink(destination: {
                     IncomeTypeView()
                 }, label: {
                     Label("Income Type", systemImage: "tray.and.arrow.down")
                 })
+                .foregroundColor(Color.navyBlue)
+                .listRowBackground(Color.white)
                 
                 NavigationLink(destination: {
                     IncomeTagView()
                 }, label: {
                     Label("Income Tag", systemImage: "tag.square")
                 })
+                .foregroundColor(Color.navyBlue)
+                .listRowBackground(Color.white)
                 
                 NavigationLink(destination: {
                     ImportExportView()
                 }, label: {
                     Label("Import and Export", systemImage: "folder")
                 })
+                .foregroundColor(Color.navyBlue)
+                .listRowBackground(Color.white)
                 
                 Button(action: {
                     isPresentingDataAndAccountDeletionConfirmation.toggle()
@@ -98,6 +112,7 @@ struct SettingsView: View {
                         }
                     }
                 }.foregroundColor(.red)
+                    .listRowBackground(Color.white)
                 
                 Button(action: {
                     isPresentingLogoutConfirm.toggle()
@@ -109,13 +124,19 @@ struct SettingsView: View {
                         logoutUser()
                     }
                 }
+                                      .foregroundColor(Color.navyBlue)
+                                      .listRowBackground(Color.white)
                 
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
                 Label("Version " + (appVersion ?? ""), systemImage: "gear.badge.checkmark")
+                    .foregroundColor(Color.navyBlue)
+                    .listRowBackground(Color.white)
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .listStyle(.insetGrouped)
+            .background(Color.navyBlue)
+            .scrollContentBackground(.hidden)
         }
         .onAppear {
             Task.init {
