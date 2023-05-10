@@ -17,15 +17,15 @@ struct BalanceCardView: View {
     
     var body: some View {
         ZStack {
-            Color.black
+            Color(#colorLiteral(red: 0.9058823529, green: 0.9490196078, blue: 0.9803921569, alpha: 1))
             VStack(alignment: .center) {
                 Spacer()
                 HStack {
                     Text(SettingsController().getDefaultCurrency().code)
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .bold()
                     Text("\(accountViewModel.totalBalance.currentValue.withCommas(decimalPlace: 2))")
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .bold()
                 }
                 HStack {
