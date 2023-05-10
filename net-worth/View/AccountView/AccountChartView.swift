@@ -49,6 +49,8 @@ struct AccountChartView: View {
                     }
                     .pickerStyle(SegmentedPickerStyle())
                 }
+                .background(Color.navyBlue)
+                .scrollContentBackground(.hidden)
             }
         }
         .onAppear {
