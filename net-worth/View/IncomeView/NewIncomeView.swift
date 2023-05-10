@@ -44,6 +44,7 @@ struct NewIncomeView: View {
                             Text($0.name).tag($0)
                         }
                     }
+                    .foregroundColor(Color.navyBlue)
                     .onChange(of: incomeTypeSelected) { _ in
                         amount="0.0"
                     }
@@ -79,6 +80,7 @@ struct NewIncomeView: View {
                                 }
                             })
                     }
+                    .foregroundColor(Color.navyBlue)
                     HStack {
                         Text("Tax Paid")
                         Spacer()
@@ -111,16 +113,22 @@ struct NewIncomeView: View {
                                 }
                             })
                     }
+                    .foregroundColor(Color.navyBlue)
                     HStack{
                         DatePicker("Credited on", selection: $date, in: ...Date(), displayedComponents: [.date])
                     }
+                    .foregroundColor(Color.navyBlue)
                     currencyPicker
+                        .foregroundColor(Color.navyBlue)
                     Picker(selection: $incomeTagSelected, label: Text("Tag")) {
                         ForEach(incomeViewModel.incomeTagList, id: \.self) {
                             Text($0.name).tag($0)
                         }
                     }
+                    .foregroundColor(Color.navyBlue)
                 }
+                .listRowBackground(Color.white)
+                .foregroundColor(Color.lightBlue)
             }
             .toolbar {
                 ToolbarItem {
@@ -137,7 +145,11 @@ struct NewIncomeView: View {
                         dismiss()
                     }, label: {
                         Image(systemName: "checkmark")
-                    }).disabled(!allFieldsFilled())
+                            .foregroundColor(Color.lightBlue)
+                            .bold()
+                    })
+                    .font(.system(size: 14).bold())
+                    .disabled(!allFieldsFilled())
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     Menu(content: {
@@ -153,7 +165,10 @@ struct NewIncomeView: View {
                         })
                     }, label: {
                         Image(systemName: "ellipsis")
+                            .foregroundColor(Color.lightBlue)
+                            .bold()
                     })
+                    .font(.system(size: 14).bold())
                 }
             }
             .onAppear {
@@ -184,6 +199,8 @@ struct NewIncomeView: View {
             })
             .navigationTitle("New Income")
             .navigationBarTitleDisplayMode(.inline)
+            .background(Color.navyBlue)
+            .scrollContentBackground(.hidden)
         }
     }
     
