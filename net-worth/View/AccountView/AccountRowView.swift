@@ -22,30 +22,30 @@ struct AccountRowView: View {
             Spacer()
             HStack {
                 Text(accountViewModel.account.accountName)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color.navyBlue)
                     .font(.headline)
                     .multilineTextAlignment(.leading)
                 Spacer()
                 if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
                     Label("", systemImage: "bell.fill")
-                        .foregroundColor(.black)
+                        .foregroundColor(Color.navyBlue)
                         .font(.caption.bold())
                     Text("\(accountViewModel.account.paymentDate)")
-                        .foregroundColor(.black)
+                        .foregroundColor(Color.navyBlue)
                         .font(.caption.bold())
                 } else if(accountViewModel.account.accountType != "Saving") {
                     Label("", systemImage: "bell.slash.fill")
-                        .foregroundColor(.black)
+                        .foregroundColor(Color.navyBlue)
                         .font(.caption.bold())
                 }
             }
             Spacer()
             HStack {
                 Text(accountViewModel.account.currency)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color.navyBlue)
                     .font(.caption.bold())
                 Text("\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 2))")
-                    .foregroundColor(.black)
+                    .foregroundColor(Color.navyBlue)
                     .font(.caption.bold())
             }
             Spacer()

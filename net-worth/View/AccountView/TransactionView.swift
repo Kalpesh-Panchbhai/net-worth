@@ -31,12 +31,12 @@ struct TransactionsView: View {
                             VStack(alignment: .leading) {
                                 Text("\(accountViewModel.accountTransactionList[i].timestamp.getDateAndFormat())")
                                     .font(.headline)
-                                    .foregroundColor(.black)
+                                    .foregroundColor(Color.navyBlue)
                                     .padding(.horizontal)
                                 HStack {
                                     Text("\(accountViewModel.accountTransactionList[i].timestamp.getTimeAndFormat())")
                                         .font(.system(size: 12))
-                                        .foregroundColor(.black)
+                                        .foregroundColor(Color.navyBlue)
                                         .padding(.leading)
                                     if(accountViewModel.account.loanType.elementsEqual("Consumer")) {
                                         if(accountViewModel.accountTransactionList[i].paid) {
@@ -55,7 +55,7 @@ struct TransactionsView: View {
                             VStack(alignment: .trailing) {
                                 Text((accountViewModel.account.currency) + " \(accountViewModel.accountTransactionList[i].currentBalance.withCommas(decimalPlace: 2))")
                                     .font(.headline)
-                                    .foregroundColor(.black)
+                                    .foregroundColor(Color.navyBlue)
                                     .padding(.horizontal)
                                 if( i < accountViewModel.accountTransactionList.count) {
                                     if(accountViewModel.accountTransactionList[i].balanceChange > 0) {

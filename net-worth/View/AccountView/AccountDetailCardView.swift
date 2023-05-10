@@ -19,22 +19,22 @@ struct AccountDetailCardView: View {
         VStack(alignment: .leading) {
             HStack {
                 Text(accountViewModel.account.currency)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color.navyBlue)
                     .font(.caption.bold())
                 Text("\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 2))")
-                    .foregroundColor(.black)
+                    .foregroundColor(Color.navyBlue)
                     .font(.caption.bold())
                 Spacer()
                 if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
                     Label("", systemImage: "bell.fill")
-                        .foregroundColor(.black)
+                        .foregroundColor(Color.navyBlue)
                         .font(.caption.bold())
                     Text("\(accountViewModel.account.paymentDate)")
-                        .foregroundColor(.black)
+                        .foregroundColor(Color.navyBlue)
                         .font(.caption.bold())
                 } else if(accountViewModel.account.accountType != "Saving") {
                     Label("", systemImage: "bell.slash.fill")
-                        .foregroundColor(.black)
+                        .foregroundColor(Color.navyBlue)
                         .font(.caption.bold())
                 }
             }
