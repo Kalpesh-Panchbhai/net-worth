@@ -39,7 +39,7 @@ struct SettingsView: View {
                     VStack() {
                         Image(uiImage: profilePhoto)
                             .clipShape(Circle())
-                            .shadow(color: .white, radius: 3)
+                            .shadow(color: Color.navyBlue, radius: 3)
                             .frame(width: 100, height: 100)
                         
                         Text(Auth.auth().currentUser?.displayName ?? "")
