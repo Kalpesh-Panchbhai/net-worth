@@ -21,7 +21,7 @@ struct AccountListView: View {
     
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)).ignoresSafeArea()
             ScrollView(.vertical, showsIndicators: false) {
                 if(!accountType.elementsEqual("Inactive Account")) {
                     VStack {
@@ -38,7 +38,7 @@ struct AccountListView: View {
                             AccountDetailView(account: account, accountViewModel: accountViewModel)
                         }, label: {
                             AccountRowView(account: account)
-                                .shadow(color: Color.gray, radius: 3)
+                                .shadow(color: Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)), radius: 3)
                                 .contextMenu {
                                     
                                     Label(account.id!, systemImage: "info.square")
@@ -82,6 +82,8 @@ struct AccountListView: View {
                     self.isChartViewOpen.toggle()
                 }, label: {
                     Label("Account List Chart", systemImage: "chart.line.uptrend.xyaxis")
+                        .foregroundColor(Color(#colorLiteral(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)))
+                        .bold()
                 })
             })
         }

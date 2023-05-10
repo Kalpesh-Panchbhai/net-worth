@@ -51,20 +51,20 @@ struct AccountCardView: View {
                 if(getTotalChangeForNonSymbol() >= 0) {
                     Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
                         .foregroundColor(.green)
-                        .font(.system(size: 11))
+                        .font(.system(size: 11).bold())
                         .padding(.bottom)
                     Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
                         .foregroundColor(.green)
-                        .font(.system(size: 11))
+                        .font(.system(size: 11).bold())
                         .padding(.bottom)
                 } else {
                     Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
                         .foregroundColor(.red)
-                        .font(.system(size: 11))
+                        .font(.system(size: 11).bold())
                         .padding(.bottom)
                     Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
                         .foregroundColor(.red)
-                        .font(.system(size: 11))
+                        .font(.system(size: 11).bold())
                         .padding(.bottom)
                 }
             }

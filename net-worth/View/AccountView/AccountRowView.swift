@@ -22,51 +22,50 @@ struct AccountRowView: View {
             Spacer()
             HStack {
                 Text(accountViewModel.account.accountName)
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                     .font(.caption.bold())
                 Spacer()
                 if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
                     Label("", systemImage: "bell.fill")
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .font(.caption.bold())
                     Text("\(accountViewModel.account.paymentDate)")
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .font(.caption.bold())
                 } else if(accountViewModel.account.accountType != "Saving") {
                     Label("", systemImage: "bell.slash.fill")
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .font(.caption.bold())
                 }
             }
             Spacer()
             HStack {
                 Text(accountViewModel.account.currency)
-                    .foregroundColor(.white)
-                    .font(.caption)
+                    .foregroundColor(.black)
+                    .font(.caption.bold())
                 Text("\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 2))")
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                     .font(.caption.bold())
             }
             Spacer()
             HStack {
-                Spacer()
                 if(getTotalChangeForNonSymbol() >= 0) {
                     Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
                         .foregroundColor(.green)
-                        .font(.caption)
+                        .font(.caption.bold())
                         .padding(.bottom)
                     Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
                         .foregroundColor(.green)
-                        .font(.caption)
+                        .font(.caption.bold())
                         .padding(.bottom)
                 } else {
                     Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
                         .foregroundColor(.red)
-                        .font(.caption)
+                        .font(.caption.bold())
                         .padding(.bottom)
                     Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
                         .foregroundColor(.red)
-                        .font(.caption)
+                        .font(.caption.bold())
                         .padding(.bottom)
                 }
             }
@@ -78,7 +77,7 @@ struct AccountRowView: View {
             }
         }
         .padding(.horizontal)
-        .background(Color(.black))
+        .background(Color(#colorLiteral(red: 0.9058823529, green: 0.9490196078, blue: 0.9803921569, alpha: 1)))
         .cornerRadius(10)
     }
     
