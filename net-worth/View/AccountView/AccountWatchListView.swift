@@ -34,7 +34,11 @@ struct AccountWatchListView: View {
                                 Label(watch.id!, systemImage: "info.square")
                             }
                         })
+                        .listRowBackground(Color.white)
+                        .foregroundColor(Color.navyBlue)
                     }
+                    .background(Color.navyBlue)
+                    .scrollContentBackground(.hidden)
                 }
             }
         }
