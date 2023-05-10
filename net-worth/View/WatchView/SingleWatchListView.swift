@@ -24,133 +24,139 @@ struct SingleWatchListView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                ScrollView(.vertical, showsIndicators: false) {
+            ZStack {
+                Color.navyBlue.ignoresSafeArea()
+                VStack {
                     if(watchViewModel.watch.accountID.count > 0) {
                         VStack {
                             BalanceCardView(accountViewModel: accountViewModel, accountType: watch.accountName, isWatchListCardView: true, watchList: watchViewModel.watch)
-                                .frame(width: 360)
+                                .frame(width: 360, height: 50)
                                 .cornerRadius(10)
                         }
-                        .shadow(color: Color.gray, radius: 3)
+                        .padding(.top, 5)
+                        .shadow(color: Color.navyBlue, radius: 3)
                         
-                        LazyVStack {
-                            ForEach(watchViewModel.watch.accountID, id: \.self) { account in
-                                NavigationLink(destination: {
-                                    AccountDetailView(account: Account(id: account), accountViewModel: accountViewModel)
-                                        .toolbarRole(.editor)
-                                }, label: {
-                                    AccountRowView(account: Account(id: account))
-                                        .shadow(color: Color.gray, radius: 3)
-                                        .contextMenu {
-                                            Label(account, systemImage: "info.square")
-                                            
-                                            if(watch.accountName != "All") {
-                                                Button(role: .destructive, action: {
-                                                    watchController.deleteAccountFromWatchList(watchList: watchViewModel.watch, accountID: account)
-                                                    Task.init {
-                                                        await watchViewModel.getWatchList(id: watch.id!)
-                                                        await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
-                                                        if(isAscendingByAlphabetEnabled) {
-                                                            if(isAscendingByAlphabet) {
-                                                                watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                                                    $0.accountName < $1.accountName
-                                                                }).map({
-                                                                    $0.id!
-                                                                })
-                                                            } else {
-                                                                watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                                                    $0.accountName > $1.accountName
-                                                                }).map({
-                                                                    $0.id!
-                                                                })
+                        Divider()
+                        ScrollView(.vertical, showsIndicators: false) {
+                            LazyVStack {
+                                ForEach(watchViewModel.watch.accountID, id: \.self) { account in
+                                    NavigationLink(destination: {
+                                        AccountDetailView(account: Account(id: account), accountViewModel: accountViewModel)
+                                            .toolbarRole(.editor)
+                                    }, label: {
+                                        AccountRowView(account: Account(id: account))
+                                            .shadow(color: Color.navyBlue, radius: 3)
+                                            .contextMenu {
+                                                Label(account, systemImage: "info.square")
+                                                
+                                                if(watch.accountName != "All") {
+                                                    Button(role: .destructive, action: {
+                                                        watchController.deleteAccountFromWatchList(watchList: watchViewModel.watch, accountID: account)
+                                                        Task.init {
+                                                            await watchViewModel.getWatchList(id: watch.id!)
+                                                            await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
+                                                            if(isAscendingByAlphabetEnabled) {
+                                                                if(isAscendingByAlphabet) {
+                                                                    watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                                                        $0.accountName < $1.accountName
+                                                                    }).map({
+                                                                        $0.id!
+                                                                    })
+                                                                } else {
+                                                                    watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                                                        $0.accountName > $1.accountName
+                                                                    }).map({
+                                                                        $0.id!
+                                                                    })
+                                                                }
+                                                                self.isAscendingByAmountEnabled = false
+                                                            } else if(isAscendingByAmountEnabled) {
+                                                                if(isAscendingByAmount) {
+                                                                    watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                                                        $0.currentBalance < $1.currentBalance
+                                                                    }).map({
+                                                                        $0.id!
+                                                                    })
+                                                                } else {
+                                                                    watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                                                        $0.currentBalance > $1.currentBalance
+                                                                    }).map({
+                                                                        $0.id!
+                                                                    })
+                                                                }
+                                                                self.isAscendingByAlphabetEnabled = false
                                                             }
-                                                            self.isAscendingByAmountEnabled = false
-                                                        } else if(isAscendingByAmountEnabled) {
-                                                            if(isAscendingByAmount) {
-                                                                watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                                                    $0.currentBalance < $1.currentBalance
-                                                                }).map({
-                                                                    $0.id!
-                                                                })
+                                                            if(!accountViewModel.accountList.isEmpty) {
+                                                                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                                                             } else {
-                                                                watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                                                    $0.currentBalance > $1.currentBalance
-                                                                }).map({
-                                                                    $0.id!
-                                                                })
+                                                                accountViewModel.totalBalance = BalanceModel(currentValue: 0.0)
                                                             }
-                                                            self.isAscendingByAlphabetEnabled = false
                                                         }
-                                                        if(!accountViewModel.accountList.isEmpty) {
-                                                            await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                                                        } else {
-                                                            accountViewModel.totalBalance = BalanceModel(currentValue: 0.0)
-                                                        }
-                                                    }
-                                                }, label: {
-                                                    Label("Delete", systemImage: "trash")
-                                                })
-                                            }
-                                            
-                                            Button {
-                                                Task.init {
-                                                    await accountViewModel.getAccount(id: account)
+                                                    }, label: {
+                                                        Label("Delete", systemImage: "trash")
+                                                    })
                                                 }
-                                                isNewTransactionViewOpen.toggle()
-                                            } label: {
-                                                Label("New Transaction", systemImage: "square.and.pencil")
+                                                
+                                                Button {
+                                                    Task.init {
+                                                        await accountViewModel.getAccount(id: account)
+                                                    }
+                                                    isNewTransactionViewOpen.toggle()
+                                                } label: {
+                                                    Label("New Transaction", systemImage: "square.and.pencil")
+                                                }
                                             }
-                                        }
+                                    })
+                                }
+                                .padding(10)
+                            }
+                        }
+                        .padding(10)
+                    }
+                }
+                .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
+                    Task.init {
+                        watchViewModel.watch = Watch()
+                        
+                        await watchViewModel.getWatchList(id: watch.id!)
+                        await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
+                        if(isAscendingByAlphabetEnabled) {
+                            if(isAscendingByAlphabet) {
+                                watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                    $0.accountName < $1.accountName
+                                }).map({
+                                    $0.id!
+                                })
+                            } else {
+                                watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                    $0.accountName > $1.accountName
+                                }).map({
+                                    $0.id!
                                 })
                             }
-                            .padding(10)
+                            self.isAscendingByAmountEnabled = false
+                        } else if(isAscendingByAmountEnabled) {
+                            if(isAscendingByAmount) {
+                                watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                    $0.currentBalance < $1.currentBalance
+                                }).map({
+                                    $0.id!
+                                })
+                            } else {
+                                watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                    $0.currentBalance > $1.currentBalance
+                                }).map({
+                                    $0.id!
+                                })
+                            }
+                            self.isAscendingByAlphabetEnabled = false
                         }
+                        await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                     }
-                }
+                }, content: {
+                    UpdateBalanceAccountView(accountViewModel: accountViewModel)
+                })
             }
-            .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
-                Task.init {
-                    watchViewModel.watch = Watch()
-                    
-                    await watchViewModel.getWatchList(id: watch.id!)
-                    await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
-                    if(isAscendingByAlphabetEnabled) {
-                        if(isAscendingByAlphabet) {
-                            watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                $0.accountName < $1.accountName
-                            }).map({
-                                $0.id!
-                            })
-                        } else {
-                            watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                $0.accountName > $1.accountName
-                            }).map({
-                                $0.id!
-                            })
-                        }
-                        self.isAscendingByAmountEnabled = false
-                    } else if(isAscendingByAmountEnabled) {
-                        if(isAscendingByAmount) {
-                            watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                $0.currentBalance < $1.currentBalance
-                            }).map({
-                                $0.id!
-                            })
-                        } else {
-                            watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                $0.currentBalance > $1.currentBalance
-                            }).map({
-                                $0.id!
-                            })
-                        }
-                        self.isAscendingByAlphabetEnabled = false
-                    }
-                    await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                }
-            }, content: {
-                UpdateBalanceAccountView(accountViewModel: accountViewModel)
-            })
         }
         .navigationTitle(watch.accountName)
         .navigationBarTitleDisplayMode(.inline)
@@ -161,7 +167,10 @@ struct SingleWatchListView: View {
                         self.addAccountViewOpen.toggle()
                     }, label: {
                         Image(systemName: "plus")
+                            .foregroundColor(Color.lightBlue)
+                            .bold()
                     })
+                    .font(.system(size: 14).bold())
                 })
             }
             
@@ -170,8 +179,11 @@ struct SingleWatchListView: View {
                     Button(action: {
                         self.isChartViewOpen.toggle()
                     }, label: {
-                        Label("Watch Chart", systemImage: "chart.line.uptrend.xyaxis")
+                        Image(systemName: "chart.line.uptrend.xyaxis")
+                            .foregroundColor(Color.lightBlue)
+                            .bold()
                     })
+                    .font(.system(size: 14).bold())
                 })
             }
             
@@ -240,7 +252,10 @@ struct SingleWatchListView: View {
                         })
                     }, label: {
                         Image(systemName: "ellipsis")
+                            .foregroundColor(Color.lightBlue)
+                            .bold()
                     })
+                    .font(.system(size: 14).bold())
                 })
             }
         }
