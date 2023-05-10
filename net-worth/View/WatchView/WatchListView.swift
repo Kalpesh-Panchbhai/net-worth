@@ -57,6 +57,8 @@ struct WatchListView: View {
                         }
                     })
                 }
+                .listRowBackground(Color.white)
+                .foregroundColor(Color.navyBlue)
             }
             .toolbar {
                 ToolbarItem(content: {
@@ -64,8 +66,10 @@ struct WatchListView: View {
                         self.newWatchListViewOpen.toggle()
                     }, label: {
                         Image(systemName: "plus")
-                            .foregroundColor(.blue)
+                            .foregroundColor(Color.lightBlue)
+                            .bold()
                     })
+                    .font(.system(size: 14).bold())
                 })
             }
             .halfSheet(showSheet: $newWatchListViewOpen) {
@@ -74,6 +78,8 @@ struct WatchListView: View {
             .halfSheet(showSheet: $updateWatchListViewOpen) {
                 UpdateWatchView(watchViewModel: watchViewModel)
             }
+            .background(Color.navyBlue)
+            .scrollContentBackground(.hidden)
             .navigationTitle("Watch List")
             .navigationBarTitleDisplayMode(.inline)
         }
