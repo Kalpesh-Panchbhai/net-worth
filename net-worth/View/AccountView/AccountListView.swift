@@ -19,6 +19,8 @@ struct AccountListView: View {
     
     var accountController = AccountController()
     
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         ZStack {
             Color.navyBlue.ignoresSafeArea()
@@ -78,6 +80,17 @@ struct AccountListView: View {
         }
         .navigationTitle(accountType)
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(
+            leading: Button(action: {
+                self.presentationMode.wrappedValue.dismiss()
+            }) {
+                Image(systemName: "chevron.left")
+                    .foregroundColor(Color.lightBlue)
+                    .bold()
+            }
+                .font(.system(size: 14).bold())
+        )
         .toolbar {
             ToolbarItem(content: {
                 Button(action: {
@@ -109,7 +122,6 @@ struct AccountListView: View {
                 await accountViewModel.getAccountList()
             }
         }
-        .background(Color.gray)
     }
 }
 

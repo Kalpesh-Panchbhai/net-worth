@@ -71,6 +71,17 @@ struct AccountDetailView: View {
         }
         .navigationTitle(accountViewModel.account.accountName)
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(
+            leading: Button(action: {
+                self.presentationMode.wrappedValue.dismiss()
+            }) {
+                Image(systemName: "chevron.left")
+                    .foregroundColor(Color.lightBlue)
+                    .bold()
+            }
+                .font(.system(size: 14).bold())
+        )
         .toolbar {
             ToolbarItem(content: {
                 Button(action: {

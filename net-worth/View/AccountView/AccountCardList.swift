@@ -23,6 +23,8 @@ struct AccountCardList: View {
     
     @State private var deletedAccount = Account()
     
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -46,13 +48,13 @@ struct AccountCardList: View {
                     ZStack {
                         Color.navyBlue.ignoresSafeArea()
                         VStack {
-                                VStack {
-                                    BalanceCardView(accountViewModel: accountViewModel, accountType: "Net Worth", isWatchListCardView: false, watchList: Watch())
-                                        .frame(width: 360, height: 50)
-                                        .cornerRadius(10)
-                                }
-                                .shadow(color: Color.navyBlue, radius: 3)
-                                Divider()
+                            VStack {
+                                BalanceCardView(accountViewModel: accountViewModel, accountType: "Net Worth", isWatchListCardView: false, watchList: Watch())
+                                    .frame(width: 360, height: 50)
+                                    .cornerRadius(10)
+                            }
+                            .shadow(color: Color.navyBlue, radius: 3)
+                            Divider()
                             ScrollView(.vertical, showsIndicators: false) {
                                 LazyVStack {
                                     ForEach(accountViewModel.sectionHeaders, id: \.self) { accountType in
