@@ -43,6 +43,7 @@ struct NotificationsView: View {
                         .foregroundColor(Color.navyBlue)
                 }
                 .listRowBackground(Color.white)
+                .foregroundColor(Color.lightBlue)
                 
                 Section("Equity Notifications") {
                     Toggle("Show Notifications", isOn: $equityNotification)
@@ -52,6 +53,7 @@ struct NotificationsView: View {
                         .foregroundColor(Color.navyBlue)
                 }
                 .listRowBackground(Color.white)
+                .foregroundColor(Color.lightBlue)
                 
                 Section("ETF Notifications") {
                     Toggle("Show Notifications", isOn: $etfNotification)
@@ -61,6 +63,7 @@ struct NotificationsView: View {
                         .foregroundColor(Color.navyBlue)
                 }
                 .listRowBackground(Color.white)
+                .foregroundColor(Color.lightBlue)
                 
                 Section("Cryptocurrency Notifications") {
                     Toggle("Show Notifications", isOn: $cryptoCurrencyNotification)
@@ -70,6 +73,7 @@ struct NotificationsView: View {
                         .foregroundColor(Color.navyBlue)
                 }
                 .listRowBackground(Color.white)
+                .foregroundColor(Color.lightBlue)
                 
                 Section("Futures Notifications") {
                     Toggle("Show Notifications", isOn: $futureNotification)
@@ -79,6 +83,7 @@ struct NotificationsView: View {
                         .foregroundColor(Color.navyBlue)
                 }
                 .listRowBackground(Color.white)
+                .foregroundColor(Color.lightBlue)
                 
                 Section("Options Notifications") {
                     Toggle("Show Notifications", isOn: $optionNotification)
@@ -88,6 +93,7 @@ struct NotificationsView: View {
                         .foregroundColor(Color.navyBlue)
                 }
                 .listRowBackground(Color.white)
+                .foregroundColor(Color.lightBlue)
                 
                 Section("Credit Card Notifications") {
                     Toggle("Show Notifications", isOn: $creditCardNotification)
@@ -97,6 +103,7 @@ struct NotificationsView: View {
                         .foregroundColor(Color.navyBlue)
                 }
                 .listRowBackground(Color.white)
+                .foregroundColor(Color.lightBlue)
                 
                 Section("Loan Notifications") {
                     Toggle("Show Notifications", isOn: $loanNotification)
@@ -106,6 +113,7 @@ struct NotificationsView: View {
                         .foregroundColor(Color.navyBlue)
                 }
                 .listRowBackground(Color.white)
+                .foregroundColor(Color.lightBlue)
                 
                 Section("Other Notifications") {
                     Toggle("Show Notifications", isOn: $otherNotification)
@@ -115,6 +123,7 @@ struct NotificationsView: View {
                         .foregroundColor(Color.navyBlue)
                 }
                 .listRowBackground(Color.white)
+                .foregroundColor(Color.lightBlue)
             }
             .navigationTitle("Notifications")
             .listStyle(.insetGrouped)
