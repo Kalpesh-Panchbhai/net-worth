@@ -23,7 +23,8 @@ struct AccountCardView: View {
             HStack {
                 Text(account.accountName)
                     .foregroundColor(.black)
-                    .font(.caption.bold())
+                    .font(.headline)
+                    .multilineTextAlignment(.leading)
                 Spacer()
                 if(account.paymentReminder && account.accountType != "Saving") {
                     Label("", systemImage: "bell.fill")

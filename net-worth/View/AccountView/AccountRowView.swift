@@ -23,7 +23,8 @@ struct AccountRowView: View {
             HStack {
                 Text(accountViewModel.account.accountName)
                     .foregroundColor(.black)
-                    .font(.caption.bold())
+                    .font(.headline)
+                    .multilineTextAlignment(.leading)
                 Spacer()
                 if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
                     Label("", systemImage: "bell.fill")

@@ -41,11 +41,11 @@ struct TransactionsView: View {
                                     if(accountViewModel.account.loanType.elementsEqual("Consumer")) {
                                         if(accountViewModel.accountTransactionList[i].paid) {
                                             Text("Paid")
-                                                .font(.system(size: 12))
+                                                .font(.system(size: 12).bold())
                                                 .foregroundColor(.green)
                                         } else {
                                             Text("Not Paid")
-                                                .font(.system(size: 12))
+                                                .font(.system(size: 12).bold())
                                                 .foregroundColor(.red)
                                         }
                                     }
@@ -60,12 +60,12 @@ struct TransactionsView: View {
                                 if( i < accountViewModel.accountTransactionList.count) {
                                     if(accountViewModel.accountTransactionList[i].balanceChange > 0) {
                                         Text("+\(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 2))")
-                                            .font(.system(size: 12))
+                                            .font(.system(size: 12).bold())
                                             .foregroundColor(.green)
                                             .padding(.horizontal)
                                     } else if(accountViewModel.accountTransactionList[i].balanceChange < 0) {
                                         Text("\(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 2))")
-                                            .font(.system(size: 12))
+                                            .font(.system(size: 12).bold())
                                             .foregroundColor(.red)
                                             .padding(.horizontal)
                                     }
