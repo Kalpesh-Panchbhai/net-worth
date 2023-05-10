@@ -75,6 +75,7 @@ struct WatchListView: View {
                 UpdateWatchView(watchViewModel: watchViewModel)
             }
             .navigationTitle("Watch List")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

@@ -50,6 +50,7 @@ struct ChartView: View {
                 .frame(minHeight: 600)
             }
             .navigationTitle("Chart")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear {
             watchListSelected = watchViewModel.watchList.filter {

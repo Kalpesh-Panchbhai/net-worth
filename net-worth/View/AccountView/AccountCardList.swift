@@ -147,7 +147,7 @@ struct AccountCardList: View {
                 })
             }
             .navigationTitle("Account")
-            .toolbarBackground(Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)), for: .navigationBar)
+            .navigationBarTitleDisplayMode(.inline)
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             Task.init {

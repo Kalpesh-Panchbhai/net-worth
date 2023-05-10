@@ -114,6 +114,7 @@ struct SettingsView: View {
                 Label("Version " + (appVersion ?? ""), systemImage: "gear.badge.checkmark")
             }
             .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
             .listStyle(.insetGrouped)
         }
         .onAppear {

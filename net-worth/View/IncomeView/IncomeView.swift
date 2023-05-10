@@ -212,6 +212,7 @@ struct IncomeView: View {
                 NewIncomeView(incomeViewModel: incomeViewModel)
             })
             .navigationTitle("Income")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
     
