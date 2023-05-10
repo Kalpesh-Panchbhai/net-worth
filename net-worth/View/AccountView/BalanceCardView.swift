@@ -21,10 +21,10 @@ struct BalanceCardView: View {
             VStack(alignment: .center) {
                 HStack {
                     Text(SettingsController().getDefaultCurrency().code)
-                        .foregroundColor(.black)
+                        .foregroundColor(Color.navyBlue)
                         .bold()
                     Text("\(accountViewModel.totalBalance.currentValue.withCommas(decimalPlace: 2))")
-                        .foregroundColor(.black)
+                        .foregroundColor(Color.navyBlue)
                         .bold()
                 }
                 HStack {
