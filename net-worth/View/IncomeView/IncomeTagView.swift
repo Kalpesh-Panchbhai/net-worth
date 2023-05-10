@@ -19,11 +19,14 @@ struct IncomeTagView: View {
         NavigationView {
             if(incomeViewModel.incomeTagList.isEmpty) {
                 ZStack {
+                    Color.navyBlue.ignoresSafeArea()
                     HStack {
                         Text("Click on")
                         Image(systemName: "plus")
                         Text("Icon to add new Income Tag.")
                     }
+                    .foregroundColor(Color.lightBlue)
+                    .bold()
                 }
             } else {
                 List {
