@@ -211,14 +211,14 @@ struct IncomeView: View {
                                 .font(.system(size: 14).bold())
                             }
                         }
-                        ToolbarItem(placement: .bottomBar){
-                            let balance = incomeViewModel.incomeTotalAmount
-                            HStack {
-                                Text("Total Income: \(SettingsController().getDefaultCurrency().code) \(balance.withCommas(decimalPlace: 2))")
-                                    .foregroundColor(Color.navyBlue)
-                                    .font(.title2)
-                            }
-                        }
+//                        ToolbarItem(placement: .bottomBar){
+//                            let balance = incomeViewModel.incomeTotalAmount
+//                            HStack {
+//                                Text("Total Income: \(SettingsController().getDefaultCurrency().code) \(balance.withCommas(decimalPlace: 2))")
+//                                    .foregroundColor(Color.navyBlue)
+//                                    .font(.title2)
+//                            }
+//                        }
                     }
                     .background(Color.navyBlue)
                     .scrollContentBackground(.hidden)
