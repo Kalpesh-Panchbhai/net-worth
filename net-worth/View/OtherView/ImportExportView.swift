@@ -17,11 +17,14 @@ struct ImportExportView: View {
         NavigationView {
             if(importExportViewModel.backupList.isEmpty) {
                 ZStack {
+                    Color.navyBlue.ignoresSafeArea()
                     HStack {
                         Text("Click on")
                         Image(systemName: "tray.and.arrow.down.fill")
                         Text("Icon to backup data.")
                     }
+                    .foregroundColor(Color.lightBlue)
+                    .bold()
                 }
             } else {
                 List {
@@ -94,7 +97,11 @@ struct ImportExportView: View {
                             })
                         }
                     })
+                    .listRowBackground(Color.white)
+                    .foregroundColor(Color.navyBlue)
                 }
+                .background(Color.navyBlue)
+                .scrollContentBackground(.hidden)
             }
         }
         .onAppear {
@@ -110,8 +117,11 @@ struct ImportExportView: View {
                         await importExportViewModel.getAllBackup()
                     }
                 }, label: {
-                    Label("Backup", systemImage: "tray.and.arrow.down.fill")
+                    Image(systemName: "tray.and.arrow.down.fill")
+                        .foregroundColor(Color.lightBlue)
+                        .bold()
                 })
+                .font(.system(size: 14).bold())
             })
         }
         .navigationTitle("Import and Export")
