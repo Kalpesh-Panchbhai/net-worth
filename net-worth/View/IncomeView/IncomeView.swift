@@ -34,7 +34,7 @@ struct IncomeView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                if(incomeViewModel.incomeList.isEmpty) {
+                if(incomeViewModel.incomeList.isEmpty && incomeViewModel.incomeListLoaded) {
                     ZStack {
                         Color.navyBlue.ignoresSafeArea()
                         HStack {
@@ -44,6 +44,11 @@ struct IncomeView: View {
                         }
                         .foregroundColor(Color.lightBlue)
                         .bold()
+                    }
+                }  else if (!incomeViewModel.incomeListLoaded) {
+                    ZStack {
+                        Color.navyBlue.ignoresSafeArea()
+                        ProgressView().tint(Color.lightBlue)
                     }
                 } else {
                     List {
