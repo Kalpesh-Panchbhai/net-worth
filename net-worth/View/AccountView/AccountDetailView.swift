@@ -29,6 +29,9 @@ struct AccountDetailView: View {
     init(account: Account, accountViewModel: AccountViewModel) {
         self.account = account
         self.accountViewModel = accountViewModel
+        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)
+        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor(red: 0.9058823529, green: 0.9490196078, blue: 0.9803921569, alpha: 1)], for: .selected)
+        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)], for: .normal)
     }
     
     var body: some View {
