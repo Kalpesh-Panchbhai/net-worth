@@ -39,6 +39,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         FirebaseApp.configure()
         UINavigationBar.appearance().barTintColor = UIColor(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)]
+        
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.stackedLayoutAppearance.normal.badgeBackgroundColor = UIColor(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)
+        UITabBar.appearance().standardAppearance = tabBarAppearance
         return true
     }
     
