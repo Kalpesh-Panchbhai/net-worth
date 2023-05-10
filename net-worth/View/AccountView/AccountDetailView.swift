@@ -75,11 +75,11 @@ struct AccountDetailView: View {
                 }, label: {
                     if(watchViewModel.watchListForAccount.count > 1) {
                         Image(systemName: "bookmark.fill")
-                            .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
+                            .foregroundColor(Color(#colorLiteral(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)))
                             .bold()
                     } else {
                         Image(systemName: "bookmark")
-                            .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
+                            .foregroundColor(Color(#colorLiteral(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)))
                             .bold()
                     }
                 })
@@ -175,7 +175,7 @@ struct AccountDetailView: View {
                     
                 }, label: {
                     Image(systemName: "ellipsis")
-                        .foregroundColor(Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)))
+                        .foregroundColor(Color(#colorLiteral(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)))
                         .bold()
                 })
             })
