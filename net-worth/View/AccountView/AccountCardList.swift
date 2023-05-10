@@ -26,7 +26,7 @@ struct AccountCardList: View {
     var body: some View {
         NavigationView {
             ZStack {
-                if(accountViewModel.accountList.isEmpty) {
+                if(accountViewModel.accountList.isEmpty && accountViewModel.accountListLoaded) {
                     ZStack {
                         Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)).ignoresSafeArea()
                         HStack {
@@ -36,6 +36,11 @@ struct AccountCardList: View {
                         }
                         .foregroundColor(Color(#colorLiteral(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)))
                         .bold()
+                    }
+                } else if (!accountViewModel.accountListLoaded) {
+                    ZStack {
+                        Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)).ignoresSafeArea()
+                        ProgressView().tint(Color(#colorLiteral(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)))
                     }
                 } else {
                     ZStack {

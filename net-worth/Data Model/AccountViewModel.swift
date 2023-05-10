@@ -11,6 +11,7 @@ import FirebaseFirestore
 class AccountViewModel: ObservableObject {
     
     @Published var accountList = [Account]()
+    @Published var accountListLoaded = false
     @Published var account = Account()
     @Published var accountTransactionList = [AccountTransaction]()
     @Published var accountTransactionListWithRange = [AccountTransaction]()
@@ -141,6 +142,7 @@ class AccountViewModel: ObservableObject {
             DispatchQueue.main.async {
                 self.accountList = list
                 self.originalAccountList = list
+                self.accountListLoaded = true
             }
         } catch {
             print(error)
