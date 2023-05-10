@@ -49,7 +49,6 @@ struct NewAccountView: View {
                             Text(accountType.rawValue).tag(accountType.rawValue)
                                 .foregroundColor(Color.navyBlue)
                         }
-                        .foregroundColor(Color.navyBlue)
                     }
                     .foregroundColor(Color.navyBlue)
                     .onChange(of: accountType) { _ in

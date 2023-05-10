@@ -98,9 +98,10 @@ public struct PieChartView: View {
                     VStack {
                         Text(self.activeIndex == -1 ? "Total" : self.activeIndex == -2 ? "Other" : names[self.activeIndex])
                             .font(.title)
-                            .foregroundColor(Color.gray)
-                        Text(self.formatter(self.activeIndex == -1 ? values.reduce(0, +) : self.activeIndex == -2 ? getOtherTotal() : values[self.activeIndex]))
+                            .foregroundColor(Color.navyBlue)
+                        Text(self.activeIndex == -1 ? values.reduce(0, +).withCommas(decimalPlace: 2) : self.activeIndex == -2 ? getOtherTotal().withCommas(decimalPlace: 2) : values[self.activeIndex].withCommas(decimalPlace: 2))
                             .font(.title)
+                            .foregroundColor(Color.navyBlue)
                     }
                     
                 }
@@ -130,18 +131,20 @@ struct PieChartRows: View {
     
     var body: some View {
         VStack{
-            ScrollView(.vertical) {
+            ScrollView(.vertical, showsIndicators: false) {
                 ForEach(0..<self.values.count, id: \.self){ i in
                     HStack {
                         RoundedRectangle(cornerRadius: 5.0)
                             .fill(self.colors[i])
                             .frame(width: 20, height: 20)
                         Text(self.names[i])
+                            .foregroundColor(Color.navyBlue)
                         Spacer()
                         VStack(alignment: .trailing) {
                             Text((Double(self.values[i])?.withCommas(decimalPlace: 2))!)
+                                .foregroundColor(Color.navyBlue)
                             Text(self.percents[i])
-                                .foregroundColor(Color.gray)
+                                .foregroundColor(Color.navyBlue)
                         }
                     }
                     .padding(.horizontal)

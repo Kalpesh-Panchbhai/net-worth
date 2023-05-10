@@ -25,6 +25,8 @@ struct ChartView: View {
                 }, label: {
                     Text("Watch List")
                 })
+                .listRowBackground(Color.white)
+                .foregroundColor(Color.navyBlue)
                 .onChange(of: watchListSelected, perform: { _ in
                     Task.init {
                         await accountViewModel.getAccountsForWatchList(accountID: watchListSelected.accountID)
@@ -46,11 +48,15 @@ struct ChartView: View {
                         $0.currentBalance > $1.currentBalance
                     }).map { _ in
                             .random
-                    })
+                    }, backgroundColor: Color.white)
+                .listRowBackground(Color.white)
+                .foregroundColor(Color.navyBlue)
                 .frame(minHeight: 600)
             }
             .navigationTitle("Chart")
             .navigationBarTitleDisplayMode(.inline)
+            .background(Color.navyBlue)
+            .scrollContentBackground(.hidden)
         }
         .onAppear {
             watchListSelected = watchViewModel.watchList.filter {
