@@ -33,7 +33,6 @@ struct IncomeTagView: View {
                             if(item.isdefault) {
                                 Text("DEFAULT")
                                     .font(.system(size: 10))
-                                    .foregroundColor(.gray)
                             }
                         }
                         .contextMenu {
@@ -53,7 +52,11 @@ struct IncomeTagView: View {
                             }
                         }
                     }
+                    .listRowBackground(Color.white)
+                    .foregroundColor(Color.navyBlue)
                 }
+                .background(Color.navyBlue)
+                .scrollContentBackground(.hidden)
             }
         }
         .toolbar {
@@ -61,8 +64,11 @@ struct IncomeTagView: View {
                 Button(action: {
                     self.addNewIncomeTagOpenView.toggle()
                 }, label: {
-                    Label("Add Income Tag", systemImage: "plus")
+                    Image(systemName: "plus")
+                        .foregroundColor(Color.lightBlue)
+                        .bold()
                 })
+                .font(.system(size: 14).bold())
             }
         }
         .sheet(isPresented: $addNewIncomeTagOpenView, content: {
