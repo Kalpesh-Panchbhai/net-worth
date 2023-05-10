@@ -39,7 +39,7 @@ struct AccountDetailView: View {
             VStack {
                 AccountDetailCardView(accountViewModel: accountViewModel)
                     .cornerRadius(10)
-                    .shadow(color: Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)), radius: 3)
+                    .shadow(color: Color.navyBlue, radius: 3)
                 Picker(selection: $tabItem, content: {
                     Text("Transactions").tag(1)
                     Text("Chart").tag(2)
@@ -78,11 +78,11 @@ struct AccountDetailView: View {
                 }, label: {
                     if(watchViewModel.watchListForAccount.count > 1) {
                         Image(systemName: "bookmark.fill")
-                            .foregroundColor(Color(#colorLiteral(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)))
+                            .foregroundColor(Color.lightBlue)
                             .bold()
                     } else {
                         Image(systemName: "bookmark")
-                            .foregroundColor(Color(#colorLiteral(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)))
+                            .foregroundColor(Color.lightBlue)
                             .bold()
                     }
                 })
@@ -178,7 +178,7 @@ struct AccountDetailView: View {
                     
                 }, label: {
                     Image(systemName: "ellipsis")
-                        .foregroundColor(Color(#colorLiteral(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)))
+                        .foregroundColor(Color.lightBlue)
                         .bold()
                 })
             })
@@ -211,6 +211,6 @@ struct AccountDetailView: View {
         }, content: {
             AddWatchListToAccountView(watchViewModel: watchViewModel, account: account)
         })
-        .background(Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)))
+        .background(Color.navyBlue)
     }
 }

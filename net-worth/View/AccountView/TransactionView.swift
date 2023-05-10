@@ -141,14 +141,14 @@ struct TransactionsView: View {
                             }
                         }
                         .padding(8)
-                        .background(Color(#colorLiteral(red: 0.9058823529, green: 0.9490196078, blue: 0.9803921569, alpha: 1)))
+                        .background(Color.white)
                         .cornerRadius(10)
-                        .shadow(color: Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)), radius: 3)
+                        .shadow(color: Color.navyBlue, radius: 3)
                     }
                 }
             }
             .padding(8)
-            .background(Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)))
+            .background(Color.navyBlue)
         }
     }
 }

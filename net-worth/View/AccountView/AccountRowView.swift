@@ -78,7 +78,7 @@ struct AccountRowView: View {
             }
         }
         .padding(.horizontal)
-        .background(Color(#colorLiteral(red: 0.9058823529, green: 0.9490196078, blue: 0.9803921569, alpha: 1)))
+        .background(Color.white)
         .cornerRadius(10)
     }
     

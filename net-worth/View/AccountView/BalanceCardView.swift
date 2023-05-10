@@ -17,7 +17,7 @@ struct BalanceCardView: View {
     
     var body: some View {
         ZStack {
-            Color(#colorLiteral(red: 0.9058823529, green: 0.9490196078, blue: 0.9803921569, alpha: 1))
+            Color.white
             VStack(alignment: .center) {
                 HStack {
                     Text(SettingsController().getDefaultCurrency().code)
