@@ -41,14 +41,14 @@ struct AccountCardList: View {
                     ZStack {
                         Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)).ignoresSafeArea()
                         VStack {
-                            ScrollView(.vertical, showsIndicators: false) {
                                 VStack {
                                     BalanceCardView(accountViewModel: accountViewModel, accountType: "Net Worth", isWatchListCardView: false, watchList: Watch())
-                                        .frame(width: 360)
+                                        .frame(width: 360, height: 50)
                                         .cornerRadius(10)
                                 }
                                 .shadow(color: Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)), radius: 3)
-                                
+                                Divider()
+                            ScrollView(.vertical, showsIndicators: false) {
                                 LazyVStack {
                                     ForEach(accountViewModel.sectionHeaders, id: \.self) { accountType in
                                         if(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 0) {
@@ -120,6 +120,7 @@ struct AccountCardList: View {
                                                 .padding(5)
                                             }
                                         }
+                                        Divider()
                                     }
                                 }
                                 .padding(10)
