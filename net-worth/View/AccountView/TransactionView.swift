@@ -24,7 +24,7 @@ struct TransactionsView: View {
     
     var body: some View {
         VStack {
-            ScrollView(.vertical) {
+            ScrollView(.vertical, showsIndicators: false) {
                 LazyVStack {
                     ForEach(0..<accountViewModel.accountTransactionList.count, id: \.self) { i in
                         HStack{

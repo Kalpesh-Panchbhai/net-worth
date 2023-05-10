@@ -22,57 +22,59 @@ struct AccountListView: View {
     var body: some View {
         ZStack {
             Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)).ignoresSafeArea()
-            ScrollView(.vertical, showsIndicators: false) {
+            VStack {
                 if(!accountType.elementsEqual("Inactive Account")) {
                     VStack {
                         BalanceCardView(accountViewModel: accountViewModel, accountType: accountType, isWatchListCardView: false, watchList: Watch())
-                            .frame(width: 360)
+                            .frame(width: 360, height: 50)
                             .cornerRadius(10)
                     }
                     .padding(.top, 5)
                     .shadow(color: Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)), radius: 3)
                 }
-                LazyVStack {
-                    ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
-                        NavigationLink(destination: {
-                            AccountDetailView(account: account, accountViewModel: accountViewModel)
-                        }, label: {
-                            AccountRowView(account: account)
-                                .shadow(color: Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)), radius: 3)
-                                .contextMenu {
-                                    
-                                    Label(account.id!, systemImage: "info.square")
-                                    
-                                    Button(role: .destructive, action: {
-                                        Task.init {
-                                            try await accountController.deleteAccount(account: account)
-                                        }
-                                        Task.init {
-                                            await accountViewModel.getAccountList()
-                                            await accountViewModel.getTotalBalance(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
-                                        }
-                                    }, label: {
-                                        Label("Delete", systemImage: "trash")
-                                    })
-                                    
-                                    if(account.active) {
-                                        Button {
+                Divider()
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVStack {
+                        ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
+                            NavigationLink(destination: {
+                                AccountDetailView(account: account, accountViewModel: accountViewModel)
+                            }, label: {
+                                AccountRowView(account: account)
+                                    .shadow(color: Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)), radius: 3)
+                                    .contextMenu {
+                                        
+                                        Label(account.id!, systemImage: "info.square")
+                                        
+                                        Button(role: .destructive, action: {
                                             Task.init {
-                                                await accountViewModel.getAccount(id: account.id!)
+                                                try await accountController.deleteAccount(account: account)
                                             }
-                                            isNewTransactionViewOpen.toggle()
-                                        } label: {
-                                            Label("New Transaction", systemImage: "square.and.pencil")
+                                            Task.init {
+                                                await accountViewModel.getAccountList()
+                                                await accountViewModel.getTotalBalance(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
+                                            }
+                                        }, label: {
+                                            Label("Delete", systemImage: "trash")
+                                        })
+                                        
+                                        if(account.active) {
+                                            Button {
+                                                Task.init {
+                                                    await accountViewModel.getAccount(id: account.id!)
+                                                }
+                                                isNewTransactionViewOpen.toggle()
+                                            } label: {
+                                                Label("New Transaction", systemImage: "square.and.pencil")
+                                            }
                                         }
                                     }
-                                }
-                            Divider()
-                        })
+                            })
+                        }
+                        .padding(10)
                     }
-                    .padding(10)
                 }
+                .padding(10)
             }
-            .padding(10)
         }
         .navigationTitle(accountType)
         .navigationBarTitleDisplayMode(.inline)
