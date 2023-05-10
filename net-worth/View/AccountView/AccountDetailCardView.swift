@@ -17,14 +17,19 @@ struct AccountDetailCardView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Spacer()
             HStack {
-                Text(accountViewModel.account.accountName)
+                Text(accountViewModel.account.currency)
                     .foregroundColor(.white)
-                    .font(.headline.bold())
+                    .font(.caption)
+                Text("\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 2))")
+                    .foregroundColor(.white)
+                    .font(.caption.bold())
                 Spacer()
                 if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
                     Label("", systemImage: "bell.fill")
+                        .foregroundColor(.white)
+                        .font(.caption.bold())
+                    Text("\(accountViewModel.account.paymentDate)")
                         .foregroundColor(.white)
                         .font(.caption.bold())
                 } else if(accountViewModel.account.accountType != "Saving") {
@@ -32,23 +37,6 @@ struct AccountDetailCardView: View {
                         .foregroundColor(.white)
                         .font(.caption.bold())
                 }
-            }
-            Spacer()
-            HStack {
-                if(accountViewModel.account.paymentReminder) {
-                    Text("\(accountViewModel.account.paymentDate)")
-                        .foregroundColor(.white)
-                        .font(.caption.bold())
-                }
-            }
-            Spacer()
-            HStack(alignment: .center) {
-                Text(accountViewModel.account.currency)
-                    .foregroundColor(.white)
-                    .font(.caption)
-                Text("\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 2))")
-                    .foregroundColor(.white)
-                    .font(.caption.bold())
             }
             HStack {
                 if(getTotalChangeForNonSymbol() >= 0) {
@@ -73,7 +61,7 @@ struct AccountDetailCardView: View {
             }
         }
         .padding(.horizontal)
-        .frame(width: 360,height: 200)
+        .frame(width: 360,height: 50)
         .padding(8)
         .background(Color(.black))
     }
