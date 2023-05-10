@@ -144,6 +144,7 @@ struct AccountCardList: View {
                             .foregroundColor(Color(#colorLiteral(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)))
                             .bold()
                     })
+                    .font(.system(size: 14).bold())
                 })
             }
             .navigationTitle("Account")

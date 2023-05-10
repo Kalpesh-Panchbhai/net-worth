@@ -37,8 +37,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
-//        UINavigationBar.appearance().isTranslucent = false
-//        UINavigationBar.appearance().barTintColor = UIColor(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)
         UINavigationBar.appearance().barTintColor = UIColor(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)]
         return true
