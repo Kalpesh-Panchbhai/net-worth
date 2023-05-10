@@ -9,28 +9,30 @@ import SwiftUI
 
 struct NotificationsView: View {
     
-    @State private var mutualFundNotification: Bool
-    @State private var equityNotification: Bool
-    @State private var etfNotification: Bool
-    @State private var cryptoCurrencyNotification: Bool
-    @State private var futureNotification: Bool
-    @State private var optionNotification: Bool
-    @State private var creditCardNotification: Bool
-    @State private var loanNotification: Bool
-    @State private var otherNotification: Bool
+    @State private var mutualFundNotification: Bool = false
+    @State private var equityNotification: Bool = false
+    @State private var etfNotification: Bool = false
+    @State private var cryptoCurrencyNotification: Bool = false
+    @State private var futureNotification: Bool = false
+    @State private var optionNotification: Bool = false
+    @State private var creditCardNotification: Bool = false
+    @State private var loanNotification: Bool = false
+    @State private var otherNotification: Bool = false
+    
+    @Environment(\.presentationMode) var presentationMode
     
     private var notificationController = NotificationController()
-    init() {
-        mutualFundNotification = notificationController.isNotificationEnabled(accountType: "MUTUALFUND")
-        equityNotification = notificationController.isNotificationEnabled(accountType: "EQUITY")
-        etfNotification = notificationController.isNotificationEnabled(accountType: "ETF")
-        cryptoCurrencyNotification = notificationController.isNotificationEnabled(accountType: "CRYPTOCURRENCY")
-        futureNotification = notificationController.isNotificationEnabled(accountType: "FUTURE")
-        optionNotification = notificationController.isNotificationEnabled(accountType: "OPTION")
-        creditCardNotification = notificationController.isNotificationEnabled(accountType: "Credit Card")
-        loanNotification = notificationController.isNotificationEnabled(accountType: "Loan")
-        otherNotification = notificationController.isNotificationEnabled(accountType: "Other")
-    }
+//    init() {
+//        mutualFundNotification = notificationController.isNotificationEnabled(accountType: "MUTUALFUND")
+//        equityNotification = notificationController.isNotificationEnabled(accountType: "EQUITY")
+//        etfNotification = notificationController.isNotificationEnabled(accountType: "ETF")
+//        cryptoCurrencyNotification = notificationController.isNotificationEnabled(accountType: "CRYPTOCURRENCY")
+//        futureNotification = notificationController.isNotificationEnabled(accountType: "FUTURE")
+//        optionNotification = notificationController.isNotificationEnabled(accountType: "OPTION")
+//        creditCardNotification = notificationController.isNotificationEnabled(accountType: "Credit Card")
+//        loanNotification = notificationController.isNotificationEnabled(accountType: "Loan")
+//        otherNotification = notificationController.isNotificationEnabled(accountType: "Other")
+//    }
     
     var body: some View {
         VStack {
@@ -129,6 +131,17 @@ struct NotificationsView: View {
             .listStyle(.insetGrouped)
             .background(Color.navyBlue)
             .scrollContentBackground(.hidden)
+            .navigationBarBackButtonHidden(true)
+            .navigationBarItems(
+                leading: Button(action: {
+                    self.presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(Color.lightBlue)
+                        .bold()
+                }
+                    .font(.system(size: 14).bold())
+            )
         }
     }
 }

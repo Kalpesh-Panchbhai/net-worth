@@ -22,6 +22,8 @@ struct SingleWatchListView: View {
     @StateObject var accountViewModel = AccountViewModel()
     @StateObject var watchViewModel = WatchViewModel()
     
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -160,6 +162,17 @@ struct SingleWatchListView: View {
         }
         .navigationTitle(watch.accountName)
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(
+            leading: Button(action: {
+                self.presentationMode.wrappedValue.dismiss()
+            }) {
+                Image(systemName: "chevron.left")
+                    .foregroundColor(Color.lightBlue)
+                    .bold()
+            }
+                .font(.system(size: 14).bold())
+        )
         .toolbar {
             if(watch.accountName != "All" && accountViewModel.originalAccountList.count > 0) {
                 ToolbarItem(content: {

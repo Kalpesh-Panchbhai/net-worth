@@ -15,6 +15,8 @@ struct IncomeTagView: View {
     
     private var incomeController = IncomeController()
     
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         NavigationView {
             if(incomeViewModel.incomeTagList.isEmpty) {
@@ -83,5 +85,16 @@ struct IncomeTagView: View {
             }
         }
         .navigationTitle("Income Tag")
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(
+            leading: Button(action: {
+                self.presentationMode.wrappedValue.dismiss()
+            }) {
+                Image(systemName: "chevron.left")
+                    .foregroundColor(Color.lightBlue)
+                    .bold()
+            }
+                .font(.system(size: 14).bold())
+        )
     }
 }

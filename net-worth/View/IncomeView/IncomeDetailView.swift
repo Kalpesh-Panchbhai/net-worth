@@ -11,6 +11,8 @@ struct IncomeDetailView: View {
     
     var income: Income
     
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         Form {
             Section("Income detail") {
@@ -58,8 +60,20 @@ struct IncomeDetailView: View {
                 
             }
             .listRowBackground(Color.white)
+            .foregroundColor(Color.lightBlue)
         }
         .background(Color.navyBlue)
         .scrollContentBackground(.hidden)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(
+            leading: Button(action: {
+                self.presentationMode.wrappedValue.dismiss()
+            }) {
+                Image(systemName: "chevron.left")
+                    .foregroundColor(Color.lightBlue)
+                    .bold()
+            }
+                .font(.system(size: 14).bold())
+        )
     }
 }

@@ -13,6 +13,8 @@ struct BackupView: View {
     
     @StateObject private var importExportViewModel = ImportExportViewModel()
     
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         NavigationView {
             if(importExportViewModel.backupList.isEmpty) {
@@ -125,5 +127,16 @@ struct BackupView: View {
             })
         }
         .navigationTitle("Backup")
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(
+            leading: Button(action: {
+                self.presentationMode.wrappedValue.dismiss()
+            }) {
+                Image(systemName: "chevron.left")
+                    .foregroundColor(Color.lightBlue)
+                    .bold()
+            }
+                .font(.system(size: 14).bold())
+        )
     }
 }
