@@ -51,7 +51,7 @@ struct ChartView: View {
                     }, backgroundColor: Color.white)
                 .listRowBackground(Color.white)
                 .foregroundColor(Color.navyBlue)
-                .frame(minHeight: 600)
+                .frame(minHeight: 550)
             }
             .navigationTitle("Chart")
             .navigationBarTitleDisplayMode(.inline)

@@ -39,7 +39,7 @@ public struct PieChartView: View {
         return tempSlices
     }
     
-    public init(values:[Double], names: [String], formatter: @escaping (Double) -> String, colors: [Color] = [Color.blue, Color.green, Color.orange], backgroundColor: Color = Color(red: 21 / 255, green: 24 / 255, blue: 30 / 255, opacity: 1.0), widthFraction: CGFloat = 0.75, innerRadiusFraction: CGFloat = 0.60){
+    public init(values:[Double], names: [String], formatter: @escaping (Double) -> String, colors: [Color] = [Color.blue, Color.green, Color.orange], backgroundColor: Color = Color(red: 21 / 255, green: 24 / 255, blue: 30 / 255, opacity: 1.0), widthFraction: CGFloat = 0.75, innerRadiusFraction: CGFloat = 0.0){
         self.values = values
         self.names = names
         self.formatter = formatter
@@ -94,17 +94,16 @@ public struct PieChartView: View {
                     Circle()
                         .fill(self.backgroundColor)
                         .frame(width: widthFraction * geometry.size.width * innerRadiusFraction, height: widthFraction * geometry.size.width * innerRadiusFraction)
-                    
-                    VStack {
-                        Text(self.activeIndex == -1 ? "Total" : self.activeIndex == -2 ? "Other" : names[self.activeIndex])
-                            .font(.title)
-                            .foregroundColor(Color.navyBlue)
-                        Text(self.activeIndex == -1 ? values.reduce(0, +).withCommas(decimalPlace: 2) : self.activeIndex == -2 ? getOtherTotal().withCommas(decimalPlace: 2) : values[self.activeIndex].withCommas(decimalPlace: 2))
-                            .font(.title)
-                            .foregroundColor(Color.navyBlue)
-                    }
-                    
                 }
+                VStack {
+                    Text(self.activeIndex == -1 ? "Total" : self.activeIndex == -2 ? "Other" : names[self.activeIndex])
+                        .font(.title)
+                        .foregroundColor(Color.navyBlue)
+                    Text(self.activeIndex == -1 ? values.reduce(0, +).withCommas(decimalPlace: 2) : self.activeIndex == -2 ? getOtherTotal().withCommas(decimalPlace: 2) : values[self.activeIndex].withCommas(decimalPlace: 2))
+                        .font(.title)
+                        .foregroundColor(Color.navyBlue)
+                }
+                Divider()
                 PieChartRows(colors: self.colors, names: self.names, values: self.values.map { self.formatter($0) }, percents: self.values.map { String(format: "%.0f%%", $0 * 100 / self.values.reduce(0, +)) })
             }
             .background(self.backgroundColor)
