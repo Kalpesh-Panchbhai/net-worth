@@ -30,7 +30,7 @@ struct AccountListView: View {
                             .cornerRadius(10)
                     }
                     .padding(.top, 5)
-                    .shadow(color: Color.gray, radius: 3)
+                    .shadow(color: Color(#colorLiteral(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)), radius: 3)
                 }
                 LazyVStack {
                     ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
