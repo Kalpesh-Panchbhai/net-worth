@@ -52,13 +52,6 @@ struct IncomeView: View {
                     }
                 } else {
                     List {
-//                        let balance = incomeViewModel.incomeTotalAmount
-//                        HStack {
-//                            Text("Total Income: \(SettingsController().getDefaultCurrency().code) \(balance.withCommas(decimalPlace: 2))")
-//                                .foregroundColor(Color.navyBlue)
-//                                .font(.title2)
-//                        }
-//                        .listRowBackground(Color.white)
                         ForEach(incomeViewModel.incomeList, id: \.self) { income in
                             NavigationLink(destination: {
                                 IncomeDetailView(income: income)
@@ -213,14 +206,6 @@ struct IncomeView: View {
                                 .font(.system(size: 14).bold())
                             }
                         }
-//                        ToolbarItem(placement: .bottomBar){
-//                            let balance = incomeViewModel.incomeTotalAmount
-//                            HStack {
-//                                Text("Total Income: \(SettingsController().getDefaultCurrency().code) \(balance.withCommas(decimalPlace: 2))")
-//                                    .foregroundColor(Color.white)
-//                                    .font(.title2)
-//                            }
-//                        }
                     }
                     .background(Color.navyBlue)
                     .scrollContentBackground(.hidden)
