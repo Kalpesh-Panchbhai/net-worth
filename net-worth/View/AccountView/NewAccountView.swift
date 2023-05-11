@@ -64,7 +64,7 @@ struct NewAccountView: View {
                         currentBalanceField()
                             .foregroundColor(Color.navyBlue)
                         currencyPicker
-                            .foregroundColor(Color.navyBlue)
+                            .colorMultiply(Color.navyBlue)
                         watchListPicker
                         accountOpenedDatePicker
                     }
@@ -74,7 +74,7 @@ struct NewAccountView: View {
                         currentBalanceField()
                             .foregroundColor(Color.navyBlue)
                         currencyPicker
-                            .foregroundColor(Color.navyBlue)
+                            .colorMultiply(Color.navyBlue)
                         enablePaymentReminderField(labelName: "Enable Payment Reminder")
                             .foregroundColor(Color.navyBlue)
                         if(paymentReminder) {
@@ -102,7 +102,7 @@ struct NewAccountView: View {
                                 .foregroundColor(Color.navyBlue)
                         }
                         currencyPicker
-                            .foregroundColor(Color.navyBlue)
+                            .colorMultiply(Color.navyBlue)
                         enablePaymentReminderField(labelName: "Enable Loan Payment Reminder")
                             .foregroundColor(Color.navyBlue)
                         if(paymentReminder) {
@@ -117,7 +117,7 @@ struct NewAccountView: View {
                         currentBalanceField()
                             .foregroundColor(Color.navyBlue)
                         currencyPicker
-                            .foregroundColor(Color.navyBlue)
+                            .colorMultiply(Color.navyBlue)
                         enablePaymentReminderField(labelName: "Enable Payment Reminder")
                             .foregroundColor(Color.navyBlue)
                         if(paymentReminder) {

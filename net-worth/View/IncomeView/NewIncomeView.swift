@@ -44,7 +44,7 @@ struct NewIncomeView: View {
                             Text($0.name).tag($0)
                         }
                     }
-                    .foregroundColor(Color.navyBlue)
+                    .colorMultiply(Color.navyBlue)
                     .onChange(of: incomeTypeSelected) { _ in
                         amount="0.0"
                     }
@@ -117,15 +117,15 @@ struct NewIncomeView: View {
                     HStack{
                         DatePicker("Credited on", selection: $date, in: ...Date(), displayedComponents: [.date])
                     }
-                    .foregroundColor(Color.navyBlue)
+                    .colorMultiply(Color.navyBlue)
                     currencyPicker
-                        .foregroundColor(Color.navyBlue)
+                        .colorMultiply(Color.navyBlue)
                     Picker(selection: $incomeTagSelected, label: Text("Tag")) {
                         ForEach(incomeViewModel.incomeTagList, id: \.self) {
                             Text($0.name).tag($0)
                         }
                     }
-                    .foregroundColor(Color.navyBlue)
+                    .colorMultiply(Color.navyBlue)
                 }
                 .listRowBackground(Color.white)
                 .foregroundColor(Color.lightBlue)
