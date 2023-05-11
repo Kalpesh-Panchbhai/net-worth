@@ -151,6 +151,7 @@ struct PieChartRows: View {
                         }
                     }
                     .padding(.horizontal)
+                    Divider()
                 }
             }
         }
