@@ -96,10 +96,11 @@ struct AccountListView: View {
                 Button(action: {
                     self.isChartViewOpen.toggle()
                 }, label: {
-                    Label("Account List Chart", systemImage: "chart.line.uptrend.xyaxis")
+                    Image(systemName: "chart.line.uptrend.xyaxis")
                         .foregroundColor(Color.lightBlue)
                         .bold()
                 })
+                .font(.system(size: 14).bold())
             })
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
@@ -116,6 +117,7 @@ struct AccountListView: View {
         })
         .sheet(isPresented: $isChartViewOpen, content: {
             AccountWatchListChartView(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
+                .presentationDetents([.medium])
         })
         .searchable(text: $searchText)
         .onAppear {
