@@ -27,8 +27,14 @@ struct UpdateBalanceAccountView: View {
     var body: some View {
         NavigationView {
             Form {
-                currentBalanceField()
-                DatePicker("Transaction date", selection: $date, in: ...Date(), displayedComponents: [.date, .hourAndMinute])
+                Section("Transaction detail") {
+                    currentBalanceField()
+                        .colorMultiply(Color.navyBlue)
+                    DatePicker("Transaction date", selection: $date, in: ...Date(), displayedComponents: [.date, .hourAndMinute])
+                        .colorMultiply(Color.navyBlue)
+                }
+                .listRowBackground(Color.white)
+                .foregroundColor(Color.lightBlue)
             }
             .toolbar {
                 ToolbarItem {
@@ -42,7 +48,10 @@ struct UpdateBalanceAccountView: View {
                         dismiss()
                     }, label: {
                         Text("Update")
+                            .foregroundColor(Color.lightBlue)
+                            .bold()
                     })
+                    .font(.system(size: 14).bold())
                 }
                 
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -56,10 +65,16 @@ struct UpdateBalanceAccountView: View {
                         dismiss()
                     }, label: {
                         Text("Add")
+                            .foregroundColor(Color.lightBlue)
+                            .bold()
                     })
+                    .font(.system(size: 14).bold())
                 }
             }
             .navigationTitle(accountViewModel.account.accountName)
+            .navigationBarTitleDisplayMode(.inline)
+            .background(Color.navyBlue)
+            .scrollContentBackground(.hidden)
         }
     }
     
