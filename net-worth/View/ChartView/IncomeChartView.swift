@@ -94,7 +94,7 @@ struct IncomeChartView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .padding()
-            .navigationTitle("Income Charts")
+            .navigationTitle("Income Chart")
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.navyBlue)
             .toolbar {

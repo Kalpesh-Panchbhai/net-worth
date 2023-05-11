@@ -78,6 +78,7 @@ struct IncomeTypeView: View {
         }
         .sheet(isPresented: $addNewIncomeTypeOpenView, content: {
             NewIncomeTypeView(incomeViewModel: incomeViewModel)
+                .presentationDetents([.medium])
         })
         .onAppear {
             Task.init {

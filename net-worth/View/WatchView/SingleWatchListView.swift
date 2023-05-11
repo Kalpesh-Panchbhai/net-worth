@@ -319,6 +319,7 @@ struct SingleWatchListView: View {
         }
         .sheet(isPresented: $isChartViewOpen, content: {
             AccountWatchListChartView(accountList: accountViewModel.accountList)
+                .presentationDetents([.medium])
         })
         .onAppear {
             Task.init {

@@ -90,6 +90,7 @@ struct IncomeView: View {
                     }
                     .sheet(isPresented: $isChartViewOpen) {
                         IncomeChartView()
+                            .presentationDetents([.medium])
                     }
                     .listStyle(.insetGrouped)
                     .toolbar {
@@ -239,6 +240,7 @@ struct IncomeView: View {
             }
             .sheet(isPresented: $isOpen, content: {
                 NewIncomeView(incomeViewModel: incomeViewModel)
+                    .presentationDetents([.medium])
             })
             .navigationTitle("Income")
             .navigationBarTitleDisplayMode(.inline)

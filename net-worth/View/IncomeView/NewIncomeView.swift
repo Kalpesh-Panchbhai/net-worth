@@ -195,6 +195,7 @@ struct NewIncomeView: View {
                 }.first ?? IncomeType()
             }, content: {
                 NewIncomeTypeView(incomeViewModel: incomeViewModel)
+                    .presentationDetents([.medium])
             })
             .sheet(isPresented: $addIncomeTagViewOpen, onDismiss: {
                 incomeTagSelected = incomeViewModel.incomeTagList.filter { item in
@@ -202,6 +203,7 @@ struct NewIncomeView: View {
                 }.first ?? IncomeTag()
             }, content: {
                 NewIncomeTagView(incomeViewModel: incomeViewModel)
+                    .presentationDetents([.medium])
             })
             .navigationTitle("New Income")
             .navigationBarTitleDisplayMode(.inline)
