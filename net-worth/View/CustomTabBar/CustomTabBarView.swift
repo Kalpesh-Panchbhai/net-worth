@@ -46,6 +46,7 @@ extension CustomTabBarView {
             Image(systemName: localSelection == tab ? tab.iconNameFill : tab.iconName)
                 .font(.system(size: 20))
             Text(tab.title)
+                .bold(localSelection == tab)
                 .font(.system(size: 10))
         }
         .foregroundColor(tab.color)
