@@ -61,7 +61,7 @@ struct ChartView: View {
         .onAppear {
             watchListSelected = watchViewModel.watchList.filter {
                 $0.accountName.elementsEqual("All")
-            }.first!
+            }.first ?? Watch()
         }
     }
 }
