@@ -25,6 +25,7 @@ struct AddWatchListToAccountView: View {
                     }
                 }
             }
+            .background(Color.navyBlue)
         }
         .onAppear {
             Task.init {
@@ -52,7 +53,8 @@ struct AddWatchListForAccountView: View {
             VStack {
                 if(isAdded) {
                     Image(systemName: "bookmark.fill")
-                        .foregroundColor(watch.accountName.elementsEqual("All") ? .gray : .blue)
+                        .foregroundColor(watch.accountName.elementsEqual("All") ? .gray : Color.navyBlue)
+                        .bold()
                         .onTapGesture {
                             isAdded.toggle()
                             self.watch.accountID = self.watch.accountID.filter { item in
@@ -62,6 +64,8 @@ struct AddWatchListForAccountView: View {
                         }
                 } else {
                     Image(systemName: "bookmark")
+                        .foregroundColor(Color.navyBlue)
+                        .bold()
                         .onTapGesture {
                             isAdded.toggle()
                             self.watch.accountID.append(account.id!)
@@ -73,8 +77,8 @@ struct AddWatchListForAccountView: View {
             .padding()
         }
         .frame(width: 350, height: 50)
-        .background(.black)
-        .foregroundColor(.white)
+        .background(Color.white)
+        .foregroundColor(Color.navyBlue)
         .cornerRadius(10)
     }
 }

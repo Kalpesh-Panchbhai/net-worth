@@ -97,6 +97,7 @@ struct AccountDetailView: View {
                             .bold()
                     }
                 })
+                .font(.system(size: 14).bold())
             })
             
             ToolbarItem(content: {
@@ -192,6 +193,7 @@ struct AccountDetailView: View {
                         .foregroundColor(Color.lightBlue)
                         .bold()
                 })
+                .font(.system(size: 14).bold())
             })
         }
         .onAppear {
