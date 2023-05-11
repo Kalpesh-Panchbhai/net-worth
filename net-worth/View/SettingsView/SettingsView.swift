@@ -73,7 +73,7 @@ struct SettingsView: View {
                 .listRowBackground(Color.white)
                 
                 defaultCurrencyPicker
-                    .foregroundColor(Color.navyBlue)
+                    .colorMultiply(Color.navyBlue)
                     .listRowBackground(Color.white)
                 
                 NavigationLink(destination: {
@@ -137,6 +137,7 @@ struct SettingsView: View {
             .listStyle(.insetGrouped)
             .background(Color.navyBlue)
             .scrollContentBackground(.hidden)
+            .foregroundColor(Color.lightBlue)
         }
         .onAppear {
             Task.init {
