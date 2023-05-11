@@ -26,7 +26,7 @@ struct ChartView: View {
                     Text("Watch List")
                 })
                 .listRowBackground(Color.white)
-                .foregroundColor(Color.navyBlue)
+                .colorMultiply(Color.navyBlue)
                 .onChange(of: watchListSelected, perform: { _ in
                     Task.init {
                         await accountViewModel.getAccountsForWatchList(accountID: watchListSelected.accountID)
