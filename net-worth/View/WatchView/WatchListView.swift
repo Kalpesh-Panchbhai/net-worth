@@ -72,11 +72,13 @@ struct WatchListView: View {
                     .font(.system(size: 14).bold())
                 })
             }
-            .halfSheet(showSheet: $newWatchListViewOpen) {
+            .sheet(isPresented: $newWatchListViewOpen) {
                 NewWatchView(watchViewModel: watchViewModel)
+                    .presentationDetents([.medium])
             }
-            .halfSheet(showSheet: $updateWatchListViewOpen) {
+            .sheet(isPresented: $updateWatchListViewOpen) {
                 UpdateWatchView(watchViewModel: watchViewModel)
+                    .presentationDetents([.medium])
             }
             .background(Color.navyBlue)
             .scrollContentBackground(.hidden)

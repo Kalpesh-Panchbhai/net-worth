@@ -112,6 +112,7 @@ struct AccountListView: View {
             }
         }, content: {
             UpdateBalanceAccountView(accountViewModel: accountViewModel)
+                .presentationDetents([.medium])
         })
         .sheet(isPresented: $isChartViewOpen, content: {
             AccountWatchListChartView(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))

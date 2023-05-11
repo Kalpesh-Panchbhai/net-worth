@@ -161,6 +161,7 @@ struct AccountCardList: View {
             }
         }, content: {
             UpdateBalanceAccountView(accountViewModel: accountViewModel)
+                .presentationDetents([.medium])
         })
         .sheet(isPresented: $isNewAccountAccountViewOpen, onDismiss: {
             Task.init {

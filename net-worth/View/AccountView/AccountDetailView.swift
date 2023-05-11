@@ -216,6 +216,7 @@ struct AccountDetailView: View {
             }
         }, content: {
             UpdateBalanceAccountView(accountViewModel: accountViewModel)
+                .presentationDetents([.medium])
         })
         .sheet(isPresented: $showAddWatchListView, onDismiss: {
             Task.init {

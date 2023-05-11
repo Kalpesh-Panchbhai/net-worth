@@ -64,7 +64,6 @@
 		7D9F6F58299CE18000F964EC /* SingleWatchListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9F6F57299CE18000F964EC /* SingleWatchListView.swift */; };
 		7DA63A492995FACA00568FCA /* AccountDetailCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA63A482995FACA00568FCA /* AccountDetailCardView.swift */; };
 		7DA63A4B2996017D00568FCA /* AccountDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA63A4A2996017D00568FCA /* AccountDetailView.swift */; };
-		7DAC70AC29408D3E0033050C /* HalfView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAC70AB29408D3E0033050C /* HalfView.swift */; };
 		7DB2B0A4299515B800E4B891 /* AccountCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2B0A3299515B800E4B891 /* AccountCardView.swift */; };
 		7DB2B0A6299518A100E4B891 /* AccountCardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2B0A5299518A100E4B891 /* AccountCardList.swift */; };
 		7DB2B0A82995638700E4B891 /* TransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2B0A72995638700E4B891 /* TransactionView.swift */; };
@@ -186,7 +185,6 @@
 		7D9F6F57299CE18000F964EC /* SingleWatchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleWatchListView.swift; sourceTree = "<group>"; };
 		7DA63A482995FACA00568FCA /* AccountDetailCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailCardView.swift; sourceTree = "<group>"; };
 		7DA63A4A2996017D00568FCA /* AccountDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailView.swift; sourceTree = "<group>"; };
-		7DAC70AB29408D3E0033050C /* HalfView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HalfView.swift; sourceTree = "<group>"; };
 		7DB2B0A3299515B800E4B891 /* AccountCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCardView.swift; sourceTree = "<group>"; };
 		7DB2B0A5299518A100E4B891 /* AccountCardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCardList.swift; sourceTree = "<group>"; };
 		7DB2B0A72995638700E4B891 /* TransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionView.swift; sourceTree = "<group>"; };
@@ -429,7 +427,6 @@
 				7DF83F902A094F3300D3233B /* ChartView */,
 				7D730E0F299375AD0002E0ED /* OnboardingView */,
 				7D921C58298682FB0014AC9E /* LoginView */,
-				7DAC70A8294086890033050C /* CustomView */,
 				7DD7A56C29224C1200CD5B37 /* AccountView */,
 				7DD7A56B29224BFD00CD5B37 /* IncomeView */,
 				7DD7A56D29224C1D00CD5B37 /* SettingsView */,
@@ -461,14 +458,6 @@
 				7DD8E5B22A06339500245A98 /* BackupView.swift */,
 			);
 			path = OtherView;
-			sourceTree = "<group>";
-		};
-		7DAC70A8294086890033050C /* CustomView */ = {
-			isa = PBXGroup;
-			children = (
-				7DAC70AB29408D3E0033050C /* HalfView.swift */,
-			);
-			path = CustomView;
 			sourceTree = "<group>";
 		};
 		7DD7A56B29224BFD00CD5B37 /* IncomeView */ = {
@@ -863,7 +852,6 @@
 				7D4E671329F7D4C900EB6B24 /* IncomeDetailView.swift in Sources */,
 				7DA63A4B2996017D00568FCA /* AccountDetailView.swift in Sources */,
 				7D79FA51291B7430004A2ECF /* net_worthApp.swift in Sources */,
-				7DAC70AC29408D3E0033050C /* HalfView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
