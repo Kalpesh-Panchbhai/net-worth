@@ -29,7 +29,7 @@ struct MainScreenView: View {
                         .tabBarItem(tab: .chart, selection: $tabSelection)
                     SettingsView()
                         .tabBarItem(tab: .setting, selection: $tabSelection)
-                }, incomeViewModel: incomeViewModel)
+                })
             }
         }
         .onAppear {
