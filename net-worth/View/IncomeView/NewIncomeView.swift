@@ -144,9 +144,15 @@ struct NewIncomeView: View {
                         }
                         dismiss()
                     }, label: {
-                        Image(systemName: "checkmark")
-                            .foregroundColor(Color.lightBlue)
-                            .bold()
+                        if(!allFieldsFilled()) {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(Color.lightBlue.opacity(0.3))
+                                .bold()
+                        } else {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(Color.lightBlue)
+                                .bold()
+                        }
                     })
                     .font(.system(size: 14).bold())
                     .disabled(!allFieldsFilled())
@@ -206,7 +212,7 @@ struct NewIncomeView: View {
     
     private func allFieldsFilled () -> Bool {
         if !incomeTypeSelected.name.isEmpty && !incomeTagSelected.name.isEmpty{
-            if amount.isEmpty {
+            if amount.isEmpty || taxPaid.isEmpty {
                 return false
             } else {
                 return true
