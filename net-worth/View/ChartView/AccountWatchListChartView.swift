@@ -51,6 +51,8 @@ struct AccountWatchListChartView: View {
                     }
                     .pickerStyle(SegmentedPickerStyle())
                 }
+                .background(Color.navyBlue)
+                .scrollContentBackground(.hidden)
             }
         }
         .onAppear {
