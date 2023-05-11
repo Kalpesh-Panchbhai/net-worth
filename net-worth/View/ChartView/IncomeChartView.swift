@@ -95,6 +95,8 @@ struct IncomeChartView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .padding()
             .navigationTitle("Income Charts")
+            .navigationBarTitleDisplayMode(.inline)
+            .background(Color.navyBlue)
             .toolbar {
                 if !incomeViewModel.incomeList.isEmpty {
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -116,7 +118,10 @@ struct IncomeChartView: View {
                                 }
                             }, label: {
                                 Text("Clear")
+                                    .foregroundColor(Color.lightBlue)
+                                    .bold()
                             })
+                            .font(.system(size: 14).bold())
                         }
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -225,7 +230,10 @@ struct IncomeChartView: View {
                             })
                         }, label: {
                             Image(systemName: "ellipsis")
+                                .foregroundColor(Color.lightBlue)
+                                .font(.system(size: 14).bold())
                         })
+                        .font(.system(size: 14).bold())
                     }
                 }
             }
