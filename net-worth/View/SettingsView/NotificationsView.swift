@@ -142,6 +142,7 @@ struct NotificationsView: View {
                 }
                     .font(.system(size: 14).bold())
             )
+            .scrollIndicators(ScrollIndicatorVisibility.hidden)
         }
     }
 }
