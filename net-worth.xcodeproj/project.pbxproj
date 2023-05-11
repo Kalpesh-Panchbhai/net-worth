@@ -68,6 +68,7 @@
 		7DB205872A0CF010001E03D6 /* CustomTabBarContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB205862A0CF010001E03D6 /* CustomTabBarContainerView.swift */; };
 		7DB205892A0CF347001E03D6 /* TabBarItemsPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB205882A0CF347001E03D6 /* TabBarItemsPreferenceKey.swift */; };
 		7DB2058B2A0CF5B6001E03D6 /* TabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2058A2A0CF5B6001E03D6 /* TabBarItem.swift */; };
+		7DB2058D2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2058C2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift */; };
 		7DB2B0A4299515B800E4B891 /* AccountCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2B0A3299515B800E4B891 /* AccountCardView.swift */; };
 		7DB2B0A6299518A100E4B891 /* AccountCardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2B0A5299518A100E4B891 /* AccountCardList.swift */; };
 		7DB2B0A82995638700E4B891 /* TransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2B0A72995638700E4B891 /* TransactionView.swift */; };
@@ -193,6 +194,7 @@
 		7DB205862A0CF010001E03D6 /* CustomTabBarContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarContainerView.swift; sourceTree = "<group>"; };
 		7DB205882A0CF347001E03D6 /* TabBarItemsPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItemsPreferenceKey.swift; sourceTree = "<group>"; };
 		7DB2058A2A0CF5B6001E03D6 /* TabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItem.swift; sourceTree = "<group>"; };
+		7DB2058C2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewGestureExtension.swift; sourceTree = "<group>"; };
 		7DB2B0A3299515B800E4B891 /* AccountCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCardView.swift; sourceTree = "<group>"; };
 		7DB2B0A5299518A100E4B891 /* AccountCardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCardList.swift; sourceTree = "<group>"; };
 		7DB2B0A72995638700E4B891 /* TransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionView.swift; sourceTree = "<group>"; };
@@ -312,6 +314,7 @@
 				7DCFE4C7292CB92900C940F0 /* StringExtension.swift */,
 				7DE42FC3293524E500D4DA0A /* DateExtension.swift */,
 				7D2C761F2A0B5B8900CE606C /* ColorExtension.swift */,
+				7DB2058C2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -861,6 +864,7 @@
 				7DB2058B2A0CF5B6001E03D6 /* TabBarItem.swift in Sources */,
 				7D921C60298683760014AC9E /* LoginHeader.swift in Sources */,
 				7DCFE4CA292D036500C940F0 /* SearchBar.swift in Sources */,
+				7DB2058D2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift in Sources */,
 				7DC46B4629A4A513000E311B /* IncomeType.swift in Sources */,
 				7D79FA8C291BA152004A2ECF /* NewAccountView.swift in Sources */,
 				7D433CF829386002007FA625 /* FinanceModel.swift in Sources */,
