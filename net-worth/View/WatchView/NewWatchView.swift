@@ -24,7 +24,7 @@ struct NewWatchView: View {
                 Section("New Watch List") {
                     TextField("Watch List name", text: $watchListName)
                         .listRowBackground(Color.white)
-                        .foregroundColor(Color.navyBlue)
+                        .colorMultiply(Color.navyBlue)
                 }
                 .foregroundColor(Color.lightBlue)
             }

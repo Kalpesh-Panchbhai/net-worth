@@ -21,9 +21,9 @@ struct UpdateWatchView: View {
         VStack {
             Form {
                 Section("Update Watch List") {
-                    TextField("Watch List name", text: $watchViewModel.watch.accountName)
+                    TextField("Updated Watch List name", text: $watchViewModel.watch.accountName)
                         .listRowBackground(Color.white)
-                        .foregroundColor(Color.navyBlue)
+                        .colorMultiply(Color.navyBlue)
                 }
                 .foregroundColor(Color.lightBlue)
             }
