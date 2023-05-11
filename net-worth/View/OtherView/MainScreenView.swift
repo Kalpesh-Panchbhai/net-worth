@@ -18,89 +18,17 @@ struct MainScreenView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                //                TabView(selection: $tabViewSelection) {
-                //                    AccountCardList(accountViewModel: accountViewModel, watchViewModel: watchViewModel)
-                //                        .tabItem{
-                //                            if(tabViewSelection==0) {
-                //                                Image(systemName: "star.circle.fill")
-                //                            } else {
-                //                                Image(systemName: "star.circle")
-                //                                    .environment(\.symbolVariants, .none)
-                //                            }
-                //                            Text("Accounts")
-                //                        }.tag(0)
-                //                        .badge(accountViewModel.accountList.count)
-                //                        .toolbarBackground(
-                //                                Color.navyBlue,
-                //                                for: .tabBar)
-                //                    WatchListView(watchViewModel: watchViewModel)
-                //                        .tabItem {
-                //                            if(tabViewSelection==1) {
-                //                                Image(systemName: "list.bullet.circle.fill")
-                //                            } else {
-                //                                Image(systemName: "list.bullet.circle")
-                //                                    .environment(\.symbolVariants, .none)
-                //                            }
-                //                            Text("Watch Lists")
-                //                        }.tag(1)
-                //                        .badge(watchViewModel.watchList.count)
-                //                        .toolbarBackground(
-                //                                Color.navyBlue,
-                //                                for: .tabBar)
-                //                    IncomeView(incomeViewModel: incomeViewModel)
-                //                        .tabItem{
-                //                            if(tabViewSelection==2) {
-                //                                Image(systemName: "indianrupeesign.circle.fill")
-                //                            } else {
-                //                                Image(systemName: "indianrupeesign.circle")
-                //                                    .environment(\.symbolVariants, .none)
-                //                            }
-                //                            Text("Incomes")
-                //                        }.tag(2)
-                //                        .badge(incomeViewModel.incomeList.count)
-                //                        .toolbarBackground(
-                //                                Color.navyBlue,
-                //                                for: .tabBar)
-                //                    ChartView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
-                //                    .tabItem {
-                //                        if(tabViewSelection == 3) {
-                //                            Image(systemName: "chart.line.uptrend.xyaxis.circle.fill")
-                //                        } else {
-                //                            Image(systemName: "chart.line.uptrend.xyaxis.circle")
-                //                                .environment(\.symbolVariants, .none)
-                //                        }
-                //                        Text("Charts")
-                //
-                //                    }.tag(3)
-                //                        .toolbarBackground(
-                //                                Color.navyBlue,
-                //                                for: .tabBar)
-                //                    SettingsView()
-                //                        .tabItem{
-                //                            if(tabViewSelection==4) {
-                //                                Image(systemName: "gearshape.fill")
-                //                            } else {
-                //                                Image(systemName: "gearshape")
-                //                                    .environment(\.symbolVariants, .none)
-                //                            }
-                //                            Text("Settings")
-                //                        }.tag(4)
-                //                        .toolbarBackground(
-                //                                Color.navyBlue,
-                //                                for: .tabBar)
-                //                }
-                //                .accentColor(Color.lightBlue)
                 CustomTabBarContainerView(selection: $tabSelection, content: {
                     AccountCardList(accountViewModel: accountViewModel, watchViewModel: watchViewModel)
-                        .tabBarItem(tab: .account, selection: $tabSelection)
+                        .tabBarItem(tab: .account, selection: $tabSelection, count: accountViewModel.accountList.count)
                     WatchListView(watchViewModel: watchViewModel)
-                        .tabBarItem(tab: .watchlist, selection: $tabSelection)
+                        .tabBarItem(tab: .watchlist, selection: $tabSelection,count: watchViewModel.watchList.count)
                     IncomeView(incomeViewModel: incomeViewModel)
-                        .tabBarItem(tab: .income, selection: $tabSelection)
+                        .tabBarItem(tab: .income, selection: $tabSelection, count: incomeViewModel.incomeList.count)
                     ChartView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
-                        .tabBarItem(tab: .chart, selection: $tabSelection)
+                        .tabBarItem(tab: .chart, selection: $tabSelection, count: 0)
                     SettingsView()
-                        .tabBarItem(tab: .setting, selection: $tabSelection)
+                        .tabBarItem(tab: .setting, selection: $tabSelection, count: 0)
                 })
             }
         }
@@ -119,6 +47,83 @@ struct MainScreenView: View {
                 await incomeViewModel.getIncomeFinancialYearList()
             }
         }
+    }
+    
+    @State public var tabViewSelection = 0
+    
+    private var version: some View {
+        TabView(selection: $tabViewSelection) {
+            AccountCardList(accountViewModel: accountViewModel, watchViewModel: watchViewModel)
+                .tabItem{
+                    if(tabViewSelection==0) {
+                        Image(systemName: "star.circle.fill")
+                    } else {
+                        Image(systemName: "star.circle")
+                            .environment(\.symbolVariants, .none)
+                    }
+                    Text("Accounts")
+                }.tag(0)
+                .badge(accountViewModel.accountList.count)
+                .toolbarBackground(
+                        Color.navyBlue,
+                        for: .tabBar)
+            WatchListView(watchViewModel: watchViewModel)
+                .tabItem {
+                    if(tabViewSelection==1) {
+                        Image(systemName: "list.bullet.circle.fill")
+                    } else {
+                        Image(systemName: "list.bullet.circle")
+                            .environment(\.symbolVariants, .none)
+                    }
+                    Text("Watch Lists")
+                }.tag(1)
+                .badge(watchViewModel.watchList.count)
+                .toolbarBackground(
+                        Color.navyBlue,
+                        for: .tabBar)
+            IncomeView(incomeViewModel: incomeViewModel)
+                .tabItem{
+                    if(tabViewSelection==2) {
+                        Image(systemName: "indianrupeesign.circle.fill")
+                    } else {
+                        Image(systemName: "indianrupeesign.circle")
+                            .environment(\.symbolVariants, .none)
+                    }
+                    Text("Incomes")
+                }.tag(2)
+                .badge(incomeViewModel.incomeList.count)
+                .toolbarBackground(
+                        Color.navyBlue,
+                        for: .tabBar)
+            ChartView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
+            .tabItem {
+                if(tabViewSelection == 3) {
+                    Image(systemName: "chart.line.uptrend.xyaxis.circle.fill")
+                } else {
+                    Image(systemName: "chart.line.uptrend.xyaxis.circle")
+                        .environment(\.symbolVariants, .none)
+                }
+                Text("Charts")
+
+            }.tag(3)
+                .toolbarBackground(
+                        Color.navyBlue,
+                        for: .tabBar)
+            SettingsView()
+                .tabItem{
+                    if(tabViewSelection==4) {
+                        Image(systemName: "gearshape.fill")
+                    } else {
+                        Image(systemName: "gearshape")
+                            .environment(\.symbolVariants, .none)
+                    }
+                    Text("Settings")
+                }.tag(4)
+                .toolbarBackground(
+                        Color.navyBlue,
+                        for: .tabBar)
+        }
+        .accentColor(Color.lightBlue)
     }
     
 }
