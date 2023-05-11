@@ -25,7 +25,7 @@ struct AddAccountToWatchListView: View {
                                 HStack {
                                     Text(accountType.uppercased())
                                         .bold()
-                                        .foregroundColor(.white)
+                                        .foregroundColor(Color.lightBlue)
                                         .font(.system(size: 15))
                                 }
                                 ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
@@ -36,6 +36,7 @@ struct AddAccountToWatchListView: View {
                     }
                 }
             }
+            .background(Color.navyBlue)
         }
         .searchable(text: $searchText)
         .onAppear {
@@ -66,7 +67,8 @@ struct AddAccountWatchView: View {
             VStack {
                 if(isAdded) {
                     Image(systemName: "bookmark.fill")
-                        .foregroundColor(.blue)
+                        .foregroundColor(Color.navyBlue)
+                        .bold()
                         .onTapGesture {
                             isAdded.toggle()
                             self.watch.accountID = self.watch.accountID.filter { item in
@@ -76,6 +78,8 @@ struct AddAccountWatchView: View {
                         }
                 } else {
                     Image(systemName: "bookmark")
+                        .foregroundColor(Color.navyBlue)
+                        .bold()
                         .onTapGesture {
                             isAdded.toggle()
                             self.watch.accountID.append(account.id!)
@@ -93,8 +97,8 @@ struct AddAccountWatchView: View {
             .padding()
         }
         .frame(width: 350, height: 50)
-        .background(.black)
-        .foregroundColor(.white)
+        .background(Color.white)
+        .foregroundColor(Color.navyBlue)
         .cornerRadius(10)
     }
 }
