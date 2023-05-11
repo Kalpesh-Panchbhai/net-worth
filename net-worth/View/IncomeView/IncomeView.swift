@@ -98,25 +98,6 @@ struct IncomeView: View {
                                 })
                                 .font(.system(size: 14).bold())
                             }
-                            ToolbarItem(placement: .navigationBarLeading) {
-                                if(!filterIncomeType.isEmpty || !filterIncomeTag.isEmpty || !filterYear.isEmpty || !filterFinancialYear.isEmpty) {
-                                    Button(action: {
-                                        filterIncomeType = ""
-                                        filterIncomeTag = ""
-                                        filterYear = ""
-                                        filterFinancialYear = ""
-                                        Task.init {
-                                            await incomeViewModel.getTotalBalance()
-                                            await incomeViewModel.getIncomeList()
-                                        }
-                                    }, label: {
-                                        Text("Clear")
-                                            .foregroundColor(Color.lightBlue)
-                                            .bold()
-                                    })
-                                    .font(.system(size: 14).bold())
-                                }
-                            }
                             ToolbarItem(placement: .navigationBarTrailing) {
                                 Menu(content: {
                                     Menu(content: {
@@ -221,6 +202,25 @@ struct IncomeView: View {
                             .bold()
                     })
                     .font(.system(size: 14).bold())
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    if(!filterIncomeType.isEmpty || !filterIncomeTag.isEmpty || !filterYear.isEmpty || !filterFinancialYear.isEmpty) {
+                        Button(action: {
+                            filterIncomeType = ""
+                            filterIncomeTag = ""
+                            filterYear = ""
+                            filterFinancialYear = ""
+                            Task.init {
+                                await incomeViewModel.getTotalBalance()
+                                await incomeViewModel.getIncomeList()
+                            }
+                        }, label: {
+                            Text("Clear")
+                                .foregroundColor(Color.lightBlue)
+                                .bold()
+                        })
+                        .font(.system(size: 14).bold())
+                    }
                 }
             }
             .sheet(isPresented: $isOpen, content: {

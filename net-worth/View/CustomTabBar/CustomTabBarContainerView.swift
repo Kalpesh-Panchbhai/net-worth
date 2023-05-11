@@ -27,7 +27,9 @@ struct CustomTabBarContainerView<Content:View>: View {
                 .ignoresSafeArea()
             VStack {
                 if(selection == .income) {
-                    tabBarVersion2
+                    if(incomeViewModel.incomeList.count > 0) {
+                        tabBarVersion2
+                    }
                 }
                 CustomTabBarView(tabs: tabs, selection: $selection, localSelection: selection)
             }
