@@ -23,8 +23,12 @@ struct NewIncomeTagView: View {
             Form {
                 Section("Income Tag detail") {
                     TextField("Tag name", text: $tagName)
-                    Toggle("Default Tag", isOn: $isDefault)
+                        .colorMultiply(Color.navyBlue)
+                    Toggle("Make it Default Tag", isOn: $isDefault)
+                        .foregroundColor(Color.navyBlue)
                 }
+                .listRowBackground(Color.white)
+                .foregroundColor(Color.lightBlue)
             }
             .toolbar {
                 ToolbarItem {
@@ -36,9 +40,17 @@ struct NewIncomeTagView: View {
                         dismiss()
                     }, label: {
                         Image(systemName: "checkmark")
-                    }).disabled(tagName.isEmpty)
+                            .foregroundColor(Color.lightBlue)
+                            .bold()
+                    })
+                    .font(.system(size: 14).bold())
+                    .disabled(tagName.isEmpty)
                 }
             }
+            .navigationTitle("New Income Tag")
+            .navigationBarTitleDisplayMode(.inline)
+            .background(Color.navyBlue)
+            .scrollContentBackground(.hidden)
         }
     }
 }

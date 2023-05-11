@@ -23,8 +23,12 @@ struct NewIncomeTypeView: View {
             Form {
                 Section("Income Type detail") {
                     TextField("Type name", text: $typeName)
-                    Toggle("Default Type", isOn: $isDefault)
+                        .colorMultiply(Color.navyBlue)
+                    Toggle("Make it Default Type", isOn: $isDefault)
+                        .foregroundColor(Color.navyBlue)
                 }
+                .listRowBackground(Color.white)
+                .foregroundColor(Color.lightBlue)
             }
             .toolbar {
                 ToolbarItem {
@@ -36,9 +40,17 @@ struct NewIncomeTypeView: View {
                         dismiss()
                     }, label: {
                         Image(systemName: "checkmark")
-                    }).disabled(typeName.isEmpty)
+                            .foregroundColor(Color.lightBlue)
+                            .bold()
+                    })
+                    .font(.system(size: 14).bold())
+                    .disabled(typeName.isEmpty)
                 }
             }
+            .navigationTitle("New Income Type")
+            .navigationBarTitleDisplayMode(.inline)
+            .background(Color.navyBlue)
+            .scrollContentBackground(.hidden)
         }
     }
 }
