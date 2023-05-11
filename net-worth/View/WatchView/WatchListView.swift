@@ -67,6 +67,11 @@ struct WatchListView: View {
                         .listRowBackground(Color.white)
                         .foregroundColor(Color.navyBlue)
                     }
+                    .refreshable {
+                        Task.init {
+                            await watchViewModel.getAllWatchList()
+                        }
+                    }
                 }
             }
             .toolbar {

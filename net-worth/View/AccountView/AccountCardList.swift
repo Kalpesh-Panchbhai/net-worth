@@ -132,6 +132,12 @@ struct AccountCardList: View {
                                 }
                                 .padding(10)
                             }
+                            .refreshable {
+                                Task.init {
+                                    await accountViewModel.getAccountList()
+                                    await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+                                }
+                            }
                         }
                     }
                     .searchable(text: $searchText)
