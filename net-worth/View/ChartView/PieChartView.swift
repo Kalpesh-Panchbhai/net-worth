@@ -97,10 +97,10 @@ public struct PieChartView: View {
                 }
                 VStack {
                     Text(self.activeIndex == -1 ? "Total" : self.activeIndex == -2 ? "Other" : names[self.activeIndex])
-                        .font(.title)
+                        .font(.system(size: 16))
                         .foregroundColor(Color.navyBlue)
                     Text(self.activeIndex == -1 ? values.reduce(0, +).withCommas(decimalPlace: 2) : self.activeIndex == -2 ? getOtherTotal().withCommas(decimalPlace: 2) : values[self.activeIndex].withCommas(decimalPlace: 2))
-                        .font(.title)
+                        .font(.system(size: 16))
                         .foregroundColor(Color.navyBlue)
                 }
                 Divider()
@@ -136,14 +136,18 @@ struct PieChartRows: View {
                         RoundedRectangle(cornerRadius: 5.0)
                             .fill(self.colors[i])
                             .frame(width: 20, height: 20)
+                            .font(.system(size: 14))
                         Text(self.names[i])
                             .foregroundColor(Color.navyBlue)
+                            .font(.system(size: 14))
                         Spacer()
                         VStack(alignment: .trailing) {
                             Text((Double(self.values[i])?.withCommas(decimalPlace: 2))!)
                                 .foregroundColor(Color.navyBlue)
+                                .font(.system(size: 14))
                             Text(self.percents[i])
                                 .foregroundColor(Color.navyBlue)
+                                .font(.system(size: 14))
                         }
                     }
                     .padding(.horizontal)
