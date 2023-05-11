@@ -39,9 +39,15 @@ struct NewIncomeTagView: View {
                         }
                         dismiss()
                     }, label: {
-                        Image(systemName: "checkmark")
-                            .foregroundColor(Color.lightBlue)
-                            .bold()
+                        if(tagName.isEmpty) {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(Color.lightBlue.opacity(0.3))
+                                .bold()                                
+                        } else {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(Color.lightBlue)
+                                .bold()
+                        }
                     })
                     .font(.system(size: 14).bold())
                     .disabled(tagName.isEmpty)
