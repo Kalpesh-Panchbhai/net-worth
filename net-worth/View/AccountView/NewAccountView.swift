@@ -47,10 +47,9 @@ struct NewAccountView: View {
                     Picker(selection: $accountType, label: Text("Account Type")) {
                         ForEach(ConstantUtils.AccountType.allCases, id: \.rawValue) { accountType in
                             Text(accountType.rawValue).tag(accountType.rawValue)
-                                .foregroundColor(Color.navyBlue)
                         }
                     }
-                    .foregroundColor(Color.navyBlue)
+                    .colorMultiply(Color.navyBlue)
                     .onChange(of: accountType) { _ in
                         accountName=""
                         currentBalance = 0.0
@@ -61,19 +60,17 @@ struct NewAccountView: View {
                     }
                     if(accountType == "Saving") {
                         nameField(labelName: "Account Name")
-                            .foregroundColor(Color.navyBlue)
+                            .colorMultiply(Color.navyBlue)
                         currentBalanceField()
                             .foregroundColor(Color.navyBlue)
                         currencyPicker
                             .foregroundColor(Color.navyBlue)
                         watchListPicker
-                            .foregroundColor(Color.navyBlue)
                         accountOpenedDatePicker
-                            .foregroundColor(Color.navyBlue)
                     }
                     else if(accountType == "Credit Card") {
                         nameField(labelName: "Credit Card Name")
-                            .foregroundColor(Color.navyBlue)
+                            .colorMultiply(Color.navyBlue)
                         currentBalanceField()
                             .foregroundColor(Color.navyBlue)
                         currencyPicker
@@ -82,21 +79,20 @@ struct NewAccountView: View {
                             .foregroundColor(Color.navyBlue)
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
-                                .foregroundColor(Color.navyBlue)
+                                .colorMultiply(Color.navyBlue)
                         }
                         watchListPicker
-                            .foregroundColor(Color.navyBlue)
                         accountOpenedDatePicker
-                            .foregroundColor(Color.navyBlue)
                     }
                     else if(accountType == "Loan") {
                         Picker(selection: $loanType, label: Text("Loan Type")) {
                             Text("Consumer").tag("Consumer")
                             Text("Non Consumer").tag("Non Consumer")
                         }
-                        .foregroundColor(Color.navyBlue)
+                        .colorMultiply(Color.navyBlue)
+                        
                         nameField(labelName: "Loan Name")
-                            .foregroundColor(Color.navyBlue)
+                            .colorMultiply(Color.navyBlue)
                         currentBalanceField()
                             .foregroundColor(Color.navyBlue)
                         if(loanType.elementsEqual("Consumer")) {
@@ -111,15 +107,13 @@ struct NewAccountView: View {
                             .foregroundColor(Color.navyBlue)
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
-                                .foregroundColor(Color.navyBlue)
+                                .colorMultiply(Color.navyBlue)
                         }
                         watchListPicker
-                            .foregroundColor(Color.navyBlue)
                         accountOpenedDatePicker
-                            .foregroundColor(Color.navyBlue)
                     } else if(accountType == "Other") {
                         nameField(labelName: "Account Name")
-                            .foregroundColor(Color.navyBlue)
+                            .colorMultiply(Color.navyBlue)
                         currentBalanceField()
                             .foregroundColor(Color.navyBlue)
                         currencyPicker
@@ -128,12 +122,10 @@ struct NewAccountView: View {
                             .foregroundColor(Color.navyBlue)
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
-                                .foregroundColor(Color.navyBlue)
+                                .colorMultiply(Color.navyBlue)
                         }
                         watchListPicker
-                            .foregroundColor(Color.navyBlue)
                         accountOpenedDatePicker
-                            .foregroundColor(Color.navyBlue)
                     }
                 }
                 .listRowBackground(Color.white)
@@ -246,10 +238,12 @@ struct NewAccountView: View {
                 }
             }
         }
+        .colorMultiply(Color.navyBlue)
     }
     
     var accountOpenedDatePicker: some View {
         DatePicker("Opened date", selection: $accountOpenedDate, in: ...Date(), displayedComponents: [.date, .hourAndMinute])
+            .colorMultiply(Color.navyBlue)
     }
     
     private func allFieldsFilled () -> Bool {
