@@ -10,6 +10,7 @@ import Foundation
 class WatchViewModel: ObservableObject {
     
     @Published var watchList = [Watch]()
+    @Published var watchListLoad = false
     @Published var watchListForAccount = [Watch]()
     @Published var watch = Watch()
     
@@ -20,6 +21,7 @@ class WatchViewModel: ObservableObject {
             let list = try await watchController.getAllWatchList()
             DispatchQueue.main.async {
                 self.watchList = list
+                self.watchListLoad = true
             }
         } catch {
             print(error)

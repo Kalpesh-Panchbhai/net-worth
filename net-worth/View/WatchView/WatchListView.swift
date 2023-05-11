@@ -18,47 +18,56 @@ struct WatchListView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(watchViewModel.watchList, id: \.self) { watchList in
-                    NavigationLink(destination: {
-                        SingleWatchListView(watch: watchList)
-                            .toolbarRole(.editor)
-                    }, label: {
-                        HStack {
-                            Text(watchList.accountName)
-                            Spacer()
-                            Text("\(watchList.accountID.count)")
-                                .font(.system(size: 12))
-                        }
-                    })
-                    .contextMenu {
-                        Label(watchList.id!, systemImage: "info.square")
+            ZStack {
+                if (!watchViewModel.watchListLoad) {
+                    ZStack {
+                        Color.navyBlue.ignoresSafeArea()
+                        ProgressView().tint(Color.lightBlue)
                     }
-                    .swipeActions(edge: .leading, content: {
-                        if(watchList.accountName != "All") {
-                            Button("Update") {
-                                Task.init {
-                                    await watchViewModel.getWatchList(id: watchList.id!)
+                } else {
+                    List {
+                        ForEach(watchViewModel.watchList, id: \.self) { watchList in
+                            NavigationLink(destination: {
+                                SingleWatchListView(watch: watchList)
+                                    .toolbarRole(.editor)
+                            }, label: {
+                                HStack {
+                                    Text(watchList.accountName)
+                                    Spacer()
+                                    Text("\(watchList.accountID.count)")
+                                        .font(.system(size: 12))
                                 }
-                                self.updateWatchListViewOpen.toggle()
+                            })
+                            .contextMenu {
+                                Label(watchList.id!, systemImage: "info.square")
                             }
-                            .tint(.green)
-                        }
-                    })
-                    .swipeActions(edge: .trailing, content: {
-                        if(watchList.accountName != "All") {
-                            Button("Delete") {
-                                watchController.deleteWatchList(watchList: watchList)
-                                Task.init {
-                                    await watchViewModel.getAllWatchList()
+                            .swipeActions(edge: .leading, content: {
+                                if(watchList.accountName != "All") {
+                                    Button("Update") {
+                                        Task.init {
+                                            await watchViewModel.getWatchList(id: watchList.id!)
+                                        }
+                                        self.updateWatchListViewOpen.toggle()
+                                    }
+                                    .tint(.green)
                                 }
-                            }
-                            .tint(.red)
+                            })
+                            .swipeActions(edge: .trailing, content: {
+                                if(watchList.accountName != "All") {
+                                    Button("Delete") {
+                                        watchController.deleteWatchList(watchList: watchList)
+                                        Task.init {
+                                            await watchViewModel.getAllWatchList()
+                                        }
+                                    }
+                                    .tint(.red)
+                                }
+                            })
                         }
-                    })
+                        .listRowBackground(Color.white)
+                        .foregroundColor(Color.navyBlue)
+                    }
                 }
-                .listRowBackground(Color.white)
-                .foregroundColor(Color.navyBlue)
             }
             .toolbar {
                 ToolbarItem(content: {
