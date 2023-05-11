@@ -21,19 +21,17 @@ struct TabBarItemViewModifier: ViewModifier {
     
     let tab: TabBarItem
     @Binding var selection: TabBarItem
-    let count: Int
     func body(content: Content) -> some View {
         content
             .opacity(selection == tab ? 1.0 : 0.0)
             .preference(key: TabBarItemsPreferenceKey.self, value: [tab])
-            .badge(count)
     }
 }
 
 extension View {
     
-    func tabBarItem(tab: TabBarItem, selection: Binding<TabBarItem>,count : Int) -> some View {
-        modifier(TabBarItemViewModifier(tab: tab, selection: selection, count: count))
+    func tabBarItem(tab: TabBarItem, selection: Binding<TabBarItem>) -> some View {
+        modifier(TabBarItemViewModifier(tab: tab, selection: selection))
     }
     
 }

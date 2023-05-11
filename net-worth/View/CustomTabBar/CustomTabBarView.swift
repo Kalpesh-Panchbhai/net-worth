@@ -43,8 +43,8 @@ extension CustomTabBarView {
     
     private func tabView2(tab: TabBarItem) -> some View {
         VStack {
-            Image(systemName: tab.iconName)
-                .font(.subheadline)
+            Image(systemName: localSelection == tab ? tab.iconNameFill : tab.iconName)
+                .font(.system(size: 16, weight: .semibold, design: .rounded))
             Text(tab.title)
                 .font(.system(size: 10, weight: .semibold, design: .rounded))
         }

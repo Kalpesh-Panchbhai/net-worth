@@ -20,15 +20,15 @@ struct MainScreenView: View {
             ZStack {
                 CustomTabBarContainerView(selection: $tabSelection, content: {
                     AccountCardList(accountViewModel: accountViewModel, watchViewModel: watchViewModel)
-                        .tabBarItem(tab: .account, selection: $tabSelection, count: accountViewModel.accountList.count)
+                        .tabBarItem(tab: .account, selection: $tabSelection)
                     WatchListView(watchViewModel: watchViewModel)
-                        .tabBarItem(tab: .watchlist, selection: $tabSelection,count: watchViewModel.watchList.count)
+                        .tabBarItem(tab: .watchlist, selection: $tabSelection)
                     IncomeView(incomeViewModel: incomeViewModel)
-                        .tabBarItem(tab: .income, selection: $tabSelection, count: incomeViewModel.incomeList.count)
+                        .tabBarItem(tab: .income, selection: $tabSelection)
                     ChartView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
-                        .tabBarItem(tab: .chart, selection: $tabSelection, count: 0)
+                        .tabBarItem(tab: .chart, selection: $tabSelection)
                     SettingsView()
-                        .tabBarItem(tab: .setting, selection: $tabSelection, count: 0)
+                        .tabBarItem(tab: .setting, selection: $tabSelection)
                 })
             }
         }

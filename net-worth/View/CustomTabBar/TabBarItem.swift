@@ -11,13 +11,23 @@ import SwiftUI
 enum TabBarItem: Hashable {
 case account, watchlist, income, chart, setting
     
-    var iconName: String {
+    var iconNameFill: String {
         switch self {
         case .account: return "star.circle.fill"
         case .watchlist: return "list.bullet.circle.fill"
         case .income: return "indianrupeesign.circle.fill"
         case .chart: return "chart.line.uptrend.xyaxis.circle.fill"
         case .setting: return "gearshape.fill"
+        }
+    }
+    
+    var iconName: String {
+        switch self {
+        case .account: return "star.circle"
+        case .watchlist: return "list.bullet.circle"
+        case .income: return "indianrupeesign.circle"
+        case .chart: return "chart.line.uptrend.xyaxis.circle"
+        case .setting: return "gearshape"
         }
     }
     
