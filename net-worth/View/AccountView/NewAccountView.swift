@@ -13,7 +13,7 @@ struct NewAccountView: View {
     @State var loanType: String = "Consumer"
     @State var symbolType: String = "None"
     @State var accountName: String = ""
-    @State var currenySelected: Currency = Currency()
+    @State var currencySelected: Currency = Currency()
     var currencyList = CurrencyList().currencyList
     @State var filterCurrencyList = CurrencyList().currencyList
     @State var currencyChanged = false
@@ -55,7 +55,7 @@ struct NewAccountView: View {
                         currentBalance = 0.0
                         paymentDate = 1
                         paymentReminder = false
-                        currenySelected = SettingsController().getDefaultCurrency()
+                        currencySelected = SettingsController().getDefaultCurrency()
                         selectedWatchList = Watch()
                     }
                     if(accountType == "Saving") {
@@ -141,7 +141,7 @@ struct NewAccountView: View {
                         }
                         newAccount.accountName = accountName
                         newAccount.currentBalance = isPlus ? currentBalance : currentBalance * -1
-                        newAccount.currency = currenySelected.code
+                        newAccount.currency = currencySelected.code
                         newAccount.paymentReminder = paymentReminder
                         
                         if(paymentReminder) {
@@ -179,9 +179,15 @@ struct NewAccountView: View {
                         }
                         dismiss()
                     }, label: {
-                        Image(systemName: "checkmark")
-                            .foregroundColor(Color.lightBlue)
-                            .bold()
+                        if(!allFieldsFilled()) {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(Color.lightBlue.opacity(0.3))
+                                .bold()
+                        } else {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(Color.lightBlue)
+                                .bold()
+                        }
                     })
                     .font(.system(size: 14).bold())
                     .disabled(!allFieldsFilled())
@@ -200,7 +206,7 @@ struct NewAccountView: View {
     }
     
     var currencyPicker: some View {
-        Picker("Currency", selection: $currenySelected) {
+        Picker("Currency", selection: $currencySelected) {
             SearchBar(text: $searchTerm, placeholder: "Search currency")
             ForEach(filterCurrencyList, id: \.self) { (data) in
                 defaultCurrencyPickerRightVersionView(currency: data)
@@ -217,13 +223,13 @@ struct NewAccountView: View {
                 filterCurrencyList = currencyList
             }
         }
-        .onChange(of: currenySelected) { (data) in
-            currenySelected = data
+        .onChange(of: currencySelected) { (data) in
+            currencySelected = data
             currencyChanged = true
         }
         .onAppear{
             if(!currencyChanged){
-                currenySelected = SettingsController().getDefaultCurrency()
+                currencySelected = SettingsController().getDefaultCurrency()
             }
         }
         .pickerStyle(.navigationLink)
@@ -248,25 +254,25 @@ struct NewAccountView: View {
     
     private func allFieldsFilled () -> Bool {
         if accountType == "Saving" {
-            if accountName.isEmpty || currenySelected.name.isEmpty {
+            if accountName.isEmpty || currencySelected.name.isEmpty {
                 return false
             } else {
                 return true
             }
         }else if accountType == "Credit Card" {
-            if accountName.isEmpty || currenySelected.name.isEmpty  {
+            if accountName.isEmpty || currencySelected.name.isEmpty  {
                 return false
             } else {
                 return true
             }
         }else if accountType == "Loan" {
-            if accountName.isEmpty || currentBalance.isZero || currenySelected.name.isEmpty  {
+            if accountName.isEmpty || currentBalance.isZero || currencySelected.name.isEmpty  {
                 return false
             } else {
                 return true
             }
         }else if accountType == "Other" {
-            if accountName.isEmpty || currenySelected.name.isEmpty  {
+            if accountName.isEmpty || currencySelected.name.isEmpty  {
                 return false
             } else {
                 return true
