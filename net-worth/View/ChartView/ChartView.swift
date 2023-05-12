@@ -22,6 +22,8 @@ struct ChartView: View {
     
     @State var compareAssetsToLiabilities = false
     
+    @State var compareWatchLists = false
+    
     var body: some View {
         NavigationView {
             List {
@@ -40,15 +42,16 @@ struct ChartView: View {
                         compareAssetsToLiabilities = true
                     } else {
                         compareAssetsToLiabilities = false
-                        Task.init {
-                            await accountViewModel.getAccountsForWatchList(accountID: watchListSelected.accountID)
-                            self.chartDataList = accountViewModel.accountList.filter {
-                                $0.currentBalance > 0
-                            }.sorted(by: {
-                                $0.currentBalance > $1.currentBalance
-                            })
-                            showingAssetsData = true
+                        compareWatchLists = false
+                        var accountList = getAccountsForWatchList(watch: watchListSelected).filter {
+                            $0.currentBalance > 0
                         }
+                        accountList.sort(by: {
+                            $0.currentBalance > $1.currentBalance
+                        })
+                        self.chartDataList = accountList
+                        
+                        showingAssetsData = true
                     }
                 })
                 Toggle("Compare Assets and Liabilities", isOn: $compareAssetsToLiabilities)
@@ -57,12 +60,12 @@ struct ChartView: View {
                     .onChange(of: compareAssetsToLiabilities) { value in
                         if(value) {
                             watchListSelected = defaultWatchListSelected
+                            compareWatchLists =  false
                             Task.init {
-                                await accountViewModel.getAccountList()
                                 self.chartDataList = [Account]()
                                 var assetAccount = Account()
                                 assetAccount.accountName = "Assets"
-                                assetAccount.currentBalance = accountViewModel.accountList.filter {
+                                assetAccount.currentBalance = getAccounts().filter {
                                     $0.currentBalance > 0
                                 }.map {
                                     $0.currentBalance
@@ -72,7 +75,7 @@ struct ChartView: View {
                                 
                                 var liabilitiesAccount = Account()
                                 liabilitiesAccount.accountName = "Liabilities"
-                                liabilitiesAccount.currentBalance = accountViewModel.accountList.filter {
+                                liabilitiesAccount.currentBalance = getAccounts().filter {
                                     $0.currentBalance < 0
                                 }.map {
                                     $0.currentBalance
@@ -89,18 +92,34 @@ struct ChartView: View {
                         }
                     }
                 
+                Toggle("Compare WatchList", isOn: $compareWatchLists)
+                    .listRowBackground(Color.white)
+                    .foregroundColor(Color.navyBlue)
+                    .onChange(of: compareWatchLists) { value in
+                        if(value) {
+                            watchListSelected = defaultWatchListSelected
+                            compareAssetsToLiabilities =  false
+                            var accountList = getAllWatchListWithAllAccountsExceptAllWatchList()
+                            accountList.sort(by: {
+                                $0.currentBalance > $1.currentBalance
+                            })
+                            self.chartDataList = accountList
+                        } else {
+                            self.chartDataList = [Account]()
+                        }
+                    }
                 HStack {
                     Spacer()
                     Button(action: {
                         if(showingAssetsData) {
-                            chartDataList = accountViewModel.accountList.filter {
+                            chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
                                 $0.currentBalance < 0
                             }.sorted(by: {
                                 $0.currentBalance < $1.currentBalance
                             })
                             showingAssetsData.toggle()
                         } else {
-                            chartDataList = accountViewModel.accountList.filter {
+                            chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
                                 $0.currentBalance > 0
                             }.sorted(by: {
                                 $0.currentBalance > $1.currentBalance
@@ -139,20 +158,39 @@ struct ChartView: View {
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.navyBlue)
             .scrollContentBackground(.hidden)
-            .onAppear {
-                Task.init {
-                    watchListSelected = watchViewModel.watchList.filter {
-                        $0.accountName.elementsEqual("All")
-                    }.first ?? Watch()
-                    await accountViewModel.getAccountsForWatchList(accountID: watchListSelected.accountID)
-                    self.chartDataList = accountViewModel.accountList.filter {
-                        $0.currentBalance > 0
-                    }.sorted(by: {
-                        $0.currentBalance > $1.currentBalance
-                    })
-                }
+        }
+    }
+
+    private func getAccounts() -> [Account] {
+        return accountViewModel.accountList
+    }
+    
+    private func getWatchLists() -> [Watch] {
+        return watchViewModel.watchList
+    }
+    
+    private func getAccountsForWatchList(watch: Watch) -> [Account] {
+        return getAccounts().filter {
+            watch.accountID.contains($0.id!)
+        }
+    }
+    
+    private func getAllWatchListWithAllAccountsExceptAllWatchList() -> [Account] {
+        var returnChartDataList = [Account]()
+        for watch in getWatchLists() {
+            if(!watch.accountName.elementsEqual("All")) {
+                var account = Account()
+                account.accountName = watch.accountName
+                account.currentBalance = calculateTotalAmountForAccountList(accountList: getAccountsForWatchList(watch: watch))
+                returnChartDataList.append(account)
             }
         }
-        
+        return returnChartDataList
+    }
+    
+    private func calculateTotalAmountForAccountList(accountList: [Account]) -> Double {
+        return accountList.map {
+            $0.currentBalance
+        }.reduce(0, +)
     }
 }

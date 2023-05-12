@@ -132,6 +132,7 @@ class AccountViewModel: ObservableObject {
             print(error)
         }
     }
+    
     func getAccountList() async {
         do {
             let list = try await accountController.getAccountList()

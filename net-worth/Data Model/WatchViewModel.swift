@@ -12,9 +12,11 @@ class WatchViewModel: ObservableObject {
     @Published var watchList = [Watch]()
     @Published var watchListLoad = false
     @Published var watchListForAccount = [Watch]()
+    @Published var watchListWithAccount = [Watch: [Account]]()
     @Published var watch = Watch()
     
     private var watchController = WatchController()
+    private var accountController = AccountController()
     
     func getAllWatchList() async {
         do {
@@ -22,6 +24,31 @@ class WatchViewModel: ObservableObject {
             DispatchQueue.main.async {
                 self.watchList = list
                 self.watchListLoad = true
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    func getAllWatchListWithAccountDetails() async {
+        do {
+            let watchList = try await watchController.getAllWatchList()
+            var watchListWithAccount2 = [Watch: [Account]]()
+            for list in watchList {
+                do {
+                    var accountList = [Account]()
+                    for i in 0..<list.accountID.count {
+                        let account = try await accountController.getAccount(id: list.accountID[i])
+                        accountList.append(account)
+                    }
+                    watchListWithAccount2.updateValue(accountList, forKey: list)
+                } catch {
+                    print(error)
+                }
+            }
+            let watchListWithAccount1 = watchListWithAccount2
+            DispatchQueue.main.async {
+                self.watchListWithAccount = watchListWithAccount1
             }
         } catch {
             print(error)
