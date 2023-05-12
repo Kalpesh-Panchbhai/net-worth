@@ -14,6 +14,7 @@ struct ChartView: View {
     @ObservedObject var accountViewModel: AccountViewModel
     
     @State var watchListSelected = Watch()
+    let defaultWatchListSelected = Watch(accountName: "Select")
     
     @State var showingAssetsData = true
     
@@ -25,7 +26,7 @@ struct ChartView: View {
         NavigationView {
             List {
                 Picker(selection: $watchListSelected, content: {
-                    Text("Select").tag(Watch())
+                    Text("Select").tag(defaultWatchListSelected)
                     ForEach(watchViewModel.watchList, id: \.self, content: {
                         Text($0.accountName).tag($0)
                     })

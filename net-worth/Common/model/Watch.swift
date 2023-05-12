@@ -20,6 +20,12 @@ struct Watch: Codable, Hashable {
         self.accountID = [String]()
     }
     
+    init(accountID: [String] = [], accountName: String = "") {
+        self.id = ""
+        self.accountID = accountID
+        self.accountName = accountName
+    }
+    
     init(doc: QueryDocumentSnapshot) {
         id = doc.documentID
         accountName = doc[ConstantUtils.watchKeyWatchName] as? String ?? ""
