@@ -128,7 +128,8 @@ struct SettingsView: View {
                                       .listRowBackground(Color.white)
                 
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-                Label("Version " + (appVersion ?? ""), systemImage: "gear.badge.checkmark")
+                let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
+                Label("Version " + (appVersion ?? "") + " Build(" + (buildVersion ?? "Unknown Build Version)") + ")", systemImage: "gear.badge.checkmark")
                     .foregroundColor(Color.navyBlue)
                     .listRowBackground(Color.white)
             }
