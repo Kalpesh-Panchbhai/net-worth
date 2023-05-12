@@ -35,21 +35,27 @@ struct ChartView: View {
                 .listRowBackground(Color.white)
                 .colorMultiply(Color.navyBlue)
                 .onChange(of: watchListSelected, perform: { _ in
-                    Task.init {
-                        await accountViewModel.getAccountsForWatchList(accountID: watchListSelected.accountID)
-                        self.chartDataList = accountViewModel.accountList.filter {
-                            $0.currentBalance > 0
-                        }.sorted(by: {
-                            $0.currentBalance > $1.currentBalance
-                        })
-                        showingAssetsData = true
+                    if(watchListSelected.accountName.isEmpty) {
+                        compareAssetsToLiabilities = true
+                    } else {
+                        compareAssetsToLiabilities = false
+                        Task.init {
+                            await accountViewModel.getAccountsForWatchList(accountID: watchListSelected.accountID)
+                            self.chartDataList = accountViewModel.accountList.filter {
+                                $0.currentBalance > 0
+                            }.sorted(by: {
+                                $0.currentBalance > $1.currentBalance
+                            })
+                            showingAssetsData = true
+                        }
                     }
                 })
-                Toggle("Compare", isOn: $compareAssetsToLiabilities)
+                Toggle("Compare Assets and Liabilities", isOn: $compareAssetsToLiabilities)
                     .listRowBackground(Color.white)
                     .foregroundColor(Color.navyBlue)
                     .onChange(of: compareAssetsToLiabilities) { value in
                         if(value) {
+                            watchListSelected = Watch()
                             Task.init {
                                 await accountViewModel.getAccountList()
                                 self.chartDataList = [Account]()
@@ -76,6 +82,9 @@ struct ChartView: View {
                                     $0.currentBalance > $1.currentBalance
                                 })
                             }
+                        }
+                        else {
+                            self.chartDataList = [Account]()
                         }
                     }
                 
