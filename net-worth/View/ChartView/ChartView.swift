@@ -69,6 +69,7 @@ struct ChartView: View {
                             Text("Show Assets")
                         }
                     })
+                    .font(.system(size: 14))
                 }.disabled(watchListSelected.accountName.isEmpty)
                 .listRowBackground(Color.white)
                 .foregroundColor(watchListSelected.accountName.isEmpty ? Color.gray : Color.navyBlue)
