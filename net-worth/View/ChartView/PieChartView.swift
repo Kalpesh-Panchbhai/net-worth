@@ -18,7 +18,6 @@ public struct PieChartView: View {
     public var widthFraction: CGFloat
     public var innerRadiusFraction: CGFloat
     
-    @State private var otherIndex = -1
     @State private var activeIndex: Int = -1
     
     var slices: [PieSliceData] {
@@ -28,18 +27,13 @@ public struct PieChartView: View {
         
         for (i, value) in values.enumerated() {
             let degrees: Double = value * 360 / sum
-            if(endDeg >= 314 && endDeg != 360) {
-                tempSlices.append(PieSliceData(startAngle: Angle(degrees: endDeg), endAngle: Angle(degrees: 360), text: String(format: "%.0f%%", ((360 - endDeg) / 360) * 100), color: self.colors[i]))
-                break
-            } else {
-                tempSlices.append(PieSliceData(startAngle: Angle(degrees: endDeg), endAngle: Angle(degrees: endDeg + degrees), text: String(format: "%.0f%%", value * 100 / sum), color: self.colors[i]))
-            }
+            tempSlices.append(PieSliceData(startAngle: Angle(degrees: endDeg), endAngle: Angle(degrees: endDeg + degrees), text: String(format: "%.0f%%", value * 100 / sum), color: self.colors[i]))
             endDeg += degrees
         }
         return tempSlices
     }
     
-    public init(values:[Double], names: [String], formatter: @escaping (Double) -> String, colors: [Color] = [Color.blue, Color.green, Color.orange], backgroundColor: Color = Color(red: 21 / 255, green: 24 / 255, blue: 30 / 255, opacity: 1.0), widthFraction: CGFloat = 0.75, innerRadiusFraction: CGFloat = 0.0){
+    public init(values:[Double], names: [String], formatter: @escaping (Double) -> String, colors: [Color] = [Color.blue, Color.green, Color.orange], backgroundColor: Color = Color(red: 21 / 255, green: 24 / 255, blue: 30 / 255, opacity: 1.0), widthFraction: CGFloat = 0.75, innerRadiusFraction: CGFloat = 0.00){
         self.values = values
         self.names = names
         self.formatter = formatter
@@ -55,7 +49,7 @@ public struct PieChartView: View {
             VStack{
                 ZStack{
                     ForEach(0..<self.values.count, id: \.self){ i in
-                        PieSliceView(pieSliceData: (i < self.slices.count ? self.slices[i] : self.slices[self.slices.count - 1]))
+                        PieSliceView(pieSliceData: self.slices[i])
                             .scaleEffect(self.activeIndex == i ? 1.03 : 1)
                             .animation(Animation.spring(), value: self.activeIndex == i ? 1.03 : 1)
                     }
@@ -77,12 +71,7 @@ public struct PieChartView: View {
                                 
                                 for (i, slice) in slices.enumerated() {
                                     if (radians < slice.endAngle.radians) {
-                                        if(i == slices.count - 1) {
-                                            self.activeIndex = -2
-                                            self.otherIndex = i
-                                        } else {
-                                            self.activeIndex = i
-                                        }
+                                        self.activeIndex = i
                                         break
                                     }
                                 }
@@ -96,10 +85,10 @@ public struct PieChartView: View {
                         .frame(width: widthFraction * geometry.size.width * innerRadiusFraction, height: widthFraction * geometry.size.width * innerRadiusFraction)
                 }
                 VStack {
-                    Text(self.activeIndex == -1 ? "Total" : self.activeIndex == -2 ? "Other" : names[self.activeIndex])
+                    Text(self.activeIndex == -1 ? "Total" : names[self.activeIndex])
                         .font(.system(size: 16))
                         .foregroundColor(Color.navyBlue)
-                    Text(self.activeIndex == -1 ? values.reduce(0, +).withCommas(decimalPlace: 2) : self.activeIndex == -2 ? getOtherTotal().withCommas(decimalPlace: 2) : values[self.activeIndex].withCommas(decimalPlace: 2))
+                    Text(self.activeIndex == -1 ? values.reduce(0, +).withCommas(decimalPlace: 2) : values[self.activeIndex].withCommas(decimalPlace: 2))
                         .font(.system(size: 16))
                         .foregroundColor(Color.navyBlue)
                 }
@@ -109,16 +98,6 @@ public struct PieChartView: View {
             .background(self.backgroundColor)
             .foregroundColor(Color.white)
         }
-    }
-    
-    private func getOtherTotal() -> Double {
-        var otherTotal = 0.0
-        for i in 0..<values.count {
-            if i >= otherIndex {
-                otherTotal += values[i]
-            }
-        }
-        return otherTotal
     }
 }
 
