@@ -19,6 +19,8 @@ struct ChartView: View {
     
     @State var chartDataList = [Account]()
     
+    @State var compareAssetsToLiabilities = false
+    
     var body: some View {
         NavigationView {
             List {
@@ -43,6 +45,39 @@ struct ChartView: View {
                         showingAssetsData = true
                     }
                 })
+                Toggle("Compare", isOn: $compareAssetsToLiabilities)
+                    .listRowBackground(Color.white)
+                    .foregroundColor(Color.navyBlue)
+                    .onChange(of: compareAssetsToLiabilities) { value in
+                        if(value) {
+                            Task.init {
+                                await accountViewModel.getAccountList()
+                                self.chartDataList = [Account]()
+                                var assetAccount = Account()
+                                assetAccount.accountName = "Assets"
+                                assetAccount.currentBalance = accountViewModel.accountList.filter {
+                                    $0.currentBalance > 0
+                                }.map {
+                                    $0.currentBalance
+                                }.reduce(0, +)
+                                
+                                self.chartDataList.append(assetAccount)
+                                
+                                var liabilitiesAccount = Account()
+                                liabilitiesAccount.accountName = "Liabilities"
+                                liabilitiesAccount.currentBalance = accountViewModel.accountList.filter {
+                                    $0.currentBalance < 0
+                                }.map {
+                                    $0.currentBalance
+                                }.reduce(0, -)
+                                
+                                self.chartDataList.append(liabilitiesAccount)
+                                self.chartDataList.sort(by: {
+                                    $0.currentBalance > $1.currentBalance
+                                })
+                            }
+                        }
+                    }
                 
                 HStack {
                     Spacer()
