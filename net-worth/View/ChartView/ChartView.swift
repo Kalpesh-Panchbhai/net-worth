@@ -17,7 +17,7 @@ struct ChartView: View {
     
     @State var showingAssetsData = true
     
-    @State var accountListChartData = [Account]()
+    @State var chartDataList = [Account]()
     
     var body: some View {
         NavigationView {
@@ -35,7 +35,7 @@ struct ChartView: View {
                 .onChange(of: watchListSelected, perform: { _ in
                     Task.init {
                         await accountViewModel.getAccountsForWatchList(accountID: watchListSelected.accountID)
-                        self.accountListChartData = accountViewModel.accountList.filter {
+                        self.chartDataList = accountViewModel.accountList.filter {
                             $0.currentBalance > 0
                         }.sorted(by: {
                             $0.currentBalance > $1.currentBalance
@@ -48,14 +48,14 @@ struct ChartView: View {
                     Spacer()
                     Button(action: {
                         if(showingAssetsData) {
-                            accountListChartData = accountViewModel.accountList.filter {
+                            chartDataList = accountViewModel.accountList.filter {
                                 $0.currentBalance < 0
                             }.sorted(by: {
                                 $0.currentBalance < $1.currentBalance
                             })
                             showingAssetsData.toggle()
                         } else {
-                            accountListChartData = accountViewModel.accountList.filter {
+                            chartDataList = accountViewModel.accountList.filter {
                                 $0.currentBalance > 0
                             }.sorted(by: {
                                 $0.currentBalance > $1.currentBalance
@@ -75,14 +75,14 @@ struct ChartView: View {
                 .foregroundColor(watchListSelected.accountName.isEmpty ? Color.gray : Color.navyBlue)
                 
                 PieChartView(
-                    values: accountListChartData.map {
+                    values: chartDataList.map {
                         $0.currentBalance
                     },
-                    names: accountListChartData.map {
+                    names: chartDataList.map {
                         $0.accountName
                     },
                     formatter: {value in String(format: "%.2f", value)},
-                    colors: accountListChartData.map { _ in
+                    colors: chartDataList.map { _ in
                             .random
                     }, backgroundColor: Color.white)
                 
@@ -100,7 +100,7 @@ struct ChartView: View {
                         $0.accountName.elementsEqual("All")
                     }.first ?? Watch()
                     await accountViewModel.getAccountsForWatchList(accountID: watchListSelected.accountID)
-                    self.accountListChartData = accountViewModel.accountList.filter {
+                    self.chartDataList = accountViewModel.accountList.filter {
                         $0.currentBalance > 0
                     }.sorted(by: {
                         $0.currentBalance > $1.currentBalance
