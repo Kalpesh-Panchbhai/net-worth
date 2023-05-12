@@ -14,7 +14,7 @@ struct MainScreenTabBarView: View {
     @Namespace private var namespace
     @State var localSelection: MainScreenTabBarItem
     var body: some View {
-        tabBarVersion2
+        tabBar
             .onChange(of: selection, perform: { value in
                 withAnimation(.easeInOut) {
                     localSelection = value
@@ -25,10 +25,10 @@ struct MainScreenTabBarView: View {
 
 extension MainScreenTabBarView {
     
-    private var tabBarVersion2: some View {
+    private var tabBar: some View {
         HStack {
             ForEach(tabs, id: \.self) { tab in
-                tabView2(tab: tab)
+                tabView(tab: tab)
                     .onTapGesture {
                         switchToTab(tab: tab)
                     }
@@ -41,7 +41,7 @@ extension MainScreenTabBarView {
         .padding(.horizontal)
     }
     
-    private func tabView2(tab: MainScreenTabBarItem) -> some View {
+    private func tabView(tab: MainScreenTabBarItem) -> some View {
         VStack {
             Image(systemName: localSelection == tab ? tab.iconNameFill : tab.iconName)
                 .font(.system(size: 20))
