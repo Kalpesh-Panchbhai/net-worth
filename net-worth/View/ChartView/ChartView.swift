@@ -166,8 +166,8 @@ struct ChartView: View {
                         }
                         self.multipleWatchListSelection.insert(watch)
                         
-                        var accountList = getAccountsForWatchList(watch: watch)
-                        var totalAmount = accountList.map( {
+                        let accountList = getAccountsForWatchList(watch: watch)
+                        let totalAmount = accountList.map( {
                             $0.currentBalance
                         }).reduce(0, +)
                         var account = Account()
