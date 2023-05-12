@@ -54,12 +54,11 @@ struct ChartView: View {
                 .listRowBackground(Color.white)
                 .foregroundColor(Color.navyBlue)
                 .frame(minHeight: 550)
-                
-                .navigationTitle("Chart")
-                .navigationBarTitleDisplayMode(.inline)
-                .background(Color.navyBlue)
-                .scrollContentBackground(.hidden)
             }
+            .navigationTitle("Chart")
+            .navigationBarTitleDisplayMode(.inline)
+            .background(Color.navyBlue)
+            .scrollContentBackground(.hidden)
             .onAppear {
                 watchListSelected = watchViewModel.watchList.filter {
                     $0.accountName.elementsEqual("All")
