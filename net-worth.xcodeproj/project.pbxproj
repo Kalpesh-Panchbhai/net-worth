@@ -67,7 +67,7 @@
 		7DB205852A0CEB78001E03D6 /* MainScreenTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB205842A0CEB78001E03D6 /* MainScreenTabBarView.swift */; };
 		7DB205872A0CF010001E03D6 /* MainScreenTabBarContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB205862A0CF010001E03D6 /* MainScreenTabBarContainerView.swift */; };
 		7DB205892A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB205882A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift */; };
-		7DB2058B2A0CF5B6001E03D6 /* TabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2058A2A0CF5B6001E03D6 /* TabBarItem.swift */; };
+		7DB2058B2A0CF5B6001E03D6 /* MainScreenTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2058A2A0CF5B6001E03D6 /* MainScreenTabBarItem.swift */; };
 		7DB2058D2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2058C2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift */; };
 		7DB2B0A4299515B800E4B891 /* AccountCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2B0A3299515B800E4B891 /* AccountCardView.swift */; };
 		7DB2B0A6299518A100E4B891 /* AccountCardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2B0A5299518A100E4B891 /* AccountCardList.swift */; };
@@ -193,7 +193,7 @@
 		7DB205842A0CEB78001E03D6 /* MainScreenTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenTabBarView.swift; sourceTree = "<group>"; };
 		7DB205862A0CF010001E03D6 /* MainScreenTabBarContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenTabBarContainerView.swift; sourceTree = "<group>"; };
 		7DB205882A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenTabBarItemsPreferenceKey.swift; sourceTree = "<group>"; };
-		7DB2058A2A0CF5B6001E03D6 /* TabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItem.swift; sourceTree = "<group>"; };
+		7DB2058A2A0CF5B6001E03D6 /* MainScreenTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenTabBarItem.swift; sourceTree = "<group>"; };
 		7DB2058C2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewGestureExtension.swift; sourceTree = "<group>"; };
 		7DB2B0A3299515B800E4B891 /* AccountCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCardView.swift; sourceTree = "<group>"; };
 		7DB2B0A5299518A100E4B891 /* AccountCardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCardList.swift; sourceTree = "<group>"; };
@@ -435,7 +435,7 @@
 		7D79FA88291B9C6E004A2ECF /* View */ = {
 			isa = PBXGroup;
 			children = (
-				7DB205812A0CEB56001E03D6 /* CustomTabBar */,
+				7D87CEF62A0E0475007C1C76 /* MainScreenTabBarView */,
 				7DF83F902A094F3300D3233B /* ChartView */,
 				7D730E0F299375AD0002E0ED /* OnboardingView */,
 				7D921C58298682FB0014AC9E /* LoginView */,
@@ -446,6 +446,17 @@
 				7DF8CCFB299F445300267C29 /* WatchView */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		7D87CEF62A0E0475007C1C76 /* MainScreenTabBarView */ = {
+			isa = PBXGroup;
+			children = (
+				7DB205842A0CEB78001E03D6 /* MainScreenTabBarView.swift */,
+				7DB205862A0CF010001E03D6 /* MainScreenTabBarContainerView.swift */,
+				7DB205882A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift */,
+				7DB2058A2A0CF5B6001E03D6 /* MainScreenTabBarItem.swift */,
+			);
+			path = MainScreenTabBarView;
 			sourceTree = "<group>";
 		};
 		7D921C58298682FB0014AC9E /* LoginView */ = {
@@ -470,17 +481,6 @@
 				7DD8E5B22A06339500245A98 /* BackupView.swift */,
 			);
 			path = OtherView;
-			sourceTree = "<group>";
-		};
-		7DB205812A0CEB56001E03D6 /* CustomTabBar */ = {
-			isa = PBXGroup;
-			children = (
-				7DB205842A0CEB78001E03D6 /* MainScreenTabBarView.swift */,
-				7DB205862A0CF010001E03D6 /* MainScreenTabBarContainerView.swift */,
-				7DB205882A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift */,
-				7DB2058A2A0CF5B6001E03D6 /* TabBarItem.swift */,
-			);
-			path = CustomTabBar;
 			sourceTree = "<group>";
 		};
 		7DD7A56B29224BFD00CD5B37 /* IncomeView */ = {
@@ -861,7 +861,7 @@
 				7DCFE4C8292CB92900C940F0 /* StringExtension.swift in Sources */,
 				7DF9DB93298F98A800831494 /* AccountViewModel.swift in Sources */,
 				7DB2B0A6299518A100E4B891 /* AccountCardList.swift in Sources */,
-				7DB2058B2A0CF5B6001E03D6 /* TabBarItem.swift in Sources */,
+				7DB2058B2A0CF5B6001E03D6 /* MainScreenTabBarItem.swift in Sources */,
 				7D921C60298683760014AC9E /* LoginHeader.swift in Sources */,
 				7DCFE4CA292D036500C940F0 /* SearchBar.swift in Sources */,
 				7DB2058D2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift in Sources */,
