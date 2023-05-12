@@ -36,7 +36,7 @@ struct ChartView: View {
                 .listRowBackground(Color.white)
                 .colorMultiply(Color.navyBlue)
                 .onChange(of: watchListSelected, perform: { _ in
-                    if(watchListSelected.accountName.isEmpty) {
+                    if(watchListSelected.accountName.elementsEqual("Select")) {
                         compareAssetsToLiabilities = true
                     } else {
                         compareAssetsToLiabilities = false
@@ -56,7 +56,7 @@ struct ChartView: View {
                     .foregroundColor(Color.navyBlue)
                     .onChange(of: compareAssetsToLiabilities) { value in
                         if(value) {
-                            watchListSelected = Watch()
+                            watchListSelected = defaultWatchListSelected
                             Task.init {
                                 await accountViewModel.getAccountList()
                                 self.chartDataList = [Account]()
@@ -115,9 +115,9 @@ struct ChartView: View {
                         }
                     })
                     .font(.system(size: 14))
-                }.disabled(watchListSelected.accountName.isEmpty)
+                }.disabled(watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty)
                 .listRowBackground(Color.white)
-                .foregroundColor(watchListSelected.accountName.isEmpty ? Color.gray : Color.navyBlue)
+                .foregroundColor((watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty) ? Color.gray : Color.navyBlue)
                 
                 PieChartView(
                     values: chartDataList.map {
