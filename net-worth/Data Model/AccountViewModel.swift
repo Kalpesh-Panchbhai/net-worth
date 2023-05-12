@@ -106,11 +106,7 @@ class AccountViewModel: ObservableObject {
                 account.accountType.lowercased().elementsEqual(filter.lowercased())
             }
     }
-    
-    func resetAccountList() {
-        accountList = originalAccountList
-    }
-    
+ 
     func getAccount(id: String) async {
         do {
             let list = try await accountController.getAccount(id: id)
