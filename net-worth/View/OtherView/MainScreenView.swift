@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainScreenView: View {
     
-    @State public var tabSelection: MainScreenTabBarItem = .chart
+    @State public var tabSelection: MainScreenTabBarItem = .account
     
     @StateObject private var accountViewModel = AccountViewModel()
     @StateObject private var watchViewModel = WatchViewModel()
