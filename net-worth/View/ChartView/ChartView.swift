@@ -17,12 +17,9 @@ struct ChartView: View {
     let defaultWatchListSelected = Watch(accountName: "Select")
     
     @State var showingAssetsData = true
-    
     @State var chartDataList = [Account]()
-    
     @State var compareAssetsToLiabilities = false
-    
-    @State var compareWatchLists = false
+    @State var multipleWatchListSelection = Set<Watch>()
     
     var body: some View {
         NavigationView {
@@ -42,7 +39,7 @@ struct ChartView: View {
                         compareAssetsToLiabilities = true
                     } else {
                         compareAssetsToLiabilities = false
-                        compareWatchLists = false
+                        multipleWatchListSelection = Set<Watch>()
                         var accountList = getAccountsForWatchList(watch: watchListSelected).filter {
                             $0.currentBalance > 0
                         }
@@ -60,7 +57,7 @@ struct ChartView: View {
                     .onChange(of: compareAssetsToLiabilities) { value in
                         if(value) {
                             watchListSelected = defaultWatchListSelected
-                            compareWatchLists =  false
+                            multipleWatchListSelection = Set<Watch>()
                             Task.init {
                                 self.chartDataList = [Account]()
                                 var assetAccount = Account()
@@ -92,22 +89,14 @@ struct ChartView: View {
                         }
                     }
                 
-                Toggle("Compare WatchList", isOn: $compareWatchLists)
-                    .listRowBackground(Color.white)
-                    .foregroundColor(Color.navyBlue)
-                    .onChange(of: compareWatchLists) { value in
-                        if(value) {
-                            watchListSelected = defaultWatchListSelected
-                            compareAssetsToLiabilities =  false
-                            var accountList = getAllWatchListWithAllAccountsExceptAllWatchList()
-                            accountList.sort(by: {
-                                $0.currentBalance > $1.currentBalance
-                            })
-                            self.chartDataList = accountList
-                        } else {
-                            self.chartDataList = [Account]()
-                        }
-                    }
+                NavigationLink(destination: {
+                    selectMultipleWatchListForCompare
+                }, label: {
+                    Text("Compare Multiple WatchList")
+                })
+                .listRowBackground(Color.white)
+                .foregroundColor(Color.navyBlue)
+                
                 HStack {
                     Spacer()
                     Button(action: {
@@ -135,8 +124,8 @@ struct ChartView: View {
                     })
                     .font(.system(size: 14))
                 }.disabled(watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty)
-                .listRowBackground(Color.white)
-                .foregroundColor((watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty) ? Color.gray : Color.navyBlue)
+                    .listRowBackground(Color.white)
+                    .foregroundColor((watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty) ? Color.gray : Color.navyBlue)
                 
                 PieChartView(
                     values: chartDataList.map {
@@ -160,7 +149,47 @@ struct ChartView: View {
             .scrollContentBackground(.hidden)
         }
     }
-
+    
+    var selectMultipleWatchListForCompare: some View {
+        List {
+            ForEach(watchViewModel.watchList.filter({ !$0.accountName.elementsEqual("All")}), id: \.self, content: { watch in
+                MultipleSelectionRow(title: watch.accountName, isSelected: self.multipleWatchListSelection.contains(watch)) {
+                    if self.multipleWatchListSelection.contains(watch) {
+                        self.multipleWatchListSelection.remove(watch)
+                        self.chartDataList.removeAll(where: {
+                            $0.accountName.elementsEqual(watch.accountName)
+                        })
+                    }
+                    else {
+                        if(self.multipleWatchListSelection.isEmpty) {
+                            self.chartDataList = [Account]()
+                        }
+                        self.multipleWatchListSelection.insert(watch)
+                        
+                        var accountList = getAccountsForWatchList(watch: watch)
+                        var totalAmount = accountList.map( {
+                            $0.currentBalance
+                        }).reduce(0, +)
+                        var account = Account()
+                        account.accountName = watch.accountName
+                        account.currentBalance = totalAmount
+                        self.chartDataList.append(account)
+                        self.chartDataList.sort(by: {
+                            $0.currentBalance > $1.currentBalance
+                        })
+                    }
+                    compareAssetsToLiabilities = false
+                    watchListSelected = defaultWatchListSelected
+                }
+            })
+            .listRowBackground(Color.white)
+        }
+        .navigationTitle("Select Watch List")
+        .foregroundColor(Color.navyBlue)
+        .background(Color.navyBlue)
+        .scrollContentBackground(.hidden)
+    }
+    
     private func getAccounts() -> [Account] {
         return accountViewModel.accountList
     }
@@ -175,22 +204,27 @@ struct ChartView: View {
         }
     }
     
-    private func getAllWatchListWithAllAccountsExceptAllWatchList() -> [Account] {
-        var returnChartDataList = [Account]()
-        for watch in getWatchLists() {
-            if(!watch.accountName.elementsEqual("All")) {
-                var account = Account()
-                account.accountName = watch.accountName
-                account.currentBalance = calculateTotalAmountForAccountList(accountList: getAccountsForWatchList(watch: watch))
-                returnChartDataList.append(account)
-            }
-        }
-        return returnChartDataList
-    }
-    
     private func calculateTotalAmountForAccountList(accountList: [Account]) -> Double {
         return accountList.map {
             $0.currentBalance
         }.reduce(0, +)
+    }
+}
+
+struct MultipleSelectionRow: View {
+    var title: String
+    var isSelected: Bool
+    var action: () -> Void
+    
+    var body: some View {
+        Button(action: self.action) {
+            HStack {
+                Text(self.title)
+                if self.isSelected {
+                    Spacer()
+                    Image(systemName: "checkmark")
+                }
+            }
+        }
     }
 }
