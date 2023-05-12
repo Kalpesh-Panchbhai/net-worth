@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainScreenView: View {
     
-    @State public var tabSelection: TabBarItem = .account
+    @State public var tabSelection: MainScreenTabBarItem = .account
     
     @StateObject private var accountViewModel = AccountViewModel()
     @StateObject private var watchViewModel = WatchViewModel()
@@ -18,7 +18,7 @@ struct MainScreenView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                CustomTabBarContainerView(selection: $tabSelection, content: {
+                MainScreenTabBarContainerView(selection: $tabSelection, content: {
                     AccountCardList(accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                         .tabBarItem(tab: .account, selection: $tabSelection)
                     WatchListView(watchViewModel: watchViewModel)

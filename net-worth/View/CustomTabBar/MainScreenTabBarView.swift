@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct CustomTabBarView: View {
+struct MainScreenTabBarView: View {
     
-    let tabs: [TabBarItem]
-    @Binding var selection: TabBarItem
+    let tabs: [MainScreenTabBarItem]
+    @Binding var selection: MainScreenTabBarItem
     @Namespace private var namespace
-    @State var localSelection: TabBarItem
+    @State var localSelection: MainScreenTabBarItem
     var body: some View {
         tabBarVersion2
             .onChange(of: selection, perform: { value in
@@ -23,7 +23,7 @@ struct CustomTabBarView: View {
     }
 }
 
-extension CustomTabBarView {
+extension MainScreenTabBarView {
     
     private var tabBarVersion2: some View {
         HStack {
@@ -41,7 +41,7 @@ extension CustomTabBarView {
         .padding(.horizontal)
     }
     
-    private func tabView2(tab: TabBarItem) -> some View {
+    private func tabView2(tab: MainScreenTabBarItem) -> some View {
         VStack {
             Image(systemName: localSelection == tab ? tab.iconNameFill : tab.iconName)
                 .font(.system(size: 20))
@@ -63,7 +63,7 @@ extension CustomTabBarView {
         )
     }
     
-    private func switchToTab(tab: TabBarItem) {
+    private func switchToTab(tab: MainScreenTabBarItem) {
         selection = tab
     }
 }

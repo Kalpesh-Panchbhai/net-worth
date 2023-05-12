@@ -64,9 +64,9 @@
 		7D9F6F58299CE18000F964EC /* SingleWatchListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9F6F57299CE18000F964EC /* SingleWatchListView.swift */; };
 		7DA63A492995FACA00568FCA /* AccountDetailCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA63A482995FACA00568FCA /* AccountDetailCardView.swift */; };
 		7DA63A4B2996017D00568FCA /* AccountDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA63A4A2996017D00568FCA /* AccountDetailView.swift */; };
-		7DB205852A0CEB78001E03D6 /* CustomTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB205842A0CEB78001E03D6 /* CustomTabBarView.swift */; };
-		7DB205872A0CF010001E03D6 /* CustomTabBarContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB205862A0CF010001E03D6 /* CustomTabBarContainerView.swift */; };
-		7DB205892A0CF347001E03D6 /* TabBarItemsPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB205882A0CF347001E03D6 /* TabBarItemsPreferenceKey.swift */; };
+		7DB205852A0CEB78001E03D6 /* MainScreenTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB205842A0CEB78001E03D6 /* MainScreenTabBarView.swift */; };
+		7DB205872A0CF010001E03D6 /* MainScreenTabBarContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB205862A0CF010001E03D6 /* MainScreenTabBarContainerView.swift */; };
+		7DB205892A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB205882A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift */; };
 		7DB2058B2A0CF5B6001E03D6 /* TabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2058A2A0CF5B6001E03D6 /* TabBarItem.swift */; };
 		7DB2058D2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2058C2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift */; };
 		7DB2B0A4299515B800E4B891 /* AccountCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2B0A3299515B800E4B891 /* AccountCardView.swift */; };
@@ -190,9 +190,9 @@
 		7D9F6F57299CE18000F964EC /* SingleWatchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleWatchListView.swift; sourceTree = "<group>"; };
 		7DA63A482995FACA00568FCA /* AccountDetailCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailCardView.swift; sourceTree = "<group>"; };
 		7DA63A4A2996017D00568FCA /* AccountDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailView.swift; sourceTree = "<group>"; };
-		7DB205842A0CEB78001E03D6 /* CustomTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarView.swift; sourceTree = "<group>"; };
-		7DB205862A0CF010001E03D6 /* CustomTabBarContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarContainerView.swift; sourceTree = "<group>"; };
-		7DB205882A0CF347001E03D6 /* TabBarItemsPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItemsPreferenceKey.swift; sourceTree = "<group>"; };
+		7DB205842A0CEB78001E03D6 /* MainScreenTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenTabBarView.swift; sourceTree = "<group>"; };
+		7DB205862A0CF010001E03D6 /* MainScreenTabBarContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenTabBarContainerView.swift; sourceTree = "<group>"; };
+		7DB205882A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenTabBarItemsPreferenceKey.swift; sourceTree = "<group>"; };
 		7DB2058A2A0CF5B6001E03D6 /* TabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItem.swift; sourceTree = "<group>"; };
 		7DB2058C2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewGestureExtension.swift; sourceTree = "<group>"; };
 		7DB2B0A3299515B800E4B891 /* AccountCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCardView.swift; sourceTree = "<group>"; };
@@ -475,9 +475,9 @@
 		7DB205812A0CEB56001E03D6 /* CustomTabBar */ = {
 			isa = PBXGroup;
 			children = (
-				7DB205842A0CEB78001E03D6 /* CustomTabBarView.swift */,
-				7DB205862A0CF010001E03D6 /* CustomTabBarContainerView.swift */,
-				7DB205882A0CF347001E03D6 /* TabBarItemsPreferenceKey.swift */,
+				7DB205842A0CEB78001E03D6 /* MainScreenTabBarView.swift */,
+				7DB205862A0CF010001E03D6 /* MainScreenTabBarContainerView.swift */,
+				7DB205882A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift */,
 				7DB2058A2A0CF5B6001E03D6 /* TabBarItem.swift */,
 			);
 			path = CustomTabBar;
@@ -812,7 +812,7 @@
 				7DD8E5AC2A0630A000245A98 /* Data.swift in Sources */,
 				7DD8E5BB2A06383200245A98 /* IncomeData.swift in Sources */,
 				7D921C66298684790014AC9E /* +View.swift in Sources */,
-				7DB205852A0CEB78001E03D6 /* CustomTabBarView.swift in Sources */,
+				7DB205852A0CEB78001E03D6 /* MainScreenTabBarView.swift in Sources */,
 				7DD8E5C12A06427300245A98 /* WatchData.swift in Sources */,
 				7DA63A492995FACA00568FCA /* AccountDetailCardView.swift in Sources */,
 				7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */,
@@ -836,7 +836,7 @@
 				7D79FA5A291B7431004A2ECF /* Persistence.swift in Sources */,
 				7D1188362A03F3000005EA32 /* AccountWatchListView.swift in Sources */,
 				7D3D5244299105A50021047B /* CommonController.swift in Sources */,
-				7DB205892A0CF347001E03D6 /* TabBarItemsPreferenceKey.swift in Sources */,
+				7DB205892A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift in Sources */,
 				7D85D030298D29BE0019F85E /* Income.swift in Sources */,
 				7DB58AB329967AFE00B93592 /* AccountRowView.swift in Sources */,
 				7DD8E5B72A06369800245A98 /* IncomeTagData.swift in Sources */,
@@ -873,7 +873,7 @@
 				7D237BED292B672900DEF91D /* DoubleExtension.swift in Sources */,
 				7D921C5A298683100014AC9E /* CustomButton.swift in Sources */,
 				7D42520F291BE95C0001C41C /* AuthenticationView.swift in Sources */,
-				7DB205872A0CF010001E03D6 /* CustomTabBarContainerView.swift in Sources */,
+				7DB205872A0CF010001E03D6 /* MainScreenTabBarContainerView.swift in Sources */,
 				7DD8E5BD2A06397B00245A98 /* AccountData.swift in Sources */,
 				7D11D0092A0A59F600897B08 /* ChartView.swift in Sources */,
 				7D65547429A107950008A8E2 /* ChartViewModel.swift in Sources */,

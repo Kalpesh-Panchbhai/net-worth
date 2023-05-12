@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-enum TabBarItem: Hashable {
+enum MainScreenTabBarItem: Hashable {
 case account, watchlist, income, chart, setting
     
     var iconNameFill: String {
