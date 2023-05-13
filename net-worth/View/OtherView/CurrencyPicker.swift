@@ -35,9 +35,9 @@ struct CurrencyPicker: View {
                 }
             } else {
                 HStack {
-                    Text(currenySelected.name)
+                    Text("Currency")
                     Spacer()
-                    Text(currenySelected.code)
+                    Text(currenySelected.name)
                 }
             }
         })

@@ -34,9 +34,9 @@ struct DefaultCurrencyPicker: View {
         }, label: {
             Label(title: {
                 HStack {
-                    Text(currenySelected.name)
+                    Text("Default Currency")
                     Spacer()
-                    Text(currenySelected.code)
+                    Text(currenySelected.name)
                 }
             }, icon: {
                 Image(systemName: "indianrupeesign.square")
