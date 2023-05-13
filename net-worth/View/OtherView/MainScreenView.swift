@@ -15,6 +15,9 @@ struct MainScreenView: View {
     @StateObject private var watchViewModel = WatchViewModel()
     @StateObject private var incomeViewModel = IncomeViewModel()
     
+    @StateObject var networkMonitor = NetworkMonitor()
+    @State var networkUnavailable = true
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -30,9 +33,13 @@ struct MainScreenView: View {
                     SettingsView()
                         .tabBarItem(tab: .setting, selection: $tabSelection)
                 })
+                .alert("Network is unavailable", isPresented: $networkUnavailable) {
+                    Button("OK", role: .cancel) { }
+                }
             }
         }
         .onAppear {
+            networkUnavailable = !networkMonitor.isConnected
             Task.init {
                 await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
@@ -47,5 +54,5 @@ struct MainScreenView: View {
                 await incomeViewModel.getIncomeFinancialYearList()
             }
         }
-    }    
+    }
 }

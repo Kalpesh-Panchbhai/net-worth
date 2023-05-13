@@ -27,6 +27,7 @@
 		7D596278294105A40008A6B9 /* BalanceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D596277294105A40008A6B9 /* BalanceModel.swift */; };
 		7D5A75602A04FB11001646A2 /* AddWatchListToAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5A755F2A04FB11001646A2 /* AddWatchListToAccountView.swift */; };
 		7D5B9F93299A896300D0477B /* BalanceCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5B9F92299A896300D0477B /* BalanceCardView.swift */; };
+		7D5F29112A0FD0B900D365DD /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5F29102A0FD0B900D365DD /* NetworkMonitor.swift */; };
 		7D65547429A107950008A8E2 /* ChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D65547329A107950008A8E2 /* ChartViewModel.swift */; };
 		7D65547629A107DC0008A8E2 /* ChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D65547529A107DC0008A8E2 /* ChartData.swift */; };
 		7D69DD732932312400F024A6 /* ConstantUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D69DD722932312400F024A6 /* ConstantUtils.swift */; };
@@ -157,6 +158,7 @@
 		7D596277294105A40008A6B9 /* BalanceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceModel.swift; sourceTree = "<group>"; };
 		7D5A755F2A04FB11001646A2 /* AddWatchListToAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWatchListToAccountView.swift; sourceTree = "<group>"; };
 		7D5B9F92299A896300D0477B /* BalanceCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceCardView.swift; sourceTree = "<group>"; };
+		7D5F29102A0FD0B900D365DD /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		7D65547329A107950008A8E2 /* ChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewModel.swift; sourceTree = "<group>"; };
 		7D65547529A107DC0008A8E2 /* ChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartData.swift; sourceTree = "<group>"; };
 		7D69DD722932312400F024A6 /* ConstantUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstantUtils.swift; sourceTree = "<group>"; };
@@ -426,6 +428,7 @@
 				7D3D5243299105A50021047B /* CommonController.swift */,
 				7DB98801299B6464004ED6D2 /* WatchController.swift */,
 				7DD8E5B42A06343A00245A98 /* ImportExportController.swift */,
+				7D5F29102A0FD0B900D365DD /* NetworkMonitor.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -826,6 +829,7 @@
 				7DC46B4829A4C5A0000E311B /* IncomeTypeView.swift in Sources */,
 				7D9F6F58299CE18000F964EC /* SingleWatchListView.swift in Sources */,
 				7D3636FB292F9CCB0013B4E5 /* NotificationsView.swift in Sources */,
+				7D5F29112A0FD0B900D365DD /* NetworkMonitor.swift in Sources */,
 				7D1C72642A06549B00022FCB /* ImportExportViewModel.swift in Sources */,
 				7DC97A28292236FB003F69D4 /* IncomeView.swift in Sources */,
 				7DB2B0A4299515B800E4B891 /* AccountCardView.swift in Sources */,
