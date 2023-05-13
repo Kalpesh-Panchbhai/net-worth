@@ -26,7 +26,7 @@ struct AccountListView: View {
         ZStack {
             Color.navyBlue.ignoresSafeArea()
             VStack {
-                if(!accountType.elementsEqual("Inactive Account")) {
+                if(!accountType.elementsEqual("Inactive Account") && !accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).isEmpty) {
                     VStack {
                         BalanceCardView(accountViewModel: accountViewModel, accountType: accountType, isWatchListCardView: false, watchList: Watch())
                             .frame(width: 360, height: 50)
@@ -57,6 +57,7 @@ struct AccountListView: View {
                                                 await accountViewModel.getTotalBalance(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
                                                 await watchViewModel.getAllWatchList()
                                             }
+                                            self.presentationMode.wrappedValue.dismiss()
                                         }, label: {
                                             Label("Delete", systemImage: "trash")
                                         })
