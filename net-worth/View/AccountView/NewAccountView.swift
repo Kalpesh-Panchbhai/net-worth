@@ -63,7 +63,7 @@ struct NewAccountView: View {
                             .colorMultiply(Color.navyBlue)
                         currentBalanceField()
                             .foregroundColor(Color.navyBlue)
-                        currencyPicker
+                        CurrencyPicker(currenySelected: $currencySelected)
                             .colorMultiply(Color.navyBlue)
                         watchListPicker
                         accountOpenedDatePicker
@@ -73,7 +73,7 @@ struct NewAccountView: View {
                             .colorMultiply(Color.navyBlue)
                         currentBalanceField()
                             .foregroundColor(Color.navyBlue)
-                        currencyPicker
+                        CurrencyPicker(currenySelected: $currencySelected)
                             .colorMultiply(Color.navyBlue)
                         enablePaymentReminderField(labelName: "Enable Payment Reminder")
                             .foregroundColor(Color.navyBlue)
@@ -101,7 +101,7 @@ struct NewAccountView: View {
                             loanPaymentDateField(labelName: "Select a loan payment date")
                                 .foregroundColor(Color.navyBlue)
                         }
-                        currencyPicker
+                        CurrencyPicker(currenySelected: $currencySelected)
                             .colorMultiply(Color.navyBlue)
                         enablePaymentReminderField(labelName: "Enable Loan Payment Reminder")
                             .foregroundColor(Color.navyBlue)
@@ -116,7 +116,7 @@ struct NewAccountView: View {
                             .colorMultiply(Color.navyBlue)
                         currentBalanceField()
                             .foregroundColor(Color.navyBlue)
-                        currencyPicker
+                        CurrencyPicker(currenySelected: $currencySelected)
                             .colorMultiply(Color.navyBlue)
                         enablePaymentReminderField(labelName: "Enable Payment Reminder")
                             .foregroundColor(Color.navyBlue)
@@ -203,36 +203,6 @@ struct NewAccountView: View {
                 await watchViewModel.getAllWatchList()
             }
         }
-    }
-    
-    var currencyPicker: some View {
-        Picker("Currency", selection: $currencySelected) {
-            SearchBar(text: $searchTerm, placeholder: "Search currency")
-            ForEach(filterCurrencyList, id: \.self) { (data) in
-                defaultCurrencyPickerRightVersionView(currency: data)
-                    .tag(data)
-            }
-        }
-        .edgesIgnoringSafeArea(.all)
-        .onChange(of: searchTerm) { (data) in
-            if(!data.isEmpty) {
-                filterCurrencyList = currencyList.filter({
-                    $0.name.lowercased().contains(searchTerm.lowercased()) || $0.symbol.lowercased().contains(searchTerm.lowercased()) || $0.code.lowercased().contains(searchTerm.lowercased())
-                })
-            } else {
-                filterCurrencyList = currencyList
-            }
-        }
-        .onChange(of: currencySelected) { (data) in
-            currencySelected = data
-            currencyChanged = true
-        }
-        .onAppear{
-            if(!currencyChanged){
-                currencySelected = SettingsController().getDefaultCurrency()
-            }
-        }
-        .pickerStyle(.navigationLink)
     }
     
     var watchListPicker: some View {

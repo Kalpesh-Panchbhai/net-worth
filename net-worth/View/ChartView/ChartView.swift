@@ -143,6 +143,7 @@ struct ChartView: View {
                 .foregroundColor(Color.navyBlue)
                 .frame(minHeight: 550)
             }
+            .scrollIndicators(.hidden)
             .navigationTitle("Chart")
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.navyBlue)

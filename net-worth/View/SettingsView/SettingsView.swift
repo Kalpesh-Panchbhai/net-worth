@@ -18,7 +18,6 @@ struct SettingsView: View {
     @State private var isPresentingLogoutConfirm = false
     
     @State private var currenySelected: Currency
-    @State private var searchTerm: String = ""
     
     private var currencyList = CurrencyList().currencyList
     
@@ -72,8 +71,8 @@ struct SettingsView: View {
                 .foregroundColor(Color.navyBlue)
                 .listRowBackground(Color.white)
                 
-                defaultCurrencyPicker
-                    .colorMultiply(Color.navyBlue)
+                DefaultCurrencyPicker(currenySelected: $currenySelected)
+                    .foregroundColor(Color.navyBlue)
                     .listRowBackground(Color.white)
                 
                 NavigationLink(destination: {
@@ -162,31 +161,6 @@ struct SettingsView: View {
         return UIImage()
     }
     
-    var defaultCurrencyPicker: some View {
-        Picker(selection: $currenySelected, content: {
-            SearchBar(text: $searchTerm, placeholder: "Search currency")
-            ForEach(filterCurrencyList, id: \.self) { (data) in
-                defaultCurrencyPickerRightVersionView(currency: data)
-                    .tag(data)
-            }
-        }, label: {
-            Label("", systemImage: "indianrupeesign.square")
-        })
-        .onChange(of: searchTerm) { (data) in
-            if(!data.isEmpty) {
-                filterCurrencyList = currencyList.filter({
-                    $0.name.lowercased().contains(searchTerm.lowercased()) || $0.symbol.lowercased().contains(searchTerm.lowercased()) || $0.code.lowercased().contains(searchTerm.lowercased())
-                })
-            } else {
-                filterCurrencyList = currencyList
-            }
-        }
-        .onChange(of: currenySelected) { (data) in
-            settingsController.setDefaultCurrency(newValue: data)
-        }
-        .pickerStyle(.navigationLink)
-    }
-    
     func logoutUser() {
         let defaults = UserDefaults.standard
         let dictionary = defaults.dictionaryRepresentation()
@@ -199,19 +173,5 @@ struct SettingsView: View {
     func deleteAccountAndData() async {
         await UserController().deleteUser()
         logoutUser()
-    }
-}
-
-struct defaultCurrencyPickerRightVersionView: View {
-    
-    var currency: Currency
-    
-    var body: some View {
-        HStack {
-            Text(currency.name)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text(currency.symbol + " " + currency.code)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-        }
     }
 }

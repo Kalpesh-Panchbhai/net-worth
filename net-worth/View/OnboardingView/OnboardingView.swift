@@ -125,34 +125,28 @@ extension OnboardingView {
     }
     
     private var selectDefaultCurrencySection: some View {
-        VStack(spacing: 40) {
-            Spacer()
-            Text("Select Default Currency")
-                .font(.largeTitle)
-                .fontWeight(.semibold)
-                .foregroundColor(.white)
-            defaultCurrencyPicker
-            Spacer()
-            Spacer()
-        }
-        .multilineTextAlignment(.center)
-        .padding(30)
-    }
-    
-    var defaultCurrencyPicker: some View {
-        
-        Picker(selection: $currenySelected, label: Text("Select a default currency"), content: {
-            Text("Select a default currency").tag(Currency())
-            ForEach(filterCurrencyList, id: \.self) { (data) in
-                defaultCurrencyPickerRightVersionView(currency: data)
-                    .tag(data)
+        NavigationView {
+            ZStack {
+                RadialGradient(gradient: Gradient(colors: [Color(#colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1)), Color(#colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1))]),
+                               center: .topLeading,
+                               startRadius: 5,
+                               endRadius: UIScreen.main.bounds.height)
+                .ignoresSafeArea()
+                VStack(spacing: 40) {
+                    Spacer()
+                    Text("Select Default Currency")
+                        .font(.largeTitle)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                    DefaultCurrencyPicker(currenySelected: $currenySelected)
+                        .foregroundColor(.white)
+                    Spacer()
+                    Spacer()
+                }
+                .multilineTextAlignment(.center)
+                .padding(30)
             }
-        })
-        .edgesIgnoringSafeArea(.all)
-        .onChange(of: currenySelected) { (data) in
-            settingsController.setDefaultCurrency(newValue: data)
         }
-        .pickerStyle(.menu)
     }
     
     private var enableFaceID: some View {

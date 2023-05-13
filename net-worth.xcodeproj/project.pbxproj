@@ -105,6 +105,9 @@
 		7DE766F32928B62900EFBD2D /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE766F22928B62900EFBD2D /* NotificationController.swift */; };
 		7DEC3B802938A38B002E9C8B /* FinanceDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DEC3B7F2938A38B002E9C8B /* FinanceDetailModel.swift */; };
 		7DF4F39929A3A88400E5C1E1 /* NewIncomeTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF4F39829A3A88400E5C1E1 /* NewIncomeTagView.swift */; };
+		7DF878FE2A0F75B6008343EE /* DefaultCurrencyPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF878FD2A0F75B6008343EE /* DefaultCurrencyPicker.swift */; };
+		7DF879002A0F7842008343EE /* CurrencyPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF878FF2A0F7842008343EE /* CurrencyPicker.swift */; };
+		7DF879022A0F7872008343EE /* CurrencySelectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF879012A0F7872008343EE /* CurrencySelectionRow.swift */; };
 		7DF8CCF9299F444000267C29 /* WatchListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF8CCF8299F444000267C29 /* WatchListView.swift */; };
 		7DF8CCFD299FB86100267C29 /* AccountChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF8CCFC299FB86100267C29 /* AccountChartView.swift */; };
 		7DF9DB91298F978600831494 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF9DB90298F978600831494 /* Account.swift */; };
@@ -231,6 +234,9 @@
 		7DE766F22928B62900EFBD2D /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		7DEC3B7F2938A38B002E9C8B /* FinanceDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceDetailModel.swift; sourceTree = "<group>"; };
 		7DF4F39829A3A88400E5C1E1 /* NewIncomeTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewIncomeTagView.swift; sourceTree = "<group>"; };
+		7DF878FD2A0F75B6008343EE /* DefaultCurrencyPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCurrencyPicker.swift; sourceTree = "<group>"; };
+		7DF878FF2A0F7842008343EE /* CurrencyPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPicker.swift; sourceTree = "<group>"; };
+		7DF879012A0F7872008343EE /* CurrencySelectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectionRow.swift; sourceTree = "<group>"; };
 		7DF8CCF8299F444000267C29 /* WatchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchListView.swift; sourceTree = "<group>"; };
 		7DF8CCFC299FB86100267C29 /* AccountChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountChartView.swift; sourceTree = "<group>"; };
 		7DF9DB90298F978600831494 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
@@ -479,6 +485,9 @@
 				7D42520E291BE95C0001C41C /* AuthenticationView.swift */,
 				7DCFE4C9292D036500C940F0 /* SearchBar.swift */,
 				7DD8E5B22A06339500245A98 /* BackupView.swift */,
+				7DF878FD2A0F75B6008343EE /* DefaultCurrencyPicker.swift */,
+				7DF878FF2A0F7842008343EE /* CurrencyPicker.swift */,
+				7DF879012A0F7872008343EE /* CurrencySelectionRow.swift */,
 			);
 			path = OtherView;
 			sourceTree = "<group>";
@@ -815,6 +824,7 @@
 				7DB205852A0CEB78001E03D6 /* MainScreenTabBarView.swift in Sources */,
 				7DD8E5C12A06427300245A98 /* WatchData.swift in Sources */,
 				7DA63A492995FACA00568FCA /* AccountDetailCardView.swift in Sources */,
+				7DF878FE2A0F75B6008343EE /* DefaultCurrencyPicker.swift in Sources */,
 				7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */,
 				7D11D0052A0A551300897B08 /* PieSliceView.swift in Sources */,
 				7D5B9F93299A896300D0477B /* BalanceCardView.swift in Sources */,
@@ -834,6 +844,7 @@
 				7D921C5E2986835C0014AC9E /* GoogleSiginBtn.swift in Sources */,
 				7D921C5C298683370014AC9E /* CustomTextField.swift in Sources */,
 				7D79FA5A291B7431004A2ECF /* Persistence.swift in Sources */,
+				7DF879002A0F7842008343EE /* CurrencyPicker.swift in Sources */,
 				7D1188362A03F3000005EA32 /* AccountWatchListView.swift in Sources */,
 				7D3D5244299105A50021047B /* CommonController.swift in Sources */,
 				7DB205892A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift in Sources */,
@@ -843,6 +854,7 @@
 				7D76290529A385EA00F71D7C /* IncomeTag.swift in Sources */,
 				7D921C62298683B30014AC9E /* LoginScreen.swift in Sources */,
 				7D85D06C298D2D650019F85E /* User.swift in Sources */,
+				7DF879022A0F7872008343EE /* CurrencySelectionRow.swift in Sources */,
 				7DD8E5B32A06339500245A98 /* BackupView.swift in Sources */,
 				7DB98802299B6464004ED6D2 /* WatchController.swift in Sources */,
 				7DB987FE299B6365004ED6D2 /* Watch.swift in Sources */,

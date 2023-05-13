@@ -23,7 +23,7 @@ struct NewIncomeView: View {
     
     private var incomeController = IncomeController()
     
-    @State public var currenySelected: Currency = Currency()
+    @State public var currencySelected: Currency = Currency()
     private var currencyList = CurrencyList().currencyList
     @State private var filterCurrencyList = CurrencyList().currencyList
     @State private var currencyChanged = false
@@ -118,8 +118,10 @@ struct NewIncomeView: View {
                         DatePicker("Credited on", selection: $date, in: ...Date(), displayedComponents: [.date])
                     }
                     .colorMultiply(Color.navyBlue)
-                    currencyPicker
+                    
+                    CurrencyPicker(currenySelected: $currencySelected)
                         .colorMultiply(Color.navyBlue)
+                    
                     Picker(selection: $incomeTagSelected, label: Text("Tag")) {
                         ForEach(incomeViewModel.incomeTagList, id: \.self) {
                             Text($0.name).tag($0)
@@ -134,7 +136,7 @@ struct NewIncomeView: View {
                 ToolbarItem {
                     Button(action: {
                         Task.init {
-                            await incomeController.addIncome(type: incomeTypeSelected, amount: amount, date: date, taxPaid: taxPaid, currency: currenySelected.code, tag: incomeTagSelected)
+                            await incomeController.addIncome(type: incomeTypeSelected, amount: amount, date: date, taxPaid: taxPaid, currency: currencySelected.code, tag: incomeTagSelected)
                             await incomeViewModel.getTotalBalance()
                             await incomeViewModel.getIncomeList()
                             await incomeViewModel.getIncomeTagList()
@@ -222,35 +224,5 @@ struct NewIncomeView: View {
         }else {
             return false
         }
-    }
-    
-    var currencyPicker: some View {
-        Picker("Currency", selection: $currenySelected) {
-            SearchBar(text: $searchTerm, placeholder: "Search currency")
-            ForEach(filterCurrencyList, id: \.self) { (data) in
-                defaultCurrencyPickerRightVersionView(currency: data)
-                .tag(data)
-            }
-        }
-        .edgesIgnoringSafeArea(.all)
-        .onChange(of: searchTerm) { (data) in
-            if(!data.isEmpty) {
-                filterCurrencyList = currencyList.filter({
-                    $0.name.lowercased().contains(searchTerm.lowercased()) || $0.symbol.lowercased().contains(searchTerm.lowercased()) || $0.code.lowercased().contains(searchTerm.lowercased())
-                })
-            } else {
-                filterCurrencyList = currencyList
-            }
-        }
-        .onChange(of: currenySelected) { (data) in
-            currenySelected = data
-            currencyChanged = true
-        }
-        .onAppear{
-            if(!currencyChanged){
-                currenySelected = SettingsController().getDefaultCurrency()
-            }
-        }
-        .pickerStyle(.navigationLink)
     }
 }
