@@ -9,11 +9,17 @@ import SwiftUI
 
 struct MainScreenTabBarContainerView<Content:View>: View {
     
+    @ObservedObject var accountViewModel: AccountViewModel
+    @ObservedObject var incomeViewModel : IncomeViewModel
+    @ObservedObject var watchViewModel: WatchViewModel
     @Binding var selection: MainScreenTabBarItem
     let content: Content
     @State private var tabs: [MainScreenTabBarItem] = []
     
-    init(selection: Binding<MainScreenTabBarItem>, @ViewBuilder content: () -> Content) {
+    init(accountViewModel: AccountViewModel, incomeViewModel : IncomeViewModel, watchViewModel: WatchViewModel, selection: Binding<MainScreenTabBarItem>, @ViewBuilder content: () -> Content) {
+        self.accountViewModel = accountViewModel
+        self.incomeViewModel = incomeViewModel
+        self.watchViewModel = watchViewModel
         self._selection = selection
         self.content = content()
     }
@@ -22,7 +28,7 @@ struct MainScreenTabBarContainerView<Content:View>: View {
         ZStack(alignment: .bottom) {
             content
                 .ignoresSafeArea()
-            MainScreenTabBarView(tabs: tabs, selection: $selection, localSelection: selection)
+            MainScreenTabBarView(accountViewModel: accountViewModel, incomeViewModel: incomeViewModel, watchViewModel: watchViewModel, tabs: tabs, selection: $selection, localSelection: selection)
         }
         .onPreferenceChange(MainScreenTabBarItemsPreferenceKey.self) { value in
             self.tabs = value

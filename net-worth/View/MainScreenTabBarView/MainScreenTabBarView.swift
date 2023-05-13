@@ -9,6 +9,10 @@ import SwiftUI
 
 struct MainScreenTabBarView: View {
     
+    @ObservedObject var accountViewModel: AccountViewModel
+    @ObservedObject var incomeViewModel : IncomeViewModel
+    @ObservedObject var watchViewModel: WatchViewModel
+    
     let tabs: [MainScreenTabBarItem]
     @Binding var selection: MainScreenTabBarItem
     @Namespace private var namespace
@@ -43,6 +47,43 @@ extension MainScreenTabBarView {
     
     private func tabView(tab: MainScreenTabBarItem) -> some View {
         VStack {
+            if(tab == .account) {
+                HStack {
+                    Spacer()
+                    ZStack {
+                        Circle()
+                            .fill(Color.lightBlue)
+                            .frame(height: 20)
+                        Text("\(accountViewModel.accountList.count)")
+                            .font(.system(size: 10))
+                            .bold()
+                    }
+                }
+            } else if (tab == .watchlist) {
+                HStack {
+                    Spacer()
+                    ZStack {
+                        Circle()
+                            .fill(Color.lightBlue)
+                            .frame(height: 20)
+                        Text("\(watchViewModel.watchList.count)")
+                            .font(.system(size: 10))
+                            .bold()
+                    }
+                }
+            } else if (tab == .income) {
+                HStack {
+                    Spacer()
+                    ZStack {
+                        Circle()
+                            .fill(Color.lightBlue)
+                            .frame(height: 20)
+                        Text("\(incomeViewModel.incomeList.count)")
+                            .font(.system(size: 10))
+                            .bold()
+                    }
+                }
+            }
             Image(systemName: localSelection == tab ? tab.iconNameFill : tab.iconName)
                 .font(.system(size: 20))
             Text(tab.title)
