@@ -237,7 +237,7 @@ struct IncomeView: View {
             }
             .sheet(isPresented: $isOpen, content: {
                 NewIncomeView(incomeViewModel: incomeViewModel)
-                    .presentationDetents([.medium])
+                    .presentationDetents([.medium, .large])
             })
             .navigationTitle("Income")
             .navigationBarTitleDisplayMode(.inline)
