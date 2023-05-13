@@ -84,6 +84,16 @@ extension MainScreenTabBarView {
                     }
                 }
             }
+            else {
+                HStack {
+                    Spacer()
+                    ZStack {
+                        Circle()
+                            .fill(Color.clear)
+                            .frame(height: 20)
+                    }
+                }
+            }
             Image(systemName: localSelection == tab ? tab.iconNameFill : tab.iconName)
                 .font(.system(size: 20))
             Text(tab.title)
