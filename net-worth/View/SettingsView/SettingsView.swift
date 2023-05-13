@@ -18,6 +18,8 @@ struct SettingsView: View {
     @State private var isPresentingLogoutConfirm = false
     
     @State private var currenySelected: Currency
+    @State private var defaultIncomeType = IncomeType()
+    @State private var defaultIncomeTag = IncomeTag()
     
     private var currencyList = CurrencyList().currencyList
     
@@ -78,7 +80,15 @@ struct SettingsView: View {
                 NavigationLink(destination: {
                     IncomeTypeView()
                 }, label: {
-                    Label("Income Type", systemImage: "tray.and.arrow.down")
+                    Label(title: {
+                        HStack {
+                            Text("Income Type")
+                            Spacer()
+                            Text(defaultIncomeType.name)
+                        }
+                    }, icon: {
+                        Image(systemName: "tray.and.arrow.down")
+                    })
                 })
                 .foregroundColor(Color.navyBlue)
                 .listRowBackground(Color.white)
@@ -86,7 +96,15 @@ struct SettingsView: View {
                 NavigationLink(destination: {
                     IncomeTagView()
                 }, label: {
-                    Label("Income Tag", systemImage: "tag.square")
+                    Label(title: {
+                        HStack {
+                            Text("Income Tag")
+                            Spacer()
+                            Text(defaultIncomeTag.name)
+                        }
+                    }, icon: {
+                        Image(systemName: "tag.square")
+                    })
                 })
                 .foregroundColor(Color.navyBlue)
                 .listRowBackground(Color.white)
@@ -142,6 +160,12 @@ struct SettingsView: View {
         .onAppear {
             Task.init {
                 profilePhoto = await fetchProfilePhoto()
+                self.defaultIncomeType = try await IncomeController().getIncomeTypeList().filter({
+                    $0.isdefault
+                }).first ?? IncomeType()
+                self.defaultIncomeTag = try await IncomeController().getIncomeTagList().filter({
+                    $0.isdefault
+                }).first ?? IncomeTag()
             }
         }
         .fullScreenCover(isPresented: $logout, content: {
