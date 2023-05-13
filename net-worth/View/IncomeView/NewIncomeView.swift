@@ -215,12 +215,8 @@ struct NewIncomeView: View {
     }
     
     private func allFieldsFilled () -> Bool {
-        if !incomeTypeSelected.name.isEmpty && !incomeTagSelected.name.isEmpty{
-            if amount.isEmpty || taxPaid.isEmpty {
-                return false
-            } else {
-                return true
-            }
+        if !incomeTypeSelected.name.isEmpty && !incomeTagSelected.name.isEmpty && !currencySelected.name.isEmpty && !amount.isEmpty && !taxPaid.isEmpty {
+            return true
         }else {
             return false
         }
