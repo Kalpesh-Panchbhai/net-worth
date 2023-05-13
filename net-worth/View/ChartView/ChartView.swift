@@ -110,7 +110,7 @@ struct ChartView: View {
                     NavigationLink(destination: {
                         selectMultipleWatchListForCompare
                     }, label: {
-                        Text("Compare Multiple WatchList")
+                        Text("Compare Multiple WatchLists")
                     })
                     .listRowBackground(Color.white)
                     .foregroundColor(Color.navyBlue)
@@ -204,7 +204,7 @@ struct ChartView: View {
             })
             .listRowBackground(Color.white)
         }
-        .navigationTitle("Select Watch List")
+        .navigationTitle("Select Watch Lists")
         .foregroundColor(Color.navyBlue)
         .background(Color.navyBlue)
         .scrollContentBackground(.hidden)
