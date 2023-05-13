@@ -227,7 +227,7 @@ struct IncomeView: View {
                                 await incomeViewModel.getIncomeList()
                             }
                         }, label: {
-                            Text("Clear")
+                            Text("Reset")
                                 .foregroundColor(Color.lightBlue)
                                 .bold()
                         })
