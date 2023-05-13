@@ -336,14 +336,6 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
-		7D730E0F299375AD0002E0ED /* OnboardingView */ = {
-			isa = PBXGroup;
-			children = (
-				7D730E1029937D370002E0ED /* OnboardingView.swift */,
-			);
-			path = OnboardingView;
-			sourceTree = "<group>";
-		};
 		7D79FA44291B7430004A2ECF = {
 			isa = PBXGroup;
 			children = (
@@ -443,7 +435,6 @@
 			children = (
 				7D87CEF62A0E0475007C1C76 /* MainScreenTabBarView */,
 				7DF83F902A094F3300D3233B /* ChartView */,
-				7D730E0F299375AD0002E0ED /* OnboardingView */,
 				7D921C58298682FB0014AC9E /* LoginView */,
 				7DD7A56C29224C1200CD5B37 /* AccountView */,
 				7DD7A56B29224BFD00CD5B37 /* IncomeView */,
@@ -481,6 +472,7 @@
 		7DAC70A7294086420033050C /* OtherView */ = {
 			isa = PBXGroup;
 			children = (
+				7D730E1029937D370002E0ED /* OnboardingView.swift */,
 				7D79FA89291B9CE6004A2ECF /* MainScreenView.swift */,
 				7D42520E291BE95C0001C41C /* AuthenticationView.swift */,
 				7DCFE4C9292D036500C940F0 /* SearchBar.swift */,
