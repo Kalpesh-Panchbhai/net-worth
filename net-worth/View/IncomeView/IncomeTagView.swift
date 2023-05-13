@@ -33,11 +33,18 @@ struct IncomeTagView: View {
             } else {
                 List {
                     ForEach(incomeViewModel.incomeTagList, id: \.self) { item in
-                        VStack(alignment: .leading) {
+                        HStack {
                             Text(item.name)
+                            Spacer()
                             if(item.isdefault) {
-                                Text("DEFAULT")
-                                    .font(.system(size: 10))
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color.green.opacity(0.5))
+                                        .frame(width: 60, height: 15)
+                                    Text("DEFAULT")
+                                        .font(.system(size: 10))
+                                        .bold()
+                                }
                             }
                         }
                         .contextMenu {
