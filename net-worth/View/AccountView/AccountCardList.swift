@@ -66,7 +66,7 @@ struct AccountCardList: View {
                                                     .font(.system(size: 15))
                                                 Spacer()
                                                 NavigationLink(destination: {
-                                                    AccountListView(accountType: accountType)
+                                                    AccountListView(accountType: accountType, watchViewModel: watchViewModel)
                                                         .toolbarRole(.editor)
                                                 }, label: {
                                                     Text("See all")
@@ -80,7 +80,7 @@ struct AccountCardList: View {
                                                     ForEach(0..<((accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 5) ? 5 : accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count), id: \.self) { i in
                                                         VStack {
                                                             NavigationLink(destination: {
-                                                                AccountDetailView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i],accountViewModel:  accountViewModel)
+                                                                AccountDetailView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i],accountViewModel:  accountViewModel, watchViewModel: watchViewModel)
                                                                     .toolbarRole(.editor)
                                                             }) {
                                                                 AccountCardView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i])

@@ -20,7 +20,7 @@ struct AccountWatchListView: View {
                     List {
                         ForEach(watchViewModel.watchListForAccount, id: \.self, content: { watch in
                             NavigationLink(destination: {
-                                SingleWatchListView(watch: watch)
+                                SingleWatchListView(watch: watch, watchViewModel: watchViewModel)
                                     .toolbarRole(.editor)
                             }, label: {
                                 HStack {

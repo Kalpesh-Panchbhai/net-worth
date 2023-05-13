@@ -10,6 +10,7 @@ import SwiftUI
 struct AccountListView: View {
     
     var accountType: String
+    @ObservedObject var watchViewModel: WatchViewModel
     
     @State private var searchText = ""
     @State private var isNewTransactionViewOpen = false
@@ -39,7 +40,7 @@ struct AccountListView: View {
                     LazyVStack {
                         ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
                             NavigationLink(destination: {
-                                AccountDetailView(account: account, accountViewModel: accountViewModel)
+                                AccountDetailView(account: account, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                             }, label: {
                                 AccountRowView(account: account)
                                     .shadow(color: Color.navyBlue, radius: 3)
@@ -54,6 +55,7 @@ struct AccountListView: View {
                                             Task.init {
                                                 await accountViewModel.getAccountList()
                                                 await accountViewModel.getTotalBalance(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
+                                                await watchViewModel.getAllWatchList()
                                             }
                                         }, label: {
                                             Label("Delete", systemImage: "trash")

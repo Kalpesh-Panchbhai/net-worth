@@ -20,7 +20,7 @@ struct SingleWatchListView: View {
     var watchController = WatchController()
     
     @StateObject var accountViewModel = AccountViewModel()
-    @StateObject var watchViewModel = WatchViewModel()
+    @ObservedObject var watchViewModel: WatchViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -43,7 +43,7 @@ struct SingleWatchListView: View {
                             LazyVStack {
                                 ForEach(watchViewModel.watch.accountID, id: \.self) { account in
                                     NavigationLink(destination: {
-                                        AccountDetailView(account: Account(id: account), accountViewModel: accountViewModel)
+                                        AccountDetailView(account: Account(id: account), accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                                             .toolbarRole(.editor)
                                     }, label: {
                                         AccountRowView(account: Account(id: account))
@@ -55,6 +55,7 @@ struct SingleWatchListView: View {
                                                     Button(role: .destructive, action: {
                                                         watchController.deleteAccountFromWatchList(watchList: watchViewModel.watch, accountID: account)
                                                         Task.init {
+                                                            await watchViewModel.getAllWatchList()
                                                             await watchViewModel.getWatchList(id: watch.id!)
                                                             await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
                                                             if(isAscendingByAlphabetEnabled) {

@@ -22,13 +22,15 @@ struct AccountDetailView: View {
     @State var showZeroAlert = false
     
     @ObservedObject var accountViewModel: AccountViewModel
-    @StateObject var watchViewModel = WatchViewModel()
+    @ObservedObject var watchViewModel: WatchViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
-    init(account: Account, accountViewModel: AccountViewModel) {
+    init(account: Account, accountViewModel: AccountViewModel, watchViewModel: WatchViewModel) {
         self.account = account
         self.accountViewModel = accountViewModel
+        self.watchViewModel = watchViewModel
+        
         UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)
         UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor(red: 0.9058823529, green: 0.9490196078, blue: 0.9803921569, alpha: 1)], for: .selected)
         UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)], for: .normal)
@@ -64,6 +66,7 @@ struct AccountDetailView: View {
                 Button("Delete account " + account.accountName + "?", role: .destructive) {
                     Task.init {
                         try await accountController.deleteAccount(account: account)
+                        await watchViewModel.getAllWatchList()
                     }
                     self.presentationMode.wrappedValue.dismiss()
                 }
@@ -221,6 +224,7 @@ struct AccountDetailView: View {
         .sheet(isPresented: $showAddWatchListView, onDismiss: {
             Task.init {
                 await watchViewModel.getWatchListByAccount(accountID: account.id!)
+                await watchViewModel.getAllWatchList()
             }
         }, content: {
             AddWatchListToAccountView(watchViewModel: watchViewModel, account: account)

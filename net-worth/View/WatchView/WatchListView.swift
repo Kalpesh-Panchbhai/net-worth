@@ -28,7 +28,7 @@ struct WatchListView: View {
                     List {
                         ForEach(watchViewModel.watchList, id: \.self) { watchList in
                             NavigationLink(destination: {
-                                SingleWatchListView(watch: watchList)
+                                SingleWatchListView(watch: watchList, watchViewModel: watchViewModel)
                                     .toolbarRole(.editor)
                             }, label: {
                                 HStack {
