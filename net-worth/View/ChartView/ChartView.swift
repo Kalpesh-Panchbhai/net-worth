@@ -25,7 +25,36 @@ struct ChartView: View {
         NavigationView {
             VStack {
                 HStack {
+                    Button(action: {
+                        if(showingAssetsData) {
+                            chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
+                                $0.currentBalance < 0
+                            }.sorted(by: {
+                                $0.currentBalance < $1.currentBalance
+                            })
+                            showingAssetsData.toggle()
+                        } else {
+                            chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
+                                $0.currentBalance > 0
+                            }.sorted(by: {
+                                $0.currentBalance > $1.currentBalance
+                            })
+                            showingAssetsData.toggle()
+                        }
+                    }, label: {
+                        if(showingAssetsData) {
+                            Text("Show Liabilities")
+                        } else {
+                            Text("Show Assets")
+                        }
+                    })
+                    .font(.system(size: 14))
+                    .disabled(watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty)
+                    .foregroundColor((watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty) ? Color.gray : Color.lightBlue)
+                    .bold()
+                    
                     Spacer()
+                    
                     Button(action: {
                         watchListSelected = Watch()
                         showingAssetsData = true
@@ -34,13 +63,13 @@ struct ChartView: View {
                         multipleWatchListSelection = Set<Watch>()
                     }, label: {
                         Text("Reset")
-                            .foregroundColor(((watchListSelected.accountName.isEmpty && chartDataList.isEmpty && !compareAssetsToLiabilities && multipleWatchListSelection.isEmpty) ? Color.gray : Color.lightBlue))
-                            .bold()
-                    }).font(.system(size: 14))
-                        .disabled((watchListSelected.accountName.isEmpty && chartDataList.isEmpty && !compareAssetsToLiabilities && multipleWatchListSelection.isEmpty))
+                    })
+                    .font(.system(size: 14))
+                    .disabled((watchListSelected.accountName.isEmpty && chartDataList.isEmpty && !compareAssetsToLiabilities && multipleWatchListSelection.isEmpty))
+                    .foregroundColor(((watchListSelected.accountName.isEmpty && chartDataList.isEmpty && !compareAssetsToLiabilities && multipleWatchListSelection.isEmpty) ? Color.gray : Color.lightBlue))
+                    .bold()
                 }
-                .padding(.horizontal)
-                        
+                .padding(.horizontal, 20)
                 List {
                     Picker(selection: $watchListSelected, content: {
                         Text("Select").tag(defaultWatchListSelected)
@@ -114,36 +143,6 @@ struct ChartView: View {
                     })
                     .listRowBackground(Color.white)
                     .foregroundColor(Color.navyBlue)
-                    
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            if(showingAssetsData) {
-                                chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
-                                    $0.currentBalance < 0
-                                }.sorted(by: {
-                                    $0.currentBalance < $1.currentBalance
-                                })
-                                showingAssetsData.toggle()
-                            } else {
-                                chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
-                                    $0.currentBalance > 0
-                                }.sorted(by: {
-                                    $0.currentBalance > $1.currentBalance
-                                })
-                                showingAssetsData.toggle()
-                            }
-                        }, label: {
-                            if(showingAssetsData) {
-                                Text("Show Liabilities")
-                            } else {
-                                Text("Show Assets")
-                            }
-                        })
-                        .font(.system(size: 14))
-                    }.disabled(watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty)
-                        .listRowBackground(Color.white)
-                        .foregroundColor((watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty) ? Color.gray : Color.navyBlue)
                     
                     PieChartView(
                         values: chartDataList.map {
