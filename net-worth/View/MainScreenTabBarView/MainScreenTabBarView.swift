@@ -35,6 +35,8 @@ extension MainScreenTabBarView {
                 tabView(tab: tab)
                     .onTapGesture {
                         switchToTab(tab: tab)
+                        let impact = UIImpactFeedbackGenerator(style: .light)
+                        impact.impactOccurred()
                     }
             }
         }
