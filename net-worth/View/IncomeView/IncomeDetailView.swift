@@ -33,14 +33,14 @@ struct IncomeDetailView: View {
                 HStack {
                     Text("Amount")
                     Spacer()
-                    Text("\(income.amount.withCommas(decimalPlace: 2))")
+                    Text(income.currency + " \(income.amount.withCommas(decimalPlace: 2))")
                 }
                 .foregroundColor(Color.navyBlue)
                 
                 HStack {
                     Text("Tax Paid")
                     Spacer()
-                    Text("\(income.taxpaid.withCommas(decimalPlace: 2))")
+                    Text(income.currency + " \(income.taxpaid.withCommas(decimalPlace: 2))")
                 }
                 .foregroundColor(Color.navyBlue)
                 
@@ -48,13 +48,6 @@ struct IncomeDetailView: View {
                     Text("Credited On")
                     Spacer()
                     Text(income.creditedOn.getDateAndFormat())
-                }
-                .foregroundColor(Color.navyBlue)
-                
-                HStack {
-                    Text("Currency")
-                    Spacer()
-                    Text(income.currency)
                 }
                 .foregroundColor(Color.navyBlue)
                 
