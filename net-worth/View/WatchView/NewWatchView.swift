@@ -9,6 +9,9 @@ import SwiftUI
 
 struct NewWatchView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var scenePhaseBlur = 0
+    
     @State private var watchListName = ""
     @State private var isFieldEmpty = false
     
@@ -55,5 +58,13 @@ struct NewWatchView: View {
         .alert(isPresented: $isFieldEmpty) {
             Alert(title: Text("Watch List Name cannot be empty"))
         }
+        .blur(radius: CGFloat(scenePhaseBlur))
+        .onChange(of: scenePhase, perform: { value in
+            if(value == .active) {
+                scenePhaseBlur = 0
+            } else {
+                scenePhaseBlur = 5
+            }
+        })
     }
 }
