@@ -9,6 +9,9 @@ import SwiftUI
 
 struct NewIncomeView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var scenePhaseBlur = 0
+    
     @State private var amount: String = "0.0"
     @State private var taxPaid: String = "0.0"
     @State private var incomeTypeSelected: IncomeType = IncomeType()
@@ -212,6 +215,14 @@ struct NewIncomeView: View {
             .background(Color.navyBlue)
             .scrollContentBackground(.hidden)
         }
+        .blur(radius: CGFloat(scenePhaseBlur))
+        .onChange(of: scenePhase, perform: { value in
+            if(value == .active) {
+                scenePhaseBlur = 0
+            } else {
+                scenePhaseBlur = 5
+            }
+        })
     }
     
     private func allFieldsFilled () -> Bool {

@@ -10,6 +10,8 @@ import SwiftUI
 struct NewIncomeTagView: View {
     
     @Environment(\.dismiss) var dismiss
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var scenePhaseBlur = 0
     
     var incomeController = IncomeController()
     
@@ -58,5 +60,13 @@ struct NewIncomeTagView: View {
             .background(Color.navyBlue)
             .scrollContentBackground(.hidden)
         }
+        .blur(radius: CGFloat(scenePhaseBlur))
+        .onChange(of: scenePhase, perform: { value in
+            if(value == .active) {
+                scenePhaseBlur = 0
+            } else {
+                scenePhaseBlur = 5
+            }
+        })
     }
 }

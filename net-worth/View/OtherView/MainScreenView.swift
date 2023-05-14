@@ -10,6 +10,8 @@ import SwiftUI
 struct MainScreenView: View {
     
     @State public var tabSelection: MainScreenTabBarItem = .account
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var scenePhaseBlur = 0
     
     @StateObject private var accountViewModel = AccountViewModel()
     @StateObject private var watchViewModel = WatchViewModel()
@@ -38,6 +40,14 @@ struct MainScreenView: View {
                 }
             }
         }
+        .blur(radius: CGFloat(scenePhaseBlur))
+        .onChange(of: scenePhase, perform: { value in
+            if(value == .active) {
+                scenePhaseBlur = 0
+            } else {
+                scenePhaseBlur = 5
+            }
+        })
         .onAppear {
             networkUnavailable = !networkMonitor.isConnected
             Task.init {

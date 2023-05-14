@@ -9,6 +9,9 @@ import SwiftUI
 
 struct NewAccountView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var scenePhaseBlur = 0
+    
     @State var accountType: String
     @State var loanType: String = "Consumer"
     @State var symbolType: String = "None"
@@ -198,6 +201,14 @@ struct NewAccountView: View {
             .background(Color.navyBlue)
             .scrollContentBackground(.hidden)
         }
+        .blur(radius: CGFloat(scenePhaseBlur))
+        .onChange(of: scenePhase, perform: { value in
+            if(value == .active) {
+                scenePhaseBlur = 0
+            } else {
+                scenePhaseBlur = 5
+            }
+        })
         .onAppear {
             Task.init {
                 await watchViewModel.getAllWatchList()

@@ -9,6 +9,9 @@ import SwiftUI
 
 struct UpdateBalanceAccountView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var scenePhaseBlur = 0
+    
     private var accountController = AccountController()
     
     @State private var amount: Double = 0.0
@@ -76,6 +79,14 @@ struct UpdateBalanceAccountView: View {
             .background(Color.navyBlue)
             .scrollContentBackground(.hidden)
         }
+        .blur(radius: CGFloat(scenePhaseBlur))
+        .onChange(of: scenePhase, perform: { value in
+            if(value == .active) {
+                scenePhaseBlur = 0
+            } else {
+                scenePhaseBlur = 5
+            }
+        })
     }
     
     private func currentBalanceField() -> HStack<TupleView<(Text, Spacer, Button<Label<Text, Image>>, Spacer, some View)>> {

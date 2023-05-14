@@ -9,6 +9,9 @@ import SwiftUI
 
 struct AddWatchListToAccountView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var scenePhaseBlur = 0
+    
     @ObservedObject var watchViewModel: WatchViewModel
     
     var account: Account
@@ -27,6 +30,14 @@ struct AddWatchListToAccountView: View {
             }
             .background(Color.navyBlue)
         }
+        .blur(radius: CGFloat(scenePhaseBlur))
+        .onChange(of: scenePhase, perform: { value in
+            if(value == .active) {
+                scenePhaseBlur = 0
+            } else {
+                scenePhaseBlur = 5
+            }
+        })
         .onAppear {
             Task.init {
                 await watchViewModel.getAllWatchList()

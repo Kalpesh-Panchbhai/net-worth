@@ -10,6 +10,9 @@ import Charts
 
 struct IncomeChartView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var scenePhaseBlur = 0
+    
     @ObservedObject var incomeViewModel = IncomeViewModel()
     
     @State var currentActiveIncome: Income?
@@ -238,6 +241,14 @@ struct IncomeChartView: View {
                 }
             }
         }
+        .blur(radius: CGFloat(scenePhaseBlur))
+        .onChange(of: scenePhase, perform: { value in
+            if(value == .active) {
+                scenePhaseBlur = 0
+            } else {
+                scenePhaseBlur = 5
+            }
+        })
     }
     
     @ViewBuilder

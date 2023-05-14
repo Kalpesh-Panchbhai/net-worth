@@ -9,6 +9,9 @@ import SwiftUI
 
 struct AddAccountToWatchListView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var scenePhaseBlur = 0
+    
     @ObservedObject var accountViewModel = AccountViewModel()
     @State var watch: Watch
     
@@ -38,6 +41,14 @@ struct AddAccountToWatchListView: View {
             }
             .background(Color.navyBlue)
         }
+        .blur(radius: CGFloat(scenePhaseBlur))
+        .onChange(of: scenePhase, perform: { value in
+            if(value == .active) {
+                scenePhaseBlur = 0
+            } else {
+                scenePhaseBlur = 5
+            }
+        })
         .searchable(text: $searchText)
         .onAppear {
             Task.init {
