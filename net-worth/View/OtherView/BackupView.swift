@@ -36,8 +36,14 @@ struct BackupView: View {
                                 
                                 Text(importExportViewModel.backupList[i].getDateAndFormat() + " at " + importExportViewModel.backupList[i].getTimeAndFormat())
                                 Spacer()
-                                Text("Latest")
-                                    .foregroundColor(.green)
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color.green.opacity(0.5))
+                                        .frame(width: 60, height: 15)
+                                    Text("Latest")
+                                        .font(.system(size: 10))
+                                        .bold()
+                                }
                             } else {
                                 Text(importExportViewModel.backupList[i].getDateAndFormat() + " at " + importExportViewModel.backupList[i].getTimeAndFormat())
                                 
