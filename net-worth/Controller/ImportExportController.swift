@@ -15,6 +15,34 @@ class ImportExportController {
     
     private var data = Data()
     
+    public func readLocalBackup() async throws -> Data {
+        var returnData = Data()
+        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        let directoryContents = try FileManager.default.contentsOfDirectory(
+            at: documentDirectory!,
+            includingPropertiesForKeys: nil
+        )
+        
+        let backupList = directoryContents.filter {
+            $0.lastPathComponent.starts(with: "Backup_")
+        }
+        
+        if(!backupList.isEmpty) {
+            do {
+                let jsonString = try String(contentsOf: backupList[0].absoluteURL, encoding: .utf8)
+                if let dataFromJsonString = jsonString.data(using: .utf8) {
+                    returnData = try JSONDecoder().decode(Data.self,
+                                                          from: dataFromJsonString)
+                    
+                }
+            } catch {
+                print(error)
+            }
+        }
+        
+        return returnData
+    }
+    
     public func getLocalBackup() -> [Date] {
         do {
             let documentDirectory = try FileManager.default.url(
