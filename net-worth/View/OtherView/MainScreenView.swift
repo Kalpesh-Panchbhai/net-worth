@@ -35,7 +35,7 @@ struct MainScreenView: View {
                     SettingsView()
                         .tabBarItem(tab: .setting, selection: $tabSelection)
                 })
-                .alert("Network is unavailable", isPresented: $networkUnavailable) {
+                .alert("Network is unavailable. You can continue to use it, it will sync automatically once the network is available.", isPresented: $networkUnavailable) {
                     Button("OK", role: .cancel) { }
                 }
             }
