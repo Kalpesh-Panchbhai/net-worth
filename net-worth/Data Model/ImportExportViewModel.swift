@@ -13,8 +13,8 @@ class ImportExportViewModel: ObservableObject {
     
     private var importExportController = ImportExportController()
     
-    func getAllBackup() async {
-        let amount = importExportController.getAllLocalBackup()
+    func getLocalBackup() async {
+        let amount = importExportController.getLocalBackup()
         DispatchQueue.main.async {
             self.backupList = amount
         }

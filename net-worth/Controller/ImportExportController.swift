@@ -15,7 +15,7 @@ class ImportExportController {
     
     private var data = Data()
     
-    public func getAllLocalBackup() -> [Date] {
+    public func getLocalBackup() -> [Date] {
         do {
             let documentDirectory = try FileManager.default.url(
                 for: .documentDirectory,
@@ -128,6 +128,9 @@ class ImportExportController {
     
     
     public func exportLocal() async {
+        
+        deleteBackups()
+        
         await exportIncomeTag()
         await exportIncomeType()
         await exportIncome()
@@ -233,7 +236,7 @@ class ImportExportController {
         }
     }
     
-    public func deleteBackup(backupDate: Date) {
+    public func deleteBackups() {
         do {
             let documentDirectory = try FileManager.default.url(
                 for: .documentDirectory,
@@ -247,9 +250,11 @@ class ImportExportController {
             )
 
             let backupList = directoryContents.filter {
-                $0.lastPathComponent.elementsEqual("Backup_" + backupDate.formatImportExportTimeStamp())
+                $0.lastPathComponent.starts(with: "Backup_")
             }
-            try FileManager.default.removeItem(at: backupList[0])
+            try backupList.forEach { value in
+                try FileManager.default.removeItem(at: value)
+            }
         } catch {
             print(error)
         }
