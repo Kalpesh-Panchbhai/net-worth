@@ -29,87 +29,6 @@ struct BackupView: View {
                     .bold()
                 }
             } else {
-                //                List {
-                //                    ForEach(0..<importExportViewModel.backupList.count, id: \.self, content: { i in
-                //                        HStack {
-                //                            if(i == 0) {
-                //
-                //                                Text(importExportViewModel.backupList[i].getDateAndFormat() + " at " + importExportViewModel.backupList[i].getTimeAndFormat())
-                //                                Spacer()
-                //                                ZStack {
-                //                                    RoundedRectangle(cornerRadius: 10)
-                //                                        .fill(Color.green.opacity(0.5))
-                //                                        .frame(width: 60, height: 15)
-                //                                    Text("Latest")
-                //                                        .font(.system(size: 10))
-                //                                        .bold()
-                //                                }
-                //                            } else {
-                //                                Text(importExportViewModel.backupList[i].getDateAndFormat() + " at " + importExportViewModel.backupList[i].getTimeAndFormat())
-                //
-                //                            }
-                //                        }
-                //                        .contextMenu {
-                //                            Button(role: .destructive, action: {
-                //                                importExportController.deleteBackup(backupDate: importExportViewModel.backupList[i])
-                //                                Task.init {
-                //                                    await importExportViewModel.getAllBackup()
-                //                                }
-                //                            }, label: {
-                //                                Label("Delete", systemImage: "trash")
-                //                            })
-                //
-                //                            Button(action: {
-                //                                let date = importExportViewModel.backupList[i]
-                //                                Task.init {
-                //                                    await importExportController.importLocal(date: date, importType: "Account")
-                //                                }
-                //                            }, label: {
-                //                                Text("Import Accounts")
-                //                            })
-                //
-                //                            Button(action: {
-                //                                let date = importExportViewModel.backupList[i]
-                //                                Task.init {
-                //                                    await importExportController.importLocal(date: date, importType: "Income")
-                //                                }
-                //                            }, label: {
-                //                                Text("Import Incomes")
-                //                            })
-                //
-                //                            Button(action: {
-                //                                let date = importExportViewModel.backupList[i]
-                //                                Task.init {
-                //                                    await importExportController.importLocal(date: date, importType: "Tag")
-                //                                }
-                //                            }, label: {
-                //                                Text("Import Income tags")
-                //                            })
-                //
-                //                            Button(action: {
-                //                                let date = importExportViewModel.backupList[i]
-                //                                Task.init {
-                //                                    await importExportController.importLocal(date: date, importType: "Type")
-                //                                }
-                //                            }, label: {
-                //                                Text("Import Income types")
-                //                            })
-                //
-                //                            Button(action: {
-                //                                let date = importExportViewModel.backupList[i]
-                //                                Task.init {
-                //                                    await importExportController.importLocal(date: date, importType: "WatchList")
-                //                                }
-                //                            }, label: {
-                //                                Text("Import Watchlists")
-                //                            })
-                //                        }
-                //                    })
-                //                    .listRowBackground(Color.white)
-                //                    .foregroundColor(Color.navyBlue)
-                //                }
-                //                .background(Color.navyBlue)
-                //                .scrollContentBackground(.hidden)
                 List {
                     HStack {
                         Image(systemName: "checkmark.icloud")
@@ -122,7 +41,11 @@ struct BackupView: View {
                                 .font(.system(size: 12))
                         }
                     }
+                    .listRowBackground(Color.white)
+                    .foregroundColor(Color.navyBlue)
                 }
+                .background(Color.navyBlue)
+                .scrollContentBackground(.hidden)
             }
         }
         .onAppear {
