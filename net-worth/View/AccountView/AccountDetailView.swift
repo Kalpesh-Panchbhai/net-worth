@@ -43,9 +43,9 @@ struct AccountDetailView: View {
                     .cornerRadius(10)
                     .shadow(color: Color.navyBlue, radius: 3)
                 Picker(selection: $tabItem, content: {
-                    Text("Transactions").tag(1)
+                    Text("Transactions (\(accountViewModel.accountTransactionList.count))").tag(1)
                     Text("Chart").tag(2)
-                    Text("WatchLists").tag(3)
+                    Text("WatchLists (\(watchViewModel.watchListForAccount.count))").tag(3)
                 }, label: {
                     Text("Account Tab View")
                 })
