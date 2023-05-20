@@ -96,7 +96,7 @@ struct WatchListView: View {
             }
             .background(Color.navyBlue)
             .scrollContentBackground(.hidden)
-            .navigationTitle("Watch List")
+            .navigationTitle("Watch Lists")
             .navigationBarTitleDisplayMode(.inline)
         }
     }

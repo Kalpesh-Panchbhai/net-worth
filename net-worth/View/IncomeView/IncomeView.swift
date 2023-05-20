@@ -239,7 +239,7 @@ struct IncomeView: View {
                 NewIncomeView(incomeViewModel: incomeViewModel)
                     .presentationDetents([.medium, .large])
             })
-            .navigationTitle("Income")
+            .navigationTitle("Incomes")
             .navigationBarTitleDisplayMode(.inline)
         }
     }

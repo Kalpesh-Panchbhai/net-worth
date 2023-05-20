@@ -162,7 +162,7 @@ struct ChartView: View {
                 }
             }
             .scrollIndicators(.hidden)
-            .navigationTitle("Chart")
+            .navigationTitle("Charts")
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.navyBlue)
             .scrollContentBackground(.hidden)

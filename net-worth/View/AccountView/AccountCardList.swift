@@ -155,7 +155,7 @@ struct AccountCardList: View {
                     .font(.system(size: 14).bold())
                 })
             }
-            .navigationTitle("Account")
+            .navigationTitle("Accounts")
             .navigationBarTitleDisplayMode(.inline)
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
