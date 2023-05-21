@@ -28,7 +28,7 @@ struct BackupView: View {
     var body: some View {
         NavigationView {
             List {
-                VStack {
+                VStack(alignment: .leading) {
                     Text("Data in Local Backup")
                         .bold()
                     Divider()
@@ -54,7 +54,7 @@ struct BackupView: View {
                 .listRowBackground(Color.white)
                 .foregroundColor(Color.navyBlue)
                 
-                VStack {
+                VStack(alignment: .leading) {
                     Text("Data in Cloud")
                         .bold()
                     Divider()
