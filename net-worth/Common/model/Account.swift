@@ -44,19 +44,6 @@ struct Account: Codable, Hashable {
         self.active = true
     }
     
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self._id = try container.decode(DocumentID<String>.self, forKey: .id)
-        self.accountType = try container.decode(String.self, forKey: .accountType)
-        self.loanType = try container.decode(String.self, forKey: .loanType)
-        self.accountName = try container.decode(String.self, forKey: .accountName)
-        self.currentBalance = try container.decode(Double.self, forKey: .currentBalance)
-        self.paymentReminder = try container.decode(Bool.self, forKey: .paymentReminder)
-        self.paymentDate = try container.decode(Int.self, forKey: .paymentDate)
-        self.currency = try container.decode(String.self, forKey: .currency)
-        self.active = try container.decode(Bool.self, forKey: .active)
-    }
-    
     init(doc: QueryDocumentSnapshot) {
         id = doc.documentID
         accountType = doc[ConstantUtils.accountKeyAccountType] as? String ?? ""
