@@ -296,7 +296,7 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		7D0D14B82937228A00AC30A3 /* Model */ = {
+		7D0D14B82937228A00AC30A3 /* model */ = {
 			isa = PBXGroup;
 			children = (
 				7D433CF729386002007FA625 /* FinanceModel.swift */,
@@ -305,7 +305,7 @@
 				7D4FF8032A1BBAE90060CE44 /* FirebaseModel */,
 				7DD8E5AD2A06310A00245A98 /* Backup */,
 			);
-			path = Model;
+			path = model;
 			sourceTree = "<group>";
 		};
 		7D237BEB292B670D00DEF91D /* Extension */ = {
@@ -338,7 +338,7 @@
 		7D69DD6F293230FF00F024A6 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				7D0D14B82937228A00AC30A3 /* Model */,
+				7D0D14B82937228A00AC30A3 /* model */,
 				7D237BEB292B670D00DEF91D /* Extension */,
 				7D69DD722932312400F024A6 /* ConstantUtils.swift */,
 				7D9DF69E2939B80400BE4C9D /* CommonUtils.swift */,
