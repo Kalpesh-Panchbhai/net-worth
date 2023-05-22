@@ -101,8 +101,8 @@ struct NewAccountView: View {
                         if(loanType.elementsEqual("Consumer")) {
                             monthlyEMIField()
                                 .foregroundColor(Color.navyBlue)
-                            loanPaymentDateField(labelName: "Select a loan payment date")
-                                .foregroundColor(Color.navyBlue)
+                            loanPaymentDateField(labelName: "Loan payment date")
+                                .colorMultiply(Color.navyBlue)
                         }
                         CurrencyPicker(currenySelected: $currencySelected)
                             .colorMultiply(Color.navyBlue)
