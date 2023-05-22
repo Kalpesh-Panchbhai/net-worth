@@ -14,13 +14,7 @@ struct Watch: Codable, Hashable {
     var accountName: String
     var accountID: [String]
     
-    init() {
-        self.id = ""
-        self.accountName = ""
-        self.accountID = [String]()
-    }
-    
-    init(accountID: [String] = [], accountName: String = "") {
+    init(id: String = "", accountID: [String] = [], accountName: String = "") {
         self.id = ""
         self.accountID = accountID
         self.accountName = accountName

@@ -14,15 +14,9 @@ struct IncomeType: Codable, Hashable {
     var name: String
     var isdefault: Bool
     
-    init(id: String? = nil, name: String, isdefault: Bool) {
+    init(id: String? = "", name: String = "", isdefault: Bool = false) {
         self.id = id
         self.name = name
         self.isdefault = isdefault
-    }
-    
-    init() {
-        self.id = ""
-        self.name = ""
-        self.isdefault = false
     }
 }
