@@ -92,7 +92,7 @@ struct SingleWatchListView: View {
                                                             if(!accountViewModel.accountList.isEmpty) {
                                                                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                                                             } else {
-                                                                accountViewModel.totalBalance = BalanceModel(currentValue: 0.0)
+                                                                accountViewModel.totalBalance = Balance(currentValue: 0.0)
                                                             }
                                                         }
                                                     }, label: {
@@ -311,7 +311,7 @@ struct SingleWatchListView: View {
                 if(!watchViewModel.watch.accountID.isEmpty) {
                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                 } else {
-                    accountViewModel.totalBalance = BalanceModel(currentValue: 0.0)
+                    accountViewModel.totalBalance = Balance(currentValue: 0.0)
                 }
                 
             }
@@ -336,7 +336,7 @@ struct SingleWatchListView: View {
                 if(!watchViewModel.watch.accountID.isEmpty) {
                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                 } else {
-                    accountViewModel.totalBalance = BalanceModel(currentValue: 0.0)
+                    accountViewModel.totalBalance = Balance(currentValue: 0.0)
                 }
                 
             }

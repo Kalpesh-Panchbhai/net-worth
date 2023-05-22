@@ -408,7 +408,7 @@ class AccountController {
     }
     
     
-    public func fetchTotalBalance(accountList: [Account]) async throws -> BalanceModel {
+    public func fetchTotalBalance(accountList: [Account]) async throws -> Balance {
         var accounts: [Account] = []
         if(accountList.isEmpty) {
             accounts = try await getAccountList()
@@ -416,30 +416,30 @@ class AccountController {
             accounts = accountList
         }
         
-        return try await withThrowingTaskGroup(of: BalanceModel.self) { group in
+        return try await withThrowingTaskGroup(of: Balance.self) { group in
             
-            var balance = BalanceModel(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
+            var balance = Balance(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
             
             for account in accounts {
                 group.addTask {
-                    var balanceModel = BalanceModel()
+                    var balance = Balance()
                     if(account.currency != SettingsController().getDefaultCurrency().code) {
                         let financeDetailModel =  try await FinanceController().getSymbolDetails(accountCurrency: account.currency)
-                        balanceModel.currentValue = financeDetailModel.regularMarketPrice ?? 0.0
-                        balanceModel.previousDayValue = financeDetailModel.chartPreviousClose ?? 0.0
+                        balance.currentValue = financeDetailModel.regularMarketPrice ?? 0.0
+                        balance.previousDayValue = financeDetailModel.chartPreviousClose ?? 0.0
                     }
                     let accountTransaction = try await self.getLastTwoAccountTransactionList(id: account.id!)
-                    balanceModel.currentValue = balanceModel.currentValue * account.currentBalance
+                    balance.currentValue = balance.currentValue * account.currentBalance
                     if(accountTransaction.count > 1 && accountTransaction[0].timestamp.timeIntervalSince(Date()) > -86400) {
-                        balanceModel.previousDayValue = balanceModel.previousDayValue * accountTransaction[1].currentBalance
+                        balance.previousDayValue = balance.previousDayValue * accountTransaction[1].currentBalance
                     } else if(accountTransaction.count == 1 && accountTransaction[0].timestamp.timeIntervalSince(Date()) > -86400) {
-                        balanceModel.currentValue = balanceModel.previousDayValue * accountTransaction[0].currentBalance
-                        balanceModel.previousDayValue = 0
+                        balance.currentValue = balance.previousDayValue * accountTransaction[0].currentBalance
+                        balance.previousDayValue = 0
                     } else {
-                        balanceModel.previousDayValue = balanceModel.previousDayValue * account.currentBalance
+                        balance.previousDayValue = balance.previousDayValue * account.currentBalance
                     }
-                    balanceModel.oneDayChange = balanceModel.currentValue - balanceModel.previousDayValue
-                    return balanceModel
+                    balance.oneDayChange = balance.currentValue - balance.previousDayValue
+                    return balance
                 }
             }
             

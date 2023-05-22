@@ -18,7 +18,7 @@ class AccountViewModel: ObservableObject {
     @Published var accountTransactionListWithRangeMultipleAccounts = [[AccountTransaction]()]
     @Published var accountTransactionLastTransactionBelowRange = [[AccountTransaction]()]
     @Published var accountLastTwoTransactionList = [AccountTransaction]()
-    @Published var totalBalance = BalanceModel(currentValue: 0.0)
+    @Published var totalBalance = Balance(currentValue: 0.0)
     @Published var grouping: Grouping = .accountType
     
     var watchList = [Account]()
