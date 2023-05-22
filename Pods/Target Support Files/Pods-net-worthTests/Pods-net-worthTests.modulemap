@@ -1,0 +1,6 @@
+framework module Pods_net_worthTests {
+  umbrella header "Pods-net-worthTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
