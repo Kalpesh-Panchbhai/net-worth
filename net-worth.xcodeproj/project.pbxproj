@@ -302,14 +302,7 @@
 				7D433CF729386002007FA625 /* FinanceModel.swift */,
 				7DEC3B7F2938A38B002E9C8B /* FinanceDetailModel.swift */,
 				7D596277294105A40008A6B9 /* Balance.swift */,
-				7D85D02F298D29BE0019F85E /* Income.swift */,
-				7D85D06B298D2D650019F85E /* User.swift */,
-				7DF9DB90298F978600831494 /* Account.swift */,
-				7DF9DB94298F9C2600831494 /* AccountTransaction.swift */,
-				7DB987FD299B6365004ED6D2 /* Watch.swift */,
-				7D65547529A107DC0008A8E2 /* ChartData.swift */,
-				7D76290429A385EA00F71D7C /* IncomeTag.swift */,
-				7DC46B4529A4A513000E311B /* IncomeType.swift */,
+				7D4FF8032A1BBAE90060CE44 /* FirebaseModel */,
 				7DD8E5AD2A06310A00245A98 /* Backup */,
 			);
 			path = model;
@@ -325,6 +318,21 @@
 				7DB2058C2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		7D4FF8032A1BBAE90060CE44 /* FirebaseModel */ = {
+			isa = PBXGroup;
+			children = (
+				7D85D02F298D29BE0019F85E /* Income.swift */,
+				7D85D06B298D2D650019F85E /* User.swift */,
+				7DF9DB90298F978600831494 /* Account.swift */,
+				7DF9DB94298F9C2600831494 /* AccountTransaction.swift */,
+				7DB987FD299B6365004ED6D2 /* Watch.swift */,
+				7D65547529A107DC0008A8E2 /* ChartData.swift */,
+				7D76290429A385EA00F71D7C /* IncomeTag.swift */,
+				7DC46B4529A4A513000E311B /* IncomeType.swift */,
+			);
+			path = FirebaseModel;
 			sourceTree = "<group>";
 		};
 		7D69DD6F293230FF00F024A6 /* Common */ = {
