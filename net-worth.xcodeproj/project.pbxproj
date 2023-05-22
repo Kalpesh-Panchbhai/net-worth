@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0A72F69C86303305F6631476 /* Pods_net_worthTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC6C9A84CDBFBA61E9B153E4 /* Pods_net_worthTests.framework */; };
-		7D0E59032A0AA3B9007C3CE1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D0E59022A0AA3B9007C3CE1 /* GoogleService-Info.plist */; };
 		7D1188362A03F3000005EA32 /* AccountWatchListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1188352A03F3000005EA32 /* AccountWatchListView.swift */; };
 		7D11D0052A0A551300897B08 /* PieSliceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D11D0042A0A551300897B08 /* PieSliceView.swift */; };
 		7D11D0072A0A56D700897B08 /* PieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D11D0062A0A56D700897B08 /* PieChartView.swift */; };
@@ -81,6 +80,7 @@
 		7DB98804299B682F004ED6D2 /* NewWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB98803299B682F004ED6D2 /* NewWatchView.swift */; };
 		7DB98806299B708C004ED6D2 /* UpdateWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB98805299B708C004ED6D2 /* UpdateWatchView.swift */; };
 		7DB98808299B8A99004ED6D2 /* AddAccountToWatchListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB98807299B8A99004ED6D2 /* AddAccountToWatchListView.swift */; };
+		7DC1C4972A1BBD3F00BE24A7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7DC1C4962A1BBD3F00BE24A7 /* GoogleService-Info.plist */; };
 		7DC46B4429A4A4B9000E311B /* NewIncomeTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC46B4329A4A4B9000E311B /* NewIncomeTypeView.swift */; };
 		7DC46B4629A4A513000E311B /* IncomeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC46B4529A4A513000E311B /* IncomeType.swift */; };
 		7DC46B4829A4C5A0000E311B /* IncomeTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC46B4729A4C5A0000E311B /* IncomeTypeView.swift */; };
@@ -135,11 +135,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0986E1DF147191E834EA6A6B /* Pods-net-worth-net-worthUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth-net-worthUITests.debug.xcconfig"; path = "Target Support Files/Pods-net-worth-net-worthUITests/Pods-net-worth-net-worthUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		0D5576F40F828E2D89BA00A0 /* Pods_net_worth_net_worthUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_net_worth_net_worthUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3EF927A00F82F2570E4628BC /* Pods-net-worth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth.release.xcconfig"; path = "Target Support Files/Pods-net-worth/Pods-net-worth.release.xcconfig"; sourceTree = "<group>"; };
-		51475C8FB29FB4066D04960A /* Pods-net-worth-net-worthUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth-net-worthUITests.release.xcconfig"; path = "Target Support Files/Pods-net-worth-net-worthUITests/Pods-net-worth-net-worthUITests.release.xcconfig"; sourceTree = "<group>"; };
-		7B8A9E5E7069E70DAD583AB5 /* Pods-net-worthTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worthTests.release.xcconfig"; path = "Target Support Files/Pods-net-worthTests/Pods-net-worthTests.release.xcconfig"; sourceTree = "<group>"; };
-		7D0E59022A0AA3B9007C3CE1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		0FDD6BF955A43665F6A6187C /* Pods-net-worth-net-worthUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth-net-worthUITests.release.xcconfig"; path = "Target Support Files/Pods-net-worth-net-worthUITests/Pods-net-worth-net-worthUITests.release.xcconfig"; sourceTree = "<group>"; };
+		2B45DF998FDF5AAD9DFFCB01 /* Pods-net-worth.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth.debug.xcconfig"; path = "Target Support Files/Pods-net-worth/Pods-net-worth.debug.xcconfig"; sourceTree = "<group>"; };
+		590F41F3DE0BE00E45DF344D /* Pods-net-worthTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worthTests.debug.xcconfig"; path = "Target Support Files/Pods-net-worthTests/Pods-net-worthTests.debug.xcconfig"; sourceTree = "<group>"; };
+		664723C2EB2A543D3793EBF9 /* Pods-net-worthTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worthTests.release.xcconfig"; path = "Target Support Files/Pods-net-worthTests/Pods-net-worthTests.release.xcconfig"; sourceTree = "<group>"; };
 		7D1188352A03F3000005EA32 /* AccountWatchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountWatchListView.swift; sourceTree = "<group>"; };
 		7D11D0042A0A551300897B08 /* PieSliceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieSliceView.swift; sourceTree = "<group>"; };
 		7D11D0062A0A56D700897B08 /* PieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartView.swift; sourceTree = "<group>"; };
@@ -210,6 +211,7 @@
 		7DB98803299B682F004ED6D2 /* NewWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewWatchView.swift; sourceTree = "<group>"; };
 		7DB98805299B708C004ED6D2 /* UpdateWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateWatchView.swift; sourceTree = "<group>"; };
 		7DB98807299B8A99004ED6D2 /* AddAccountToWatchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAccountToWatchListView.swift; sourceTree = "<group>"; };
+		7DC1C4962A1BBD3F00BE24A7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7DC46B4329A4A4B9000E311B /* NewIncomeTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewIncomeTypeView.swift; sourceTree = "<group>"; };
 		7DC46B4529A4A513000E311B /* IncomeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeType.swift; sourceTree = "<group>"; };
 		7DC46B4729A4C5A0000E311B /* IncomeTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTypeView.swift; sourceTree = "<group>"; };
@@ -243,11 +245,9 @@
 		7DF9DB90298F978600831494 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		7DF9DB92298F98A800831494 /* AccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewModel.swift; sourceTree = "<group>"; };
 		7DF9DB94298F9C2600831494 /* AccountTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTransaction.swift; sourceTree = "<group>"; };
-		85BF90A6CA5A7DCEC6723FA1 /* Pods-net-worthTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worthTests.debug.xcconfig"; path = "Target Support Files/Pods-net-worthTests/Pods-net-worthTests.debug.xcconfig"; sourceTree = "<group>"; };
-		AD23DE04C908FD10EBFE3945 /* Pods-net-worth.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth.debug.xcconfig"; path = "Target Support Files/Pods-net-worth/Pods-net-worth.debug.xcconfig"; sourceTree = "<group>"; };
-		B3F0D9369CD92E805DA1283C /* Pods-net-worth-net-worthUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth-net-worthUITests.debug.xcconfig"; path = "Target Support Files/Pods-net-worth-net-worthUITests/Pods-net-worth-net-worthUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		BC5CC7014F51AC0DAEF83346 /* Pods_net_worth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_net_worth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC6C9A84CDBFBA61E9B153E4 /* Pods_net_worthTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_net_worthTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF5EF456C574539AF6CA64AD /* Pods-net-worth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth.release.xcconfig"; path = "Target Support Files/Pods-net-worth/Pods-net-worth.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -283,15 +283,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		7467775B37AEF524C2F7DAD1 /* Pods */ = {
+		3516CB7AD10B24B4F06946C5 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				AD23DE04C908FD10EBFE3945 /* Pods-net-worth.debug.xcconfig */,
-				3EF927A00F82F2570E4628BC /* Pods-net-worth.release.xcconfig */,
-				B3F0D9369CD92E805DA1283C /* Pods-net-worth-net-worthUITests.debug.xcconfig */,
-				51475C8FB29FB4066D04960A /* Pods-net-worth-net-worthUITests.release.xcconfig */,
-				85BF90A6CA5A7DCEC6723FA1 /* Pods-net-worthTests.debug.xcconfig */,
-				7B8A9E5E7069E70DAD583AB5 /* Pods-net-worthTests.release.xcconfig */,
+				2B45DF998FDF5AAD9DFFCB01 /* Pods-net-worth.debug.xcconfig */,
+				EF5EF456C574539AF6CA64AD /* Pods-net-worth.release.xcconfig */,
+				0986E1DF147191E834EA6A6B /* Pods-net-worth-net-worthUITests.debug.xcconfig */,
+				0FDD6BF955A43665F6A6187C /* Pods-net-worth-net-worthUITests.release.xcconfig */,
+				590F41F3DE0BE00E45DF344D /* Pods-net-worthTests.debug.xcconfig */,
+				664723C2EB2A543D3793EBF9 /* Pods-net-worthTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -355,7 +355,7 @@
 				7D79FA70291B7432004A2ECF /* net-worthUITests */,
 				7D79FA4E291B7430004A2ECF /* Products */,
 				CDD4222682A92C71AC144E67 /* Frameworks */,
-				7467775B37AEF524C2F7DAD1 /* Pods */,
+				3516CB7AD10B24B4F06946C5 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -372,7 +372,7 @@
 		7D79FA4F291B7430004A2ECF /* net-worth */ = {
 			isa = PBXGroup;
 			children = (
-				7D0E59022A0AA3B9007C3CE1 /* GoogleService-Info.plist */,
+				7DC1C4962A1BBD3F00BE24A7 /* GoogleService-Info.plist */,
 				7D79FA5E291B7431004A2ECF /* Info.plist */,
 				7D79FA50291B7430004A2ECF /* net_worthApp.swift */,
 				7D69DD6F293230FF00F024A6 /* Common */,
@@ -707,7 +707,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D80ECF0291CE0C500A22496 /* LaunchScreen.storyboard in Resources */,
-				7D0E59032A0AA3B9007C3CE1 /* GoogleService-Info.plist in Resources */,
+				7DC1C4972A1BBD3F00BE24A7 /* GoogleService-Info.plist in Resources */,
 				7D79FA58291B7431004A2ECF /* Preview Assets.xcassets in Resources */,
 				7D79FA55291B7431004A2ECF /* Assets.xcassets in Resources */,
 			);
@@ -1048,7 +1048,7 @@
 		};
 		7D79FA78291B7432004A2ECF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AD23DE04C908FD10EBFE3945 /* Pods-net-worth.debug.xcconfig */;
+			baseConfigurationReference = 2B45DF998FDF5AAD9DFFCB01 /* Pods-net-worth.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1084,7 +1084,7 @@
 		};
 		7D79FA79291B7432004A2ECF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3EF927A00F82F2570E4628BC /* Pods-net-worth.release.xcconfig */;
+			baseConfigurationReference = EF5EF456C574539AF6CA64AD /* Pods-net-worth.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1120,7 +1120,7 @@
 		};
 		7D79FA7B291B7432004A2ECF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 85BF90A6CA5A7DCEC6723FA1 /* Pods-net-worthTests.debug.xcconfig */;
+			baseConfigurationReference = 590F41F3DE0BE00E45DF344D /* Pods-net-worthTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1141,7 +1141,7 @@
 		};
 		7D79FA7C291B7432004A2ECF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7B8A9E5E7069E70DAD583AB5 /* Pods-net-worthTests.release.xcconfig */;
+			baseConfigurationReference = 664723C2EB2A543D3793EBF9 /* Pods-net-worthTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1162,7 +1162,7 @@
 		};
 		7D79FA7E291B7432004A2ECF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B3F0D9369CD92E805DA1283C /* Pods-net-worth-net-worthUITests.debug.xcconfig */;
+			baseConfigurationReference = 0986E1DF147191E834EA6A6B /* Pods-net-worth-net-worthUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1181,7 +1181,7 @@
 		};
 		7D79FA7F291B7432004A2ECF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 51475C8FB29FB4066D04960A /* Pods-net-worth-net-worthUITests.release.xcconfig */;
+			baseConfigurationReference = 0FDD6BF955A43665F6A6187C /* Pods-net-worth-net-worthUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
