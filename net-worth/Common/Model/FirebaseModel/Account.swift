@@ -21,27 +21,16 @@ struct Account: Codable, Hashable {
     var currency: String
     var active: Bool
     
-    init() {
-        self.accountType = ""
-        self.loanType = ""
-        self.accountName = ""
-        self.currentBalance = 0.0
-        self.paymentReminder = false
-        self.paymentDate = 0
-        self.currency = ""
-        self.active = true
-    }
-    
-    init(id: String) {
+    init(id: String = "", accountType: String = "", loanType: String = "", accountName: String = "", currentBalance: Double = 0.0, paymentReminder: Bool = false, paymentDate: Int = 0, currency: String = "", active: Bool = true) {
         self.id = id
-        self.accountType = ""
-        self.loanType = ""
-        self.accountName = ""
-        self.currentBalance = 0.0
-        self.paymentReminder = false
-        self.paymentDate = 0
-        self.currency = ""
-        self.active = true
+        self.accountType = accountType
+        self.loanType = loanType
+        self.accountName = accountName
+        self.currentBalance = currentBalance
+        self.paymentReminder = paymentReminder
+        self.paymentDate = paymentDate
+        self.currency = currency
+        self.active = active
     }
     
     init(doc: QueryDocumentSnapshot) {
@@ -55,16 +44,4 @@ struct Account: Codable, Hashable {
         currency = doc[ConstantUtils.accountKeyCurrency] as? String ?? ""
         active =  doc[ConstantUtils.accountKeyActive] as? Bool ?? true
     }
-    
-    init(accountType: String, loanType: String, accountName: String, currentBalance: Double, paymentReminder: Bool, paymentDate: Int, currency: String, active: Bool) {
-        self.accountType = accountType
-        self.loanType = loanType
-        self.accountName = accountName
-        self.currentBalance = currentBalance
-        self.paymentReminder = paymentReminder
-        self.paymentDate = paymentDate
-        self.currency = currency
-        self.active = active
-    }
-    
 }
