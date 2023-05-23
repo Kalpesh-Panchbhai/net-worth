@@ -20,6 +20,17 @@ class AccountController {
             .collection(ConstantUtils.accountCollectionName)
     }
     
+    public func addAccount(newAccount: Account) async -> String {
+        do {
+            let accountID = try getAccountCollection()
+                .addDocument(from: newAccount).documentID
+            return accountID
+        } catch {
+            print(error)
+        }
+        return ""
+    }
+    
     public func addAccount(newAccount: Account, accountOpenedDate: Date) async -> String {
         do {
             let accountID = try getAccountCollection()
@@ -30,24 +41,6 @@ class AccountController {
             print(error)
         }
         return ""
-    }
-    
-    public func deleteAccount(account: Account) async throws {
-        let watchList = try await watchController.getAllWatchList()
-        watchList.forEach { watch in
-            if(watch.accountID.contains(account.id!)) {
-                watchController.deleteAccountFromWatchList(watchList: watch, accountID: account.id!)
-            }
-        }
-        CommonController.delete(collection: getAccountCollection().document(account.id!).collection(ConstantUtils.accountTransactionCollectionName))
-        try await getAccountCollection().document(account.id!).delete()
-    }
-    
-    public func deleteAccounts() async throws {
-        let accountList = try await getAccountList()
-        for account in accountList {
-            try await deleteAccount(account: account)
-        }
     }
     
     public func updateAccount(account: Account) {
@@ -71,18 +64,6 @@ class AccountController {
         return account
     }
     
-    public func getAccountList() async throws -> [Account] {
-        var accountList = [Account]()
-        accountList = try await getAccountCollection()
-            .order(by: ConstantUtils.accountKeyAccountName)
-            .getDocuments()
-            .documents
-            .map { doc in
-                return Account(doc: doc)
-            }
-        return accountList
-    }
-    
     public func getAccount(accountType: String) -> [Account]{
         var accountList = [Account]()
         
@@ -102,16 +83,83 @@ class AccountController {
         return accountList
     }
     
-    public func addAccount(newAccount: Account) async -> String {
-        do {
-            let accountID = try getAccountCollection()
-                .addDocument(from: newAccount).documentID
-            return accountID
-        } catch {
-            print(error)
-        }
-        return ""
+    public func getAccountList() async throws -> [Account] {
+        var accountList = [Account]()
+        accountList = try await getAccountCollection()
+            .order(by: ConstantUtils.accountKeyAccountName)
+            .getDocuments()
+            .documents
+            .map { doc in
+                return Account(doc: doc)
+            }
+        return accountList
     }
+    
+    public func fetchTotalBalance(accountList: [Account]) async throws -> Balance {
+        var accounts: [Account] = []
+        if(accountList.isEmpty) {
+            accounts = try await getAccountList()
+        } else {
+            accounts = accountList
+        }
+        
+        return try await withThrowingTaskGroup(of: Balance.self) { group in
+            
+            var balance = Balance(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
+            
+            for account in accounts {
+                group.addTask {
+                    var balance = Balance()
+                    if(account.currency != SettingsController().getDefaultCurrency().code) {
+                        let financeDetailModel =  try await FinanceController().getSymbolDetails(accountCurrency: account.currency)
+                        balance.currentValue = financeDetailModel.regularMarketPrice ?? 0.0
+                        balance.previousDayValue = financeDetailModel.chartPreviousClose ?? 0.0
+                    }
+                    let accountTransaction = try await self.getLastTwoAccountTransactionList(id: account.id!)
+                    balance.currentValue = balance.currentValue * account.currentBalance
+                    if(accountTransaction.count > 1 && accountTransaction[0].timestamp.timeIntervalSince(Date()) > -86400) {
+                        balance.previousDayValue = balance.previousDayValue * accountTransaction[1].currentBalance
+                    } else if(accountTransaction.count == 1 && accountTransaction[0].timestamp.timeIntervalSince(Date()) > -86400) {
+                        balance.currentValue = balance.previousDayValue * accountTransaction[0].currentBalance
+                        balance.previousDayValue = 0
+                    } else {
+                        balance.previousDayValue = balance.previousDayValue * account.currentBalance
+                    }
+                    balance.oneDayChange = balance.currentValue - balance.previousDayValue
+                    return balance
+                }
+            }
+            
+            for try await taskResult in group {
+                balance.currentValue += taskResult.currentValue
+                balance.oneDayChange += taskResult.oneDayChange
+            }
+            
+            return balance
+            
+        }
+    }
+    
+    public func deleteAccount(account: Account) async throws {
+        let watchList = try await watchController.getAllWatchList()
+        watchList.forEach { watch in
+            if(watch.accountID.contains(account.id!)) {
+                watchController.deleteAccountFromWatchList(watchList: watch, accountID: account.id!)
+            }
+        }
+        CommonController.delete(collection: getAccountCollection().document(account.id!).collection(ConstantUtils.accountTransactionCollectionName))
+        try await getAccountCollection().document(account.id!).delete()
+    }
+    
+    public func deleteAccounts() async throws {
+        let accountList = try await getAccountList()
+        for account in accountList {
+            try await deleteAccount(account: account)
+        }
+    }
+}
+
+extension AccountController {
     
     public func addTransaction(accountID: String, account: Account, timestamp: Date) async throws {
         let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: account.currentBalance, currentBalance: account.currentBalance)
@@ -128,7 +176,7 @@ class AccountController {
         }
     }
     
-    public func addTransaction(accountID: String, accountTransaction: AccountTransaction) async throws { 
+    public func addTransaction(accountID: String, accountTransaction: AccountTransaction) async throws {
         do {
             let documentID = try getAccountCollection()
                 .document(accountID)
@@ -406,52 +454,4 @@ class AccountController {
             .document(accountTransactionID)
             .delete()
     }
-    
-    
-    public func fetchTotalBalance(accountList: [Account]) async throws -> Balance {
-        var accounts: [Account] = []
-        if(accountList.isEmpty) {
-            accounts = try await getAccountList()
-        } else {
-            accounts = accountList
-        }
-        
-        return try await withThrowingTaskGroup(of: Balance.self) { group in
-            
-            var balance = Balance(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
-            
-            for account in accounts {
-                group.addTask {
-                    var balance = Balance()
-                    if(account.currency != SettingsController().getDefaultCurrency().code) {
-                        let financeDetailModel =  try await FinanceController().getSymbolDetails(accountCurrency: account.currency)
-                        balance.currentValue = financeDetailModel.regularMarketPrice ?? 0.0
-                        balance.previousDayValue = financeDetailModel.chartPreviousClose ?? 0.0
-                    }
-                    let accountTransaction = try await self.getLastTwoAccountTransactionList(id: account.id!)
-                    balance.currentValue = balance.currentValue * account.currentBalance
-                    if(accountTransaction.count > 1 && accountTransaction[0].timestamp.timeIntervalSince(Date()) > -86400) {
-                        balance.previousDayValue = balance.previousDayValue * accountTransaction[1].currentBalance
-                    } else if(accountTransaction.count == 1 && accountTransaction[0].timestamp.timeIntervalSince(Date()) > -86400) {
-                        balance.currentValue = balance.previousDayValue * accountTransaction[0].currentBalance
-                        balance.previousDayValue = 0
-                    } else {
-                        balance.previousDayValue = balance.previousDayValue * account.currentBalance
-                    }
-                    balance.oneDayChange = balance.currentValue - balance.previousDayValue
-                    return balance
-                }
-            }
-            
-            for try await taskResult in group {
-                balance.currentValue += taskResult.currentValue
-                balance.oneDayChange += taskResult.oneDayChange
-            }
-            
-            return balance
-            
-        }
-    }
-    
-    
 }
