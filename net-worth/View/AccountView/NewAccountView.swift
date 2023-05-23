@@ -27,7 +27,7 @@ struct NewAccountView: View {
     @State var paymentDate = 1
     @State var loanPaymentDate = 1
     @State var dates = Array(1...28)
-    @State private var accountOpenedDate = Date()
+    @State var accountOpenedDate = Date()
     
     @State var isPlus = true
     
