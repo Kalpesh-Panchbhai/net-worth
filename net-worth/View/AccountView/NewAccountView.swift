@@ -13,7 +13,7 @@ struct NewAccountView: View {
     @State private var scenePhaseBlur = 0
     
     @State var accountType: String
-    @State var loanType: String = "Consumer"
+    @State var loanType: String = "consumer"
     @State var symbolType: String = "None"
     @State var accountName: String = ""
     @State var currencySelected: Currency = Currency()
@@ -89,8 +89,8 @@ struct NewAccountView: View {
                     }
                     else if(accountType == "Loan") {
                         Picker(selection: $loanType, label: Text("Loan Type")) {
-                            Text("Consumer").tag("Consumer")
-                            Text("Non Consumer").tag("Non Consumer")
+                            Text("Consumer Loan").tag("consumer")
+                            Text("Home Loan").tag("home")
                         }
                         .colorMultiply(Color.navyBlue)
                         
@@ -98,12 +98,10 @@ struct NewAccountView: View {
                             .colorMultiply(Color.navyBlue)
                         currentBalanceField()
                             .foregroundColor(Color.navyBlue)
-                        if(loanType.elementsEqual("Consumer")) {
-                            monthlyEMIField()
-                                .foregroundColor(Color.navyBlue)
-                            loanPaymentDateField(labelName: "Loan payment date")
-                                .colorMultiply(Color.navyBlue)
-                        }
+                        monthlyEMIField()
+                            .foregroundColor(Color.navyBlue)
+                        loanPaymentDateField(labelName: "Loan payment date")
+                            .colorMultiply(Color.navyBlue)
                         CurrencyPicker(currenySelected: $currencySelected)
                             .colorMultiply(Color.navyBlue)
                         enablePaymentReminderField(labelName: "Enable Loan Payment Reminder")
@@ -176,7 +174,7 @@ struct NewAccountView: View {
                             })
                             watchController.addAccountToWatchList(watch: watch)
                             await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                            if(accountType.elementsEqual("Loan") && loanType.elementsEqual("Consumer")) {
+                            if(accountType.elementsEqual("Loan") && loanType.elementsEqual("consumer")) {
                                 accountController.addLoanAccountEMITransaction(account: newAccount, emiDate: loanPaymentDate, accountOpenedDate: accountOpenedDate, monthlyEmiAmount: monthlyEmi)
                             }
                         }
