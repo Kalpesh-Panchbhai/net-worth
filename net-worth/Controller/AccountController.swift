@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import FirebaseFirestore
 
+//MARK: Account
 class AccountController {
     
     private var notificationController = NotificationController()
@@ -159,6 +160,7 @@ class AccountController {
     }
 }
 
+//MARK: Account Transaction
 extension AccountController {
     
     public func addTransaction(accountID: String, account: Account, timestamp: Date) async throws {
