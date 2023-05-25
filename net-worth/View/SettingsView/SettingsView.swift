@@ -11,27 +11,24 @@ import GoogleSignIn
 
 struct SettingsView: View {
     
-    @State private var profilePhoto = UIImage()
-    @State private var isAuthenticationRequired: Bool
-    @State private var logout =  false
-    @State private var isPresentingDataAndAccountDeletionConfirmation = false
-    @State private var isPresentingLogoutConfirm = false
+    @State var profilePhoto = UIImage()
+    @State var isAuthenticationRequired: Bool
+    @State var logout =  false
+    @State var isPresentingDataAndAccountDeletionConfirmation = false
+    @State var isPresentingLogoutConfirm = false
     
-    @State private var currenySelected: Currency
-    @State private var defaultIncomeType = IncomeType()
-    @State private var defaultIncomeTag = IncomeTag()
+    @State var currenySelected: Currency
+    @State var defaultIncomeType = IncomeType()
+    @State var defaultIncomeTag = IncomeTag()
     
-    private var currencyList = CurrencyList().currencyList
+    var currencyList = CurrencyList().currencyList
     
-    @State private var filterCurrencyList = CurrencyList().currencyList
+    @State var filterCurrencyList = CurrencyList().currencyList
     
-    private var settingsController = SettingsController()
-    private var notificationController = NotificationController()
+    var settingsController = SettingsController()
+    var notificationController = NotificationController()
     
-    init() {
-        isAuthenticationRequired = settingsController.isAuthenticationRequired()
-        currenySelected = settingsController.getDefaultCurrency()
-    }
+    @StateObject var incomeViewModel: IncomeViewModel
     
     var body: some View {
         NavigationView(){
@@ -78,7 +75,7 @@ struct SettingsView: View {
                     .listRowBackground(Color.white)
                 
                 NavigationLink(destination: {
-                    IncomeTypeView()
+                    IncomeTypeView(incomeViewModel: incomeViewModel)
                 }, label: {
                     Label(title: {
                         HStack {

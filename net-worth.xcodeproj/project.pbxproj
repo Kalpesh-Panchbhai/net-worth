@@ -502,12 +502,12 @@
 			children = (
 				7DC97A27292236FB003F69D4 /* IncomeView.swift */,
 				7D3E3CBC2A1FABCD009538BA /* IncomeRowView.swift */,
+				7D4E671229F7D4C900EB6B24 /* IncomeDetailView.swift */,
 				7DC97A2B29223ADB003F69D4 /* NewIncomeView.swift */,
 				7DC46B4729A4C5A0000E311B /* IncomeTypeView.swift */,
 				7DC46B4929A4C5B0000E311B /* IncomeTagView.swift */,
-				7D4E671229F7D4C900EB6B24 /* IncomeDetailView.swift */,
-				7DF4F39829A3A88400E5C1E1 /* NewIncomeTagView.swift */,
 				7DC46B4329A4A4B9000E311B /* NewIncomeTypeView.swift */,
+				7DF4F39829A3A88400E5C1E1 /* NewIncomeTagView.swift */,
 			);
 			path = IncomeView;
 			sourceTree = "<group>";

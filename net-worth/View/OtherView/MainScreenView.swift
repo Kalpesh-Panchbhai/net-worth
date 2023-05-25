@@ -32,7 +32,7 @@ struct MainScreenView: View {
                         .tabBarItem(tab: .income, selection: $tabSelection)
                     ChartView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
                         .tabBarItem(tab: .chart, selection: $tabSelection)
-                    SettingsView()
+                    SettingsView(isAuthenticationRequired: SettingsController().isAuthenticationRequired(), currenySelected: SettingsController().getDefaultCurrency(), incomeViewModel: incomeViewModel)
                         .tabBarItem(tab: .setting, selection: $tabSelection)
                 })
                 .alert("Network is unavailable. You can continue to use it, it will sync automatically once the network is available.", isPresented: $networkUnavailable) {

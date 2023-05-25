@@ -15,7 +15,7 @@ struct NewIncomeTypeView: View {
     
     var incomeController = IncomeController()
     
-    @ObservedObject var incomeViewModel : IncomeViewModel
+    @StateObject var incomeViewModel : IncomeViewModel
     
     @State private var typeName = ""
     @State private var isDefault = false
