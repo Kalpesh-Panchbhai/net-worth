@@ -50,6 +50,7 @@ struct NewIncomeView: View {
                     .colorMultiply(Color.navyBlue)
                     .onChange(of: incomeTypeSelected) { _ in
                         amount="0.0"
+                        taxPaid="0.0"
                     }
                     HStack {
                         Text("Amount")
@@ -82,6 +83,7 @@ struct NewIncomeView: View {
                                     amount = filtered
                                 }
                             })
+                            .multilineTextAlignment(.trailing)
                     }
                     .foregroundColor(Color.navyBlue)
                     HStack {
@@ -115,6 +117,7 @@ struct NewIncomeView: View {
                                     taxPaid = filtered
                                 }
                             })
+                            .multilineTextAlignment(.trailing)
                     }
                     .foregroundColor(Color.navyBlue)
                     HStack{
