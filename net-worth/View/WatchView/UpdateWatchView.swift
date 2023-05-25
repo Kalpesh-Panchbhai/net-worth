@@ -11,13 +11,13 @@ struct UpdateWatchView: View {
     
     var watchController = WatchController()
     
-    @State private var scenePhaseBlur = 0
-    @State private var isFieldEmpty = false
+    @State var scenePhaseBlur = 0
+    @State var isFieldEmpty = false
     
     @ObservedObject var watchViewModel: WatchViewModel
     
     @Environment(\.dismiss) var dismiss
-    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
         VStack {

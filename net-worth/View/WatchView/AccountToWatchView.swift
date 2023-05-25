@@ -9,13 +9,13 @@ import SwiftUI
 
 struct AccountToWatchView: View {
     
-    @State private var scenePhaseBlur = 0
+    @State var scenePhaseBlur = 0
     @State var watch: Watch
-    @State private var searchText = ""
+    @State var searchText = ""
     
     @ObservedObject var accountViewModel = AccountViewModel()
     
-    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
         NavigationView {

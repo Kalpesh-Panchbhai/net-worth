@@ -9,13 +9,9 @@ import SwiftUI
 
 struct AccountRowView: View {
     
-    private var account: Account
+    var account: Account
     
     @StateObject var accountViewModel = AccountViewModel()
-    
-    init(account: Account) {
-        self.account = account
-    }
     
     var body: some View {
         VStack(alignment: .leading) {

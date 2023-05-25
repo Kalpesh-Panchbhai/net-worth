@@ -10,13 +10,11 @@ import LocalAuthentication
 
 struct AuthenticationView: View {
     
-    @State private var unlocked =  false
+    var settingsController = SettingsController()
     
-    @State private var hasAlreadyLaunched =  false
-    
-    @State private var authenticateTypeMessage = "Please authenticate"
-    
-    private var settingsController = SettingsController()
+    @State var unlocked =  false
+    @State var hasAlreadyLaunched =  false
+    @State var authenticateTypeMessage = "Please authenticate"
     
     var body: some View {
         VStack {

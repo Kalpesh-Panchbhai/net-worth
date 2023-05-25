@@ -41,7 +41,7 @@ struct NewAccountView: View {
     @StateObject var watchViewModel = WatchViewModel()
     
     @ObservedObject var accountViewModel : AccountViewModel
-    @State private var selectedWatchList = Watch()
+    @State var selectedWatchList = Watch()
     
     var body: some View {
         NavigationView {

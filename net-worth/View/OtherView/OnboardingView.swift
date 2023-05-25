@@ -9,32 +9,31 @@ import SwiftUI
 
 struct OnboardingView: View {
     
-    @AppStorage("onboardingCompleted") var onboardingCompleted = false
+    var settingsController = SettingsController()
+    var notificationController = NotificationController()
+    var currencyList = CurrencyList().currencyList
     let transition: AnyTransition = .asymmetric(
         insertion: .move(edge: .trailing),
         removal: .move(edge: .leading))
-    @State private var onboardingState: Int = 0
-    @State private var currenySelected: Currency = Currency()
-    @State private var filterCurrencyList = CurrencyList().currencyList
-    private var currencyList = CurrencyList().currencyList
-    @State private var isAuthenticationRequired: Bool = false
-    
-    @State private var allNotification: Bool = false
-    @State private var mutualFundNotification: Bool = false
-    @State private var equityNotification: Bool = false
-    @State private var etfNotification: Bool = false
-    @State private var cryptoCurrencyNotification: Bool = false
-    @State private var futureNotification: Bool = false
-    @State private var optionNotification: Bool = false
-    @State private var creditCardNotification: Bool = false
-    @State private var loanNotification: Bool = false
-    @State private var otherNotification: Bool = false
-    
-    private var settingsController = SettingsController()
-    private var notificationController = NotificationController()
-    
+
+    @State var onboardingState: Int = 0
+    @State var currenySelected: Currency = Currency()
+    @State var filterCurrencyList = CurrencyList().currencyList
+    @State var isAuthenticationRequired: Bool = false
+    @State var allNotification: Bool = false
+    @State var mutualFundNotification: Bool = false
+    @State var equityNotification: Bool = false
+    @State var etfNotification: Bool = false
+    @State var cryptoCurrencyNotification: Bool = false
+    @State var futureNotification: Bool = false
+    @State var optionNotification: Bool = false
+    @State var creditCardNotification: Bool = false
+    @State var loanNotification: Bool = false
+    @State var otherNotification: Bool = false
     @State var alertTitle: String = ""
     @State var showAlert: Bool = false
+    
+    @AppStorage("onboardingCompleted") var onboardingCompleted = false
     
     var body: some View {
         ZStack {

@@ -9,11 +9,11 @@ import Foundation
 
 class ImportExportController {
     
-    private var incomeController = IncomeController()
-    private var accountController = AccountController()
-    private var watchController = WatchController()
+    var incomeController = IncomeController()
+    var accountController = AccountController()
+    var watchController = WatchController()
     
-    private var data = Data()
+    var data = Data()
     
     public func readLocalBackup() async throws -> Data {
         var returnData = Data()

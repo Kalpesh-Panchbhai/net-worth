@@ -10,9 +10,9 @@ import UserNotifications
 
 class NotificationController {
     
-    private var defaultHour = 8
+    var defaultHour = 8
     
-    private var granted: Bool = false
+    var granted: Bool = false
     
     public func getGranted() -> Bool {
         return granted
@@ -22,7 +22,7 @@ class NotificationController {
         enableNotification()
     }
     
-    private var notificationCenter  =  UNUserNotificationCenter.current()
+    var notificationCenter  =  UNUserNotificationCenter.current()
     
     private func enableNotification() async throws -> Bool {
         return try await notificationCenter.requestAuthorization(options: [.alert,

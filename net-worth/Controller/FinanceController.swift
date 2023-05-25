@@ -9,11 +9,9 @@ import Foundation
 
 class FinanceController {
     
-    private var dataCaptured = false
-    
-    private var financeModel = [FinanceModel]()
-    
-    private var financeDetailModel = FinanceDetailModel()
+    var dataCaptured = false
+    var financeModel = [FinanceModel]()
+    var financeDetailModel = FinanceDetailModel()
     
     public func getSymbolDetails(accountCurrency: String) async throws -> FinanceDetailModel {
         
