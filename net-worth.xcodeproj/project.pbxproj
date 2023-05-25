@@ -570,11 +570,11 @@
 		7DF8CCFB299F445300267C29 /* WatchView */ = {
 			isa = PBXGroup;
 			children = (
+				7DF8CCF8299F444000267C29 /* WatchListView.swift */,
 				7DB98803299B682F004ED6D2 /* NewWatchView.swift */,
 				7DB98805299B708C004ED6D2 /* UpdateWatchView.swift */,
 				7DB98807299B8A99004ED6D2 /* AddAccountToWatchListView.swift */,
 				7D9F6F57299CE18000F964EC /* SingleWatchListView.swift */,
-				7DF8CCF8299F444000267C29 /* WatchListView.swift */,
 			);
 			path = WatchView;
 			sourceTree = "<group>";
