@@ -9,13 +9,13 @@ import SwiftUI
 
 struct TransactionsView: View {
     
-    @ObservedObject private var accountViewModel: AccountViewModel
+    @ObservedObject var accountViewModel: AccountViewModel
     
-    @State private var index = 0
+    @State var index = 0
     
-    private var accountTransactionList = [AccountTransaction]()
+    var accountTransactionList = [AccountTransaction]()
     
-    private var accountController = AccountController()
+    var accountController = AccountController()
     
     init(accountViewModel: AccountViewModel) {
         self.accountViewModel = accountViewModel

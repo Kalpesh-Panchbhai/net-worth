@@ -9,8 +9,8 @@ import SwiftUI
 
 struct NewAccountView: View {
     
-    @Environment(\.scenePhase) private var scenePhase
-    @State private var scenePhaseBlur = 0
+    @Environment(\.scenePhase) var scenePhase
+    @State var scenePhaseBlur = 0
     
     @State var accountType: String
     @State var loanType: String = "Consumer"

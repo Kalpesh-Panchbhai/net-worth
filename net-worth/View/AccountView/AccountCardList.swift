@@ -9,19 +9,18 @@ import SwiftUI
 
 struct AccountCardList: View {
     
-    @State private var isNewAccountAccountViewOpen = false
-    @State private var isNewTransactionViewOpen = false
-    @State private var accountTypeSelected = "None"
-    @State private var selectedAccount = Account()
-    @State private var searchText = ""
-    @State private var isPresentingAccountDeleteConfirm = false
+    var accountController = AccountController()
+    
+    @State var isNewAccountAccountViewOpen = false
+    @State var isNewTransactionViewOpen = false
+    @State var accountTypeSelected = "None"
+    @State var selectedAccount = Account()
+    @State var searchText = ""
+    @State var isPresentingAccountDeleteConfirm = false
+    @State var deletedAccount = Account()
     
     @StateObject var accountViewModel: AccountViewModel
     @ObservedObject var watchViewModel: WatchViewModel
-    
-    var accountController = AccountController()
-    
-    @State private var deletedAccount = Account()
     
     @Environment(\.presentationMode) var presentationMode
     

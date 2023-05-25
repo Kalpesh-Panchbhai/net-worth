@@ -9,11 +9,11 @@ import SwiftUI
 
 struct AccountDetailView: View {
     
-    private var dates = Array(1...28)
-    private var account: Account
-    private var accountController = AccountController()
+    var dates = Array(1...28)
+    var account: Account
+    var accountController = AccountController()
     
-    @State private var showAddWatchListView = false
+    @State var showAddWatchListView = false
     @State var isNewTransactionViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
     @State var paymentDate = 0

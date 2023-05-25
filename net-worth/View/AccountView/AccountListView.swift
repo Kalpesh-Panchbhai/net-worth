@@ -10,15 +10,14 @@ import SwiftUI
 struct AccountListView: View {
     
     var accountType: String
-    @ObservedObject var watchViewModel: WatchViewModel
+    var accountController = AccountController()
     
-    @State private var searchText = ""
-    @State private var isNewTransactionViewOpen = false
-    @State private var isChartViewOpen = false
+    @State var searchText = ""
+    @State var isNewTransactionViewOpen = false
+    @State var isChartViewOpen = false
     
     @StateObject var accountViewModel = AccountViewModel()
-    
-    var accountController = AccountController()
+    @ObservedObject var watchViewModel: WatchViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
