@@ -91,7 +91,7 @@ struct SettingsView: View {
                 .listRowBackground(Color.white)
                 
                 NavigationLink(destination: {
-                    IncomeTagView()
+                    IncomeTagView(incomeViewModel: incomeViewModel)
                 }, label: {
                     Label(title: {
                         HStack {
