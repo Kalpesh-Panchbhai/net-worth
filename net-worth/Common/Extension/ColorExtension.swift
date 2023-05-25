@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 extension Color {
+    
     static var random: Color {
         return Color(red: .random, green: .random, blue: .random)
     }

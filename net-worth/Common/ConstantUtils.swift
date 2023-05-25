@@ -16,7 +16,6 @@ class ConstantUtils {
         case loan = "Loan"
         case other = "Other"
     }
-
     
     static var userCollectionName = "users"
     static var incomeCollectionName = "incomes"
