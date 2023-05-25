@@ -13,7 +13,7 @@ struct NewAccountView: View {
     @State private var scenePhaseBlur = 0
     
     @State var accountType: String
-    @State var loanType: String = "consumer"
+    @State var loanType: String = "Consumer"
     @State var symbolType: String = "None"
     @State var accountName: String = ""
     @State var currencySelected: Currency = Currency()
@@ -89,8 +89,8 @@ struct NewAccountView: View {
                     }
                     else if(accountType == "Loan") {
                         Picker(selection: $loanType, label: Text("Loan Type")) {
-                            Text("Consumer Loan").tag("consumer")
-                            Text("Home Loan").tag("home")
+                            Text("Consumer").tag("Consumer")
+                            Text("Non Consumer").tag("Non Consumer")
                         }
                         .colorMultiply(Color.navyBlue)
                         
@@ -174,7 +174,7 @@ struct NewAccountView: View {
                             })
                             watchController.addAccountToWatchList(watch: watch)
                             await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                            if(accountType.elementsEqual("Loan") && loanType.elementsEqual("consumer")) {
+                            if(accountType.elementsEqual("Loan") && loanType.elementsEqual("Consumer")) {
                                 accountController.addLoanAccountEMITransaction(account: newAccount, emiDate: loanPaymentDate, accountOpenedDate: accountOpenedDate, monthlyEmiAmount: monthlyEmi)
                             }
                         }

@@ -38,7 +38,7 @@ struct TransactionsView: View {
                                         .font(.system(size: 12))
                                         .foregroundColor(Color.navyBlue)
                                         .padding(.leading)
-                                    if(accountViewModel.account.loanType.elementsEqual("consumer")) {
+                                    if(accountViewModel.account.loanType.elementsEqual("Consumer")) {
                                         if(accountViewModel.accountTransactionList[i].paid) {
                                             Text("Paid")
                                                 .font(.system(size: 12).bold())
@@ -75,7 +75,7 @@ struct TransactionsView: View {
                         .contextMenu {
                             Label(accountViewModel.accountTransactionList[i].id!, systemImage: "info.square")
                             
-                            if(accountViewModel.accountTransactionList.count > 1 && !accountViewModel.account.loanType.elementsEqual("consumer")) {
+                            if(accountViewModel.accountTransactionList.count > 1 && !accountViewModel.account.loanType.elementsEqual("Consumer")) {
                                 Button(role: .destructive, action: {
                                     if(i==0) {
                                         var account = accountViewModel.account
@@ -118,7 +118,7 @@ struct TransactionsView: View {
                                 }, label: {
                                     Label("Delete", systemImage: "trash")
                                 })
-                            } else if(accountViewModel.account.loanType.elementsEqual("consumer")) {
+                            } else if(accountViewModel.account.loanType.elementsEqual("Consumer")) {
                                 if((i == (accountViewModel.accountTransactionList.count - accountViewModel.accountTransactionList.filter { item in
                                     item.paid
                                 }.count) - 1) && accountViewModel.accountTransactionList[i].timestamp<=Date.now) {
