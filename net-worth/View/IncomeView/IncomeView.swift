@@ -23,7 +23,7 @@ struct IncomeView: View {
     
     @State private var showingSelectDefaultCurrencyAlert = false
     
-    fileprivate func financialYear(startYear: String, endYear: String) -> Text {
+    private func financialYear(startYear: String, endYear: String) -> Text {
         return Text(startYear + "-" + endYear)
     }
     
