@@ -227,7 +227,7 @@ struct NewAccountView: View {
     }
     
     var accountOpenedDatePicker: some View {
-        DatePicker("Opened date", selection: $accountOpenedDate, in: ...Date(), displayedComponents: [.date, .hourAndMinute])
+        DatePicker("Opened date", selection: $accountOpenedDate, in: ...Date(), displayedComponents: [.date])
             .colorMultiply(Color.navyBlue)
     }
     
