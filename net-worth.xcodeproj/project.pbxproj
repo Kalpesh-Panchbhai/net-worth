@@ -19,6 +19,7 @@
 		7D3636FB292F9CCB0013B4E5 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */; };
 		7D3D5244299105A50021047B /* CommonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D5243299105A50021047B /* CommonController.swift */; };
 		7D3E3CBD2A1FABCD009538BA /* IncomeRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3E3CBC2A1FABCD009538BA /* IncomeRowView.swift */; };
+		7D3E3CBF2A1FC4FC009538BA /* RowAccountToWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3E3CBE2A1FC4FC009538BA /* RowAccountToWatchView.swift */; };
 		7D42520F291BE95C0001C41C /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D42520E291BE95C0001C41C /* AuthenticationView.swift */; };
 		7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D433CF529385DBB007FA625 /* FinanceController.swift */; };
 		7D433CF829386002007FA625 /* FinanceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D433CF729386002007FA625 /* FinanceModel.swift */; };
@@ -62,7 +63,7 @@
 		7D921C62298683B30014AC9E /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D921C61298683B30014AC9E /* LoginScreen.swift */; };
 		7D921C66298684790014AC9E /* +View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D921C65298684790014AC9E /* +View.swift */; };
 		7D9DF69F2939B80400BE4C9D /* CommonUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9DF69E2939B80400BE4C9D /* CommonUtils.swift */; };
-		7D9F6F58299CE18000F964EC /* SingleWatchListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9F6F57299CE18000F964EC /* SingleWatchListView.swift */; };
+		7D9F6F58299CE18000F964EC /* WatchDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9F6F57299CE18000F964EC /* WatchDetailView.swift */; };
 		7DA63A492995FACA00568FCA /* AccountDetailCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA63A482995FACA00568FCA /* AccountDetailCardView.swift */; };
 		7DA63A4B2996017D00568FCA /* AccountDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA63A4A2996017D00568FCA /* AccountDetailView.swift */; };
 		7DB205852A0CEB78001E03D6 /* MainScreenTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB205842A0CEB78001E03D6 /* MainScreenTabBarView.swift */; };
@@ -80,7 +81,7 @@
 		7DB98802299B6464004ED6D2 /* WatchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB98801299B6464004ED6D2 /* WatchController.swift */; };
 		7DB98804299B682F004ED6D2 /* NewWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB98803299B682F004ED6D2 /* NewWatchView.swift */; };
 		7DB98806299B708C004ED6D2 /* UpdateWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB98805299B708C004ED6D2 /* UpdateWatchView.swift */; };
-		7DB98808299B8A99004ED6D2 /* AddAccountToWatchListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB98807299B8A99004ED6D2 /* AddAccountToWatchListView.swift */; };
+		7DB98808299B8A99004ED6D2 /* AccountToWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB98807299B8A99004ED6D2 /* AccountToWatchView.swift */; };
 		7DC1C4972A1BBD3F00BE24A7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7DC1C4962A1BBD3F00BE24A7 /* GoogleService-Info.plist */; };
 		7DC46B4429A4A4B9000E311B /* NewIncomeTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC46B4329A4A4B9000E311B /* NewIncomeTypeView.swift */; };
 		7DC46B4629A4A513000E311B /* IncomeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC46B4529A4A513000E311B /* IncomeType.swift */; };
@@ -110,7 +111,7 @@
 		7DF878FE2A0F75B6008343EE /* DefaultCurrencyPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF878FD2A0F75B6008343EE /* DefaultCurrencyPicker.swift */; };
 		7DF879002A0F7842008343EE /* CurrencyPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF878FF2A0F7842008343EE /* CurrencyPicker.swift */; };
 		7DF879022A0F7872008343EE /* CurrencySelectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF879012A0F7872008343EE /* CurrencySelectionRow.swift */; };
-		7DF8CCF9299F444000267C29 /* WatchListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF8CCF8299F444000267C29 /* WatchListView.swift */; };
+		7DF8CCF9299F444000267C29 /* WatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF8CCF8299F444000267C29 /* WatchView.swift */; };
 		7DF8CCFD299FB86100267C29 /* AccountChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF8CCFC299FB86100267C29 /* AccountChartView.swift */; };
 		7DF9DB91298F978600831494 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF9DB90298F978600831494 /* Account.swift */; };
 		7DF9DB93298F98A800831494 /* AccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF9DB92298F98A800831494 /* AccountViewModel.swift */; };
@@ -153,6 +154,7 @@
 		7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
 		7D3D5243299105A50021047B /* CommonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonController.swift; sourceTree = "<group>"; };
 		7D3E3CBC2A1FABCD009538BA /* IncomeRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeRowView.swift; sourceTree = "<group>"; };
+		7D3E3CBE2A1FC4FC009538BA /* RowAccountToWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowAccountToWatchView.swift; sourceTree = "<group>"; };
 		7D42520E291BE95C0001C41C /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		7D433CF529385DBB007FA625 /* FinanceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceController.swift; sourceTree = "<group>"; };
 		7D433CF729386002007FA625 /* FinanceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceModel.swift; sourceTree = "<group>"; };
@@ -194,7 +196,7 @@
 		7D921C61298683B30014AC9E /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
 		7D921C65298684790014AC9E /* +View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+View.swift"; sourceTree = "<group>"; };
 		7D9DF69E2939B80400BE4C9D /* CommonUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonUtils.swift; sourceTree = "<group>"; };
-		7D9F6F57299CE18000F964EC /* SingleWatchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleWatchListView.swift; sourceTree = "<group>"; };
+		7D9F6F57299CE18000F964EC /* WatchDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDetailView.swift; sourceTree = "<group>"; };
 		7DA63A482995FACA00568FCA /* AccountDetailCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailCardView.swift; sourceTree = "<group>"; };
 		7DA63A4A2996017D00568FCA /* AccountDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailView.swift; sourceTree = "<group>"; };
 		7DB205842A0CEB78001E03D6 /* MainScreenTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenTabBarView.swift; sourceTree = "<group>"; };
@@ -212,7 +214,7 @@
 		7DB98801299B6464004ED6D2 /* WatchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchController.swift; sourceTree = "<group>"; };
 		7DB98803299B682F004ED6D2 /* NewWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewWatchView.swift; sourceTree = "<group>"; };
 		7DB98805299B708C004ED6D2 /* UpdateWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateWatchView.swift; sourceTree = "<group>"; };
-		7DB98807299B8A99004ED6D2 /* AddAccountToWatchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAccountToWatchListView.swift; sourceTree = "<group>"; };
+		7DB98807299B8A99004ED6D2 /* AccountToWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountToWatchView.swift; sourceTree = "<group>"; };
 		7DC1C4962A1BBD3F00BE24A7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7DC46B4329A4A4B9000E311B /* NewIncomeTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewIncomeTypeView.swift; sourceTree = "<group>"; };
 		7DC46B4529A4A513000E311B /* IncomeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeType.swift; sourceTree = "<group>"; };
@@ -242,7 +244,7 @@
 		7DF878FD2A0F75B6008343EE /* DefaultCurrencyPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCurrencyPicker.swift; sourceTree = "<group>"; };
 		7DF878FF2A0F7842008343EE /* CurrencyPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPicker.swift; sourceTree = "<group>"; };
 		7DF879012A0F7872008343EE /* CurrencySelectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectionRow.swift; sourceTree = "<group>"; };
-		7DF8CCF8299F444000267C29 /* WatchListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchListView.swift; sourceTree = "<group>"; };
+		7DF8CCF8299F444000267C29 /* WatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchView.swift; sourceTree = "<group>"; };
 		7DF8CCFC299FB86100267C29 /* AccountChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountChartView.swift; sourceTree = "<group>"; };
 		7DF9DB90298F978600831494 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		7DF9DB92298F98A800831494 /* AccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewModel.swift; sourceTree = "<group>"; };
@@ -570,11 +572,12 @@
 		7DF8CCFB299F445300267C29 /* WatchView */ = {
 			isa = PBXGroup;
 			children = (
-				7DF8CCF8299F444000267C29 /* WatchListView.swift */,
+				7DF8CCF8299F444000267C29 /* WatchView.swift */,
+				7D9F6F57299CE18000F964EC /* WatchDetailView.swift */,
 				7DB98803299B682F004ED6D2 /* NewWatchView.swift */,
 				7DB98805299B708C004ED6D2 /* UpdateWatchView.swift */,
-				7DB98807299B8A99004ED6D2 /* AddAccountToWatchListView.swift */,
-				7D9F6F57299CE18000F964EC /* SingleWatchListView.swift */,
+				7DB98807299B8A99004ED6D2 /* AccountToWatchView.swift */,
+				7D3E3CBE2A1FC4FC009538BA /* RowAccountToWatchView.swift */,
 			);
 			path = WatchView;
 			sourceTree = "<group>";
@@ -815,9 +818,10 @@
 				7D5A75602A04FB11001646A2 /* AddWatchListToAccountView.swift in Sources */,
 				7DB58AB529967B2E00B93592 /* AccountListView.swift in Sources */,
 				7D14A8F02A0253A9002FC324 /* AccountWatchListChartView.swift in Sources */,
+				7D3E3CBF2A1FC4FC009538BA /* RowAccountToWatchView.swift in Sources */,
 				7D2C76202A0B5B8900CE606C /* ColorExtension.swift in Sources */,
 				7D65547629A107DC0008A8E2 /* ChartData.swift in Sources */,
-				7DB98808299B8A99004ED6D2 /* AddAccountToWatchListView.swift in Sources */,
+				7DB98808299B8A99004ED6D2 /* AccountToWatchView.swift in Sources */,
 				7DC97A2C29223ADB003F69D4 /* NewIncomeView.swift in Sources */,
 				7DF9DB95298F9C2600831494 /* AccountTransaction.swift in Sources */,
 				7DEC3B802938A38B002E9C8B /* FinanceDetailModel.swift in Sources */,
@@ -838,7 +842,7 @@
 				7DF8CCFD299FB86100267C29 /* AccountChartView.swift in Sources */,
 				7D79FA5D291B7431004A2ECF /* net_worth.xcdatamodeld in Sources */,
 				7DC46B4829A4C5A0000E311B /* IncomeTypeView.swift in Sources */,
-				7D9F6F58299CE18000F964EC /* SingleWatchListView.swift in Sources */,
+				7D9F6F58299CE18000F964EC /* WatchDetailView.swift in Sources */,
 				7D3636FB292F9CCB0013B4E5 /* NotificationsView.swift in Sources */,
 				7D5F29112A0FD0B900D365DD /* NetworkMonitor.swift in Sources */,
 				7D1C72642A06549B00022FCB /* ImportExportViewModel.swift in Sources */,
@@ -868,7 +872,7 @@
 				7DB987FE299B6365004ED6D2 /* Watch.swift in Sources */,
 				7D79FA87291B803A004A2ECF /* AccountController.swift in Sources */,
 				7DC46B4A29A4C5B0000E311B /* IncomeTagView.swift in Sources */,
-				7DF8CCF9299F444000267C29 /* WatchListView.swift in Sources */,
+				7DF8CCF9299F444000267C29 /* WatchView.swift in Sources */,
 				7DF4F39929A3A88400E5C1E1 /* NewIncomeTagView.swift in Sources */,
 				7D85D032298D2ADD0019F85E /* IncomeViewModel.swift in Sources */,
 				7DE42FC02934F69200D4DA0A /* UpdateBalanceAccountView.swift in Sources */,

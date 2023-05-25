@@ -27,7 +27,7 @@ struct MainScreenView: View {
                 MainScreenTabBarContainerView(accountViewModel: accountViewModel, incomeViewModel : incomeViewModel, watchViewModel: watchViewModel, selection: $tabSelection, content: {
                     AccountCardList(accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                         .tabBarItem(tab: .account, selection: $tabSelection)
-                    WatchListView(watchViewModel: watchViewModel)
+                    WatchView(watchViewModel: watchViewModel)
                         .tabBarItem(tab: .watchlist, selection: $tabSelection)
                     IncomeView(incomeViewModel: incomeViewModel)
                         .tabBarItem(tab: .income, selection: $tabSelection)

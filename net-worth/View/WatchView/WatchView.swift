@@ -7,19 +7,20 @@
 
 import SwiftUI
 
-struct WatchListView: View {
-    
-    @StateObject var watchViewModel: WatchViewModel
-    
-    @State private var newWatchListViewOpen = false
-    @State private var updateWatchListViewOpen = false
+struct WatchView: View {
     
     var watchController = WatchController()
+    
+    @State var newWatchListViewOpen = false
+    @State var updateWatchViewOpen = false
+    
+    @StateObject var watchViewModel: WatchViewModel
     
     var body: some View {
         NavigationView {
             ZStack {
                 if (!watchViewModel.watchListLoad) {
+                    //MARK: Loading View
                     ZStack {
                         Color.navyBlue.ignoresSafeArea()
                         ProgressView().tint(Color.lightBlue)
@@ -28,7 +29,7 @@ struct WatchListView: View {
                     List {
                         ForEach(watchViewModel.watchList, id: \.self) { watchList in
                             NavigationLink(destination: {
-                                SingleWatchListView(watch: watchList, watchViewModel: watchViewModel)
+                                WatchDetailView(watch: watchList, watchViewModel: watchViewModel)
                                     .toolbarRole(.editor)
                             }, label: {
                                 HStack {
@@ -41,17 +42,19 @@ struct WatchListView: View {
                             .contextMenu {
                                 Label(watchList.id!, systemImage: "info.square")
                             }
+                            // MARK: Update
                             .swipeActions(edge: .leading, content: {
                                 if(watchList.accountName != "All") {
                                     Button("Update") {
                                         Task.init {
                                             await watchViewModel.getWatchList(id: watchList.id!)
                                         }
-                                        self.updateWatchListViewOpen.toggle()
+                                        self.updateWatchViewOpen.toggle()
                                     }
                                     .tint(.green)
                                 }
                             })
+                            // MARK: Delete
                             .swipeActions(edge: .trailing, content: {
                                 if(watchList.accountName != "All") {
                                     Button("Delete") {
@@ -75,6 +78,7 @@ struct WatchListView: View {
                 }
             }
             .toolbar {
+                // MARK: Add New Watch ToolbarItem
                 ToolbarItem(content: {
                     Button(action: {
                         self.newWatchListViewOpen.toggle()
@@ -86,11 +90,13 @@ struct WatchListView: View {
                     .font(.system(size: 14).bold())
                 })
             }
+            // MARK: New Watch Sheet View
             .sheet(isPresented: $newWatchListViewOpen) {
                 NewWatchView(watchViewModel: watchViewModel)
                     .presentationDetents([.medium])
             }
-            .sheet(isPresented: $updateWatchListViewOpen) {
+            // MARK: Update Watch Sheet View
+            .sheet(isPresented: $updateWatchViewOpen) {
                 UpdateWatchView(watchViewModel: watchViewModel)
                     .presentationDetents([.medium])
             }
