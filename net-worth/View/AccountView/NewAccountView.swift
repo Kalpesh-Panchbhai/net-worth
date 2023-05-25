@@ -60,6 +60,10 @@ struct NewAccountView: View {
                         paymentReminder = false
                         currencySelected = SettingsController().getDefaultCurrency()
                         selectedWatchList = Watch()
+                        isPlus = true
+                        loanPaymentDate = 1
+                        monthlyEmi = 0.0
+                        accountOpenedDate = Date()
                     }
                     if(accountType == "Saving") {
                         nameField(labelName: "Account Name")
@@ -273,18 +277,28 @@ struct NewAccountView: View {
         HStack {
             Text("Current Balance")
             Spacer()
-            Button(action: {
-                if isPlus {
-                    isPlus = false
-                }else {
-                    isPlus = true
-                }
-            }, label: {
-                Label("", systemImage: isPlus ? "plus" : "minus")
-            })
+            ZStack {
+                RoundedRectangle(cornerRadius: 6)
+                    .frame(width: 25, height: 25)
+                    .foregroundColor(Color.white)
+                    .shadow(color: Color.navyBlue, radius: 3)
+                Button(action: {
+                    if isPlus {
+                        isPlus = false
+                    }else {
+                        isPlus = true
+                    }
+                }, label: {
+                    Image(systemName: isPlus ? "plus" : "minus")
+                        .foregroundColor(isPlus ? Color.green : Color.red)
+                        .bold()
+                })
+                .font(.system(size: 14).bold())
+            }
             Spacer()
             TextField("Current Balance", value: $currentBalance, formatter: Double().formatter())
                 .keyboardType(.decimalPad)
+                .multilineTextAlignment(.trailing)
         }
     }
     
