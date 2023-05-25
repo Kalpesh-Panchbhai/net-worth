@@ -77,15 +77,9 @@ struct IncomeView: View {
                                 // MARK: List View Refreshable
                                 .refreshable {
                                     if(!filterIncomeType.isEmpty || !filterIncomeTag.isEmpty || !filterYear.isEmpty || !filterFinancialYear.isEmpty) {
-                                        Task.init {
-                                            await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                        }
+                                        updateDataWithFilter()
                                     } else {
-                                        Task.init {
-                                            await incomeViewModel.getTotalBalance()
-                                            await incomeViewModel.getIncomeList()
-                                        }
+                                        updateData()
                                     }
                                 }
                                 // MARK: Chart Sheet View
@@ -115,10 +109,7 @@ struct IncomeView: View {
                                                         ForEach(incomeViewModel.incomeTypeList, id: \.self) { item in
                                                             Button(action: {
                                                                 filterIncomeType = item.name
-                                                                Task.init {
-                                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                                                }
+                                                                updateDataWithFilter()
                                                             }, label: {
                                                                 Text(item.name)
                                                             })
@@ -133,10 +124,7 @@ struct IncomeView: View {
                                                         ForEach(incomeViewModel.incomeTagList, id: \.self) { item in
                                                             Button(action: {
                                                                 filterIncomeTag = item.name
-                                                                Task.init {
-                                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                                                }
+                                                                updateDataWithFilter()
                                                             }, label: {
                                                                 Text(item.name)
                                                             })
@@ -152,10 +140,7 @@ struct IncomeView: View {
                                                             Button(action: {
                                                                 filterYear = item
                                                                 filterFinancialYear = ""
-                                                                Task.init {
-                                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                                                }
+                                                                updateDataWithFilter()
                                                             }, label: {
                                                                 Text(item)
                                                             })
@@ -171,10 +156,7 @@ struct IncomeView: View {
                                                             Button(action: {
                                                                 filterYear = ""
                                                                 filterFinancialYear = item
-                                                                Task.init {
-                                                                    await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                                                }
+                                                                updateDataWithFilter()
                                                             }, label: {
                                                                 Text(item)
                                                             })
@@ -222,10 +204,7 @@ struct IncomeView: View {
                             filterIncomeTag = ""
                             filterYear = ""
                             filterFinancialYear = ""
-                            Task.init {
-                                await incomeViewModel.getTotalBalance()
-                                await incomeViewModel.getIncomeList()
-                            }
+                            updateData()
                         }, label: {
                             Text("Reset")
                                 .foregroundColor(Color.lightBlue)
@@ -273,6 +252,20 @@ struct IncomeView: View {
                     await incomeViewModel.getIncomeFinancialYearList()
                 }
             }
+        }
+    }
+    
+    private func updateDataWithFilter() {
+        Task.init {
+            await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+        }
+    }
+    
+    private func updateData() {
+        Task.init {
+            await incomeViewModel.getTotalBalance()
+            await incomeViewModel.getIncomeList()
         }
     }
 }
