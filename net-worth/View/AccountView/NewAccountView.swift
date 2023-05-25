@@ -64,7 +64,7 @@ struct NewAccountView: View {
                     if(accountType == "Saving") {
                         nameField(labelName: "Account Name")
                             .colorMultiply(Color.navyBlue)
-                        currentBalanceField()
+                        currentBalanceField
                             .foregroundColor(Color.navyBlue)
                         CurrencyPicker(currenySelected: $currencySelected)
                             .colorMultiply(Color.navyBlue)
@@ -74,7 +74,7 @@ struct NewAccountView: View {
                     else if(accountType == "Credit Card") {
                         nameField(labelName: "Credit Card Name")
                             .colorMultiply(Color.navyBlue)
-                        currentBalanceField()
+                        currentBalanceField
                             .foregroundColor(Color.navyBlue)
                         CurrencyPicker(currenySelected: $currencySelected)
                             .colorMultiply(Color.navyBlue)
@@ -96,10 +96,10 @@ struct NewAccountView: View {
                         
                         nameField(labelName: "Loan Name")
                             .colorMultiply(Color.navyBlue)
-                        currentBalanceField()
+                        currentBalanceField
                             .foregroundColor(Color.navyBlue)
                         if(loanType.elementsEqual("Consumer")) {
-                            monthlyEMIField()
+                            monthlyEMIField
                                 .foregroundColor(Color.navyBlue)
                             loanPaymentDateField(labelName: "Loan payment date")
                                 .colorMultiply(Color.navyBlue)
@@ -117,7 +117,7 @@ struct NewAccountView: View {
                     } else if(accountType == "Other") {
                         nameField(labelName: "Account Name")
                             .colorMultiply(Color.navyBlue)
-                        currentBalanceField()
+                        currentBalanceField
                             .foregroundColor(Color.navyBlue)
                         CurrencyPicker(currenySelected: $currencySelected)
                             .colorMultiply(Color.navyBlue)
@@ -269,8 +269,8 @@ struct NewAccountView: View {
         }
     }
     
-    private func currentBalanceField() -> HStack<TupleView<(Text, Spacer, Button<Label<Text, Image>>, Spacer, some View)>> {
-        return HStack {
+    private var currentBalanceField: some View {
+        HStack {
             Text("Current Balance")
             Spacer()
             Button(action: {
@@ -288,8 +288,8 @@ struct NewAccountView: View {
         }
     }
     
-    private func monthlyEMIField() -> HStack<TupleView<(Text, Spacer, some View)>> {
-        return HStack {
+    private var monthlyEMIField: some View {
+        HStack {
             Text("Monthly EMI")
             Spacer()
             TextField("Monthly EMI", value: $monthlyEmi, formatter: Double().formatter())
