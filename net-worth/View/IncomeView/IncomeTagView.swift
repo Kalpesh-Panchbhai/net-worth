@@ -48,6 +48,8 @@ struct IncomeTagView: View {
                             }
                         }
                         .contextMenu {
+                            Label(item.id!, systemImage: "info.square")
+                            
                             if(!item.isdefault) {
                                 Button(action: {
                                     incomeController.makeOtherIncomeTagNonDefault(documentID: item.id!)
