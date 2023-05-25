@@ -98,10 +98,12 @@ struct NewAccountView: View {
                             .colorMultiply(Color.navyBlue)
                         currentBalanceField()
                             .foregroundColor(Color.navyBlue)
-                        monthlyEMIField()
-                            .foregroundColor(Color.navyBlue)
-                        loanPaymentDateField(labelName: "Loan payment date")
-                            .colorMultiply(Color.navyBlue)
+                        if(loanType.elementsEqual("Consumer")) {
+                            monthlyEMIField()
+                                .foregroundColor(Color.navyBlue)
+                            loanPaymentDateField(labelName: "Loan payment date")
+                                .colorMultiply(Color.navyBlue)
+                        }
                         CurrencyPicker(currenySelected: $currencySelected)
                             .colorMultiply(Color.navyBlue)
                         enablePaymentReminderField(labelName: "Enable Loan Payment Reminder")
