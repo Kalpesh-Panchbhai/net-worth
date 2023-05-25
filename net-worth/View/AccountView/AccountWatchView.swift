@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AccountWatchListView: View {
+struct AccountWatchView: View {
     
     var account: Account
     

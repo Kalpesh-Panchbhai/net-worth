@@ -1,52 +1,13 @@
 //
-//  AddWatchListAccountView.swift
+//  SwiftUIView.swift
 //  net-worth
 //
-//  Created by Kalpesh Panchbhai on 05/05/23.
+//  Created by Kalpesh Panchbhai on 25/05/23.
 //
 
 import SwiftUI
 
-struct AddWatchListToAccountView: View {
-    
-    @Environment(\.scenePhase) private var scenePhase
-    @State private var scenePhaseBlur = 0
-    
-    @ObservedObject var watchViewModel: WatchViewModel
-    
-    var account: Account
-    
-    var body: some View {
-        NavigationView {
-            VStack {
-                Spacer(minLength: 20)
-                ScrollView(.vertical) {
-                    LazyVStack {
-                        ForEach(watchViewModel.watchList, id: \.self) { watchList in
-                            AddWatchListForAccountView(account: account, watch: watchList, isAdded: watchList.accountID.contains(account.id!))
-                        }
-                    }
-                }
-            }
-            .background(Color.navyBlue)
-        }
-        .blur(radius: CGFloat(scenePhaseBlur))
-        .onChange(of: scenePhase, perform: { value in
-            if(value == .active) {
-                scenePhaseBlur = 0
-            } else {
-                scenePhaseBlur = 5
-            }
-        })
-        .onAppear {
-            Task.init {
-                await watchViewModel.getAllWatchList()
-            }
-        }
-    }
-}
-
-struct AddWatchListForAccountView: View {
+struct RowWatchToAccountView: View {
     
     var account: Account
     var watchController = WatchController()

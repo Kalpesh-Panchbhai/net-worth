@@ -55,7 +55,7 @@ struct AccountDetailView: View {
                 } else if(tabItem == 2) {
                     AccountChartView(account: account)
                 } else {
-                    AccountWatchListView(account: account, watchViewModel: watchViewModel)
+                    AccountWatchView(account: account, watchViewModel: watchViewModel)
                 }
             }
             .alert(isPresented: $showZeroAlert) {
@@ -228,7 +228,7 @@ struct AccountDetailView: View {
                 await watchViewModel.getAllWatchList()
             }
         }, content: {
-            AddWatchListToAccountView(watchViewModel: watchViewModel, account: account)
+            WatchToAccountView(account: account, watchViewModel: watchViewModel)
         })
         .background(Color.navyBlue)
     }
