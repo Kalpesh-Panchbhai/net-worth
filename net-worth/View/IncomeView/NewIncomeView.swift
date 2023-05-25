@@ -114,6 +114,7 @@ struct NewIncomeView: View {
                             .multilineTextAlignment(.trailing)
                     }
                     .foregroundColor(Color.navyBlue)
+                    
                     HStack{
                         DatePicker("Credited on", selection: $date, in: ...Date(), displayedComponents: [.date])
                     }
@@ -225,7 +226,7 @@ struct NewIncomeView: View {
     private func allFieldsFilled () -> Bool {
         if !incomeTypeSelected.name.isEmpty && !incomeTagSelected.name.isEmpty && !currencySelected.name.isEmpty && !amount.isEmpty && !taxPaid.isEmpty {
             return true
-        }else {
+        } else {
             return false
         }
     }
