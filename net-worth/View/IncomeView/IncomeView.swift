@@ -255,17 +255,17 @@ struct IncomeView: View {
         }
     }
     
-    private func updateDataWithFilter() {
-        Task.init {
-            await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-        }
-    }
-    
     private func updateData() {
         Task.init {
             await incomeViewModel.getTotalBalance()
             await incomeViewModel.getIncomeList()
+        }
+    }
+    
+    private func updateDataWithFilter() {
+        Task.init {
+            await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
         }
     }
 }
