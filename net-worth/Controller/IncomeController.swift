@@ -7,24 +7,13 @@
 
 import FirebaseFirestore
 
+// MARK: Income
 class IncomeController {
     
     private func getIncomeCollection() -> CollectionReference {
         return UserController()
             .getCurrentUserDocument()
             .collection(ConstantUtils.incomeCollectionName)
-    }
-    
-    private func getIncomeTagCollection() -> CollectionReference {
-        return UserController()
-            .getCurrentUserDocument()
-            .collection(ConstantUtils.incomeTagCollectionName)
-    }
-    
-    private func getIncomeTypeCollection() -> CollectionReference {
-        return UserController()
-            .getCurrentUserDocument()
-            .collection(ConstantUtils.incomeTypeCollectionName)
     }
     
     public func addIncome(type: IncomeType, amount: String, date: Date, taxPaid: String, currency: String, tag: IncomeTag) async {
@@ -52,24 +41,6 @@ class IncomeController {
     
     public func deleteIncomes() {
         CommonController.delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeCollectionName))
-    }
-    
-    public func fetchTotalAmount() async throws -> Double {
-        var total = 0.0
-        try await withUnsafeThrowingContinuation { continuation in
-            getIncomeCollection()
-                .getDocuments { snapshot, error in
-                    if error  == nil {
-                        if let snapshot = snapshot {
-                            snapshot.documents.forEach { doc in
-                                total += doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0
-                            }
-                            continuation.resume()
-                        }
-                    }
-                }
-        }
-        return total
     }
     
     func getIncomeList() async throws -> [Income] {
@@ -222,6 +193,24 @@ class IncomeController {
         return incomeList
     }
     
+    public func fetchTotalAmount() async throws -> Double {
+        var total = 0.0
+        try await withUnsafeThrowingContinuation { continuation in
+            getIncomeCollection()
+                .getDocuments { snapshot, error in
+                    if error  == nil {
+                        if let snapshot = snapshot {
+                            snapshot.documents.forEach { doc in
+                                total += doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0
+                            }
+                            continuation.resume()
+                        }
+                    }
+                }
+        }
+        return total
+    }
+    
     public func fetchTotalAmount(incomeType: String, incomeTag: String, year: String, financialYear: String) async throws -> Double {
         var total = 0.0
         try await withUnsafeThrowingContinuation { continuation in
@@ -303,75 +292,67 @@ class IncomeController {
         return total
     }
     
-    func getIncomeTagList() async throws -> [IncomeTag] {
-        var incomeTagList = [IncomeTag]()
-        incomeTagList = try await getIncomeTagCollection()
-            .order(by: ConstantUtils.incomeTagKeyName)
-            .getDocuments()
-            .documents
-            .map { doc in
-                return IncomeTag(id: doc.documentID,
-                                 name: doc[ConstantUtils.incomeTagKeyName] as? String ?? "",
-                                 isdefault: doc[ConstantUtils.incomeTagKeyIsDefault] as? Bool ?? false)
-            }
+    func getIncomeYearList() async throws -> [String] {
+        var incomeList = [Income]()
+        incomeList = try await getIncomeList()
         
-        return incomeTagList
-    }
-    
-    public func addIncomeTag(tag: IncomeTag) {
-        do {
-            let documentID = try getIncomeTagCollection()
-                .addDocument(from: tag)
-                .documentID
+        let grouped = Dictionary(grouping: incomeList) { (income) -> Int in
+            let date = Calendar.current.dateComponents([.year], from: income.creditedOn)
             
-            print("New Income Tag Added : " + documentID)
+            return date.year ?? 0
             
-            if(tag.isdefault) {
-                makeOtherIncomeTagNonDefault(documentID: documentID)
+        }
+        return grouped.map({
+            $0.key
+        }).sorted(by: {
+            $0 > $1
+        }).map { value in
+            return String(value).replacingOccurrences(of: ",", with: "")
+        }
+        
+    }
+    
+    func getIncomeFinancialYearList() async throws -> [String] {
+        var incomeList = [Income]()
+        incomeList = try await getIncomeList()
+        var returnResponse = [String]()
+        if(incomeList.isEmpty) {
+            return returnResponse
+        }
+        var financialYearAvailable = true
+        let firstYear = Calendar.current.dateComponents([.year], from: incomeList.last!.creditedOn).year!
+        var nextYear = firstYear + 1
+        let firstFinancialyear = String(firstYear) + "-" + String(nextYear)
+        returnResponse.insert(firstFinancialyear, at: 0)
+        let grouped = Dictionary(grouping: incomeList) { (income) -> String in
+            let date = Calendar.current.dateComponents([.year, .month], from: income.creditedOn)
+            
+            return String(date.year!) + " " + String(date.month!)
+            
+        }
+        while(financialYearAvailable) {
+            financialYearAvailable = grouped.contains(where: { key, value in
+                key == String(nextYear) + " 4"
+            })
+            
+            if(financialYearAvailable) {
+                let firstYear = nextYear
+                nextYear = nextYear + 1
+                let financialyear = String(firstYear) + "-" + String(nextYear)
+                returnResponse.insert(financialyear, at: 0)
             }
-        } catch {
-            print(error)
         }
+        return returnResponse
     }
+}
+
+// MARK: Income Type
+extension IncomeController {
     
-    public func makeOtherIncomeTagNonDefault(documentID: String) {
-        getIncomeTagCollection()
-            .getDocuments { snapshot, error in
-                if error  == nil {
-                    if let snapshot = snapshot {
-                        snapshot.documents.forEach { doc in
-                            if(!doc.documentID.elementsEqual(documentID) && (doc[ConstantUtils.incomeTagKeyIsDefault] as? Bool ?? false)) {
-                                let updatedIncomeTag = IncomeTag(id: doc.documentID,
-                                                                 name: doc[ConstantUtils.incomeTagKeyName] as? String ?? "",
-                                                                 isdefault: false)
-                                self.updateIncomeTag(tag: updatedIncomeTag)
-                            }
-                        }
-                    }
-                }
-            }
-    }
-    
-    public func addDefaultIncomeTag() async throws {
-        let count = try await getIncomeTagList().count
-        if(count == 0) {
-            let incomeTag = IncomeTag(name: "None", isdefault: false)
-            addIncomeTag(tag: incomeTag)
-        }
-    }
-    
-    public func updateIncomeTag(tag: IncomeTag) {
-        do {
-            try getIncomeTagCollection()
-                .document(tag.id!)
-                .setData(from: tag, merge: true)
-        } catch {
-            print(error)
-        }
-    }
-    
-    public func deleteIncomeTags() {
-        CommonController.delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeTagCollectionName))
+    private func getIncomeTypeCollection() -> CollectionReference {
+        return UserController()
+            .getCurrentUserDocument()
+            .collection(ConstantUtils.incomeTypeCollectionName)
     }
     
     func getIncomeTypeList() async throws -> [IncomeType] {
@@ -445,57 +426,86 @@ class IncomeController {
         CommonController.delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeTypeCollectionName))
     }
     
-    func getIncomeYearList() async throws -> [String] {
-        var incomeList = [Income]()
-        incomeList = try await getIncomeList()
-        
-        let grouped = Dictionary(grouping: incomeList) { (income) -> Int in
-            let date = Calendar.current.dateComponents([.year], from: income.creditedOn)
-            
-            return date.year ?? 0
-            
-        }
-        return grouped.map({
-            $0.key
-        }).sorted(by: {
-            $0 > $1
-        }).map { value in
-            return String(value).replacingOccurrences(of: ",", with: "")
-        }
-        
-    }
-    
-    func getIncomeFinancialYearList() async throws -> [String] {
-        var incomeList = [Income]()
-        incomeList = try await getIncomeList()
-        var returnResponse = [String]()
-        if(incomeList.isEmpty) {
-            return returnResponse
-        }
-        var financialYearAvailable = true
-        let firstYear = Calendar.current.dateComponents([.year], from: incomeList.last!.creditedOn).year!
-        var nextYear = firstYear + 1
-        let firstFinancialyear = String(firstYear) + "-" + String(nextYear)
-        returnResponse.insert(firstFinancialyear, at: 0)
-        let grouped = Dictionary(grouping: incomeList) { (income) -> String in
-            let date = Calendar.current.dateComponents([.year, .month], from: income.creditedOn)
-            
-            return String(date.year!) + " " + String(date.month!)
-            
-        }
-        while(financialYearAvailable) {
-            financialYearAvailable = grouped.contains(where: { key, value in
-                key == String(nextYear) + " 4"
-            })
-            
-            if(financialYearAvailable) {
-                let firstYear = nextYear
-                nextYear = nextYear + 1
-                let financialyear = String(firstYear) + "-" + String(nextYear)
-                returnResponse.insert(financialyear, at: 0)
-            }
-        }
-        return returnResponse
-    }
 }
 
+// MARK: Income Tag
+extension IncomeController {
+    
+    private func getIncomeTagCollection() -> CollectionReference {
+        return UserController()
+            .getCurrentUserDocument()
+            .collection(ConstantUtils.incomeTagCollectionName)
+    }
+    
+    func getIncomeTagList() async throws -> [IncomeTag] {
+        var incomeTagList = [IncomeTag]()
+        incomeTagList = try await getIncomeTagCollection()
+            .order(by: ConstantUtils.incomeTagKeyName)
+            .getDocuments()
+            .documents
+            .map { doc in
+                return IncomeTag(id: doc.documentID,
+                                 name: doc[ConstantUtils.incomeTagKeyName] as? String ?? "",
+                                 isdefault: doc[ConstantUtils.incomeTagKeyIsDefault] as? Bool ?? false)
+            }
+        
+        return incomeTagList
+    }
+    
+    public func addIncomeTag(tag: IncomeTag) {
+        do {
+            let documentID = try getIncomeTagCollection()
+                .addDocument(from: tag)
+                .documentID
+            
+            print("New Income Tag Added : " + documentID)
+            
+            if(tag.isdefault) {
+                makeOtherIncomeTagNonDefault(documentID: documentID)
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    public func makeOtherIncomeTagNonDefault(documentID: String) {
+        getIncomeTagCollection()
+            .getDocuments { snapshot, error in
+                if error  == nil {
+                    if let snapshot = snapshot {
+                        snapshot.documents.forEach { doc in
+                            if(!doc.documentID.elementsEqual(documentID) && (doc[ConstantUtils.incomeTagKeyIsDefault] as? Bool ?? false)) {
+                                let updatedIncomeTag = IncomeTag(id: doc.documentID,
+                                                                 name: doc[ConstantUtils.incomeTagKeyName] as? String ?? "",
+                                                                 isdefault: false)
+                                self.updateIncomeTag(tag: updatedIncomeTag)
+                            }
+                        }
+                    }
+                }
+            }
+    }
+    
+    public func addDefaultIncomeTag() async throws {
+        let count = try await getIncomeTagList().count
+        if(count == 0) {
+            let incomeTag = IncomeTag(name: "None", isdefault: false)
+            addIncomeTag(tag: incomeTag)
+        }
+    }
+    
+    public func updateIncomeTag(tag: IncomeTag) {
+        do {
+            try getIncomeTagCollection()
+                .document(tag.id!)
+                .setData(from: tag, merge: true)
+        } catch {
+            print(error)
+        }
+    }
+    
+    public func deleteIncomeTags() {
+        CommonController.delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeTagCollectionName))
+    }
+    
+}
