@@ -33,7 +33,7 @@ struct WatchDetailView: View {
                     if(watchViewModel.watch.accountID.count > 0) {
                         // MARK: Balance Card
                         VStack {
-                            BalanceCardView(accountViewModel: accountViewModel, accountType: watch.accountName, isWatchListCardView: true, watchList: watchViewModel.watch)
+                            BalanceCardView(accountType: watch.accountName, isWatchListCardView: true, watchList: watchViewModel.watch, accountViewModel: accountViewModel)
                                 .frame(width: 360, height: 50)
                                 .cornerRadius(10)
                         }

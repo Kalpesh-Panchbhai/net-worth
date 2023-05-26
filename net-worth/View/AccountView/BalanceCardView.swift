@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct BalanceCardView: View {
-    
-    @StateObject var accountViewModel: AccountViewModel
-    
+
     var accountType: String
     var isWatchListCardView: Bool
+    
     @State var watchList: Watch
+    
+    @StateObject var accountViewModel: AccountViewModel
     
     var body: some View {
         ZStack {

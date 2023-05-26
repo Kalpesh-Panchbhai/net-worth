@@ -9,18 +9,19 @@ import SwiftUI
 
 struct NewAccountView: View {
     
-    @Environment(\.scenePhase) var scenePhase
-    @State var scenePhaseBlur = 0
+    var currencyList = CurrencyList().currencyList
+    var accountController = AccountController()
+    var financeController = FinanceController()
+    var watchController = WatchController()
     
+    @State var scenePhaseBlur = 0
     @State var accountType: String
     @State var loanType: String = "Consumer"
     @State var symbolType: String = "None"
     @State var accountName: String = ""
     @State var currencySelected: Currency = Currency()
-    var currencyList = CurrencyList().currencyList
     @State var filterCurrencyList = CurrencyList().currencyList
     @State var currencyChanged = false
-    
     @State var currentBalance: Double = 0.0
     @State var monthlyEmi: Double = 0.0
     @State var paymentReminder = false
@@ -28,20 +29,15 @@ struct NewAccountView: View {
     @State var loanPaymentDate = 1
     @State var dates = Array(1...28)
     @State var accountOpenedDate = Date()
-    
     @State var isPlus = true
+    @State var searchTerm: String = ""
+    @State var selectedWatchList = Watch()
     
-    var accountController = AccountController()
-    var financeController = FinanceController()
-    var watchController = WatchController()
+    @StateObject var watchViewModel = WatchViewModel()
+    @ObservedObject var accountViewModel : AccountViewModel
     
     @Environment(\.dismiss) var dismiss
-    
-    @State var searchTerm: String = ""
-    @StateObject var watchViewModel = WatchViewModel()
-    
-    @ObservedObject var accountViewModel : AccountViewModel
-    @State var selectedWatchList = Watch()
+    @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
         NavigationView {

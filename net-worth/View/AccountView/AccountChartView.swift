@@ -10,11 +10,12 @@ import Charts
 
 struct AccountChartView: View {
     
-    @StateObject var chartViewModel = ChartViewModel()
-    @StateObject var accountViewModel = AccountViewModel()
+    var account: Account
+    
     @State var range = "1M"
     
-    var account: Account
+    @StateObject var chartViewModel = ChartViewModel()
+    @StateObject var accountViewModel = AccountViewModel()
     
     var body: some View {
         VStack {
