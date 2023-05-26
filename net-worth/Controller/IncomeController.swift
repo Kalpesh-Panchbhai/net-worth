@@ -43,50 +43,7 @@ class IncomeController {
         CommonController.delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeCollectionName))
     }
     
-    func getIncomeList() async throws -> [Income] {
-        var incomeList = [Income]()
-        incomeList = try await getIncomeCollection()
-            .order(by: ConstantUtils.incomeKeyCreditedOn)
-            .getDocuments()
-            .documents
-            .map { doc in
-                return Income(id: doc.documentID,
-                              amount: doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0,
-                              taxpaid: doc[ConstantUtils.incomeKeyTaxPaid] as? Double ?? 0.0,
-                              creditedOn: (doc[ConstantUtils.incomeKeyCreditedOn] as? Timestamp)?.dateValue() ?? Date(),
-                              currency: doc[ConstantUtils.incomeKeyCurrency] as? String ?? "",
-                              type: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
-                              tag: doc[ConstantUtils.incomeKeyIncomeTag] as? String ?? "")
-            }
-        var cumAmount = 0.0
-        var cumTaxPaid = 0.0
-        incomeList = incomeList.map { value1 in
-            var sum = 0.0
-            var totalMonth = 0.0
-            cumAmount = cumAmount + value1.amount
-            cumTaxPaid = cumTaxPaid + value1.taxpaid
-            incomeList.forEach { value2 in
-                if(value1.creditedOn >= value2.creditedOn) {
-                    sum = sum + value2.amount
-                    totalMonth+=1
-                }
-            }
-            return Income(id: value1.id,
-                          amount: value1.amount,
-                          taxpaid: value1.taxpaid,
-                          creditedOn: value1.creditedOn,
-                          currency: value1.currency,
-                          type: value1.type,
-                          tag: value1.tag,
-                          avgAmount: sum / totalMonth,
-                          avgTaxPaid: cumTaxPaid / Double(incomeList.count),
-                          cumulativeAmount: cumAmount,
-                          cumulativeTaxPaid: cumTaxPaid)
-        }.reversed()
-        return incomeList
-    }
-    
-    func getIncomeList(incomeType: String, incomeTag: String, year: String, financialYear: String) async throws -> [Income] {
+    func getIncomeList(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async throws -> [Income] {
         var incomeList = [Income]()
         
         var query = getIncomeCollection()
@@ -193,25 +150,7 @@ class IncomeController {
         return incomeList
     }
     
-    public func fetchTotalAmount() async throws -> Double {
-        var total = 0.0
-        try await withUnsafeThrowingContinuation { continuation in
-            getIncomeCollection()
-                .getDocuments { snapshot, error in
-                    if error  == nil {
-                        if let snapshot = snapshot {
-                            snapshot.documents.forEach { doc in
-                                total += doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0
-                            }
-                            continuation.resume()
-                        }
-                    }
-                }
-        }
-        return total
-    }
-    
-    public func fetchTotalAmount(incomeType: String, incomeTag: String, year: String, financialYear: String) async throws -> Double {
+    public func fetchTotalAmount(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async throws -> Double {
         var total = 0.0
         try await withUnsafeThrowingContinuation { continuation in
             var query = getIncomeCollection()
@@ -309,7 +248,6 @@ class IncomeController {
         }).map { value in
             return String(value).replacingOccurrences(of: ",", with: "")
         }
-        
     }
     
     func getIncomeFinancialYearList() async throws -> [String] {

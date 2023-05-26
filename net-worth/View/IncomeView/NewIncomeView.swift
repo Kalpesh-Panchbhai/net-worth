@@ -141,12 +141,6 @@ struct NewIncomeView: View {
                     Button(action: {
                         Task.init {
                             await incomeController.addIncome(type: incomeTypeSelected, amount: amount, date: date, taxPaid: taxPaid, currency: currencySelected.code, tag: incomeTagSelected)
-                            await incomeViewModel.getTotalBalance()
-                            await incomeViewModel.getIncomeList()
-                            await incomeViewModel.getIncomeTagList()
-                            await incomeViewModel.getIncomeTypeList()
-                            await incomeViewModel.getIncomeYearList()
-                            await incomeViewModel.getIncomeFinancialYearList()
                         }
                         dismiss()
                     }, label: {
