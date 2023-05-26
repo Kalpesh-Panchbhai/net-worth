@@ -9,10 +9,10 @@ import SwiftUI
 
 struct DefaultCurrencyPicker: View {
     
-    @State private var filterCurrencyList = CurrencyList().currencyList
-    @Binding var currenySelected: Currency
-    
     var settingsController = SettingsController()
+    
+    @State var filterCurrencyList = CurrencyList().currencyList
+    @Binding var currenySelected: Currency
     
     var body: some View {
         NavigationLink(destination: {

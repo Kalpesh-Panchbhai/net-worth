@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CurrencyPicker: View {
     
-    @State private var filterCurrencyList = CurrencyList().currencyList
+    @State var filterCurrencyList = CurrencyList().currencyList
     @Binding var currenySelected: Currency
     
     var body: some View {

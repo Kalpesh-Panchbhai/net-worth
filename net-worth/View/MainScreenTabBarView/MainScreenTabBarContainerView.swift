@@ -9,12 +9,14 @@ import SwiftUI
 
 struct MainScreenTabBarContainerView<Content:View>: View {
     
+    let content: Content
+    
+    @Binding var selection: MainScreenTabBarItem
+    @State var tabs: [MainScreenTabBarItem] = []
+    
     @ObservedObject var accountViewModel: AccountViewModel
     @ObservedObject var incomeViewModel : IncomeViewModel
     @ObservedObject var watchViewModel: WatchViewModel
-    @Binding var selection: MainScreenTabBarItem
-    let content: Content
-    @State private var tabs: [MainScreenTabBarItem] = []
     
     init(accountViewModel: AccountViewModel, incomeViewModel : IncomeViewModel, watchViewModel: WatchViewModel, selection: Binding<MainScreenTabBarItem>, @ViewBuilder content: () -> Content) {
         self.accountViewModel = accountViewModel

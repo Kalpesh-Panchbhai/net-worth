@@ -15,7 +15,7 @@ struct MainScreenTabBarView: View {
     
     let tabs: [MainScreenTabBarItem]
     @Binding var selection: MainScreenTabBarItem
-    @Namespace private var namespace
+    @Namespace var namespace
     @State var localSelection: MainScreenTabBarItem
     var body: some View {
         tabBar

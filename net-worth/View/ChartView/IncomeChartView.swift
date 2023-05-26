@@ -10,10 +10,7 @@ import Charts
 
 struct IncomeChartView: View {
     
-    @Environment(\.scenePhase) private var scenePhase
-    @State private var scenePhaseBlur = 0
-    
-    @ObservedObject var incomeViewModel = IncomeViewModel()
+    @State var scenePhaseBlur = 0
     
     @State var currentActiveIncome: Income?
     @State var plotWidth: CGFloat = 0
@@ -25,6 +22,10 @@ struct IncomeChartView: View {
     
     @State var cumulativeView = false
     @State var taxPaidView = false
+    
+    @ObservedObject var incomeViewModel = IncomeViewModel()
+    
+    @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
         NavigationStack {

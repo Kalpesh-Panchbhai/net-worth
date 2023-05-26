@@ -11,21 +11,15 @@ import FirebaseFirestore
 
 class IncomeViewModel: ObservableObject {
     
+    var incomeController = IncomeController()
+    
     @Published var incomeList = [Income]()
-    
     @Published var incomeListLoaded = false
-    
     @Published var incomeTagList = [IncomeTag]()
-    
     @Published var incomeTypeList = [IncomeType]()
-    
     @Published var incomeYearList = [String]()
-    
     @Published var incomeFinancialYearList = [String]()
-    
     @Published var incomeTotalAmount = 0.0
-    
-    private var incomeController = IncomeController()
     
     func getTotalBalance() async {
         do {

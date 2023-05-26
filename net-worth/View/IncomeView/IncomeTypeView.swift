@@ -9,17 +9,18 @@ import SwiftUI
 
 struct IncomeTypeView: View {
     
-    @ObservedObject var incomeViewModel = IncomeViewModel()
+    var incomeController = IncomeController()
     
     @State var addNewIncomeTypeOpenView = false
     
-    private var incomeController = IncomeController()
+    @StateObject var incomeViewModel: IncomeViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         NavigationView {
             if(incomeViewModel.incomeTypeList.isEmpty) {
+                // MARK: Empty View
                 ZStack {
                     Color.navyBlue.ignoresSafeArea()
                     HStack {
@@ -74,6 +75,7 @@ struct IncomeTypeView: View {
             }
         }
         .toolbar {
+            // MARK: Add Income Type ToolbarItem
             ToolbarItem {
                 Button(action: {
                     self.addNewIncomeTypeOpenView.toggle()
@@ -85,6 +87,7 @@ struct IncomeTypeView: View {
                 .font(.system(size: 14).bold())
             }
         }
+        // MARK: Add New Income Type Sheet View
         .sheet(isPresented: $addNewIncomeTypeOpenView, content: {
             NewIncomeTypeView(incomeViewModel: incomeViewModel)
                 .presentationDetents([.medium])

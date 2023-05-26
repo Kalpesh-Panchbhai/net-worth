@@ -9,32 +9,34 @@ import SwiftUI
 
 struct MainScreenView: View {
     
-    @State public var tabSelection: MainScreenTabBarItem = .account
-    @Environment(\.scenePhase) private var scenePhase
-    @State private var scenePhaseBlur = 0
-    
-    @StateObject private var accountViewModel = AccountViewModel()
-    @StateObject private var watchViewModel = WatchViewModel()
-    @StateObject private var incomeViewModel = IncomeViewModel()
-    
-    @StateObject var networkMonitor = NetworkMonitor()
+    @State var tabSelection: MainScreenTabBarItem = .account
+    @State var scenePhaseBlur = 0
     @State var networkUnavailable = true
+    
+    @StateObject var accountViewModel = AccountViewModel()
+    @StateObject var watchViewModel = WatchViewModel()
+    @StateObject var incomeViewModel = IncomeViewModel()
+    @StateObject var networkMonitor = NetworkMonitor()
+    
+    @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
         NavigationStack {
+            // MARK: Tab View
             ZStack {
                 MainScreenTabBarContainerView(accountViewModel: accountViewModel, incomeViewModel : incomeViewModel, watchViewModel: watchViewModel, selection: $tabSelection, content: {
                     AccountCardList(accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                         .tabBarItem(tab: .account, selection: $tabSelection)
-                    WatchListView(watchViewModel: watchViewModel)
+                    WatchView(watchViewModel: watchViewModel)
                         .tabBarItem(tab: .watchlist, selection: $tabSelection)
                     IncomeView(incomeViewModel: incomeViewModel)
                         .tabBarItem(tab: .income, selection: $tabSelection)
                     ChartView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
                         .tabBarItem(tab: .chart, selection: $tabSelection)
-                    SettingsView()
+                    SettingsView(isAuthenticationRequired: SettingsController().isAuthenticationRequired(), currenySelected: SettingsController().getDefaultCurrency(), incomeViewModel: incomeViewModel)
                         .tabBarItem(tab: .setting, selection: $tabSelection)
                 })
+                // MARK: Network unavailable message
                 .alert("Network is unavailable. You can continue to use it, it will sync automatically once the network is available.", isPresented: $networkUnavailable) {
                     Button("OK", role: .cancel) { }
                 }

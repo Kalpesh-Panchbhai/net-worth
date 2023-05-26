@@ -9,17 +9,16 @@ import SwiftUI
 
 struct ChartView: View {
     
-    @ObservedObject var watchViewModel: WatchViewModel
-    
-    @ObservedObject var accountViewModel: AccountViewModel
-    
-    @State var watchListSelected = Watch()
     let defaultWatchListSelected = Watch(accountName: "Select")
     
+    @State var watchListSelected = Watch()
     @State var showingAssetsData = true
     @State var chartDataList = [Account]()
     @State var compareAssetsToLiabilities = false
     @State var multipleWatchListSelection = Set<Watch>()
+    
+    @ObservedObject var watchViewModel: WatchViewModel
+    @ObservedObject var accountViewModel: AccountViewModel
     
     var body: some View {
         NavigationView {

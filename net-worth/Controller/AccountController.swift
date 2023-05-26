@@ -12,8 +12,8 @@ import FirebaseFirestore
 //MARK: Account
 class AccountController {
     
-    private var notificationController = NotificationController()
-    private var watchController = WatchController()
+    var notificationController = NotificationController()
+    var watchController = WatchController()
     
     private func getAccountCollection() -> CollectionReference {
         return UserController()

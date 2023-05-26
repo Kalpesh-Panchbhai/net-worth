@@ -1,64 +1,13 @@
 //
-//  AddAccountWatchListView.swift
+//  SwiftUIView.swift
 //  net-worth
 //
-//  Created by Kalpesh Panchbhai on 14/02/23.
+//  Created by Kalpesh Panchbhai on 25/05/23.
 //
 
 import SwiftUI
 
-struct AddAccountToWatchListView: View {
-    
-    @Environment(\.scenePhase) private var scenePhase
-    @State private var scenePhaseBlur = 0
-    
-    @ObservedObject var accountViewModel = AccountViewModel()
-    @State var watch: Watch
-    
-    @State private var searchText = ""
-    
-    var body: some View {
-        NavigationView {
-            VStack {
-                Spacer(minLength: 20)
-                ScrollView(.vertical) {
-                    LazyVStack {
-                        ForEach(accountViewModel.sectionHeaders, id: \.self) { accountType in
-                            if(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 0) {
-                                HStack {
-                                    Text(accountType.uppercased())
-                                        .bold()
-                                        .foregroundColor(Color.lightBlue)
-                                        .font(.system(size: 15))
-                                }
-                                ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
-                                    AddAccountWatchView(account: account, watch: $watch, isAdded: watch.accountID.contains(account.id!), accountViewModel: accountViewModel)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            .background(Color.navyBlue)
-        }
-        .blur(radius: CGFloat(scenePhaseBlur))
-        .onChange(of: scenePhase, perform: { value in
-            if(value == .active) {
-                scenePhaseBlur = 0
-            } else {
-                scenePhaseBlur = 5
-            }
-        })
-        .searchable(text: $searchText)
-        .onAppear {
-            Task.init {
-                await accountViewModel.getAccountList()
-            }
-        }
-    }
-}
-
-struct AddAccountWatchView: View {
+struct RowAccountToWatchView: View {
     
     var account: Account
     var watchController = WatchController()

@@ -9,11 +9,11 @@ import SwiftUI
 
 struct AccountDetailView: View {
     
-    private var dates = Array(1...28)
-    private var account: Account
-    private var accountController = AccountController()
+    var dates = Array(1...28)
+    var account: Account
+    var accountController = AccountController()
     
-    @State private var showAddWatchListView = false
+    @State var showAddWatchListView = false
     @State var isNewTransactionViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
     @State var paymentDate = 0
@@ -55,7 +55,7 @@ struct AccountDetailView: View {
                 } else if(tabItem == 2) {
                     AccountChartView(account: account)
                 } else {
-                    AccountWatchListView(account: account, watchViewModel: watchViewModel)
+                    AccountWatchView(account: account, watchViewModel: watchViewModel)
                 }
             }
             .alert(isPresented: $showZeroAlert) {
@@ -228,7 +228,7 @@ struct AccountDetailView: View {
                 await watchViewModel.getAllWatchList()
             }
         }, content: {
-            AddWatchListToAccountView(watchViewModel: watchViewModel, account: account)
+            WatchToAccountView(account: account, watchViewModel: watchViewModel)
         })
         .background(Color.navyBlue)
     }

@@ -9,8 +9,8 @@ import SwiftUI
 
 struct NewAccountView: View {
     
-    @Environment(\.scenePhase) private var scenePhase
-    @State private var scenePhaseBlur = 0
+    @Environment(\.scenePhase) var scenePhase
+    @State var scenePhaseBlur = 0
     
     @State var accountType: String
     @State var loanType: String = "Consumer"
@@ -41,7 +41,7 @@ struct NewAccountView: View {
     @StateObject var watchViewModel = WatchViewModel()
     
     @ObservedObject var accountViewModel : AccountViewModel
-    @State private var selectedWatchList = Watch()
+    @State var selectedWatchList = Watch()
     
     var body: some View {
         NavigationView {

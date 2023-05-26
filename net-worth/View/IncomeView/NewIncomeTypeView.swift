@@ -9,16 +9,16 @@ import SwiftUI
 
 struct NewIncomeTypeView: View {
     
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.scenePhase) private var scenePhase
-    @State private var scenePhaseBlur = 0
-    
     var incomeController = IncomeController()
     
-    @ObservedObject var incomeViewModel : IncomeViewModel
+    @State var scenePhaseBlur = 0
+    @State var typeName = ""
+    @State var isDefault = false
     
-    @State private var typeName = ""
-    @State private var isDefault = false
+    @StateObject var incomeViewModel : IncomeViewModel
+    
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
         NavigationView {

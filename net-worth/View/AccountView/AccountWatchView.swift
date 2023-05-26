@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AccountWatchListView: View {
+struct AccountWatchView: View {
     
     var account: Account
     
@@ -20,7 +20,7 @@ struct AccountWatchListView: View {
                     List {
                         ForEach(watchViewModel.watchListForAccount, id: \.self, content: { watch in
                             NavigationLink(destination: {
-                                SingleWatchListView(watch: watch, watchViewModel: watchViewModel)
+                                WatchDetailView(watch: watch, watchViewModel: watchViewModel)
                                     .toolbarRole(.editor)
                             }, label: {
                                 HStack {

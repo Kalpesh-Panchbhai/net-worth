@@ -7,17 +7,18 @@
 
 import SwiftUI
 
-struct SingleWatchListView: View {
+struct WatchDetailView: View {
     
     var watch: Watch
-    @State private var isNewTransactionViewOpen = false
-    @State private var isChartViewOpen = false
-    @State private var addAccountViewOpen = false
-    @State private var isAscendingByAlphabet = true
-    @State private var isAscendingByAlphabetEnabled = false
-    @State private var isAscendingByAmount = true
-    @State private var isAscendingByAmountEnabled = false
     var watchController = WatchController()
+    
+    @State var isNewTransactionViewOpen = false
+    @State var isChartViewOpen = false
+    @State var addAccountViewOpen = false
+    @State var isAscendingByAlphabet = true
+    @State var isAscendingByAlphabetEnabled = false
+    @State var isAscendingByAmount = true
+    @State var isAscendingByAmountEnabled = false
     
     @StateObject var accountViewModel = AccountViewModel()
     @ObservedObject var watchViewModel: WatchViewModel
@@ -30,6 +31,7 @@ struct SingleWatchListView: View {
                 Color.navyBlue.ignoresSafeArea()
                 VStack {
                     if(watchViewModel.watch.accountID.count > 0) {
+                        // MARK: Balance Card
                         VStack {
                             BalanceCardView(accountViewModel: accountViewModel, accountType: watch.accountName, isWatchListCardView: true, watchList: watchViewModel.watch)
                                 .frame(width: 360, height: 50)
@@ -43,6 +45,7 @@ struct SingleWatchListView: View {
                             LazyVStack {
                                 ForEach(watchViewModel.watch.accountID, id: \.self) { account in
                                     NavigationLink(destination: {
+                                        // MARK: Account Detail View
                                         AccountDetailView(account: Account(id: account), accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                                             .toolbarRole(.editor)
                                     }, label: {
@@ -50,7 +53,7 @@ struct SingleWatchListView: View {
                                             .shadow(color: Color.navyBlue, radius: 3)
                                             .contextMenu {
                                                 Label(account, systemImage: "info.square")
-                                                
+                                                // MARK: Delete
                                                 if(watch.accountName != "All") {
                                                     Button(role: .destructive, action: {
                                                         watchController.deleteAccountFromWatchList(watchList: watchViewModel.watch, accountID: account)
@@ -99,7 +102,7 @@ struct SingleWatchListView: View {
                                                         Label("Delete", systemImage: "trash")
                                                     })
                                                 }
-                                                
+                                                // MARK: New Transaction
                                                 Button {
                                                     Task.init {
                                                         await accountViewModel.getAccount(id: account)
@@ -316,7 +319,7 @@ struct SingleWatchListView: View {
                 
             }
         }) {
-            AddAccountToWatchListView(watch: watchViewModel.watch)
+            AccountToWatchView(watch: watchViewModel.watch)
         }
         .sheet(isPresented: $isChartViewOpen, content: {
             AccountWatchListChartView(accountList: accountViewModel.accountList)

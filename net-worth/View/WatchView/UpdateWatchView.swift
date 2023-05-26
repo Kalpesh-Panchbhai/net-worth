@@ -9,16 +9,15 @@ import SwiftUI
 
 struct UpdateWatchView: View {
     
-    @Environment(\.scenePhase) private var scenePhase
-    @State private var scenePhaseBlur = 0
-    
-    @State private var isFieldEmpty = false
-    
-    @Environment(\.dismiss) var dismiss
-    
     var watchController = WatchController()
     
+    @State var scenePhaseBlur = 0
+    @State var isFieldEmpty = false
+    
     @ObservedObject var watchViewModel: WatchViewModel
+    
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
         VStack {

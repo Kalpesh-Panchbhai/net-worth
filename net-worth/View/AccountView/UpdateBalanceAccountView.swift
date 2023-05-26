@@ -9,23 +9,19 @@ import SwiftUI
 
 struct UpdateBalanceAccountView: View {
     
-    @Environment(\.scenePhase) private var scenePhase
-    @State private var scenePhaseBlur = 0
+    @Environment(\.scenePhase) var scenePhase
+    @State var scenePhaseBlur = 0
     
-    private var accountController = AccountController()
+    var accountController = AccountController()
     
-    @State private var amount: Double = 0.0
-    @State private var date = Date()
+    @State var amount: Double = 0.0
+    @State var date = Date()
     
     @State var isPlus = true;
     
     @Environment(\.dismiss) var dismiss
     
     @ObservedObject var accountViewModel: AccountViewModel
-    
-    init(accountViewModel: AccountViewModel){
-        self.accountViewModel = accountViewModel
-    }
     
     var body: some View {
         NavigationView {

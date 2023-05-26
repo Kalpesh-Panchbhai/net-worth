@@ -9,14 +9,14 @@ import Foundation
 
 class WatchViewModel: ObservableObject {
     
+    var watchController = WatchController()
+    var accountController = AccountController()
+    
     @Published var watchList = [Watch]()
     @Published var watchListLoad = false
     @Published var watchListForAccount = [Watch]()
     @Published var watchListWithAccount = [Watch: [Account]]()
     @Published var watch = Watch()
-    
-    private var watchController = WatchController()
-    private var accountController = AccountController()
     
     func getAllWatchList() async {
         do {

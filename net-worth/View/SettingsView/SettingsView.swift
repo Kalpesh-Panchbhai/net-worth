@@ -11,31 +11,28 @@ import GoogleSignIn
 
 struct SettingsView: View {
     
-    @State private var profilePhoto = UIImage()
-    @State private var isAuthenticationRequired: Bool
-    @State private var logout =  false
-    @State private var isPresentingDataAndAccountDeletionConfirmation = false
-    @State private var isPresentingLogoutConfirm = false
+    var currencyList = CurrencyList().currencyList
     
-    @State private var currenySelected: Currency
-    @State private var defaultIncomeType = IncomeType()
-    @State private var defaultIncomeTag = IncomeTag()
+    var settingsController = SettingsController()
+    var notificationController = NotificationController()
     
-    private var currencyList = CurrencyList().currencyList
+    @State var filterCurrencyList = CurrencyList().currencyList
+    @State var profilePhoto = UIImage()
+    @State var isAuthenticationRequired: Bool
+    @State var logout =  false
+    @State var isPresentingDataAndAccountDeletionConfirmation = false
+    @State var isPresentingLogoutConfirm = false
     
-    @State private var filterCurrencyList = CurrencyList().currencyList
+    @State var currenySelected: Currency
+    @State var defaultIncomeType = IncomeType()
+    @State var defaultIncomeTag = IncomeTag()
     
-    private var settingsController = SettingsController()
-    private var notificationController = NotificationController()
-    
-    init() {
-        isAuthenticationRequired = settingsController.isAuthenticationRequired()
-        currenySelected = settingsController.getDefaultCurrency()
-    }
+    @StateObject var incomeViewModel: IncomeViewModel
     
     var body: some View {
         NavigationView(){
             List{
+                // MARK: Profile Detail View
                 Section() {
                     VStack() {
                         Image(uiImage: profilePhoto)
@@ -57,6 +54,7 @@ struct SettingsView: View {
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
                 }
+                // MARK: Authentication Required toggle
                 Toggle(isOn: $isAuthenticationRequired, label: {
                     Label("Require Face ID", systemImage: "faceid")
                 }).onChange(of: isAuthenticationRequired) { newValue in
@@ -64,7 +62,7 @@ struct SettingsView: View {
                 }
                 .foregroundColor(Color.navyBlue)
                 .listRowBackground(Color.white)
-                
+                // MARK: Notification View Link
                 NavigationLink(destination: {
                     NotificationsView()
                 }, label: {
@@ -72,13 +70,13 @@ struct SettingsView: View {
                 })
                 .foregroundColor(Color.navyBlue)
                 .listRowBackground(Color.white)
-                
+                // MARK: Default Currency Picker
                 DefaultCurrencyPicker(currenySelected: $currenySelected)
                     .foregroundColor(Color.navyBlue)
                     .listRowBackground(Color.white)
-                
+                // MARK: Income Type View
                 NavigationLink(destination: {
-                    IncomeTypeView()
+                    IncomeTypeView(incomeViewModel: incomeViewModel)
                 }, label: {
                     Label(title: {
                         HStack {
@@ -92,9 +90,9 @@ struct SettingsView: View {
                 })
                 .foregroundColor(Color.navyBlue)
                 .listRowBackground(Color.white)
-                
+                // MARK: Income Tag View
                 NavigationLink(destination: {
-                    IncomeTagView()
+                    IncomeTagView(incomeViewModel: incomeViewModel)
                 }, label: {
                     Label(title: {
                         HStack {
@@ -108,7 +106,7 @@ struct SettingsView: View {
                 })
                 .foregroundColor(Color.navyBlue)
                 .listRowBackground(Color.white)
-                
+                // MARK: Backup View
                 NavigationLink(destination: {
                     BackupView()
                 }, label: {
@@ -116,7 +114,7 @@ struct SettingsView: View {
                 })
                 .foregroundColor(Color.navyBlue)
                 .listRowBackground(Color.white)
-                
+                // MARK: Delete Account & Data
                 Button(action: {
                     isPresentingDataAndAccountDeletionConfirmation.toggle()
                 }, label: {
@@ -130,7 +128,7 @@ struct SettingsView: View {
                     }
                 }.foregroundColor(.red)
                     .listRowBackground(Color.white)
-                
+                // MARK: Logout
                 Button(action: {
                     isPresentingLogoutConfirm.toggle()
                 }, label: {
@@ -143,7 +141,7 @@ struct SettingsView: View {
                 }
                                       .foregroundColor(Color.navyBlue)
                                       .listRowBackground(Color.white)
-                
+                // MARK: Application Version
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
                 let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
                 Label("Version " + (appVersion ?? "") + " Build(" + (buildVersion ?? "Unknown Build Version)") + ")", systemImage: "gear.badge.checkmark")
@@ -173,7 +171,7 @@ struct SettingsView: View {
         })
     }
     
-    func fetchProfilePhoto() async -> UIImage {
+    private func fetchProfilePhoto() async -> UIImage {
         do {
             let (data, _) = try await URLSession.shared.data(from: (Auth.auth().currentUser?.photoURL)!)
             if let image = UIImage(data: data) {
@@ -185,7 +183,7 @@ struct SettingsView: View {
         return UIImage()
     }
     
-    func logoutUser() {
+    private func logoutUser() {
         let defaults = UserDefaults.standard
         let dictionary = defaults.dictionaryRepresentation()
         dictionary.keys.forEach { key in
@@ -194,7 +192,7 @@ struct SettingsView: View {
         settingsController.setAuthentication(newValue: false)
     }
     
-    func deleteAccountAndData() async {
+    private func deleteAccountAndData() async {
         await UserController().deleteUser()
         logoutUser()
     }

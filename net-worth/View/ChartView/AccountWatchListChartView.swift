@@ -10,14 +10,15 @@ import Charts
 
 struct AccountWatchListChartView: View {
     
-    @Environment(\.scenePhase) private var scenePhase
-    @State private var scenePhaseBlur = 0
+    var accountList: [Account]
+    
+    @State var scenePhaseBlur = 0
+    @State var range = "1M"
     
     @StateObject var chartViewModel = ChartViewModel()
     @StateObject var accountViewModel = AccountViewModel()
-    @State var range = "1M"
     
-    var accountList: [Account]
+    @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
         VStack {

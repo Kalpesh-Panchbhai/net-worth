@@ -9,19 +9,19 @@ import SwiftUI
 
 struct BackupView: View {
     
-    private var importExportController = ImportExportController()
-    private var accountController = AccountController()
-    private var incomeController = IncomeController()
-    private var watchController = WatchController()
+    var importExportController = ImportExportController()
+    var accountController = AccountController()
+    var incomeController = IncomeController()
+    var watchController = WatchController()
     
-    @StateObject private var importExportViewModel = ImportExportViewModel()
+    @State var totalAccountInCloud = 0
+    @State var totalAccountTransactionInCloud = 0
+    @State var totalIncomeInCloud = 0
+    @State var totalWatchListInCloud = 0
+    @State var totalIncomeTypeInCloud = 0
+    @State var totalIncomeTagInCloud = 0
     
-    @State private var totalAccountInCloud = 0
-    @State private var totalAccountTransactionInCloud = 0
-    @State private var totalIncomeInCloud = 0
-    @State private var totalWatchListInCloud = 0
-    @State private var totalIncomeTypeInCloud = 0
-    @State private var totalIncomeTagInCloud = 0
+    @StateObject var importExportViewModel = ImportExportViewModel()
     
     @Environment(\.presentationMode) var presentationMode
     

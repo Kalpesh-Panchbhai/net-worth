@@ -9,10 +9,10 @@ import Foundation
 
 class ImportExportViewModel: ObservableObject {
     
+    var importExportController = ImportExportController()
+    
     @Published var backupList = [Date]()
     @Published var backupData = Data()
-    
-    private var importExportController = ImportExportController()
     
     func getLocalBackup() async {
         let amount = importExportController.getLocalBackup()

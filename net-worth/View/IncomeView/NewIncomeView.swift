@@ -9,34 +9,28 @@ import SwiftUI
 
 struct NewIncomeView: View {
     
-    @Environment(\.scenePhase) private var scenePhase
-    @State private var scenePhaseBlur = 0
-    
-    @State private var amount: String = "0.0"
-    @State private var taxPaid: String = "0.0"
-    @State private var incomeTypeSelected: IncomeType = IncomeType()
-    @State private var incomeTagSelected: IncomeTag = IncomeTag()
-    @State private var date = Date()
-    @State private var addIncomeTagViewOpen = false
-    @State private var addIncomeTypeViewOpen = false
-    
     var incomeTypes =  ["None", "Salary", "Portfolio","Other"]
+    var incomeController = IncomeController()
+    var currencyList = CurrencyList().currencyList
     
-    @Environment(\.dismiss) var dismiss
+    @State var scenePhaseBlur = 0
+    @State var amount: String = "0.0"
+    @State var taxPaid: String = "0.0"
+    @State var incomeTypeSelected: IncomeType = IncomeType()
+    @State var incomeTagSelected: IncomeTag = IncomeTag()
+    @State var date = Date()
+    @State var addIncomeTagViewOpen = false
+    @State var addIncomeTypeViewOpen = false
     
-    private var incomeController = IncomeController()
-    
-    @State public var currencySelected: Currency = Currency()
-    private var currencyList = CurrencyList().currencyList
-    @State private var filterCurrencyList = CurrencyList().currencyList
-    @State private var currencyChanged = false
-    @State private var searchTerm: String = ""
+    @State var currencySelected: Currency = Currency()
+    @State var filterCurrencyList = CurrencyList().currencyList
+    @State var currencyChanged = false
+    @State var searchTerm: String = ""
     
     @ObservedObject var incomeViewModel : IncomeViewModel
     
-    init(incomeViewModel: IncomeViewModel) {
-        self.incomeViewModel = incomeViewModel
-    }
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
         NavigationView {
@@ -120,6 +114,7 @@ struct NewIncomeView: View {
                             .multilineTextAlignment(.trailing)
                     }
                     .foregroundColor(Color.navyBlue)
+                    
                     HStack{
                         DatePicker("Credited on", selection: $date, in: ...Date(), displayedComponents: [.date])
                     }
@@ -231,7 +226,7 @@ struct NewIncomeView: View {
     private func allFieldsFilled () -> Bool {
         if !incomeTypeSelected.name.isEmpty && !incomeTagSelected.name.isEmpty && !currencySelected.name.isEmpty && !amount.isEmpty && !taxPaid.isEmpty {
             return true
-        }else {
+        } else {
             return false
         }
     }

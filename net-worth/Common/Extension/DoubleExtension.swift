@@ -5,6 +5,7 @@
 import Foundation
 
 extension Double {
+    
     func withCommas(decimalPlace: Int) -> String {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal

@@ -10,6 +10,11 @@ import FirebaseFirestore
 
 class AccountViewModel: ObservableObject {
     
+    
+    var watchList = [Account]()
+    var originalAccountList = [Account]()
+    var accountController = AccountController()
+    
     @Published var accountList = [Account]()
     @Published var accountListLoaded = false
     @Published var account = Account()
@@ -20,10 +25,6 @@ class AccountViewModel: ObservableObject {
     @Published var accountLastTwoTransactionList = [AccountTransaction]()
     @Published var totalBalance = Balance(currentValue: 0.0)
     @Published var grouping: Grouping = .accountType
-    
-    var watchList = [Account]()
-    var originalAccountList = [Account]()
-    private var accountController = AccountController()
     
     enum Grouping: String, CaseIterable, Identifiable {
         case accountType = "Account Type"

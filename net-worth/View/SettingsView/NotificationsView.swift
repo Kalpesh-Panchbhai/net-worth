@@ -9,19 +9,19 @@ import SwiftUI
 
 struct NotificationsView: View {
     
-    @State private var mutualFundNotification: Bool = false
-    @State private var equityNotification: Bool = false
-    @State private var etfNotification: Bool = false
-    @State private var cryptoCurrencyNotification: Bool = false
-    @State private var futureNotification: Bool = false
-    @State private var optionNotification: Bool = false
-    @State private var creditCardNotification: Bool = false
-    @State private var loanNotification: Bool = false
-    @State private var otherNotification: Bool = false
+    var notificationController = NotificationController()
+    
+    @State var mutualFundNotification: Bool = false
+    @State var equityNotification: Bool = false
+    @State var etfNotification: Bool = false
+    @State var cryptoCurrencyNotification: Bool = false
+    @State var futureNotification: Bool = false
+    @State var optionNotification: Bool = false
+    @State var creditCardNotification: Bool = false
+    @State var loanNotification: Bool = false
+    @State var otherNotification: Bool = false
     
     @Environment(\.presentationMode) var presentationMode
-    
-    private var notificationController = NotificationController()
 //    init() {
 //        mutualFundNotification = notificationController.isNotificationEnabled(accountType: "MUTUALFUND")
 //        equityNotification = notificationController.isNotificationEnabled(accountType: "EQUITY")
