@@ -8,17 +8,12 @@
 import SwiftUI
 
 struct LoginHeader: View {
+    
     var body: some View {
         VStack {
             Text("Net Worth")
                 .font(.largeTitle)
                 .fontWeight(.medium)
         }
-    }
-}
-
-struct LoginHeader_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginHeader()
     }
 }

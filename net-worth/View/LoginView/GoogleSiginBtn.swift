@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct GoogleSiginBtn: View {
+    
     var action: () -> Void
     
     var body: some View {
@@ -32,12 +33,5 @@ struct GoogleSiginBtn: View {
                     .fill(.white)
             }
         }
-//        .frame(width: .infinity, height: 50)
-    }
-}
-
-struct GoogleSiginBtn_Previews: PreviewProvider {
-    static var previews: some View {
-        GoogleSiginBtn(action: {})
     }
 }
