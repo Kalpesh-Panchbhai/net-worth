@@ -375,7 +375,7 @@
 				7D79FA50291B7430004A2ECF /* net_worthApp.swift */,
 				7D69DD6F293230FF00F024A6 /* Common */,
 				7D79FA88291B9C6E004A2ECF /* View */,
-				7D79FA80291B75CB004A2ECF /* Data Model */,
+				7D79FA80291B75CB004A2ECF /* View Model */,
 				7D79FA83291B7EC2004A2ECF /* Controller */,
 				7D79FA56291B7431004A2ECF /* Preview Content */,
 			);
@@ -408,7 +408,7 @@
 			path = "net-worthUITests";
 			sourceTree = "<group>";
 		};
-		7D79FA80291B75CB004A2ECF /* Data Model */ = {
+		7D79FA80291B75CB004A2ECF /* View Model */ = {
 			isa = PBXGroup;
 			children = (
 				7D79FA5B291B7431004A2ECF /* net_worth.xcdatamodeld */,
@@ -418,7 +418,7 @@
 				7D65547329A107950008A8E2 /* ChartViewModel.swift */,
 				7D1C72632A06549B00022FCB /* ImportExportViewModel.swift */,
 			);
-			path = "Data Model";
+			path = "View Model";
 			sourceTree = "<group>";
 		};
 		7D79FA83291B7EC2004A2ECF /* Controller */ = {
