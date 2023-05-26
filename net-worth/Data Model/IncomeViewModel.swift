@@ -15,22 +15,12 @@ class IncomeViewModel: ObservableObject {
     
     @Published var incomeList = [Income]()
     @Published var incomeListLoaded = false
+    @Published var incomeTotalAmount = 0.0
+    
     @Published var incomeTagList = [IncomeTag]()
     @Published var incomeTypeList = [IncomeType]()
     @Published var incomeYearList = [String]()
     @Published var incomeFinancialYearList = [String]()
-    @Published var incomeTotalAmount = 0.0
-    
-    func getTotalBalance() async {
-        do {
-            let amount = try await incomeController.fetchTotalAmount()
-            DispatchQueue.main.async {
-                self.incomeTotalAmount = amount
-            }
-        } catch {
-            print(error)
-        }
-    }
     
     func getIncomeList() async {
         do {
@@ -44,9 +34,20 @@ class IncomeViewModel: ObservableObject {
         }
     }
     
-    func getTotalBalance(incomeType: String, incomeTag: String, year: String, financialYear: String) async {
+    func getIncomeList(incomeType: String, incomeTag: String, year: String, financialYear: String) async {
         do {
-            let amount = try await incomeController.fetchTotalAmount(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
+            let list = try await incomeController.getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
+            DispatchQueue.main.async {
+                self.incomeList = list
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    func getTotalBalance() async {
+        do {
+            let amount = try await incomeController.fetchTotalAmount()
             DispatchQueue.main.async {
                 self.incomeTotalAmount = amount
             }
@@ -55,11 +56,11 @@ class IncomeViewModel: ObservableObject {
         }
     }
     
-    func getIncomeList(incomeType: String, incomeTag: String, year: String, financialYear: String) async {
+    func getTotalBalance(incomeType: String, incomeTag: String, year: String, financialYear: String) async {
         do {
-            let list = try await incomeController.getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
+            let amount = try await incomeController.fetchTotalAmount(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
             DispatchQueue.main.async {
-                self.incomeList = list
+                self.incomeTotalAmount = amount
             }
         } catch {
             print(error)
