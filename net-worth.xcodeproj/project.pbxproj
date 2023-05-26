@@ -39,7 +39,6 @@
 		7D79FA51291B7430004A2ECF /* net_worthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA50291B7430004A2ECF /* net_worthApp.swift */; };
 		7D79FA55291B7431004A2ECF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D79FA54291B7431004A2ECF /* Assets.xcassets */; };
 		7D79FA58291B7431004A2ECF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D79FA57291B7431004A2ECF /* Preview Assets.xcassets */; };
-		7D79FA5A291B7431004A2ECF /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA59291B7431004A2ECF /* Persistence.swift */; };
 		7D79FA5D291B7431004A2ECF /* net_worth.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA5B291B7431004A2ECF /* net_worth.xcdatamodeld */; };
 		7D79FA68291B7432004A2ECF /* net_worthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA67291B7432004A2ECF /* net_worthTests.swift */; };
 		7D79FA72291B7432004A2ECF /* net_worthUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA71291B7432004A2ECF /* net_worthUITests.swift */; };
@@ -175,7 +174,6 @@
 		7D79FA50291B7430004A2ECF /* net_worthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = net_worthApp.swift; sourceTree = "<group>"; };
 		7D79FA54291B7431004A2ECF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7D79FA57291B7431004A2ECF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		7D79FA59291B7431004A2ECF /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		7D79FA5C291B7431004A2ECF /* net_worth.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = net_worth.xcdatamodel; sourceTree = "<group>"; };
 		7D79FA5E291B7431004A2ECF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7D79FA63291B7432004A2ECF /* net-worthTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "net-worthTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -420,7 +418,6 @@
 			isa = PBXGroup;
 			children = (
 				7D79FA5B291B7431004A2ECF /* net_worth.xcdatamodeld */,
-				7D79FA59291B7431004A2ECF /* Persistence.swift */,
 				7D85D031298D2ADD0019F85E /* IncomeViewModel.swift */,
 				7DF9DB92298F98A800831494 /* AccountViewModel.swift */,
 				7DB987FF299B6420004ED6D2 /* WatchViewModel.swift */,
@@ -858,7 +855,6 @@
 				7D79FA8A291B9CE6004A2ECF /* MainScreenView.swift in Sources */,
 				7D921C5E2986835C0014AC9E /* GoogleSiginBtn.swift in Sources */,
 				7D921C5C298683370014AC9E /* CustomTextField.swift in Sources */,
-				7D79FA5A291B7431004A2ECF /* Persistence.swift in Sources */,
 				7DF879002A0F7842008343EE /* CurrencyPicker.swift in Sources */,
 				7D1188362A03F3000005EA32 /* AccountWatchView.swift in Sources */,
 				7D3D5244299105A50021047B /* CommonController.swift in Sources */,
