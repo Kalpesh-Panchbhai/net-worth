@@ -8,7 +8,7 @@
 import SwiftUI
 import Charts
 
-struct AccountWatchListChartView: View {
+struct AccountWatchChartView: View {
     
     var accountList: [Account]
     

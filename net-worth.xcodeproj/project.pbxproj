@@ -12,7 +12,7 @@
 		7D11D0052A0A551300897B08 /* PieSliceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D11D0042A0A551300897B08 /* PieSliceView.swift */; };
 		7D11D0072A0A56D700897B08 /* PieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D11D0062A0A56D700897B08 /* PieChartView.swift */; };
 		7D11D0092A0A59F600897B08 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D11D0082A0A59F600897B08 /* ChartView.swift */; };
-		7D14A8F02A0253A9002FC324 /* AccountWatchListChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D14A8EF2A0253A9002FC324 /* AccountWatchListChartView.swift */; };
+		7D14A8F02A0253A9002FC324 /* AccountWatchChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D14A8EF2A0253A9002FC324 /* AccountWatchChartView.swift */; };
 		7D1C72642A06549B00022FCB /* ImportExportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1C72632A06549B00022FCB /* ImportExportViewModel.swift */; };
 		7D237BED292B672900DEF91D /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D237BEC292B672800DEF91D /* DoubleExtension.swift */; };
 		7D2C76202A0B5B8900CE606C /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2C761F2A0B5B8900CE606C /* ColorExtension.swift */; };
@@ -145,7 +145,7 @@
 		7D11D0042A0A551300897B08 /* PieSliceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieSliceView.swift; sourceTree = "<group>"; };
 		7D11D0062A0A56D700897B08 /* PieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartView.swift; sourceTree = "<group>"; };
 		7D11D0082A0A59F600897B08 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
-		7D14A8EF2A0253A9002FC324 /* AccountWatchListChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountWatchListChartView.swift; sourceTree = "<group>"; };
+		7D14A8EF2A0253A9002FC324 /* AccountWatchChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountWatchChartView.swift; sourceTree = "<group>"; };
 		7D1C72632A06549B00022FCB /* ImportExportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExportViewModel.swift; sourceTree = "<group>"; };
 		7D237BEC292B672800DEF91D /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
 		7D2C761F2A0B5B8900CE606C /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
@@ -554,7 +554,7 @@
 		7DF83F902A094F3300D3233B /* ChartView */ = {
 			isa = PBXGroup;
 			children = (
-				7D14A8EF2A0253A9002FC324 /* AccountWatchListChartView.swift */,
+				7D14A8EF2A0253A9002FC324 /* AccountWatchChartView.swift */,
 				7D6F885129F8FBFB000AE48A /* IncomeChartView.swift */,
 				7D11D0042A0A551300897B08 /* PieSliceView.swift */,
 				7D11D0062A0A56D700897B08 /* PieChartView.swift */,
@@ -811,7 +811,7 @@
 				7DD8E5BF2A063AA000245A98 /* AccountTransactionData.swift in Sources */,
 				7D5A75602A04FB11001646A2 /* WatchToAccountView.swift in Sources */,
 				7DB58AB529967B2E00B93592 /* AccountListView.swift in Sources */,
-				7D14A8F02A0253A9002FC324 /* AccountWatchListChartView.swift in Sources */,
+				7D14A8F02A0253A9002FC324 /* AccountWatchChartView.swift in Sources */,
 				7D3E3CBF2A1FC4FC009538BA /* RowAccountToWatchView.swift in Sources */,
 				7D2C76202A0B5B8900CE606C /* ColorExtension.swift in Sources */,
 				7D65547629A107DC0008A8E2 /* ChartData.swift in Sources */,
