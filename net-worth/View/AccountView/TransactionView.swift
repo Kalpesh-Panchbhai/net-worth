@@ -13,6 +13,7 @@ struct TransactionsView: View {
     var accountController = AccountController()
     
     @State var index = 0
+    
     @ObservedObject var accountViewModel: AccountViewModel
     
     init(accountViewModel: AccountViewModel) {

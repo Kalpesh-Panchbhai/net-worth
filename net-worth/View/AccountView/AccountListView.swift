@@ -27,7 +27,7 @@ struct AccountListView: View {
             VStack {
                 if(!accountType.elementsEqual("Inactive Account") && !accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).isEmpty) {
                     VStack {
-                        BalanceCardView(accountViewModel: accountViewModel, accountType: accountType, isWatchListCardView: false, watchList: Watch())
+                        BalanceCardView(accountType: accountType, isWatchListCardView: false, watchList: Watch(), accountViewModel: accountViewModel)
                             .frame(width: 360, height: 50)
                             .cornerRadius(10)
                     }
@@ -118,7 +118,7 @@ struct AccountListView: View {
                 .presentationDetents([.medium])
         })
         .sheet(isPresented: $isChartViewOpen, content: {
-            AccountWatchListChartView(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
+            AccountWatchChartView(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
                 .presentationDetents([.medium])
         })
         .searchable(text: $searchText)

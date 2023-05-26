@@ -48,7 +48,7 @@ struct AccountCardList: View {
                         Color.navyBlue.ignoresSafeArea()
                         VStack {
                             VStack {
-                                BalanceCardView(accountViewModel: accountViewModel, accountType: "Net Worth", isWatchListCardView: false, watchList: Watch())
+                                BalanceCardView(accountType: "Net Worth", isWatchListCardView: false, watchList: Watch(), accountViewModel: accountViewModel)
                                     .frame(width: 360, height: 50)
                                     .cornerRadius(10)
                             }

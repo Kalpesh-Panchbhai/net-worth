@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CurrencySelectionRow: View {
+    
     var currency: Currency
     var isSelected: Bool
     var action: () -> Void

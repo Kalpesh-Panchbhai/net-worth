@@ -9,15 +9,15 @@ import SwiftUI
 
 public struct PieChartView: View {
     
-    public let values: [Double]
-    public let names: [String]
-    public let formatter: (Double) -> String
+    let values: [Double]
+    let names: [String]
+    let formatter: (Double) -> String
     
-    public var colors: [Color]
-    public var backgroundColor: Color
+    var colors: [Color]
+    var backgroundColor: Color
     
-    public var widthFraction: CGFloat
-    public var innerRadiusFraction: CGFloat
+    var widthFraction: CGFloat
+    var innerRadiusFraction: CGFloat
     
     @State var activeIndex: Int = -1
     

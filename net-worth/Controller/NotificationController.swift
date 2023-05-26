@@ -11,7 +11,6 @@ import UserNotifications
 class NotificationController {
     
     var defaultHour = 8
-    
     var granted: Bool = false
     
     public func getGranted() -> Bool {

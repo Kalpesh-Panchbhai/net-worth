@@ -46,12 +46,13 @@ struct NewIncomeView: View {
                         amount="0.0"
                         taxPaid="0.0"
                     }
+                    
                     HStack {
                         Text("Amount")
                         Spacer()
                         TextField("Amount", text: $amount)
                             .keyboardType(.decimalPad)
-                            .onChange(of: amount, perform: {_ in
+                            .onChange(of: amount, perform: { _ in
                                 let filtered = amount.filter {"0123456789.".contains($0)}
                                 
                                 if filtered.contains(".") {
@@ -80,12 +81,13 @@ struct NewIncomeView: View {
                             .multilineTextAlignment(.trailing)
                     }
                     .foregroundColor(Color.navyBlue)
+                    
                     HStack {
                         Text("Tax Paid")
                         Spacer()
                         TextField("Tax Paid", text: $taxPaid)
                             .keyboardType(.decimalPad)
-                            .onChange(of: taxPaid, perform: {_ in
+                            .onChange(of: taxPaid, perform: { _ in
                                 let filtered = taxPaid.filter {"0123456789.".contains($0)}
                                 
                                 if filtered.contains(".") {
@@ -134,6 +136,7 @@ struct NewIncomeView: View {
                 .foregroundColor(Color.lightBlue)
             }
             .toolbar {
+                // MARK: ToolbarItem for Checkmark
                 ToolbarItem {
                     Button(action: {
                         Task.init {
@@ -160,6 +163,7 @@ struct NewIncomeView: View {
                     .font(.system(size: 14).bold())
                     .disabled(!allFieldsFilled())
                 }
+                // MARK: ToolbarItem to add new Income Type and Income Tag
                 ToolbarItem(placement: .navigationBarLeading) {
                     Menu(content: {
                         Button(action: {

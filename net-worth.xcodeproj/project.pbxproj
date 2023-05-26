@@ -12,7 +12,7 @@
 		7D11D0052A0A551300897B08 /* PieSliceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D11D0042A0A551300897B08 /* PieSliceView.swift */; };
 		7D11D0072A0A56D700897B08 /* PieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D11D0062A0A56D700897B08 /* PieChartView.swift */; };
 		7D11D0092A0A59F600897B08 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D11D0082A0A59F600897B08 /* ChartView.swift */; };
-		7D14A8F02A0253A9002FC324 /* AccountWatchListChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D14A8EF2A0253A9002FC324 /* AccountWatchListChartView.swift */; };
+		7D14A8F02A0253A9002FC324 /* AccountWatchChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D14A8EF2A0253A9002FC324 /* AccountWatchChartView.swift */; };
 		7D1C72642A06549B00022FCB /* ImportExportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1C72632A06549B00022FCB /* ImportExportViewModel.swift */; };
 		7D237BED292B672900DEF91D /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D237BEC292B672800DEF91D /* DoubleExtension.swift */; };
 		7D2C76202A0B5B8900CE606C /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2C761F2A0B5B8900CE606C /* ColorExtension.swift */; };
@@ -56,8 +56,6 @@
 		7D921C522986801E0014AC9E /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 7D921C512986801E0014AC9E /* FirebaseAuth */; };
 		7D921C55298681BC0014AC9E /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 7D921C54298681BC0014AC9E /* GoogleSignIn */; };
 		7D921C57298681BC0014AC9E /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7D921C56298681BC0014AC9E /* GoogleSignInSwift */; };
-		7D921C5A298683100014AC9E /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D921C59298683100014AC9E /* CustomButton.swift */; };
-		7D921C5C298683370014AC9E /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D921C5B298683370014AC9E /* CustomTextField.swift */; };
 		7D921C5E2986835C0014AC9E /* GoogleSiginBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D921C5D2986835C0014AC9E /* GoogleSiginBtn.swift */; };
 		7D921C60298683760014AC9E /* LoginHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D921C5F298683760014AC9E /* LoginHeader.swift */; };
 		7D921C62298683B30014AC9E /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D921C61298683B30014AC9E /* LoginScreen.swift */; };
@@ -93,7 +91,6 @@
 		7DC97A2A29223989003F69D4 /* IncomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A2929223989003F69D4 /* IncomeController.swift */; };
 		7DC97A2C29223ADB003F69D4 /* NewIncomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A2B29223ADB003F69D4 /* NewIncomeView.swift */; };
 		7DCFE4C8292CB92900C940F0 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCFE4C7292CB92900C940F0 /* StringExtension.swift */; };
-		7DCFE4CA292D036500C940F0 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCFE4C9292D036500C940F0 /* SearchBar.swift */; };
 		7DD8E5AC2A0630A000245A98 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8E5AB2A0630A000245A98 /* Data.swift */; };
 		7DD8E5B32A06339500245A98 /* BackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8E5B22A06339500245A98 /* BackupView.swift */; };
 		7DD8E5B52A06343A00245A98 /* ImportExportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8E5B42A06343A00245A98 /* ImportExportController.swift */; };
@@ -147,7 +144,7 @@
 		7D11D0042A0A551300897B08 /* PieSliceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieSliceView.swift; sourceTree = "<group>"; };
 		7D11D0062A0A56D700897B08 /* PieChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartView.swift; sourceTree = "<group>"; };
 		7D11D0082A0A59F600897B08 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
-		7D14A8EF2A0253A9002FC324 /* AccountWatchListChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountWatchListChartView.swift; sourceTree = "<group>"; };
+		7D14A8EF2A0253A9002FC324 /* AccountWatchChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountWatchChartView.swift; sourceTree = "<group>"; };
 		7D1C72632A06549B00022FCB /* ImportExportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExportViewModel.swift; sourceTree = "<group>"; };
 		7D237BEC292B672800DEF91D /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
 		7D2C761F2A0B5B8900CE606C /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
@@ -189,8 +186,6 @@
 		7D85D02F298D29BE0019F85E /* Income.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Income.swift; sourceTree = "<group>"; };
 		7D85D031298D2ADD0019F85E /* IncomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeViewModel.swift; sourceTree = "<group>"; };
 		7D85D06B298D2D650019F85E /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		7D921C59298683100014AC9E /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
-		7D921C5B298683370014AC9E /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		7D921C5D2986835C0014AC9E /* GoogleSiginBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSiginBtn.swift; sourceTree = "<group>"; };
 		7D921C5F298683760014AC9E /* LoginHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginHeader.swift; sourceTree = "<group>"; };
 		7D921C61298683B30014AC9E /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
@@ -226,7 +221,6 @@
 		7DC97A2929223989003F69D4 /* IncomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeController.swift; sourceTree = "<group>"; };
 		7DC97A2B29223ADB003F69D4 /* NewIncomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewIncomeView.swift; sourceTree = "<group>"; };
 		7DCFE4C7292CB92900C940F0 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
-		7DCFE4C9292D036500C940F0 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		7DD8E5AB2A0630A000245A98 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		7DD8E5B22A06339500245A98 /* BackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupView.swift; sourceTree = "<group>"; };
 		7DD8E5B42A06343A00245A98 /* ImportExportController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExportController.swift; sourceTree = "<group>"; };
@@ -473,8 +467,6 @@
 		7D921C58298682FB0014AC9E /* LoginView */ = {
 			isa = PBXGroup;
 			children = (
-				7D921C59298683100014AC9E /* CustomButton.swift */,
-				7D921C5B298683370014AC9E /* CustomTextField.swift */,
 				7D921C5D2986835C0014AC9E /* GoogleSiginBtn.swift */,
 				7D921C5F298683760014AC9E /* LoginHeader.swift */,
 				7D921C61298683B30014AC9E /* LoginScreen.swift */,
@@ -489,7 +481,6 @@
 				7D730E1029937D370002E0ED /* OnboardingView.swift */,
 				7D79FA89291B9CE6004A2ECF /* MainScreenView.swift */,
 				7D42520E291BE95C0001C41C /* AuthenticationView.swift */,
-				7DCFE4C9292D036500C940F0 /* SearchBar.swift */,
 				7DD8E5B22A06339500245A98 /* BackupView.swift */,
 				7DF878FD2A0F75B6008343EE /* DefaultCurrencyPicker.swift */,
 				7DF878FF2A0F7842008343EE /* CurrencyPicker.swift */,
@@ -560,7 +551,7 @@
 		7DF83F902A094F3300D3233B /* ChartView */ = {
 			isa = PBXGroup;
 			children = (
-				7D14A8EF2A0253A9002FC324 /* AccountWatchListChartView.swift */,
+				7D14A8EF2A0253A9002FC324 /* AccountWatchChartView.swift */,
 				7D6F885129F8FBFB000AE48A /* IncomeChartView.swift */,
 				7D11D0042A0A551300897B08 /* PieSliceView.swift */,
 				7D11D0062A0A56D700897B08 /* PieChartView.swift */,
@@ -817,7 +808,7 @@
 				7DD8E5BF2A063AA000245A98 /* AccountTransactionData.swift in Sources */,
 				7D5A75602A04FB11001646A2 /* WatchToAccountView.swift in Sources */,
 				7DB58AB529967B2E00B93592 /* AccountListView.swift in Sources */,
-				7D14A8F02A0253A9002FC324 /* AccountWatchListChartView.swift in Sources */,
+				7D14A8F02A0253A9002FC324 /* AccountWatchChartView.swift in Sources */,
 				7D3E3CBF2A1FC4FC009538BA /* RowAccountToWatchView.swift in Sources */,
 				7D2C76202A0B5B8900CE606C /* ColorExtension.swift in Sources */,
 				7D65547629A107DC0008A8E2 /* ChartData.swift in Sources */,
@@ -854,7 +845,6 @@
 				7DB98806299B708C004ED6D2 /* UpdateWatchView.swift in Sources */,
 				7D79FA8A291B9CE6004A2ECF /* MainScreenView.swift in Sources */,
 				7D921C5E2986835C0014AC9E /* GoogleSiginBtn.swift in Sources */,
-				7D921C5C298683370014AC9E /* CustomTextField.swift in Sources */,
 				7DF879002A0F7842008343EE /* CurrencyPicker.swift in Sources */,
 				7D1188362A03F3000005EA32 /* AccountWatchView.swift in Sources */,
 				7D3D5244299105A50021047B /* CommonController.swift in Sources */,
@@ -887,7 +877,6 @@
 				7DB2B0A6299518A100E4B891 /* AccountCardList.swift in Sources */,
 				7DB2058B2A0CF5B6001E03D6 /* MainScreenTabBarItem.swift in Sources */,
 				7D921C60298683760014AC9E /* LoginHeader.swift in Sources */,
-				7DCFE4CA292D036500C940F0 /* SearchBar.swift in Sources */,
 				7DB2058D2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift in Sources */,
 				7DC46B4629A4A513000E311B /* IncomeType.swift in Sources */,
 				7D79FA8C291BA152004A2ECF /* NewAccountView.swift in Sources */,
@@ -895,7 +884,6 @@
 				7D730E1129937D370002E0ED /* OnboardingView.swift in Sources */,
 				7D69DD732932312400F024A6 /* ConstantUtils.swift in Sources */,
 				7D237BED292B672900DEF91D /* DoubleExtension.swift in Sources */,
-				7D921C5A298683100014AC9E /* CustomButton.swift in Sources */,
 				7D42520F291BE95C0001C41C /* AuthenticationView.swift in Sources */,
 				7DB205872A0CF010001E03D6 /* MainScreenTabBarContainerView.swift in Sources */,
 				7DD8E5BD2A06397B00245A98 /* AccountData.swift in Sources */,
