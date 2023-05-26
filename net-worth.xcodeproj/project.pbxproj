@@ -39,7 +39,6 @@
 		7D79FA51291B7430004A2ECF /* net_worthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA50291B7430004A2ECF /* net_worthApp.swift */; };
 		7D79FA55291B7431004A2ECF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D79FA54291B7431004A2ECF /* Assets.xcassets */; };
 		7D79FA58291B7431004A2ECF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D79FA57291B7431004A2ECF /* Preview Assets.xcassets */; };
-		7D79FA5D291B7431004A2ECF /* net_worth.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA5B291B7431004A2ECF /* net_worth.xcdatamodeld */; };
 		7D79FA68291B7432004A2ECF /* net_worthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA67291B7432004A2ECF /* net_worthTests.swift */; };
 		7D79FA72291B7432004A2ECF /* net_worthUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA71291B7432004A2ECF /* net_worthUITests.swift */; };
 		7D79FA74291B7432004A2ECF /* net_worthUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA73291B7432004A2ECF /* net_worthUITestsLaunchTests.swift */; };
@@ -171,7 +170,6 @@
 		7D79FA50291B7430004A2ECF /* net_worthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = net_worthApp.swift; sourceTree = "<group>"; };
 		7D79FA54291B7431004A2ECF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7D79FA57291B7431004A2ECF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		7D79FA5C291B7431004A2ECF /* net_worth.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = net_worth.xcdatamodel; sourceTree = "<group>"; };
 		7D79FA5E291B7431004A2ECF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7D79FA63291B7432004A2ECF /* net-worthTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "net-worthTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D79FA67291B7432004A2ECF /* net_worthTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = net_worthTests.swift; sourceTree = "<group>"; };
@@ -297,11 +295,11 @@
 		7D0D14B82937228A00AC30A3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				7D433CF729386002007FA625 /* FinanceModel.swift */,
-				7DEC3B7F2938A38B002E9C8B /* FinanceDetailModel.swift */,
 				7D596277294105A40008A6B9 /* Balance.swift */,
-				7D4FF8032A1BBAE90060CE44 /* FirebaseModel */,
+				7DEC3B7F2938A38B002E9C8B /* FinanceDetailModel.swift */,
+				7D433CF729386002007FA625 /* FinanceModel.swift */,
 				7DD8E5AD2A06310A00245A98 /* Backup */,
+				7D4FF8032A1BBAE90060CE44 /* FirebaseModel */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -309,11 +307,11 @@
 		7D237BEB292B670D00DEF91D /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				7D237BEC292B672800DEF91D /* DoubleExtension.swift */,
-				7DCFE4C7292CB92900C940F0 /* StringExtension.swift */,
-				7DE42FC3293524E500D4DA0A /* DateExtension.swift */,
 				7D2C761F2A0B5B8900CE606C /* ColorExtension.swift */,
+				7DE42FC3293524E500D4DA0A /* DateExtension.swift */,
+				7D237BEC292B672800DEF91D /* DoubleExtension.swift */,
 				7DB2058C2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift */,
+				7DCFE4C7292CB92900C940F0 /* StringExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -336,10 +334,10 @@
 		7D69DD6F293230FF00F024A6 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				7D0D14B82937228A00AC30A3 /* Model */,
-				7D237BEB292B670D00DEF91D /* Extension */,
-				7D69DD722932312400F024A6 /* ConstantUtils.swift */,
 				7D9DF69E2939B80400BE4C9D /* CommonUtils.swift */,
+				7D69DD722932312400F024A6 /* ConstantUtils.swift */,
+				7D237BEB292B670D00DEF91D /* Extension */,
+				7D0D14B82937228A00AC30A3 /* Model */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -348,12 +346,12 @@
 			isa = PBXGroup;
 			children = (
 				7D80ECEF291CE0C500A22496 /* LaunchScreen.storyboard */,
+				CDD4222682A92C71AC144E67 /* Frameworks */,
 				7D79FA4F291B7430004A2ECF /* net-worth */,
 				7D79FA66291B7432004A2ECF /* net-worthTests */,
 				7D79FA70291B7432004A2ECF /* net-worthUITests */,
-				7D79FA4E291B7430004A2ECF /* Products */,
-				CDD4222682A92C71AC144E67 /* Frameworks */,
 				3516CB7AD10B24B4F06946C5 /* Pods */,
+				7D79FA4E291B7430004A2ECF /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -374,10 +372,10 @@
 				7D79FA5E291B7431004A2ECF /* Info.plist */,
 				7D79FA50291B7430004A2ECF /* net_worthApp.swift */,
 				7D69DD6F293230FF00F024A6 /* Common */,
-				7D79FA88291B9C6E004A2ECF /* View */,
-				7D79FA80291B75CB004A2ECF /* Data Model */,
 				7D79FA83291B7EC2004A2ECF /* Controller */,
 				7D79FA56291B7431004A2ECF /* Preview Content */,
+				7D79FA88291B9C6E004A2ECF /* View */,
+				7D79FA80291B75CB004A2ECF /* View Model */,
 			);
 			path = "net-worth";
 			sourceTree = "<group>";
@@ -408,32 +406,31 @@
 			path = "net-worthUITests";
 			sourceTree = "<group>";
 		};
-		7D79FA80291B75CB004A2ECF /* Data Model */ = {
+		7D79FA80291B75CB004A2ECF /* View Model */ = {
 			isa = PBXGroup;
 			children = (
-				7D79FA5B291B7431004A2ECF /* net_worth.xcdatamodeld */,
-				7D85D031298D2ADD0019F85E /* IncomeViewModel.swift */,
 				7DF9DB92298F98A800831494 /* AccountViewModel.swift */,
-				7DB987FF299B6420004ED6D2 /* WatchViewModel.swift */,
 				7D65547329A107950008A8E2 /* ChartViewModel.swift */,
 				7D1C72632A06549B00022FCB /* ImportExportViewModel.swift */,
+				7D85D031298D2ADD0019F85E /* IncomeViewModel.swift */,
+				7DB987FF299B6420004ED6D2 /* WatchViewModel.swift */,
 			);
-			path = "Data Model";
+			path = "View Model";
 			sourceTree = "<group>";
 		};
 		7D79FA83291B7EC2004A2ECF /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				7D433CF529385DBB007FA625 /* FinanceController.swift */,
-				7DE766F22928B62900EFBD2D /* NotificationController.swift */,
 				7D79FA86291B803A004A2ECF /* AccountController.swift */,
-				7DC97A2529221990003F69D4 /* SettingsController.swift */,
-				7DC97A2929223989003F69D4 /* IncomeController.swift */,
-				7D7AA908298D8DA2004C9776 /* UserController.swift */,
 				7D3D5243299105A50021047B /* CommonController.swift */,
-				7DB98801299B6464004ED6D2 /* WatchController.swift */,
+				7D433CF529385DBB007FA625 /* FinanceController.swift */,
 				7DD8E5B42A06343A00245A98 /* ImportExportController.swift */,
+				7DC97A2929223989003F69D4 /* IncomeController.swift */,
 				7D5F29102A0FD0B900D365DD /* NetworkMonitor.swift */,
+				7DE766F22928B62900EFBD2D /* NotificationController.swift */,
+				7DC97A2529221990003F69D4 /* SettingsController.swift */,
+				7D7AA908298D8DA2004C9776 /* UserController.swift */,
+				7DB98801299B6464004ED6D2 /* WatchController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -441,13 +438,13 @@
 		7D79FA88291B9C6E004A2ECF /* View */ = {
 			isa = PBXGroup;
 			children = (
-				7D87CEF62A0E0475007C1C76 /* MainScreenTabBarView */,
-				7DF83F902A094F3300D3233B /* ChartView */,
-				7D921C58298682FB0014AC9E /* LoginView */,
 				7DD7A56C29224C1200CD5B37 /* AccountView */,
+				7DF83F902A094F3300D3233B /* ChartView */,
 				7DD7A56B29224BFD00CD5B37 /* IncomeView */,
-				7DD7A56D29224C1D00CD5B37 /* SettingsView */,
+				7D921C58298682FB0014AC9E /* LoginView */,
+				7D87CEF62A0E0475007C1C76 /* MainScreenTabBarView */,
 				7DAC70A7294086420033050C /* OtherView */,
+				7DD7A56D29224C1D00CD5B37 /* SettingsView */,
 				7DF8CCFB299F445300267C29 /* WatchView */,
 			);
 			path = View;
@@ -456,10 +453,10 @@
 		7D87CEF62A0E0475007C1C76 /* MainScreenTabBarView */ = {
 			isa = PBXGroup;
 			children = (
-				7DB205842A0CEB78001E03D6 /* MainScreenTabBarView.swift */,
 				7DB205862A0CF010001E03D6 /* MainScreenTabBarContainerView.swift */,
-				7DB205882A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift */,
 				7DB2058A2A0CF5B6001E03D6 /* MainScreenTabBarItem.swift */,
+				7DB205882A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift */,
+				7DB205842A0CEB78001E03D6 /* MainScreenTabBarView.swift */,
 			);
 			path = MainScreenTabBarView;
 			sourceTree = "<group>";
@@ -467,10 +464,10 @@
 		7D921C58298682FB0014AC9E /* LoginView */ = {
 			isa = PBXGroup;
 			children = (
+				7D921C65298684790014AC9E /* +View.swift */,
 				7D921C5D2986835C0014AC9E /* GoogleSiginBtn.swift */,
 				7D921C5F298683760014AC9E /* LoginHeader.swift */,
 				7D921C61298683B30014AC9E /* LoginScreen.swift */,
-				7D921C65298684790014AC9E /* +View.swift */,
 			);
 			path = LoginView;
 			sourceTree = "<group>";
@@ -478,13 +475,13 @@
 		7DAC70A7294086420033050C /* OtherView */ = {
 			isa = PBXGroup;
 			children = (
-				7D730E1029937D370002E0ED /* OnboardingView.swift */,
-				7D79FA89291B9CE6004A2ECF /* MainScreenView.swift */,
 				7D42520E291BE95C0001C41C /* AuthenticationView.swift */,
 				7DD8E5B22A06339500245A98 /* BackupView.swift */,
-				7DF878FD2A0F75B6008343EE /* DefaultCurrencyPicker.swift */,
 				7DF878FF2A0F7842008343EE /* CurrencyPicker.swift */,
 				7DF879012A0F7872008343EE /* CurrencySelectionRow.swift */,
+				7DF878FD2A0F75B6008343EE /* DefaultCurrencyPicker.swift */,
+				7D79FA89291B9CE6004A2ECF /* MainScreenView.swift */,
+				7D730E1029937D370002E0ED /* OnboardingView.swift */,
 			);
 			path = OtherView;
 			sourceTree = "<group>";
@@ -492,14 +489,14 @@
 		7DD7A56B29224BFD00CD5B37 /* IncomeView */ = {
 			isa = PBXGroup;
 			children = (
-				7DC97A27292236FB003F69D4 /* IncomeView.swift */,
-				7D3E3CBC2A1FABCD009538BA /* IncomeRowView.swift */,
 				7D4E671229F7D4C900EB6B24 /* IncomeDetailView.swift */,
-				7DC97A2B29223ADB003F69D4 /* NewIncomeView.swift */,
-				7DC46B4729A4C5A0000E311B /* IncomeTypeView.swift */,
+				7D3E3CBC2A1FABCD009538BA /* IncomeRowView.swift */,
 				7DC46B4929A4C5B0000E311B /* IncomeTagView.swift */,
-				7DC46B4329A4A4B9000E311B /* NewIncomeTypeView.swift */,
+				7DC46B4729A4C5A0000E311B /* IncomeTypeView.swift */,
+				7DC97A27292236FB003F69D4 /* IncomeView.swift */,
 				7DF4F39829A3A88400E5C1E1 /* NewIncomeTagView.swift */,
+				7DC46B4329A4A4B9000E311B /* NewIncomeTypeView.swift */,
+				7DC97A2B29223ADB003F69D4 /* NewIncomeView.swift */,
 			);
 			path = IncomeView;
 			sourceTree = "<group>";
@@ -507,20 +504,20 @@
 		7DD7A56C29224C1200CD5B37 /* AccountView */ = {
 			isa = PBXGroup;
 			children = (
-				7DB2B0A3299515B800E4B891 /* AccountCardView.swift */,
 				7DB2B0A5299518A100E4B891 /* AccountCardList.swift */,
-				7D79FA8B291BA152004A2ECF /* NewAccountView.swift */,
-				7DE42FBF2934F69200D4DA0A /* UpdateBalanceAccountView.swift */,
-				7DA63A4A2996017D00568FCA /* AccountDetailView.swift */,
-				7DA63A482995FACA00568FCA /* AccountDetailCardView.swift */,
-				7DB2B0A72995638700E4B891 /* TransactionView.swift */,
+				7DB2B0A3299515B800E4B891 /* AccountCardView.swift */,
 				7DF8CCFC299FB86100267C29 /* AccountChartView.swift */,
-				7D1188352A03F3000005EA32 /* AccountWatchView.swift */,
-				7DB58AB229967AFE00B93592 /* AccountRowView.swift */,
+				7DA63A482995FACA00568FCA /* AccountDetailCardView.swift */,
+				7DA63A4A2996017D00568FCA /* AccountDetailView.swift */,
 				7DB58AB429967B2E00B93592 /* AccountListView.swift */,
+				7DB58AB229967AFE00B93592 /* AccountRowView.swift */,
+				7D1188352A03F3000005EA32 /* AccountWatchView.swift */,
 				7D5B9F92299A896300D0477B /* BalanceCardView.swift */,
-				7D5A755F2A04FB11001646A2 /* WatchToAccountView.swift */,
+				7D79FA8B291BA152004A2ECF /* NewAccountView.swift */,
 				7D3E3CC02A1FC87D009538BA /* RowWatchToAccountView.swift */,
+				7DB2B0A72995638700E4B891 /* TransactionView.swift */,
+				7DE42FBF2934F69200D4DA0A /* UpdateBalanceAccountView.swift */,
+				7D5A755F2A04FB11001646A2 /* WatchToAccountView.swift */,
 			);
 			path = AccountView;
 			sourceTree = "<group>";
@@ -552,10 +549,10 @@
 			isa = PBXGroup;
 			children = (
 				7D14A8EF2A0253A9002FC324 /* AccountWatchChartView.swift */,
-				7D6F885129F8FBFB000AE48A /* IncomeChartView.swift */,
-				7D11D0042A0A551300897B08 /* PieSliceView.swift */,
-				7D11D0062A0A56D700897B08 /* PieChartView.swift */,
 				7D11D0082A0A59F600897B08 /* ChartView.swift */,
+				7D6F885129F8FBFB000AE48A /* IncomeChartView.swift */,
+				7D11D0062A0A56D700897B08 /* PieChartView.swift */,
+				7D11D0042A0A551300897B08 /* PieSliceView.swift */,
 			);
 			path = ChartView;
 			sourceTree = "<group>";
@@ -563,12 +560,12 @@
 		7DF8CCFB299F445300267C29 /* WatchView */ = {
 			isa = PBXGroup;
 			children = (
-				7DF8CCF8299F444000267C29 /* WatchView.swift */,
-				7D9F6F57299CE18000F964EC /* WatchDetailView.swift */,
-				7DB98803299B682F004ED6D2 /* NewWatchView.swift */,
-				7DB98805299B708C004ED6D2 /* UpdateWatchView.swift */,
 				7DB98807299B8A99004ED6D2 /* AccountToWatchView.swift */,
+				7DB98803299B682F004ED6D2 /* NewWatchView.swift */,
 				7D3E3CBE2A1FC4FC009538BA /* RowAccountToWatchView.swift */,
+				7DB98805299B708C004ED6D2 /* UpdateWatchView.swift */,
+				7D9F6F57299CE18000F964EC /* WatchDetailView.swift */,
+				7DF8CCF8299F444000267C29 /* WatchView.swift */,
 			);
 			path = WatchView;
 			sourceTree = "<group>";
@@ -831,7 +828,6 @@
 				7D5B9F93299A896300D0477B /* BalanceCardView.swift in Sources */,
 				7D7AA909298D8DA2004C9776 /* UserController.swift in Sources */,
 				7DF8CCFD299FB86100267C29 /* AccountChartView.swift in Sources */,
-				7D79FA5D291B7431004A2ECF /* net_worth.xcdatamodeld in Sources */,
 				7DC46B4829A4C5A0000E311B /* IncomeTypeView.swift in Sources */,
 				7D9F6F58299CE18000F964EC /* WatchDetailView.swift in Sources */,
 				7D3636FB292F9CCB0013B4E5 /* NotificationsView.swift in Sources */,
@@ -1294,19 +1290,6 @@
 			productName = GoogleSignInSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
-
-/* Begin XCVersionGroup section */
-		7D79FA5B291B7431004A2ECF /* net_worth.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				7D79FA5C291B7431004A2ECF /* net_worth.xcdatamodel */,
-			);
-			currentVersion = 7D79FA5C291B7431004A2ECF /* net_worth.xcdatamodel */;
-			path = net_worth.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 7D79FA45291B7430004A2ECF /* Project object */;
 }
