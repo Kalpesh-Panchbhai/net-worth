@@ -308,6 +308,15 @@ struct IncomeChartView: View {
             }
         }
         // MARK: Customizing Y-AXIS Length
+        .chartYAxis {
+            AxisMarks() { value in
+                AxisGridLine()
+                AxisTick()
+                AxisValueLabel {
+                    Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))")
+                }
+            }
+        }
         .chartYScale(domain: 0...(getMaxYScale() * 1.5))
         // MARK: Gesture to Highlight Current Bar
         .chartOverlay(content: { proxy in

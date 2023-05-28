@@ -29,6 +29,15 @@ struct AccountChartView: View {
                             )
                         }
                     }
+                    .chartYAxis {
+                        AxisMarks() { value in
+                            AxisGridLine()
+                            AxisTick()
+                            AxisValueLabel {
+                                Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))")
+                            }
+                        }
+                    }
                     .frame(height: 250)
                     
                     Picker(selection: $range, content: {

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Charts
 import FirebaseFirestore
 
 class CommonController {
@@ -19,6 +20,35 @@ class CommonController {
             
             batch.commit {_ in
                 self.delete(collection: collection, batchSize: batchSize)
+            }
+        }
+    }
+    
+    public static func parseAxisValue(value: AxisValue) -> String? {
+        let input = String(describing: value)
+        let regex = /\((\d*.0)|\((0)|\((-\d*.0)/
+        
+        if let match = input.firstMatch(of: regex) {
+            return "\(match.1 ?? match.2 ?? match.3 ?? "")"
+        }
+        return nil
+    }
+    
+    public static func abbreviateAxisValue(string: String) -> String {
+        let decimal = Decimal(string: string)
+        if decimal == nil {
+            return string
+        } else {
+            if abs(decimal!) > 1000000000000.0 {
+                return "\(decimal! / 1000000000000.0)t"
+            } else if abs(decimal!) > 1000000000.0 {
+                return "\(decimal! / 1000000000.0)b"
+            } else if abs(decimal!) > 1000000.0 {
+                return "\(decimal! / 1000000.0)m"
+            } else if abs(decimal!) > 1000.0 {
+                return "\(decimal! / 1000.0)k"
+            } else {
+                return "\(decimal!)"
             }
         }
     }
