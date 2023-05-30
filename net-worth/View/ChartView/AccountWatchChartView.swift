@@ -21,70 +21,74 @@ struct AccountWatchChartView: View {
     @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
-        VStack {
-            HStack {
-                List {
-                    Chart {
-                        ForEach(chartViewModel.chartDataList, id: \.self) { item in
-                            LineMark(
-                                x: .value("Mount", item.date),
-                                y: .value("Value", item.value)
-                            )
-                        }
-                    }
-                    .chartYAxis {
-                        AxisMarks() { value in
-                            AxisGridLine()
-                            AxisTick()
-                            AxisValueLabel {
-                                Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))")
+        NavigationStack {
+            VStack {
+                HStack {
+                    List {
+                        Chart {
+                            ForEach(chartViewModel.chartDataList, id: \.self) { item in
+                                LineMark(
+                                    x: .value("Mount", item.date),
+                                    y: .value("Value", item.value)
+                                )
                             }
                         }
-                    }
-                    .frame(height: 250)
-                    
-                    Picker(selection: $range, content: {
-                        Text("1M").tag("1M")
-                        Text("3M").tag("3M")
-                        Text("6M").tag("6M")
-                        Text("1Y").tag("1Y")
-                        Text("2Y").tag("2Y")
-                        Text("5Y").tag("5Y")
-                        Text("All").tag("All")
-                    }, label: {
+                        .chartYAxis {
+                            AxisMarks() { value in
+                                AxisGridLine()
+                                AxisTick()
+                                AxisValueLabel {
+                                    Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))")
+                                }
+                            }
+                        }
+                        .frame(height: 250)
                         
-                    })
-                    .onChange(of: range) { value in
-                        Task.init {
-                            await accountViewModel.getAccountTransactionListWithRangeMultipleAccounts(accountList: accountList, range: range)
-                            if(!range.elementsEqual("All")) {
-                                await accountViewModel.getAccountLastTransactionBelowRange(accountList: accountList, range: range)
+                        Picker(selection: $range, content: {
+                            Text("1M").tag("1M")
+                            Text("3M").tag("3M")
+                            Text("6M").tag("6M")
+                            Text("1Y").tag("1Y")
+                            Text("2Y").tag("2Y")
+                            Text("5Y").tag("5Y")
+                            Text("All").tag("All")
+                        }, label: {
+                            
+                        })
+                        .onChange(of: range) { value in
+                            Task.init {
+                                await accountViewModel.getAccountTransactionListWithRangeMultipleAccounts(accountList: accountList, range: range)
+                                if(!range.elementsEqual("All")) {
+                                    await accountViewModel.getAccountLastTransactionBelowRange(accountList: accountList, range: range)
+                                }
+                                await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel, range: range)
                             }
-                            await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel, range: range)
                         }
+                        .pickerStyle(SegmentedPickerStyle())
                     }
-                    .pickerStyle(SegmentedPickerStyle())
+                    .background(Color.navyBlue)
+                    .scrollContentBackground(.hidden)
                 }
-                .background(Color.navyBlue)
-                .scrollContentBackground(.hidden)
             }
-        }
-        .blur(radius: CGFloat(scenePhaseBlur))
-        .onChange(of: scenePhase, perform: { value in
-            if(value == .active) {
-                scenePhaseBlur = 0
-            } else {
-                scenePhaseBlur = 5
-            }
-        })
-        .onAppear {
-            Task.init {
-                await accountViewModel.getAccountTransactionListWithRangeMultipleAccounts(accountList: accountList, range: range)
-                if(!range.elementsEqual("All")) {
-                    await accountViewModel.getAccountLastTransactionBelowRange(accountList: accountList, range: range)
+            .blur(radius: CGFloat(scenePhaseBlur))
+            .onChange(of: scenePhase, perform: { value in
+                if(value == .active) {
+                    scenePhaseBlur = 0
+                } else {
+                    scenePhaseBlur = 5
                 }
-                await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel, range: range)
+            })
+            .onAppear {
+                Task.init {
+                    await accountViewModel.getAccountTransactionListWithRangeMultipleAccounts(accountList: accountList, range: range)
+                    if(!range.elementsEqual("All")) {
+                        await accountViewModel.getAccountLastTransactionBelowRange(accountList: accountList, range: range)
+                    }
+                    await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel, range: range)
+                }
             }
+            .navigationTitle("Chart")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
