@@ -16,6 +16,7 @@ struct ChartView: View {
     @State var chartDataList = [Account]()
     @State var compareAssetsToLiabilities = false
     @State var multipleWatchListSelection = Set<Watch>()
+    @State var showNetWorthChart = false
     
     @ObservedObject var watchViewModel: WatchViewModel
     @ObservedObject var accountViewModel: AccountViewModel
@@ -160,6 +161,21 @@ struct ChartView: View {
                     .frame(minHeight: 550)
                 }
             }
+            .toolbar {
+                ToolbarItem {
+                    Button(action: {
+                        self.showNetWorthChart.toggle()
+                    }, label: {
+                        Text("Net worth")
+                            .foregroundColor(Color.lightBlue)
+                    })
+                    .font(.system(size: 14).bold())
+                }
+            }
+            .sheet(isPresented: $showNetWorthChart, content: {
+                NetWorthChartView(accountList: getAccounts())
+                    .presentationDetents([.medium])
+            })
             .scrollIndicators(.hidden)
             .navigationTitle("Charts")
             .navigationBarTitleDisplayMode(.inline)

@@ -69,4 +69,26 @@ class ChartViewModel: ObservableObject {
             self.chartDataList = chartDataListResponse
         }
     }
+    
+    func getChartDataForNetworth(incomeViewModel: IncomeViewModel) async {
+        DispatchQueue.main.async {
+            var currentTotalIncome = 0.0
+            var chartDataListResponse = [ChartData]()
+            for chartData in self.chartDataList {
+                if(incomeViewModel.incomeList.contains {
+                    $0.creditedOn.removeTimeStamp() == chartData.date.removeTimeStamp()
+                }) {
+                    currentTotalIncome = incomeViewModel.incomeList.filter {
+                        $0.creditedOn.removeTimeStamp() == chartData.date.removeTimeStamp()
+                    }.first!.cumulativeAmount
+                }
+                if(currentTotalIncome.isZero) {
+                    chartDataListResponse.append(ChartData(date: chartData.date, value: 0))
+                } else {
+                    chartDataListResponse.append(ChartData(date: chartData.date, value: (chartData.value / currentTotalIncome) * 100))
+                }
+            }
+            self.chartDataList = chartDataListResponse
+        }
+    }
 }
