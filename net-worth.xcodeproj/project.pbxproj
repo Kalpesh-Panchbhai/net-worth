@@ -553,9 +553,9 @@
 				7D14A8EF2A0253A9002FC324 /* AccountWatchChartView.swift */,
 				7D11D0082A0A59F600897B08 /* ChartView.swift */,
 				7D6F885129F8FBFB000AE48A /* IncomeChartView.swift */,
+				7D111E742A25C21B00485DB1 /* NetWorthChartView.swift */,
 				7D11D0062A0A56D700897B08 /* PieChartView.swift */,
 				7D11D0042A0A551300897B08 /* PieSliceView.swift */,
-				7D111E742A25C21B00485DB1 /* NetWorthChartView.swift */,
 			);
 			path = ChartView;
 			sourceTree = "<group>";
