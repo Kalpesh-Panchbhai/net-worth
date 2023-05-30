@@ -16,6 +16,7 @@ class IncomeViewModel: ObservableObject {
     @Published var incomeList = [Income]()
     @Published var incomeListLoaded = false
     @Published var incomeTotalAmount = 0.0
+    @Published var incomeTaxPaidAmount = 0.0
     
     @Published var incomeTagList = [IncomeTag]()
     @Published var incomeTypeList = [IncomeType]()
@@ -39,6 +40,17 @@ class IncomeViewModel: ObservableObject {
             let amount = try await incomeController.fetchTotalAmount(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
             DispatchQueue.main.async {
                 self.incomeTotalAmount = amount
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    func getTotalTaxPaid(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async {
+        do {
+            let taxPaid = try await incomeController.fetchTotalTaxPaid(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
+            DispatchQueue.main.async {
+                self.incomeTaxPaidAmount = taxPaid
             }
         } catch {
             print(error)

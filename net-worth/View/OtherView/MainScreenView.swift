@@ -59,6 +59,7 @@ struct MainScreenView: View {
                 await watchViewModel.getAllWatchList()
                 
                 await incomeViewModel.getTotalBalance()
+                await incomeViewModel.getTotalTaxPaid()
                 await incomeViewModel.getIncomeList()
                 await incomeViewModel.getIncomeTypeList()
                 await incomeViewModel.getIncomeTagList()

@@ -21,6 +21,9 @@ struct IncomeView: View {
     @State var filterYear = ""
     @State var filterFinancialYear = ""
     
+    @State var showTaxPaidData = false
+    @State var hideZeroAmount = true
+    
     @StateObject var incomeViewModel: IncomeViewModel
     
     var body: some View {
@@ -50,7 +53,11 @@ struct IncomeView: View {
                         VStack {
                             // MARK: Total Amount View
                             VStack {
-                                incomeTotalAmount
+                                if(showTaxPaidData) {
+                                    incomeTotalTaxPaid
+                                } else {
+                                    incomeTotalAmount
+                                }
                             }
                             .shadow(color: Color.navyBlue, radius: 3)
                             Divider()
@@ -58,14 +65,16 @@ struct IncomeView: View {
                             VStack {
                                 List {
                                     ForEach(incomeViewModel.incomeList, id: \.self) { income in
-                                        NavigationLink(destination: {
-                                            IncomeDetailView(income: income)
-                                                .toolbarRole(.editor)
-                                        }, label: {
-                                            IncomeRowView(income: income)
-                                        })
-                                        .contextMenu {
-                                            Label(income.id!, systemImage: "info.square")
+                                        if((hideZeroAmount && ((!income.taxpaid.isZero && showTaxPaidData) || (!income.amount.isZero && !showTaxPaidData)) || !hideZeroAmount)) {
+                                            NavigationLink(destination: {
+                                                IncomeDetailView(income: income)
+                                                    .toolbarRole(.editor)
+                                            }, label: {
+                                                IncomeRowView(income: income, showTaxPaid: $showTaxPaidData)
+                                            })
+                                            .contextMenu {
+                                                Label(income.id!, systemImage: "info.square")
+                                            }
                                         }
                                     }
                                     .onDelete(perform: deleteIncome)
@@ -165,6 +174,16 @@ struct IncomeView: View {
                                             }, label: {
                                                 Label("Filter by", systemImage: "line.3.horizontal.decrease.circle")
                                             })
+                                            
+                                            // MARK: Show Tax View
+                                            Toggle(isOn: $showTaxPaidData, label: {
+                                                Text("Show Tax View")
+                                            })
+                                            
+                                            // MARK: Hide Zero Balance
+                                            Toggle(isOn: $hideZeroAmount, label: {
+                                                Text("Hide Zero amount")
+                                            })
                                         }, label: {
                                             Image(systemName: "ellipsis")
                                                 .foregroundColor(Color.lightBlue)
@@ -231,7 +250,21 @@ struct IncomeView: View {
     
     private var incomeTotalAmount: some View {
         HStack {
-            Text("Total: \(SettingsController().getDefaultCurrency().code) \(incomeViewModel.incomeTotalAmount.withCommas(decimalPlace: 2))")
+            Text("Total Income: \(SettingsController().getDefaultCurrency().code) \(incomeViewModel.incomeTotalAmount.withCommas(decimalPlace: 2))")
+                .foregroundColor(Color.navyBlue)
+                .bold()
+        }
+        .padding(6)
+        .frame(width: 360, height: 50)
+        .background(Color.white)
+        .cornerRadius(10)
+        .shadow(color: Color.navyBlue.opacity(0.3),radius: 10, x: 0, y: 5)
+        .padding(.horizontal)
+    }
+    
+    private var incomeTotalTaxPaid: some View {
+        HStack {
+            Text("Total Tax Paid: \(SettingsController().getDefaultCurrency().code) \(incomeViewModel.incomeTaxPaidAmount.withCommas(decimalPlace: 2))")
                 .foregroundColor(Color.navyBlue)
                 .bold()
         }
@@ -262,6 +295,7 @@ struct IncomeView: View {
     private func updateData() {
         Task.init {
             await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+            await incomeViewModel.getTotalTaxPaid(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
             await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
         }
     }
