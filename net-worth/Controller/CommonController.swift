@@ -39,13 +39,13 @@ class CommonController {
         if decimal == nil {
             return string
         } else {
-            if abs(decimal!) > 1000000000000.0 {
+            if abs(decimal!) > 999999999999.9 {
                 return "\(decimal! / 1000000000000.0)t"
-            } else if abs(decimal!) > 1000000000.0 {
+            } else if abs(decimal!) > 999999999.9 {
                 return "\(decimal! / 1000000000.0)b"
-            } else if abs(decimal!) > 1000000.0 {
+            } else if abs(decimal!) > 999999.9 {
                 return "\(decimal! / 1000000.0)m"
-            } else if abs(decimal!) > 1000.0 {
+            } else if abs(decimal!) > 999.9 {
                 return "\(decimal! / 1000.0)k"
             } else {
                 return "\(decimal!)"
