@@ -125,13 +125,15 @@ class IncomeController {
         var cumAmount = 0.0
         var cumTaxPaid = 0.0
         incomeList = incomeList.map { value1 in
-            var sum = 0.0
-            var totalMonth = 0.0
+            var sumAmount = 0.0
+            var sumTaxPaid = 0.0
+            var totalMonth = 0
             cumAmount = cumAmount + value1.amount
             cumTaxPaid = cumTaxPaid + value1.taxpaid
             incomeList.forEach { value2 in
                 if(value1.creditedOn >= value2.creditedOn) {
-                    sum = sum + value2.amount
+                    sumAmount += value2.amount
+                    sumTaxPaid += value2.taxpaid
                     totalMonth+=1
                 }
             }
@@ -142,8 +144,8 @@ class IncomeController {
                           currency: value1.currency,
                           type: value1.type,
                           tag: value1.tag,
-                          avgAmount: sum / totalMonth,
-                          avgTaxPaid: cumTaxPaid / Double(incomeList.count),
+                          avgAmount: sumAmount / Double(totalMonth),
+                          avgTaxPaid: sumTaxPaid / Double(totalMonth),
                           cumulativeAmount: cumAmount,
                           cumulativeTaxPaid: cumTaxPaid)
         }.reversed()
