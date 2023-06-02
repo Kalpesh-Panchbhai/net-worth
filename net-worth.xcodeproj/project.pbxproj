@@ -26,7 +26,6 @@
 		7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D433CF529385DBB007FA625 /* FinanceController.swift */; };
 		7D433CF829386002007FA625 /* FinanceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D433CF729386002007FA625 /* FinanceModel.swift */; };
 		7D4E671329F7D4C900EB6B24 /* IncomeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4E671229F7D4C900EB6B24 /* IncomeDetailView.swift */; };
-		7D51FE18291E1E8500BBA94A /* SlidingTabView in Frameworks */ = {isa = PBXBuildFile; productRef = 7D51FE17291E1E8400BBA94A /* SlidingTabView */; };
 		7D596278294105A40008A6B9 /* Balance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D596277294105A40008A6B9 /* Balance.swift */; };
 		7D5A75602A04FB11001646A2 /* WatchToAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5A755F2A04FB11001646A2 /* WatchToAccountView.swift */; };
 		7D5B9F93299A896300D0477B /* BalanceCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5B9F92299A896300D0477B /* BalanceCardView.swift */; };
@@ -253,7 +252,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7D51FE18291E1E8500BBA94A /* SlidingTabView in Frameworks */,
 				7D921C522986801E0014AC9E /* FirebaseAuth in Frameworks */,
 				7D85D068298D2CCF0019F85E /* FirebaseFirestore in Frameworks */,
 				7D921C55298681BC0014AC9E /* GoogleSignIn in Frameworks */,
@@ -601,7 +599,6 @@
 			);
 			name = "net-worth";
 			packageProductDependencies = (
-				7D51FE17291E1E8400BBA94A /* SlidingTabView */,
 				7D921C512986801E0014AC9E /* FirebaseAuth */,
 				7D921C54298681BC0014AC9E /* GoogleSignIn */,
 				7D921C56298681BC0014AC9E /* GoogleSignInSwift */,
@@ -1263,11 +1260,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		7D51FE17291E1E8400BBA94A /* SlidingTabView */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7D51FE16291E1E8400BBA94A /* XCRemoteSwiftPackageReference "SlidingTabView" */;
-			productName = SlidingTabView;
-		};
 		7D85D067298D2CCF0019F85E /* FirebaseFirestore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 7D921C502986801E0014AC9E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
