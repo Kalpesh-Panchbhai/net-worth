@@ -680,7 +680,6 @@
 			);
 			mainGroup = 7D79FA44291B7430004A2ECF;
 			packageReferences = (
-				7D51FE16291E1E8400BBA94A /* XCRemoteSwiftPackageReference "SlidingTabView" */,
 				7D921C502986801E0014AC9E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				7D921C53298681BC0014AC9E /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
@@ -1233,14 +1232,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		7D51FE16291E1E8400BBA94A /* XCRemoteSwiftPackageReference "SlidingTabView" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/QuynhNguyen/SlidingTabView";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 		7D921C502986801E0014AC9E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
