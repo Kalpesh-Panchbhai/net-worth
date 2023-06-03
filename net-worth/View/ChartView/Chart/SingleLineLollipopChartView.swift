@@ -18,16 +18,25 @@ struct SingleLineLollipopChartView: View {
     @State private var selectedElement: ChartData?
     
     var body: some View {
-        Chart(chartDataList, id: \.date) {
-            LineMark(
-                x: .value("Date", $0.date),
-                y: .value("Value", $0.value)
-            )
-            .accessibilityLabel($0.date.formatted(date: .complete, time: .omitted))
-            .accessibilityValue("\($0.value)")
-            .lineStyle(StrokeStyle(lineWidth: lineWidth))
-            .foregroundStyle(chartColor.gradient)
-            .interpolationMethod(.cardinal)
+        Chart {
+            ForEach(chartDataList, id: \.self) { data in
+                LineMark(
+                    x: .value("Date", data.date),
+                    y: .value("Value", data.value)
+                )
+                .accessibilityLabel(data.date.formatted(date: .complete, time: .omitted))
+                .accessibilityValue("\(data.value)")
+                .lineStyle(StrokeStyle(lineWidth: lineWidth))
+                .foregroundStyle(chartColor.gradient)
+                .interpolationMethod(.cardinal)
+                
+                AreaMark(
+                    x: .value("Date", data.date),
+                    y: .value("Value", data.value)
+                )
+                .foregroundStyle(chartColor.opacity(0.1).gradient)
+                .interpolationMethod(.cardinal)
+            }
         }
         .chartXAxis {
             AxisMarks(values: .automatic) { _ in
