@@ -34,13 +34,13 @@ struct SingleLineLollipopChartView: View {
                     x: .value("Date", data.date),
                     y: .value("Value", data.value)
                 )
-                .foregroundStyle(chartColor.opacity(0.1).gradient)
+                .foregroundStyle(Gradient(colors: [Color.navyBlue.opacity(0.3), .clear]))
                 .interpolationMethod(.cardinal)
             }
         }
         .chartXAxis {
             AxisMarks(values: .automatic) { _ in
-                AxisGridLine(centered: true, stroke: StrokeStyle(dash: [1, 2]))
+                AxisGridLine(centered: true, stroke: StrokeStyle(dash: [1]))
                     .foregroundStyle(Color.navyBlue)
                 AxisTick(stroke: StrokeStyle(lineWidth: 1))
                     .foregroundStyle(Color.navyBlue)
@@ -50,7 +50,7 @@ struct SingleLineLollipopChartView: View {
         }
         .chartYAxis {
             AxisMarks(values: .automatic) { value in
-                AxisGridLine(centered: true, stroke: StrokeStyle(dash: [1, 2]))
+                AxisGridLine(centered: true, stroke: StrokeStyle(dash: [1]))
                     .foregroundStyle(Color.navyBlue)
                 AxisTick(stroke: StrokeStyle(lineWidth: 1))
                     .foregroundStyle(Color.navyBlue)
