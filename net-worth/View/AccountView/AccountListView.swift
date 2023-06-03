@@ -119,7 +119,6 @@ struct AccountListView: View {
         })
         .sheet(isPresented: $isChartViewOpen, content: {
             AccountWatchChartView(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
-                .presentationDetents([.medium])
         })
         .searchable(text: $searchText)
         .onAppear {

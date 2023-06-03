@@ -25,7 +25,6 @@ struct AccountChartView: View {
                         SingleLineLollipopChartView(chartDataList: chartViewModel.chartDataList)
                     }
                     .listRowBackground(Color.white)
-                    .foregroundColor(Color.lightBlue)
                     
                     Section {
                         Picker(selection: $range, content: {

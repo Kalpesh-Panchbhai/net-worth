@@ -22,73 +22,65 @@ struct AccountWatchChartView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                HStack {
-                    List {
-                        Chart {
-                            ForEach(chartViewModel.chartDataList, id: \.self) { item in
-                                LineMark(
-                                    x: .value("Mount", item.date),
-                                    y: .value("Value", item.value)
-                                )
+            ZStack {
+                Color.navyBlue.ignoresSafeArea()
+                VStack {
+                    HStack {
+                        List {
+                            Section {
+                                SingleLineLollipopChartView(chartDataList: chartViewModel.chartDataList)
                             }
-                        }
-                        .chartYAxis {
-                            AxisMarks() { value in
-                                AxisGridLine()
-                                AxisTick()
-                                AxisValueLabel {
-                                    Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))")
-                                }
-                            }
-                        }
-                        .frame(height: 250)
-                        
-                        Picker(selection: $range, content: {
-                            Text("1M").tag("1M")
-                            Text("3M").tag("3M")
-                            Text("6M").tag("6M")
-                            Text("1Y").tag("1Y")
-                            Text("2Y").tag("2Y")
-                            Text("5Y").tag("5Y")
-                            Text("All").tag("All")
-                        }, label: {
+                            .listRowBackground(Color.white)
                             
-                        })
-                        .onChange(of: range) { value in
-                            Task.init {
-                                await accountViewModel.getAccountTransactionListWithRangeMultipleAccounts(accountList: accountList, range: range)
-                                if(!range.elementsEqual("All")) {
-                                    await accountViewModel.getAccountLastTransactionBelowRange(accountList: accountList, range: range)
+                            Section {
+                                Picker(selection: $range, content: {
+                                    Text("1M").tag("1M")
+                                    Text("3M").tag("3M")
+                                    Text("6M").tag("6M")
+                                    Text("1Y").tag("1Y")
+                                    Text("2Y").tag("2Y")
+                                    Text("5Y").tag("5Y")
+                                    Text("All").tag("All")
+                                }, label: {
+                                    
+                                })
+                                .onChange(of: range) { value in
+                                    Task.init {
+                                        await accountViewModel.getAccountTransactionListWithRangeMultipleAccounts(accountList: accountList, range: range)
+                                        if(!range.elementsEqual("All")) {
+                                            await accountViewModel.getAccountLastTransactionBelowRange(accountList: accountList, range: range)
+                                        }
+                                        await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel, range: range)
+                                    }
                                 }
-                                await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel, range: range)
+                                .pickerStyle(SegmentedPickerStyle())
                             }
+                            .listRowBackground(Color.navyBlue)
+                            .foregroundColor(Color.lightBlue)
                         }
-                        .pickerStyle(SegmentedPickerStyle())
                     }
-                    .background(Color.navyBlue)
+                    .blur(radius: CGFloat(scenePhaseBlur))
+                    .onChange(of: scenePhase, perform: { value in
+                        if(value == .active) {
+                            scenePhaseBlur = 0
+                        } else {
+                            scenePhaseBlur = 5
+                        }
+                    })
+                    .onAppear {
+                        Task.init {
+                            await accountViewModel.getAccountTransactionListWithRangeMultipleAccounts(accountList: accountList, range: range)
+                            if(!range.elementsEqual("All")) {
+                                await accountViewModel.getAccountLastTransactionBelowRange(accountList: accountList, range: range)
+                            }
+                            await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel, range: range)
+                        }
+                    }
+                    .navigationTitle("Chart")
+                    .navigationBarTitleDisplayMode(.inline)
                     .scrollContentBackground(.hidden)
                 }
             }
-            .blur(radius: CGFloat(scenePhaseBlur))
-            .onChange(of: scenePhase, perform: { value in
-                if(value == .active) {
-                    scenePhaseBlur = 0
-                } else {
-                    scenePhaseBlur = 5
-                }
-            })
-            .onAppear {
-                Task.init {
-                    await accountViewModel.getAccountTransactionListWithRangeMultipleAccounts(accountList: accountList, range: range)
-                    if(!range.elementsEqual("All")) {
-                        await accountViewModel.getAccountLastTransactionBelowRange(accountList: accountList, range: range)
-                    }
-                    await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel, range: range)
-                }
-            }
-            .navigationTitle("Chart")
-            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
