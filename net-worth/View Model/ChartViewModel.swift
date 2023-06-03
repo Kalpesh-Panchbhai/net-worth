@@ -22,6 +22,9 @@ class ChartViewModel: ObservableObject {
                     chartDataListResponse.append(ChartData(date: account.timestamp.removeTimeStamp(), value: account.currentBalance))
                 }
             }
+            chartDataListResponse.sort(by: {
+                $0.date < $1.date
+            })
             self.chartDataList = chartDataListResponse
         }
     }
@@ -70,6 +73,9 @@ class ChartViewModel: ObservableObject {
                 chartDataListResponse.append(ChartData(date: startDate, value: totalAmountForEachDate))
                 startDate = startDate.addingTimeInterval(86400)
             }
+            chartDataListResponse.sort(by: {
+                $0.date < $1.date
+            })
             self.chartDataList = chartDataListResponse
         }
     }
@@ -92,6 +98,9 @@ class ChartViewModel: ObservableObject {
                     chartDataListResponse.append(ChartData(date: chartData.date, value: (chartData.value / currentTotalIncome) * 100))
                 }
             }
+            chartDataListResponse.sort(by: {
+                $0.date < $1.date
+            })
             self.chartDataList = chartDataListResponse
         }
     }

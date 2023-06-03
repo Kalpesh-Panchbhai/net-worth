@@ -156,7 +156,7 @@ struct SingleLineLollipopChartView: View {
     }
     
     private func isPositiveValue() -> Bool {
-        !chartDataList.isEmpty && (((chartDataList.last?.value.distance(to: chartDataList.first!.value))!) > 0)
+        !chartDataList.isEmpty && (((chartDataList.first?.value.distance(to: chartDataList.last!.value))!) >= 0)
     }
     
     private func getChartColor() -> Color {
