@@ -16,7 +16,11 @@ class ChartViewModel: ObservableObject {
         DispatchQueue.main.async {
             var chartDataListResponse = [ChartData]()
             for account in accountViewModel.accountTransactionListWithRange {
-                chartDataListResponse.append(ChartData(date: account.timestamp, value: account.currentBalance))
+                if(!chartDataListResponse.contains(where: {
+                    $0.date == account.timestamp.removeTimeStamp()
+                })) {
+                    chartDataListResponse.append(ChartData(date: account.timestamp.removeTimeStamp(), value: account.currentBalance))
+                }
             }
             self.chartDataList = chartDataListResponse
         }
