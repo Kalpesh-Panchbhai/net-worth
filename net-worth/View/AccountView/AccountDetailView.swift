@@ -50,6 +50,10 @@ struct AccountDetailView: View {
                     Text("Account Tab View")
                 })
                 .pickerStyle(SegmentedPickerStyle())
+                .onChange(of: tabItem, perform: { _ in
+                    let impact = UIImpactFeedbackGenerator(style: .light)
+                    impact.impactOccurred()
+                })
                 if(tabItem == 1) {
                     TransactionsView(accountViewModel: accountViewModel)
                 } else if(tabItem == 2) {

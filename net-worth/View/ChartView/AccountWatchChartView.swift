@@ -52,6 +52,8 @@ struct AccountWatchChartView: View {
                                         }
                                         await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel, range: range)
                                     }
+                                    let impact = UIImpactFeedbackGenerator(style: .light)
+                                    impact.impactOccurred()
                                 }
                                 .pickerStyle(SegmentedPickerStyle())
                             }

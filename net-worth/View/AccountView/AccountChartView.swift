@@ -43,6 +43,8 @@ struct AccountChartView: View {
                                 await accountViewModel.getAccountTransactionListWithRange(id: account.id!, range: range)
                                 await chartViewModel.getChartData(accountViewModel: accountViewModel)
                             }
+                            let impact = UIImpactFeedbackGenerator(style: .light)
+                            impact.impactOccurred()
                         }
                         .pickerStyle(SegmentedPickerStyle())
                     }
