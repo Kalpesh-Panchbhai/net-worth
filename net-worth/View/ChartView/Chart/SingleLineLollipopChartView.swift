@@ -89,8 +89,11 @@ struct SingleLineLollipopChartView: View {
                     if let selectedElement {
                         let dateInterval = Calendar.current.dateInterval(of: .day, for: selectedElement.date)!
                         let startPositionX1 = proxy.position(forX: dateInterval.start) ?? 0
+                        let startPositionY1 = proxy.position(forY: selectedElement.value) ?? 0
                         
                         let lineX = startPositionX1 + geo[proxy.plotAreaFrame].origin.x
+                        let lineY = startPositionY1 + geo[proxy.plotAreaFrame].origin.y
+                        
                         let lineHeight = geo[proxy.plotAreaFrame].maxY
                         let boxWidth: CGFloat = 100
                         let boxOffset = max(0, min(geo.size.width - boxWidth, lineX - boxWidth / 2))
@@ -99,6 +102,11 @@ struct SingleLineLollipopChartView: View {
                             .fill(Color.lightBlue)
                             .frame(width: 2, height: lineHeight)
                             .position(x: lineX, y: lineHeight / 2)
+                        
+                        Circle()
+                            .fill(Color.lightBlue)
+                            .frame(width: 8, height: 8)
+                            .position(x: lineX, y: lineY)
                         
                         VStack(alignment: .center) {
                             Text("\(selectedElement.date, format: .dateTime.year().month().day())")
