@@ -21,43 +21,34 @@ struct AccountChartView: View {
         VStack {
             HStack {
                 List {
-                    Chart {
-                        ForEach(chartViewModel.chartDataList, id: \.self) { item in
-                            LineMark(
-                                x: .value("Mount", item.date),
-                                y: .value("Value", item.value)
-                            )
-                        }
+                    Section {
+                        SingleLineLollipopChartView(chartDataList: chartViewModel.chartDataList)
                     }
-                    .chartYAxis {
-                        AxisMarks() { value in
-                            AxisGridLine()
-                            AxisTick()
-                            AxisValueLabel {
-                                Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))")
+                    .listRowBackground(Color.white)
+                    .foregroundColor(Color.lightBlue)
+                    
+                    Section {
+                        Picker(selection: $range, content: {
+                            Text("1M").tag("1M")
+                            Text("3M").tag("3M")
+                            Text("6M").tag("6M")
+                            Text("1Y").tag("1Y")
+                            Text("2Y").tag("2Y")
+                            Text("5Y").tag("5Y")
+                            Text("All").tag("All")
+                        }, label: {
+                            
+                        })
+                        .onChange(of: range) { value in
+                            Task.init {
+                                await accountViewModel.getAccountTransactionListWithRange(id: account.id!, range: range)
+                                await chartViewModel.getChartData(accountViewModel: accountViewModel)
                             }
                         }
+                        .pickerStyle(SegmentedPickerStyle())
                     }
-                    .frame(height: 250)
-                    
-                    Picker(selection: $range, content: {
-                        Text("1M").tag("1M")
-                        Text("3M").tag("3M")
-                        Text("6M").tag("6M")
-                        Text("1Y").tag("1Y")
-                        Text("2Y").tag("2Y")
-                        Text("5Y").tag("5Y")
-                        Text("All").tag("All")
-                    }, label: {
-                        
-                    })
-                    .onChange(of: range) { value in
-                        Task.init {
-                            await accountViewModel.getAccountTransactionListWithRange(id: account.id!, range: range)
-                            await chartViewModel.getChartData(accountViewModel: accountViewModel)
-                        }
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
+                    .listRowBackground(Color.navyBlue)
+                    .foregroundColor(Color.lightBlue)
                 }
                 .background(Color.navyBlue)
                 .scrollContentBackground(.hidden)
