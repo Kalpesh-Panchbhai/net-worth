@@ -11,6 +11,7 @@ import Charts
 struct SingleLineLollipopChartView: View {
     
     var chartDataList: [ChartData]
+    var isPercentageChart: Bool = false
     
     @State private var lineWidth = 2.0
     @State private var selectedElement: ChartData?
@@ -53,7 +54,11 @@ struct SingleLineLollipopChartView: View {
                 AxisTick(stroke: StrokeStyle(lineWidth: 1))
                     .foregroundStyle(Color.navyBlue)
                 AxisValueLabel {
-                    Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))")
+                    if(isPercentageChart) {
+                        Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))%")
+                    } else {
+                        Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))")
+                    }
                 }
                 .foregroundStyle(Color.navyBlue)
             }
@@ -110,7 +115,7 @@ struct SingleLineLollipopChartView: View {
                             Text("\(selectedElement.date, format: .dateTime.year().month().day())")
                                 .font(.system(size: 10).bold())
                                 .foregroundColor(Color.white)
-                            Text("\(selectedElement.value, format: .number)")
+                            Text("\(selectedElement.value.withCommas(decimalPlace: 2))")
                                 .font(.system(size: 12).bold())
                                 .foregroundColor(Color.white)
                         }

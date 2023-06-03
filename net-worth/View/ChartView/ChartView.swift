@@ -174,7 +174,6 @@ struct ChartView: View {
             }
             .sheet(isPresented: $showNetWorthChart, content: {
                 NetWorthChartView(accountList: getAccounts())
-                    .presentationDetents([.medium])
             })
             .scrollIndicators(.hidden)
             .navigationTitle("Charts")
