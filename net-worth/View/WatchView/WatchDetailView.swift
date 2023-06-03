@@ -323,7 +323,6 @@ struct WatchDetailView: View {
         }
         .sheet(isPresented: $isChartViewOpen, content: {
             AccountWatchChartView(accountList: accountViewModel.accountList)
-                .presentationDetents([.medium])
         })
         .onAppear {
             Task.init {
