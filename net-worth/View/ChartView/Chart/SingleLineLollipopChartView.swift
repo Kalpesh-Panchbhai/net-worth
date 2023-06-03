@@ -13,8 +13,6 @@ struct SingleLineLollipopChartView: View {
     var chartDataList: [ChartData]
     
     @State private var lineWidth = 2.0
-    @State private var chartColor: Color = Color.navyBlue
-    @State private var showSymbols = true
     @State private var selectedElement: ChartData?
     
     var body: some View {
@@ -27,20 +25,20 @@ struct SingleLineLollipopChartView: View {
                 .accessibilityLabel(data.date.formatted(date: .complete, time: .omitted))
                 .accessibilityValue("\(data.value)")
                 .lineStyle(StrokeStyle(lineWidth: lineWidth))
-                .foregroundStyle(chartColor.gradient)
-                .interpolationMethod(.cardinal)
+                .foregroundStyle(getChartColor().gradient)
+                .interpolationMethod(.catmullRom)
                 
                 AreaMark(
                     x: .value("Date", data.date),
                     y: .value("Value", data.value)
                 )
-                .foregroundStyle(Gradient(colors: [Color.navyBlue.opacity(0.3), .clear]))
-                .interpolationMethod(.cardinal)
+                .foregroundStyle(Gradient(colors: [getChartColor().opacity(0.3), .clear]))
+                .interpolationMethod(.catmullRom)
             }
         }
         .chartXAxis {
             AxisMarks(values: .automatic) { _ in
-                AxisGridLine(centered: true, stroke: StrokeStyle(dash: [1]))
+                AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 0.1, dash: [0]))
                     .foregroundStyle(Color.navyBlue)
                 AxisTick(stroke: StrokeStyle(lineWidth: 1))
                     .foregroundStyle(Color.navyBlue)
@@ -50,7 +48,7 @@ struct SingleLineLollipopChartView: View {
         }
         .chartYAxis {
             AxisMarks(values: .automatic) { value in
-                AxisGridLine(centered: true, stroke: StrokeStyle(dash: [1]))
+                AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 0.1, dash: [0]))
                     .foregroundStyle(Color.navyBlue)
                 AxisTick(stroke: StrokeStyle(lineWidth: 1))
                     .foregroundStyle(Color.navyBlue)
@@ -99,12 +97,12 @@ struct SingleLineLollipopChartView: View {
                         let boxOffset = max(0, min(geo.size.width - boxWidth, lineX - boxWidth / 2))
                         
                         Rectangle()
-                            .fill(Color.lightBlue)
+                            .fill(getChartColor())
                             .frame(width: 2, height: lineHeight)
                             .position(x: lineX, y: lineHeight / 2)
                         
                         Circle()
-                            .fill(Color.lightBlue)
+                            .fill(getChartColor())
                             .frame(width: 8, height: 8)
                             .position(x: lineX, y: lineY)
                         
@@ -155,5 +153,13 @@ struct SingleLineLollipopChartView: View {
             }
         }
         return nil
+    }
+    
+    private func isPositiveValue() -> Bool {
+        !chartDataList.isEmpty && (((chartDataList.last?.value.distance(to: chartDataList.first!.value))!) > 0)
+    }
+    
+    private func getChartColor() -> Color {
+        isPositiveValue() ? Color.green : Color.red
     }
 }
