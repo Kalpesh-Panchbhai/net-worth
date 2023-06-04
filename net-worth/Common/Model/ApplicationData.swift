@@ -16,6 +16,6 @@ struct ApplicationData: Codable {
     
     private init() {
         incomeList = [Income]()
-        incomeListUpdatedDate = Date().getEarliestDate()
+        incomeListUpdatedDate = Date().getEarliestDate().addingTimeInterval(-86400)
     }
 }
