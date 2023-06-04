@@ -321,14 +321,14 @@
 		7D4FF8032A1BBAE90060CE44 /* FirebaseModel */ = {
 			isa = PBXGroup;
 			children = (
-				7D85D02F298D29BE0019F85E /* Income.swift */,
-				7D85D06B298D2D650019F85E /* User.swift */,
 				7DF9DB90298F978600831494 /* Account.swift */,
 				7DF9DB94298F9C2600831494 /* AccountTransaction.swift */,
-				7DB987FD299B6365004ED6D2 /* Watch.swift */,
 				7D65547529A107DC0008A8E2 /* ChartData.swift */,
+				7D85D02F298D29BE0019F85E /* Income.swift */,
 				7D76290429A385EA00F71D7C /* IncomeTag.swift */,
 				7DC46B4529A4A513000E311B /* IncomeType.swift */,
+				7D85D06B298D2D650019F85E /* User.swift */,
+				7DB987FD299B6365004ED6D2 /* Watch.swift */,
 			);
 			path = FirebaseModel;
 			sourceTree = "<group>";
@@ -544,12 +544,12 @@
 		7DD8E5AD2A06310A00245A98 /* Backup */ = {
 			isa = PBXGroup;
 			children = (
-				7DD8E5AB2A0630A000245A98 /* Data.swift */,
-				7DD8E5B62A06369800245A98 /* IncomeTagData.swift */,
-				7DD8E5B82A06375F00245A98 /* IncomeTypeData.swift */,
-				7DD8E5BA2A06383200245A98 /* IncomeData.swift */,
 				7DD8E5BC2A06397B00245A98 /* AccountData.swift */,
 				7DD8E5BE2A063AA000245A98 /* AccountTransactionData.swift */,
+				7DD8E5AB2A0630A000245A98 /* Data.swift */,
+				7DD8E5BA2A06383200245A98 /* IncomeData.swift */,
+				7DD8E5B62A06369800245A98 /* IncomeTagData.swift */,
+				7DD8E5B82A06375F00245A98 /* IncomeTypeData.swift */,
 				7DD8E5C02A06427300245A98 /* WatchData.swift */,
 			);
 			path = Backup;
