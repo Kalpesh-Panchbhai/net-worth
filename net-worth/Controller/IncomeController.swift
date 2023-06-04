@@ -221,29 +221,55 @@ class IncomeController {
         if(incomeList.isEmpty) {
             return returnResponse
         }
-        var financialYearAvailable = true
+    
         let firstYear = Calendar.current.dateComponents([.year], from: incomeList.last!.creditedOn).year!
-        var nextYear = firstYear + 1
-        let firstFinancialyear = String(firstYear) + "-" + String(nextYear)
-        returnResponse.insert(firstFinancialyear, at: 0)
-        let grouped = Dictionary(grouping: incomeList) { (income) -> String in
-            let date = Calendar.current.dateComponents([.year, .month], from: income.creditedOn)
-            
-            return String(date.year!) + " " + String(date.month!)
-            
+        let lastYear = Calendar.current.dateComponents([.year], from: incomeList.first!.creditedOn).year!
+        
+        var dateComponent = DateComponents()
+        dateComponent.year = firstYear
+        dateComponent.month = 1
+        dateComponent.day = 1
+        let firstDayOfYear = Calendar.current.date(from: dateComponent)!
+        
+        dateComponent = DateComponents()
+        dateComponent.year = firstYear
+        dateComponent.month = 3
+        dateComponent.day = 31
+        let lastDayOfFinancialYear = Calendar.current.date(from: dateComponent)!
+        
+        let firstFinancialYearAvailable = incomeList.filter {
+            firstDayOfYear <= $0.creditedOn && $0.creditedOn <= lastDayOfFinancialYear
+        }.count > 0
+        
+        if(firstFinancialYearAvailable) {
+            returnResponse.insert("\(firstYear - 1)-\(firstYear)", at: 0)
         }
-        while(financialYearAvailable) {
-            financialYearAvailable = grouped.contains(where: { key, value in
-                key == String(nextYear) + " 4"
-            })
+        
+        var nextYear = firstYear + 1
+        var financialYearAvailable = true
+        while(financialYearAvailable || nextYear <= (lastYear + 1)) {
+            dateComponent = DateComponents()
+            dateComponent.year = nextYear - 1
+            dateComponent.month = 4
+            dateComponent.day = 1
+            let firstDayOfFinancialYear = Calendar.current.date(from: dateComponent)!
+            
+            dateComponent = DateComponents()
+            dateComponent.year = nextYear
+            dateComponent.month = 3
+            dateComponent.day = 31
+            let lastDayOfFinancialYear = Calendar.current.date(from: dateComponent)!
+            
+            financialYearAvailable = incomeList.filter {
+                firstDayOfFinancialYear <= $0.creditedOn && $0.creditedOn <= lastDayOfFinancialYear
+            }.count > 0
             
             if(financialYearAvailable) {
-                let firstYear = nextYear
-                nextYear = nextYear + 1
-                let financialyear = String(firstYear) + "-" + String(nextYear)
-                returnResponse.insert(financialyear, at: 0)
+                returnResponse.insert("\(nextYear - 1)-\(nextYear)", at: 0)
             }
+            nextYear = nextYear + 1
         }
+        
         return returnResponse
     }
 }
