@@ -283,7 +283,7 @@ struct IncomeView: View {
                 id = incomeViewModel.incomeList[$0].id ?? ""
             }.forEach {
                 Task.init {
-                    await incomeController.deleteIncome(income: id)
+                    await incomeController.deleteIncome(id: id)
                     updateData()
                     await incomeViewModel.getIncomeYearList()
                     await incomeViewModel.getIncomeFinancialYearList()

@@ -16,11 +16,10 @@ class IncomeController {
             .collection(ConstantUtils.incomeCollectionName)
     }
     
-    public func addIncome(type: IncomeType, amount: String, date: Date, taxPaid: String, currency: String, tag: IncomeTag) async {
-        let newIncome = Income(amount: Double(amount) ?? 0.0, taxpaid: Double(taxPaid) ?? 0.0, creditedOn: date, currency: currency, type: type.name, tag: tag.name)
+    public func addIncome(income: Income) async {
         do {
             let documentID = try getIncomeCollection()
-                .addDocument(from: newIncome)
+                .addDocument(from: income)
                 .documentID
             
             print("New Income Added : " + documentID)
@@ -29,18 +28,21 @@ class IncomeController {
         }
     }
     
-    public func deleteIncome(income: String) async {
+    public func deleteIncome(id: String) async {
         do {
             try await getIncomeCollection()
-                .document(income)
+                .document(id)
                 .delete()
+            
+            print("Income Deleted : " + id)
         } catch {
             print(error)
         }
     }
     
     public func deleteIncomes() {
-        CommonController.delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeCollectionName))
+        CommonController
+            .delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeCollectionName))
     }
     
     func getIncomeList(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async throws -> [Income] {
@@ -438,6 +440,8 @@ extension IncomeController {
             try getIncomeTypeCollection()
                 .document(type.id!)
                 .setData(from: type, merge: true)
+            
+            print("Income Type : " + type.id! + " Updated")
         } catch {
             print(error)
         }
@@ -520,6 +524,8 @@ extension IncomeController {
             try getIncomeTagCollection()
                 .document(tag.id!)
                 .setData(from: tag, merge: true)
+            
+            print("Income Tag : " + tag.id! + " Updated")
         } catch {
             print(error)
         }

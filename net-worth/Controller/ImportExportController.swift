@@ -114,7 +114,8 @@ class ImportExportController {
     
     private func importIncome() async {
         for income in data.income {
-            await incomeController.addIncome(type: IncomeType(name: income.type, isdefault: false), amount: String(income.amount), date: income.creditedOn, taxPaid: String(income.taxpaid), currency: income.currency, tag: IncomeTag(name: income.tag, isdefault: false))
+            let income = Income(amount: income.amount, taxpaid: income.taxpaid, creditedOn: income.creditedOn, currency: income.currency, type: income.type, tag: income.tag)
+            await incomeController.addIncome(income: income)
         }
     }
     
