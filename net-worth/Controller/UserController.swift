@@ -29,6 +29,44 @@ class UserController {
         return db.collection(ConstantUtils.userCollectionName).document(getCurrentUserUID())
     }
     
+    func getCurrentUser() async throws -> User {
+        return try await UserController()
+            .getCurrentUserDocument()
+            .getDocument()
+            .data(as: User.self)
+    }
+    
+    func updateUser(user: User) {
+        do {
+            try getCurrentUserDocument()
+                .setData(from: user, merge: true)
+        } catch {
+            print(error)
+        }
+    }
+    
+    func updateIncomeUserData() async {
+        do {
+            var user = try await getCurrentUser()
+            user.incomeDataUpdatedDate = Date.now
+            
+            updateUser(user: user)
+        } catch {
+            print(error)
+        }
+    }
+    
+    func isNewIncomeAvailable() async -> Bool {
+        do {
+            let user = try await getCurrentUser()
+            return ApplicationData.shared.incomeListUpdatedDate < user.incomeDataUpdatedDate
+        } catch {
+            print(error)
+        }
+        
+        return true
+    }
+    
     func deleteUser() async {
         let db = Firestore.firestore()
         do {

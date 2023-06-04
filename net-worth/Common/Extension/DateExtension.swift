@@ -9,6 +9,14 @@ import Foundation
 
 extension Date {
     
+    func getEarliestDate() -> Date {
+        var dateComponent = DateComponents();
+        dateComponent.day = 1
+        dateComponent.month = 1
+        dateComponent.year = 1900
+        return Calendar.current.date(from: dateComponent)!
+    }
+    
     func format() -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium

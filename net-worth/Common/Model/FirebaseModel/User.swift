@@ -11,5 +11,12 @@ import FirebaseFirestoreSwift
 struct User: Codable {
     
     var id: String
+    
+    var incomeDataUpdatedDate: Date
+    
+    init(id: String, incomeDataUpdatedDate: Date =  Date().getEarliestDate()) {
+        self.id = id
+        self.incomeDataUpdatedDate = incomeDataUpdatedDate
+    }
 
 }
