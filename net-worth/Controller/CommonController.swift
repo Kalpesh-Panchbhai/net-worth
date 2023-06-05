@@ -11,19 +11,6 @@ import FirebaseFirestore
 
 class CommonController {
     
-    public static func delete(collection: CollectionReference, batchSize: Int = 100) {
-        collection.limit(to: batchSize).getDocuments { (docset, error) in
-            let docset = docset
-            
-            let batch = collection.firestore.batch()
-            docset?.documents.forEach { batch.deleteDocument($0.reference) }
-            
-            batch.commit {_ in
-                self.delete(collection: collection, batchSize: batchSize)
-            }
-        }
-    }
-    
     public static func parseAxisValue(value: AxisValue) -> String? {
         let input = String(describing: value)
         let regex = /\((\d*.0)|\((0)|\((-\d*.0)/
@@ -49,6 +36,19 @@ class CommonController {
                 return "\(decimal! / 1000.0)k"
             } else {
                 return "\(decimal!)"
+            }
+        }
+    }
+    
+    public static func delete(collection: CollectionReference, batchSize: Int = 100) {
+        collection.limit(to: batchSize).getDocuments { (docset, error) in
+            let docset = docset
+            
+            let batch = collection.firestore.batch()
+            docset?.documents.forEach { batch.deleteDocument($0.reference) }
+            
+            batch.commit {_ in
+                self.delete(collection: collection, batchSize: batchSize)
             }
         }
     }

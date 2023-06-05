@@ -23,6 +23,10 @@ class NotificationController {
     
     var notificationCenter  =  UNUserNotificationCenter.current()
     
+    public func isNotificationEnabled(accountType: String) -> Bool {
+        return UserDefaults.standard.bool(forKey: accountType)
+    }
+    
     private func enableNotification() async -> Bool {
         do {
             return try await notificationCenter.requestAuthorization(options: [.alert,
@@ -40,36 +44,6 @@ class NotificationController {
         Task {
             granted = await enableNotification()
         }
-    }
-    
-    public func setNotification(id: String, day: Int, accountType: String, accountName: String) {
-        if(isNotificationEnabled(accountType: accountType)) {
-            let content = getContent(accountType: accountType, accountName: accountName)
-            
-            var dateComponents = DateComponents()
-            dateComponents.calendar = Calendar.current
-            
-            dateComponents.day = day
-            dateComponents.hour = defaultHour
-            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-            
-            let request = UNNotificationRequest(identifier: id,
-                                                content: content, trigger: trigger)
-            
-            let notificationCenter = UNUserNotificationCenter.current()
-            notificationCenter.add(request) { (error) in
-                if error != nil {
-                    print("Failed to add notification")
-                }else {
-                    print("Added Notification")
-                }
-            }
-        }
-    }
-    
-    public func removeNotification(id: String) {
-        notificationCenter.removeDeliveredNotifications(withIdentifiers: [id])
-        notificationCenter.removePendingNotificationRequests(withIdentifiers: [id])
     }
     
     private func getContent(accountType: String, accountName: String) -> UNMutableNotificationContent {
@@ -124,8 +98,29 @@ class NotificationController {
         return content
     }
     
-    public func isNotificationEnabled(accountType: String) -> Bool {
-        return UserDefaults.standard.bool(forKey: accountType)
+    public func setNotification(id: String, day: Int, accountType: String, accountName: String) {
+        if(isNotificationEnabled(accountType: accountType)) {
+            let content = getContent(accountType: accountType, accountName: accountName)
+            
+            var dateComponents = DateComponents()
+            dateComponents.calendar = Calendar.current
+            
+            dateComponents.day = day
+            dateComponents.hour = defaultHour
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+            
+            let request = UNNotificationRequest(identifier: id,
+                                                content: content, trigger: trigger)
+            
+            let notificationCenter = UNUserNotificationCenter.current()
+            notificationCenter.add(request) { (error) in
+                if error != nil {
+                    print("Failed to add notification")
+                }else {
+                    print("Added Notification")
+                }
+            }
+        }
     }
     
     public func setNotification(newValue: Bool, accountType: String) {
@@ -146,5 +141,10 @@ class NotificationController {
     
     public func enableNotification(account: Account) {
         setNotification(id: account.id!, day: account.paymentDate, accountType: account.accountType, accountName: account.accountName)
+    }
+    
+    public func removeNotification(id: String) {
+        notificationCenter.removeDeliveredNotifications(withIdentifiers: [id])
+        notificationCenter.removePendingNotificationRequests(withIdentifiers: [id])
     }
 }

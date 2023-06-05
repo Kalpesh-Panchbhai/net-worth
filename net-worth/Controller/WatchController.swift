@@ -16,6 +16,35 @@ class WatchController {
             .collection(ConstantUtils.watchCollectionName)
     }
     
+    public func addWatchList(watchList: Watch) {
+        do {
+            let documentID = try getWatchCollection()
+                .addDocument(from: watchList).documentID
+            print("New Watch List created : " + documentID)
+        } catch {
+            print(error)
+        }
+    }
+    
+    public func addDefaultWatchList() async {
+        let count = await getAllWatchList().count
+        if(count == 0) {
+            var watchList = Watch()
+            watchList.accountName = "All"
+            addWatchList(watchList: watchList)
+        }
+    }
+    
+    public func addAccountToWatchList(watch: Watch) {
+        do {
+            try getWatchCollection()
+                .document(watch.id!)
+                .setData(from: watch, merge: true)
+        } catch {
+            print(error)
+        }
+    }
+    
     public func getAllWatchList() async -> [Watch] {
         var watchList = [Watch]()
         do {
@@ -69,33 +98,30 @@ class WatchController {
         return watch
     }
     
-    public func addWatchList(watchList: Watch) {
+    public func getWatchListByAccount(accountID: String) async -> [Watch] {
+        var watch = [Watch]()
         do {
-            let documentID = try getWatchCollection()
-                .addDocument(from: watchList).documentID
-            print("New Watch List created : " + documentID)
+            watch = try await getWatchCollection()
+                .getDocuments()
+                .documents
+                .map { doc in
+                    return Watch(doc: doc)
+                }
+            watch = watch.filter { item in
+                item.accountID.contains(accountID)
+            }.sorted(by: { item1, item2 in
+                item1.accountName < item2.accountName
+            })
         } catch {
             print(error)
         }
-    }
-    
-    public func addDefaultWatchList() async {
-        let count = await getAllWatchList().count
-        if(count == 0) {
-            var watchList = Watch()
-            watchList.accountName = "All"
-            addWatchList(watchList: watchList)
+        var returnWatchList = watch.filter { item in
+            !item.accountName.elementsEqual("All")
         }
-    }
-    
-    public func addAccountToWatchList(watch: Watch) {
-        do {
-            try getWatchCollection()
-                .document(watch.id!)
-                .setData(from: watch, merge: true)
-        } catch {
-            print(error)
-        }
+        returnWatchList.insert(contentsOf: watch.filter { item in
+            item.accountName.elementsEqual("All")
+        }, at: 0)
+        return returnWatchList
     }
     
     public func updateWatchList(watchList: Watch) {
@@ -125,31 +151,5 @@ class WatchController {
             id != accountID
         }
         updateWatchList(watchList: watchList)
-    }
-    
-    public func getWatchListByAccount(accountID: String) async -> [Watch] {
-        var watch = [Watch]()
-        do {
-            watch = try await getWatchCollection()
-                .getDocuments()
-                .documents
-                .map { doc in
-                    return Watch(doc: doc)
-                }
-            watch = watch.filter { item in
-                item.accountID.contains(accountID)
-            }.sorted(by: { item1, item2 in
-                item1.accountName < item2.accountName
-            })
-        } catch {
-            print(error)
-        }
-        var returnWatchList = watch.filter { item in
-            !item.accountName.elementsEqual("All")
-        }
-        returnWatchList.insert(contentsOf: watch.filter { item in
-            item.accountName.elementsEqual("All")
-        }, at: 0)
-        return returnWatchList
     }
 }

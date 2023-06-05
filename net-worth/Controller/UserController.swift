@@ -11,17 +11,22 @@ import FirebaseFirestore
 
 class UserController {
     
-    func getCurrentUserUID() -> String {
-        guard let userUID = Auth.auth().currentUser?.uid else { return "" }
-        return userUID
-    }
-    
     func addCurrentUser() {
         do {
             try getCurrentUserDocument().setData(from: User(id: getCurrentUserUID()))
         } catch {
             print(error)
         }
+    }
+    
+    func isNewIncomeAvailable() async -> Bool {
+        let user = await getCurrentUser()
+        return ApplicationData.shared.incomeListUpdatedDate < user.incomeDataUpdatedDate
+    }
+    
+    func getCurrentUserUID() -> String {
+        guard let userUID = Auth.auth().currentUser?.uid else { return "" }
+        return userUID
     }
     
     func getCurrentUserDocument() -> DocumentReference {
@@ -55,11 +60,6 @@ class UserController {
         user.incomeDataUpdatedDate = Date.now
         
         updateUser(user: user)
-    }
-    
-    func isNewIncomeAvailable() async -> Bool {
-        let user = await getCurrentUser()
-        return ApplicationData.shared.incomeListUpdatedDate < user.incomeDataUpdatedDate
     }
     
     func deleteUser() async {

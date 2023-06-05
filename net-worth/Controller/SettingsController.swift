@@ -15,10 +15,6 @@ class SettingsController {
         return UserDefaults.standard.bool(forKey: "authentication")
     }
     
-    public func setAuthentication(newValue: Bool) {
-        UserDefaults.standard.set(newValue, forKey: "authentication")
-    }
-    
     public func getDefaultCurrency() -> Currency {
         if let data = UserDefaults.standard.data(forKey: "default_currency") {
             do {
@@ -33,6 +29,10 @@ class SettingsController {
         }
         
         return Currency()
+    }
+    
+    public func setAuthentication(newValue: Bool) {
+        UserDefaults.standard.set(newValue, forKey: "authentication")
     }
     
     public func setDefaultCurrency(newValue: Currency) {

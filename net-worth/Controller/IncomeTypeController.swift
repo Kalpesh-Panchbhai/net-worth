@@ -15,6 +15,30 @@ class IncomeTypeController {
             .collection(ConstantUtils.incomeTypeCollectionName)
     }
     
+    public func addIncomeType(type: IncomeType) {
+        do {
+            let documentID = try getIncomeTypeCollection()
+                .addDocument(from: type)
+                .documentID
+            
+            print("New Income Type Added : " + documentID)
+            
+            if(type.isdefault) {
+                makeOtherIncomeTypeNonDefault(documentID: documentID)
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    public func addDefaultIncomeType() async {
+        let count = await getIncomeTypeList().count
+        if(count == 0) {
+            let incomeType = IncomeType(name: "None", isdefault: false)
+            addIncomeType(type: incomeType)
+        }
+    }
+    
     public func getIncomeTypeList() async -> [IncomeType] {
         var incomeTypeList = [IncomeType]()
         do {
@@ -33,22 +57,6 @@ class IncomeTypeController {
         return incomeTypeList
     }
     
-    public func addIncomeType(type: IncomeType) {
-        do {
-            let documentID = try getIncomeTypeCollection()
-                .addDocument(from: type)
-                .documentID
-            
-            print("New Income Type Added : " + documentID)
-            
-            if(type.isdefault) {
-                makeOtherIncomeTypeNonDefault(documentID: documentID)
-            }
-        } catch {
-            print(error)
-        }
-    }
-    
     public func makeOtherIncomeTypeNonDefault(documentID: String) {
         getIncomeTypeCollection()
             .getDocuments { snapshot, error in
@@ -65,14 +73,6 @@ class IncomeTypeController {
                     }
                 }
             }
-    }
-    
-    public func addDefaultIncomeType() async {
-        let count = await getIncomeTypeList().count
-        if(count == 0) {
-            let incomeType = IncomeType(name: "None", isdefault: false)
-            addIncomeType(type: incomeType)
-        }
     }
     
     public func updateIncomeType(type: IncomeType) {

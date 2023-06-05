@@ -16,12 +16,6 @@ class AccountController {
     var watchController = WatchController()
     var accountTransactionController = AccountTransactionController()
     
-    public func getAccountCollection() -> CollectionReference {
-        return UserController()
-            .getCurrentUserDocument()
-            .collection(ConstantUtils.accountCollectionName)
-    }
-    
     public func addAccount(newAccount: Account) async -> String {
         do {
             let accountID = try getAccountCollection()
@@ -46,14 +40,10 @@ class AccountController {
         return ""
     }
     
-    public func updateAccount(account: Account) {
-        do {
-            try getAccountCollection()
-                .document(account.id!)
-                .setData(from: account, merge: true)
-        } catch {
-            print(error)
-        }
+    public func getAccountCollection() -> CollectionReference {
+        return UserController()
+            .getCurrentUserDocument()
+            .collection(ConstantUtils.accountCollectionName)
     }
     
     public func getAccount(id: String) async -> Account {
@@ -151,6 +141,16 @@ class AccountController {
             print(error)
         }
         return Balance(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
+    }
+    
+    public func updateAccount(account: Account) {
+        do {
+            try getAccountCollection()
+                .document(account.id!)
+                .setData(from: account, merge: true)
+        } catch {
+            print(error)
+        }
     }
     
     public func deleteAccount(account: Account) async {

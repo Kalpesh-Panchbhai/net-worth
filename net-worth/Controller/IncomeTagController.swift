@@ -15,6 +15,30 @@ class IncomeTagController {
             .collection(ConstantUtils.incomeTagCollectionName)
     }
     
+    public func addIncomeTag(tag: IncomeTag) {
+        do {
+            let documentID = try getIncomeTagCollection()
+                .addDocument(from: tag)
+                .documentID
+            
+            print("New Income Tag Added : " + documentID)
+            
+            if(tag.isdefault) {
+                makeOtherIncomeTagNonDefault(documentID: documentID)
+            }
+        } catch {
+            print(error)
+        }
+    }
+    
+    public func addDefaultIncomeTag() async {
+        let count = await getIncomeTagList().count
+        if(count == 0) {
+            let incomeTag = IncomeTag(name: "None", isdefault: false)
+            addIncomeTag(tag: incomeTag)
+        }
+    }
+    
     public func getIncomeTagList() async -> [IncomeTag] {
         var incomeTagList = [IncomeTag]()
         do {
@@ -33,22 +57,6 @@ class IncomeTagController {
         return incomeTagList
     }
     
-    public func addIncomeTag(tag: IncomeTag) {
-        do {
-            let documentID = try getIncomeTagCollection()
-                .addDocument(from: tag)
-                .documentID
-            
-            print("New Income Tag Added : " + documentID)
-            
-            if(tag.isdefault) {
-                makeOtherIncomeTagNonDefault(documentID: documentID)
-            }
-        } catch {
-            print(error)
-        }
-    }
-    
     public func makeOtherIncomeTagNonDefault(documentID: String) {
         getIncomeTagCollection()
             .getDocuments { snapshot, error in
@@ -65,14 +73,6 @@ class IncomeTagController {
                     }
                 }
             }
-    }
-    
-    public func addDefaultIncomeTag() async {
-        let count = await getIncomeTagList().count
-        if(count == 0) {
-            let incomeTag = IncomeTag(name: "None", isdefault: false)
-            addIncomeTag(tag: incomeTag)
-        }
     }
     
     public func updateIncomeTag(tag: IncomeTag) {

@@ -29,27 +29,6 @@ class IncomeController {
         }
     }
     
-    public func deleteIncome(id: String) async {
-        do {
-            try await getIncomeCollection()
-                .document(id)
-                .delete()
-            
-            print("Income Deleted : " + id)
-            
-            await UserController().updateIncomeUserData()
-        } catch {
-            print(error)
-        }
-    }
-    
-    public func deleteIncomes() {
-        CommonController
-            .delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeCollectionName))
-        
-        print("All Incomes Deleted.")
-    }
-    
     private func getIncomeList() async -> [Income] {
         var incomeList = [Income]()
         print("Fetching Income List")
@@ -275,5 +254,26 @@ class IncomeController {
         }
         
         return returnResponse
+    }
+    
+    public func deleteIncome(id: String) async {
+        do {
+            try await getIncomeCollection()
+                .document(id)
+                .delete()
+            
+            print("Income Deleted : " + id)
+            
+            await UserController().updateIncomeUserData()
+        } catch {
+            print(error)
+        }
+    }
+    
+    public func deleteIncomes() {
+        CommonController
+            .delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeCollectionName))
+        
+        print("All Incomes Deleted.")
     }
 }

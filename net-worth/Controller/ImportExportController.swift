@@ -18,66 +18,6 @@ class ImportExportController {
     
     var data = Data()
     
-    public func readLocalBackup() async -> Data {
-        var returnData = Data()
-        do {
-            let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-            let directoryContents = try FileManager.default.contentsOfDirectory(
-                at: documentDirectory!,
-                includingPropertiesForKeys: nil
-            )
-            
-            let backupList = directoryContents.filter {
-                $0.lastPathComponent.starts(with: "Backup_")
-            }
-            
-            if(!backupList.isEmpty) {
-                do {
-                    let jsonString = try String(contentsOf: backupList[0].absoluteURL, encoding: .utf8)
-                    if let dataFromJsonString = jsonString.data(using: .utf8) {
-                        returnData = try JSONDecoder().decode(Data.self,
-                                                              from: dataFromJsonString)
-                        
-                    }
-                } catch {
-                    print(error)
-                }
-            }
-        } catch {
-            print(error)
-        }
-        return returnData
-    }
-    
-    public func getLocalBackup() -> [Date] {
-        do {
-            let documentDirectory = try FileManager.default.url(
-                for: .documentDirectory,
-                in: .userDomainMask,
-                appropriateFor: nil,
-                create: true
-            )
-            let directoryContents = try FileManager.default.contentsOfDirectory(
-                at: documentDirectory,
-                includingPropertiesForKeys: nil
-            )
-            
-            let backupList = directoryContents.filter {
-                $0.lastPathComponent.starts(with: "Backup_")
-            }
-            
-            return backupList.map {
-                $0.lastPathComponent.replacingOccurrences(of: "Backup_", with: "").toDate()
-            }.sorted().reversed()
-            
-        } catch {
-            print(error)
-        }
-        
-        return [Date]()
-        
-    }
-    
     public func importLocal(date: Date, importType: String) async {
         let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         let pathWithFileName = documentDirectory!.appendingPathComponent("Backup_" + date.formatImportExportTimeStamp())
@@ -183,13 +123,6 @@ class ImportExportController {
         }
     }
     
-    private func getCurrentDateTimeStamp() -> String {
-        let date = Date.now
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMddHHmmss"
-        return dateFormatter.string(from: date)
-    }
-    
     private func exportIncomeTag() async {
         let incomeTagList = await incomeTagController.getIncomeTagList()
         data.incomeTag = incomeTagList.map { item in
@@ -240,6 +173,73 @@ class ImportExportController {
             }
             return WatchData(accountName: watch.accountName, accountID: accounts)
         }
+    }
+    
+    private func getCurrentDateTimeStamp() -> String {
+        let date = Date.now
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMddHHmmss"
+        return dateFormatter.string(from: date)
+    }
+    
+    public func readLocalBackup() async -> Data {
+        var returnData = Data()
+        do {
+            let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+            let directoryContents = try FileManager.default.contentsOfDirectory(
+                at: documentDirectory!,
+                includingPropertiesForKeys: nil
+            )
+            
+            let backupList = directoryContents.filter {
+                $0.lastPathComponent.starts(with: "Backup_")
+            }
+            
+            if(!backupList.isEmpty) {
+                do {
+                    let jsonString = try String(contentsOf: backupList[0].absoluteURL, encoding: .utf8)
+                    if let dataFromJsonString = jsonString.data(using: .utf8) {
+                        returnData = try JSONDecoder().decode(Data.self,
+                                                              from: dataFromJsonString)
+                        
+                    }
+                } catch {
+                    print(error)
+                }
+            }
+        } catch {
+            print(error)
+        }
+        return returnData
+    }
+    
+    public func getLocalBackup() -> [Date] {
+        do {
+            let documentDirectory = try FileManager.default.url(
+                for: .documentDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+            )
+            let directoryContents = try FileManager.default.contentsOfDirectory(
+                at: documentDirectory,
+                includingPropertiesForKeys: nil
+            )
+            
+            let backupList = directoryContents.filter {
+                $0.lastPathComponent.starts(with: "Backup_")
+            }
+            
+            return backupList.map {
+                $0.lastPathComponent.replacingOccurrences(of: "Backup_", with: "").toDate()
+            }.sorted().reversed()
+            
+        } catch {
+            print(error)
+        }
+        
+        return [Date]()
+        
     }
     
     public func deleteBackups() {

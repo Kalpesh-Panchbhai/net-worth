@@ -144,18 +144,6 @@ class AccountTransactionController {
         }
     }
     
-    public func updateAccountTransaction(accountID: String, accountTransaction: AccountTransaction) {
-        do {
-            try AccountController().getAccountCollection()
-                .document(accountID)
-                .collection(ConstantUtils.accountTransactionCollectionName)
-                .document(accountTransaction.id!)
-                .setData(from: accountTransaction, merge: true)
-        } catch {
-            print(error)
-        }
-    }
-    
     public func getAccountTransactionList(accountID: String) async -> [AccountTransaction] {
         var accountTransactionList = [AccountTransaction]()
         do {
@@ -295,6 +283,18 @@ class AccountTransactionController {
             print(error)
         }
         return accountTransactionList
+    }
+    
+    public func updateAccountTransaction(accountID: String, accountTransaction: AccountTransaction) {
+        do {
+            try AccountController().getAccountCollection()
+                .document(accountID)
+                .collection(ConstantUtils.accountTransactionCollectionName)
+                .document(accountTransaction.id!)
+                .setData(from: accountTransaction, merge: true)
+        } catch {
+            print(error)
+        }
     }
     
     public func deleteAccountTransaction(accountID: String, id: String) async {
