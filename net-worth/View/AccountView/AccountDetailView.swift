@@ -134,13 +134,17 @@ struct AccountDetailView: View {
                                 accountViewModel.account.active = isActive
                                 accountViewModel.account.paymentReminder = false
                                 accountViewModel.account.paymentDate = 0
-                                accountController.updateAccount(account: accountViewModel.account)
+                                Task.init {
+                                    await accountController.updateAccount(account: accountViewModel.account)
+                                }
                                 NotificationController().removeNotification(id: accountViewModel.account.id!)
                                 paymentDate = 0
                             }
                         } else {
                             accountViewModel.account.active = isActive
-                            accountController.updateAccount(account: accountViewModel.account)
+                            Task.init {
+                                await accountController.updateAccount(account: accountViewModel.account)
+                            }
                         }
                     })
                     
@@ -163,7 +167,9 @@ struct AccountDetailView: View {
                                 .onChange(of: paymentDate) { _ in
                                     accountViewModel.account.paymentReminder = true
                                     accountViewModel.account.paymentDate = paymentDate
-                                    accountController.updateAccount(account: accountViewModel.account)
+                                    Task.init {
+                                        await accountController.updateAccount(account: accountViewModel.account)
+                                    }
                                     NotificationController().enableNotification(account: accountViewModel.account)
                                 }
                                 .pickerStyle(MenuPickerStyle())
@@ -171,7 +177,9 @@ struct AccountDetailView: View {
                                 Button(action: {
                                     accountViewModel.account.paymentReminder = false
                                     accountViewModel.account.paymentDate = 0
-                                    accountController.updateAccount(account: accountViewModel.account)
+                                    Task.init {
+                                        await accountController.updateAccount(account: accountViewModel.account)
+                                    }
                                     NotificationController().removeNotification(id: accountViewModel.account.id!)
                                     paymentDate = 0
                                 }, label: {
@@ -188,7 +196,9 @@ struct AccountDetailView: View {
                                 .onChange(of: paymentDate) { _ in
                                     accountViewModel.account.paymentReminder = true
                                     accountViewModel.account.paymentDate = paymentDate
-                                    accountController.updateAccount(account: accountViewModel.account)
+                                    Task.init {
+                                        await accountController.updateAccount(account: accountViewModel.account)
+                                    }
                                     NotificationController().enableNotification(account: accountViewModel.account)
                                 }
                                 .pickerStyle(MenuPickerStyle())
@@ -209,7 +219,7 @@ struct AccountDetailView: View {
                 await accountViewModel.getAccount(id: account.id!)
                 paymentDate = accountViewModel.account.paymentDate
                 isActive = accountViewModel.account.active
-                await accountViewModel.getAccountTransactionList(id: account.id!)
+                accountViewModel.getAccountTransactionList(id: account.id!)
                 await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
                 await watchViewModel.getWatchListByAccount(accountID: account.id!)
             }
@@ -217,7 +227,7 @@ struct AccountDetailView: View {
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             Task.init {
                 await accountViewModel.getAccount(id: accountViewModel.account.id!)
-                await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
+                accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
                 await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
                 await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)

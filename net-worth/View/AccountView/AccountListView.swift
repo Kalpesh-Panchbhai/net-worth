@@ -108,7 +108,7 @@ struct AccountListView: View {
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             Task.init {
                 await accountViewModel.getAccount(id: accountViewModel.account.id!)
-                await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
+                accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
                 await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
                 await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))

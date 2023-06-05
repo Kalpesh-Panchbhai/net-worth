@@ -110,7 +110,7 @@ class AccountViewModel: ObservableObject {
     }
     
     func getAccount(id: String) async {
-        let list = await accountController.getAccount(id: id)
+        let list = accountController.getAccount(id: id)
         DispatchQueue.main.async {
             self.account = list
         }
@@ -119,7 +119,7 @@ class AccountViewModel: ObservableObject {
     func getAccountsForWatchList(accountID: [String]) async {
         watchList = [Account]()
         for i in 0..<accountID.count {
-            let account = await accountController.getAccount(id: accountID[i])
+            let account = accountController.getAccount(id: accountID[i])
             watchList.append(account)
         }
         DispatchQueue.main.async {
@@ -143,8 +143,8 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func getAccountTransactionList(id: String) async {
-        let list = await accountTransactionController.getAccountTransactionList(accountID: id)
+    func getAccountTransactionList(id: String) {
+        let list = accountTransactionController.getAccountTransactionList(accountID: id)
         DispatchQueue.main.async {
             self.accountTransactionList = list
         }

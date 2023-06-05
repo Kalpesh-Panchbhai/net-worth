@@ -19,6 +19,8 @@ class AccountController {
         do {
             let accountID = try getAccountCollection()
                 .addDocument(from: newAccount).documentID
+            
+            await UserController().updateAccountUserData()
             return accountID
         } catch {
             print(error)
@@ -32,6 +34,8 @@ class AccountController {
                 .addDocument(from: newAccount).documentID
             let accountTransaction = AccountTransaction(timestamp: accountOpenedDate, balanceChange: newAccount.currentBalance, currentBalance: newAccount.currentBalance)
             await accountTransactionController.addTransaction(accountID: accountID, accountTransaction: accountTransaction)
+            
+            await UserController().updateAccountUserData()
             return accountID
         } catch {
             print(error)
@@ -45,41 +49,24 @@ class AccountController {
             .collection(ConstantUtils.accountCollectionName)
     }
     
-    public func getAccount(id: String) async -> Account {
-        var account = Account()
-        do {
-            account = try await getAccountCollection()
-                .document(id)
-                .getDocument()
-                .data(as: Account.self)
-        } catch {
-            print(error)
-        }
-        return account
+    public func getAccount(id: String) -> Account {
+        return ApplicationData.shared.accountList.keys.filter {
+            $0.id!.elementsEqual(id)
+        }.first!
     }
     
     public func getAccount(accountType: String) -> [Account]{
-        var accountList = [Account]()
-        
-        getAccountCollection()
-            .whereField(ConstantUtils.accountKeyAccountType, isEqualTo: accountType)
-            .getDocuments { snapshot, error in
-                if error == nil {
-                    if let snapshot = snapshot {
-                        accountList = snapshot.documents.map { doc in
-                            return Account(doc: doc)
-                        }
-                    }
-                } else {
-                    
-                }
+        return ApplicationData.shared.accountList.keys
+            .filter {
+                $0.accountType.elementsEqual(accountType)
             }
-        return accountList
     }
     
-    public func getAccountList() async -> [Account] {
+    private func getAccountDataList() async -> [Account] {
         var accountList = [Account]()
+        print("Updating Accounts")
         do {
+            let backupAccountList = ApplicationData.shared.accountList
             accountList = try await getAccountCollection()
                 .order(by: ConstantUtils.accountKeyAccountName)
                 .getDocuments()
@@ -87,10 +74,45 @@ class AccountController {
                 .map { doc in
                     return Account(doc: doc)
                 }
+            ApplicationData.shared.accountListUpdatedDate = await UserController().getCurrentUser().accountDataUpdatedDate
+            // TODO: Update Account List
+            var newAccountList = [Account: [AccountTransaction]]()
+            
+            for account in accountList {
+                let isNewData = backupAccountList.filter {
+                    $0.key.id!.elementsEqual(account.id!)
+                }.first?.key.lastUpdated ?? account.lastUpdated.addingTimeInterval(-86400) < account.lastUpdated
+                if(isNewData) {
+                    let accountTransactionList = await accountTransactionController.getAccountTransactionDataList(accountID: account.id!)
+                    newAccountList.updateValue(accountTransactionList, forKey: account)
+                } else {
+                    let accountTransactionList = backupAccountList.filter {
+                        $0.key.id!.elementsEqual(account.id!)
+                    }.first?.value ?? [AccountTransaction]()
+                    newAccountList.updateValue(accountTransactionList, forKey: account)
+                }
+            }
+            
+            ApplicationData.shared.accountList = newAccountList
         } catch {
             print(error)
         }
+        print("Accounts Updated")
         return accountList
+    }
+    
+    public func getAccountList() async -> [Account] {
+        var accountList = [Account]()
+        if(await UserController().isNewAccountAvailable()) {
+            print("New Accounts")
+            accountList = await getAccountDataList()
+        } else {
+            print("Old Accounts")
+            accountList = Array(ApplicationData.shared.accountList.keys)
+        }
+        return accountList.sorted(by: {
+            $0.accountName < $1.accountName
+        })
     }
     
     public func fetchTotalBalance(accountList: [Account]) async -> Balance {
@@ -142,11 +164,13 @@ class AccountController {
         return Balance(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
     }
     
-    public func updateAccount(account: Account) {
+    public func updateAccount(account: Account) async {
         do {
             try getAccountCollection()
                 .document(account.id!)
                 .setData(from: account, merge: true)
+            
+            await UserController().updateAccountUserData()
         } catch {
             print(error)
         }
@@ -165,6 +189,8 @@ class AccountController {
         } catch {
             print(error)
         }
+        
+        await UserController().updateAccountUserData()
     }
     
     public func deleteAccounts() async {

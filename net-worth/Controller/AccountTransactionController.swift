@@ -24,7 +24,7 @@ class AccountTransactionController {
     }
     
     public func addTransaction(accountID: String, account: Account, timestamp: Date, operation: String) async {
-        let accountTransactionsList = await getAccountTransactionList(accountID: accountID)
+        let accountTransactionsList = getAccountTransactionList(accountID: accountID)
         if(accountTransactionsList.count > 0) {
             if(accountTransactionsList.last!.timestamp > timestamp) {
                 // Transaction Start
@@ -65,7 +65,7 @@ class AccountTransactionController {
                     } catch {
                         print(error)
                     }
-                    AccountController().updateAccount(account: updatedAccount)
+                    await AccountController().updateAccount(account: updatedAccount)
                 } else {
                     let balanceChange = account.currentBalance - accountTransactionsList.first!.currentBalance
                     let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: balanceChange, currentBalance: account.currentBalance)
@@ -80,7 +80,7 @@ class AccountTransactionController {
                     } catch {
                         print(error)
                     }
-                    AccountController().updateAccount(account: account)
+                    await AccountController().updateAccount(account: account)
                 }
             } else {
                 var first = AccountTransaction(timestamp: Date(), balanceChange: 0.0, currentBalance: 0.0)
@@ -144,7 +144,7 @@ class AccountTransactionController {
         }
     }
     
-    public func getAccountTransactionList(accountID: String) async -> [AccountTransaction] {
+    public func getAccountTransactionDataList(accountID: String) async -> [AccountTransaction] {
         var accountTransactionList = [AccountTransaction]()
         do {
             accountTransactionList = try await AccountController().getAccountCollection()
@@ -164,6 +164,12 @@ class AccountTransactionController {
             print(error)
         }
         return accountTransactionList
+    }
+    
+    public func getAccountTransactionList(accountID: String) -> [AccountTransaction] {
+        return ApplicationData.shared.accountList.filter {
+            $0.key.id!.elementsEqual(accountID)
+        }.first!.value
     }
     
     public func getAccountTransactionListWithRange(accountID: String, range: String) async -> [AccountTransaction] {
@@ -181,46 +187,13 @@ class AccountTransactionController {
         } else if(range.elementsEqual("5Y")) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-155520000))
         } else if(range.elementsEqual("All")) {
-            var accountTransactionList = [AccountTransaction]()
-            do {
-                accountTransactionList = try await AccountController().getAccountCollection()
-                    .document(accountID)
-                    .collection(ConstantUtils.accountTransactionCollectionName)
-                    .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
-                    .getDocuments()
-                    .documents
-                    .map { doc in
-                        return AccountTransaction(id: doc.documentID,
-                                                  timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
-                                                  balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0,
-                                                  currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0,
-                                                  paid: doc[ConstantUtils.accountTransactionKeyPaid] as? Bool ?? true)
-                    }
-            } catch {
-                print(error)
-            }
-            return accountTransactionList
+            return getAccountTransactionList(accountID: accountID)
         }
-        var accountTransactionList = [AccountTransaction]()
-        do {
-            accountTransactionList = try await AccountController().getAccountCollection()
-                .document(accountID)
-                .collection(ConstantUtils.accountTransactionCollectionName)
-                .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
-                .whereField(ConstantUtils.accountTransactionKeytimestamp, isGreaterThanOrEqualTo: date)
-                .getDocuments()
-                .documents
-                .map { doc in
-                    return AccountTransaction(id: doc.documentID,
-                                              timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
-                                              balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0,
-                                              currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0,
-                                              paid: doc[ConstantUtils.accountTransactionKeyPaid] as? Bool ?? true)
-                }
-        } catch {
-            print(error)
+        let accountTransactionList = getAccountTransactionList(accountID: accountID)
+        
+        return accountTransactionList.filter {
+            $0.timestamp >= date.dateValue()
         }
-        return accountTransactionList
     }
     
     public func getAccountLastTransactionBelowRange(accountID: String, range: String) async -> [AccountTransaction] {
@@ -238,51 +211,21 @@ class AccountTransactionController {
         } else if(range.elementsEqual("5Y")) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-155520000))
         }
-        var accountTransactionList = [AccountTransaction]()
-        do {
-            accountTransactionList = try await AccountController().getAccountCollection()
-                .document(accountID)
-                .collection(ConstantUtils.accountTransactionCollectionName)
-                .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
-                .whereField(ConstantUtils.accountTransactionKeytimestamp, isLessThan: date)
-                .getDocuments()
-                .documents
-                .map { doc in
-                    return AccountTransaction(id: doc.documentID,
-                                              timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
-                                              balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0,
-                                              currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0,
-                                              paid: doc[ConstantUtils.accountTransactionKeyPaid] as? Bool ?? true)
-                }
-        } catch {
-            print(error)
+        let accountTransactionList = getAccountTransactionList(accountID: accountID)
+        return accountTransactionList.filter {
+            $0.timestamp < date.dateValue()
         }
-        return accountTransactionList
     }
     
     public func getLastTwoAccountTransactionList(accountID: String) async -> [AccountTransaction] {
-        var accountTransactionList = [AccountTransaction]()
-        do {
-            accountTransactionList = try await AccountController()
-                .getAccountCollection()
-                .document(accountID)
-                .collection(ConstantUtils.accountTransactionCollectionName)
-                .whereField(ConstantUtils.accountTransactionKeyPaid, isEqualTo: true)
-                .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
-                .limit(to: 2)
-                .getDocuments()
-                .documents
-                .map { doc in
-                    return AccountTransaction(id: doc.documentID,
-                                              timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
-                                              balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0,
-                                              currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0,
-                                              paid: doc[ConstantUtils.accountTransactionKeyPaid] as? Bool ?? true)
-                }
-        } catch {
-            print(error)
+        var accountTransactionList = getAccountTransactionList(accountID: accountID)
+        
+        accountTransactionList = accountTransactionList.filter {
+            $0.paid
         }
-        return accountTransactionList
+        return accountTransactionList.prefix(2).map {
+            return $0
+        }
     }
     
     public func updateAccountTransaction(accountID: String, accountTransaction: AccountTransaction) {

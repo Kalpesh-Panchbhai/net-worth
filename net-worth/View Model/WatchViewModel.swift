@@ -32,7 +32,7 @@ class WatchViewModel: ObservableObject {
         for list in watchList {
             var accountList = [Account]()
             for i in 0..<list.accountID.count {
-                let account = await accountController.getAccount(id: list.accountID[i])
+                let account = accountController.getAccount(id: list.accountID[i])
                 accountList.append(account)
             }
             watchListWithAccount2.updateValue(accountList, forKey: list)

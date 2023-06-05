@@ -84,8 +84,8 @@ struct TransactionsView: View {
                                         Task.init {
                                             await accountTransactionController.deleteAccountTransaction(accountID: account.id!, id: accountTransactionID)
                                             account.currentBalance = newCurrentBalance
-                                            accountController.updateAccount(account: account)
-                                            await accountViewModel.getAccountTransactionList(id: account.id!)
+                                            await accountController.updateAccount(account: account)
+                                            accountViewModel.getAccountTransactionList(id: account.id!)
                                             await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
                                             await accountViewModel.getAccount(id: account.id!)
                                         }
@@ -97,7 +97,7 @@ struct TransactionsView: View {
                                         Task.init {
                                             await accountTransactionController.deleteAccountTransaction(accountID: account.id!, id: accountTransactionID)
                                             accountTransactionController.updateAccountTransaction(accountID: account.id!, accountTransaction: currentLastTransaction)
-                                            await accountViewModel.getAccountTransactionList(id: account.id!)
+                                            accountViewModel.getAccountTransactionList(id: account.id!)
                                             await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
                                             await accountViewModel.getAccount(id: account.id!)
                                         }
@@ -110,7 +110,7 @@ struct TransactionsView: View {
                                         Task.init {
                                             await accountTransactionController.deleteAccountTransaction(accountID: account.id!, id: accountTransactionID)
                                             accountTransactionController.updateAccountTransaction(accountID: account.id!, accountTransaction: currentLastTransaction)
-                                            await accountViewModel.getAccountTransactionList(id: account.id!)
+                                            accountViewModel.getAccountTransactionList(id: account.id!)
                                             await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
                                             await accountViewModel.getAccount(id: account.id!)
                                         }
@@ -129,8 +129,8 @@ struct TransactionsView: View {
                                         account.currentBalance = accountTransaction.currentBalance
                                         Task.init {
                                             accountTransactionController.updateAccountTransaction(accountID: account.id!, accountTransaction: accountTransaction)
-                                            accountController.updateAccount(account: account)
-                                            await accountViewModel.getAccountTransactionList(id: account.id!)
+                                            await accountController.updateAccount(account: account)
+                                            accountViewModel.getAccountTransactionList(id: account.id!)
                                             await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
                                             await accountViewModel.getAccount(id:account.id!)
                                         }
