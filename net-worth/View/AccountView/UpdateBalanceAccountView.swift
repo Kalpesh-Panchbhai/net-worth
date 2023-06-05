@@ -25,8 +25,8 @@ struct UpdateBalanceAccountView: View {
         NavigationView {
             Form {
                 Section("Transaction detail") {
-                    currentBalanceField()
-                        .colorMultiply(Color.navyBlue)
+                    currentBalanceField
+                        .foregroundColor(Color.navyBlue)
                     DatePicker("Transaction date", selection: $date, in: ...Date(), displayedComponents: [.date, .hourAndMinute])
                         .colorMultiply(Color.navyBlue)
                 }
@@ -40,7 +40,7 @@ struct UpdateBalanceAccountView: View {
                         amount = isPlus ? amount : amount * -1
                         updatedAccount.currentBalance = amount
                         Task.init {
-                                try await accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Update")
+                            try await accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Update")
                         }
                         dismiss()
                     }, label: {
@@ -57,7 +57,7 @@ struct UpdateBalanceAccountView: View {
                         amount = isPlus ? amount : amount * -1
                         updatedAccount.currentBalance = amount
                         Task.init {
-                                try await accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Add")
+                            try await accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Add")
                         }
                         dismiss()
                     }, label: {
@@ -83,19 +83,28 @@ struct UpdateBalanceAccountView: View {
         })
     }
     
-    private func currentBalanceField() -> HStack<TupleView<(Text, Spacer, Button<Label<Text, Image>>, Spacer, some View)>> {
-        return HStack {
+    private var currentBalanceField: some View {
+        HStack {
             Text("Amount")
             Spacer()
-            Button(action: {
-                if isPlus {
-                    isPlus = false
-                }else {
-                    isPlus = true
-                }
-            }, label: {
-                Label("", systemImage: isPlus ? "plus" : "minus")
-            })
+            ZStack {
+                RoundedRectangle(cornerRadius: 6)
+                    .frame(width: 25, height: 25)
+                    .foregroundColor(Color.white)
+                    .shadow(color: Color.navyBlue, radius: 3)
+                Button(action: {
+                    if isPlus {
+                        isPlus = false
+                    }else {
+                        isPlus = true
+                    }
+                }, label: {
+                    Image(systemName: isPlus ? "plus" : "minus")
+                        .foregroundColor(isPlus ? Color.green : Color.red)
+                        .bold()
+                })
+                .font(.system(size: 14).bold())
+            }
             Spacer()
             TextField("Amount", value: $amount, formatter: Double().formatter())
                 .keyboardType(.decimalPad)
