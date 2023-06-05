@@ -29,11 +29,16 @@ class UserController {
         return db.collection(ConstantUtils.userCollectionName).document(getCurrentUserUID())
     }
     
-    func getCurrentUser() async throws -> User {
-        return try await UserController()
-            .getCurrentUserDocument()
-            .getDocument()
-            .data(as: User.self)
+    func getCurrentUser() async -> User {
+        do {
+            return try await UserController()
+                .getCurrentUserDocument()
+                .getDocument()
+                .data(as: User.self)
+        } catch {
+            print(error)
+        }
+        return User(id: "")
     }
     
     func updateUser(user: User) {
@@ -46,33 +51,23 @@ class UserController {
     }
     
     func updateIncomeUserData() async {
-        do {
-            var user = try await getCurrentUser()
-            user.incomeDataUpdatedDate = Date.now
-            
-            updateUser(user: user)
-        } catch {
-            print(error)
-        }
+        var user = await getCurrentUser()
+        user.incomeDataUpdatedDate = Date.now
+        
+        updateUser(user: user)
     }
     
     func isNewIncomeAvailable() async -> Bool {
-        do {
-            let user = try await getCurrentUser()
-            return ApplicationData.shared.incomeListUpdatedDate < user.incomeDataUpdatedDate
-        } catch {
-            print(error)
-        }
-        
-        return true
+        let user = await getCurrentUser()
+        return ApplicationData.shared.incomeListUpdatedDate < user.incomeDataUpdatedDate
     }
     
     func deleteUser() async {
         let db = Firestore.firestore()
         do {
-            try await AccountController().deleteAccounts()
+            await AccountController().deleteAccounts()
             IncomeController().deleteIncomes()
-            try await WatchController().deleteWatchLists()
+            await WatchController().deleteWatchLists()
             IncomeTagController().deleteIncomeTags()
             IncomeTypeController().deleteIncomeTypes()
             try await db.collection(ConstantUtils.userCollectionName).document(getCurrentUserUID()).delete()

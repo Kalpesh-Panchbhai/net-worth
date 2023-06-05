@@ -40,7 +40,7 @@ struct UpdateBalanceAccountView: View {
                         amount = isPlus ? amount : amount * -1
                         updatedAccount.currentBalance = amount
                         Task.init {
-                            try await accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Update")
+                            await accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Update")
                         }
                         dismiss()
                     }, label: {
@@ -57,7 +57,7 @@ struct UpdateBalanceAccountView: View {
                         amount = isPlus ? amount : amount * -1
                         updatedAccount.currentBalance = amount
                         Task.init {
-                            try await accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Add")
+                            await accountController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Add")
                         }
                         dismiss()
                     }, label: {

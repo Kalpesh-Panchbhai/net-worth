@@ -15,18 +15,21 @@ class IncomeTypeController {
             .collection(ConstantUtils.incomeTypeCollectionName)
     }
     
-    func getIncomeTypeList() async throws -> [IncomeType] {
+    public func getIncomeTypeList() async -> [IncomeType] {
         var incomeTypeList = [IncomeType]()
-        incomeTypeList = try await getIncomeTypeCollection()
-            .order(by: ConstantUtils.incomeTypeKeyName)
-            .getDocuments()
-            .documents
-            .map { doc in
-                return IncomeType(id: doc.documentID,
-                                  name: doc[ConstantUtils.incomeTypeKeyName] as? String ?? "",
-                                  isdefault: doc[ConstantUtils.incomeTagKeyIsDefault] as? Bool ?? false)
-            }
-        
+        do {
+            incomeTypeList = try await getIncomeTypeCollection()
+                .order(by: ConstantUtils.incomeTypeKeyName)
+                .getDocuments()
+                .documents
+                .map { doc in
+                    return IncomeType(id: doc.documentID,
+                                      name: doc[ConstantUtils.incomeTypeKeyName] as? String ?? "",
+                                      isdefault: doc[ConstantUtils.incomeTagKeyIsDefault] as? Bool ?? false)
+                }
+        } catch {
+            print(error)
+        }
         return incomeTypeList
     }
     
@@ -64,8 +67,8 @@ class IncomeTypeController {
             }
     }
     
-    public func addDefaultIncomeType() async throws {
-        let count = try await getIncomeTypeList().count
+    public func addDefaultIncomeType() async {
+        let count = await getIncomeTypeList().count
         if(count == 0) {
             let incomeType = IncomeType(name: "None", isdefault: false)
             addIncomeType(type: incomeType)

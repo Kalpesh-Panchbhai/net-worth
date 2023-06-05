@@ -78,12 +78,12 @@ struct BackupView: View {
                 await importExportViewModel.getLocalBackup()
                 await importExportViewModel.readLocalBackup()
                 
-                try await getTotalAccountInCloud()
-                try await getTotalAccountTransactionInCloud()
-                try await getTotalIncomeInCloud()
-                try await getTotalWatchListInCloud()
-                try await getTotalIncomeTagInCloud()
-                try await getTotalIncomeTypeInCloud()
+                await getTotalAccountInCloud()
+                await getTotalAccountTransactionInCloud()
+                await getTotalIncomeInCloud()
+                await getTotalWatchListInCloud()
+                await getTotalIncomeTagInCloud()
+                await getTotalIncomeTypeInCloud()
             }
         }
         .toolbar {
@@ -181,8 +181,8 @@ struct BackupView: View {
         }
     }
     
-    private func getTotalAccountInCloud() async throws {
-        totalAccountInCloud = try await accountController.getAccountList().count
+    private func getTotalAccountInCloud() async {
+        totalAccountInCloud = await accountController.getAccountList().count
     }
     
     private var accountTransactionInCloud: some View {
@@ -193,10 +193,10 @@ struct BackupView: View {
         }
     }
     
-    private func getTotalAccountTransactionInCloud() async throws {
-        let accountlist = try await accountController.getAccountList()
+    private func getTotalAccountTransactionInCloud() async {
+        let accountlist = await accountController.getAccountList()
         for account in accountlist {
-            try await totalAccountTransactionInCloud += accountController.getAccountTransactionList(id: account.id!).count
+            await totalAccountTransactionInCloud += accountController.getAccountTransactionList(id: account.id!).count
         }
     }
     
@@ -208,8 +208,8 @@ struct BackupView: View {
         }
     }
     
-    private func getTotalIncomeInCloud() async throws {
-        totalIncomeInCloud = try await incomeController.getIncomeList().count
+    private func getTotalIncomeInCloud() async {
+        totalIncomeInCloud = await incomeController.getIncomeList().count
     }
     
     private var watchListInCloud: some View {
@@ -220,8 +220,8 @@ struct BackupView: View {
         }
     }
     
-    private func getTotalWatchListInCloud() async throws {
-        totalWatchListInCloud = try await watchController.getAllWatchList().count
+    private func getTotalWatchListInCloud() async {
+        totalWatchListInCloud = await watchController.getAllWatchList().count
     }
     
     private var incomeTypeInCloud: some View {
@@ -232,8 +232,8 @@ struct BackupView: View {
         }
     }
     
-    private func getTotalIncomeTypeInCloud() async throws {
-        totalIncomeTypeInCloud = try await incomeTypeController.getIncomeTypeList().count
+    private func getTotalIncomeTypeInCloud() async {
+        totalIncomeTypeInCloud = await incomeTypeController.getIncomeTypeList().count
     }
     
     private var incomeTagInCloud: some View {
@@ -244,7 +244,7 @@ struct BackupView: View {
         }
     }
     
-    private func getTotalIncomeTagInCloud() async throws {
-        totalIncomeTagInCloud = try await incomeTagController.getIncomeTagList().count
+    private func getTotalIncomeTagInCloud() async {
+        totalIncomeTagInCloud = await incomeTagController.getIncomeTagList().count
     }
 }

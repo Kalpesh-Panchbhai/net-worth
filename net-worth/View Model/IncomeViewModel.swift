@@ -26,80 +26,52 @@ class IncomeViewModel: ObservableObject {
     @Published var incomeFinancialYearList = [String]()
     
     func getIncomeList(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async {
-        do {
-            let list = try await incomeController.getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
-            DispatchQueue.main.async {
-                self.incomeList = list
-                self.incomeListLoaded = true
-            }
-        } catch {
-            print(error)
+        let list = await incomeController.getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
+        DispatchQueue.main.async {
+            self.incomeList = list
+            self.incomeListLoaded = true
         }
     }
     
     func getTotalBalance(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async {
-        do {
-            let amount = try await incomeController.fetchTotalAmount(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
-            DispatchQueue.main.async {
-                self.incomeTotalAmount = amount
-            }
-        } catch {
-            print(error)
+        let amount = await incomeController.fetchTotalAmount(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
+        DispatchQueue.main.async {
+            self.incomeTotalAmount = amount
         }
     }
     
     func getTotalTaxPaid(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async {
-        do {
-            let taxPaid = try await incomeController.fetchTotalTaxPaid(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
-            DispatchQueue.main.async {
-                self.incomeTaxPaidAmount = taxPaid
-            }
-        } catch {
-            print(error)
+        let taxPaid = await incomeController.fetchTotalTaxPaid(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
+        DispatchQueue.main.async {
+            self.incomeTaxPaidAmount = taxPaid
         }
     }
     
     func getIncomeTagList() async {
-        do {
-            let list = try await incomeTagController.getIncomeTagList()
-            DispatchQueue.main.async {
-                self.incomeTagList = list
-            }
-        } catch {
-            print(error)
+        let list = await incomeTagController.getIncomeTagList()
+        DispatchQueue.main.async {
+            self.incomeTagList = list
         }
     }
     
     func getIncomeTypeList() async {
-        do {
-            let list = try await incomeTypeController.getIncomeTypeList()
-            DispatchQueue.main.async {
-                self.incomeTypeList = list
-            }
-        } catch {
-            print(error)
+        let list = await incomeTypeController.getIncomeTypeList()
+        DispatchQueue.main.async {
+            self.incomeTypeList = list
         }
     }
     
     func getIncomeYearList() async {
-        do {
-            let list = try await incomeController.getIncomeYearList()
-            DispatchQueue.main.async {
-                self.incomeYearList = list
-            }
-        } catch {
-            print(error)
+        let list = await incomeController.getIncomeYearList()
+        DispatchQueue.main.async {
+            self.incomeYearList = list
         }
     }
     
     func getIncomeFinancialYearList() async {
-        do {
-            let list = try await incomeController.getIncomeFinancialYearList()
-            DispatchQueue.main.async {
-                self.incomeFinancialYearList = list
-            }
-        } catch {
-            print(error)
+        let list = await incomeController.getIncomeFinancialYearList()
+        DispatchQueue.main.async {
+            self.incomeFinancialYearList = list
         }
     }
 }

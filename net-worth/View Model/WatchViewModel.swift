@@ -19,61 +19,41 @@ class WatchViewModel: ObservableObject {
     @Published var watch = Watch()
     
     func getAllWatchList() async {
-        do {
-            let list = try await watchController.getAllWatchList()
-            DispatchQueue.main.async {
-                self.watchList = list
-                self.watchListLoad = true
-            }
-        } catch {
-            print(error)
+        let list = await watchController.getAllWatchList()
+        DispatchQueue.main.async {
+            self.watchList = list
+            self.watchListLoad = true
         }
     }
     
     func getAllWatchListWithAccountDetails() async {
-        do {
-            let watchList = try await watchController.getAllWatchList()
-            var watchListWithAccount2 = [Watch: [Account]]()
-            for list in watchList {
-                do {
-                    var accountList = [Account]()
-                    for i in 0..<list.accountID.count {
-                        let account = try await accountController.getAccount(id: list.accountID[i])
-                        accountList.append(account)
-                    }
-                    watchListWithAccount2.updateValue(accountList, forKey: list)
-                } catch {
-                    print(error)
-                }
+        let watchList = await watchController.getAllWatchList()
+        var watchListWithAccount2 = [Watch: [Account]]()
+        for list in watchList {
+            var accountList = [Account]()
+            for i in 0..<list.accountID.count {
+                let account = await accountController.getAccount(id: list.accountID[i])
+                accountList.append(account)
             }
-            let watchListWithAccount1 = watchListWithAccount2
-            DispatchQueue.main.async {
-                self.watchListWithAccount = watchListWithAccount1
-            }
-        } catch {
-            print(error)
+            watchListWithAccount2.updateValue(accountList, forKey: list)
+        }
+        let watchListWithAccount1 = watchListWithAccount2
+        DispatchQueue.main.async {
+            self.watchListWithAccount = watchListWithAccount1
         }
     }
     
     func getWatchList(id: String) async {
-        do {
-            let item = try await watchController.getWatchList(id: id)
-            DispatchQueue.main.async {
-                self.watch = item
-            }
-        } catch {
-            print(error)
+        let item = await watchController.getWatchList(id: id)
+        DispatchQueue.main.async {
+            self.watch = item
         }
     }
     
     func getWatchListByAccount(accountID: String) async {
-        do {
-            let list = try await watchController.getWatchListByAccount(accountID: accountID)
-            DispatchQueue.main.async {
-                self.watchListForAccount = list
-            }
-        } catch {
-            print(error)
+        let list = await watchController.getWatchListByAccount(accountID: accountID)
+        DispatchQueue.main.async {
+            self.watchListForAccount = list
         }
     }
 }

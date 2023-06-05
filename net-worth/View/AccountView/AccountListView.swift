@@ -49,7 +49,7 @@ struct AccountListView: View {
                                         
                                         Button(role: .destructive, action: {
                                             Task.init {
-                                                try await accountController.deleteAccount(account: account)
+                                                await accountController.deleteAccount(account: account)
                                             }
                                             Task.init {
                                                 await accountViewModel.getAccountList()

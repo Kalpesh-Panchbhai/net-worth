@@ -23,21 +23,22 @@ class NotificationController {
     
     var notificationCenter  =  UNUserNotificationCenter.current()
     
-    private func enableNotification() async throws -> Bool {
-        return try await notificationCenter.requestAuthorization(options: [.alert,
-                                                                           .sound,
-                                                                           .badge,
-                                                                           .criticalAlert,
-                                                                           .providesAppNotificationSettings])
+    private func enableNotification() async -> Bool {
+        do {
+            return try await notificationCenter.requestAuthorization(options: [.alert,
+                                                                               .sound,
+                                                                               .badge,
+                                                                               .criticalAlert,
+                                                                               .providesAppNotificationSettings])
+        } catch {
+            print(error)
+        }
+        return false
     }
     
     private func enableNotification() {
         Task {
-            do {
-                granted = try await enableNotification()
-            } catch {
-                print(error)
-            }
+            granted = await enableNotification()
         }
     }
     

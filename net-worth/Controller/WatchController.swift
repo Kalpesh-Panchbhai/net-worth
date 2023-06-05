@@ -16,17 +16,21 @@ class WatchController {
             .collection(ConstantUtils.watchCollectionName)
     }
     
-    public func getAllWatchList() async throws -> [Watch] {
+    public func getAllWatchList() async -> [Watch] {
         var watchList = [Watch]()
-        watchList = try await getWatchCollection()
-            .order(by: ConstantUtils.watchKeyWatchName)
-            .getDocuments()
-            .documents
-            .map { doc in
-                return Watch(doc: doc)
-            }.sorted(by: { item1, item2 in
-                item1.accountName < item2.accountName
-            })
+        do {
+            watchList = try await getWatchCollection()
+                .order(by: ConstantUtils.watchKeyWatchName)
+                .getDocuments()
+                .documents
+                .map { doc in
+                    return Watch(doc: doc)
+                }.sorted(by: { item1, item2 in
+                    item1.accountName < item2.accountName
+                })
+        } catch {
+            print(error)
+        }
         var returnWatchList = watchList.filter { item in
             !item.accountName.elementsEqual("All")
         }
@@ -36,24 +40,32 @@ class WatchController {
         return returnWatchList
     }
     
-    public func getDefaultWatchList() async throws -> Watch {
+    public func getDefaultWatchList() async -> Watch {
         var watch = Watch()
-        watch = try await getWatchCollection()
-            .whereField(ConstantUtils.watchKeyWatchName, isEqualTo: "All")
-            .getDocuments()
-            .documents
-            .map { doc in
-                return Watch(doc: doc)
-            }.first!
+        do {
+            watch = try await getWatchCollection()
+                .whereField(ConstantUtils.watchKeyWatchName, isEqualTo: "All")
+                .getDocuments()
+                .documents
+                .map { doc in
+                    return Watch(doc: doc)
+                }.first!
+        } catch {
+            print(error)
+        }
         return watch
     }
     
-    public func getWatchList(id: String) async throws -> Watch {
+    public func getWatchList(id: String) async -> Watch {
         var watch = Watch()
-        watch = try await getWatchCollection()
-            .document(id)
-            .getDocument()
-            .data(as: Watch.self)
+        do {
+            watch = try await getWatchCollection()
+                .document(id)
+                .getDocument()
+                .data(as: Watch.self)
+        } catch {
+            print(error)
+        }
         return watch
     }
     
@@ -67,8 +79,8 @@ class WatchController {
         }
     }
     
-    public func addDefaultWatchList() async throws {
-        let count = try await getAllWatchList().count
+    public func addDefaultWatchList() async {
+        let count = await getAllWatchList().count
         if(count == 0) {
             var watchList = Watch()
             watchList.accountName = "All"
@@ -96,8 +108,8 @@ class WatchController {
         }
     }
     
-    public func deleteWatchLists() async throws {
-        let watchList = try await getAllWatchList()
+    public func deleteWatchLists() async {
+        let watchList = await getAllWatchList()
         for watch in watchList {
             deleteWatchList(watchList: watch)
         }
@@ -115,19 +127,23 @@ class WatchController {
         updateWatchList(watchList: watchList)
     }
     
-    public func getWatchListByAccount(accountID: String) async throws -> [Watch] {
+    public func getWatchListByAccount(accountID: String) async -> [Watch] {
         var watch = [Watch]()
-        watch = try await getWatchCollection()
-            .getDocuments()
-            .documents
-            .map { doc in
-                return Watch(doc: doc)
-            }
-        watch = watch.filter { item in
-            item.accountID.contains(accountID)
-        }.sorted(by: { item1, item2 in
-            item1.accountName < item2.accountName
-        })
+        do {
+            watch = try await getWatchCollection()
+                .getDocuments()
+                .documents
+                .map { doc in
+                    return Watch(doc: doc)
+                }
+            watch = watch.filter { item in
+                item.accountID.contains(accountID)
+            }.sorted(by: { item1, item2 in
+                item1.accountName < item2.accountName
+            })
+        } catch {
+            print(error)
+        }
         var returnWatchList = watch.filter { item in
             !item.accountName.elementsEqual("All")
         }
