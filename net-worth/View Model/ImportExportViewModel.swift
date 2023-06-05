@@ -22,13 +22,9 @@ class ImportExportViewModel: ObservableObject {
     }
     
     func readLocalBackup() async {
-        do {
-            let data = try await importExportController.readLocalBackup()
-            DispatchQueue.main.async {
-                self.backupData = data
-            }
-        } catch {
-            print(error)
+        let data = await importExportController.readLocalBackup()
+        DispatchQueue.main.async {
+            self.backupData = data
         }
     }
 }

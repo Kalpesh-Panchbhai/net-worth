@@ -112,7 +112,7 @@ struct AccountCardList: View {
                                                                             isPresented: $isPresentingAccountDeleteConfirm) {
                                                             Button("Delete account " + deletedAccount.accountName + "?", role: .destructive) {
                                                                 Task.init {
-                                                                    try await accountController.deleteAccount(account: deletedAccount)
+                                                                    await accountController.deleteAccount(account: deletedAccount)
                                                                     await accountViewModel.getAccountList()
                                                                     await watchViewModel.getAllWatchList()
                                                                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)

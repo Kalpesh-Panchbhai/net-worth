@@ -67,7 +67,7 @@ class IncomeController {
                                   type: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
                                   tag: doc[ConstantUtils.incomeKeyIncomeTag] as? String ?? "")
                 }
-            ApplicationData.shared.incomeListUpdatedDate = try await UserController().getCurrentUser().incomeDataUpdatedDate
+            ApplicationData.shared.incomeListUpdatedDate = await UserController().getCurrentUser().incomeDataUpdatedDate
             ApplicationData.shared.incomeList = incomeList
         } catch {
             print(error)
@@ -76,7 +76,7 @@ class IncomeController {
         return incomeList
     }
     
-    public func getIncomeList(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async throws -> [Income] {
+    public func getIncomeList(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async -> [Income] {
         var incomeList = [Income]()
         
         if(await UserController().isNewIncomeAvailable()) {
@@ -180,8 +180,8 @@ class IncomeController {
         return incomeList
     }
     
-    public func fetchTotalAmount(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async throws -> Double {
-        let incomeList = try await getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
+    public func fetchTotalAmount(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async -> Double {
+        let incomeList = await getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
         
         var total = 0.0
         incomeList.forEach {
@@ -190,8 +190,8 @@ class IncomeController {
         return total
     }
     
-    public func fetchTotalTaxPaid(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async throws -> Double {
-        let incomeList = try await getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
+    public func fetchTotalTaxPaid(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async -> Double {
+        let incomeList = await getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
         
         var total = 0.0
         incomeList.forEach {
@@ -200,8 +200,8 @@ class IncomeController {
         return total
     }
     
-    public func getIncomeYearList() async throws -> [String] {
-        let incomeList = try await getIncomeList(incomeType: "", incomeTag: "", year: "", financialYear: "")
+    public func getIncomeYearList() async -> [String] {
+        let incomeList = await getIncomeList(incomeType: "", incomeTag: "", year: "", financialYear: "")
         
         let grouped = Dictionary(grouping: incomeList) { (income) -> Int in
             let date = Calendar.current.dateComponents([.year], from: income.creditedOn)
@@ -218,8 +218,8 @@ class IncomeController {
         }
     }
     
-    public func getIncomeFinancialYearList() async throws -> [String] {
-        let incomeList = try await getIncomeList(incomeType: "", incomeTag: "", year: "", financialYear: "")
+    public func getIncomeFinancialYearList() async -> [String] {
+        let incomeList = await getIncomeList(incomeType: "", incomeTag: "", year: "", financialYear: "")
         
         var returnResponse = [String]()
         if(incomeList.isEmpty) {

@@ -15,18 +15,21 @@ class IncomeTagController {
             .collection(ConstantUtils.incomeTagCollectionName)
     }
     
-    func getIncomeTagList() async throws -> [IncomeTag] {
+    public func getIncomeTagList() async -> [IncomeTag] {
         var incomeTagList = [IncomeTag]()
-        incomeTagList = try await getIncomeTagCollection()
-            .order(by: ConstantUtils.incomeTagKeyName)
-            .getDocuments()
-            .documents
-            .map { doc in
-                return IncomeTag(id: doc.documentID,
-                                 name: doc[ConstantUtils.incomeTagKeyName] as? String ?? "",
-                                 isdefault: doc[ConstantUtils.incomeTagKeyIsDefault] as? Bool ?? false)
-            }
-        
+        do {
+            incomeTagList = try await getIncomeTagCollection()
+                .order(by: ConstantUtils.incomeTagKeyName)
+                .getDocuments()
+                .documents
+                .map { doc in
+                    return IncomeTag(id: doc.documentID,
+                                     name: doc[ConstantUtils.incomeTagKeyName] as? String ?? "",
+                                     isdefault: doc[ConstantUtils.incomeTagKeyIsDefault] as? Bool ?? false)
+                }
+        } catch {
+            print(error)
+        }
         return incomeTagList
     }
     
@@ -64,8 +67,8 @@ class IncomeTagController {
             }
     }
     
-    public func addDefaultIncomeTag() async throws {
-        let count = try await getIncomeTagList().count
+    public func addDefaultIncomeTag() async {
+        let count = await getIncomeTagList().count
         if(count == 0) {
             let incomeTag = IncomeTag(name: "None", isdefault: false)
             addIncomeTag(tag: incomeTag)

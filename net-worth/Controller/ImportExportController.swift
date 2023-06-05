@@ -17,31 +17,34 @@ class ImportExportController {
     
     var data = Data()
     
-    public func readLocalBackup() async throws -> Data {
+    public func readLocalBackup() async -> Data {
         var returnData = Data()
-        let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let directoryContents = try FileManager.default.contentsOfDirectory(
-            at: documentDirectory!,
-            includingPropertiesForKeys: nil
-        )
-        
-        let backupList = directoryContents.filter {
-            $0.lastPathComponent.starts(with: "Backup_")
-        }
-        
-        if(!backupList.isEmpty) {
-            do {
-                let jsonString = try String(contentsOf: backupList[0].absoluteURL, encoding: .utf8)
-                if let dataFromJsonString = jsonString.data(using: .utf8) {
-                    returnData = try JSONDecoder().decode(Data.self,
-                                                          from: dataFromJsonString)
-                    
-                }
-            } catch {
-                print(error)
+        do {
+            let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+            let directoryContents = try FileManager.default.contentsOfDirectory(
+                at: documentDirectory!,
+                includingPropertiesForKeys: nil
+            )
+            
+            let backupList = directoryContents.filter {
+                $0.lastPathComponent.starts(with: "Backup_")
             }
+            
+            if(!backupList.isEmpty) {
+                do {
+                    let jsonString = try String(contentsOf: backupList[0].absoluteURL, encoding: .utf8)
+                    if let dataFromJsonString = jsonString.data(using: .utf8) {
+                        returnData = try JSONDecoder().decode(Data.self,
+                                                              from: dataFromJsonString)
+                        
+                    }
+                } catch {
+                    print(error)
+                }
+            }
+        } catch {
+            print(error)
         }
-        
         return returnData
     }
     
@@ -130,11 +133,7 @@ class ImportExportController {
             let accountID = await accountController.addAccount(newAccount: newAccount)
             for i in 0..<accountTransaction.count {
                 let newAccountTransaction = AccountTransaction(timestamp: accountTransaction[i].timestamp, balanceChange: accountTransaction[i].balanceChange, currentBalance: accountTransaction[i].currentBalance, paid: accountTransaction[i].paid)
-                do {
-                    try await accountController.addTransaction(accountID: accountID, accountTransaction: newAccountTransaction)
-                } catch {
-                    print(error)
-                }
+                await accountController.addTransaction(accountID: accountID, accountTransaction: newAccountTransaction)
             }
         }
     }
@@ -142,21 +141,16 @@ class ImportExportController {
     private func importWatch() async {
         for watch in data.watch {
             var newWatch = Watch()
-            do {
-                let accountList = try await accountController.getAccountList()
-                newWatch.accountID = watch.accountID.map { accountID in
-                    accountList.filter { account in
-                        account.accountName.elementsEqual(accountID)
-                    }.first?.id ?? ""
-                }
-                newWatch.accountName = watch.accountName
-                watchController.addWatchList(watchList: newWatch)
-            } catch {
-                print(error)
+            let accountList = await accountController.getAccountList()
+            newWatch.accountID = watch.accountID.map { accountID in
+                accountList.filter { account in
+                    account.accountName.elementsEqual(accountID)
+                }.first?.id ?? ""
             }
+            newWatch.accountName = watch.accountName
+            watchController.addWatchList(watchList: newWatch)
         }
     }
-    
     
     public func exportLocal() async {
         
@@ -196,74 +190,54 @@ class ImportExportController {
     }
     
     private func exportIncomeTag() async {
-        do {
-            let incomeTagList = try await incomeTagController.getIncomeTagList()
-            data.incomeTag = incomeTagList.map { item in
-                return IncomeTagData(name: item.name, isdefault: item.isdefault)
-            }
-        } catch {
-            print(error)
+        let incomeTagList = await incomeTagController.getIncomeTagList()
+        data.incomeTag = incomeTagList.map { item in
+            return IncomeTagData(name: item.name, isdefault: item.isdefault)
         }
     }
     
     private func exportIncomeType() async {
-        do {
-            let incomeTypeList = try await incomeTypeController.getIncomeTypeList()
-            data.incomeType = incomeTypeList.map { item in
-                return IncomeTypeData(name: item.name, isdefault: item.isdefault)
-            }
-        } catch {
-            print(error)
+        let incomeTypeList = await incomeTypeController.getIncomeTypeList()
+        data.incomeType = incomeTypeList.map { item in
+            return IncomeTypeData(name: item.name, isdefault: item.isdefault)
         }
     }
     
     private func exportIncome() async {
-        do {
-            let incomeList = try await incomeController.getIncomeList()
-            data.income = incomeList.map { item in
-                return IncomeData(amount: item.amount, taxpaid: item.taxpaid, creditedOn: item.creditedOn, currency: item.currency, type: item.type, tag: item.tag, avgAmount: item.avgAmount, avgTaxPaid: item.avgTaxPaid, cumulativeAmount: item.cumulativeAmount, cumulativeTaxPaid: item.cumulativeTaxPaid, animate: item.animate)
-            }
-        } catch {
-            print(error)
+        let incomeList = await incomeController.getIncomeList()
+        data.income = incomeList.map { item in
+            return IncomeData(amount: item.amount, taxpaid: item.taxpaid, creditedOn: item.creditedOn, currency: item.currency, type: item.type, tag: item.tag, avgAmount: item.avgAmount, avgTaxPaid: item.avgTaxPaid, cumulativeAmount: item.cumulativeAmount, cumulativeTaxPaid: item.cumulativeTaxPaid, animate: item.animate)
         }
     }
     
     private func exportAccount() async {
-        do {
-            let accountList = try await accountController.getAccountList()
-            var accountTransactionList = [String: [AccountTransaction]]()
-            for account in accountList {
-                let accountTransactions = try await accountController.getAccountTransactionList(id: account.id!)
-                accountTransactionList.updateValue(accountTransactions, forKey: account.id!)
+        let accountList = await accountController.getAccountList()
+        var accountTransactionList = [String: [AccountTransaction]]()
+        for account in accountList {
+            let accountTransactions = await accountController.getAccountTransactionList(id: account.id!)
+            accountTransactionList.updateValue(accountTransactions, forKey: account.id!)
+        }
+        
+        data.account = accountList.map { account in
+            let accountTransaction = accountTransactionList.filter {
+                $0.key.elementsEqual(account.id!)
+            }.first?.value.map { accountTransaction in
+                return AccountTransactionData(timestamp: accountTransaction.timestamp, balanceChange: accountTransaction.balanceChange, currentBalance: accountTransaction.currentBalance, paid: accountTransaction.paid)
             }
-            
-            data.account = accountList.map { account in
-                let accountTransaction = accountTransactionList.filter {
-                    $0.key.elementsEqual(account.id!)
-                }.first?.value.map { accountTransaction in
-                    return AccountTransactionData(timestamp: accountTransaction.timestamp, balanceChange: accountTransaction.balanceChange, currentBalance: accountTransaction.currentBalance, paid: accountTransaction.paid)
-                }
-                return AccountData(accountType: account.accountType, loanType: account.loanType, accountName: account.accountName, currentBalance: account.currentBalance, paymentReminder: account.paymentReminder, paymentDate: account.paymentDate, currency: account.currency, active: account.active, accountTransaction: accountTransaction ?? [AccountTransactionData]())
-            }
-        } catch {
-            print(error)
+            return AccountData(accountType: account.accountType, loanType: account.loanType, accountName: account.accountName, currentBalance: account.currentBalance, paymentReminder: account.paymentReminder, paymentDate: account.paymentDate, currency: account.currency, active: account.active, accountTransaction: accountTransaction ?? [AccountTransactionData]())
         }
     }
     
     private func exportWatch() async {
-        do {
-            let watchList = try await watchController.getAllWatchList()
-            let accountList = try await accountController.getAccountList()
-            data.watch = watchList.map { watch in
-                let accounts = watch.accountID.map { accountID in
-                    accountList.filter { account in
-                        account.id!.elementsEqual(accountID)
-                    }.first!.accountName
-                }
-                return WatchData(accountName: watch.accountName, accountID: accounts)
+        let watchList = await watchController.getAllWatchList()
+        let accountList = await accountController.getAccountList()
+        data.watch = watchList.map { watch in
+            let accounts = watch.accountID.map { accountID in
+                accountList.filter { account in
+                    account.id!.elementsEqual(accountID)
+                }.first!.accountName
             }
-        } catch {
-            print(error)
+            return WatchData(accountName: watch.accountName, accountID: accounts)
         }
     }
     
@@ -279,7 +253,7 @@ class ImportExportController {
                 at: documentDirectory,
                 includingPropertiesForKeys: nil
             )
-
+            
             let backupList = directoryContents.filter {
                 $0.lastPathComponent.starts(with: "Backup_")
             }
@@ -292,14 +266,9 @@ class ImportExportController {
     }
     
     func deleteData() async {
-        do {
-            try await accountController.deleteAccounts()
-            incomeController.deleteIncomes()
-            try await watchController.deleteWatchLists()
-            incomeTagController.deleteIncomeTags()
-            incomeTypeController.deleteIncomeTypes()
-        } catch {
-            print(error)
-        }
-    }
+        await accountController.deleteAccounts()
+        incomeController.deleteIncomes()
+        await watchController.deleteWatchLists()
+        incomeTagController.deleteIncomeTags()
+        incomeTypeController.deleteIncomeTypes()    }
 }

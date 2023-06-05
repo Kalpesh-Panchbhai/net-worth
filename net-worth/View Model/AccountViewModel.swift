@@ -107,119 +107,83 @@ class AccountViewModel: ObservableObject {
                 account.accountType.lowercased().elementsEqual(filter.lowercased())
             }
     }
- 
+    
     func getAccount(id: String) async {
-        do {
-            let list = try await accountController.getAccount(id: id)
-            DispatchQueue.main.async {
-                self.account = list
-            }
-        } catch {
-            print(error)
+        let list = await accountController.getAccount(id: id)
+        DispatchQueue.main.async {
+            self.account = list
         }
     }
     
     func getAccountsForWatchList(accountID: [String]) async {
-        do {
-            watchList = [Account]()
-            for i in 0..<accountID.count {
-                let account = try await accountController.getAccount(id: accountID[i])
-                watchList.append(account)
-            }
-            DispatchQueue.main.async {
-                self.accountList = self.watchList
-            }
-        } catch {
-            print(error)
+        watchList = [Account]()
+        for i in 0..<accountID.count {
+            let account = await accountController.getAccount(id: accountID[i])
+            watchList.append(account)
+        }
+        DispatchQueue.main.async {
+            self.accountList = self.watchList
         }
     }
     
     func getAccountList() async {
-        do {
-            let list = try await accountController.getAccountList()
-            DispatchQueue.main.async {
-                self.accountList = list
-                self.originalAccountList = list
-                self.accountListLoaded = true
-            }
-        } catch {
-            print(error)
+        let list = await accountController.getAccountList()
+        DispatchQueue.main.async {
+            self.accountList = list
+            self.originalAccountList = list
+            self.accountListLoaded = true
         }
     }
     
     func getTotalBalance(accountList: [Account]) async {
-        do {
-            let balance = try await accountController.fetchTotalBalance(accountList: accountList)
-            DispatchQueue.main.async {
-                self.totalBalance = balance
-            }
-        } catch {
-            print(error)
+        let balance = await accountController.fetchTotalBalance(accountList: accountList)
+        DispatchQueue.main.async {
+            self.totalBalance = balance
         }
     }
     
     func getAccountTransactionList(id: String) async {
-        do {
-            let list = try await accountController.getAccountTransactionList(id: id)
-            DispatchQueue.main.async {
-                self.accountTransactionList = list
-            }
-        } catch {
-            print(error)
+        let list = await accountController.getAccountTransactionList(id: id)
+        DispatchQueue.main.async {
+            self.accountTransactionList = list
         }
     }
     
     func getAccountTransactionListWithRange(id: String, range: String) async {
-        do {
-            let list = try await accountController.getAccountTransactionListWithRange(id: id, range: range)
-            DispatchQueue.main.async {
-                self.accountTransactionListWithRange = list
-            }
-        } catch {
-            print(error)
+        let list = await accountController.getAccountTransactionListWithRange(id: id, range: range)
+        DispatchQueue.main.async {
+            self.accountTransactionListWithRange = list
         }
     }
     
     func getAccountTransactionListWithRangeMultipleAccounts(accountList: [Account], range: String) async {
-        do {
+        DispatchQueue.main.async {
+            self.accountTransactionListWithRangeMultipleAccounts = [[AccountTransaction]()]
+        }
+        for account in accountList {
+            let list = await accountController.getAccountTransactionListWithRange(id: account.id!, range: range)
             DispatchQueue.main.async {
-                self.accountTransactionListWithRangeMultipleAccounts = [[AccountTransaction]()]
+                self.accountTransactionListWithRangeMultipleAccounts.append(list)
             }
-            for account in accountList {
-                let list = try await accountController.getAccountTransactionListWithRange(id: account.id!, range: range)
-                DispatchQueue.main.async {
-                    self.accountTransactionListWithRangeMultipleAccounts.append(list)
-                }
-            }
-        } catch {
-            print(error)
         }
     }
     
     func getAccountLastTransactionBelowRange(accountList: [Account], range: String) async {
-        do {
+        DispatchQueue.main.async {
+            self.accountTransactionLastTransactionBelowRange = [[AccountTransaction]()]
+        }
+        for account in accountList {
+            let list = await accountController.getAccountLastTransactionBelowRange(id: account.id!, range: range)
             DispatchQueue.main.async {
-                self.accountTransactionLastTransactionBelowRange = [[AccountTransaction]()]
+                self.accountTransactionLastTransactionBelowRange.append(list)
             }
-            for account in accountList {
-                let list = try await accountController.getAccountLastTransactionBelowRange(id: account.id!, range: range)
-                DispatchQueue.main.async {
-                    self.accountTransactionLastTransactionBelowRange.append(list)
-                }
-            }
-        } catch {
-            print(error)
         }
     }
     
     func getLastTwoAccountTransactionList(id: String) async {
-        do {
-            let list = try await accountController.getLastTwoAccountTransactionList(id: id)
-            DispatchQueue.main.async {
-                self.accountLastTwoTransactionList = list
-            }
-        } catch {
-            print(error)
+        let list = await accountController.getLastTwoAccountTransactionList(id: id)
+        DispatchQueue.main.async {
+            self.accountLastTwoTransactionList = list
         }
     }
 }

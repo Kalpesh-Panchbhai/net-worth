@@ -165,7 +165,7 @@ struct NewAccountView: View {
                                 })
                                 watchController.addAccountToWatchList(watch: selectedWatchList)
                             }
-                            var watch = try await watchController.getDefaultWatchList()
+                            var watch = await watchController.getDefaultWatchList()
                             watch.accountID.append(accountID)
                             watch.accountID.sort(by: { item1, item2 in
                                 accountViewModel.accountList.filter { account1 in

@@ -69,7 +69,7 @@ struct AccountDetailView: View {
                                 isPresented: $isPresentingAccountDeleteConfirm) {
                 Button("Delete account " + account.accountName + "?", role: .destructive) {
                     Task.init {
-                        try await accountController.deleteAccount(account: account)
+                        await accountController.deleteAccount(account: account)
                         await accountViewModel.getAccountList()
                         await watchViewModel.getAllWatchList()
                     }
