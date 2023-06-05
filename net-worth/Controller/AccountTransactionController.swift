@@ -39,7 +39,7 @@ class AccountTransactionController {
     }
     
     public func addTransaction(accountID: String, account: Account, timestamp: Date, operation: String) async {
-        let accountTransactionsList = await getAccountTransactionList(id: accountID)
+        let accountTransactionsList = await getAccountTransactionList(accountID: accountID)
         if(accountTransactionsList.count > 0) {
             if(accountTransactionsList.last!.timestamp > timestamp) {
                 // Transaction Start
@@ -171,11 +171,11 @@ class AccountTransactionController {
         }
     }
     
-    public func getAccountTransactionList(id: String) async -> [AccountTransaction] {
+    public func getAccountTransactionList(accountID: String) async -> [AccountTransaction] {
         var accountTransactionList = [AccountTransaction]()
         do {
             accountTransactionList = try await AccountController().getAccountCollection()
-                .document(id)
+                .document(accountID)
                 .collection(ConstantUtils.accountTransactionCollectionName)
                 .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
                 .getDocuments()
@@ -193,7 +193,7 @@ class AccountTransactionController {
         return accountTransactionList
     }
     
-    public func getAccountTransactionListWithRange(id: String, range: String) async -> [AccountTransaction] {
+    public func getAccountTransactionListWithRange(accountID: String, range: String) async -> [AccountTransaction] {
         var date = Timestamp()
         if(range.elementsEqual("1M")) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000))
@@ -211,7 +211,7 @@ class AccountTransactionController {
             var accountTransactionList = [AccountTransaction]()
             do {
                 accountTransactionList = try await AccountController().getAccountCollection()
-                    .document(id)
+                    .document(accountID)
                     .collection(ConstantUtils.accountTransactionCollectionName)
                     .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
                     .getDocuments()
@@ -231,7 +231,7 @@ class AccountTransactionController {
         var accountTransactionList = [AccountTransaction]()
         do {
             accountTransactionList = try await AccountController().getAccountCollection()
-                .document(id)
+                .document(accountID)
                 .collection(ConstantUtils.accountTransactionCollectionName)
                 .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
                 .whereField(ConstantUtils.accountTransactionKeytimestamp, isGreaterThanOrEqualTo: date)
@@ -250,7 +250,7 @@ class AccountTransactionController {
         return accountTransactionList
     }
     
-    public func getAccountLastTransactionBelowRange(id: String, range: String) async -> [AccountTransaction] {
+    public func getAccountLastTransactionBelowRange(accountID: String, range: String) async -> [AccountTransaction] {
         var date = Timestamp()
         if(range.elementsEqual("1M")) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000))
@@ -268,7 +268,7 @@ class AccountTransactionController {
         var accountTransactionList = [AccountTransaction]()
         do {
             accountTransactionList = try await AccountController().getAccountCollection()
-                .document(id)
+                .document(accountID)
                 .collection(ConstantUtils.accountTransactionCollectionName)
                 .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
                 .whereField(ConstantUtils.accountTransactionKeytimestamp, isLessThan: date)
@@ -287,11 +287,12 @@ class AccountTransactionController {
         return accountTransactionList
     }
     
-    public func getLastTwoAccountTransactionList(id: String) async -> [AccountTransaction] {
+    public func getLastTwoAccountTransactionList(accountID: String) async -> [AccountTransaction] {
         var accountTransactionList = [AccountTransaction]()
         do {
-            accountTransactionList = try await AccountController().getAccountCollection()
-                .document(id)
+            accountTransactionList = try await AccountController()
+                .getAccountCollection()
+                .document(accountID)
                 .collection(ConstantUtils.accountTransactionCollectionName)
                 .whereField(ConstantUtils.accountTransactionKeyPaid, isEqualTo: true)
                 .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
@@ -311,12 +312,12 @@ class AccountTransactionController {
         return accountTransactionList
     }
     
-    public func deleteAccountTransaction(accountID: String, accountTransactionID: String) async {
+    public func deleteAccountTransaction(accountID: String, id: String) async {
         do {
             try await AccountController().getAccountCollection()
                 .document(accountID)
                 .collection(ConstantUtils.accountTransactionCollectionName)
-                .document(accountTransactionID)
+                .document(id)
                 .delete()
         } catch {
             print(error)

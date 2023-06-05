@@ -197,7 +197,7 @@ struct BackupView: View {
     private func getTotalAccountTransactionInCloud() async {
         let accountlist = await accountController.getAccountList()
         for account in accountlist {
-            await totalAccountTransactionInCloud += accountTransactionController.getAccountTransactionList(id: account.id!).count
+            await totalAccountTransactionInCloud += accountTransactionController.getAccountTransactionList(accountID: account.id!).count
         }
     }
     
