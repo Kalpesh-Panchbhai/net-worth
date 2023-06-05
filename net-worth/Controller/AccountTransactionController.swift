@@ -10,21 +10,6 @@ import FirebaseFirestore
 
 class AccountTransactionController {
     
-    public func addTransaction(accountID: String, account: Account, timestamp: Date) async {
-        let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: account.currentBalance, currentBalance: account.currentBalance)
-        
-        do {
-            let documentID = try AccountController().getAccountCollection()
-                .document(accountID)
-                .collection(ConstantUtils.accountTransactionCollectionName)
-                .addDocument(from: newTransaction).documentID
-            
-            print("New Account transaction added : " + documentID)
-        } catch {
-            print(error)
-        }
-    }
-    
     public func addTransaction(accountID: String, accountTransaction: AccountTransaction) async {
         do {
             let documentID = try AccountController().getAccountCollection()

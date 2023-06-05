@@ -37,7 +37,8 @@ class AccountController {
         do {
             let accountID = try getAccountCollection()
                 .addDocument(from: newAccount).documentID
-            await accountTransactionController.addTransaction(accountID: accountID, account: newAccount, timestamp: accountOpenedDate)
+            let accountTransaction = AccountTransaction(timestamp: accountOpenedDate, balanceChange: newAccount.currentBalance, currentBalance: newAccount.currentBalance)
+            await accountTransactionController.addTransaction(accountID: accountID, accountTransaction: accountTransaction)
             return accountID
         } catch {
             print(error)
