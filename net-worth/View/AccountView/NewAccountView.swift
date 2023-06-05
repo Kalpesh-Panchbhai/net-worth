@@ -11,6 +11,7 @@ struct NewAccountView: View {
     
     var currencyList = CurrencyList().currencyList
     var accountController = AccountController()
+    var accountTransactionController = AccountTransactionController()
     var financeController = FinanceController()
     var watchController = WatchController()
     
@@ -177,7 +178,7 @@ struct NewAccountView: View {
                             watchController.addAccountToWatchList(watch: watch)
                             await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                             if(accountType.elementsEqual("Loan") && loanType.elementsEqual("Consumer")) {
-                                accountController.addLoanAccountEMITransaction(account: newAccount, emiDate: loanPaymentDate, accountOpenedDate: accountOpenedDate, monthlyEmiAmount: monthlyEmi)
+                                accountTransactionController.addLoanAccountEMITransaction(account: newAccount, emiDate: loanPaymentDate, accountOpenedDate: accountOpenedDate, monthlyEmiAmount: monthlyEmi)
                             }
                         }
                         dismiss()

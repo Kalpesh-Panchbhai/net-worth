@@ -14,6 +14,7 @@ class AccountViewModel: ObservableObject {
     var watchList = [Account]()
     var originalAccountList = [Account]()
     var accountController = AccountController()
+    var accountTransactionController = AccountTransactionController()
     
     @Published var accountList = [Account]()
     @Published var accountListLoaded = false
@@ -143,14 +144,14 @@ class AccountViewModel: ObservableObject {
     }
     
     func getAccountTransactionList(id: String) async {
-        let list = await accountController.getAccountTransactionList(id: id)
+        let list = await accountTransactionController.getAccountTransactionList(id: id)
         DispatchQueue.main.async {
             self.accountTransactionList = list
         }
     }
     
     func getAccountTransactionListWithRange(id: String, range: String) async {
-        let list = await accountController.getAccountTransactionListWithRange(id: id, range: range)
+        let list = await accountTransactionController.getAccountTransactionListWithRange(id: id, range: range)
         DispatchQueue.main.async {
             self.accountTransactionListWithRange = list
         }
@@ -161,7 +162,7 @@ class AccountViewModel: ObservableObject {
             self.accountTransactionListWithRangeMultipleAccounts = [[AccountTransaction]()]
         }
         for account in accountList {
-            let list = await accountController.getAccountTransactionListWithRange(id: account.id!, range: range)
+            let list = await accountTransactionController.getAccountTransactionListWithRange(id: account.id!, range: range)
             DispatchQueue.main.async {
                 self.accountTransactionListWithRangeMultipleAccounts.append(list)
             }
@@ -173,7 +174,7 @@ class AccountViewModel: ObservableObject {
             self.accountTransactionLastTransactionBelowRange = [[AccountTransaction]()]
         }
         for account in accountList {
-            let list = await accountController.getAccountLastTransactionBelowRange(id: account.id!, range: range)
+            let list = await accountTransactionController.getAccountLastTransactionBelowRange(id: account.id!, range: range)
             DispatchQueue.main.async {
                 self.accountTransactionLastTransactionBelowRange.append(list)
             }
@@ -181,7 +182,7 @@ class AccountViewModel: ObservableObject {
     }
     
     func getLastTwoAccountTransactionList(id: String) async {
-        let list = await accountController.getLastTwoAccountTransactionList(id: id)
+        let list = await accountTransactionController.getLastTwoAccountTransactionList(id: id)
         DispatchQueue.main.async {
             self.accountLastTwoTransactionList = list
         }

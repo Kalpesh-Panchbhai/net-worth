@@ -11,6 +11,7 @@ struct BackupView: View {
     
     var importExportController = ImportExportController()
     var accountController = AccountController()
+    var accountTransactionController = AccountTransactionController()
     var incomeController = IncomeController()
     var incomeTypeController = IncomeTypeController()
     var incomeTagController = IncomeTagController()
@@ -196,7 +197,7 @@ struct BackupView: View {
     private func getTotalAccountTransactionInCloud() async {
         let accountlist = await accountController.getAccountList()
         for account in accountlist {
-            await totalAccountTransactionInCloud += accountController.getAccountTransactionList(id: account.id!).count
+            await totalAccountTransactionInCloud += accountTransactionController.getAccountTransactionList(id: account.id!).count
         }
     }
     

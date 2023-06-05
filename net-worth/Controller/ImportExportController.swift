@@ -13,6 +13,7 @@ class ImportExportController {
     var incomeTypeController = IncomeTypeController()
     var incomeTagController = IncomeTagController()
     var accountController = AccountController()
+    var accountTransactionController = AccountTransactionController()
     var watchController = WatchController()
     
     var data = Data()
@@ -133,7 +134,7 @@ class ImportExportController {
             let accountID = await accountController.addAccount(newAccount: newAccount)
             for i in 0..<accountTransaction.count {
                 let newAccountTransaction = AccountTransaction(timestamp: accountTransaction[i].timestamp, balanceChange: accountTransaction[i].balanceChange, currentBalance: accountTransaction[i].currentBalance, paid: accountTransaction[i].paid)
-                await accountController.addTransaction(accountID: accountID, accountTransaction: newAccountTransaction)
+                await accountTransactionController.addTransaction(accountID: accountID, accountTransaction: newAccountTransaction)
             }
         }
     }
@@ -214,7 +215,7 @@ class ImportExportController {
         let accountList = await accountController.getAccountList()
         var accountTransactionList = [String: [AccountTransaction]]()
         for account in accountList {
-            let accountTransactions = await accountController.getAccountTransactionList(id: account.id!)
+            let accountTransactions = await accountTransactionController.getAccountTransactionList(id: account.id!)
             accountTransactionList.updateValue(accountTransactions, forKey: account.id!)
         }
         
