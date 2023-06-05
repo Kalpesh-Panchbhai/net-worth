@@ -10,13 +10,11 @@ import FirebaseFirestore
 
 class AccountTransactionController {
     
-    private var accountController = AccountController()
-    
     public func addTransaction(accountID: String, account: Account, timestamp: Date) async {
         let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: account.currentBalance, currentBalance: account.currentBalance)
         
         do {
-            let documentID = try accountController.getAccountCollection()
+            let documentID = try AccountController().getAccountCollection()
                 .document(accountID)
                 .collection(ConstantUtils.accountTransactionCollectionName)
                 .addDocument(from: newTransaction).documentID
@@ -29,7 +27,7 @@ class AccountTransactionController {
     
     public func addTransaction(accountID: String, accountTransaction: AccountTransaction) async {
         do {
-            let documentID = try accountController.getAccountCollection()
+            let documentID = try AccountController().getAccountCollection()
                 .document(accountID)
                 .collection(ConstantUtils.accountTransactionCollectionName)
                 .addDocument(from: accountTransaction).documentID
@@ -53,7 +51,7 @@ class AccountTransactionController {
                 let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: account.currentBalance, currentBalance: account.currentBalance)
                 
                 do {
-                    let documentID = try accountController.getAccountCollection()
+                    let documentID = try AccountController().getAccountCollection()
                         .document(accountID)
                         .collection(ConstantUtils.accountTransactionCollectionName)
                         .addDocument(from: newTransaction).documentID
@@ -73,7 +71,7 @@ class AccountTransactionController {
                     let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: balanceChange, currentBalance: currentBalance)
                     
                     do {
-                        let documentID = try accountController.getAccountCollection()
+                        let documentID = try AccountController().getAccountCollection()
                             .document(accountID)
                             .collection(ConstantUtils.accountTransactionCollectionName)
                             .addDocument(from: newTransaction).documentID
@@ -82,13 +80,13 @@ class AccountTransactionController {
                     } catch {
                         print(error)
                     }
-                    accountController.updateAccount(account: updatedAccount)
+                    AccountController().updateAccount(account: updatedAccount)
                 } else {
                     let balanceChange = account.currentBalance - accountTransactionsList.first!.currentBalance
                     let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: balanceChange, currentBalance: account.currentBalance)
                     
                     do {
-                        let documentID = try accountController.getAccountCollection()
+                        let documentID = try AccountController().getAccountCollection()
                             .document(accountID)
                             .collection(ConstantUtils.accountTransactionCollectionName)
                             .addDocument(from: newTransaction).documentID
@@ -97,7 +95,7 @@ class AccountTransactionController {
                     } catch {
                         print(error)
                     }
-                    accountController.updateAccount(account: account)
+                    AccountController().updateAccount(account: account)
                 }
             } else {
                 var first = AccountTransaction(timestamp: Date(), balanceChange: 0.0, currentBalance: 0.0)
@@ -115,7 +113,7 @@ class AccountTransactionController {
                 let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: balanceChange, currentBalance: account.currentBalance)
                 
                 do {
-                    let documentID = try accountController.getAccountCollection()
+                    let documentID = try AccountController().getAccountCollection()
                         .document(accountID)
                         .collection(ConstantUtils.accountTransactionCollectionName)
                         .addDocument(from: newTransaction).documentID
@@ -149,7 +147,7 @@ class AccountTransactionController {
             let newTransaction = AccountTransaction(timestamp: paymentDate!, balanceChange: monthlyEmiAmount, currentBalance: currentBalance, paid: false)
             
             do {
-                let documentID = try accountController.getAccountCollection()
+                let documentID = try AccountController().getAccountCollection()
                     .document(account.id!)
                     .collection(ConstantUtils.accountTransactionCollectionName)
                     .addDocument(from: newTransaction).documentID
@@ -163,7 +161,7 @@ class AccountTransactionController {
     
     public func updateAccountTransaction(accountTransaction: AccountTransaction, accountID: String) {
         do {
-            try accountController.getAccountCollection()
+            try AccountController().getAccountCollection()
                 .document(accountID)
                 .collection(ConstantUtils.accountTransactionCollectionName)
                 .document(accountTransaction.id!)
@@ -176,7 +174,7 @@ class AccountTransactionController {
     public func getAccountTransactionList(id: String) async -> [AccountTransaction] {
         var accountTransactionList = [AccountTransaction]()
         do {
-            accountTransactionList = try await accountController.getAccountCollection()
+            accountTransactionList = try await AccountController().getAccountCollection()
                 .document(id)
                 .collection(ConstantUtils.accountTransactionCollectionName)
                 .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
@@ -212,7 +210,7 @@ class AccountTransactionController {
         } else if(range.elementsEqual("All")) {
             var accountTransactionList = [AccountTransaction]()
             do {
-                accountTransactionList = try await accountController.getAccountCollection()
+                accountTransactionList = try await AccountController().getAccountCollection()
                     .document(id)
                     .collection(ConstantUtils.accountTransactionCollectionName)
                     .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
@@ -232,7 +230,7 @@ class AccountTransactionController {
         }
         var accountTransactionList = [AccountTransaction]()
         do {
-            accountTransactionList = try await accountController.getAccountCollection()
+            accountTransactionList = try await AccountController().getAccountCollection()
                 .document(id)
                 .collection(ConstantUtils.accountTransactionCollectionName)
                 .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
@@ -269,7 +267,7 @@ class AccountTransactionController {
         }
         var accountTransactionList = [AccountTransaction]()
         do {
-            accountTransactionList = try await accountController.getAccountCollection()
+            accountTransactionList = try await AccountController().getAccountCollection()
                 .document(id)
                 .collection(ConstantUtils.accountTransactionCollectionName)
                 .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
@@ -292,7 +290,7 @@ class AccountTransactionController {
     public func getLastTwoAccountTransactionList(id: String) async -> [AccountTransaction] {
         var accountTransactionList = [AccountTransaction]()
         do {
-            accountTransactionList = try await accountController.getAccountCollection()
+            accountTransactionList = try await AccountController().getAccountCollection()
                 .document(id)
                 .collection(ConstantUtils.accountTransactionCollectionName)
                 .whereField(ConstantUtils.accountTransactionKeyPaid, isEqualTo: true)
@@ -315,7 +313,7 @@ class AccountTransactionController {
     
     public func deleteAccountTransaction(accountID: String, accountTransactionID: String) async {
         do {
-            try await accountController.getAccountCollection()
+            try await AccountController().getAccountCollection()
                 .document(accountID)
                 .collection(ConstantUtils.accountTransactionCollectionName)
                 .document(accountTransactionID)
