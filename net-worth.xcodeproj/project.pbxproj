@@ -26,6 +26,8 @@
 		7D42520F291BE95C0001C41C /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D42520E291BE95C0001C41C /* AuthenticationView.swift */; };
 		7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D433CF529385DBB007FA625 /* FinanceController.swift */; };
 		7D433CF829386002007FA625 /* FinanceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D433CF729386002007FA625 /* FinanceModel.swift */; };
+		7D4A60CD2A2DD0A500F46C1F /* IncomeTypeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4A60CC2A2DD0A500F46C1F /* IncomeTypeController.swift */; };
+		7D4A60CF2A2DD1B900F46C1F /* IncomeTagController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4A60CE2A2DD1B900F46C1F /* IncomeTagController.swift */; };
 		7D4E671329F7D4C900EB6B24 /* IncomeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4E671229F7D4C900EB6B24 /* IncomeDetailView.swift */; };
 		7D596278294105A40008A6B9 /* Balance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D596277294105A40008A6B9 /* Balance.swift */; };
 		7D5A75602A04FB11001646A2 /* WatchToAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5A755F2A04FB11001646A2 /* WatchToAccountView.swift */; };
@@ -159,6 +161,8 @@
 		7D42520E291BE95C0001C41C /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		7D433CF529385DBB007FA625 /* FinanceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceController.swift; sourceTree = "<group>"; };
 		7D433CF729386002007FA625 /* FinanceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceModel.swift; sourceTree = "<group>"; };
+		7D4A60CC2A2DD0A500F46C1F /* IncomeTypeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTypeController.swift; sourceTree = "<group>"; };
+		7D4A60CE2A2DD1B900F46C1F /* IncomeTagController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTagController.swift; sourceTree = "<group>"; };
 		7D4E671229F7D4C900EB6B24 /* IncomeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeDetailView.swift; sourceTree = "<group>"; };
 		7D596277294105A40008A6B9 /* Balance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Balance.swift; sourceTree = "<group>"; };
 		7D5A755F2A04FB11001646A2 /* WatchToAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchToAccountView.swift; sourceTree = "<group>"; };
@@ -431,6 +435,8 @@
 				7D433CF529385DBB007FA625 /* FinanceController.swift */,
 				7DD8E5B42A06343A00245A98 /* ImportExportController.swift */,
 				7DC97A2929223989003F69D4 /* IncomeController.swift */,
+				7D4A60CE2A2DD1B900F46C1F /* IncomeTagController.swift */,
+				7D4A60CC2A2DD0A500F46C1F /* IncomeTypeController.swift */,
 				7D5F29102A0FD0B900D365DD /* NetworkMonitor.swift */,
 				7DE766F22928B62900EFBD2D /* NotificationController.swift */,
 				7DC97A2529221990003F69D4 /* SettingsController.swift */,
@@ -857,11 +863,13 @@
 				7D921C5E2986835C0014AC9E /* GoogleSiginBtn.swift in Sources */,
 				7DF879002A0F7842008343EE /* CurrencyPicker.swift in Sources */,
 				7D1188362A03F3000005EA32 /* AccountWatchView.swift in Sources */,
+				7D4A60CF2A2DD1B900F46C1F /* IncomeTagController.swift in Sources */,
 				7D3D5244299105A50021047B /* CommonController.swift in Sources */,
 				7D3E3CC12A1FC87D009538BA /* RowWatchToAccountView.swift in Sources */,
 				7DB205892A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift in Sources */,
 				7D85D030298D29BE0019F85E /* Income.swift in Sources */,
 				7DB58AB329967AFE00B93592 /* AccountRowView.swift in Sources */,
+				7D4A60CD2A2DD0A500F46C1F /* IncomeTypeController.swift in Sources */,
 				7DD8E5B72A06369800245A98 /* IncomeTagData.swift in Sources */,
 				7D76290529A385EA00F71D7C /* IncomeTag.swift in Sources */,
 				7D921C62298683B30014AC9E /* LoginScreen.swift in Sources */,

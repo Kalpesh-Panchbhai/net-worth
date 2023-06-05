@@ -12,6 +12,8 @@ import FirebaseFirestore
 class IncomeViewModel: ObservableObject {
     
     var incomeController = IncomeController()
+    var incomeTypeController = IncomeTypeController()
+    var incomeTagController = IncomeTagController()
     
     @Published var incomeList = [Income]()
     @Published var incomeListLoaded = false
@@ -59,7 +61,7 @@ class IncomeViewModel: ObservableObject {
     
     func getIncomeTagList() async {
         do {
-            let list = try await incomeController.getIncomeTagList()
+            let list = try await incomeTagController.getIncomeTagList()
             DispatchQueue.main.async {
                 self.incomeTagList = list
             }
@@ -70,7 +72,7 @@ class IncomeViewModel: ObservableObject {
     
     func getIncomeTypeList() async {
         do {
-            let list = try await incomeController.getIncomeTypeList()
+            let list = try await incomeTypeController.getIncomeTypeList()
             DispatchQueue.main.async {
                 self.incomeTypeList = list
             }

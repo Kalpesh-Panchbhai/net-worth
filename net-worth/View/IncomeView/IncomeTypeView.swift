@@ -10,6 +10,7 @@ import SwiftUI
 struct IncomeTypeView: View {
     
     var incomeController = IncomeController()
+    var incomeTypeController = IncomeTypeController()
     
     @State var addNewIncomeTypeOpenView = false
     
@@ -53,10 +54,10 @@ struct IncomeTypeView: View {
                             
                             if(!item.isdefault) {
                                 Button(action: {
-                                    incomeController.makeOtherIncomeTypeNonDefault(documentID: item.id!)
+                                    incomeTypeController.makeOtherIncomeTypeNonDefault(documentID: item.id!)
                                     var updatedIncomeType = item
                                     updatedIncomeType.isdefault = true
-                                    incomeController.updateIncomeType(type: updatedIncomeType)
+                                    incomeTypeController.updateIncomeType(type: updatedIncomeType)
                                     Task.init {
                                         incomeViewModel.incomeTypeList = [IncomeType]()
                                         await incomeViewModel.getIncomeTypeList()

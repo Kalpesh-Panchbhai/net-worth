@@ -73,8 +73,8 @@ class UserController {
             try await AccountController().deleteAccounts()
             IncomeController().deleteIncomes()
             try await WatchController().deleteWatchLists()
-            IncomeController().deleteIncomeTags()
-            IncomeController().deleteIncomeTypes()
+            IncomeTagController().deleteIncomeTags()
+            IncomeTypeController().deleteIncomeTypes()
             try await db.collection(ConstantUtils.userCollectionName).document(getCurrentUserUID()).delete()
         } catch {
             print(error)

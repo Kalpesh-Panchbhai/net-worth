@@ -12,6 +12,8 @@ struct BackupView: View {
     var importExportController = ImportExportController()
     var accountController = AccountController()
     var incomeController = IncomeController()
+    var incomeTypeController = IncomeTypeController()
+    var incomeTagController = IncomeTagController()
     var watchController = WatchController()
     
     @State var totalAccountInCloud = 0
@@ -231,7 +233,7 @@ struct BackupView: View {
     }
     
     private func getTotalIncomeTypeInCloud() async throws {
-        totalIncomeTypeInCloud = try await incomeController.getIncomeTypeList().count
+        totalIncomeTypeInCloud = try await incomeTypeController.getIncomeTypeList().count
     }
     
     private var incomeTagInCloud: some View {
@@ -243,6 +245,6 @@ struct BackupView: View {
     }
     
     private func getTotalIncomeTagInCloud() async throws {
-        totalIncomeTagInCloud = try await incomeController.getIncomeTagList().count
+        totalIncomeTagInCloud = try await incomeTagController.getIncomeTagList().count
     }
 }

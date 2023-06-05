@@ -10,6 +10,7 @@ import SwiftUI
 struct NewIncomeTypeView: View {
     
     var incomeController = IncomeController()
+    var incomeTypeController = IncomeTypeController()
     
     @State var scenePhaseBlur = 0
     @State var typeName = ""
@@ -36,7 +37,7 @@ struct NewIncomeTypeView: View {
                 ToolbarItem {
                     Button(action: {
                         Task.init {
-                            incomeController.addIncomeType(type: IncomeType(name: typeName, isdefault: isDefault))
+                            incomeTypeController.addIncomeType(type: IncomeType(name: typeName, isdefault: isDefault))
                             await incomeViewModel.getIncomeTypeList()
                         }
                         dismiss()

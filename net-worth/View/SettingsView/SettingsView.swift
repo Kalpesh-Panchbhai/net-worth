@@ -158,10 +158,10 @@ struct SettingsView: View {
         .onAppear {
             Task.init {
                 profilePhoto = await fetchProfilePhoto()
-                self.defaultIncomeType = try await IncomeController().getIncomeTypeList().filter({
+                self.defaultIncomeType = try await IncomeTypeController().getIncomeTypeList().filter({
                     $0.isdefault
                 }).first ?? IncomeType()
-                self.defaultIncomeTag = try await IncomeController().getIncomeTagList().filter({
+                self.defaultIncomeTag = try await IncomeTagController().getIncomeTagList().filter({
                     $0.isdefault
                 }).first ?? IncomeTag()
             }

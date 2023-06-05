@@ -10,6 +10,7 @@ import SwiftUI
 struct IncomeTagView: View {
     
     var incomeController = IncomeController()
+    var incomeTagController = IncomeTagController()
     
     @State var addNewIncomeTagOpenView = false
     
@@ -53,10 +54,10 @@ struct IncomeTagView: View {
                             
                             if(!item.isdefault) {
                                 Button(action: {
-                                    incomeController.makeOtherIncomeTagNonDefault(documentID: item.id!)
+                                    incomeTagController.makeOtherIncomeTagNonDefault(documentID: item.id!)
                                     var updatedIncomeTag = item
                                     updatedIncomeTag.isdefault = true
-                                    incomeController.updateIncomeTag(tag: updatedIncomeTag)
+                                    incomeTagController.updateIncomeTag(tag: updatedIncomeTag)
                                     Task.init {
                                         incomeViewModel.incomeTagList = [IncomeTag]()
                                         await incomeViewModel.getIncomeTagList()

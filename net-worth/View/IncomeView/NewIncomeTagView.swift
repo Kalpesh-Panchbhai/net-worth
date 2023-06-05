@@ -10,6 +10,7 @@ import SwiftUI
 struct NewIncomeTagView: View {
     
     var incomeController = IncomeController()
+    var incomeTagController = IncomeTagController()
     
     @State var scenePhaseBlur = 0
     @State var tagName = ""
@@ -36,7 +37,7 @@ struct NewIncomeTagView: View {
                 ToolbarItem {
                     Button(action: {
                         Task.init {
-                            incomeController.addIncomeTag(tag: IncomeTag(name: tagName, isdefault: isDefault))
+                            incomeTagController.addIncomeTag(tag: IncomeTag(name: tagName, isdefault: isDefault))
                             await incomeViewModel.getIncomeTagList()
                         }
                         dismiss()
