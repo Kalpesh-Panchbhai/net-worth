@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 import FirebaseFirestore
 
-//MARK: Account
 class AccountController {
     
     var notificationController = NotificationController()
