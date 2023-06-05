@@ -47,11 +47,13 @@ class IncomeController {
     public func deleteIncomes() {
         CommonController
             .delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeCollectionName))
+        
+        print("All Incomes Deleted.")
     }
     
     private func getIncomeList() async -> [Income] {
         var incomeList = [Income]()
-        
+        print("Fetching Income List")
         do {
             incomeList = try await getIncomeCollection()
                 .order(by: ConstantUtils.incomeKeyCreditedOn)
@@ -71,6 +73,7 @@ class IncomeController {
         } catch {
             print(error)
         }
+        print("Income List Fetched")
         return incomeList
     }
     
@@ -78,8 +81,10 @@ class IncomeController {
         var incomeList = [Income]()
         
         if(await UserController().isNewIncomeAvailable()) {
+            print("New")
             incomeList = await getIncomeList()
         } else {
+            print("Old")
             incomeList = ApplicationData.shared.incomeList
         }
         
