@@ -31,7 +31,7 @@ class AccountTransactionController {
                 var start = accountTransactionsList.last!
                 start.balanceChange = start.currentBalance - account.currentBalance
                 
-                updateAccountTransaction(accountTransaction: start, accountID: accountID)
+                updateAccountTransaction(accountID: accountID, accountTransaction: start)
                 
                 let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: account.currentBalance, currentBalance: account.currentBalance)
                 
@@ -93,7 +93,7 @@ class AccountTransactionController {
                     }
                 }
                 first.balanceChange = first.currentBalance - account.currentBalance
-                updateAccountTransaction(accountTransaction: first, accountID: accountID)
+                updateAccountTransaction(accountID: accountID, accountTransaction: first)
                 let balanceChange = account.currentBalance - last.currentBalance
                 let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: balanceChange, currentBalance: account.currentBalance)
                 
@@ -144,7 +144,7 @@ class AccountTransactionController {
         }
     }
     
-    public func updateAccountTransaction(accountTransaction: AccountTransaction, accountID: String) {
+    public func updateAccountTransaction(accountID: String, accountTransaction: AccountTransaction) {
         do {
             try AccountController().getAccountCollection()
                 .document(accountID)
