@@ -134,7 +134,6 @@ struct AccountDetailView: View {
                                 accountViewModel.account.active = isActive
                                 accountViewModel.account.paymentReminder = false
                                 accountViewModel.account.paymentDate = 0
-                                accountViewModel.account.lastUpdated = Date.now
                                 Task.init {
                                     await accountController.updateAccount(account: accountViewModel.account)
                                     await accountViewModel.getAccountList()
@@ -144,7 +143,6 @@ struct AccountDetailView: View {
                             }
                         } else {
                             accountViewModel.account.active = isActive
-                            accountViewModel.account.lastUpdated = Date.now
                             Task.init {
                                 await accountController.updateAccount(account: accountViewModel.account)
                                 await accountViewModel.getAccountList()
@@ -173,6 +171,7 @@ struct AccountDetailView: View {
                                     accountViewModel.account.paymentDate = paymentDate
                                     Task.init {
                                         await accountController.updateAccount(account: accountViewModel.account)
+                                        await accountViewModel.getAccountList()
                                     }
                                     NotificationController().enableNotification(account: accountViewModel.account)
                                 }
@@ -183,6 +182,7 @@ struct AccountDetailView: View {
                                     accountViewModel.account.paymentDate = 0
                                     Task.init {
                                         await accountController.updateAccount(account: accountViewModel.account)
+                                        await accountViewModel.getAccountList()
                                     }
                                     NotificationController().removeNotification(id: accountViewModel.account.id!)
                                     paymentDate = 0
@@ -202,6 +202,7 @@ struct AccountDetailView: View {
                                     accountViewModel.account.paymentDate = paymentDate
                                     Task.init {
                                         await accountController.updateAccount(account: accountViewModel.account)
+                                        await accountViewModel.getAccountList()
                                     }
                                     NotificationController().enableNotification(account: accountViewModel.account)
                                 }
