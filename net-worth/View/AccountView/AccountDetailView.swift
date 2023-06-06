@@ -20,6 +20,7 @@ struct AccountDetailView: View {
     @State var isActive = true
     @State var tabItem = 1
     @State var showZeroAlert = false
+    @State var failedToMarkInActive = false
     
     @ObservedObject var accountViewModel: AccountViewModel
     @ObservedObject var watchViewModel: WatchViewModel
@@ -130,7 +131,9 @@ struct AccountDetailView: View {
                             if(!accountViewModel.account.currentBalance.isZero) {
                                 self.showZeroAlert.toggle()
                                 self.isActive.toggle()
+                                self.failedToMarkInActive = true
                             } else {
+                                self.failedToMarkInActive = false
                                 accountViewModel.account.active = isActive
                                 accountViewModel.account.paymentReminder = false
                                 accountViewModel.account.paymentDate = 0
@@ -141,7 +144,7 @@ struct AccountDetailView: View {
                                 NotificationController().removeNotification(id: accountViewModel.account.id!)
                                 paymentDate = 0
                             }
-                        } else {
+                        } else if(!failedToMarkInActive){
                             accountViewModel.account.active = isActive
                             Task.init {
                                 await accountController.updateAccount(account: accountViewModel.account)
