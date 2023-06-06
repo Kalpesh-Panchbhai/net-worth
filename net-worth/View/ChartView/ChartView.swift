@@ -9,8 +9,6 @@ import SwiftUI
 
 struct ChartView: View {
     
-    let defaultWatchListSelected = Watch(accountName: "Select")
-    
     @State var watchListSelected = Watch()
     @State var showingAssetsData = true
     @State var chartDataList = [Account]()
@@ -72,7 +70,7 @@ struct ChartView: View {
                 .padding(.horizontal, 20)
                 List {
                     Picker(selection: $watchListSelected, content: {
-                        Text("Select").tag(defaultWatchListSelected)
+                        Text("Select").tag(Watch())
                         ForEach(watchViewModel.watchList, id: \.self, content: {
                             Text($0.accountName).tag($0)
                         })
@@ -103,7 +101,7 @@ struct ChartView: View {
                         .foregroundColor(Color.navyBlue)
                         .onChange(of: compareAssetsToLiabilities) { value in
                             if(value) {
-                                watchListSelected = defaultWatchListSelected
+                                watchListSelected = Watch()
                                 multipleWatchListSelection = Set<Watch>()
                                 Task.init {
                                     self.chartDataList = [Account]()
@@ -212,7 +210,7 @@ struct ChartView: View {
                         })
                     }
                     compareAssetsToLiabilities = false
-                    watchListSelected = defaultWatchListSelected
+                    watchListSelected = Watch()
                 }
             })
             .listRowBackground(Color.white)
