@@ -84,7 +84,9 @@ struct TransactionsView: View {
                                         Task.init {
                                             await accountTransactionController.deleteAccountTransaction(accountID: account.id!, id: accountTransactionID)
                                             account.currentBalance = newCurrentBalance
+                                            account.lastUpdated = Date.now
                                             await accountController.updateAccount(account: account)
+                                            await accountViewModel.getAccountList()
                                             accountViewModel.getAccountTransactionList(id: account.id!)
                                             await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
                                             await accountViewModel.getAccount(id: account.id!)
