@@ -54,11 +54,11 @@ struct IncomeTypeView: View {
                             
                             if(!item.isdefault) {
                                 Button(action: {
-                                    incomeTypeController.makeOtherIncomeTypeNonDefault(documentID: item.id!)
-                                    var updatedIncomeType = item
-                                    updatedIncomeType.isdefault = true
-                                    incomeTypeController.updateIncomeType(type: updatedIncomeType)
                                     Task.init {
+                                        await incomeTypeController.makeOtherIncomeTypeNonDefault(documentID: item.id!)
+                                        var updatedIncomeType = item
+                                        updatedIncomeType.isdefault = true
+                                        incomeTypeController.updateIncomeType(type: updatedIncomeType)
                                         incomeViewModel.incomeTypeList = [IncomeType]()
                                         await incomeViewModel.getIncomeTypeList()
                                     }

@@ -54,11 +54,11 @@ struct IncomeTagView: View {
                             
                             if(!item.isdefault) {
                                 Button(action: {
-                                    incomeTagController.makeOtherIncomeTagNonDefault(documentID: item.id!)
-                                    var updatedIncomeTag = item
-                                    updatedIncomeTag.isdefault = true
-                                    incomeTagController.updateIncomeTag(tag: updatedIncomeTag)
                                     Task.init {
+                                        await incomeTagController.makeOtherIncomeTagNonDefault(documentID: item.id!)
+                                        var updatedIncomeTag = item
+                                        updatedIncomeTag.isdefault = true
+                                        incomeTagController.updateIncomeTag(tag: updatedIncomeTag)
                                         incomeViewModel.incomeTagList = [IncomeTag]()
                                         await incomeViewModel.getIncomeTagList()
                                     }

@@ -47,14 +47,14 @@ class ImportExportController {
     private func importIncomeTag() async {
         for tag in data.incomeTag {
             let incomeTag = IncomeTag(name: tag.name, isdefault: tag.isdefault)
-            incomeTagController.addIncomeTag(tag: incomeTag)
+            await incomeTagController.addIncomeTag(tag: incomeTag)
         }
     }
     
     private func importIncomeType() async {
         for type in data.incomeType {
             let incomeType = IncomeType(name: type.name, isdefault: type.isdefault)
-            incomeTypeController.addIncomeType(type: incomeType)
+            await incomeTypeController.addIncomeType(type: incomeType)
         }
     }
     

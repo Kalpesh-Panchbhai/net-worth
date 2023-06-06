@@ -15,7 +15,7 @@ class IncomeTypeController {
             .collection(ConstantUtils.incomeTypeCollectionName)
     }
     
-    public func addIncomeType(type: IncomeType) {
+    public func addIncomeType(type: IncomeType) async {
         do {
             let documentID = try getIncomeTypeCollection()
                 .addDocument(from: type)
@@ -24,7 +24,7 @@ class IncomeTypeController {
             print("New Income Type Added : " + documentID)
             
             if(type.isdefault) {
-                makeOtherIncomeTypeNonDefault(documentID: documentID)
+                await makeOtherIncomeTypeNonDefault(documentID: documentID)
             }
         } catch {
             print(error)
@@ -35,7 +35,7 @@ class IncomeTypeController {
         let count = await getIncomeTypeList().count
         if(count == 0) {
             let incomeType = IncomeType(name: "None", isdefault: false)
-            addIncomeType(type: incomeType)
+            await addIncomeType(type: incomeType)
         }
     }
     
@@ -57,22 +57,22 @@ class IncomeTypeController {
         return incomeTypeList
     }
     
-    public func makeOtherIncomeTypeNonDefault(documentID: String) {
-        getIncomeTypeCollection()
-            .getDocuments { snapshot, error in
-                if error  == nil {
-                    if let snapshot = snapshot {
-                        snapshot.documents.forEach { doc in
-                            if(!doc.documentID.elementsEqual(documentID) && (doc[ConstantUtils.incomeTypeKeyIsDefault] as? Bool ?? false)) {
-                                let updatedIncomeType = IncomeType(id: doc.documentID,
-                                                                   name: doc[ConstantUtils.incomeTypeKeyName] as? String ?? "",
-                                                                   isdefault: false)
-                                self.updateIncomeType(type: updatedIncomeType)
-                            }
-                        }
+    public func makeOtherIncomeTypeNonDefault(documentID: String) async {
+        do {
+            try await getIncomeTypeCollection()
+                .getDocuments()
+                .documents
+                .forEach { doc in
+                    if(!doc.documentID.elementsEqual(documentID) && (doc[ConstantUtils.incomeTypeKeyIsDefault] as? Bool ?? false)) {
+                        let updatedIncomeType = IncomeType(id: doc.documentID,
+                                                           name: doc[ConstantUtils.incomeTypeKeyName] as? String ?? "",
+                                                           isdefault: false)
+                        self.updateIncomeType(type: updatedIncomeType)
                     }
                 }
-            }
+        } catch {
+            print(error)
+        }
     }
     
     public func updateIncomeType(type: IncomeType) {

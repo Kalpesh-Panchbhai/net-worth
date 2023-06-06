@@ -15,7 +15,7 @@ class IncomeTagController {
             .collection(ConstantUtils.incomeTagCollectionName)
     }
     
-    public func addIncomeTag(tag: IncomeTag) {
+    public func addIncomeTag(tag: IncomeTag) async {
         do {
             let documentID = try getIncomeTagCollection()
                 .addDocument(from: tag)
@@ -24,7 +24,7 @@ class IncomeTagController {
             print("New Income Tag Added : " + documentID)
             
             if(tag.isdefault) {
-                makeOtherIncomeTagNonDefault(documentID: documentID)
+                await makeOtherIncomeTagNonDefault(documentID: documentID)
             }
         } catch {
             print(error)
@@ -35,7 +35,7 @@ class IncomeTagController {
         let count = await getIncomeTagList().count
         if(count == 0) {
             let incomeTag = IncomeTag(name: "None", isdefault: false)
-            addIncomeTag(tag: incomeTag)
+            await addIncomeTag(tag: incomeTag)
         }
     }
     
@@ -57,22 +57,22 @@ class IncomeTagController {
         return incomeTagList
     }
     
-    public func makeOtherIncomeTagNonDefault(documentID: String) {
-        getIncomeTagCollection()
-            .getDocuments { snapshot, error in
-                if error  == nil {
-                    if let snapshot = snapshot {
-                        snapshot.documents.forEach { doc in
-                            if(!doc.documentID.elementsEqual(documentID) && (doc[ConstantUtils.incomeTagKeyIsDefault] as? Bool ?? false)) {
-                                let updatedIncomeTag = IncomeTag(id: doc.documentID,
-                                                                 name: doc[ConstantUtils.incomeTagKeyName] as? String ?? "",
-                                                                 isdefault: false)
-                                self.updateIncomeTag(tag: updatedIncomeTag)
-                            }
-                        }
+    public func makeOtherIncomeTagNonDefault(documentID: String) async {
+        do {
+            try await getIncomeTagCollection()
+                .getDocuments()
+                .documents
+                .forEach { doc in
+                    if(!doc.documentID.elementsEqual(documentID) && (doc[ConstantUtils.incomeTagKeyIsDefault] as? Bool ?? false)) {
+                        let updatedIncomeTag = IncomeTag(id: doc.documentID,
+                                                         name: doc[ConstantUtils.incomeTagKeyName] as? String ?? "",
+                                                         isdefault: false)
+                        self.updateIncomeTag(tag: updatedIncomeTag)
                     }
                 }
-            }
+        } catch {
+            print(error)
+        }
     }
     
     public func updateIncomeTag(tag: IncomeTag) {
