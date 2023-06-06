@@ -13,7 +13,8 @@ struct AccountDetailView: View {
     var account: Account
     var accountController = AccountController()
     
-    @State var initialLoad = false
+    @State var initialLoadForActiveButton = false
+    @State var initialLoadForPaymentButton = false
     @State var showAddWatchListView = false
     @State var isNewTransactionViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
@@ -135,7 +136,7 @@ struct AccountDetailView: View {
                                 self.failedToMarkInActive = true
                             } else {
                                 self.failedToMarkInActive = false
-                                if(!initialLoad) {
+                                if(!initialLoadForActiveButton) {
                                     accountViewModel.account.active = isActive
                                     accountViewModel.account.paymentReminder = false
                                     accountViewModel.account.paymentDate = 0
@@ -146,7 +147,7 @@ struct AccountDetailView: View {
                                     NotificationController().removeNotification(id: accountViewModel.account.id!)
                                     paymentDate = 0
                                 } else {
-                                    initialLoad = false
+                                    initialLoadForActiveButton = false
                                 }
                             }
                         } else if(!failedToMarkInActive){
@@ -206,13 +207,17 @@ struct AccountDetailView: View {
                                     Label("Change Date", systemImage: "calendar.circle.fill")
                                 })
                                 .onChange(of: paymentDate) { _ in
-                                    accountViewModel.account.paymentReminder = true
-                                    accountViewModel.account.paymentDate = paymentDate
-                                    Task.init {
-                                        await accountController.updateAccount(account: accountViewModel.account)
-                                        await accountViewModel.getAccountList()
+                                    if(!initialLoadForPaymentButton) {
+                                        accountViewModel.account.paymentReminder = true
+                                        accountViewModel.account.paymentDate = paymentDate
+                                        Task.init {
+                                            await accountController.updateAccount(account: accountViewModel.account)
+                                            await accountViewModel.getAccountList()
+                                        }
+                                        NotificationController().enableNotification(account: accountViewModel.account)
+                                    } else {
+                                        initialLoadForPaymentButton = false
                                     }
-                                    NotificationController().enableNotification(account: accountViewModel.account)
                                 }
                                 .pickerStyle(MenuPickerStyle())
                             }
@@ -231,9 +236,12 @@ struct AccountDetailView: View {
             Task.init {
                 await accountViewModel.getAccount(id: account.id!)
                 paymentDate = accountViewModel.account.paymentDate
+                if(accountViewModel.account.paymentReminder) {
+                    initialLoadForPaymentButton = true
+                }
                 isActive = accountViewModel.account.active
                 if(!isActive) {
-                    initialLoad = true
+                    initialLoadForActiveButton = true
                 }
                 accountViewModel.getAccountTransactionList(id: account.id!)
                 await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
