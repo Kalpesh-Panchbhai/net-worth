@@ -51,7 +51,6 @@ class AccountController {
     
     private func getAccountDataList() async -> [Account] {
         var accountList = [Account]()
-        print("Updating Accounts")
         do {
             let backupAccountList = ApplicationData.shared.accountList
             
@@ -85,7 +84,6 @@ class AccountController {
         } catch {
             print(error)
         }
-        print("Accounts Updated")
         return accountList
     }
     
@@ -105,10 +103,8 @@ class AccountController {
     public func getAccountList() async -> [Account] {
         var accountList = [Account]()
         if(await UserController().isNewAccountAvailable()) {
-            print("New Accounts")
             accountList = await getAccountDataList()
         } else {
-            print("Old Accounts")
             accountList = Array(ApplicationData.shared.accountList.keys)
         }
         return accountList.sorted(by: {
