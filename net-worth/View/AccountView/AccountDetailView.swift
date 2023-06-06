@@ -13,6 +13,7 @@ struct AccountDetailView: View {
     var account: Account
     var accountController = AccountController()
     
+    @State var initialLoad = false
     @State var showAddWatchListView = false
     @State var isNewTransactionViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
@@ -134,15 +135,19 @@ struct AccountDetailView: View {
                                 self.failedToMarkInActive = true
                             } else {
                                 self.failedToMarkInActive = false
-                                accountViewModel.account.active = isActive
-                                accountViewModel.account.paymentReminder = false
-                                accountViewModel.account.paymentDate = 0
-                                Task.init {
-                                    await accountController.updateAccount(account: accountViewModel.account)
-                                    await accountViewModel.getAccountList()
+                                if(!initialLoad) {
+                                    accountViewModel.account.active = isActive
+                                    accountViewModel.account.paymentReminder = false
+                                    accountViewModel.account.paymentDate = 0
+                                    Task.init {
+                                        await accountController.updateAccount(account: accountViewModel.account)
+                                        await accountViewModel.getAccountList()
+                                    }
+                                    NotificationController().removeNotification(id: accountViewModel.account.id!)
+                                    paymentDate = 0
+                                } else {
+                                    initialLoad = false
                                 }
-                                NotificationController().removeNotification(id: accountViewModel.account.id!)
-                                paymentDate = 0
                             }
                         } else if(!failedToMarkInActive){
                             accountViewModel.account.active = isActive
@@ -227,6 +232,9 @@ struct AccountDetailView: View {
                 await accountViewModel.getAccount(id: account.id!)
                 paymentDate = accountViewModel.account.paymentDate
                 isActive = accountViewModel.account.active
+                if(!isActive) {
+                    initialLoad = true
+                }
                 accountViewModel.getAccountTransactionList(id: account.id!)
                 await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
                 await watchViewModel.getWatchListByAccount(accountID: account.id!)
