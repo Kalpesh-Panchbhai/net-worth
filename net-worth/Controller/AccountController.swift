@@ -15,6 +15,12 @@ class AccountController {
     var watchController = WatchController()
     var accountTransactionController = AccountTransactionController()
     
+    public func getAccountCollection() -> CollectionReference {
+        return UserController()
+            .getCurrentUserDocument()
+            .collection(ConstantUtils.accountCollectionName)
+    }
+    
     public func addAccount(newAccount: Account) async -> String {
         do {
             let accountID = try getAccountCollection()
@@ -41,12 +47,6 @@ class AccountController {
             print(error)
         }
         return ""
-    }
-    
-    public func getAccountCollection() -> CollectionReference {
-        return UserController()
-            .getCurrentUserDocument()
-            .collection(ConstantUtils.accountCollectionName)
     }
     
     public func getAccount(id: String) -> Account {
