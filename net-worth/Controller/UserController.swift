@@ -24,6 +24,13 @@ class UserController {
         return ApplicationData.shared.incomeListUpdatedDate < user.incomeDataUpdatedDate
     }
     
+    func isNewAccountAvailable() async -> Bool {
+        let user = await getCurrentUser()
+        print(user.accountDataUpdatedDate)
+        print(ApplicationData.shared.accountListUpdatedDate)
+        return ApplicationData.shared.accountListUpdatedDate < user.accountDataUpdatedDate
+    }
+    
     func getCurrentUserUID() -> String {
         guard let userUID = Auth.auth().currentUser?.uid else { return "" }
         return userUID
@@ -58,6 +65,13 @@ class UserController {
     func updateIncomeUserData() async {
         var user = await getCurrentUser()
         user.incomeDataUpdatedDate = Date.now
+        
+        updateUser(user: user)
+    }
+    
+    func updateAccountUserData() async {
+        var user = await getCurrentUser()
+        user.accountDataUpdatedDate = Date.now
         
         updateUser(user: user)
     }

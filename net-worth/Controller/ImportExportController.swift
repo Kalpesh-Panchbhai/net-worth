@@ -148,7 +148,7 @@ class ImportExportController {
         let accountList = await accountController.getAccountList()
         var accountTransactionList = [String: [AccountTransaction]]()
         for account in accountList {
-            let accountTransactions = await accountTransactionController.getAccountTransactionList(accountID: account.id!)
+            let accountTransactions = accountTransactionController.getAccountTransactionList(accountID: account.id!)
             accountTransactionList.updateValue(accountTransactions, forKey: account.id!)
         }
         

@@ -159,7 +159,7 @@ struct AccountCardList: View {
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             Task.init {
-                await accountViewModel.getAccount(id: accountViewModel.account.id!)
+//                await accountViewModel.getAccount(id: accountViewModel.account.id!)
                 accountViewModel.accountList = [Account]()
                 await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)

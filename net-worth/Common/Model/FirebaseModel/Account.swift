@@ -20,8 +20,9 @@ struct Account: Codable, Hashable {
     var paymentDate: Int
     var currency: String
     var active: Bool
+    var lastUpdated: Date
     
-    init(id: String = "", accountType: String = "", loanType: String = "", accountName: String = "", currentBalance: Double = 0.0, paymentReminder: Bool = false, paymentDate: Int = 0, currency: String = "", active: Bool = true) {
+    init(id: String = "", accountType: String = "", loanType: String = "", accountName: String = "", currentBalance: Double = 0.0, paymentReminder: Bool = false, paymentDate: Int = 0, currency: String = "", active: Bool = true, lastUpdated: Date = Date.now) {
         self.id = id
         self.accountType = accountType
         self.loanType = loanType
@@ -31,6 +32,7 @@ struct Account: Codable, Hashable {
         self.paymentDate = paymentDate
         self.currency = currency
         self.active = active
+        self.lastUpdated = lastUpdated
     }
     
     init(doc: QueryDocumentSnapshot) {
@@ -43,5 +45,6 @@ struct Account: Codable, Hashable {
         paymentDate = doc[ConstantUtils.accountKeyPaymentDate] as? Int ?? 0
         currency = doc[ConstantUtils.accountKeyCurrency] as? String ?? ""
         active =  doc[ConstantUtils.accountKeyActive] as? Bool ?? true
+        lastUpdated = (doc[ConstantUtils.accountKeyLastUpdated] as? Timestamp)?.dateValue() ?? Date()
     }
 }
