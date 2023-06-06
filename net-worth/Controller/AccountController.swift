@@ -90,7 +90,7 @@ class AccountController {
     public func getAccount(id: String) -> Account {
         return ApplicationData.shared.accountList.keys.filter {
             $0.id!.elementsEqual(id)
-        }.first!
+        }.first ?? Account()
     }
     
     public func getAccount(accountType: String) -> [Account]{

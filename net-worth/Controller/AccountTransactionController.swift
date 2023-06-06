@@ -197,7 +197,7 @@ class AccountTransactionController {
     public func getAccountTransactionList(accountID: String) -> [AccountTransaction] {
         return ApplicationData.shared.accountList.filter {
             $0.key.id!.elementsEqual(accountID)
-        }.first!.value
+        }.first?.value ?? [AccountTransaction]()
     }
     
     public func getAccountTransactionListWithRange(accountID: String, range: String) async -> [AccountTransaction] {
