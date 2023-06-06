@@ -24,4 +24,8 @@ struct ApplicationData: Codable {
         accountList = [Account: [AccountTransaction]]()
         accountListUpdatedDate = Date().getEarliestDate().addingTimeInterval(-86400)
     }
+    
+    public static func clear() {
+        shared = ApplicationData()
+    }
 }

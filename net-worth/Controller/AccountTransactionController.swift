@@ -18,6 +18,7 @@ class AccountTransactionController {
                 .addDocument(from: accountTransaction).documentID
             
             print("New Account transaction added : " + documentID)
+            
         } catch {
             print(error)
         }
@@ -31,7 +32,7 @@ class AccountTransactionController {
                 var start = accountTransactionsList.last!
                 start.balanceChange = start.currentBalance - account.currentBalance
                 
-                updateAccountTransaction(accountID: accountID, accountTransaction: start)
+                await updateAccountTransaction(accountID: accountID, accountTransaction: start)
                 
                 let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: account.currentBalance, currentBalance: account.currentBalance)
                 
@@ -53,6 +54,12 @@ class AccountTransactionController {
                     let balanceChange = currentBalance - accountTransactionsList.first!.currentBalance
                     var updatedAccount = account
                     updatedAccount.currentBalance = currentBalance
+                    
+                    let account = ApplicationData.shared.accountList.filter {
+                        $0.key.id!.elementsEqual(updatedAccount.id!)
+                    }.first!.key
+                    ApplicationData.shared.accountList.switchKey(fromKey: account, toKey: updatedAccount)
+                    
                     let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: balanceChange, currentBalance: currentBalance)
                     
                     do {
@@ -81,6 +88,11 @@ class AccountTransactionController {
                         print(error)
                     }
                     await AccountController().updateAccount(account: account)
+                    
+                    let oldAccount = ApplicationData.shared.accountList.filter {
+                        $0.key.id!.elementsEqual(account.id!)
+                    }.first!.key
+                    ApplicationData.shared.accountList.switchKey(fromKey: oldAccount, toKey: account)
                 }
             } else {
                 var first = AccountTransaction(timestamp: Date(), balanceChange: 0.0, currentBalance: 0.0)
@@ -93,7 +105,7 @@ class AccountTransactionController {
                     }
                 }
                 first.balanceChange = first.currentBalance - account.currentBalance
-                updateAccountTransaction(accountID: accountID, accountTransaction: first)
+                await updateAccountTransaction(accountID: accountID, accountTransaction: first)
                 let balanceChange = account.currentBalance - last.currentBalance
                 let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: balanceChange, currentBalance: account.currentBalance)
                 
@@ -109,9 +121,17 @@ class AccountTransactionController {
                 }
             }
         }
+        
+        var updatedAccount = ApplicationData.shared.accountList.filter {
+            $0.key.id!.elementsEqual(accountID)
+        }.first!.key
+        
+        updatedAccount.lastUpdated = Date.now
+        
+        await AccountController().updateAccount(account: updatedAccount)
     }
     
-    public func addLoanAccountEMITransaction(account: Account, emiDate: Int, accountOpenedDate: Date, monthlyEmiAmount: Double) {
+    public func addLoanAccountEMITransaction(account: Account, emiDate: Int, accountOpenedDate: Date, monthlyEmiAmount: Double) async {
         var currentBalance = account.currentBalance
         var monthlyEmiAmount = monthlyEmiAmount
         var calendarDate = Calendar.current.dateComponents([.year, .month, .day], from: accountOpenedDate)
@@ -142,6 +162,14 @@ class AccountTransactionController {
                 print(error)
             }
         }
+        
+        var updatedAccount = ApplicationData.shared.accountList.filter {
+            $0.key.id!.elementsEqual(account.id!)
+        }.first!.key
+        
+        updatedAccount.lastUpdated = Date.now
+        
+        await AccountController().updateAccount(account: updatedAccount)
     }
     
     public func getAccountTransactionDataList(accountID: String) async -> [AccountTransaction] {
@@ -228,13 +256,21 @@ class AccountTransactionController {
         }
     }
     
-    public func updateAccountTransaction(accountID: String, accountTransaction: AccountTransaction) {
+    public func updateAccountTransaction(accountID: String, accountTransaction: AccountTransaction) async {
         do {
             try AccountController().getAccountCollection()
                 .document(accountID)
                 .collection(ConstantUtils.accountTransactionCollectionName)
                 .document(accountTransaction.id!)
                 .setData(from: accountTransaction, merge: true)
+            
+            var updatedAccount = ApplicationData.shared.accountList.filter {
+                $0.key.id!.elementsEqual(accountID)
+            }.first!.key
+            
+            updatedAccount.lastUpdated = Date.now
+            
+            await AccountController().updateAccount(account: updatedAccount)
         } catch {
             print(error)
         }
@@ -247,6 +283,14 @@ class AccountTransactionController {
                 .collection(ConstantUtils.accountTransactionCollectionName)
                 .document(id)
                 .delete()
+            
+            var deletedAccount = ApplicationData.shared.accountList.filter {
+                $0.key.id!.elementsEqual(accountID)
+            }.first!.key
+            
+            deletedAccount.lastUpdated = Date.now
+            
+            await AccountController().updateAccount(account: deletedAccount)
         } catch {
             print(error)
         }

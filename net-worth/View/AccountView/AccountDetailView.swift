@@ -226,6 +226,7 @@ struct AccountDetailView: View {
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             Task.init {
+                await accountViewModel.getAccountList()
                 await accountViewModel.getAccount(id: accountViewModel.account.id!)
                 accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
                 await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
