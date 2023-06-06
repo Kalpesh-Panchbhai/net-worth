@@ -49,24 +49,12 @@ class AccountController {
         return ""
     }
     
-    public func getAccount(id: String) -> Account {
-        return ApplicationData.shared.accountList.keys.filter {
-            $0.id!.elementsEqual(id)
-        }.first!
-    }
-    
-    public func getAccount(accountType: String) -> [Account]{
-        return ApplicationData.shared.accountList.keys
-            .filter {
-                $0.accountType.elementsEqual(accountType)
-            }
-    }
-    
     private func getAccountDataList() async -> [Account] {
         var accountList = [Account]()
         print("Updating Accounts")
         do {
             let backupAccountList = ApplicationData.shared.accountList
+            
             accountList = try await getAccountCollection()
                 .order(by: ConstantUtils.accountKeyAccountName)
                 .getDocuments()
@@ -75,7 +63,7 @@ class AccountController {
                     return Account(doc: doc)
                 }
             ApplicationData.shared.accountListUpdatedDate = await UserController().getCurrentUser().accountDataUpdatedDate
-            // TODO: Update Account List
+            
             var newAccountList = [Account: [AccountTransaction]]()
             
             for account in accountList {
@@ -99,6 +87,19 @@ class AccountController {
         }
         print("Accounts Updated")
         return accountList
+    }
+    
+    public func getAccount(id: String) -> Account {
+        return ApplicationData.shared.accountList.keys.filter {
+            $0.id!.elementsEqual(id)
+        }.first!
+    }
+    
+    public func getAccount(accountType: String) -> [Account]{
+        return ApplicationData.shared.accountList.keys
+            .filter {
+                $0.accountType.elementsEqual(accountType)
+            }
     }
     
     public func getAccountList() async -> [Account] {
