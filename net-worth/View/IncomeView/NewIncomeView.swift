@@ -37,6 +37,7 @@ struct NewIncomeView: View {
             Form {
                 Section("Income detail") {
                     Picker(selection: $incomeTypeSelected, label: Text("Type")) {
+                        Text("Select").tag(IncomeType())
                         ForEach(incomeViewModel.incomeTypeList, id: \.self) {
                             Text($0.name).tag($0)
                         }
@@ -126,6 +127,7 @@ struct NewIncomeView: View {
                         .colorMultiply(Color.navyBlue)
                     
                     Picker(selection: $incomeTagSelected, label: Text("Tag")) {
+                        Text("Select").tag(IncomeTag())
                         ForEach(incomeViewModel.incomeTagList, id: \.self) {
                             Text($0.name).tag($0)
                         }
