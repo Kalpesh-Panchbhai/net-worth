@@ -40,19 +40,19 @@ struct SingleLineLollipopChartView: View {
         .chartXAxis {
             AxisMarks(values: .automatic) { _ in
                 AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 0.1, dash: [0]))
-                    .foregroundStyle(Color.navyBlue)
+                    .foregroundStyle(Color.theme.text)
                 AxisTick(stroke: StrokeStyle(lineWidth: 1))
-                    .foregroundStyle(Color.navyBlue)
+                    .foregroundStyle(Color.theme.text)
                 AxisValueLabel()
-                    .foregroundStyle(Color.navyBlue)
+                    .foregroundStyle(Color.theme.text)
             }
         }
         .chartYAxis {
             AxisMarks(values: .automatic) { value in
                 AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 0.1, dash: [0]))
-                    .foregroundStyle(Color.navyBlue)
+                    .foregroundStyle(Color.theme.text)
                 AxisTick(stroke: StrokeStyle(lineWidth: 1))
-                    .foregroundStyle(Color.navyBlue)
+                    .foregroundStyle(Color.theme.text)
                 AxisValueLabel {
                     if(isPercentageChart) {
                         Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))%")
@@ -60,7 +60,7 @@ struct SingleLineLollipopChartView: View {
                         Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))")
                     }
                 }
-                .foregroundStyle(Color.navyBlue)
+                .foregroundStyle(Color.theme.text)
             }
         }
         .chartOverlay { proxy in
@@ -114,10 +114,10 @@ struct SingleLineLollipopChartView: View {
                         VStack(alignment: .center) {
                             Text("\(selectedElement.date, format: .dateTime.year().month().day())")
                                 .font(.system(size: 10).bold())
-                                .foregroundColor(Color.white)
+                                .foregroundColor(Color.theme.background)
                             Text("\(selectedElement.value.withCommas(decimalPlace: 2))")
                                 .font(.system(size: 12).bold())
-                                .foregroundColor(Color.white)
+                                .foregroundColor(Color.theme.background)
                         }
                         .accessibilityElement(children: .combine)
                         .accessibilityHidden(false)
@@ -125,7 +125,7 @@ struct SingleLineLollipopChartView: View {
                         .background {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color.navyBlue)
+                                    .fill(Color.theme.text)
                             }
                             .padding(.horizontal, -8)
                             .padding(.vertical, -4)
@@ -165,6 +165,6 @@ struct SingleLineLollipopChartView: View {
     }
     
     private func getChartColor() -> Color {
-        isPositiveValue() ? Color.green : Color.red
+        isPositiveValue() ? Color.theme.green : Color.theme.red
     }
 }

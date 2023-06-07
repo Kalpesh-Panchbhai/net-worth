@@ -27,13 +27,14 @@ struct UpdateBalanceAccountView: View {
             Form {
                 Section("Transaction detail") {
                     currentBalanceField
-                        .foregroundColor(Color.navyBlue)
+                        .foregroundColor(Color.theme.text)
                     DatePicker("Transaction date", selection: $date, in: ...Date(), displayedComponents: [.date, .hourAndMinute])
-                        .colorMultiply(Color.navyBlue)
+                        .foregroundColor(Color.theme.text)
                 }
-                .listRowBackground(Color.white)
-                .foregroundColor(Color.lightBlue)
+                .listRowBackground(Color.theme.background)
+                .foregroundColor(Color.theme.text)
             }
+            .shadow(color: Color.theme.text, radius: 3)
             .toolbar {
                 ToolbarItem {
                     Button(action: {
@@ -46,7 +47,7 @@ struct UpdateBalanceAccountView: View {
                         dismiss()
                     }, label: {
                         Text("Update")
-                            .foregroundColor(Color.lightBlue)
+                            .foregroundColor(Color.theme.text)
                             .bold()
                     })
                     .font(.system(size: 14).bold())
@@ -63,7 +64,7 @@ struct UpdateBalanceAccountView: View {
                         dismiss()
                     }, label: {
                         Text("Add")
-                            .foregroundColor(Color.lightBlue)
+                            .foregroundColor(Color.theme.text)
                             .bold()
                     })
                     .font(.system(size: 14).bold())
@@ -71,7 +72,7 @@ struct UpdateBalanceAccountView: View {
             }
             .navigationTitle(accountViewModel.account.accountName)
             .navigationBarTitleDisplayMode(.inline)
-            .background(Color.navyBlue)
+            .background(Color.theme.background)
             .scrollContentBackground(.hidden)
         }
         .blur(radius: CGFloat(scenePhaseBlur))
@@ -91,8 +92,8 @@ struct UpdateBalanceAccountView: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 6)
                     .frame(width: 25, height: 25)
-                    .foregroundColor(Color.white)
-                    .shadow(color: Color.navyBlue, radius: 3)
+                    .foregroundColor(Color.theme.text)
+                    .shadow(color: Color.theme.text, radius: 3)
                 Button(action: {
                     if isPlus {
                         isPlus = false
@@ -101,7 +102,7 @@ struct UpdateBalanceAccountView: View {
                     }
                 }, label: {
                     Image(systemName: isPlus ? "plus" : "minus")
-                        .foregroundColor(isPlus ? Color.green : Color.red)
+                        .foregroundColor(isPlus ? Color.theme.green : Color.theme.red)
                         .bold()
                 })
                 .font(.system(size: 14).bold())

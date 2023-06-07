@@ -23,16 +23,15 @@ struct AccountListView: View {
     
     var body: some View {
         ZStack {
-            Color.navyBlue.ignoresSafeArea()
+            Color.theme.background.ignoresSafeArea()
             VStack {
                 if(!accountType.elementsEqual("Inactive Account") && !accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).isEmpty) {
                     VStack {
                         BalanceCardView(accountType: accountType, isWatchListCardView: false, watchList: Watch(), accountViewModel: accountViewModel)
-                            .frame(width: 360, height: 50)
+                            .frame(width: 360, height: 70)
                             .cornerRadius(10)
                     }
-                    .padding(.top, 5)
-                    .shadow(color: Color.navyBlue, radius: 3)
+                    .shadow(color: Color.theme.text, radius: 3)
                 }
                 Divider()
                 ScrollView(.vertical, showsIndicators: false) {
@@ -42,7 +41,7 @@ struct AccountListView: View {
                                 AccountDetailView(account: account, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                             }, label: {
                                 AccountRowView(account: account)
-                                    .shadow(color: Color.navyBlue, radius: 3)
+                                    .shadow(color: Color.theme.text, radius: 3)
                                     .contextMenu {
                                         
                                         Label(account.id!, systemImage: "info.square")
@@ -88,7 +87,7 @@ struct AccountListView: View {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(Color.lightBlue)
+                    .foregroundColor(Color.theme.text)
                     .bold()
             }
                 .font(.system(size: 14).bold())
@@ -99,7 +98,7 @@ struct AccountListView: View {
                     self.isChartViewOpen.toggle()
                 }, label: {
                     Image(systemName: "chart.line.uptrend.xyaxis")
-                        .foregroundColor(Color.lightBlue)
+                        .foregroundColor(Color.theme.text)
                         .bold()
                 })
                 .font(.system(size: 14).bold())

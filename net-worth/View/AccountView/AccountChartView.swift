@@ -24,7 +24,7 @@ struct AccountChartView: View {
                     Section {
                         SingleLineLollipopChartView(chartDataList: chartViewModel.chartDataList)
                     }
-                    .listRowBackground(Color.white)
+                    .listRowBackground(Color.theme.background)
                     
                     Section {
                         Picker(selection: $range, content: {
@@ -48,10 +48,9 @@ struct AccountChartView: View {
                         }
                         .pickerStyle(SegmentedPickerStyle())
                     }
-                    .listRowBackground(Color.navyBlue)
-                    .foregroundColor(Color.lightBlue)
                 }
-                .background(Color.navyBlue)
+                .shadow(color: Color.theme.text, radius: 3)
+                .background(Color.theme.background)
                 .scrollContentBackground(.hidden)
             }
         }

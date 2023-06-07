@@ -23,14 +23,14 @@ struct AccountWatchChartView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.navyBlue.ignoresSafeArea()
+                Color.theme.background.ignoresSafeArea()
                 VStack {
                     HStack {
                         List {
                             Section {
                                 SingleLineLollipopChartView(chartDataList: chartViewModel.chartDataList)
                             }
-                            .listRowBackground(Color.white)
+                            .listRowBackground(Color.theme.background)
                             
                             Section {
                                 Picker(selection: $range, content: {
@@ -57,9 +57,9 @@ struct AccountWatchChartView: View {
                                 }
                                 .pickerStyle(SegmentedPickerStyle())
                             }
-                            .listRowBackground(Color.navyBlue)
-                            .foregroundColor(Color.lightBlue)
                         }
+                        .shadow(color: Color.theme.text, radius: 3)
+                        .background(Color.theme.background)
                     }
                     .blur(radius: CGFloat(scenePhaseBlur))
                     .onChange(of: scenePhase, perform: { value in

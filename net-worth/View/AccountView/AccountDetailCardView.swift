@@ -20,22 +20,22 @@ struct AccountDetailCardView: View {
             Spacer()
             HStack {
                 Text(accountViewModel.account.currency)
-                    .foregroundColor(Color.navyBlue)
+                    .foregroundColor(Color.theme.text)
                     .font(.caption.bold())
                 Text("\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 2))")
-                    .foregroundColor(Color.navyBlue)
+                    .foregroundColor(Color.theme.text)
                     .font(.caption.bold())
                 Spacer()
                 if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
                     Image(systemName: "bell.fill")
-                        .foregroundColor(Color.navyBlue)
+                        .foregroundColor(Color.theme.text)
                         .font(.caption.bold())
                     Text("\(accountViewModel.account.paymentDate)")
-                        .foregroundColor(Color.navyBlue)
+                        .foregroundColor(Color.theme.text)
                         .font(.caption.bold())
                 } else if(accountViewModel.account.accountType != "Saving") {
                     Image(systemName: "bell.slash.fill")
-                        .foregroundColor(Color.navyBlue)
+                        .foregroundColor(Color.theme.text)
                         .font(.caption.bold())
                 }
             }
@@ -43,25 +43,35 @@ struct AccountDetailCardView: View {
             HStack {
                 if(getTotalChangeForNonSymbol() >= 0) {
                     if(getTotalChangeForNonSymbol() > 0) {
-                        Image(systemName: "arrow.up")
-                            .foregroundColor(.green)
+                        ZStack {
+                            Circle()
+                                .fill(Color.theme.green.opacity(0.2))
+                                .frame(width: 17, height: 17)
+                            Image(systemName: "arrow.up")
+                                .foregroundColor(Color.theme.green)
+                                .font(.caption.bold())
+                        }
+                    }
+                    Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
+                        .foregroundColor(Color.theme.green)
+                        .font(.caption.bold())
+                    Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
+                        .foregroundColor(Color.theme.green)
+                        .font(.caption.bold())
+                } else {
+                    ZStack {
+                        Circle()
+                            .fill(Color.theme.red.opacity(0.2))
+                            .frame(width: 17, height: 17)
+                        Image(systemName: "arrow.down")
+                            .foregroundColor(Color.theme.red)
                             .font(.caption.bold())
                     }
                     Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
-                        .foregroundColor(.green)
+                        .foregroundColor(Color.theme.red)
                         .font(.caption.bold())
                     Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
-                        .foregroundColor(.green)
-                        .font(.caption.bold())
-                } else {
-                    Image(systemName: "arrow.down")
-                        .foregroundColor(.red)
-                        .font(.caption.bold())
-                    Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
-                        .foregroundColor(.red)
-                        .font(.caption.bold())
-                    Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
-                        .foregroundColor(.red)
+                        .foregroundColor(Color.theme.red)
                         .font(.caption.bold())
                 }
             }
@@ -70,7 +80,7 @@ struct AccountDetailCardView: View {
         .padding(.horizontal)
         .frame(width: 360,height: 50)
         .padding(8)
-        .background(Color.white)
+        .background(Color.theme.background)
     }
     
     func getTotalChangeForNonSymbol() -> Double {

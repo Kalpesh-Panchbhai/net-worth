@@ -49,7 +49,7 @@ struct NewAccountView: View {
                             Text(accountType.rawValue).tag(accountType.rawValue)
                         }
                     }
-                    .colorMultiply(Color.navyBlue)
+                    .foregroundColor(Color.theme.text)
                     .onChange(of: accountType) { _ in
                         accountName=""
                         currentBalance = 0.0
@@ -64,26 +64,26 @@ struct NewAccountView: View {
                     }
                     if(accountType == "Saving") {
                         nameField(labelName: "Account Name")
-                            .colorMultiply(Color.navyBlue)
+                            .foregroundColor(Color.theme.text)
                         currentBalanceField
-                            .foregroundColor(Color.navyBlue)
+                            .foregroundColor(Color.theme.text)
                         CurrencyPicker(currenySelected: $currencySelected)
-                            .colorMultiply(Color.navyBlue)
+                            .foregroundColor(Color.theme.text)
                         watchListPicker
                         accountOpenedDatePicker
                     }
                     else if(accountType == "Credit Card") {
                         nameField(labelName: "Credit Card Name")
-                            .colorMultiply(Color.navyBlue)
+                            .foregroundColor(Color.theme.text)
                         currentBalanceField
-                            .foregroundColor(Color.navyBlue)
+                            .foregroundColor(Color.theme.text)
                         CurrencyPicker(currenySelected: $currencySelected)
-                            .colorMultiply(Color.navyBlue)
+                            .foregroundColor(Color.theme.text)
                         enablePaymentReminderField(labelName: "Enable Payment Reminder")
-                            .foregroundColor(Color.navyBlue)
+                            .foregroundColor(Color.theme.text)
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
-                                .colorMultiply(Color.navyBlue)
+                                .foregroundColor(Color.theme.text)
                         }
                         watchListPicker
                         accountOpenedDatePicker
@@ -93,48 +93,49 @@ struct NewAccountView: View {
                             Text("Consumer").tag("Consumer")
                             Text("Non Consumer").tag("Non Consumer")
                         }
-                        .colorMultiply(Color.navyBlue)
+                        .foregroundColor(Color.theme.text)
                         
                         nameField(labelName: "Loan Name")
-                            .colorMultiply(Color.navyBlue)
+                            .foregroundColor(Color.theme.text)
                         currentBalanceField
-                            .foregroundColor(Color.navyBlue)
+                            .foregroundColor(Color.theme.text)
                         if(loanType.elementsEqual("Consumer")) {
                             monthlyEMIField
-                                .foregroundColor(Color.navyBlue)
+                                .foregroundColor(Color.theme.text)
                             loanPaymentDateField(labelName: "Loan payment date")
-                                .colorMultiply(Color.navyBlue)
+                                .foregroundColor(Color.theme.text)
                         }
                         CurrencyPicker(currenySelected: $currencySelected)
-                            .colorMultiply(Color.navyBlue)
+                            .foregroundColor(Color.theme.text)
                         enablePaymentReminderField(labelName: "Enable Loan Payment Reminder")
-                            .foregroundColor(Color.navyBlue)
+                            .foregroundColor(Color.theme.text)
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
-                                .colorMultiply(Color.navyBlue)
+                                .foregroundColor(Color.theme.text)
                         }
                         watchListPicker
                         accountOpenedDatePicker
                     } else if(accountType == "Other") {
                         nameField(labelName: "Account Name")
-                            .colorMultiply(Color.navyBlue)
+                            .foregroundColor(Color.theme.text)
                         currentBalanceField
-                            .foregroundColor(Color.navyBlue)
+                            .foregroundColor(Color.theme.text)
                         CurrencyPicker(currenySelected: $currencySelected)
-                            .colorMultiply(Color.navyBlue)
+                            .foregroundColor(Color.theme.text)
                         enablePaymentReminderField(labelName: "Enable Payment Reminder")
-                            .foregroundColor(Color.navyBlue)
+                            .foregroundColor(Color.theme.text)
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
-                                .colorMultiply(Color.navyBlue)
+                                .foregroundColor(Color.theme.text)
                         }
                         watchListPicker
                         accountOpenedDatePicker
                     }
                 }
-                .listRowBackground(Color.white)
-                .foregroundColor(Color.lightBlue)
+                .listRowBackground(Color.theme.background)
+                .foregroundColor(Color.theme.text)
             }
+            .shadow(color: Color.theme.text, radius: 3)
             .toolbar {
                 ToolbarItem {
                     Button(action: {
@@ -187,11 +188,11 @@ struct NewAccountView: View {
                     }, label: {
                         if(!allFieldsFilled()) {
                             Image(systemName: "checkmark")
-                                .foregroundColor(Color.lightBlue.opacity(0.3))
+                                .foregroundColor(Color.theme.text.opacity(0.3))
                                 .bold()
                         } else {
                             Image(systemName: "checkmark")
-                                .foregroundColor(Color.lightBlue)
+                                .foregroundColor(Color.theme.text)
                                 .bold()
                         }
                     })
@@ -201,7 +202,7 @@ struct NewAccountView: View {
             }
             .navigationTitle("New Account")
             .navigationBarTitleDisplayMode(.inline)
-            .background(Color.navyBlue)
+            .background(Color.theme.background)
             .scrollContentBackground(.hidden)
         }
         .blur(radius: CGFloat(scenePhaseBlur))
@@ -228,12 +229,12 @@ struct NewAccountView: View {
                 }
             }
         }
-        .colorMultiply(Color.navyBlue)
+        .foregroundColor(Color.theme.text)
     }
     
     var accountOpenedDatePicker: some View {
         DatePicker("Opened date", selection: $accountOpenedDate, in: ...Date(), displayedComponents: [.date])
-            .colorMultiply(Color.navyBlue)
+            .foregroundColor(Color.theme.text)
     }
     
     private func allFieldsFilled () -> Bool {
@@ -279,8 +280,8 @@ struct NewAccountView: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 6)
                     .frame(width: 25, height: 25)
-                    .foregroundColor(Color.white)
-                    .shadow(color: Color.navyBlue, radius: 3)
+                    .foregroundColor(Color.theme.text)
+                    .shadow(color: Color.theme.text, radius: 2)
                 Button(action: {
                     if isPlus {
                         isPlus = false
@@ -289,7 +290,7 @@ struct NewAccountView: View {
                     }
                 }, label: {
                     Image(systemName: isPlus ? "plus" : "minus")
-                        .foregroundColor(isPlus ? Color.green : Color.red)
+                        .foregroundColor(isPlus ? Color.theme.green : Color.theme.red)
                         .bold()
                 })
                 .font(.system(size: 14).bold())

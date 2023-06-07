@@ -26,27 +26,28 @@ struct TransactionsView: View {
         VStack {
             ScrollView(.vertical, showsIndicators: false) {
                 LazyVStack {
+                    Spacer()
                     ForEach(0..<accountViewModel.accountTransactionList.count, id: \.self) { i in
                         HStack{
                             VStack(alignment: .leading) {
                                 Text("\(accountViewModel.accountTransactionList[i].timestamp.getDateAndFormat())")
                                     .font(.headline)
-                                    .foregroundColor(Color.navyBlue)
+                                    .foregroundColor(Color.theme.text)
                                     .padding(.horizontal)
                                 HStack {
                                     Text("\(accountViewModel.accountTransactionList[i].timestamp.getTimeAndFormat())")
                                         .font(.system(size: 12))
-                                        .foregroundColor(Color.navyBlue)
+                                        .foregroundColor(Color.theme.text)
                                         .padding(.leading)
                                     if(accountViewModel.account.loanType.elementsEqual("Consumer")) {
                                         if(accountViewModel.accountTransactionList[i].paid) {
                                             Text("Paid")
                                                 .font(.system(size: 12).bold())
-                                                .foregroundColor(.green)
+                                                .foregroundColor(Color.theme.green)
                                         } else {
                                             Text("Not Paid")
                                                 .font(.system(size: 12).bold())
-                                                .foregroundColor(.red)
+                                                .foregroundColor(Color.theme.red)
                                         }
                                     }
                                 }
@@ -55,23 +56,24 @@ struct TransactionsView: View {
                             VStack(alignment: .trailing) {
                                 Text((accountViewModel.account.currency) + " \(accountViewModel.accountTransactionList[i].currentBalance.withCommas(decimalPlace: 2))")
                                     .font(.headline)
-                                    .foregroundColor(Color.navyBlue)
+                                    .foregroundColor(Color.theme.text)
                                     .padding(.horizontal)
                                 if( i < accountViewModel.accountTransactionList.count) {
                                     if(accountViewModel.accountTransactionList[i].balanceChange > 0) {
                                         Text("+\(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 2))")
                                             .font(.system(size: 12).bold())
-                                            .foregroundColor(.green)
+                                            .foregroundColor(Color.theme.green)
                                             .padding(.horizontal)
                                     } else if(accountViewModel.accountTransactionList[i].balanceChange < 0) {
                                         Text("\(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 2))")
                                             .font(.system(size: 12).bold())
-                                            .foregroundColor(.red)
+                                            .foregroundColor(Color.theme.red)
                                             .padding(.horizontal)
                                     }
                                 }
                             }
                         }
+                        .frame(width: 340)
                         .contextMenu {
                             Label(accountViewModel.accountTransactionList[i].id!, systemImage: "info.square")
                             
@@ -145,14 +147,14 @@ struct TransactionsView: View {
                             }
                         }
                         .padding(8)
-                        .background(Color.white)
+                        .background(Color.theme.background)
                         .cornerRadius(10)
-                        .shadow(color: Color.navyBlue, radius: 3)
+                        .shadow(color: Color.theme.text, radius: 3)
                     }
                 }
             }
             .padding(8)
-            .background(Color.navyBlue)
+            .background(Color.theme.background)
         }
     }
 }

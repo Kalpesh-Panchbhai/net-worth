@@ -34,9 +34,9 @@ struct AccountDetailView: View {
         self.accountViewModel = accountViewModel
         self.watchViewModel = watchViewModel
         
-        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)
-        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor(red: 0.9058823529, green: 0.9490196078, blue: 0.9803921569, alpha: 1)], for: .selected)
-        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)], for: .normal)
+        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.theme.text)
+        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor(Color.theme.background)], for: .selected)
+        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor(Color.theme.text)], for: .normal)
     }
     
     var body: some View {
@@ -44,7 +44,7 @@ struct AccountDetailView: View {
             VStack {
                 AccountDetailCardView(accountViewModel: accountViewModel)
                     .cornerRadius(10)
-                    .shadow(color: Color.navyBlue, radius: 3)
+                    .shadow(color: Color.theme.text, radius: 3)
                 Picker(selection: $tabItem, content: {
                     Text("Transactions (\(accountViewModel.accountTransactionList.count))").tag(1)
                     Text("Chart").tag(2)
@@ -88,7 +88,7 @@ struct AccountDetailView: View {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(Color.lightBlue)
+                    .foregroundColor(Color.theme.text)
                     .bold()
             }
                 .font(.system(size: 14).bold())
@@ -100,11 +100,11 @@ struct AccountDetailView: View {
                 }, label: {
                     if(watchViewModel.watchListForAccount.count > 1) {
                         Image(systemName: "bookmark.fill")
-                            .foregroundColor(Color.lightBlue)
+                            .foregroundColor(Color.theme.text)
                             .bold()
                     } else {
                         Image(systemName: "bookmark")
-                            .foregroundColor(Color.lightBlue)
+                            .foregroundColor(Color.theme.text)
                             .bold()
                     }
                 })
@@ -226,7 +226,7 @@ struct AccountDetailView: View {
                     
                 }, label: {
                     Image(systemName: "ellipsis")
-                        .foregroundColor(Color.lightBlue)
+                        .foregroundColor(Color.theme.text)
                         .bold()
                 })
                 .font(.system(size: 14).bold())
@@ -269,6 +269,6 @@ struct AccountDetailView: View {
         }, content: {
             WatchToAccountView(account: account, watchViewModel: watchViewModel)
         })
-        .background(Color.navyBlue)
+        .background(Color.theme.background)
     }
 }

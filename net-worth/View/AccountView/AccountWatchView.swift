@@ -34,10 +34,11 @@ struct AccountWatchView: View {
                                 Label(watch.id!, systemImage: "info.square")
                             }
                         })
-                        .listRowBackground(Color.white)
-                        .foregroundColor(Color.navyBlue)
+                        .listRowBackground(Color.theme.background)
+                        .foregroundColor(Color.theme.text)
                     }
-                    .background(Color.navyBlue)
+                    .shadow(color: Color.theme.text, radius: 3)
+                    .background(Color.theme.background)
                     .scrollContentBackground(.hidden)
                 }
             }
