@@ -322,10 +322,10 @@
 			children = (
 				7D2C761F2A0B5B8900CE606C /* ColorExtension.swift */,
 				7DE42FC3293524E500D4DA0A /* DateExtension.swift */,
+				7D4A60D22A2E5FEA00F46C1F /* DictionaryExtension.swift */,
 				7D237BEC292B672800DEF91D /* DoubleExtension.swift */,
 				7DB2058C2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift */,
 				7DCFE4C7292CB92900C940F0 /* StringExtension.swift */,
-				7D4A60D22A2E5FEA00F46C1F /* DictionaryExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
