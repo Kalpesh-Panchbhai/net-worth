@@ -41,9 +41,9 @@ extension MainScreenTabBarView {
             }
         }
         .padding(3)
-        .background(Color.white.ignoresSafeArea(edges: .bottom))
+        .background(Color.theme.background.ignoresSafeArea(edges: .bottom))
         .cornerRadius(10)
-        .shadow(color: Color.navyBlue.opacity(0.3),radius: 10, x: 0, y: 5)
+        .shadow(color: Color.theme.text.opacity(0.3),radius: 10, x: 0, y: 5)
         .padding(.horizontal)
     }
     
@@ -54,7 +54,7 @@ extension MainScreenTabBarView {
                     Spacer()
                     ZStack {
                         Circle()
-                            .fill(Color.lightBlue)
+                            .fill(Color.green.opacity(0.5))
                             .frame(height: 20)
                         Text("\(accountViewModel.accountList.count)")
                             .font(.system(size: 10))
@@ -66,7 +66,7 @@ extension MainScreenTabBarView {
                     Spacer()
                     ZStack {
                         Circle()
-                            .fill(Color.lightBlue)
+                            .fill(Color.green.opacity(0.5))
                             .frame(height: 20)
                         Text("\(watchViewModel.watchList.count)")
                             .font(.system(size: 10))
@@ -78,7 +78,7 @@ extension MainScreenTabBarView {
                     Spacer()
                     ZStack {
                         Circle()
-                            .fill(Color.lightBlue)
+                            .fill(Color.green.opacity(0.5))
                             .frame(height: 20)
                         Text("\(incomeViewModel.incomeList.count)")
                             .font(.system(size: 10))

@@ -43,11 +43,11 @@ case account, watchlist, income, chart, setting
     
     var color: Color {
         switch self {
-        case .account: return Color.navyBlue
-        case .watchlist: return Color.navyBlue
-        case .income: return Color.navyBlue
-        case .chart: return Color.navyBlue
-        case .setting: return Color.navyBlue
+        case .account: return Color.theme.text
+        case .watchlist: return Color.theme.text
+        case .income: return Color.theme.text
+        case .chart: return Color.theme.text
+        case .setting: return Color.theme.text
         }
     }
 }
