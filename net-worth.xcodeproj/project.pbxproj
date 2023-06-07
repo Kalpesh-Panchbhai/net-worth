@@ -15,7 +15,7 @@
 		7D14A8F02A0253A9002FC324 /* AccountWatchChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D14A8EF2A0253A9002FC324 /* AccountWatchChartView.swift */; };
 		7D1C72642A06549B00022FCB /* ImportExportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1C72632A06549B00022FCB /* ImportExportViewModel.swift */; };
 		7D237BED292B672900DEF91D /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D237BEC292B672800DEF91D /* DoubleExtension.swift */; };
-		7D2C76202A0B5B8900CE606C /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2C761F2A0B5B8900CE606C /* ColorExtension.swift */; };
+		7D2C76202A0B5B8900CE606C /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2C761F2A0B5B8900CE606C /* Color.swift */; };
 		7D2D38412A2C8945006C0AD2 /* ApplicationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2D38402A2C8945006C0AD2 /* ApplicationData.swift */; };
 		7D3636FB292F9CCB0013B4E5 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */; };
 		7D3D5244299105A50021047B /* CommonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3D5243299105A50021047B /* CommonController.swift */; };
@@ -126,7 +126,7 @@
 		7D14A8EF2A0253A9002FC324 /* AccountWatchChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountWatchChartView.swift; sourceTree = "<group>"; };
 		7D1C72632A06549B00022FCB /* ImportExportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExportViewModel.swift; sourceTree = "<group>"; };
 		7D237BEC292B672800DEF91D /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
-		7D2C761F2A0B5B8900CE606C /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		7D2C761F2A0B5B8900CE606C /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		7D2D38402A2C8945006C0AD2 /* ApplicationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationData.swift; sourceTree = "<group>"; };
 		7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
 		7D3D5243299105A50021047B /* CommonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonController.swift; sourceTree = "<group>"; };
@@ -266,7 +266,7 @@
 		7D237BEB292B670D00DEF91D /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				7D2C761F2A0B5B8900CE606C /* ColorExtension.swift */,
+				7D2C761F2A0B5B8900CE606C /* Color.swift */,
 				7DE42FC3293524E500D4DA0A /* DateExtension.swift */,
 				7D4A60D22A2E5FEA00F46C1F /* DictionaryExtension.swift */,
 				7D237BEC292B672800DEF91D /* DoubleExtension.swift */,
@@ -296,7 +296,6 @@
 			children = (
 				7D9DF69E2939B80400BE4C9D /* CommonUtils.swift */,
 				7D69DD722932312400F024A6 /* ConstantUtils.swift */,
-				7D237BEB292B670D00DEF91D /* Extension */,
 				7D0D14B82937228A00AC30A3 /* Model */,
 			);
 			path = Common;
@@ -328,6 +327,7 @@
 				7D79FA50291B7430004A2ECF /* net_worthApp.swift */,
 				7D69DD6F293230FF00F024A6 /* Common */,
 				7D79FA83291B7EC2004A2ECF /* Controller */,
+				7D237BEB292B670D00DEF91D /* Extension */,
 				7D79FA56291B7431004A2ECF /* Preview Content */,
 				7D79FA88291B9C6E004A2ECF /* View */,
 				7D79FA80291B75CB004A2ECF /* View Model */,
@@ -641,7 +641,7 @@
 				7DB58AB529967B2E00B93592 /* AccountListView.swift in Sources */,
 				7D14A8F02A0253A9002FC324 /* AccountWatchChartView.swift in Sources */,
 				7D3E3CBF2A1FC4FC009538BA /* RowAccountToWatchView.swift in Sources */,
-				7D2C76202A0B5B8900CE606C /* ColorExtension.swift in Sources */,
+				7D2C76202A0B5B8900CE606C /* Color.swift in Sources */,
 				7D65547629A107DC0008A8E2 /* ChartData.swift in Sources */,
 				7DB98808299B8A99004ED6D2 /* AccountToWatchView.swift in Sources */,
 				7DC97A2C29223ADB003F69D4 /* NewIncomeView.swift in Sources */,

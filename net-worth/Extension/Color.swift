@@ -10,6 +10,8 @@ import SwiftUI
 
 extension Color {
     
+    static let theme = ColorTheme()
+    
     static var random: Color {
         return Color(red: .random, green: .random, blue: .random)
     }
@@ -25,5 +27,14 @@ extension Color {
     static var white: Color {
         return Color(#colorLiteral(red: 0.9058823529, green: 0.9490196078, blue: 0.9803921569, alpha: 1))
     }
+}
+
+struct ColorTheme {
+    
+    let accent = Color("AccentColor")
+    let background = Color("BackgroundColor")
+    let green = Color("GreenColor")
+    let red = Color("RedColor")
+    let secondaryText = Color("SecondaryTextColor")
 }
 
