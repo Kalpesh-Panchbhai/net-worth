@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A72F69C86303305F6631476 /* Pods_net_worthTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC6C9A84CDBFBA61E9B153E4 /* Pods_net_worthTests.framework */; };
 		7D111E752A25C21B00485DB1 /* NetWorthChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D111E742A25C21B00485DB1 /* NetWorthChartView.swift */; };
 		7D1188362A03F3000005EA32 /* AccountWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1188352A03F3000005EA32 /* AccountWatchView.swift */; };
 		7D11D0052A0A551300897B08 /* PieSliceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D11D0042A0A551300897B08 /* PieSliceView.swift */; };
@@ -44,9 +43,6 @@
 		7D79FA51291B7430004A2ECF /* net_worthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA50291B7430004A2ECF /* net_worthApp.swift */; };
 		7D79FA55291B7431004A2ECF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D79FA54291B7431004A2ECF /* Assets.xcassets */; };
 		7D79FA58291B7431004A2ECF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D79FA57291B7431004A2ECF /* Preview Assets.xcassets */; };
-		7D79FA68291B7432004A2ECF /* net_worthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA67291B7432004A2ECF /* net_worthTests.swift */; };
-		7D79FA72291B7432004A2ECF /* net_worthUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA71291B7432004A2ECF /* net_worthUITests.swift */; };
-		7D79FA74291B7432004A2ECF /* net_worthUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA73291B7432004A2ECF /* net_worthUITestsLaunchTests.swift */; };
 		7D79FA87291B803A004A2ECF /* AccountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA86291B803A004A2ECF /* AccountController.swift */; };
 		7D79FA8A291B9CE6004A2ECF /* MainScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA89291B9CE6004A2ECF /* MainScreenView.swift */; };
 		7D79FA8C291BA152004A2ECF /* NewAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA8B291BA152004A2ECF /* NewAccountView.swift */; };
@@ -118,33 +114,10 @@
 		7DF9DB91298F978600831494 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF9DB90298F978600831494 /* Account.swift */; };
 		7DF9DB93298F98A800831494 /* AccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF9DB92298F98A800831494 /* AccountViewModel.swift */; };
 		7DF9DB95298F9C2600831494 /* AccountTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF9DB94298F9C2600831494 /* AccountTransaction.swift */; };
-		A1F5E8ECAEDA6710B8D6EA11 /* Pods_net_worth_net_worthUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D5576F40F828E2D89BA00A0 /* Pods_net_worth_net_worthUITests.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		7D79FA64291B7432004A2ECF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7D79FA45291B7430004A2ECF /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 7D79FA4C291B7430004A2ECF;
-			remoteInfo = "net-worth";
-		};
-		7D79FA6E291B7432004A2ECF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7D79FA45291B7430004A2ECF /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 7D79FA4C291B7430004A2ECF;
-			remoteInfo = "net-worth";
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
-		0986E1DF147191E834EA6A6B /* Pods-net-worth-net-worthUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth-net-worthUITests.debug.xcconfig"; path = "Target Support Files/Pods-net-worth-net-worthUITests/Pods-net-worth-net-worthUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		0D5576F40F828E2D89BA00A0 /* Pods_net_worth_net_worthUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_net_worth_net_worthUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		0FDD6BF955A43665F6A6187C /* Pods-net-worth-net-worthUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth-net-worthUITests.release.xcconfig"; path = "Target Support Files/Pods-net-worth-net-worthUITests/Pods-net-worth-net-worthUITests.release.xcconfig"; sourceTree = "<group>"; };
 		2B45DF998FDF5AAD9DFFCB01 /* Pods-net-worth.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth.debug.xcconfig"; path = "Target Support Files/Pods-net-worth/Pods-net-worth.debug.xcconfig"; sourceTree = "<group>"; };
-		590F41F3DE0BE00E45DF344D /* Pods-net-worthTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worthTests.debug.xcconfig"; path = "Target Support Files/Pods-net-worthTests/Pods-net-worthTests.debug.xcconfig"; sourceTree = "<group>"; };
-		664723C2EB2A543D3793EBF9 /* Pods-net-worthTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worthTests.release.xcconfig"; path = "Target Support Files/Pods-net-worthTests/Pods-net-worthTests.release.xcconfig"; sourceTree = "<group>"; };
 		7D111E742A25C21B00485DB1 /* NetWorthChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorthChartView.swift; sourceTree = "<group>"; };
 		7D1188352A03F3000005EA32 /* AccountWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountWatchView.swift; sourceTree = "<group>"; };
 		7D11D0042A0A551300897B08 /* PieSliceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieSliceView.swift; sourceTree = "<group>"; };
@@ -183,11 +156,6 @@
 		7D79FA54291B7431004A2ECF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7D79FA57291B7431004A2ECF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		7D79FA5E291B7431004A2ECF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7D79FA63291B7432004A2ECF /* net-worthTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "net-worthTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		7D79FA67291B7432004A2ECF /* net_worthTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = net_worthTests.swift; sourceTree = "<group>"; };
-		7D79FA6D291B7432004A2ECF /* net-worthUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "net-worthUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		7D79FA71291B7432004A2ECF /* net_worthUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = net_worthUITests.swift; sourceTree = "<group>"; };
-		7D79FA73291B7432004A2ECF /* net_worthUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = net_worthUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		7D79FA86291B803A004A2ECF /* AccountController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountController.swift; sourceTree = "<group>"; };
 		7D79FA89291B9CE6004A2ECF /* MainScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenView.swift; sourceTree = "<group>"; };
 		7D79FA8B291BA152004A2ECF /* NewAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAccountView.swift; sourceTree = "<group>"; };
@@ -254,8 +222,6 @@
 		7DF9DB90298F978600831494 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		7DF9DB92298F98A800831494 /* AccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewModel.swift; sourceTree = "<group>"; };
 		7DF9DB94298F9C2600831494 /* AccountTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTransaction.swift; sourceTree = "<group>"; };
-		BC5CC7014F51AC0DAEF83346 /* Pods_net_worth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_net_worth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		BC6C9A84CDBFBA61E9B153E4 /* Pods_net_worthTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_net_worthTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF5EF456C574539AF6CA64AD /* Pods-net-worth.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-net-worth.release.xcconfig"; path = "Target Support Files/Pods-net-worth/Pods-net-worth.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -272,22 +238,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		7D79FA60291B7432004A2ECF /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0A72F69C86303305F6631476 /* Pods_net_worthTests.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7D79FA6A291B7432004A2ECF /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A1F5E8ECAEDA6710B8D6EA11 /* Pods_net_worth_net_worthUITests.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -296,10 +246,6 @@
 			children = (
 				2B45DF998FDF5AAD9DFFCB01 /* Pods-net-worth.debug.xcconfig */,
 				EF5EF456C574539AF6CA64AD /* Pods-net-worth.release.xcconfig */,
-				0986E1DF147191E834EA6A6B /* Pods-net-worth-net-worthUITests.debug.xcconfig */,
-				0FDD6BF955A43665F6A6187C /* Pods-net-worth-net-worthUITests.release.xcconfig */,
-				590F41F3DE0BE00E45DF344D /* Pods-net-worthTests.debug.xcconfig */,
-				664723C2EB2A543D3793EBF9 /* Pods-net-worthTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -360,10 +306,7 @@
 			isa = PBXGroup;
 			children = (
 				7D80ECEF291CE0C500A22496 /* LaunchScreen.storyboard */,
-				CDD4222682A92C71AC144E67 /* Frameworks */,
 				7D79FA4F291B7430004A2ECF /* net-worth */,
-				7D79FA66291B7432004A2ECF /* net-worthTests */,
-				7D79FA70291B7432004A2ECF /* net-worthUITests */,
 				3516CB7AD10B24B4F06946C5 /* Pods */,
 				7D79FA4E291B7430004A2ECF /* Products */,
 			);
@@ -373,8 +316,6 @@
 			isa = PBXGroup;
 			children = (
 				7D79FA4D291B7430004A2ECF /* net-worth.app */,
-				7D79FA63291B7432004A2ECF /* net-worthTests.xctest */,
-				7D79FA6D291B7432004A2ECF /* net-worthUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -401,23 +342,6 @@
 				7D79FA57291B7431004A2ECF /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		7D79FA66291B7432004A2ECF /* net-worthTests */ = {
-			isa = PBXGroup;
-			children = (
-				7D79FA67291B7432004A2ECF /* net_worthTests.swift */,
-			);
-			path = "net-worthTests";
-			sourceTree = "<group>";
-		};
-		7D79FA70291B7432004A2ECF /* net-worthUITests */ = {
-			isa = PBXGroup;
-			children = (
-				7D79FA71291B7432004A2ECF /* net_worthUITests.swift */,
-				7D79FA73291B7432004A2ECF /* net_worthUITestsLaunchTests.swift */,
-			);
-			path = "net-worthUITests";
 			sourceTree = "<group>";
 		};
 		7D79FA80291B75CB004A2ECF /* View Model */ = {
@@ -597,16 +521,6 @@
 			path = WatchView;
 			sourceTree = "<group>";
 		};
-		CDD4222682A92C71AC144E67 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				BC5CC7014F51AC0DAEF83346 /* Pods_net_worth.framework */,
-				0D5576F40F828E2D89BA00A0 /* Pods_net_worth_net_worthUITests.framework */,
-				BC6C9A84CDBFBA61E9B153E4 /* Pods_net_worthTests.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -635,44 +549,6 @@
 			productReference = 7D79FA4D291B7430004A2ECF /* net-worth.app */;
 			productType = "com.apple.product-type.application";
 		};
-		7D79FA62291B7432004A2ECF /* net-worthTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 7D79FA7A291B7432004A2ECF /* Build configuration list for PBXNativeTarget "net-worthTests" */;
-			buildPhases = (
-				67D76457AEE1B07C08552FF4 /* [CP] Check Pods Manifest.lock */,
-				7D79FA5F291B7432004A2ECF /* Sources */,
-				7D79FA60291B7432004A2ECF /* Frameworks */,
-				7D79FA61291B7432004A2ECF /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				7D79FA65291B7432004A2ECF /* PBXTargetDependency */,
-			);
-			name = "net-worthTests";
-			productName = "net-worthTests";
-			productReference = 7D79FA63291B7432004A2ECF /* net-worthTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		7D79FA6C291B7432004A2ECF /* net-worthUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 7D79FA7D291B7432004A2ECF /* Build configuration list for PBXNativeTarget "net-worthUITests" */;
-			buildPhases = (
-				2AA48DA853171CAEC7E964C5 /* [CP] Check Pods Manifest.lock */,
-				7D79FA69291B7432004A2ECF /* Sources */,
-				7D79FA6A291B7432004A2ECF /* Frameworks */,
-				7D79FA6B291B7432004A2ECF /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				7D79FA6F291B7432004A2ECF /* PBXTargetDependency */,
-			);
-			name = "net-worthUITests";
-			productName = "net-worthUITests";
-			productReference = 7D79FA6D291B7432004A2ECF /* net-worthUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -685,14 +561,6 @@
 				TargetAttributes = {
 					7D79FA4C291B7430004A2ECF = {
 						CreatedOnToolsVersion = 14.1;
-					};
-					7D79FA62291B7432004A2ECF = {
-						CreatedOnToolsVersion = 14.1;
-						TestTargetID = 7D79FA4C291B7430004A2ECF;
-					};
-					7D79FA6C291B7432004A2ECF = {
-						CreatedOnToolsVersion = 14.1;
-						TestTargetID = 7D79FA4C291B7430004A2ECF;
 					};
 				};
 			};
@@ -714,8 +582,6 @@
 			projectRoot = "";
 			targets = (
 				7D79FA4C291B7430004A2ECF /* net-worth */,
-				7D79FA62291B7432004A2ECF /* net-worthTests */,
-				7D79FA6C291B7432004A2ECF /* net-worthUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -732,67 +598,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		7D79FA61291B7432004A2ECF /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7D79FA6B291B7432004A2ECF /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2AA48DA853171CAEC7E964C5 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-net-worth-net-worthUITests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		67D76457AEE1B07C08552FF4 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-net-worthTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		CF425DA91CB92B2DF48B1207 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -923,37 +731,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		7D79FA5F291B7432004A2ECF /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7D79FA68291B7432004A2ECF /* net_worthTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7D79FA69291B7432004A2ECF /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7D79FA72291B7432004A2ECF /* net_worthUITests.swift in Sources */,
-				7D79FA74291B7432004A2ECF /* net_worthUITestsLaunchTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		7D79FA65291B7432004A2ECF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 7D79FA4C291B7430004A2ECF /* net-worth */;
-			targetProxy = 7D79FA64291B7432004A2ECF /* PBXContainerItemProxy */;
-		};
-		7D79FA6F291B7432004A2ECF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 7D79FA4C291B7430004A2ECF /* net-worth */;
-			targetProxy = 7D79FA6E291B7432004A2ECF /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		7D79FA75291B7432004A2ECF /* Debug */ = {
@@ -1144,86 +922,6 @@
 			};
 			name = Release;
 		};
-		7D79FA7B291B7432004A2ECF /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 590F41F3DE0BE00E45DF344D /* Pods-net-worthTests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 599;
-				DEVELOPMENT_TEAM = 2SHT42699C;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.networth.net-worthTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/net-worth.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/net-worth";
-			};
-			name = Debug;
-		};
-		7D79FA7C291B7432004A2ECF /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 664723C2EB2A543D3793EBF9 /* Pods-net-worthTests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 599;
-				DEVELOPMENT_TEAM = 2SHT42699C;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.networth.net-worthTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/net-worth.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/net-worth";
-			};
-			name = Release;
-		};
-		7D79FA7E291B7432004A2ECF /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0986E1DF147191E834EA6A6B /* Pods-net-worth-net-worthUITests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 599;
-				DEVELOPMENT_TEAM = 2SHT42699C;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.networth.net-worthUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "net-worth";
-			};
-			name = Debug;
-		};
-		7D79FA7F291B7432004A2ECF /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0FDD6BF955A43665F6A6187C /* Pods-net-worth-net-worthUITests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 599;
-				DEVELOPMENT_TEAM = 2SHT42699C;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.networth.net-worthUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "net-worth";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1241,24 +939,6 @@
 			buildConfigurations = (
 				7D79FA78291B7432004A2ECF /* Debug */,
 				7D79FA79291B7432004A2ECF /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		7D79FA7A291B7432004A2ECF /* Build configuration list for PBXNativeTarget "net-worthTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				7D79FA7B291B7432004A2ECF /* Debug */,
-				7D79FA7C291B7432004A2ECF /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		7D79FA7D291B7432004A2ECF /* Build configuration list for PBXNativeTarget "net-worthUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				7D79FA7E291B7432004A2ECF /* Debug */,
-				7D79FA7F291B7432004A2ECF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
