@@ -18,20 +18,20 @@ struct AccountCardView: View {
             Spacer()
             HStack {
                 Text(account.accountName)
-                    .foregroundColor(Color.navyBlue)
+                    .foregroundColor(Color.theme.text)
                     .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)
                 Spacer()
                 if(account.paymentReminder && account.accountType != "Saving") {
                     Image(systemName: "bell.fill")
-                        .foregroundColor(Color.navyBlue)
+                        .foregroundColor(Color.theme.text)
                         .font(.caption.bold())
                     Text("\(account.paymentDate)")
-                        .foregroundColor(Color.navyBlue)
+                        .foregroundColor(Color.theme.text)
                         .font(.caption.bold())
                 } else if(account.accountType != "Saving") {
                     Image(systemName: "bell.slash.fill")
-                        .foregroundColor(Color.navyBlue)
+                        .foregroundColor(Color.theme.text)
                         .font(.caption.bold())
                 }
             }
@@ -39,35 +39,45 @@ struct AccountCardView: View {
             Spacer()
             HStack(alignment: .center) {
                 Text(account.currency)
-                    .foregroundColor(Color.navyBlue)
+                    .foregroundColor(Color.theme.text)
                     .font(.caption.bold())
                 Text("\(account.currentBalance.withCommas(decimalPlace: 2))")
-                    .foregroundColor(Color.navyBlue)
+                    .foregroundColor(Color.theme.text)
                     .font(.caption.bold())
             }
             Spacer()
             HStack {
                 if(getTotalChangeForNonSymbol() >= 0) {
                     if(getTotalChangeForNonSymbol() > 0) {
-                        Image(systemName: "arrow.up")
-                            .foregroundColor(.green)
+                        ZStack {
+                            Circle()
+                                .fill(Color.theme.green.opacity(0.2))
+                                .frame(width: 17, height: 17)
+                            Image(systemName: "arrow.up")
+                                .foregroundColor(Color.theme.green)
+                                .font(.system(size: 11).bold())
+                        }
+                    }
+                    Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
+                        .foregroundColor(Color.theme.green)
+                        .font(.system(size: 11).bold())
+                    Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
+                        .foregroundColor(Color.theme.green)
+                        .font(.system(size: 11).bold())
+                } else {
+                    ZStack {
+                        Circle()
+                            .fill(Color.theme.red.opacity(0.2))
+                            .frame(width: 17, height: 17)
+                        Image(systemName: "arrow.down")
+                            .foregroundColor(Color.theme.red)
                             .font(.system(size: 11).bold())
                     }
                     Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
-                        .foregroundColor(.green)
+                        .foregroundColor(Color.theme.red)
                         .font(.system(size: 11).bold())
                     Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
-                        .foregroundColor(.green)
-                        .font(.system(size: 11).bold())
-                } else {
-                    Image(systemName: "arrow.down")
-                        .foregroundColor(.red)
-                        .font(.system(size: 11).bold())
-                    Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
-                        .foregroundColor(.red)
-                        .font(.system(size: 11).bold())
-                    Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
-                        .foregroundColor(.red)
+                        .foregroundColor(Color.theme.red)
                         .font(.system(size: 11).bold())
                 }
             }
@@ -80,7 +90,7 @@ struct AccountCardView: View {
         }
         .frame(width: 150, height: 100)
         .padding(8)
-        .background(Color.white)
+        .background(Color.theme.background)
         .cornerRadius(10)
     }
     

@@ -29,30 +29,30 @@ struct AccountCardList: View {
             ZStack {
                 if(accountViewModel.accountList.isEmpty && accountViewModel.accountListLoaded) {
                     ZStack {
-                        Color.navyBlue.ignoresSafeArea()
+                        Color.theme.background.ignoresSafeArea()
                         HStack {
                             Text("Click on")
                             Image(systemName: "plus")
                             Text("Icon to add new Account.")
                         }
-                        .foregroundColor(Color.lightBlue)
+                        .foregroundColor(Color.theme.text)
                         .bold()
                     }
                 } else if (!accountViewModel.accountListLoaded) {
                     ZStack {
-                        Color.navyBlue.ignoresSafeArea()
-                        ProgressView().tint(Color.lightBlue)
+                        Color.theme.background.ignoresSafeArea()
+                        ProgressView().tint(Color.theme.text)
                     }
                 } else {
                     ZStack {
-                        Color.navyBlue.ignoresSafeArea()
+                        Color.theme.background.ignoresSafeArea()
                         VStack {
                             VStack {
                                 BalanceCardView(accountType: "Net Worth", isWatchListCardView: false, watchList: Watch(), accountViewModel: accountViewModel)
-                                    .frame(width: 360, height: 50)
+                                    .frame(width: 360, height: 70)
                                     .cornerRadius(10)
                             }
-                            .shadow(color: Color.navyBlue, radius: 3)
+                            .shadow(color: Color.theme.text, radius: 3)
                             Divider()
                             ScrollView(.vertical, showsIndicators: false) {
                                 LazyVStack {
@@ -60,7 +60,7 @@ struct AccountCardList: View {
                                         if(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 0) {
                                             HStack {
                                                 Text(accountType.uppercased())
-                                                    .foregroundColor(Color.lightBlue)
+                                                    .foregroundColor(Color.theme.text)
                                                     .bold()
                                                     .font(.system(size: 15))
                                                 Spacer()
@@ -69,7 +69,7 @@ struct AccountCardList: View {
                                                         .toolbarRole(.editor)
                                                 }, label: {
                                                     Text("See all")
-                                                        .foregroundColor(Color.lightBlue)
+                                                        .foregroundColor(Color.theme.text)
                                                         .bold()
                                                         .font(.system(size: 15))
                                                 })
@@ -83,7 +83,7 @@ struct AccountCardList: View {
                                                                     .toolbarRole(.editor)
                                                             }) {
                                                                 AccountCardView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i])
-                                                                    .shadow(color: Color.navyBlue, radius: 3)
+                                                                    .shadow(color: Color.theme.text, radius: 3)
                                                                     .contextMenu {
                                                                         
                                                                         Label(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i].id!, systemImage: "info.square")
@@ -148,7 +148,7 @@ struct AccountCardList: View {
                         isNewAccountAccountViewOpen.toggle()
                     }, label: {
                         Image(systemName: "plus")
-                            .foregroundColor(Color.lightBlue)
+                            .foregroundColor(Color.theme.text)
                             .bold()
                     })
                     .font(.system(size: 14).bold())
@@ -159,7 +159,6 @@ struct AccountCardList: View {
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             Task.init {
-//                await accountViewModel.getAccount(id: accountViewModel.account.id!)
                 accountViewModel.accountList = [Account]()
                 await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)

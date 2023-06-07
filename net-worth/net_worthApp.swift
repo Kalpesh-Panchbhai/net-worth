@@ -37,15 +37,15 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
-        UINavigationBar.appearance().barTintColor = UIColor(red: 0.06666666667, green: 0.1529411765, blue: 0.4352941176, alpha: 1)
-        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)]
+        UINavigationBar.appearance().barTintColor = UIColor(Color.theme.background)
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(Color.theme.text)]
         
         let tabBarAppearance = UITabBarAppearance()
         tabBarAppearance.stackedLayoutAppearance.normal.badgeBackgroundColor = UIColor(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)
         UITabBar.appearance().standardAppearance = tabBarAppearance
         
-        UIRefreshControl.appearance().tintColor = UIColor(Color.lightBlue)
-        UIRefreshControl.appearance().attributedTitle = NSAttributedString(string: "Refreshing...", attributes: [NSAttributedString.Key.foregroundColor: UIColor(Color.lightBlue)])
+        UIRefreshControl.appearance().tintColor = UIColor(Color.theme.text)
+        UIRefreshControl.appearance().attributedTitle = NSAttributedString(string: "Refreshing...", attributes: [NSAttributedString.Key.foregroundColor: UIColor(Color.theme.text)])
         return true
     }
     
