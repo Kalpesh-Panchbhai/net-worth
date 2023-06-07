@@ -109,7 +109,7 @@ extension MainScreenTabBarView {
             ZStack {
                 if localSelection == tab {
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(Color.lightBlue.opacity(0.2))
+                        .fill(Color.theme.text.opacity(0.2))
                         .matchedGeometryEffect(id: "background_rectangle", in: namespace)
                 }
             }
