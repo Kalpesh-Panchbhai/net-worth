@@ -22,8 +22,8 @@ struct WatchView: View {
                 if (!watchViewModel.watchListLoad) {
                     //MARK: Loading View
                     ZStack {
-                        Color.navyBlue.ignoresSafeArea()
-                        ProgressView().tint(Color.lightBlue)
+                        Color.theme.background.ignoresSafeArea()
+                        ProgressView().tint(Color.theme.text)
                     }
                 } else {
                     List {
@@ -51,7 +51,7 @@ struct WatchView: View {
                                         }
                                         self.updateWatchViewOpen.toggle()
                                     }
-                                    .tint(.green)
+                                    .tint(Color.theme.green)
                                 }
                             })
                             // MARK: Delete
@@ -63,13 +63,14 @@ struct WatchView: View {
                                             await watchViewModel.getAllWatchList()
                                         }
                                     }
-                                    .tint(.red)
+                                    .tint(Color.theme.red)
                                 }
                             })
                         }
-                        .listRowBackground(Color.white)
-                        .foregroundColor(Color.navyBlue)
                     }
+                    .shadow(color: Color.theme.text, radius: 3)
+                    .listRowBackground(Color.theme.background)
+                    .foregroundColor(Color.theme.text)
                     .refreshable {
                         Task.init {
                             await watchViewModel.getAllWatchList()
@@ -84,7 +85,7 @@ struct WatchView: View {
                         self.newWatchListViewOpen.toggle()
                     }, label: {
                         Image(systemName: "plus")
-                            .foregroundColor(Color.lightBlue)
+                            .foregroundColor(Color.theme.text)
                             .bold()
                     })
                     .font(.system(size: 14).bold())
@@ -100,7 +101,7 @@ struct WatchView: View {
                 UpdateWatchView(watchViewModel: watchViewModel)
                     .presentationDetents([.medium])
             }
-            .background(Color.navyBlue)
+            .background(Color.theme.background)
             .scrollContentBackground(.hidden)
             .navigationTitle("Watch Lists")
             .navigationBarTitleDisplayMode(.inline)

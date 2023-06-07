@@ -24,16 +24,16 @@ struct UpdateWatchView: View {
             Form {
                 Section("Update Watch List") {
                     TextField("Updated Watch List name", text: $watchViewModel.watch.accountName)
-                        .listRowBackground(Color.white)
-                        .colorMultiply(Color.navyBlue)
+                        .foregroundColor(Color.theme.text)
                 }
-                .foregroundColor(Color.lightBlue)
+                .listRowBackground(Color.theme.background)
+                .foregroundColor(Color.theme.text)
             }
             VStack {
                 Text("Update")
             }.frame(width: 350, height: 50)
-                .foregroundColor(.white)
-                .background(.green)
+                .foregroundColor(Color.theme.text)
+                .background(Color.theme.green)
                 .bold()
                 .cornerRadius(10)
                 .onTapGesture {
@@ -49,7 +49,7 @@ struct UpdateWatchView: View {
                 }
             Spacer()
         }
-        .background(Color.navyBlue)
+        .background(Color.theme.background)
         .scrollContentBackground(.hidden)
         .alert(isPresented: $isFieldEmpty) {
             Alert(title: Text("Watch List Name cannot be empty"))

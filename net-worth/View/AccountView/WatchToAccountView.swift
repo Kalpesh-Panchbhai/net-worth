@@ -20,16 +20,18 @@ struct WatchToAccountView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Spacer(minLength: 20)
+                Spacer()
                 ScrollView(.vertical) {
                     LazyVStack {
                         ForEach(watchViewModel.watchList, id: \.self) { watchList in
                             RowWatchToAccountView(account: account, watch: watchList, isAdded: watchList.accountID.contains(account.id!))
+                                .shadow(color: Color.theme.text, radius: 3)
+                                .padding(.top, 10)
                         }
                     }
                 }
             }
-            .background(Color.navyBlue)
+            .background(Color.theme.background)
         }
         .blur(radius: CGFloat(scenePhaseBlur))
         .onChange(of: scenePhase, perform: { value in

@@ -28,17 +28,17 @@ struct WatchDetailView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.navyBlue.ignoresSafeArea()
+                Color.theme.background.ignoresSafeArea()
                 VStack {
                     if(watchViewModel.watch.accountID.count > 0) {
                         // MARK: Balance Card
                         VStack {
                             BalanceCardView(accountType: watch.accountName, isWatchListCardView: true, watchList: watchViewModel.watch, accountViewModel: accountViewModel)
-                                .frame(width: 360, height: 50)
+                                .frame(width: 360, height: 70)
                                 .cornerRadius(10)
                         }
                         .padding(.top, 5)
-                        .shadow(color: Color.navyBlue, radius: 3)
+                        .shadow(color: Color.theme.text, radius: 3)
                         
                         Divider()
                         ScrollView(.vertical, showsIndicators: false) {
@@ -50,7 +50,7 @@ struct WatchDetailView: View {
                                             .toolbarRole(.editor)
                                     }, label: {
                                         AccountRowView(account: Account(id: account))
-                                            .shadow(color: Color.navyBlue, radius: 3)
+                                            .shadow(color: Color.theme.text, radius: 3)
                                             .contextMenu {
                                                 Label(account, systemImage: "info.square")
                                                 // MARK: Delete
@@ -172,7 +172,7 @@ struct WatchDetailView: View {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(Color.lightBlue)
+                    .foregroundColor(Color.theme.text)
                     .bold()
             }
                 .font(.system(size: 14).bold())
@@ -184,7 +184,7 @@ struct WatchDetailView: View {
                         self.addAccountViewOpen.toggle()
                     }, label: {
                         Image(systemName: "plus")
-                            .foregroundColor(Color.lightBlue)
+                            .foregroundColor(Color.theme.text)
                             .bold()
                     })
                     .font(.system(size: 14).bold())
@@ -197,7 +197,7 @@ struct WatchDetailView: View {
                         self.isChartViewOpen.toggle()
                     }, label: {
                         Image(systemName: "chart.line.uptrend.xyaxis")
-                            .foregroundColor(Color.lightBlue)
+                            .foregroundColor(Color.theme.text)
                             .bold()
                     })
                     .font(.system(size: 14).bold())
@@ -269,7 +269,7 @@ struct WatchDetailView: View {
                         })
                     }, label: {
                         Image(systemName: "ellipsis")
-                            .foregroundColor(Color.lightBlue)
+                            .foregroundColor(Color.theme.text)
                             .bold()
                     })
                     .font(.system(size: 14).bold())
