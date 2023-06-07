@@ -42,7 +42,7 @@ struct NewIncomeView: View {
                             Text($0.name).tag($0)
                         }
                     }
-                    .colorMultiply(Color.navyBlue)
+                    .foregroundColor(Color.theme.text)
                     .onChange(of: incomeTypeSelected) { _ in
                         amount="0.0"
                         taxPaid="0.0"
@@ -81,7 +81,7 @@ struct NewIncomeView: View {
                             })
                             .multilineTextAlignment(.trailing)
                     }
-                    .foregroundColor(Color.navyBlue)
+                    .foregroundColor(Color.theme.text)
                     
                     HStack {
                         Text("Tax Paid")
@@ -116,15 +116,15 @@ struct NewIncomeView: View {
                             })
                             .multilineTextAlignment(.trailing)
                     }
-                    .foregroundColor(Color.navyBlue)
+                    .foregroundColor(Color.theme.text)
                     
                     HStack{
                         DatePicker("Credited on", selection: $date, in: ...Date(), displayedComponents: [.date])
                     }
-                    .colorMultiply(Color.navyBlue)
+                    .foregroundColor(Color.theme.text)
                     
                     CurrencyPicker(currenySelected: $currencySelected)
-                        .colorMultiply(Color.navyBlue)
+                        .foregroundColor(Color.theme.text)
                     
                     Picker(selection: $incomeTagSelected, label: Text("Tag")) {
                         Text("Select").tag(IncomeTag())
@@ -132,11 +132,12 @@ struct NewIncomeView: View {
                             Text($0.name).tag($0)
                         }
                     }
-                    .colorMultiply(Color.navyBlue)
+                    .foregroundColor(Color.theme.text)
                 }
-                .listRowBackground(Color.white)
-                .foregroundColor(Color.lightBlue)
+                .listRowBackground(Color.theme.background)
+                .foregroundColor(Color.theme.text)
             }
+            .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
             .toolbar {
                 // MARK: ToolbarItem for Checkmark
                 ToolbarItem {
@@ -149,11 +150,11 @@ struct NewIncomeView: View {
                     }, label: {
                         if(!allFieldsFilled()) {
                             Image(systemName: "checkmark")
-                                .foregroundColor(Color.lightBlue.opacity(0.3))
+                                .foregroundColor(Color.theme.text.opacity(0.3))
                                 .bold()
                         } else {
                             Image(systemName: "checkmark")
-                                .foregroundColor(Color.lightBlue)
+                                .foregroundColor(Color.theme.text)
                                 .bold()
                         }
                     })
@@ -175,7 +176,7 @@ struct NewIncomeView: View {
                         })
                     }, label: {
                         Image(systemName: "ellipsis")
-                            .foregroundColor(Color.lightBlue)
+                            .foregroundColor(Color.theme.text)
                             .bold()
                     })
                     .font(.system(size: 14).bold())
@@ -211,7 +212,7 @@ struct NewIncomeView: View {
             })
             .navigationTitle("New Income")
             .navigationBarTitleDisplayMode(.inline)
-            .background(Color.navyBlue)
+            .background(Color.theme.background)
             .scrollContentBackground(.hidden)
         }
         .blur(radius: CGFloat(scenePhaseBlur))

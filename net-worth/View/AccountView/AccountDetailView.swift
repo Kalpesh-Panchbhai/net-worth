@@ -44,7 +44,7 @@ struct AccountDetailView: View {
             VStack {
                 AccountDetailCardView(accountViewModel: accountViewModel)
                     .cornerRadius(10)
-                    .shadow(color: Color.theme.text, radius: 3)
+                    .shadow(color: Color.theme.text.opacity(0.3),radius: 10, x: 0, y: 5)
                 Picker(selection: $tabItem, content: {
                     Text("Transactions (\(accountViewModel.accountTransactionList.count))").tag(1)
                     Text("Chart").tag(2)

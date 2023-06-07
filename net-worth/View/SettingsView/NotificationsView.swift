@@ -42,94 +42,97 @@ struct NotificationsView: View {
                         .onChange(of: mutualFundNotification) { newValue in
                             notificationController.setNotification(newValue: newValue, accountType: "MUTUALFUND")
                         }
-                        .foregroundColor(Color.navyBlue)
+//                        .foregroundColor(Color.navyBlue)
                 }
-                .listRowBackground(Color.white)
-                .foregroundColor(Color.lightBlue)
+//                .listRowBackground(Color.theme.background)
+//                .foregroundColor(Color.lightBlue)
                 
                 Section("Equity Notifications") {
                     Toggle("Show Notifications", isOn: $equityNotification)
                         .onChange(of: equityNotification) { newValue in
                             notificationController.setNotification(newValue: newValue, accountType: "EQUITY")
                         }
-                        .foregroundColor(Color.navyBlue)
+//                        .foregroundColor(Color.navyBlue)
                 }
-                .listRowBackground(Color.white)
-                .foregroundColor(Color.lightBlue)
+//                .listRowBackground(Color.white)
+//                .foregroundColor(Color.lightBlue)
                 
                 Section("ETF Notifications") {
                     Toggle("Show Notifications", isOn: $etfNotification)
                         .onChange(of: etfNotification) { newValue in
                             notificationController.setNotification(newValue: newValue, accountType: "ETF")
                         }
-                        .foregroundColor(Color.navyBlue)
+//                        .foregroundColor(Color.navyBlue)
                 }
-                .listRowBackground(Color.white)
-                .foregroundColor(Color.lightBlue)
+//                .listRowBackground(Color.white)
+//                .foregroundColor(Color.lightBlue)
                 
                 Section("Cryptocurrency Notifications") {
                     Toggle("Show Notifications", isOn: $cryptoCurrencyNotification)
                         .onChange(of: cryptoCurrencyNotification) { newValue in
                             notificationController.setNotification(newValue: newValue, accountType: "CRYPTOCURRENCY")
                         }
-                        .foregroundColor(Color.navyBlue)
+//                        .foregroundColor(Color.navyBlue)
                 }
-                .listRowBackground(Color.white)
-                .foregroundColor(Color.lightBlue)
+//                .listRowBackground(Color.white)
+//                .foregroundColor(Color.lightBlue)
                 
                 Section("Futures Notifications") {
                     Toggle("Show Notifications", isOn: $futureNotification)
                         .onChange(of: futureNotification) { newValue in
                             notificationController.setNotification(newValue: newValue, accountType: "FUTURE")
                         }
-                        .foregroundColor(Color.navyBlue)
+//                        .foregroundColor(Color.navyBlue)
                 }
-                .listRowBackground(Color.white)
-                .foregroundColor(Color.lightBlue)
+//                .listRowBackground(Color.white)
+//                .foregroundColor(Color.lightBlue)
                 
                 Section("Options Notifications") {
                     Toggle("Show Notifications", isOn: $optionNotification)
                         .onChange(of: optionNotification) { newValue in
                             notificationController.setNotification(newValue: newValue, accountType: "OPTION")
                         }
-                        .foregroundColor(Color.navyBlue)
+//                        .foregroundColor(Color.navyBlue)
                 }
-                .listRowBackground(Color.white)
-                .foregroundColor(Color.lightBlue)
+//                .listRowBackground(Color.white)
+//                .foregroundColor(Color.lightBlue)
                 
                 Section("Credit Card Notifications") {
                     Toggle("Show Notifications", isOn: $creditCardNotification)
                         .onChange(of: creditCardNotification) { newValue in
                             notificationController.setNotification(newValue: newValue, accountType: "Credit Card")
                         }
-                        .foregroundColor(Color.navyBlue)
+//                        .foregroundColor(Color.navyBlue)
                 }
-                .listRowBackground(Color.white)
-                .foregroundColor(Color.lightBlue)
+//                .listRowBackground(Color.white)
+//                .foregroundColor(Color.lightBlue)
                 
                 Section("Loan Notifications") {
                     Toggle("Show Notifications", isOn: $loanNotification)
                         .onChange(of: loanNotification) { newValue in
                             notificationController.setNotification(newValue: newValue, accountType: "Loan")
                         }
-                        .foregroundColor(Color.navyBlue)
+//                        .foregroundColor(Color.navyBlue)
                 }
-                .listRowBackground(Color.white)
-                .foregroundColor(Color.lightBlue)
+//                .listRowBackground(Color.white)
+//                .foregroundColor(Color.lightBlue)
                 
                 Section("Other Notifications") {
                     Toggle("Show Notifications", isOn: $otherNotification)
                         .onChange(of: otherNotification) { newValue in
                             notificationController.setNotification(newValue: newValue, accountType: "Other")
                         }
-                        .foregroundColor(Color.navyBlue)
+//                        .foregroundColor(Color.navyBlue)
                 }
-                .listRowBackground(Color.white)
-                .foregroundColor(Color.lightBlue)
+//                .listRowBackground(Color.white)
+//                .foregroundColor(Color.lightBlue)
             }
+            .shadow(color: Color.theme.text.opacity(0.3),radius: 10, x: 0, y: 5)
+            .listRowBackground(Color.theme.background)
+            .foregroundColor(Color.theme.text)
             .navigationTitle("Notifications")
             .listStyle(.insetGrouped)
-            .background(Color.navyBlue)
+            .background(Color.theme.background)
             .scrollContentBackground(.hidden)
             .navigationBarBackButtonHidden(true)
             .navigationBarItems(
@@ -137,7 +140,7 @@ struct NotificationsView: View {
                     self.presentationMode.wrappedValue.dismiss()
                 }) {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(Color.lightBlue)
+                        .foregroundColor(Color.theme.text)
                         .bold()
                 }
                     .font(.system(size: 14).bold())

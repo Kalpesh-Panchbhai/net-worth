@@ -29,7 +29,7 @@ struct NetWorthChartView: View {
                         Section {
                             SingleLineLollipopChartView(chartDataList: chartViewModel.chartDataList, isPercentageChart: true)
                         }
-                        .listRowBackground(Color.white)
+                        .listRowBackground(Color.theme.background)
                         
                         Section {
                             Picker(selection: $range, content: {
@@ -58,10 +58,11 @@ struct NetWorthChartView: View {
                             }
                             .pickerStyle(SegmentedPickerStyle())
                         }
-                        .listRowBackground(Color.navyBlue)
-                        .foregroundColor(Color.lightBlue)
+                        .listRowBackground(Color.theme.background)
+                        .foregroundColor(Color.theme.text)
                     }
-                    .background(Color.navyBlue)
+                    .shadow(color: Color.theme.text.opacity(0.3),radius: 10, x: 0, y: 5)
+                    .background(Color.theme.background)
                     .scrollContentBackground(.hidden)
                 }
             }

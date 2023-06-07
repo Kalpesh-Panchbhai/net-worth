@@ -135,7 +135,7 @@ struct NewAccountView: View {
                 .listRowBackground(Color.theme.background)
                 .foregroundColor(Color.theme.text)
             }
-            .shadow(color: Color.theme.text, radius: 3)
+            .shadow(color: Color.theme.text.opacity(0.3),radius: 10, x: 0, y: 5)
             .toolbar {
                 ToolbarItem {
                     Button(action: {
@@ -281,7 +281,7 @@ struct NewAccountView: View {
                 RoundedRectangle(cornerRadius: 6)
                     .frame(width: 25, height: 25)
                     .foregroundColor(Color.theme.text)
-                    .shadow(color: Color.theme.text, radius: 2)
+                    .shadow(color: Color.theme.text.opacity(0.3),radius: 3, x: 0, y: 5)
                 Button(action: {
                     if isPlus {
                         isPlus = false

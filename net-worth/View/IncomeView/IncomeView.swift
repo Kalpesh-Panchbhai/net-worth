@@ -32,24 +32,24 @@ struct IncomeView: View {
                 if(incomeViewModel.incomeList.isEmpty && incomeViewModel.incomeListLoaded) {
                     // MARK: Empty View
                     ZStack {
-                        Color.navyBlue.ignoresSafeArea()
+                        Color.theme.background.ignoresSafeArea()
                         HStack {
                             Text("Click on")
                             Image(systemName: "plus")
                             Text("Icon to add new Income.")
                         }
-                        .foregroundColor(Color.lightBlue)
+                        .foregroundColor(Color.theme.text)
                         .bold()
                     }
                 }  else if (!incomeViewModel.incomeListLoaded) {
                     // MARK: Loading View
                     ZStack {
-                        Color.navyBlue.ignoresSafeArea()
-                        ProgressView().tint(Color.lightBlue)
+                        Color.theme.background.ignoresSafeArea()
+                        ProgressView().tint(Color.theme.text)
                     }
                 } else {
                     ZStack {
-                        Color.navyBlue.ignoresSafeArea()
+                        Color.theme.background.ignoresSafeArea()
                         VStack {
                             // MARK: Total Amount View
                             VStack {
@@ -59,7 +59,6 @@ struct IncomeView: View {
                                     incomeTotalAmount
                                 }
                             }
-                            .shadow(color: Color.navyBlue, radius: 3)
                             Divider()
                             // MARK: List View
                             VStack {
@@ -78,9 +77,10 @@ struct IncomeView: View {
                                         }
                                     }
                                     .onDelete(perform: deleteIncome)
-                                    .listRowBackground(Color.white)
-                                    .foregroundColor(Color.navyBlue)
+                                    .listRowBackground(Color.theme.background)
+                                    .foregroundColor(Color.theme.text)
                                 }
+                                .shadow(color: Color.theme.text.opacity(0.3),radius: 10, x: 0, y: 5)
                                 // MARK: List View Scroll Indicator
                                 .scrollIndicators(ScrollIndicatorVisibility.hidden)
                                 // MARK: List View Refreshable
@@ -100,7 +100,7 @@ struct IncomeView: View {
                                             self.isChartViewOpen.toggle()
                                         }, label: {
                                             Label("Income Chart", systemImage: "chart.line.uptrend.xyaxis")
-                                                .foregroundColor(Color.lightBlue)
+                                                .foregroundColor(Color.theme.text)
                                                 .bold()
                                         })
                                         .font(.system(size: 14).bold())
@@ -186,13 +186,13 @@ struct IncomeView: View {
                                             })
                                         }, label: {
                                             Image(systemName: "ellipsis")
-                                                .foregroundColor(Color.lightBlue)
+                                                .foregroundColor(Color.theme.text)
                                                 .bold()
                                         })
                                         .font(.system(size: 14).bold())
                                     }
                                 }
-                                .background(Color.navyBlue)
+                                .background(Color.theme.background)
                                 .scrollContentBackground(.hidden)
                             }
                         }
@@ -206,7 +206,7 @@ struct IncomeView: View {
                         self.isNewIncomeViewOpen.toggle()
                     }, label: {
                         Image(systemName: "plus")
-                            .foregroundColor(Color.lightBlue)
+                            .foregroundColor(Color.theme.text)
                             .bold()
                     })
                     .font(.system(size: 14).bold())
@@ -251,28 +251,28 @@ struct IncomeView: View {
     private var incomeTotalAmount: some View {
         HStack {
             Text("Total Income: \(SettingsController().getDefaultCurrency().code) \(incomeViewModel.incomeTotalAmount.withCommas(decimalPlace: 2))")
-                .foregroundColor(Color.navyBlue)
+                .foregroundColor(Color.theme.text)
                 .bold()
         }
         .padding(6)
         .frame(width: 360, height: 50)
-        .background(Color.white)
+        .background(Color.theme.background)
         .cornerRadius(10)
-        .shadow(color: Color.navyBlue.opacity(0.3),radius: 10, x: 0, y: 5)
+        .shadow(color: Color.theme.text.opacity(0.3),radius: 5, x: 0, y: 5)
         .padding(.horizontal)
     }
     
     private var incomeTotalTaxPaid: some View {
         HStack {
             Text("Total Tax Paid: \(SettingsController().getDefaultCurrency().code) \(incomeViewModel.incomeTaxPaidAmount.withCommas(decimalPlace: 2))")
-                .foregroundColor(Color.navyBlue)
+                .foregroundColor(Color.theme.text)
                 .bold()
         }
         .padding(6)
         .frame(width: 360, height: 50)
-        .background(Color.white)
+        .background(Color.theme.background)
         .cornerRadius(10)
-        .shadow(color: Color.navyBlue.opacity(0.3),radius: 10, x: 0, y: 5)
+        .shadow(color: Color.theme.text.opacity(0.3),radius: 5, x: 0, y: 5)
         .padding(.horizontal)
     }
     

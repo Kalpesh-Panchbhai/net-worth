@@ -68,7 +68,7 @@ struct WatchView: View {
                             })
                         }
                     }
-                    .shadow(color: Color.theme.text, radius: 3)
+                    .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
                     .listRowBackground(Color.theme.background)
                     .foregroundColor(Color.theme.text)
                     .refreshable {

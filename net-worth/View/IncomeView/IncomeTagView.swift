@@ -23,13 +23,13 @@ struct IncomeTagView: View {
             if(incomeViewModel.incomeTagList.isEmpty) {
                 // MARK: Empty View
                 ZStack {
-                    Color.navyBlue.ignoresSafeArea()
+                    Color.theme.background.ignoresSafeArea()
                     HStack {
                         Text("Click on")
                         Image(systemName: "plus")
                         Text("Icon to add new Income Tag.")
                     }
-                    .foregroundColor(Color.lightBlue)
+                    .foregroundColor(Color.theme.text)
                     .bold()
                 }
             } else {
@@ -41,7 +41,7 @@ struct IncomeTagView: View {
                             if(item.isdefault) {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 10)
-                                        .fill(Color.green.opacity(0.5))
+                                        .fill(Color.theme.green.opacity(0.5))
                                         .frame(width: 60, height: 15)
                                     Text("DEFAULT")
                                         .font(.system(size: 10))
@@ -68,10 +68,11 @@ struct IncomeTagView: View {
                             }
                         }
                     }
-                    .listRowBackground(Color.white)
-                    .foregroundColor(Color.navyBlue)
+                    .listRowBackground(Color.theme.background)
+                    .foregroundColor(Color.theme.text)
                 }
-                .background(Color.navyBlue)
+                .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
+                .background(Color.theme.background)
                 .scrollContentBackground(.hidden)
             }
         }
@@ -82,7 +83,7 @@ struct IncomeTagView: View {
                     self.addNewIncomeTagOpenView.toggle()
                 }, label: {
                     Image(systemName: "plus")
-                        .foregroundColor(Color.lightBlue)
+                        .foregroundColor(Color.theme.text)
                         .bold()
                 })
                 .font(.system(size: 14).bold())
@@ -105,7 +106,7 @@ struct IncomeTagView: View {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(Color.lightBlue)
+                    .foregroundColor(Color.theme.text)
                     .bold()
             }
                 .font(.system(size: 14).bold())

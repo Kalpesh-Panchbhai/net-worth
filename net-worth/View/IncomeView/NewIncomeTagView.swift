@@ -26,13 +26,12 @@ struct NewIncomeTagView: View {
             Form {
                 Section("Income Tag detail") {
                     TextField("Tag name", text: $tagName)
-                        .colorMultiply(Color.navyBlue)
-                    Toggle("Make it Default Tag", isOn: $isDefault)
-                        .foregroundColor(Color.navyBlue)
+                    Toggle("Default Tag", isOn: $isDefault)
                 }
-                .listRowBackground(Color.white)
-                .foregroundColor(Color.lightBlue)
+                .listRowBackground(Color.theme.background)
+                .foregroundColor(Color.theme.text)
             }
+            .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
             .toolbar {
                 ToolbarItem {
                     Button(action: {
@@ -44,11 +43,11 @@ struct NewIncomeTagView: View {
                     }, label: {
                         if(tagName.isEmpty) {
                             Image(systemName: "checkmark")
-                                .foregroundColor(Color.lightBlue.opacity(0.3))
+                                .foregroundColor(Color.theme.text.opacity(0.3))
                                 .bold()                                
                         } else {
                             Image(systemName: "checkmark")
-                                .foregroundColor(Color.lightBlue)
+                                .foregroundColor(Color.theme.text)
                                 .bold()
                         }
                     })
@@ -58,7 +57,7 @@ struct NewIncomeTagView: View {
             }
             .navigationTitle("New Income Tag")
             .navigationBarTitleDisplayMode(.inline)
-            .background(Color.navyBlue)
+            .background(Color.theme.background)
             .scrollContentBackground(.hidden)
         }
         .blur(radius: CGFloat(scenePhaseBlur))

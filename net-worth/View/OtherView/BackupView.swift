@@ -54,8 +54,8 @@ struct BackupView: View {
                     incomeTag
                     incomeType
                 }
-                .listRowBackground(Color.white)
-                .foregroundColor(Color.navyBlue)
+                .listRowBackground(Color.theme.background)
+                .foregroundColor(Color.theme.text)
                 
                 VStack(alignment: .leading) {
                     Text("Data in Cloud")
@@ -68,10 +68,11 @@ struct BackupView: View {
                     incomeTagInCloud
                     incomeTypeInCloud
                 }
-                .listRowBackground(Color.white)
-                .foregroundColor(Color.navyBlue)
+                .listRowBackground(Color.theme.background)
+                .foregroundColor(Color.theme.text)
             }
-            .background(Color.navyBlue)
+            .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
+            .background(Color.theme.background)
             .scrollContentBackground(.hidden)
         }
         .onAppear {
@@ -97,7 +98,7 @@ struct BackupView: View {
                     }
                 }, label: {
                     Image(systemName: "tray.and.arrow.down.fill")
-                        .foregroundColor(Color.lightBlue)
+                        .foregroundColor(Color.theme.text)
                         .bold()
                 })
                 .font(.system(size: 14).bold())
@@ -110,7 +111,7 @@ struct BackupView: View {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(Color.lightBlue)
+                    .foregroundColor(Color.theme.text)
                     .bold()
             }
                 .font(.system(size: 14).bold())

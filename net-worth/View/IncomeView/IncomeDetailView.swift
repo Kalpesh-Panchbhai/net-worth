@@ -21,41 +21,37 @@ struct IncomeDetailView: View {
                     Spacer()
                     Text(income.tag)
                 }
-                .foregroundColor(Color.navyBlue)
                 
                 HStack {
                     Text("Income Type")
                     Spacer()
                     Text(income.type)
                 }
-                .foregroundColor(Color.navyBlue)
                 
                 HStack {
                     Text("Amount")
                     Spacer()
                     Text(income.currency + " \(income.amount.withCommas(decimalPlace: 2))")
                 }
-                .foregroundColor(Color.navyBlue)
                 
                 HStack {
                     Text("Tax Paid")
                     Spacer()
                     Text(income.currency + " \(income.taxpaid.withCommas(decimalPlace: 2))")
                 }
-                .foregroundColor(Color.navyBlue)
                 
                 HStack {
                     Text("Credited On")
                     Spacer()
                     Text(income.creditedOn.getDateAndFormat())
                 }
-                .foregroundColor(Color.navyBlue)
                 
             }
-            .listRowBackground(Color.white)
-            .foregroundColor(Color.lightBlue)
+            .listRowBackground(Color.theme.background)
+            .foregroundColor(Color.theme.text)
         }
-        .background(Color.navyBlue)
+        .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
+        .background(Color.theme.background)
         .scrollContentBackground(.hidden)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(
@@ -63,7 +59,7 @@ struct IncomeDetailView: View {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(Color.lightBlue)
+                    .foregroundColor(Color.theme.text)
                     .bold()
             }
                 .font(.system(size: 14).bold())

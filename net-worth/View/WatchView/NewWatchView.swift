@@ -25,11 +25,11 @@ struct NewWatchView: View {
             Form {
                 Section("New Watch List") {
                     TextField("Watch List name", text: $watchListName)
-                        .foregroundColor(Color.theme.text)
                 }
                 .listRowBackground(Color.theme.background)
                 .foregroundColor(Color.theme.text)
             }
+            .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
             VStack {
                 Text("Submit")
             }.frame(width: 350, height: 50)
@@ -50,6 +50,7 @@ struct NewWatchView: View {
                         dismiss()
                     }
                 }
+                .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
             Spacer()
         }
         .background(Color.theme.background)

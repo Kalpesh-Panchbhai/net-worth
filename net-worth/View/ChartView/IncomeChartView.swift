@@ -49,9 +49,11 @@ struct IncomeChartView: View {
                     HStack {
                         if(taxPaidView) {
                             Text(totalTaxPaid.stringFormat)
+                                .foregroundColor(Color.theme.text)
                                 .font(.title3.bold())
                         } else {
                             Text(totalAmount.stringFormat)
+                                .foregroundColor(Color.theme.text)
                                 .font(.title3.bold())
                         }
                         Spacer()
@@ -68,7 +70,7 @@ struct IncomeChartView: View {
                                 }
                             }
                         }.buttonStyle(.borderedProminent)
-                            .tint(self.cumulativeView ? .green : .blue)
+                            .tint(self.cumulativeView ? Color.theme.green : .blue)
                             .font(.system(size: 13))
                         Button("Tax Paid") {
                             self.taxPaidView.toggle()
@@ -83,7 +85,7 @@ struct IncomeChartView: View {
                                 }
                             }
                         }.buttonStyle(.borderedProminent)
-                            .tint(self.taxPaidView ? .green : .blue)
+                            .tint(self.taxPaidView ? Color.theme.green : .blue)
                             .font(.system(size: 13))
                     }
                     
@@ -93,14 +95,15 @@ struct IncomeChartView: View {
                 .padding()
                 .background {
                     RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(.black.shadow(.drop(radius: 2)))
+                        .fill(Color.theme.background.shadow(.drop(radius: 2)))
                 }
             }
+            .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .padding()
             .navigationTitle("Income Chart")
             .navigationBarTitleDisplayMode(.inline)
-            .background(Color.navyBlue)
+            .background(Color.theme.background)
             .toolbar {
                 if !incomeViewModel.incomeList.isEmpty {
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -122,7 +125,7 @@ struct IncomeChartView: View {
                                 }
                             }, label: {
                                 Text("Clear")
-                                    .foregroundColor(Color.lightBlue)
+                                    .foregroundColor(Color.theme.text)
                                     .bold()
                             })
                             .font(.system(size: 14).bold())
@@ -234,7 +237,7 @@ struct IncomeChartView: View {
                             })
                         }, label: {
                             Image(systemName: "ellipsis")
-                                .foregroundColor(Color.lightBlue)
+                                .foregroundColor(Color.theme.text)
                                 .font(.system(size: 14).bold())
                         })
                         .font(.system(size: 14).bold())
@@ -261,14 +264,14 @@ struct IncomeChartView: View {
                     x: .value("Time", income.creditedOn),
                     y: .value("Amount",income.animate ? (cumulativeView ? (taxPaidView ? income.cumulativeTaxPaid : income.cumulativeAmount) : (taxPaidView ? income.taxpaid : income.amount)) : 0.0)
                 )
-                .foregroundStyle(Color.blue.gradient)
+                .foregroundStyle(Color.theme.text.gradient)
                 .interpolationMethod(.catmullRom)
                 
                 AreaMark(
                     x: .value("Time", income.creditedOn),
                     y: .value("Amount",income.animate ? (cumulativeView ? (taxPaidView ? income.cumulativeTaxPaid : income.cumulativeAmount) : (taxPaidView ? income.taxpaid : income.amount)) : 0.0)
                 )
-                .foregroundStyle(Color.blue.opacity(0.1).gradient)
+                .foregroundStyle(Color.theme.text.opacity(0.1).gradient)
                 .interpolationMethod(.catmullRom)
                 
                 if let currentActiveIncome, currentActiveIncome.id == income.id {
@@ -314,6 +317,7 @@ struct IncomeChartView: View {
                 AxisTick()
                 AxisValueLabel {
                     Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))")
+                        .foregroundColor(Color.theme.text)
                 }
             }
         }

@@ -37,16 +37,16 @@ struct SettingsView: View {
                     VStack() {
                         Image(uiImage: profilePhoto)
                             .clipShape(Circle())
-                            .shadow(color: Color.navyBlue, radius: 3)
+                            .shadow(color: Color.theme.text.opacity(0.3),radius: 10, x: 0, y: 5)
                             .frame(width: 100, height: 100)
                         
                         Text(Auth.auth().currentUser?.displayName ?? "")
                             .font(.system(size: 25))
                             .bold()
-                            .foregroundColor(Color.lightBlue)
+                            .foregroundColor(Color.theme.text)
                         Text(Auth.auth().currentUser?.email ?? "")
                             .font(.system(size: 15))
-                            .foregroundColor(Color.lightBlue)
+                            .foregroundColor(Color.theme.text)
                         
                     }
                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -60,20 +60,20 @@ struct SettingsView: View {
                 }).onChange(of: isAuthenticationRequired) { newValue in
                     settingsController.setAuthentication(newValue: newValue)
                 }
-                .foregroundColor(Color.navyBlue)
-                .listRowBackground(Color.white)
+                .foregroundColor(Color.theme.text)
+                .listRowBackground(Color.theme.background)
                 // MARK: Notification View Link
                 NavigationLink(destination: {
                     NotificationsView()
                 }, label: {
                     Label("Notifications", systemImage: "play.square")
                 })
-                .foregroundColor(Color.navyBlue)
-                .listRowBackground(Color.white)
+                .foregroundColor(Color.theme.text)
+                .listRowBackground(Color.theme.background)
                 // MARK: Default Currency Picker
                 DefaultCurrencyPicker(currenySelected: $currenySelected)
-                    .foregroundColor(Color.navyBlue)
-                    .listRowBackground(Color.white)
+                    .foregroundColor(Color.theme.text)
+                    .listRowBackground(Color.theme.background)
                 // MARK: Income Type View
                 NavigationLink(destination: {
                     IncomeTypeView(incomeViewModel: incomeViewModel)
@@ -88,8 +88,8 @@ struct SettingsView: View {
                         Image(systemName: "tray.and.arrow.down")
                     })
                 })
-                .foregroundColor(Color.navyBlue)
-                .listRowBackground(Color.white)
+                .foregroundColor(Color.theme.text)
+                .listRowBackground(Color.theme.background)
                 // MARK: Income Tag View
                 NavigationLink(destination: {
                     IncomeTagView(incomeViewModel: incomeViewModel)
@@ -104,16 +104,16 @@ struct SettingsView: View {
                         Image(systemName: "tag.square")
                     })
                 })
-                .foregroundColor(Color.navyBlue)
-                .listRowBackground(Color.white)
+                .foregroundColor(Color.theme.text)
+                .listRowBackground(Color.theme.background)
                 // MARK: Backup View
                 NavigationLink(destination: {
                     BackupView()
                 }, label: {
                     Label("Backup", systemImage: "folder")
                 })
-                .foregroundColor(Color.navyBlue)
-                .listRowBackground(Color.white)
+                .foregroundColor(Color.theme.text)
+                .listRowBackground(Color.theme.background)
                 // MARK: Delete Account & Data
                 Button(action: {
                     isPresentingDataAndAccountDeletionConfirmation.toggle()
@@ -126,8 +126,9 @@ struct SettingsView: View {
                             await deleteAccountAndData()
                         }
                     }
-                }.foregroundColor(.red)
-                    .listRowBackground(Color.white)
+                }
+                                      .foregroundColor(Color.theme.red)
+                                      .listRowBackground(Color.theme.background)
                 // MARK: Logout
                 Button(action: {
                     isPresentingLogoutConfirm.toggle()
@@ -139,21 +140,22 @@ struct SettingsView: View {
                         logoutUser()
                     }
                 }
-                                      .foregroundColor(Color.navyBlue)
-                                      .listRowBackground(Color.white)
+                                      .foregroundColor(Color.theme.text)
+                                      .listRowBackground(Color.theme.background)
                 // MARK: Application Version
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
                 let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
                 Label("Version " + (appVersion ?? "") + " Build(" + (buildVersion ?? "Unknown Build Version)") + ")", systemImage: "gear.badge.checkmark")
-                    .foregroundColor(Color.navyBlue)
-                    .listRowBackground(Color.white)
+                    .foregroundColor(Color.theme.text)
+                    .listRowBackground(Color.theme.background)
             }
+            .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .listStyle(.insetGrouped)
-            .background(Color.navyBlue)
+            .background(Color.theme.background)
             .scrollContentBackground(.hidden)
-            .foregroundColor(Color.lightBlue)
+            .foregroundColor(Color.theme.text)
         }
         .onAppear {
             Task.init {

@@ -48,7 +48,7 @@ struct ChartView: View {
                     })
                     .font(.system(size: 14))
                     .disabled(watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty)
-                    .foregroundColor((watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty) ? Color.gray : Color.lightBlue)
+                    .foregroundColor((watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty) ? Color.gray : Color.theme.text)
                     .bold()
                     
                     Spacer()
@@ -64,7 +64,7 @@ struct ChartView: View {
                     })
                     .font(.system(size: 14))
                     .disabled((watchListSelected.accountName.isEmpty && chartDataList.isEmpty && !compareAssetsToLiabilities && multipleWatchListSelection.isEmpty))
-                    .foregroundColor(((watchListSelected.accountName.isEmpty && chartDataList.isEmpty && !compareAssetsToLiabilities && multipleWatchListSelection.isEmpty) ? Color.gray : Color.lightBlue))
+                    .foregroundColor(((watchListSelected.accountName.isEmpty && chartDataList.isEmpty && !compareAssetsToLiabilities && multipleWatchListSelection.isEmpty) ? Color.gray : Color.theme.text))
                     .bold()
                 }
                 .padding(.horizontal, 20)
@@ -77,8 +77,6 @@ struct ChartView: View {
                     }, label: {
                         Text("Watch List")
                     })
-                    .listRowBackground(Color.white)
-                    .colorMultiply(Color.navyBlue)
                     .onChange(of: watchListSelected, perform: { _ in
                         if(watchListSelected.accountName.elementsEqual("Select")) {
                             compareAssetsToLiabilities = true
@@ -96,9 +94,8 @@ struct ChartView: View {
                             showingAssetsData = true
                         }
                     })
+                    
                     Toggle("Compare Assets and Liabilities", isOn: $compareAssetsToLiabilities)
-                        .listRowBackground(Color.white)
-                        .foregroundColor(Color.navyBlue)
                         .onChange(of: compareAssetsToLiabilities) { value in
                             if(value) {
                                 watchListSelected = Watch()
@@ -139,8 +136,6 @@ struct ChartView: View {
                     }, label: {
                         Text("Compare Multiple WatchLists")
                     })
-                    .listRowBackground(Color.white)
-                    .foregroundColor(Color.navyBlue)
                     
                     PieChartView(
                         values: chartDataList.map {
@@ -152,12 +147,12 @@ struct ChartView: View {
                         formatter: {value in String(format: "%.2f", value)},
                         colors: chartDataList.map { _ in
                                 .random
-                        }, backgroundColor: Color.white)
-                    
-                    .listRowBackground(Color.white)
-                    .foregroundColor(Color.navyBlue)
+                        }, backgroundColor: Color.theme.background)
                     .frame(minHeight: 550)
                 }
+                .shadow(color: Color.theme.text.opacity(0.3),radius: 10, x: 0, y: 5)
+                .listRowBackground(Color.theme.background)
+                .foregroundColor(Color.theme.text)
             }
             .toolbar {
                 ToolbarItem {
@@ -165,7 +160,7 @@ struct ChartView: View {
                         self.showNetWorthChart.toggle()
                     }, label: {
                         Text("Net worth")
-                            .foregroundColor(Color.lightBlue)
+                            .foregroundColor(Color.theme.text)
                     })
                     .font(.system(size: 14).bold())
                 }
@@ -176,7 +171,7 @@ struct ChartView: View {
             .scrollIndicators(.hidden)
             .navigationTitle("Charts")
             .navigationBarTitleDisplayMode(.inline)
-            .background(Color.navyBlue)
+            .background(Color.theme.background)
             .scrollContentBackground(.hidden)
         }
     }
@@ -213,11 +208,11 @@ struct ChartView: View {
                     watchListSelected = Watch()
                 }
             })
-            .listRowBackground(Color.white)
+            .listRowBackground(Color.theme.background)
         }
         .navigationTitle("Select Watch Lists")
-        .foregroundColor(Color.navyBlue)
-        .background(Color.navyBlue)
+        .foregroundColor(Color.theme.text)
+        .background(Color.theme.background)
         .scrollContentBackground(.hidden)
     }
     
