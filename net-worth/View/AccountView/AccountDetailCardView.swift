@@ -17,6 +17,7 @@ struct AccountDetailCardView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
+            Spacer()
             HStack {
                 Text(accountViewModel.account.currency)
                     .foregroundColor(Color.navyBlue)
@@ -26,39 +27,45 @@ struct AccountDetailCardView: View {
                     .font(.caption.bold())
                 Spacer()
                 if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
-                    Label("", systemImage: "bell.fill")
+                    Image(systemName: "bell.fill")
                         .foregroundColor(Color.navyBlue)
                         .font(.caption.bold())
                     Text("\(accountViewModel.account.paymentDate)")
                         .foregroundColor(Color.navyBlue)
                         .font(.caption.bold())
                 } else if(accountViewModel.account.accountType != "Saving") {
-                    Label("", systemImage: "bell.slash.fill")
+                    Image(systemName: "bell.slash.fill")
                         .foregroundColor(Color.navyBlue)
                         .font(.caption.bold())
                 }
             }
+            Spacer()
             HStack {
                 if(getTotalChangeForNonSymbol() >= 0) {
+                    if(getTotalChangeForNonSymbol() > 0) {
+                        Image(systemName: "arrow.up")
+                            .foregroundColor(.green)
+                            .font(.caption.bold())
+                    }
                     Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
                         .foregroundColor(.green)
                         .font(.caption.bold())
-                        .padding(.bottom)
                     Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
                         .foregroundColor(.green)
                         .font(.caption.bold())
-                        .padding(.bottom)
                 } else {
+                    Image(systemName: "arrow.down")
+                        .foregroundColor(.red)
+                        .font(.caption.bold())
                     Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
                         .foregroundColor(.red)
                         .font(.caption.bold())
-                        .padding(.bottom)
                     Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
                         .foregroundColor(.red)
                         .font(.caption.bold())
-                        .padding(.bottom)
                 }
             }
+            Spacer()
         }
         .padding(.horizontal)
         .frame(width: 360,height: 50)

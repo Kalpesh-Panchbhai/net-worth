@@ -19,18 +19,18 @@ struct AccountRowView: View {
             HStack {
                 Text(accountViewModel.account.accountName)
                     .foregroundColor(Color.navyBlue)
-                    .font(.headline)
+                    .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)
                 Spacer()
                 if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
-                    Label("", systemImage: "bell.fill")
+                    Image(systemName: "bell.fill")
                         .foregroundColor(Color.navyBlue)
                         .font(.caption.bold())
                     Text("\(accountViewModel.account.paymentDate)")
                         .foregroundColor(Color.navyBlue)
                         .font(.caption.bold())
                 } else if(accountViewModel.account.accountType != "Saving") {
-                    Label("", systemImage: "bell.slash.fill")
+                    Image(systemName: "bell.slash.fill")
                         .foregroundColor(Color.navyBlue)
                         .font(.caption.bold())
                 }
@@ -47,25 +47,30 @@ struct AccountRowView: View {
             Spacer()
             HStack {
                 if(getTotalChangeForNonSymbol() >= 0) {
+                    if(getTotalChangeForNonSymbol() > 0) {
+                        Image(systemName: "arrow.up")
+                            .foregroundColor(.green)
+                            .font(.caption.bold())
+                    }
                     Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
                         .foregroundColor(.green)
                         .font(.caption.bold())
-                        .padding(.bottom)
                     Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
                         .foregroundColor(.green)
                         .font(.caption.bold())
-                        .padding(.bottom)
                 } else {
+                    Image(systemName: "arrow.down")
+                        .foregroundColor(.red)
+                        .font(.caption.bold())
                     Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
                         .foregroundColor(.red)
                         .font(.caption.bold())
-                        .padding(.bottom)
                     Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
                         .foregroundColor(.red)
                         .font(.caption.bold())
-                        .padding(.bottom)
                 }
             }
+            Spacer()
         }
         .onAppear {
             Task.init {

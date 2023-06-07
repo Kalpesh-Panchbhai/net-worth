@@ -10,7 +10,7 @@ import SwiftUI
 struct AccountCardView: View {
     
     var account: Account
-
+    
     @StateObject var accountViewModel = AccountViewModel()
     
     var body: some View {
@@ -19,22 +19,23 @@ struct AccountCardView: View {
             HStack {
                 Text(account.accountName)
                     .foregroundColor(Color.navyBlue)
-                    .font(.headline)
+                    .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)
                 Spacer()
                 if(account.paymentReminder && account.accountType != "Saving") {
-                    Label("", systemImage: "bell.fill")
+                    Image(systemName: "bell.fill")
                         .foregroundColor(Color.navyBlue)
                         .font(.caption.bold())
                     Text("\(account.paymentDate)")
                         .foregroundColor(Color.navyBlue)
                         .font(.caption.bold())
                 } else if(account.accountType != "Saving") {
-                    Label("", systemImage: "bell.slash.fill")
+                    Image(systemName: "bell.slash.fill")
                         .foregroundColor(Color.navyBlue)
                         .font(.caption.bold())
                 }
             }
+            Spacer()
             Spacer()
             HStack(alignment: .center) {
                 Text(account.currency)
@@ -44,27 +45,33 @@ struct AccountCardView: View {
                     .foregroundColor(Color.navyBlue)
                     .font(.caption.bold())
             }
+            Spacer()
             HStack {
                 if(getTotalChangeForNonSymbol() >= 0) {
+                    if(getTotalChangeForNonSymbol() > 0) {
+                        Image(systemName: "arrow.up")
+                            .foregroundColor(.green)
+                            .font(.system(size: 11).bold())
+                    }
                     Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
                         .foregroundColor(.green)
                         .font(.system(size: 11).bold())
-                        .padding(.bottom)
                     Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
                         .foregroundColor(.green)
                         .font(.system(size: 11).bold())
-                        .padding(.bottom)
                 } else {
+                    Image(systemName: "arrow.down")
+                        .foregroundColor(.red)
+                        .font(.system(size: 11).bold())
                     Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
                         .foregroundColor(.red)
                         .font(.system(size: 11).bold())
-                        .padding(.bottom)
                     Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
                         .foregroundColor(.red)
                         .font(.system(size: 11).bold())
-                        .padding(.bottom)
                 }
             }
+            Spacer()
         }
         .onAppear {
             Task.init {

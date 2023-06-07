@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BalanceCardView: View {
-
+    
     var accountType: String
     var isWatchListCardView: Bool
     
@@ -30,6 +30,12 @@ struct BalanceCardView: View {
                 }
                 HStack {
                     if(accountViewModel.totalBalance.oneDayChange >= 0) {
+                        if(accountViewModel.totalBalance.oneDayChange > 0) {
+                            Image(systemName: "arrow.up")
+                                .foregroundColor(.green)
+                                .font(.system(size: 14)
+                                    .bold())
+                        }
                         Text("\(accountViewModel.totalBalance.oneDayChange.withCommas(decimalPlace: 2))")
                             .foregroundColor(.green)
                             .font(.system(size: 14))
@@ -39,6 +45,10 @@ struct BalanceCardView: View {
                             .font(.system(size: 14))
                             .bold()
                     } else {
+                        Image(systemName: "arrow.down")
+                            .foregroundColor(.red)
+                            .font(.system(size: 14)
+                                .bold())
                         Text("\(accountViewModel.totalBalance.oneDayChange.withCommas(decimalPlace: 2))")
                             .foregroundColor(.red)
                             .font(.system(size: 14))
