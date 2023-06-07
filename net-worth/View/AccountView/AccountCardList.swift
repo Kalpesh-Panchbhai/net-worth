@@ -74,6 +74,7 @@ struct AccountCardList: View {
                                                         .font(.system(size: 15))
                                                 })
                                             }
+                                            .padding(.horizontal, 8)
                                             ScrollView(.horizontal, showsIndicators: false) {
                                                 LazyHStack {
                                                     ForEach(0..<((accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 5) ? 5 : accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count), id: \.self) { i in
