@@ -52,7 +52,6 @@ struct AccountCardList: View {
                                     .frame(width: 360, height: 70)
                                     .cornerRadius(10)
                             }
-                            .shadow(color: Color.theme.text.opacity(0.3), radius: 5, x: 0, y: 5)
                             Divider()
                             ScrollView(.vertical, showsIndicators: false) {
                                 LazyVStack {
@@ -60,7 +59,7 @@ struct AccountCardList: View {
                                         if(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 0) {
                                             HStack {
                                                 Text(accountType.uppercased())
-                                                    .foregroundColor(Color.theme.text)
+                                                    .foregroundColor(Color.theme.primaryText)
                                                     .bold()
                                                     .font(.system(size: 15))
                                                 Spacer()
@@ -69,7 +68,7 @@ struct AccountCardList: View {
                                                         .toolbarRole(.editor)
                                                 }, label: {
                                                     Text("See all")
-                                                        .foregroundColor(Color.theme.text)
+                                                        .foregroundColor(Color.theme.primaryText)
                                                         .bold()
                                                         .font(.system(size: 15))
                                                 })
@@ -84,7 +83,6 @@ struct AccountCardList: View {
                                                                     .toolbarRole(.editor)
                                                             }) {
                                                                 AccountCardView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i])
-                                                                    .shadow(color: Color.theme.text.opacity(0.3), radius: 5, x: 0, y: 5)
                                                                     .contextMenu {
                                                                         
                                                                         Label(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i].id!, systemImage: "info.square")
@@ -149,7 +147,7 @@ struct AccountCardList: View {
                         isNewAccountAccountViewOpen.toggle()
                     }, label: {
                         Image(systemName: "plus")
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                             .bold()
                     })
                     .font(.system(size: 14).bold())

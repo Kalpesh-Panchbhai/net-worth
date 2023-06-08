@@ -32,12 +32,12 @@ struct TransactionsView: View {
                             VStack(alignment: .leading) {
                                 Text("\(accountViewModel.accountTransactionList[i].timestamp.getDateAndFormat())")
                                     .font(.headline)
-                                    .foregroundColor(Color.theme.text)
+                                    .foregroundColor(Color.theme.primaryText)
                                     .padding(.horizontal)
                                 HStack {
                                     Text("\(accountViewModel.accountTransactionList[i].timestamp.getTimeAndFormat())")
                                         .font(.system(size: 12))
-                                        .foregroundColor(Color.theme.text)
+                                        .foregroundColor(Color.theme.primaryText)
                                         .padding(.leading)
                                     if(accountViewModel.account.loanType.elementsEqual("Consumer")) {
                                         if(accountViewModel.accountTransactionList[i].paid) {
@@ -56,7 +56,7 @@ struct TransactionsView: View {
                             VStack(alignment: .trailing) {
                                 Text((accountViewModel.account.currency) + " \(accountViewModel.accountTransactionList[i].currentBalance.withCommas(decimalPlace: 2))")
                                     .font(.headline)
-                                    .foregroundColor(Color.theme.text)
+                                    .foregroundColor(Color.theme.primaryText)
                                     .padding(.horizontal)
                                 if( i < accountViewModel.accountTransactionList.count) {
                                     if(accountViewModel.accountTransactionList[i].balanceChange > 0) {
@@ -147,9 +147,8 @@ struct TransactionsView: View {
                             }
                         }
                         .padding(8)
-                        .background(Color.theme.background)
+                        .background(Color.theme.foreground)
                         .cornerRadius(10)
-                        .shadow(color: Color.theme.text.opacity(0.3),radius: 5, x: 0, y: 5)
                     }
                 }
             }

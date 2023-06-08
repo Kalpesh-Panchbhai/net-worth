@@ -28,12 +28,11 @@ struct AccountToWatchView: View {
                                 HStack {
                                     Text(accountType.uppercased())
                                         .bold()
-                                        .foregroundColor(Color.theme.text)
+                                        .foregroundColor(Color.theme.primaryText)
                                         .font(.system(size: 15))
                                 }
                                 ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
                                     RowAccountToWatchView(account: account, watch: $watch, isAdded: watch.accountID.contains(account.id!), accountViewModel: accountViewModel)
-                                        .shadow(color: Color.theme.text, radius: 3)
                                         .padding(.bottom, 10)
                                 }
                                 Divider()

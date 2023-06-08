@@ -29,7 +29,7 @@ struct IncomeTypeView: View {
                         Image(systemName: "plus")
                         Text("Icon to add new Income Type.")
                     }
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                     .bold()
                 }
             } else {
@@ -68,10 +68,9 @@ struct IncomeTypeView: View {
                             }
                         }
                     }
-                    .listRowBackground(Color.theme.background)
-                    .foregroundColor(Color.theme.text)
+                    .listRowBackground(Color.theme.foreground)
+                    .foregroundColor(Color.theme.primaryText)
                 }
-                .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
                 .background(Color.theme.background)
                 .scrollContentBackground(.hidden)
             }
@@ -83,7 +82,7 @@ struct IncomeTypeView: View {
                     self.addNewIncomeTypeOpenView.toggle()
                 }, label: {
                     Image(systemName: "plus")
-                        .foregroundColor(Color.theme.text)
+                        .foregroundColor(Color.theme.primaryText)
                         .bold()
                 })
                 .font(.system(size: 14).bold())
@@ -106,7 +105,7 @@ struct IncomeTypeView: View {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                     .bold()
             }
                 .font(.system(size: 14).bold())

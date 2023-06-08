@@ -49,7 +49,7 @@ struct NewAccountView: View {
                             Text(accountType.rawValue).tag(accountType.rawValue)
                         }
                     }
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                     .onChange(of: accountType) { _ in
                         accountName=""
                         currentBalance = 0.0
@@ -64,26 +64,26 @@ struct NewAccountView: View {
                     }
                     if(accountType == "Saving") {
                         nameField(labelName: "Account Name")
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                         currentBalanceField
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                         CurrencyPicker(currenySelected: $currencySelected)
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                         watchListPicker
                         accountOpenedDatePicker
                     }
                     else if(accountType == "Credit Card") {
                         nameField(labelName: "Credit Card Name")
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                         currentBalanceField
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                         CurrencyPicker(currenySelected: $currencySelected)
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                         enablePaymentReminderField(labelName: "Enable Payment Reminder")
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
-                                .foregroundColor(Color.theme.text)
+                                .foregroundColor(Color.theme.primaryText)
                         }
                         watchListPicker
                         accountOpenedDatePicker
@@ -93,49 +93,48 @@ struct NewAccountView: View {
                             Text("Consumer").tag("Consumer")
                             Text("Non Consumer").tag("Non Consumer")
                         }
-                        .foregroundColor(Color.theme.text)
+                        .foregroundColor(Color.theme.primaryText)
                         
                         nameField(labelName: "Loan Name")
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                         currentBalanceField
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                         if(loanType.elementsEqual("Consumer")) {
                             monthlyEMIField
-                                .foregroundColor(Color.theme.text)
+                                .foregroundColor(Color.theme.primaryText)
                             loanPaymentDateField(labelName: "Loan payment date")
-                                .foregroundColor(Color.theme.text)
+                                .foregroundColor(Color.theme.primaryText)
                         }
                         CurrencyPicker(currenySelected: $currencySelected)
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                         enablePaymentReminderField(labelName: "Enable Loan Payment Reminder")
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
-                                .foregroundColor(Color.theme.text)
+                                .foregroundColor(Color.theme.primaryText)
                         }
                         watchListPicker
                         accountOpenedDatePicker
                     } else if(accountType == "Other") {
                         nameField(labelName: "Account Name")
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                         currentBalanceField
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                         CurrencyPicker(currenySelected: $currencySelected)
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                         enablePaymentReminderField(labelName: "Enable Payment Reminder")
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                         if(paymentReminder) {
                             paymentDateField(labelName: "Select a payment date")
-                                .foregroundColor(Color.theme.text)
+                                .foregroundColor(Color.theme.primaryText)
                         }
                         watchListPicker
                         accountOpenedDatePicker
                     }
                 }
-                .listRowBackground(Color.theme.background)
-                .foregroundColor(Color.theme.text)
+                .listRowBackground(Color.theme.foreground)
+                .foregroundColor(Color.theme.primaryText)
             }
-            .shadow(color: Color.theme.text.opacity(0.3),radius: 10, x: 0, y: 5)
             .toolbar {
                 ToolbarItem {
                     Button(action: {
@@ -188,11 +187,11 @@ struct NewAccountView: View {
                     }, label: {
                         if(!allFieldsFilled()) {
                             Image(systemName: "checkmark")
-                                .foregroundColor(Color.theme.text.opacity(0.3))
+                                .foregroundColor(Color.theme.primaryText.opacity(0.3))
                                 .bold()
                         } else {
                             Image(systemName: "checkmark")
-                                .foregroundColor(Color.theme.text)
+                                .foregroundColor(Color.theme.primaryText)
                                 .bold()
                         }
                     })
@@ -229,12 +228,12 @@ struct NewAccountView: View {
                 }
             }
         }
-        .foregroundColor(Color.theme.text)
+        .foregroundColor(Color.theme.primaryText)
     }
     
     var accountOpenedDatePicker: some View {
         DatePicker("Opened date", selection: $accountOpenedDate, in: ...Date(), displayedComponents: [.date])
-            .foregroundColor(Color.theme.text)
+            .foregroundColor(Color.theme.primaryText)
     }
     
     private func allFieldsFilled () -> Bool {
@@ -280,8 +279,7 @@ struct NewAccountView: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 6)
                     .frame(width: 25, height: 25)
-                    .foregroundColor(Color.theme.text)
-                    .shadow(color: Color.theme.text.opacity(0.3),radius: 3, x: 0, y: 5)
+                    .foregroundColor(Color.theme.primaryText)
                 Button(action: {
                     if isPlus {
                         isPlus = false

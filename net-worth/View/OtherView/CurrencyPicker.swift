@@ -20,15 +20,14 @@ struct CurrencyPicker: View {
                         self.currenySelected = data
                     })
                 }
-                .listRowBackground(Color.theme.background)
+                .listRowBackground(Color.theme.foreground)
             }
-            .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
             .scrollIndicators(.hidden)
             .navigationTitle("Currency")
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.theme.background)
             .scrollContentBackground(.hidden)
-            .foregroundColor(Color.theme.text)
+            .foregroundColor(Color.theme.primaryText)
         }, label: {
             if(currenySelected.name.isEmpty) {
                 HStack {

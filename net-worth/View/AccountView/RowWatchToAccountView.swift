@@ -25,7 +25,7 @@ struct RowWatchToAccountView: View {
             VStack {
                 if(isAdded) {
                     Image(systemName: "bookmark.fill")
-                        .foregroundColor(watch.accountName.elementsEqual("All") ? .gray : Color.theme.text)
+                        .foregroundColor(watch.accountName.elementsEqual("All") ? .gray : Color.theme.primaryText)
                         .bold()
                         .onTapGesture {
                             isAdded.toggle()
@@ -36,7 +36,7 @@ struct RowWatchToAccountView: View {
                         }
                 } else {
                     Image(systemName: "bookmark")
-                        .foregroundColor(Color.theme.text)
+                        .foregroundColor(Color.theme.primaryText)
                         .bold()
                         .onTapGesture {
                             isAdded.toggle()
@@ -49,7 +49,7 @@ struct RowWatchToAccountView: View {
             .padding()
         }
         .frame(width: 350, height: 50)
-        .background(Color.theme.background)
+        .background(Color.theme.foreground)
         .foregroundColor(Color.theme.text)
         .cornerRadius(10)
     }

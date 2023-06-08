@@ -25,7 +25,6 @@ struct WatchToAccountView: View {
                     LazyVStack {
                         ForEach(watchViewModel.watchList, id: \.self) { watchList in
                             RowWatchToAccountView(account: account, watch: watchList, isAdded: watchList.accountID.contains(account.id!))
-                                .shadow(color: Color.theme.text, radius: 3)
                                 .padding(.top, 10)
                         }
                     }

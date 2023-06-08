@@ -42,7 +42,7 @@ struct NewIncomeView: View {
                             Text($0.name).tag($0)
                         }
                     }
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                     .onChange(of: incomeTypeSelected) { _ in
                         amount="0.0"
                         taxPaid="0.0"
@@ -81,7 +81,7 @@ struct NewIncomeView: View {
                             })
                             .multilineTextAlignment(.trailing)
                     }
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                     
                     HStack {
                         Text("Tax Paid")
@@ -116,15 +116,15 @@ struct NewIncomeView: View {
                             })
                             .multilineTextAlignment(.trailing)
                     }
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                     
                     HStack{
                         DatePicker("Credited on", selection: $date, in: ...Date(), displayedComponents: [.date])
                     }
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                     
                     CurrencyPicker(currenySelected: $currencySelected)
-                        .foregroundColor(Color.theme.text)
+                        .foregroundColor(Color.theme.primaryText)
                     
                     Picker(selection: $incomeTagSelected, label: Text("Tag")) {
                         Text("Select").tag(IncomeTag())
@@ -132,12 +132,11 @@ struct NewIncomeView: View {
                             Text($0.name).tag($0)
                         }
                     }
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                 }
-                .listRowBackground(Color.theme.background)
-                .foregroundColor(Color.theme.text)
+                .listRowBackground(Color.theme.foreground)
+                .foregroundColor(Color.theme.primaryText)
             }
-            .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
             .toolbar {
                 // MARK: ToolbarItem for Checkmark
                 ToolbarItem {
@@ -150,11 +149,11 @@ struct NewIncomeView: View {
                     }, label: {
                         if(!allFieldsFilled()) {
                             Image(systemName: "checkmark")
-                                .foregroundColor(Color.theme.text.opacity(0.3))
+                                .foregroundColor(Color.theme.primaryText.opacity(0.3))
                                 .bold()
                         } else {
                             Image(systemName: "checkmark")
-                                .foregroundColor(Color.theme.text)
+                                .foregroundColor(Color.theme.primaryText)
                                 .bold()
                         }
                     })
@@ -176,7 +175,7 @@ struct NewIncomeView: View {
                         })
                     }, label: {
                         Image(systemName: "ellipsis")
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                             .bold()
                     })
                     .font(.system(size: 14).bold())

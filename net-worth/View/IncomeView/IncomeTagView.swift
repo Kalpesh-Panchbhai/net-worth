@@ -29,7 +29,7 @@ struct IncomeTagView: View {
                         Image(systemName: "plus")
                         Text("Icon to add new Income Tag.")
                     }
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                     .bold()
                 }
             } else {
@@ -68,10 +68,9 @@ struct IncomeTagView: View {
                             }
                         }
                     }
-                    .listRowBackground(Color.theme.background)
-                    .foregroundColor(Color.theme.text)
+                    .listRowBackground(Color.theme.foreground)
+                    .foregroundColor(Color.theme.primaryText)
                 }
-                .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
                 .background(Color.theme.background)
                 .scrollContentBackground(.hidden)
             }
@@ -83,7 +82,7 @@ struct IncomeTagView: View {
                     self.addNewIncomeTagOpenView.toggle()
                 }, label: {
                     Image(systemName: "plus")
-                        .foregroundColor(Color.theme.text)
+                        .foregroundColor(Color.theme.primaryText)
                         .bold()
                 })
                 .font(.system(size: 14).bold())

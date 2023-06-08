@@ -38,7 +38,7 @@ struct PieSliceView: View {
                         x: geometry.size.width * 0.5 * CGFloat(1.0 + 1.2 * cos(self.midRadians)),
                         y: geometry.size.height * 0.5 * CGFloat(1.0 - 1.2 * sin(self.midRadians))
                     )
-                    .foregroundColor(Color.navyBlue)
+                    .foregroundColor(Color.theme.primaryText)
                     .font(.system(size: 14))
             }
         }

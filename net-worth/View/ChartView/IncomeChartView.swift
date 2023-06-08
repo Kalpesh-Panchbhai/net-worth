@@ -49,11 +49,11 @@ struct IncomeChartView: View {
                     HStack {
                         if(taxPaidView) {
                             Text(totalTaxPaid.stringFormat)
-                                .foregroundColor(Color.theme.text)
+                                .foregroundColor(Color.theme.primaryText)
                                 .font(.title3.bold())
                         } else {
                             Text(totalAmount.stringFormat)
-                                .foregroundColor(Color.theme.text)
+                                .foregroundColor(Color.theme.primaryText)
                                 .font(.title3.bold())
                         }
                         Spacer()
@@ -95,10 +95,9 @@ struct IncomeChartView: View {
                 .padding()
                 .background {
                     RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(Color.theme.background.shadow(.drop(radius: 2)))
+                        .fill(Color.theme.foreground.shadow(.drop(radius: 2)))
                 }
             }
-            .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .padding()
             .navigationTitle("Income Chart")
@@ -237,7 +236,7 @@ struct IncomeChartView: View {
                             })
                         }, label: {
                             Image(systemName: "ellipsis")
-                                .foregroundColor(Color.theme.text)
+                                .foregroundColor(Color.theme.primaryText)
                                 .font(.system(size: 14).bold())
                         })
                         .font(.system(size: 14).bold())
@@ -264,14 +263,14 @@ struct IncomeChartView: View {
                     x: .value("Time", income.creditedOn),
                     y: .value("Amount",income.animate ? (cumulativeView ? (taxPaidView ? income.cumulativeTaxPaid : income.cumulativeAmount) : (taxPaidView ? income.taxpaid : income.amount)) : 0.0)
                 )
-                .foregroundStyle(Color.theme.text.gradient)
+                .foregroundStyle(Color.theme.primaryText.gradient)
                 .interpolationMethod(.catmullRom)
                 
                 AreaMark(
                     x: .value("Time", income.creditedOn),
                     y: .value("Amount",income.animate ? (cumulativeView ? (taxPaidView ? income.cumulativeTaxPaid : income.cumulativeAmount) : (taxPaidView ? income.taxpaid : income.amount)) : 0.0)
                 )
-                .foregroundStyle(Color.theme.text.opacity(0.1).gradient)
+                .foregroundStyle(Color.theme.primaryText.opacity(0.1).gradient)
                 .interpolationMethod(.catmullRom)
                 
                 if let currentActiveIncome, currentActiveIncome.id == income.id {
@@ -304,7 +303,6 @@ struct IncomeChartView: View {
                             .padding(.vertical, 4)
                             .background {
                                 RoundedRectangle(cornerRadius: 6, style: .continuous)
-                                    .fill(.white.shadow(.drop(radius: 2)))
                             }
                         }
                 }
@@ -317,7 +315,7 @@ struct IncomeChartView: View {
                 AxisTick()
                 AxisValueLabel {
                     Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))")
-                        .foregroundColor(Color.theme.text)
+                        .foregroundColor(Color.theme.primaryText)
                 }
             }
         }

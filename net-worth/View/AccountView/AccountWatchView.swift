@@ -34,10 +34,9 @@ struct AccountWatchView: View {
                                 Label(watch.id!, systemImage: "info.square")
                             }
                         })
-                        .listRowBackground(Color.theme.background)
-                        .foregroundColor(Color.theme.text)
+                        .listRowBackground(Color.theme.foreground)
+                        .foregroundColor(Color.theme.primaryText)
                     }
-                    .shadow(color: Color.theme.text.opacity(0.3),radius: 10, x: 0, y: 5)
                     .background(Color.theme.background)
                     .scrollContentBackground(.hidden)
                 }
