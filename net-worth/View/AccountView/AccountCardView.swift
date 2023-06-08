@@ -18,20 +18,20 @@ struct AccountCardView: View {
             Spacer()
             HStack {
                 Text(account.accountName)
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                     .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)
                 Spacer()
                 if(account.paymentReminder && account.accountType != "Saving") {
                     Image(systemName: "bell.fill")
-                        .foregroundColor(Color.theme.text)
+                        .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                     Text("\(account.paymentDate)")
-                        .foregroundColor(Color.theme.text)
+                        .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 } else if(account.accountType != "Saving") {
                     Image(systemName: "bell.slash.fill")
-                        .foregroundColor(Color.theme.text)
+                        .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 }
             }
@@ -39,10 +39,10 @@ struct AccountCardView: View {
             Spacer()
             HStack(alignment: .center) {
                 Text(account.currency)
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                     .font(.caption.bold())
                 Text("\(account.currentBalance.withCommas(decimalPlace: 2))")
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                     .font(.caption.bold())
             }
             Spacer()
@@ -90,7 +90,7 @@ struct AccountCardView: View {
         }
         .frame(width: 150, height: 100)
         .padding(8)
-        .background(Color.theme.background)
+        .background(Color.theme.foreground)
         .cornerRadius(10)
     }
     

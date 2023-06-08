@@ -92,10 +92,10 @@ public struct PieChartView: View {
                 VStack {
                     Text(getAccountName())
                         .font(.system(size: 14))
-                        .foregroundColor(Color.navyBlue)
+                        .foregroundColor(Color.theme.primaryText)
                     Text(getAccountAmount())
                         .font(.system(size: 14))
-                        .foregroundColor(Color.navyBlue)
+                        .foregroundColor(Color.theme.primaryText)
                 }
                 Divider()
                 PieChartRows(colors: self.colors, names: self.names, values: self.values.map { self.formatter($0) }, percents: self.values.map { String(format: "%.2f%%", $0 * 100 / self.values.reduce(0, +)) })
@@ -137,15 +137,15 @@ struct PieChartRows: View {
                             .frame(width: 20, height: 20)
                             .font(.system(size: 14))
                         Text(self.names[i])
-                            .foregroundColor(Color.navyBlue)
+                            .foregroundColor(Color.theme.primaryText)
                             .font(.system(size: 14))
                         Spacer()
                         VStack(alignment: .trailing) {
                             Text((Double(self.values[i])?.withCommas(decimalPlace: 2))!)
-                                .foregroundColor(Color.navyBlue)
+                                .foregroundColor(Color.theme.primaryText)
                                 .font(.system(size: 14))
                             Text(self.percents[i])
-                                .foregroundColor(Color.navyBlue)
+                                .foregroundColor(Color.theme.primaryText)
                                 .font(.system(size: 14))
                         }
                     }

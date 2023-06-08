@@ -25,14 +25,13 @@ struct UpdateWatchView: View {
                 Section("Update Watch List") {
                     TextField("Updated Watch List name", text: $watchViewModel.watch.accountName)
                 }
-                .listRowBackground(Color.theme.background)
-                .foregroundColor(Color.theme.text)
+                .listRowBackground(Color.theme.foreground)
+                .foregroundColor(Color.theme.primaryText)
             }
-            .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
             VStack {
                 Text("Update")
             }.frame(width: 350, height: 50)
-                .foregroundColor(Color.theme.text)
+                .foregroundColor(Color.theme.primaryText)
                 .background(Color.theme.green)
                 .bold()
                 .cornerRadius(10)
@@ -47,7 +46,6 @@ struct UpdateWatchView: View {
                         dismiss()
                     }
                 }
-                .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
             Spacer()
         }
         .background(Color.theme.background)

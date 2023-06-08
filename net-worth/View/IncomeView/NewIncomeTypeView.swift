@@ -28,10 +28,9 @@ struct NewIncomeTypeView: View {
                     TextField("Type name", text: $typeName)
                     Toggle("Default Type", isOn: $isDefault)
                 }
-                .listRowBackground(Color.theme.background)
-                .foregroundColor(Color.theme.text)
+                .listRowBackground(Color.theme.foreground)
+                .foregroundColor(Color.theme.primaryText)
             }
-            .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
             .toolbar {
                 ToolbarItem {
                     Button(action: {
@@ -43,11 +42,11 @@ struct NewIncomeTypeView: View {
                     }, label: {
                         if(typeName.isEmpty) {
                             Image(systemName: "checkmark")
-                                .foregroundColor(Color.theme.text.opacity(0.3))
+                                .foregroundColor(Color.theme.primaryText.opacity(0.3))
                                 .bold()
                         } else {
                             Image(systemName: "checkmark")
-                                .foregroundColor(Color.theme.text)
+                                .foregroundColor(Color.theme.primaryText)
                                 .bold()
                         }
                     })

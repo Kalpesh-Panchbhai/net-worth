@@ -23,7 +23,7 @@ struct WatchView: View {
                     //MARK: Loading View
                     ZStack {
                         Color.theme.background.ignoresSafeArea()
-                        ProgressView().tint(Color.theme.text)
+                        ProgressView().tint(Color.theme.primaryText)
                     }
                 } else {
                     List {
@@ -67,10 +67,9 @@ struct WatchView: View {
                                 }
                             })
                         }
+                        .listRowBackground(Color.theme.foreground)
                     }
-                    .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
-                    .listRowBackground(Color.theme.background)
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                     .refreshable {
                         Task.init {
                             await watchViewModel.getAllWatchList()
@@ -85,7 +84,7 @@ struct WatchView: View {
                         self.newWatchListViewOpen.toggle()
                     }, label: {
                         Image(systemName: "plus")
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                             .bold()
                     })
                     .font(.system(size: 14).bold())

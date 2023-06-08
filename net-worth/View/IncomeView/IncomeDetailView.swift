@@ -47,10 +47,9 @@ struct IncomeDetailView: View {
                 }
                 
             }
-            .listRowBackground(Color.theme.background)
-            .foregroundColor(Color.theme.text)
+            .listRowBackground(Color.theme.foreground)
+            .foregroundColor(Color.theme.primaryText)
         }
-        .shadow(color: Color.theme.text.opacity(0.3), radius: 10, x: 0, y: 5)
         .background(Color.theme.background)
         .scrollContentBackground(.hidden)
         .navigationBarBackButtonHidden(true)
@@ -59,7 +58,7 @@ struct IncomeDetailView: View {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                     .bold()
             }
                 .font(.system(size: 14).bold())

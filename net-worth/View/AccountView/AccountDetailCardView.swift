@@ -20,22 +20,22 @@ struct AccountDetailCardView: View {
             Spacer()
             HStack {
                 Text(accountViewModel.account.currency)
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                     .font(.caption.bold())
                 Text("\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 2))")
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                     .font(.caption.bold())
                 Spacer()
                 if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
                     Image(systemName: "bell.fill")
-                        .foregroundColor(Color.theme.text)
+                        .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                     Text("\(accountViewModel.account.paymentDate)")
-                        .foregroundColor(Color.theme.text)
+                        .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 } else if(accountViewModel.account.accountType != "Saving") {
                     Image(systemName: "bell.slash.fill")
-                        .foregroundColor(Color.theme.text)
+                        .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 }
             }
@@ -80,7 +80,7 @@ struct AccountDetailCardView: View {
         .padding(.horizontal)
         .frame(width: 360,height: 50)
         .padding(8)
-        .background(Color.theme.background)
+        .background(Color.theme.foreground)
     }
     
     func getTotalChangeForNonSymbol() -> Double {

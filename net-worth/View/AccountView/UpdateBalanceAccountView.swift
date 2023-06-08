@@ -27,14 +27,13 @@ struct UpdateBalanceAccountView: View {
             Form {
                 Section("Transaction detail") {
                     currentBalanceField
-                        .foregroundColor(Color.theme.text)
+                        .foregroundColor(Color.theme.primaryText)
                     DatePicker("Transaction date", selection: $date, in: ...Date(), displayedComponents: [.date, .hourAndMinute])
-                        .foregroundColor(Color.theme.text)
+                        .foregroundColor(Color.theme.primaryText)
                 }
-                .listRowBackground(Color.theme.background)
-                .foregroundColor(Color.theme.text)
+                .listRowBackground(Color.theme.foreground)
+                .foregroundColor(Color.theme.primaryText)
             }
-            .shadow(color: Color.theme.text.opacity(0.3),radius: 10, x: 0, y: 5)
             .toolbar {
                 ToolbarItem {
                     Button(action: {
@@ -47,7 +46,7 @@ struct UpdateBalanceAccountView: View {
                         dismiss()
                     }, label: {
                         Text("Update")
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                             .bold()
                     })
                     .font(.system(size: 14).bold())
@@ -64,7 +63,7 @@ struct UpdateBalanceAccountView: View {
                         dismiss()
                     }, label: {
                         Text("Add")
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                             .bold()
                     })
                     .font(.system(size: 14).bold())
@@ -92,8 +91,7 @@ struct UpdateBalanceAccountView: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 6)
                     .frame(width: 25, height: 25)
-                    .foregroundColor(Color.theme.text)
-                    .shadow(color: Color.theme.text.opacity(0.3),radius: 3, x: 0, y: 5)
+                    .foregroundColor(Color.theme.primaryText)
                 Button(action: {
                     if isPlus {
                         isPlus = false

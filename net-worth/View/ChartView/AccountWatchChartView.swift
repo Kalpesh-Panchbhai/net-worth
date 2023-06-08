@@ -30,7 +30,7 @@ struct AccountWatchChartView: View {
                             Section {
                                 SingleLineLollipopChartView(chartDataList: chartViewModel.chartDataList)
                             }
-                            .listRowBackground(Color.theme.background)
+                            .listRowBackground(Color.theme.foreground)
                             
                             Section {
                                 Picker(selection: $range, content: {
@@ -57,8 +57,8 @@ struct AccountWatchChartView: View {
                                 }
                                 .pickerStyle(SegmentedPickerStyle())
                             }
+                            .listRowBackground(Color.theme.foreground)
                         }
-                        .shadow(color: Color.theme.text, radius: 3)
                         .background(Color.theme.background)
                     }
                     .blur(radius: CGFloat(scenePhaseBlur))

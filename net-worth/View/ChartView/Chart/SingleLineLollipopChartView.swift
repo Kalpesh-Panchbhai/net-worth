@@ -40,19 +40,19 @@ struct SingleLineLollipopChartView: View {
         .chartXAxis {
             AxisMarks(values: .automatic) { _ in
                 AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 0.1, dash: [0]))
-                    .foregroundStyle(Color.theme.text)
+                    .foregroundStyle(Color.theme.primaryText)
                 AxisTick(stroke: StrokeStyle(lineWidth: 1))
-                    .foregroundStyle(Color.theme.text)
+                    .foregroundStyle(Color.theme.primaryText)
                 AxisValueLabel()
-                    .foregroundStyle(Color.theme.text)
+                    .foregroundStyle(Color.theme.primaryText)
             }
         }
         .chartYAxis {
             AxisMarks(values: .automatic) { value in
                 AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 0.1, dash: [0]))
-                    .foregroundStyle(Color.theme.text)
+                    .foregroundStyle(Color.theme.primaryText)
                 AxisTick(stroke: StrokeStyle(lineWidth: 1))
-                    .foregroundStyle(Color.theme.text)
+                    .foregroundStyle(Color.theme.primaryText)
                 AxisValueLabel {
                     if(isPercentageChart) {
                         Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))%")
@@ -60,7 +60,7 @@ struct SingleLineLollipopChartView: View {
                         Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))")
                     }
                 }
-                .foregroundStyle(Color.theme.text)
+                .foregroundStyle(Color.theme.primaryText)
             }
         }
         .chartOverlay { proxy in

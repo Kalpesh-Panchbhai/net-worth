@@ -77,10 +77,9 @@ struct IncomeView: View {
                                         }
                                     }
                                     .onDelete(perform: deleteIncome)
-                                    .listRowBackground(Color.theme.background)
-                                    .foregroundColor(Color.theme.text)
+                                    .listRowBackground(Color.theme.foreground)
+                                    .foregroundColor(Color.theme.primaryText)
                                 }
-                                .shadow(color: Color.theme.text.opacity(0.3),radius: 10, x: 0, y: 5)
                                 // MARK: List View Scroll Indicator
                                 .scrollIndicators(ScrollIndicatorVisibility.hidden)
                                 // MARK: List View Refreshable
@@ -99,8 +98,8 @@ struct IncomeView: View {
                                         Button(action: {
                                             self.isChartViewOpen.toggle()
                                         }, label: {
-                                            Label("Income Chart", systemImage: "chart.line.uptrend.xyaxis")
-                                                .foregroundColor(Color.theme.text)
+                                            Image(systemName: "chart.line.uptrend.xyaxis")
+                                                .foregroundColor(Color.theme.primaryText)
                                                 .bold()
                                         })
                                         .font(.system(size: 14).bold())
@@ -186,7 +185,7 @@ struct IncomeView: View {
                                             })
                                         }, label: {
                                             Image(systemName: "ellipsis")
-                                                .foregroundColor(Color.theme.text)
+                                                .foregroundColor(Color.theme.primaryText)
                                                 .bold()
                                         })
                                         .font(.system(size: 14).bold())
@@ -251,28 +250,26 @@ struct IncomeView: View {
     private var incomeTotalAmount: some View {
         HStack {
             Text("Total Income: \(SettingsController().getDefaultCurrency().code) \(incomeViewModel.incomeTotalAmount.withCommas(decimalPlace: 2))")
-                .foregroundColor(Color.theme.text)
+                .foregroundColor(Color.theme.primaryText)
                 .bold()
         }
         .padding(6)
         .frame(width: 360, height: 50)
-        .background(Color.theme.background)
+        .background(Color.theme.foreground)
         .cornerRadius(10)
-        .shadow(color: Color.theme.text.opacity(0.3),radius: 5, x: 0, y: 5)
         .padding(.horizontal)
     }
     
     private var incomeTotalTaxPaid: some View {
         HStack {
             Text("Total Tax Paid: \(SettingsController().getDefaultCurrency().code) \(incomeViewModel.incomeTaxPaidAmount.withCommas(decimalPlace: 2))")
-                .foregroundColor(Color.theme.text)
+                .foregroundColor(Color.theme.primaryText)
                 .bold()
         }
         .padding(6)
         .frame(width: 360, height: 50)
-        .background(Color.theme.background)
+        .background(Color.theme.foreground)
         .cornerRadius(10)
-        .shadow(color: Color.theme.text.opacity(0.3),radius: 5, x: 0, y: 5)
         .padding(.horizontal)
     }
     
