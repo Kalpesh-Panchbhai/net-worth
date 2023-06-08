@@ -149,6 +149,10 @@ struct TransactionsView: View {
                         .padding(8)
                         .background(Color.theme.foreground)
                         .cornerRadius(10)
+                        .background {
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .fill(Color.theme.foreground.shadow(.drop(radius: 5)))
+                        }
                     }
                 }
             }

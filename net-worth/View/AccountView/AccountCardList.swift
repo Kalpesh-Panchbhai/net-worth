@@ -52,6 +52,10 @@ struct AccountCardList: View {
                                     .frame(width: 360, height: 70)
                                     .cornerRadius(10)
                             }
+                            .background {
+                                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                    .fill(Color.theme.foreground.shadow(.drop(radius: 5)))
+                            }
                             Divider()
                             ScrollView(.vertical, showsIndicators: false) {
                                 LazyVStack {
@@ -106,6 +110,10 @@ struct AccountCardList: View {
                                                                         }
                                                                     }
                                                             }
+                                                        }
+                                                        .background {
+                                                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                                                .fill(Color.theme.foreground.shadow(.drop(radius: 5)))
                                                         }
                                                         .confirmationDialog("Are you sure?",
                                                                             isPresented: $isPresentingAccountDeleteConfirm) {
