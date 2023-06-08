@@ -41,9 +41,8 @@ extension MainScreenTabBarView {
             }
         }
         .padding(3)
-        .background(Color.theme.background.ignoresSafeArea(edges: .bottom))
+        .background(Color.theme.foreground2.ignoresSafeArea(edges: .bottom))
         .cornerRadius(10)
-        .shadow(color: Color.theme.text.opacity(0.3),radius: 10, x: 0, y: 5)
         .padding(.horizontal)
     }
     
@@ -54,7 +53,7 @@ extension MainScreenTabBarView {
                     Spacer()
                     ZStack {
                         Circle()
-                            .fill(Color.green.opacity(0.5))
+                            .fill(Color.theme.green.opacity(0.5))
                             .frame(height: 20)
                         Text("\(accountViewModel.accountList.count)")
                             .font(.system(size: 10))
@@ -66,7 +65,7 @@ extension MainScreenTabBarView {
                     Spacer()
                     ZStack {
                         Circle()
-                            .fill(Color.green.opacity(0.5))
+                            .fill(Color.theme.green.opacity(0.5))
                             .frame(height: 20)
                         Text("\(watchViewModel.watchList.count)")
                             .font(.system(size: 10))
@@ -78,7 +77,7 @@ extension MainScreenTabBarView {
                     Spacer()
                     ZStack {
                         Circle()
-                            .fill(Color.green.opacity(0.5))
+                            .fill(Color.theme.green.opacity(0.5))
                             .frame(height: 20)
                         Text("\(incomeViewModel.incomeList.count)")
                             .font(.system(size: 10))
@@ -109,7 +108,7 @@ extension MainScreenTabBarView {
             ZStack {
                 if localSelection == tab {
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(Color.theme.text.opacity(0.2))
+                        .fill(Color.theme.primaryText.opacity(0.2))
                         .matchedGeometryEffect(id: "background_rectangle", in: namespace)
                 }
             }
