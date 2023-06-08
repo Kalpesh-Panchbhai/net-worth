@@ -38,7 +38,7 @@ struct WatchDetailView: View {
                                 .cornerRadius(10)
                         }
                         .padding(.top, 5)
-                        .shadow(color: Color.theme.text, radius: 3)
+                        .shadow(color: Color.theme.text.opacity(0.3), radius: 5, x: 0, y: 5)
                         
                         Divider()
                         ScrollView(.vertical, showsIndicators: false) {
@@ -50,7 +50,7 @@ struct WatchDetailView: View {
                                             .toolbarRole(.editor)
                                     }, label: {
                                         AccountRowView(account: Account(id: account))
-                                            .shadow(color: Color.theme.text, radius: 3)
+                                            .shadow(color: Color.theme.text.opacity(0.3), radius: 5, x: 0, y: 5)
                                             .contextMenu {
                                                 Label(account, systemImage: "info.square")
                                                 // MARK: Delete

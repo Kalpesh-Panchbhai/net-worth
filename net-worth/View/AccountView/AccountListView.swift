@@ -31,7 +31,7 @@ struct AccountListView: View {
                             .frame(width: 360, height: 70)
                             .cornerRadius(10)
                     }
-                    .shadow(color: Color.theme.text, radius: 3)
+                    .shadow(color: Color.theme.text.opacity(0.3), radius: 5, x: 0, y: 5)
                 }
                 Divider()
                 ScrollView(.vertical, showsIndicators: false) {
@@ -41,7 +41,7 @@ struct AccountListView: View {
                                 AccountDetailView(account: account, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                             }, label: {
                                 AccountRowView(account: account)
-                                    .shadow(color: Color.theme.text, radius: 3)
+                                    .shadow(color: Color.theme.text.opacity(0.3), radius: 5, x: 0, y: 5)
                                     .contextMenu {
                                         
                                         Label(account.id!, systemImage: "info.square")
