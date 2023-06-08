@@ -303,7 +303,6 @@ struct IncomeChartView: View {
                             .padding(.vertical, 4)
                             .background {
                                 RoundedRectangle(cornerRadius: 6, style: .continuous)
-//                                    .fill(.white.shadow(.drop(radius: 2)))
                             }
                         }
                 }

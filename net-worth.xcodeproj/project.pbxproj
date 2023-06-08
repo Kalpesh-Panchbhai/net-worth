@@ -92,7 +92,6 @@
 		7DC97A2C29223ADB003F69D4 /* NewIncomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC97A2B29223ADB003F69D4 /* NewIncomeView.swift */; };
 		7DCA54772A2B5C9E009938E1 /* SingleLineLollipopChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCA54762A2B5C9E009938E1 /* SingleLineLollipopChartView.swift */; };
 		7DCFE4C8292CB92900C940F0 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCFE4C7292CB92900C940F0 /* StringExtension.swift */; };
-		7DD24FAA2A31A9060034DC6F /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD24FA92A31A9060034DC6F /* SwiftUIView.swift */; };
 		7DD8E5AC2A0630A000245A98 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8E5AB2A0630A000245A98 /* Data.swift */; };
 		7DD8E5B32A06339500245A98 /* BackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8E5B22A06339500245A98 /* BackupView.swift */; };
 		7DD8E5B52A06343A00245A98 /* ImportExportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD8E5B42A06343A00245A98 /* ImportExportController.swift */; };
@@ -201,7 +200,6 @@
 		7DC97A2B29223ADB003F69D4 /* NewIncomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewIncomeView.swift; sourceTree = "<group>"; };
 		7DCA54762A2B5C9E009938E1 /* SingleLineLollipopChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleLineLollipopChartView.swift; sourceTree = "<group>"; };
 		7DCFE4C7292CB92900C940F0 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
-		7DD24FA92A31A9060034DC6F /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		7DD8E5AB2A0630A000245A98 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		7DD8E5B22A06339500245A98 /* BackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupView.swift; sourceTree = "<group>"; };
 		7DD8E5B42A06343A00245A98 /* ImportExportController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExportController.swift; sourceTree = "<group>"; };
@@ -274,7 +272,6 @@
 				7D237BEC292B672800DEF91D /* DoubleExtension.swift */,
 				7DB2058C2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift */,
 				7DCFE4C7292CB92900C940F0 /* StringExtension.swift */,
-				7DD24FA92A31A9060034DC6F /* SwiftUIView.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -635,7 +632,6 @@
 			files = (
 				7D11D0072A0A56D700897B08 /* PieChartView.swift in Sources */,
 				7DB98804299B682F004ED6D2 /* NewWatchView.swift in Sources */,
-				7DD24FAA2A31A9060034DC6F /* SwiftUIView.swift in Sources */,
 				7DE766F32928B62900EFBD2D /* NotificationController.swift in Sources */,
 				7DF9DB91298F978600831494 /* Account.swift in Sources */,
 				7DD8E5B52A06343A00245A98 /* ImportExportController.swift in Sources */,
