@@ -221,7 +221,7 @@ struct IncomeView: View {
                             updateData()
                         }, label: {
                             Text("Reset")
-                                .foregroundColor(Color.lightBlue)
+                                .foregroundColor(Color.theme.primaryText)
                                 .bold()
                         })
                         .font(.system(size: 14).bold())
