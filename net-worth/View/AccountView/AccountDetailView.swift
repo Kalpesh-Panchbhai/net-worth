@@ -34,9 +34,9 @@ struct AccountDetailView: View {
         self.accountViewModel = accountViewModel
         self.watchViewModel = watchViewModel
         
-        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.theme.text)
+        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.theme.primaryText)
         UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor(Color.theme.background)], for: .selected)
-        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor(Color.theme.text)], for: .normal)
+        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor(Color.theme.primaryText)], for: .normal)
     }
     
     var body: some View {
@@ -87,7 +87,7 @@ struct AccountDetailView: View {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                     .bold()
             }
                 .font(.system(size: 14).bold())

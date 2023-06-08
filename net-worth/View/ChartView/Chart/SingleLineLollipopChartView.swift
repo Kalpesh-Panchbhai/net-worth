@@ -125,7 +125,7 @@ struct SingleLineLollipopChartView: View {
                         .background {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color.theme.text)
+                                    .fill(Color.theme.primaryText)
                             }
                             .padding(.horizontal, -8)
                             .padding(.vertical, -4)

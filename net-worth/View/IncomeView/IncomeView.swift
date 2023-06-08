@@ -38,14 +38,14 @@ struct IncomeView: View {
                             Image(systemName: "plus")
                             Text("Icon to add new Income.")
                         }
-                        .foregroundColor(Color.theme.text)
+                        .foregroundColor(Color.theme.primaryText)
                         .bold()
                     }
                 }  else if (!incomeViewModel.incomeListLoaded) {
                     // MARK: Loading View
                     ZStack {
                         Color.theme.background.ignoresSafeArea()
-                        ProgressView().tint(Color.theme.text)
+                        ProgressView().tint(Color.theme.primaryText)
                     }
                 } else {
                     ZStack {
@@ -205,7 +205,7 @@ struct IncomeView: View {
                         self.isNewIncomeViewOpen.toggle()
                     }, label: {
                         Image(systemName: "plus")
-                            .foregroundColor(Color.theme.text)
+                            .foregroundColor(Color.theme.primaryText)
                             .bold()
                     })
                     .font(.system(size: 14).bold())

@@ -153,7 +153,7 @@ struct SettingsView: View {
             .listStyle(.insetGrouped)
             .background(Color.theme.background)
             .scrollContentBackground(.hidden)
-            .foregroundColor(Color.theme.text)
+            .foregroundColor(Color.theme.primaryText)
         }
         .onAppear {
             Task.init {

@@ -35,13 +35,13 @@ struct AccountCardList: View {
                             Image(systemName: "plus")
                             Text("Icon to add new Account.")
                         }
-                        .foregroundColor(Color.theme.text)
+                        .foregroundColor(Color.theme.primaryText)
                         .bold()
                     }
                 } else if (!accountViewModel.accountListLoaded) {
                     ZStack {
                         Color.theme.background.ignoresSafeArea()
-                        ProgressView().tint(Color.theme.text)
+                        ProgressView().tint(Color.theme.primaryText)
                     }
                 } else {
                     ZStack {

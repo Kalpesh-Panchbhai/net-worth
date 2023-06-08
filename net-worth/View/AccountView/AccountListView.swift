@@ -85,7 +85,7 @@ struct AccountListView: View {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(Color.theme.text)
+                    .foregroundColor(Color.theme.primaryText)
                     .bold()
             }
                 .font(.system(size: 14).bold())

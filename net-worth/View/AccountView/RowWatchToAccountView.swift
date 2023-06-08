@@ -50,7 +50,7 @@ struct RowWatchToAccountView: View {
         }
         .frame(width: 350, height: 50)
         .background(Color.theme.foreground)
-        .foregroundColor(Color.theme.text)
+        .foregroundColor(Color.theme.primaryText)
         .cornerRadius(10)
     }
 }

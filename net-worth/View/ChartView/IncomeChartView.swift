@@ -124,7 +124,7 @@ struct IncomeChartView: View {
                                 }
                             }, label: {
                                 Text("Clear")
-                                    .foregroundColor(Color.theme.text)
+                                    .foregroundColor(Color.theme.primaryText)
                                     .bold()
                             })
                             .font(.system(size: 14).bold())
