@@ -9,8 +9,6 @@ import SwiftUI
 
 struct AccountWatchView: View {
     
-    var account: Account
-    
     @ObservedObject var watchViewModel: WatchViewModel
     
     var body: some View {

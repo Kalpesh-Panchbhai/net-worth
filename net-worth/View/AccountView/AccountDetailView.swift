@@ -65,7 +65,7 @@ struct AccountDetailView: View {
                 } else if(tabItem == 2) {
                     AccountChartView(account: account)
                 } else {
-                    AccountWatchView(account: account, watchViewModel: watchViewModel)
+                    AccountWatchView(watchViewModel: watchViewModel)
                 }
             }
             .alert(isPresented: $showZeroAlert) {
