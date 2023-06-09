@@ -107,8 +107,9 @@ struct SingleLineLollipopChartView: View {
                             .position(x: lineX, y: lineHeight / 2)
                         
                         Circle()
-                            .fill(getChartColor())
-                            .frame(width: 8, height: 8)
+                            .strokeBorder(Color.theme.primaryText, lineWidth: 5)
+                            .background(Circle().fill(getChartColor()))
+                            .frame(width: 12, height: 12)
                             .position(x: lineX, y: lineY)
                         
                         VStack(alignment: .center) {
