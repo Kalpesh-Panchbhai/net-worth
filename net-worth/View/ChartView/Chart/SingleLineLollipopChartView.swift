@@ -48,7 +48,7 @@ struct SingleLineLollipopChartView: View {
             }
         }
         .chartYAxis {
-            AxisMarks(values: .automatic) { value in
+            AxisMarks(position: .leading, values: .automatic) { value in
                 AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 0.1, dash: [0]))
                     .foregroundStyle(Color.theme.primaryText)
                 AxisTick(stroke: StrokeStyle(lineWidth: 1))
@@ -135,8 +135,6 @@ struct SingleLineLollipopChartView: View {
                 }
             }
         }
-        .chartXAxis(.automatic)
-        .chartYAxis(.automatic)
         .frame(height: 400)
     }
     

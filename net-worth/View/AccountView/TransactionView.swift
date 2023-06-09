@@ -37,7 +37,7 @@ struct TransactionsView: View {
                                 HStack {
                                     Text("\(accountViewModel.accountTransactionList[i].timestamp.getTimeAndFormat())")
                                         .font(.system(size: 12))
-                                        .foregroundColor(Color.theme.primaryText)
+                                        .foregroundColor(Color.theme.secondaryText)
                                         .padding(.leading)
                                     if(accountViewModel.account.loanType.elementsEqual("Consumer")) {
                                         if(accountViewModel.accountTransactionList[i].paid) {
@@ -73,7 +73,7 @@ struct TransactionsView: View {
                                 }
                             }
                         }
-                        .frame(width: 340)
+                        .frame(width: 360)
                         .contextMenu {
                             Label(accountViewModel.accountTransactionList[i].id!, systemImage: "info.square")
                             
