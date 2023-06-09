@@ -93,10 +93,6 @@ struct IncomeChartView: View {
                     
                 }
                 .padding()
-                .background {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(Color.theme.foreground.shadow(.drop(radius: 5)))
-                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .padding()

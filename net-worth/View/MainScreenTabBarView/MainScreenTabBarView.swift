@@ -43,10 +43,6 @@ extension MainScreenTabBarView {
         .padding(3)
         .background(Color.theme.foreground2.ignoresSafeArea(edges: .bottom))
         .cornerRadius(10)
-        .background {
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(Color.theme.foreground.shadow(.drop(radius: 5)))
-        }
         .padding(.horizontal)
         
     }

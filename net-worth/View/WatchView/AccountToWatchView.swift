@@ -33,10 +33,6 @@ struct AccountToWatchView: View {
                                 }
                                 ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
                                     RowAccountToWatchView(account: account, watch: $watch, isAdded: watch.accountID.contains(account.id!), accountViewModel: accountViewModel)
-                                        .background {
-                                            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                                .fill(Color.theme.foreground.shadow(.drop(radius: 5)))
-                                        }
                                         .padding(.bottom, 10)
                                 }
                                 Divider()

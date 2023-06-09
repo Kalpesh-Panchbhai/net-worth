@@ -43,10 +43,6 @@ struct AccountChartView: View {
                         let impact = UIImpactFeedbackGenerator(style: .light)
                         impact.impactOccurred()
                     }
-                    .background {
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .fill(Color.theme.foreground.shadow(.drop(radius: 5)))
-                    }
                     .pickerStyle(SegmentedPickerStyle())
                     .listRowBackground(Color.theme.foreground)
                 }

@@ -49,10 +49,6 @@ struct NewWatchView: View {
                         dismiss()
                     }
                 }
-                .background {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(Color.theme.foreground.shadow(.drop(radius: 5)))
-                }
             Spacer()
         }
         .background(Color.theme.background)
