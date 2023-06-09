@@ -28,21 +28,9 @@ struct AccountCardList: View {
         NavigationView {
             ZStack {
                 if(accountViewModel.accountList.isEmpty && accountViewModel.accountListLoaded) {
-                    ZStack {
-                        Color.theme.background.ignoresSafeArea()
-                        HStack {
-                            Text("Click on")
-                            Image(systemName: "plus")
-                            Text("Icon to add new Account.")
-                        }
-                        .foregroundColor(Color.theme.primaryText)
-                        .bold()
-                    }
+                    EmptyView(name: "Account")
                 } else if (!accountViewModel.accountListLoaded) {
-                    ZStack {
-                        Color.theme.background.ignoresSafeArea()
-                        ProgressView().tint(Color.theme.primaryText)
-                    }
+                    LoadingView()
                 } else {
                     ZStack {
                         Color.theme.background.ignoresSafeArea()

@@ -31,22 +31,10 @@ struct IncomeView: View {
             ZStack {
                 if(incomeViewModel.incomeList.isEmpty && incomeViewModel.incomeListLoaded) {
                     // MARK: Empty View
-                    ZStack {
-                        Color.theme.background.ignoresSafeArea()
-                        HStack {
-                            Text("Click on")
-                            Image(systemName: "plus")
-                            Text("Icon to add new Income.")
-                        }
-                        .foregroundColor(Color.theme.primaryText)
-                        .bold()
-                    }
+                    EmptyView(name: "Income")
                 }  else if (!incomeViewModel.incomeListLoaded) {
                     // MARK: Loading View
-                    ZStack {
-                        Color.theme.background.ignoresSafeArea()
-                        ProgressView().tint(Color.theme.primaryText)
-                    }
+                    LoadingView()
                 } else {
                     ZStack {
                         Color.theme.background.ignoresSafeArea()

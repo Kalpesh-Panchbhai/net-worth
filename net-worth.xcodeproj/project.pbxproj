@@ -15,6 +15,8 @@
 		7D14A8F02A0253A9002FC324 /* AccountWatchChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D14A8EF2A0253A9002FC324 /* AccountWatchChartView.swift */; };
 		7D1C72642A06549B00022FCB /* ImportExportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1C72632A06549B00022FCB /* ImportExportViewModel.swift */; };
 		7D237BED292B672900DEF91D /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D237BEC292B672800DEF91D /* DoubleExtension.swift */; };
+		7D2461182A335ABF00693BA5 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2461172A335ABF00693BA5 /* LoadingView.swift */; };
+		7D24611A2A335C8600693BA5 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2461192A335C8600693BA5 /* EmptyView.swift */; };
 		7D2C76202A0B5B8900CE606C /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2C761F2A0B5B8900CE606C /* Color.swift */; };
 		7D2D38412A2C8945006C0AD2 /* ApplicationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2D38402A2C8945006C0AD2 /* ApplicationData.swift */; };
 		7D3636FB292F9CCB0013B4E5 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */; };
@@ -126,6 +128,8 @@
 		7D14A8EF2A0253A9002FC324 /* AccountWatchChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountWatchChartView.swift; sourceTree = "<group>"; };
 		7D1C72632A06549B00022FCB /* ImportExportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExportViewModel.swift; sourceTree = "<group>"; };
 		7D237BEC292B672800DEF91D /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
+		7D2461172A335ABF00693BA5 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		7D2461192A335C8600693BA5 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		7D2C761F2A0B5B8900CE606C /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		7D2D38402A2C8945006C0AD2 /* ApplicationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationData.swift; sourceTree = "<group>"; };
 		7D3636FA292F9CCB0013B4E5 /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
@@ -276,6 +280,15 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		7D2461162A335AA800693BA5 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				7D2461172A335ABF00693BA5 /* LoadingView.swift */,
+				7D2461192A335C8600693BA5 /* EmptyView.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
 		7D4FF8032A1BBAE90060CE44 /* FirebaseModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -379,6 +392,7 @@
 		7D79FA88291B9C6E004A2ECF /* View */ = {
 			isa = PBXGroup;
 			children = (
+				7D2461162A335AA800693BA5 /* Component */,
 				7DD7A56C29224C1200CD5B37 /* AccountView */,
 				7DF83F902A094F3300D3233B /* ChartView */,
 				7DD7A56B29224BFD00CD5B37 /* IncomeView */,
@@ -726,8 +740,10 @@
 				7D11D0092A0A59F600897B08 /* ChartView.swift in Sources */,
 				7D65547429A107950008A8E2 /* ChartViewModel.swift in Sources */,
 				7D4E671329F7D4C900EB6B24 /* IncomeDetailView.swift in Sources */,
+				7D24611A2A335C8600693BA5 /* EmptyView.swift in Sources */,
 				7DA63A4B2996017D00568FCA /* AccountDetailView.swift in Sources */,
 				7D79FA51291B7430004A2ECF /* net_worthApp.swift in Sources */,
+				7D2461182A335ABF00693BA5 /* LoadingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

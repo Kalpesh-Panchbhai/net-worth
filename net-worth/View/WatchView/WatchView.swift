@@ -21,10 +21,7 @@ struct WatchView: View {
             ZStack {
                 if (!watchViewModel.watchListLoad) {
                     //MARK: Loading View
-                    ZStack {
-                        Color.theme.background.ignoresSafeArea()
-                        ProgressView().tint(Color.theme.primaryText)
-                    }
+                    LoadingView()
                 } else {
                     List {
                         ForEach(watchViewModel.watchList, id: \.self) { watchList in
