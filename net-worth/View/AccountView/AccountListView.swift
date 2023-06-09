@@ -31,6 +31,10 @@ struct AccountListView: View {
                             .frame(width: 360, height: 70)
                             .cornerRadius(10)
                     }
+                    .background {
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(Color.theme.foreground.shadow(.drop(radius: 5)))
+                    }
                 }
                 Divider()
                 ScrollView(.vertical, showsIndicators: false) {
@@ -40,6 +44,10 @@ struct AccountListView: View {
                                 AccountDetailView(account: account, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                             }, label: {
                                 AccountRowView(account: account)
+                                    .background {
+                                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                            .fill(Color.theme.foreground.shadow(.drop(radius: 5)))
+                                    }
                                     .contextMenu {
                                         
                                         Label(account.id!, systemImage: "info.square")

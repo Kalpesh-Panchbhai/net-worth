@@ -254,10 +254,14 @@ struct IncomeView: View {
                 .bold()
         }
         .padding(6)
-        .frame(width: 360, height: 50)
+        .frame(width: 300, height: 50)
         .background(Color.theme.foreground)
         .cornerRadius(10)
         .padding(.horizontal)
+        .background {
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(Color.theme.foreground.shadow(.drop(radius: 5)))
+        }
     }
     
     private var incomeTotalTaxPaid: some View {
@@ -267,10 +271,14 @@ struct IncomeView: View {
                 .bold()
         }
         .padding(6)
-        .frame(width: 360, height: 50)
+        .frame(width: 300, height: 50)
         .background(Color.theme.foreground)
         .cornerRadius(10)
         .padding(.horizontal)
+        .background {
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(Color.theme.foreground.shadow(.drop(radius: 5)))
+        }
     }
     
     private func deleteIncome(offsets: IndexSet) {

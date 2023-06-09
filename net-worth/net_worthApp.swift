@@ -40,10 +40,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         UINavigationBar.appearance().barTintColor = UIColor(Color.theme.background)
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(Color.theme.primaryText)]
         
-        let tabBarAppearance = UITabBarAppearance()
-        tabBarAppearance.stackedLayoutAppearance.normal.badgeBackgroundColor = UIColor(red: 0.3490196078, green: 0.7411764706, blue: 0.9568627451, alpha: 1)
-        UITabBar.appearance().standardAppearance = tabBarAppearance
-        
         UIRefreshControl.appearance().tintColor = UIColor(Color.theme.primaryText)
         UIRefreshControl.appearance().attributedTitle = NSAttributedString(string: "Refreshing...", attributes: [NSAttributedString.Key.foregroundColor: UIColor(Color.theme.primaryText)])
         return true

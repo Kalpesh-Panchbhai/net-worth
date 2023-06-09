@@ -21,33 +21,33 @@ struct AccountChartView: View {
         VStack {
             HStack {
                 List {
-                    Section {
-                        SingleLineLollipopChartView(chartDataList: chartViewModel.chartDataList)
-                    }
-                    .listRowBackground(Color.theme.foreground)
+                    SingleLineLollipopChartView(chartDataList: chartViewModel.chartDataList)
+                        .listRowBackground(Color.theme.foreground)
                     
-                    Section {
-                        Picker(selection: $range, content: {
-                            Text("1M").tag("1M")
-                            Text("3M").tag("3M")
-                            Text("6M").tag("6M")
-                            Text("1Y").tag("1Y")
-                            Text("2Y").tag("2Y")
-                            Text("5Y").tag("5Y")
-                            Text("All").tag("All")
-                        }, label: {
-                            
-                        })
-                        .onChange(of: range) { value in
-                            Task.init {
-                                await accountViewModel.getAccountTransactionListWithRange(id: account.id!, range: range)
-                                await chartViewModel.getChartData(accountViewModel: accountViewModel)
-                            }
-                            let impact = UIImpactFeedbackGenerator(style: .light)
-                            impact.impactOccurred()
+                    Picker(selection: $range, content: {
+                        Text("1M").tag("1M")
+                        Text("3M").tag("3M")
+                        Text("6M").tag("6M")
+                        Text("1Y").tag("1Y")
+                        Text("2Y").tag("2Y")
+                        Text("5Y").tag("5Y")
+                        Text("All").tag("All")
+                    }, label: {
+                        
+                    })
+                    .onChange(of: range) { value in
+                        Task.init {
+                            await accountViewModel.getAccountTransactionListWithRange(id: account.id!, range: range)
+                            await chartViewModel.getChartData(accountViewModel: accountViewModel)
                         }
-                        .pickerStyle(SegmentedPickerStyle())
+                        let impact = UIImpactFeedbackGenerator(style: .light)
+                        impact.impactOccurred()
                     }
+                    .background {
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(Color.theme.foreground.shadow(.drop(radius: 5)))
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
                     .listRowBackground(Color.theme.foreground)
                 }
                 .background(Color.theme.background)

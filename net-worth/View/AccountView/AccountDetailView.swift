@@ -44,6 +44,10 @@ struct AccountDetailView: View {
             VStack {
                 AccountDetailCardView(accountViewModel: accountViewModel)
                     .cornerRadius(10)
+                    .background {
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(Color.theme.foreground.shadow(.drop(radius: 5)))
+                    }
                 Picker(selection: $tabItem, content: {
                     Text("Transactions (\(accountViewModel.accountTransactionList.count))").tag(1)
                     Text("Chart").tag(2)

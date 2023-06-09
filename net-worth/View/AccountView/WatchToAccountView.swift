@@ -25,6 +25,10 @@ struct WatchToAccountView: View {
                     LazyVStack {
                         ForEach(watchViewModel.watchList, id: \.self) { watchList in
                             RowWatchToAccountView(account: account, watch: watchList, isAdded: watchList.accountID.contains(account.id!))
+                                .background {
+                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                        .fill(Color.theme.foreground.shadow(.drop(radius: 5)))
+                                }
                                 .padding(.top, 10)
                         }
                     }

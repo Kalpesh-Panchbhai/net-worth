@@ -38,7 +38,10 @@ struct WatchDetailView: View {
                                 .cornerRadius(10)
                         }
                         .padding(.top, 5)
-                        
+                        .background {
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .fill(Color.theme.foreground.shadow(.drop(radius: 5)))
+                        }
                         Divider()
                         ScrollView(.vertical, showsIndicators: false) {
                             LazyVStack {
@@ -49,6 +52,10 @@ struct WatchDetailView: View {
                                             .toolbarRole(.editor)
                                     }, label: {
                                         AccountRowView(account: Account(id: account))
+                                            .background {
+                                                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                                    .fill(Color.theme.foreground.shadow(.drop(radius: 5)))
+                                            }
                                             .contextMenu {
                                                 Label(account, systemImage: "info.square")
                                                 // MARK: Delete
