@@ -15,6 +15,8 @@ struct AccountListView: View {
     @State var searchText = ""
     @State var isNewTransactionViewOpen = false
     @State var isChartViewOpen = false
+    @State var isPresentingAccountDeleteConfirm = false
+    @State var deletedAccount = Account()
     
     @StateObject var accountViewModel = AccountViewModel()
     @ObservedObject var watchViewModel: WatchViewModel
@@ -45,15 +47,8 @@ struct AccountListView: View {
                                         Label(account.id!, systemImage: "info.square")
                                         
                                         Button(role: .destructive, action: {
-                                            Task.init {
-                                                await accountController.deleteAccount(account: account)
-                                            }
-                                            Task.init {
-                                                await accountViewModel.getAccountList()
-                                                await accountViewModel.getTotalBalance(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
-                                                await watchViewModel.getAllWatchList()
-                                            }
-                                            self.presentationMode.wrappedValue.dismiss()
+                                            isPresentingAccountDeleteConfirm.toggle()
+                                            deletedAccount = account
                                         }, label: {
                                             Label("Delete", systemImage: "trash")
                                         })
@@ -117,6 +112,18 @@ struct AccountListView: View {
         .sheet(isPresented: $isChartViewOpen, content: {
             AccountWatchChartView(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
         })
+        .confirmationDialog("Are you sure?",
+                            isPresented: $isPresentingAccountDeleteConfirm) {
+            Button("Delete account " + deletedAccount.accountName + "?", role: .destructive) {
+                Task.init {
+                    await accountController.deleteAccount(account: deletedAccount)
+                    await accountViewModel.getAccountList()
+                    await watchViewModel.getAllWatchList()
+                    await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            }
+        }
         .searchable(text: $searchText)
         .onAppear {
             Task.init {
