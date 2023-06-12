@@ -88,7 +88,7 @@ struct AccountCardView: View {
                 await accountViewModel.getLastTwoAccountTransactionList(id: account.id ?? "")
             }
         }
-        .frame(width: 150, height: 100)
+        .frame(width: 300, height: 130)
         .padding(8)
         .background(Color.theme.foreground)
         .cornerRadius(10)
