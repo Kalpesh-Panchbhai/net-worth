@@ -19,6 +19,7 @@ struct WatchDetailView: View {
     @State var isAscendingByAlphabetEnabled = false
     @State var isAscendingByAmount = true
     @State var isAscendingByAmountEnabled = false
+    @State var hideInactiveAccount = true
     
     @StateObject var accountViewModel = AccountViewModel()
     @ObservedObject var watchViewModel: WatchViewModel
@@ -41,75 +42,80 @@ struct WatchDetailView: View {
                         Divider()
                         ScrollView(.vertical, showsIndicators: false) {
                             LazyVStack {
-                                ForEach(watchViewModel.watch.accountID, id: \.self) { account in
-                                    NavigationLink(destination: {
-                                        // MARK: Account Detail View
-                                        AccountDetailView(account: Account(id: account), accountViewModel: accountViewModel, watchViewModel: watchViewModel)
-                                            .toolbarRole(.editor)
-                                    }, label: {
-                                        AccountRowView(account: Account(id: account))
-                                            .contextMenu {
-                                                Label(account, systemImage: "info.square")
-                                                // MARK: Delete
-                                                if(watch.accountName != "All") {
-                                                    Button(role: .destructive, action: {
-                                                        watchController.deleteAccountFromWatchList(watchList: watchViewModel.watch, accountID: account)
-                                                        Task.init {
-                                                            await watchViewModel.getAllWatchList()
-                                                            await watchViewModel.getWatchList(id: watch.id!)
-                                                            await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
-                                                            if(isAscendingByAlphabetEnabled) {
-                                                                if(isAscendingByAlphabet) {
-                                                                    watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                                                        $0.accountName < $1.accountName
-                                                                    }).map({
-                                                                        $0.id!
-                                                                    })
-                                                                } else {
-                                                                    watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                                                        $0.accountName > $1.accountName
-                                                                    }).map({
-                                                                        $0.id!
-                                                                    })
+                                ForEach(watchViewModel.watch.accountID, id: \.self) { accountID in
+                                    if((hideInactiveAccount && isAccountActive(id: accountID)) || !hideInactiveAccount) {
+                                        NavigationLink(destination: {
+                                            // MARK: Account Detail View
+                                            AccountDetailView(account: Account(id: accountID), accountViewModel: accountViewModel, watchViewModel: watchViewModel)
+                                                .toolbarRole(.editor)
+                                        }, label: {
+                                            AccountRowView(account: Account(id: accountID))
+                                                .contextMenu {
+                                                    Label(accountID, systemImage: "info.square")
+                                                    // MARK: Delete
+                                                    if(watch.accountName != "All") {
+                                                        Button(role: .destructive, action: {
+                                                            watchController.deleteAccountFromWatchList(watchList: watchViewModel.watch, accountID: accountID)
+                                                            Task.init {
+                                                                await watchViewModel.getAllWatchList()
+                                                                await watchViewModel.getWatchList(id: watch.id!)
+                                                                await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
+                                                                if(isAscendingByAlphabetEnabled) {
+                                                                    if(isAscendingByAlphabet) {
+                                                                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                                                            $0.accountName < $1.accountName
+                                                                        }).map({
+                                                                            $0.id!
+                                                                        })
+                                                                    } else {
+                                                                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                                                            $0.accountName > $1.accountName
+                                                                        }).map({
+                                                                            $0.id!
+                                                                        })
+                                                                    }
+                                                                    self.isAscendingByAmountEnabled = false
+                                                                } else if(isAscendingByAmountEnabled) {
+                                                                    if(isAscendingByAmount) {
+                                                                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                                                            $0.currentBalance < $1.currentBalance
+                                                                        }).map({
+                                                                            $0.id!
+                                                                        })
+                                                                    } else {
+                                                                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                                                                            $0.currentBalance > $1.currentBalance
+                                                                        }).map({
+                                                                            $0.id!
+                                                                        })
+                                                                    }
+                                                                    self.isAscendingByAlphabetEnabled = false
                                                                 }
-                                                                self.isAscendingByAmountEnabled = false
-                                                            } else if(isAscendingByAmountEnabled) {
-                                                                if(isAscendingByAmount) {
-                                                                    watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                                                        $0.currentBalance < $1.currentBalance
-                                                                    }).map({
-                                                                        $0.id!
-                                                                    })
+                                                                if(!accountViewModel.accountList.isEmpty) {
+                                                                    await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                                                                 } else {
-                                                                    watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                                                                        $0.currentBalance > $1.currentBalance
-                                                                    }).map({
-                                                                        $0.id!
-                                                                    })
+                                                                    accountViewModel.totalBalance = Balance(currentValue: 0.0)
                                                                 }
-                                                                self.isAscendingByAlphabetEnabled = false
                                                             }
-                                                            if(!accountViewModel.accountList.isEmpty) {
-                                                                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                                                            } else {
-                                                                accountViewModel.totalBalance = Balance(currentValue: 0.0)
-                                                            }
-                                                        }
-                                                    }, label: {
-                                                        Label("Delete", systemImage: "trash")
-                                                    })
-                                                }
-                                                // MARK: New Transaction
-                                                Button {
-                                                    Task.init {
-                                                        await accountViewModel.getAccount(id: account)
+                                                        }, label: {
+                                                            Label("Delete", systemImage: "trash")
+                                                        })
                                                     }
-                                                    isNewTransactionViewOpen.toggle()
-                                                } label: {
-                                                    Label("New Transaction", systemImage: "square.and.pencil")
+                                                    
+                                                    if(isAccountActive(id: accountID)) {
+                                                        // MARK: New Transaction
+                                                        Button {
+                                                            Task.init {
+                                                                await accountViewModel.getAccount(id: accountID)
+                                                            }
+                                                            isNewTransactionViewOpen.toggle()
+                                                        } label: {
+                                                            Label("New Transaction", systemImage: "square.and.pencil")
+                                                        }
+                                                    }
                                                 }
-                                            }
-                                    })
+                                        })
+                                    }
                                 }
                                 .padding(10)
                             }
@@ -264,6 +270,10 @@ struct WatchDetailView: View {
                         }, label: {
                             Text("Sort by")
                         })
+                        
+                        Toggle(isOn: $hideInactiveAccount, label: {
+                            Text("Hide Inactive Accounts")
+                        })
                     }, label: {
                         Image(systemName: "ellipsis")
                             .foregroundColor(Color.theme.primaryText)
@@ -340,5 +350,11 @@ struct WatchDetailView: View {
                 
             }
         }
+    }
+    
+    private func isAccountActive(id: String) -> Bool {
+        return ApplicationData.shared.accountList.filter {
+            $0.key.id!.elementsEqual(id) && $0.key.active
+        }.count > 0
     }
 }
