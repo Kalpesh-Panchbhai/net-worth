@@ -27,7 +27,6 @@ struct BarLollipopChartView: View {
                 .accessibilityLabel(data.date.formatted(date: .complete, time: .omitted))
                 .accessibilityValue("\(data.value)")
                 .foregroundStyle(Color.theme.secondaryText.gradient)
-                .interpolationMethod(.catmullRom)
             }
         }
         .chartXAxis {
