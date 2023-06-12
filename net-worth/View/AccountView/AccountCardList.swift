@@ -40,66 +40,22 @@ struct AccountCardList: View {
                         Divider()
                         ScrollView(.vertical) {
                             ForEach(accountViewModel.sectionHeaders, id: \.self) { accountType in
-                                HStack {
-                                    Text(accountType.uppercased())
-                                        .foregroundColor(Color.theme.primaryText)
-                                        .bold()
-                                        .font(.system(size: 15))
-                                    Spacer()
-                                    NavigationLink(destination: {
-                                        AccountListView(accountType: accountType, watchViewModel: watchViewModel)
-                                            .toolbarRole(.editor)
-                                    }, label: {
-                                        Text("See all")
-                                            .foregroundColor(Color.theme.primaryText)
-                                            .bold()
-                                            .font(.system(size: 15))
-                                    })
-                                }
-                                .padding(.horizontal, 8)
+                                AccountCardListHeader(accountType: accountType, watchViewModel: watchViewModel)
+                                
                                 TabView {
                                     ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
-                                        VStack {
-                                            NavigationLink(destination: {
-                                                AccountDetailView(account: account,accountViewModel:  accountViewModel, watchViewModel: watchViewModel)
-                                                    .toolbarRole(.editor)
-                                            }) {
-                                                AccountCardView(account: account)
-                                                    .contextMenu {
-                                                        
-                                                        Label(account.id!, systemImage: "info.square")
-                                                        
-                                                        Button(role: .destructive, action: {
-                                                            isPresentingAccountDeleteConfirm.toggle()
-                                                            deletedAccount = account
-                                                        }, label: {
-                                                            Label("Delete", systemImage: "trash")
-                                                        })
-                                                        
-                                                        if(account.active) {
-                                                            Button {
-                                                                Task.init {
-                                                                    await accountViewModel.getAccount(id: account.id!)
-                                                                }
-                                                                isNewTransactionViewOpen.toggle()
-                                                            } label: {
-                                                                Label("New Transaction", systemImage: "square.and.pencil")
-                                                            }
-                                                        }
+                                        AccountCard(account: account, isNewTransactionViewOpen: $isNewTransactionViewOpen, isPresentingAccountDeleteConfirm: $isPresentingAccountDeleteConfirm, deletedAccount: $deletedAccount, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
+                                            .confirmationDialog("Are you sure?",
+                                                                isPresented: $isPresentingAccountDeleteConfirm) {
+                                                Button("Delete account " + deletedAccount.accountName + "?", role: .destructive) {
+                                                    Task.init {
+                                                        await accountController.deleteAccount(account: deletedAccount)
+                                                        await accountViewModel.getAccountList()
+                                                        await watchViewModel.getAllWatchList()
+                                                        await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                                                     }
-                                            }
-                                        }
-                                        .confirmationDialog("Are you sure?",
-                                                            isPresented: $isPresentingAccountDeleteConfirm) {
-                                            Button("Delete account " + deletedAccount.accountName + "?", role: .destructive) {
-                                                Task.init {
-                                                    await accountController.deleteAccount(account: deletedAccount)
-                                                    await accountViewModel.getAccountList()
-                                                    await watchViewModel.getAllWatchList()
-                                                    await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                                                 }
                                             }
-                                        }
                                     }
                                 }
                                 .frame(width: 360, height: 200)
