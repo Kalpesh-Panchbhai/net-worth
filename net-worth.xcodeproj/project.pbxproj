@@ -42,6 +42,7 @@
 		7D6F885229F8FBFB000AE48A /* IncomeChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6F885129F8FBFB000AE48A /* IncomeChartView.swift */; };
 		7D730E1129937D370002E0ED /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D730E1029937D370002E0ED /* OnboardingView.swift */; };
 		7D76290529A385EA00F71D7C /* IncomeTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D76290429A385EA00F71D7C /* IncomeTag.swift */; };
+		7D798FFA2A3735B2002170E5 /* BarLollipopChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D798FF92A3735B2002170E5 /* BarLollipopChartView.swift */; };
 		7D79FA51291B7430004A2ECF /* net_worthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA50291B7430004A2ECF /* net_worthApp.swift */; };
 		7D79FA55291B7431004A2ECF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D79FA54291B7431004A2ECF /* Assets.xcassets */; };
 		7D79FA58291B7431004A2ECF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D79FA57291B7431004A2ECF /* Preview Assets.xcassets */; };
@@ -155,6 +156,7 @@
 		7D6F885129F8FBFB000AE48A /* IncomeChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeChartView.swift; sourceTree = "<group>"; };
 		7D730E1029937D370002E0ED /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		7D76290429A385EA00F71D7C /* IncomeTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTag.swift; sourceTree = "<group>"; };
+		7D798FF92A3735B2002170E5 /* BarLollipopChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarLollipopChartView.swift; sourceTree = "<group>"; };
 		7D79FA4D291B7430004A2ECF /* net-worth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "net-worth.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D79FA50291B7430004A2ECF /* net_worthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = net_worthApp.swift; sourceTree = "<group>"; };
 		7D79FA54291B7431004A2ECF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -445,6 +447,7 @@
 			isa = PBXGroup;
 			children = (
 				7DCA54762A2B5C9E009938E1 /* SingleLineLollipopChartView.swift */,
+				7D798FF92A3735B2002170E5 /* BarLollipopChartView.swift */,
 			);
 			path = Chart;
 			sourceTree = "<group>";
@@ -730,6 +733,7 @@
 				7D79FA8C291BA152004A2ECF /* NewAccountView.swift in Sources */,
 				7D2D38412A2C8945006C0AD2 /* ApplicationData.swift in Sources */,
 				7D433CF829386002007FA625 /* FinanceModel.swift in Sources */,
+				7D798FFA2A3735B2002170E5 /* BarLollipopChartView.swift in Sources */,
 				7D730E1129937D370002E0ED /* OnboardingView.swift in Sources */,
 				7D69DD732932312400F024A6 /* ConstantUtils.swift in Sources */,
 				7D111E752A25C21B00485DB1 /* NetWorthChartView.swift in Sources */,

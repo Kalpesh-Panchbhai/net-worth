@@ -23,6 +23,9 @@ struct IncomeChartView: View {
     @State var cumulativeView = false
     @State var taxPaidView = false
     
+    @State var incomeChartDataList = [ChartData]()
+    @State var incomeAvg = 0.0
+    
     @ObservedObject var incomeViewModel = IncomeViewModel()
     
     @Environment(\.scenePhase) var scenePhase
@@ -59,37 +62,25 @@ struct IncomeChartView: View {
                         Spacer()
                         Button("Cumulative") {
                             self.cumulativeView.toggle()
-                            Task.init {
-                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                for(index,_) in incomeViewModel.incomeList.enumerated() {
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
-                                        withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
-                                            incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
-                                        }
-                                    }
-                                }
-                            }
+                            
+                            updateChartData()
                         }.buttonStyle(.borderedProminent)
                             .tint(self.cumulativeView ? Color.theme.green : .blue)
                             .font(.system(size: 13))
                         Button("Tax Paid") {
                             self.taxPaidView.toggle()
-                            Task.init {
-                                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                for(index,_) in incomeViewModel.incomeList.enumerated() {
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
-                                        withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
-                                            incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
-                                        }
-                                    }
-                                }
-                            }
+                            
+                            updateChartData()
                         }.buttonStyle(.borderedProminent)
                             .tint(self.taxPaidView ? Color.theme.green : .blue)
                             .font(.system(size: 13))
                     }
                     
-                    AnimatedChart()
+                    if(cumulativeView) {
+                        SingleLineLollipopChartView(chartDataList: incomeChartDataList)
+                    } else {
+                        BarLollipopChartView(chartDataList: incomeChartDataList, average: incomeAvg)
+                    }
                     
                 }
                 .padding()
@@ -108,16 +99,8 @@ struct IncomeChartView: View {
                                 filterIncomeTag = ""
                                 filterYear = ""
                                 filterFinancialYear = ""
-                                Task.init {
-                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                    for(index,_) in incomeViewModel.incomeList.enumerated() {
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
-                                            withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
-                                                incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
-                                            }
-                                        }
-                                    }
-                                }
+                                
+                                updateChartData()
                             }, label: {
                                 Text("Clear")
                                     .foregroundColor(Color.theme.primaryText)
@@ -134,16 +117,8 @@ struct IncomeChartView: View {
                                         ForEach(incomeViewModel.incomeTypeList, id: \.self) { item in
                                             Button(action: {
                                                 filterIncomeType = item.name
-                                                Task.init {
-                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                                    for(index,_) in incomeViewModel.incomeList.enumerated() {
-                                                        DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
-                                                            withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
-                                                                incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
-                                                            }
-                                                        }
-                                                    }
-                                                }
+                                                
+                                                updateChartData()
                                             }, label: {
                                                 Text(item.name)
                                             })
@@ -158,16 +133,8 @@ struct IncomeChartView: View {
                                         ForEach(incomeViewModel.incomeTagList, id: \.self) { item in
                                             Button(action: {
                                                 filterIncomeTag = item.name
-                                                Task.init {
-                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                                    for(index,_) in incomeViewModel.incomeList.enumerated() {
-                                                        DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
-                                                            withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
-                                                                incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
-                                                            }
-                                                        }
-                                                    }
-                                                }
+                                                
+                                                updateChartData()
                                             }, label: {
                                                 Text(item.name)
                                             })
@@ -183,16 +150,8 @@ struct IncomeChartView: View {
                                             Button(action: {
                                                 filterYear = item
                                                 filterFinancialYear = ""
-                                                Task.init {
-                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                                    for(index,_) in incomeViewModel.incomeList.enumerated() {
-                                                        DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
-                                                            withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
-                                                                incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
-                                                            }
-                                                        }
-                                                    }
-                                                }
+                                                
+                                                updateChartData()
                                             }, label: {
                                                 Text(item)
                                             })
@@ -208,16 +167,8 @@ struct IncomeChartView: View {
                                             Button(action: {
                                                 filterYear = ""
                                                 filterFinancialYear = item
-                                                Task.init {
-                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                                                    for(index,_) in incomeViewModel.incomeList.enumerated() {
-                                                        DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
-                                                            withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
-                                                                incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
-                                                            }
-                                                        }
-                                                    }
-                                                }
+                                                
+                                                updateChartData()
                                             }, label: {
                                                 Text(item)
                                             })
@@ -248,102 +199,6 @@ struct IncomeChartView: View {
                 scenePhaseBlur = 5
             }
         })
-    }
-    
-    @ViewBuilder
-    func AnimatedChart() -> some View {
-        Chart {
-            ForEach(incomeViewModel.incomeList, id: \.id) { income in
-                // MARK: Line Graph
-                LineMark(
-                    x: .value("Time", income.creditedOn),
-                    y: .value("Amount",income.animate ? (cumulativeView ? (taxPaidView ? income.cumulativeTaxPaid : income.cumulativeAmount) : (taxPaidView ? income.taxpaid : income.amount)) : 0.0)
-                )
-                .foregroundStyle(Color.theme.primaryText.gradient)
-                .interpolationMethod(.catmullRom)
-                
-                AreaMark(
-                    x: .value("Time", income.creditedOn),
-                    y: .value("Amount",income.animate ? (cumulativeView ? (taxPaidView ? income.cumulativeTaxPaid : income.cumulativeAmount) : (taxPaidView ? income.taxpaid : income.amount)) : 0.0)
-                )
-                .foregroundStyle(Color.theme.primaryText.opacity(0.1).gradient)
-                .interpolationMethod(.catmullRom)
-                
-                if let currentActiveIncome, currentActiveIncome.id == income.id {
-                    RuleMark(x: .value("Time", currentActiveIncome.creditedOn))
-                        .lineStyle(.init(lineWidth: 2, miterLimit: 2, dash: [2], dashPhase: 5))
-                        .offset(x: (plotWidth / CGFloat(incomeViewModel.incomeList.count)) / 2)
-                        .annotation(position: .top) {
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text("Views")
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                
-                                if(taxPaidView) {
-                                    Text(currentActiveIncome.taxpaid.stringFormat)
-                                        .font(.title3.bold())
-                                        .foregroundColor(.gray)
-                                } else {
-                                    Text(currentActiveIncome.amount.stringFormat)
-                                        .font(.title3.bold())
-                                        .foregroundColor(.gray)
-                                }
-                                Text(currentActiveIncome.tag)
-                                    .font(.title3.bold())
-                                    .foregroundColor(.gray)
-                                Text(currentActiveIncome.creditedOn.getDateAndFormat())
-                                    .font(.title3.bold())
-                                    .foregroundColor(.gray)
-                            }
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 4)
-                            .background {
-                                RoundedRectangle(cornerRadius: 6, style: .continuous)
-                            }
-                        }
-                }
-            }
-        }
-        // MARK: Customizing Y-AXIS Length
-        .chartYAxis {
-            AxisMarks() { value in
-                AxisGridLine()
-                AxisTick()
-                AxisValueLabel {
-                    Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))")
-                        .foregroundColor(Color.theme.primaryText)
-                }
-            }
-        }
-        .chartYScale(domain: 0...(getMaxYScale() * 1.5))
-        // MARK: Gesture to Highlight Current Bar
-        .chartOverlay(content: { proxy in
-            GeometryReader { innerProxy in
-                Rectangle()
-                    .fill(.clear).contentShape(Rectangle())
-                    .gesture(
-                        DragGesture()
-                            .onChanged { value in
-                                // MARK: Getting Current Location
-                                let location = value.location
-                                
-                                if let date: Date = proxy.value(atX: location.x) {
-                                    let calendar = Calendar.current
-                                    let selectedDate = calendar.dateComponents([.day, .month, .year], from: date)
-                                    if let currentIncome = incomeViewModel.incomeList.first(where: { income in
-                                        calendar.dateComponents([.day, .month, .year], from: income.creditedOn) == selectedDate
-                                    }) {
-                                        self.currentActiveIncome = currentIncome
-                                        self.plotWidth = proxy.plotAreaSize.width
-                                    }
-                                }
-                            }.onEnded { value in
-                                self.currentActiveIncome = nil
-                            }
-                    )
-            }
-        })
-        .frame(height: 250)
         .onAppear {
             Task.init {
                 await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
@@ -351,14 +206,23 @@ struct IncomeChartView: View {
                 await incomeViewModel.getIncomeTypeList()
                 await incomeViewModel.getIncomeYearList()
                 await incomeViewModel.getIncomeFinancialYearList()
-                for(index,_) in incomeViewModel.incomeList.enumerated() {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
-                        withAnimation(.interactiveSpring(response: 0.8, dampingFraction: 0.8, blendDuration: 0.8)) {
-                            incomeViewModel.incomeList[incomeViewModel.incomeList.count - 1 - index].animate = true
-                        }
-                    }
-                }
+                
+                updateChartData()
             }
+        }
+    }
+    
+    private func updateChartData() {
+        Task.init {
+            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+            incomeChartDataList = [ChartData]()
+            for income in incomeViewModel.incomeList {
+                incomeChartDataList.append(ChartData(date: income.creditedOn, value: cumulativeView ? (taxPaidView ? income.cumulativeTaxPaid : income.cumulativeAmount) : (taxPaidView ? income.taxpaid : income.amount)))
+            }
+            
+            incomeAvg = taxPaidView ? (incomeViewModel.incomeList.first?.avgTaxPaid ?? 0.0) : (incomeViewModel.incomeList.first?.avgAmount ?? 0.0)
+            
+            incomeChartDataList.reverse()
         }
     }
     
@@ -393,23 +257,5 @@ struct IncomeChartView: View {
             }
         }
         return returnString
-    }
-    
-    func getMaxYScale() -> Double {
-        var max = 0.0
-        if(cumulativeView && !taxPaidView) {
-            max = incomeViewModel.incomeList.first?.cumulativeAmount ?? 0.0
-        } else if(!cumulativeView && !taxPaidView) {
-            max = incomeViewModel.incomeList.max { item1, item2 in
-                item2.amount > item1.amount
-            }?.amount ?? 0.0
-        } else if(cumulativeView && taxPaidView) {
-            max = incomeViewModel.incomeList.first?.cumulativeTaxPaid ?? 0.0
-        } else {
-            max = incomeViewModel.incomeList.max { item1, item2 in
-                item2.taxpaid > item1.taxpaid
-            }?.taxpaid ?? 0.0
-        }
-        return max
     }
 }

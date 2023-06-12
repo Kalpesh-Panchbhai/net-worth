@@ -77,7 +77,6 @@ struct IncomeView: View {
                                 // MARK: Chart Sheet View
                                 .sheet(isPresented: $isChartViewOpen) {
                                     IncomeChartView()
-                                        .presentationDetents([.medium])
                                 }
                                 .listStyle(.insetGrouped)
                                 .toolbar {
