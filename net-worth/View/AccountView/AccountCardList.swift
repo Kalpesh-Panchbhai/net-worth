@@ -108,7 +108,6 @@ struct AccountCardList: View {
                                                         }
                                                     }
                                                     .padding(10)
-                                                    
                                                 }
                                                 .padding(5)
                                             }
