@@ -83,7 +83,7 @@ struct IncomeChartView: View {
                             SingleLineLollipopChartView(chartDataList: incomeChartDataList)
                                 .listRowBackground(Color.theme.foreground)
                         } else {
-                            BarLollipopChartView(chartDataList: incomeChartDataList, average: incomeAvg)
+                            BarLollipopChartView(chartDataList: incomeChartDataList, average: incomeAvg, isAverageChart: true)
                                 .listRowBackground(Color.theme.foreground)
                         }
                     }

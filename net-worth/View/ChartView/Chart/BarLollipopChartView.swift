@@ -11,7 +11,8 @@ import Charts
 struct BarLollipopChartView: View {
     
     var chartDataList: [ChartData]
-    var average: Double
+    var average: Double = 0.0
+    var isAverageChart: Bool = false
     var isPercentageChart: Bool = false
     
     @State private var lineWidth = 2.0
@@ -27,6 +28,36 @@ struct BarLollipopChartView: View {
                 .accessibilityLabel(data.date.formatted(date: .complete, time: .omitted))
                 .accessibilityValue("\(data.value)")
                 .foregroundStyle(Color.theme.primaryText.gradient)
+            }
+            
+            if(isAverageChart) {
+                if(average >= 0) {
+                    RuleMark(y: .value("Value", average))
+                        .foregroundStyle(Color.theme.green)
+                        .annotation(alignment: .leading, content: {
+                            Text("Average")
+                                .font(.system(size: 10))
+                                .foregroundColor(Color.theme.green)
+                        })
+                        .annotation(position: .bottom, alignment: .leading, content: {
+                            Text(average.withCommas(decimalPlace: 2))
+                                .font(.system(size: 10))
+                                .foregroundColor(Color.theme.green)
+                        })
+                } else {
+                    RuleMark(y: .value("Value", average))
+                        .foregroundStyle(Color.theme.red)
+                        .annotation(alignment: .leading, content: {
+                            Text("Average")
+                                .font(.system(size: 10))
+                                .foregroundColor(Color.theme.red)
+                        })
+                        .annotation(position: .bottom, alignment: .leading, content: {
+                            Text(average.withCommas(decimalPlace: 2))
+                                .font(.system(size: 10))
+                                .foregroundColor(Color.theme.red)
+                        })
+                }
             }
         }
         .chartXAxis {
