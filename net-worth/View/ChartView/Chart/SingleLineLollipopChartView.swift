@@ -116,9 +116,15 @@ struct SingleLineLollipopChartView: View {
                             Text("\(selectedElement.date, format: .dateTime.year().month().day())")
                                 .font(.system(size: 10).bold())
                                 .foregroundColor(Color.theme.background)
-                            Text("\(selectedElement.value.withCommas(decimalPlace: 2))")
-                                .font(.system(size: 12).bold())
-                                .foregroundColor(Color.theme.background)
+                            if(isPercentageChart) {
+                                Text("\(selectedElement.value.withCommas(decimalPlace: 2))%")
+                                    .font(.system(size: 12).bold())
+                                    .foregroundColor(Color.theme.background)
+                            } else {
+                                Text("\(selectedElement.value.withCommas(decimalPlace: 2))")
+                                    .font(.system(size: 12).bold())
+                                    .foregroundColor(Color.theme.background)
+                            }
                         }
                         .accessibilityElement(children: .combine)
                         .accessibilityHidden(false)
