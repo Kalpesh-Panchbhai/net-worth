@@ -23,7 +23,8 @@ struct BarLollipopChartView: View {
             ForEach(chartDataList, id: \.self) { data in
                 BarMark(
                     x: .value("Date", data.date),
-                    y: .value("Value", data.value)
+                    y: .value("Value", data.value),
+                    width: .fixed(2)
                 )
                 .accessibilityLabel(data.date.formatted(date: .complete, time: .omitted))
                 .accessibilityValue("\(data.value)")
