@@ -35,14 +35,6 @@ struct IncomeChartView: View {
             VStack {
                 VStack(alignment: .leading) {
                     List {
-                        HStack {
-                            if(!(filterIncomeType.isEmpty && filterIncomeTag.isEmpty && filterYear.isEmpty && filterFinancialYear.isEmpty)) {
-                                Text(getAppliedFilter())
-                                    .fontWeight(.semibold)
-                            }
-                        }
-                        .listRowBackground(Color.theme.foreground)
-                        
                         let totalAmount = incomeViewModel.incomeList.reduce(0.0) { partialResult, item in
                             item.amount + partialResult
                         }
@@ -86,6 +78,15 @@ struct IncomeChartView: View {
                             BarLollipopChartView(chartDataList: incomeChartDataList, average: incomeAvg, isAverageChart: true)
                                 .listRowBackground(Color.theme.foreground)
                         }
+                        
+                        if(!(filterIncomeType.isEmpty && filterIncomeTag.isEmpty && filterYear.isEmpty && filterFinancialYear.isEmpty)) {
+                            HStack {
+                                Text(getAppliedFilter())
+                                    .font(.system(size: 14))
+                            }
+                            .listRowBackground(Color.theme.foreground)
+                        }
+                        
                     }
                 }
             }
@@ -239,7 +240,7 @@ struct IncomeChartView: View {
         }
         if(!filterIncomeTag.isEmpty) {
             if(filterAlreadyApplied) {
-                returnString = returnString + "," + filterIncomeTag
+                returnString = returnString + ", " + filterIncomeTag
             } else {
                 returnString = "Applied Filter: " + filterIncomeTag
                 filterAlreadyApplied = true
@@ -247,7 +248,7 @@ struct IncomeChartView: View {
         }
         if(!filterYear.isEmpty) {
             if(filterAlreadyApplied) {
-                returnString = returnString + "," + filterYear
+                returnString = returnString + ", " + filterYear
             } else {
                 returnString = "Applied Filter: " + filterYear
                 filterAlreadyApplied = true
@@ -255,7 +256,7 @@ struct IncomeChartView: View {
         }
         if(!filterFinancialYear.isEmpty) {
             if(filterAlreadyApplied) {
-                returnString = returnString + "," + filterFinancialYear
+                returnString = returnString + ", " + filterFinancialYear
             } else {
                 returnString = "Applied Filter: " + filterFinancialYear
             }
