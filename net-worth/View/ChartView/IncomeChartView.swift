@@ -33,57 +33,61 @@ struct IncomeChartView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                VStack(alignment: .leading,spacing: 12) {
-                    HStack {
-                        if(!(filterIncomeType.isEmpty && filterIncomeTag.isEmpty && filterYear.isEmpty && filterFinancialYear.isEmpty)) {
-                            Text(getAppliedFilter())
-                                .fontWeight(.semibold)
+                VStack(alignment: .leading) {
+                    List {
+                        HStack {
+                            if(!(filterIncomeType.isEmpty && filterIncomeTag.isEmpty && filterYear.isEmpty && filterFinancialYear.isEmpty)) {
+                                Text(getAppliedFilter())
+                                    .fontWeight(.semibold)
+                            }
                         }
-                    }
-                    
-                    let totalAmount = incomeViewModel.incomeList.reduce(0.0) { partialResult, item in
-                        item.amount + partialResult
-                    }
-                    
-                    let totalTaxPaid = incomeViewModel.incomeList.reduce(0.0) { partialResult, item in
-                        item.taxpaid + partialResult
-                    }
-                    
-                    HStack {
-                        if(taxPaidView) {
-                            Text(totalTaxPaid.stringFormat)
-                                .foregroundColor(Color.theme.primaryText)
-                                .font(.title3.bold())
+                        .listRowBackground(Color.theme.foreground)
+                        
+                        let totalAmount = incomeViewModel.incomeList.reduce(0.0) { partialResult, item in
+                            item.amount + partialResult
+                        }
+                        
+                        let totalTaxPaid = incomeViewModel.incomeList.reduce(0.0) { partialResult, item in
+                            item.taxpaid + partialResult
+                        }
+                        
+                        HStack {
+                            if(taxPaidView) {
+                                Text(totalTaxPaid.stringFormat)
+                                    .foregroundColor(Color.theme.primaryText)
+                                    .font(.title3.bold())
+                            } else {
+                                Text(totalAmount.stringFormat)
+                                    .foregroundColor(Color.theme.primaryText)
+                                    .font(.title3.bold())
+                            }
+                            Spacer()
+                            Button("Cumulative") {
+                                self.cumulativeView.toggle()
+                                
+                                updateChartData()
+                            }.buttonStyle(.borderedProminent)
+                                .tint(self.cumulativeView ? Color.theme.green : .blue)
+                                .font(.system(size: 13))
+                            Button("Tax Paid") {
+                                self.taxPaidView.toggle()
+                                
+                                updateChartData()
+                            }.buttonStyle(.borderedProminent)
+                                .tint(self.taxPaidView ? Color.theme.green : .blue)
+                                .font(.system(size: 13))
+                        }
+                        .listRowBackground(Color.theme.foreground)
+                        
+                        if(cumulativeView) {
+                            SingleLineLollipopChartView(chartDataList: incomeChartDataList)
+                                .listRowBackground(Color.theme.foreground)
                         } else {
-                            Text(totalAmount.stringFormat)
-                                .foregroundColor(Color.theme.primaryText)
-                                .font(.title3.bold())
+                            BarLollipopChartView(chartDataList: incomeChartDataList, average: incomeAvg)
+                                .listRowBackground(Color.theme.foreground)
                         }
-                        Spacer()
-                        Button("Cumulative") {
-                            self.cumulativeView.toggle()
-                            
-                            updateChartData()
-                        }.buttonStyle(.borderedProminent)
-                            .tint(self.cumulativeView ? Color.theme.green : .blue)
-                            .font(.system(size: 13))
-                        Button("Tax Paid") {
-                            self.taxPaidView.toggle()
-                            
-                            updateChartData()
-                        }.buttonStyle(.borderedProminent)
-                            .tint(self.taxPaidView ? Color.theme.green : .blue)
-                            .font(.system(size: 13))
                     }
-                    
-                    if(cumulativeView) {
-                        SingleLineLollipopChartView(chartDataList: incomeChartDataList)
-                    } else {
-                        BarLollipopChartView(chartDataList: incomeChartDataList, average: incomeAvg)
-                    }
-                    
                 }
-                .padding()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .padding()
