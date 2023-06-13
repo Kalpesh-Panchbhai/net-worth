@@ -65,35 +65,33 @@ struct AccountCardList: View {
                                             ScrollView(.horizontal, showsIndicators: false) {
                                                 LazyHStack {
                                                     ForEach(0..<((accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 5) ? 5 : accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count), id: \.self) { i in
-                                                        VStack {
-                                                            NavigationLink(destination: {
-                                                                AccountDetailView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i],accountViewModel:  accountViewModel, watchViewModel: watchViewModel)
-                                                                    .toolbarRole(.editor)
-                                                            }) {
-                                                                AccountCardView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i])
-                                                                    .contextMenu {
-                                                                        
-                                                                        Label(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i].id!, systemImage: "info.square")
-                                                                        
-                                                                        Button(role: .destructive, action: {
-                                                                            isPresentingAccountDeleteConfirm.toggle()
-                                                                            deletedAccount = accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i];
-                                                                        }, label: {
-                                                                            Label("Delete", systemImage: "trash")
-                                                                        })
-                                                                        
-                                                                        if(accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].active) {
-                                                                            Button {
-                                                                                Task.init {
-                                                                                    await accountViewModel.getAccount(id: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].id!)
-                                                                                }
-                                                                                isNewTransactionViewOpen.toggle()
-                                                                            } label: {
-                                                                                Label("New Transaction", systemImage: "square.and.pencil")
+                                                        NavigationLink(destination: {
+                                                            AccountDetailView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i],accountViewModel:  accountViewModel, watchViewModel: watchViewModel)
+                                                                .toolbarRole(.editor)
+                                                        }) {
+                                                            AccountCardView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i])
+                                                                .contextMenu {
+                                                                    
+                                                                    Label(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i].id!, systemImage: "info.square")
+                                                                    
+                                                                    Button(role: .destructive, action: {
+                                                                        isPresentingAccountDeleteConfirm.toggle()
+                                                                        deletedAccount = accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i];
+                                                                    }, label: {
+                                                                        Label("Delete", systemImage: "trash")
+                                                                    })
+                                                                    
+                                                                    if(accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].active) {
+                                                                        Button {
+                                                                            Task.init {
+                                                                                await accountViewModel.getAccount(id: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].id!)
                                                                             }
+                                                                            isNewTransactionViewOpen.toggle()
+                                                                        } label: {
+                                                                            Label("New Transaction", systemImage: "square.and.pencil")
                                                                         }
                                                                     }
-                                                            }
+                                                                }
                                                         }
                                                         .confirmationDialog("Are you sure?",
                                                                             isPresented: $isPresentingAccountDeleteConfirm) {
