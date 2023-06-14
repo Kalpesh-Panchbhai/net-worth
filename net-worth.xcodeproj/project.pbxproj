@@ -38,6 +38,7 @@
 		7D5F29112A0FD0B900D365DD /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5F29102A0FD0B900D365DD /* NetworkMonitor.swift */; };
 		7D65547429A107950008A8E2 /* ChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D65547329A107950008A8E2 /* ChartViewModel.swift */; };
 		7D65547629A107DC0008A8E2 /* ChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D65547529A107DC0008A8E2 /* ChartData.swift */; };
+		7D6885C72A399F0600B47392 /* IncomeCalculation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6885C62A399F0600B47392 /* IncomeCalculation.swift */; };
 		7D69DD732932312400F024A6 /* ConstantUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D69DD722932312400F024A6 /* ConstantUtils.swift */; };
 		7D6F885229F8FBFB000AE48A /* IncomeChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6F885129F8FBFB000AE48A /* IncomeChartView.swift */; };
 		7D730E1129937D370002E0ED /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D730E1029937D370002E0ED /* OnboardingView.swift */; };
@@ -152,6 +153,7 @@
 		7D5F29102A0FD0B900D365DD /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		7D65547329A107950008A8E2 /* ChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewModel.swift; sourceTree = "<group>"; };
 		7D65547529A107DC0008A8E2 /* ChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartData.swift; sourceTree = "<group>"; };
+		7D6885C62A399F0600B47392 /* IncomeCalculation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeCalculation.swift; sourceTree = "<group>"; };
 		7D69DD722932312400F024A6 /* ConstantUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstantUtils.swift; sourceTree = "<group>"; };
 		7D6F885129F8FBFB000AE48A /* IncomeChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeChartView.swift; sourceTree = "<group>"; };
 		7D730E1029937D370002E0ED /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -263,6 +265,7 @@
 				7D596277294105A40008A6B9 /* Balance.swift */,
 				7DEC3B7F2938A38B002E9C8B /* FinanceDetailModel.swift */,
 				7D433CF729386002007FA625 /* FinanceModel.swift */,
+				7D6885C62A399F0600B47392 /* IncomeCalculation.swift */,
 				7DD8E5AD2A06310A00245A98 /* Backup */,
 				7D4FF8032A1BBAE90060CE44 /* FirebaseModel */,
 			);
@@ -659,6 +662,7 @@
 				7D14A8F02A0253A9002FC324 /* AccountWatchChartView.swift in Sources */,
 				7D3E3CBF2A1FC4FC009538BA /* RowAccountToWatchView.swift in Sources */,
 				7D2C76202A0B5B8900CE606C /* Color.swift in Sources */,
+				7D6885C72A399F0600B47392 /* IncomeCalculation.swift in Sources */,
 				7D65547629A107DC0008A8E2 /* ChartData.swift in Sources */,
 				7DB98808299B8A99004ED6D2 /* AccountToWatchView.swift in Sources */,
 				7DC97A2C29223ADB003F69D4 /* NewIncomeView.swift in Sources */,

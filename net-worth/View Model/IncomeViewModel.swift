@@ -15,7 +15,7 @@ class IncomeViewModel: ObservableObject {
     var incomeTypeController = IncomeTypeController()
     var incomeTagController = IncomeTagController()
     
-    @Published var incomeList = [Income]()
+    @Published var incomeList = [IncomeCalculation]()
     @Published var incomeListLoaded = false
     @Published var incomeTotalAmount = 0.0
     @Published var incomeTaxPaidAmount = 0.0

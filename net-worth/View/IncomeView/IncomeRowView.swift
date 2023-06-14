@@ -9,7 +9,7 @@ import SwiftUI
 
 struct IncomeRowView: View {
     
-    var income: Income
+    var income: IncomeCalculation
     
     @Binding var showTaxPaid: Bool
     

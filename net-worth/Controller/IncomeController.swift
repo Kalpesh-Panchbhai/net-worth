@@ -53,7 +53,7 @@ class IncomeController {
         return incomeList
     }
     
-    public func getIncomeList(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async -> [Income] {
+    public func getIncomeList(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async -> [IncomeCalculation] {
         var incomeList = [Income]()
         
         if(await UserController().isNewIncomeAvailable()) {
@@ -127,7 +127,7 @@ class IncomeController {
         
         var cumAmount = 0.0
         var cumTaxPaid = 0.0
-        incomeList = incomeList.map { value1 in
+        let returnIncomeList = incomeList.map { value1 in
             var sumAmount = 0.0
             var sumTaxPaid = 0.0
             var totalMonth = 0
@@ -140,19 +140,19 @@ class IncomeController {
                     totalMonth+=1
                 }
             }
-            return Income(id: value1.id,
-                          amount: value1.amount,
-                          taxpaid: value1.taxpaid,
-                          creditedOn: value1.creditedOn,
-                          currency: value1.currency,
-                          type: value1.type,
-                          tag: value1.tag,
-                          avgAmount: sumAmount / Double(totalMonth),
-                          avgTaxPaid: sumTaxPaid / Double(totalMonth),
-                          cumulativeAmount: cumAmount,
-                          cumulativeTaxPaid: cumTaxPaid)
-        }.reversed()
-        return incomeList
+            return IncomeCalculation(id: value1.id,
+                                     amount: value1.amount,
+                                     taxpaid: value1.taxpaid,
+                                     creditedOn: value1.creditedOn,
+                                     currency: value1.currency,
+                                     type: value1.type,
+                                     tag: value1.tag,
+                                     avgAmount: sumAmount / Double(totalMonth),
+                                     avgTaxPaid: sumTaxPaid / Double(totalMonth),
+                                     cumulativeAmount: cumAmount,
+                                     cumulativeTaxPaid: cumTaxPaid)
+        }
+        return returnIncomeList.reversed()
     }
     
     public func fetchTotalAmount(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async -> Double {
@@ -200,7 +200,7 @@ class IncomeController {
         if(incomeList.isEmpty) {
             return returnResponse
         }
-    
+        
         let firstYear = Calendar.current.dateComponents([.year], from: incomeList.last!.creditedOn).year!
         let lastYear = Calendar.current.dateComponents([.year], from: incomeList.first!.creditedOn).year!
         

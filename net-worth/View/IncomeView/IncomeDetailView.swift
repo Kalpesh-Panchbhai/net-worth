@@ -9,7 +9,7 @@ import SwiftUI
 
 struct IncomeDetailView: View {
     
-    var income: Income
+    var income: IncomeCalculation
     
     @Environment(\.presentationMode) var presentationMode
     
