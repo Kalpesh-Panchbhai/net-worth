@@ -22,6 +22,4 @@ struct Income: Codable, Hashable {
     var avgTaxPaid: Double = 0.0
     var cumulativeAmount: Double = 0.0
     var cumulativeTaxPaid: Double = 0.0
-    
-    var animate: Bool = false
 }

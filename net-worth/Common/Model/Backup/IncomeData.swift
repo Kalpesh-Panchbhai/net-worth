@@ -21,6 +21,4 @@ struct IncomeData: Codable {
     var cumulativeAmount: Double
     var cumulativeTaxPaid: Double
     
-    var animate: Bool
-    
 }
