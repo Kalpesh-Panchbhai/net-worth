@@ -140,7 +140,7 @@ class ImportExportController {
     private func exportIncome() async {
         let incomeList = await incomeController.getIncomeList()
         data.income = incomeList.map { item in
-            return IncomeData(amount: item.amount, taxpaid: item.taxpaid, creditedOn: item.creditedOn, currency: item.currency, type: item.type, tag: item.tag, avgAmount: item.avgAmount, avgTaxPaid: item.avgTaxPaid, cumulativeAmount: item.cumulativeAmount, cumulativeTaxPaid: item.cumulativeTaxPaid)
+            return IncomeData(amount: item.amount, taxpaid: item.taxpaid, creditedOn: item.creditedOn, currency: item.currency, type: item.type, tag: item.tag)
         }
     }
     

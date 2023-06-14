@@ -16,9 +16,4 @@ struct IncomeData: Codable {
     var type: String
     var tag: String
     
-    var avgAmount: Double
-    var avgTaxPaid: Double
-    var cumulativeAmount: Double
-    var cumulativeTaxPaid: Double
-    
 }
