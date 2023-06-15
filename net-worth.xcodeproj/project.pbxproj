@@ -288,8 +288,8 @@
 		7D2461162A335AA800693BA5 /* Component */ = {
 			isa = PBXGroup;
 			children = (
-				7D2461172A335ABF00693BA5 /* LoadingView.swift */,
 				7D2461192A335C8600693BA5 /* EmptyView.swift */,
+				7D2461172A335ABF00693BA5 /* LoadingView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -397,9 +397,9 @@
 		7D79FA88291B9C6E004A2ECF /* View */ = {
 			isa = PBXGroup;
 			children = (
-				7D2461162A335AA800693BA5 /* Component */,
 				7DD7A56C29224C1200CD5B37 /* AccountView */,
 				7DF83F902A094F3300D3233B /* ChartView */,
+				7D2461162A335AA800693BA5 /* Component */,
 				7DD7A56B29224BFD00CD5B37 /* IncomeView */,
 				7D921C58298682FB0014AC9E /* LoginView */,
 				7D87CEF62A0E0475007C1C76 /* MainScreenTabBarView */,
@@ -449,8 +449,8 @@
 		7DCA54752A2B5C8E009938E1 /* Chart */ = {
 			isa = PBXGroup;
 			children = (
-				7DCA54762A2B5C9E009938E1 /* SingleLineLollipopChartView.swift */,
 				7D798FF92A3735B2002170E5 /* BarLollipopChartView.swift */,
+				7DCA54762A2B5C9E009938E1 /* SingleLineLollipopChartView.swift */,
 			);
 			path = Chart;
 			sourceTree = "<group>";
