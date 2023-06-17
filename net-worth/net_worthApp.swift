@@ -8,6 +8,7 @@
 import SwiftUI
 import FirebaseCore
 import GoogleSignIn
+import GoogleMobileAds
 
 @main
 struct net_worthApp: App {
@@ -42,6 +43,9 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         
         UIRefreshControl.appearance().tintColor = UIColor(Color.theme.primaryText)
         UIRefreshControl.appearance().attributedTitle = NSAttributedString(string: "Refreshing...", attributes: [NSAttributedString.Key.foregroundColor: UIColor(Color.theme.primaryText)])
+        
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        
         return true
     }
     

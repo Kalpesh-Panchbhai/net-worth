@@ -84,6 +84,8 @@
 		7DB98804299B682F004ED6D2 /* NewWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB98803299B682F004ED6D2 /* NewWatchView.swift */; };
 		7DB98806299B708C004ED6D2 /* UpdateWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB98805299B708C004ED6D2 /* UpdateWatchView.swift */; };
 		7DB98808299B8A99004ED6D2 /* AccountToWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB98807299B8A99004ED6D2 /* AccountToWatchView.swift */; };
+		7DBE9EF82A3DFB8900159227 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 7DBE9EF72A3DFB8900159227 /* GoogleMobileAds */; };
+		7DBE9EFA2A3DFD2100159227 /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBE9EF92A3DFD2100159227 /* AdBannerView.swift */; };
 		7DC1C4972A1BBD3F00BE24A7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7DC1C4962A1BBD3F00BE24A7 /* GoogleService-Info.plist */; };
 		7DC46B4429A4A4B9000E311B /* NewIncomeTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC46B4329A4A4B9000E311B /* NewIncomeTypeView.swift */; };
 		7DC46B4629A4A513000E311B /* IncomeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC46B4529A4A513000E311B /* IncomeType.swift */; };
@@ -196,6 +198,7 @@
 		7DB98803299B682F004ED6D2 /* NewWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewWatchView.swift; sourceTree = "<group>"; };
 		7DB98805299B708C004ED6D2 /* UpdateWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateWatchView.swift; sourceTree = "<group>"; };
 		7DB98807299B8A99004ED6D2 /* AccountToWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountToWatchView.swift; sourceTree = "<group>"; };
+		7DBE9EF92A3DFD2100159227 /* AdBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdBannerView.swift; sourceTree = "<group>"; };
 		7DC1C4962A1BBD3F00BE24A7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7DC46B4329A4A4B9000E311B /* NewIncomeTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewIncomeTypeView.swift; sourceTree = "<group>"; };
 		7DC46B4529A4A513000E311B /* IncomeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeType.swift; sourceTree = "<group>"; };
@@ -238,6 +241,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7DBE9EF82A3DFB8900159227 /* GoogleMobileAds in Frameworks */,
 				7D921C522986801E0014AC9E /* FirebaseAuth in Frameworks */,
 				7D85D068298D2CCF0019F85E /* FirebaseFirestore in Frameworks */,
 				7D921C55298681BC0014AC9E /* GoogleSignIn in Frameworks */,
@@ -406,6 +410,7 @@
 				7DAC70A7294086420033050C /* OtherView */,
 				7DD7A56D29224C1D00CD5B37 /* SettingsView */,
 				7DF8CCFB299F445300267C29 /* WatchView */,
+				7DBE9EFB2A3E00E500159227 /* AdView */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -444,6 +449,14 @@
 				7D730E1029937D370002E0ED /* OnboardingView.swift */,
 			);
 			path = OtherView;
+			sourceTree = "<group>";
+		};
+		7DBE9EFB2A3E00E500159227 /* AdView */ = {
+			isa = PBXGroup;
+			children = (
+				7DBE9EF92A3DFD2100159227 /* AdBannerView.swift */,
+			);
+			path = AdView;
 			sourceTree = "<group>";
 		};
 		7DCA54752A2B5C8E009938E1 /* Chart */ = {
@@ -564,6 +577,7 @@
 				7D921C56298681BC0014AC9E /* GoogleSignInSwift */,
 				7D85D067298D2CCF0019F85E /* FirebaseFirestore */,
 				7D85D069298D2CCF0019F85E /* FirebaseFirestoreSwift */,
+				7DBE9EF72A3DFB8900159227 /* GoogleMobileAds */,
 			);
 			productName = "net-worth";
 			productReference = 7D79FA4D291B7430004A2ECF /* net-worth.app */;
@@ -596,6 +610,7 @@
 			packageReferences = (
 				7D921C502986801E0014AC9E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				7D921C53298681BC0014AC9E /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				7DBE9EF62A3DFB8900159227 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 			);
 			productRefGroup = 7D79FA4E291B7430004A2ECF /* Products */;
 			projectDirPath = "";
@@ -750,6 +765,7 @@
 				7D4E671329F7D4C900EB6B24 /* IncomeDetailView.swift in Sources */,
 				7D24611A2A335C8600693BA5 /* EmptyView.swift in Sources */,
 				7DA63A4B2996017D00568FCA /* AccountDetailView.swift in Sources */,
+				7DBE9EFA2A3DFD2100159227 /* AdBannerView.swift in Sources */,
 				7D79FA51291B7430004A2ECF /* net_worthApp.swift in Sources */,
 				7D2461182A335ABF00693BA5 /* LoadingView.swift in Sources */,
 			);
@@ -899,6 +915,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.2;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.net-worth.net-worth";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -935,6 +952,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.2;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.net-worth.net-worth";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -984,6 +1002,14 @@
 				minimumVersion = 7.0.0;
 			};
 		};
+		7DBE9EF62A3DFB8900159227 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1011,6 +1037,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7D921C53298681BC0014AC9E /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		7DBE9EF72A3DFB8900159227 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7DBE9EF62A3DFB8900159227 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

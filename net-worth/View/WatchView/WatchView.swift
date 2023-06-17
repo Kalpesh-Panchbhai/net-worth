@@ -65,6 +65,9 @@ struct WatchView: View {
                             })
                         }
                         .listRowBackground(Color.theme.foreground)
+                        
+                        AdBannerView()
+                            .listRowBackground(Color.theme.background)
                     }
                     .foregroundColor(Color.theme.primaryText)
                     .refreshable {

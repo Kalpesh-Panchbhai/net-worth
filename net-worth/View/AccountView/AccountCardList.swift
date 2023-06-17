@@ -39,6 +39,9 @@ struct AccountCardList: View {
                                 BalanceCardView(accountType: "Net Worth", isWatchListCardView: false, watchList: Watch(), accountViewModel: accountViewModel)
                                     .frame(width: 360, height: 70)
                                     .cornerRadius(10)
+                                AdBannerView()
+                                    .listRowBackground(Color.theme.background)
+                                    .frame(height: 50)
                             }
                             Divider()
                             ScrollView(.vertical, showsIndicators: false) {
