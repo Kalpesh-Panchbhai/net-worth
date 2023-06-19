@@ -53,4 +53,15 @@ class CommonController {
         }
     }
     
+    public static func getGrowthPercentage(first: Double, last: Double) -> String {
+        
+        var percentage = first.distance(to: last) / first * 100
+        
+        if((first.distance(to: last) > 0 && percentage < 0) || (first.distance(to: last) < 0 && percentage > 0)) {
+            percentage = percentage * -1.0
+        } else if(percentage.stringFormat.elementsEqual("-0")) {
+            percentage = percentage * -1.0
+        }
+        return percentage.withCommas(decimalPlace: 2) + "%"
+    }
 }

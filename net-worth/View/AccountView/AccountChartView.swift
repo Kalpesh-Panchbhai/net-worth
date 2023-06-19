@@ -21,6 +21,16 @@ struct AccountChartView: View {
         VStack {
             HStack {
                 List {
+                    if(chartViewModel.chartDataList.count > 0) {
+                        HStack {
+                            Text("Growth Rate")
+                            Spacer()
+                            Text(getGrowthPercentage())
+                        }
+                        .listRowBackground(Color.theme.foreground)
+                        .foregroundColor(Color.theme.primaryText)
+                    }
+                    
                     SingleLineLollipopChartView(chartDataList: chartViewModel.chartDataList)
                         .listRowBackground(Color.theme.foreground)
                     
@@ -56,5 +66,9 @@ struct AccountChartView: View {
                 await chartViewModel.getChartData(accountViewModel: accountViewModel)
             }
         }
+    }
+    
+    private func getGrowthPercentage() -> String {
+        return CommonController.getGrowthPercentage(first: chartViewModel.chartDataList.first?.value ?? 0.0, last: chartViewModel.chartDataList.last?.value ?? 0.0)
     }
 }
