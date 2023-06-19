@@ -46,9 +46,6 @@ struct IncomeView: View {
                                 } else {
                                     incomeTotalAmount
                                 }
-                                AdBannerView()
-                                    .listRowBackground(Color.theme.background)
-                                    .frame(height: 50)
                             }
                             Divider()
                             // MARK: List View

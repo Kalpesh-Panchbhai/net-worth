@@ -134,9 +134,6 @@ struct NewAccountView: View {
                 }
                 .listRowBackground(Color.theme.foreground)
                 .foregroundColor(Color.theme.primaryText)
-                
-                AdBannerView()
-                    .listRowBackground(Color.theme.background)
             }
             .toolbar {
                 ToolbarItem {
