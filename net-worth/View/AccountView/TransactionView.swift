@@ -54,10 +54,15 @@ struct TransactionsView: View {
                             }
                             Spacer()
                             VStack(alignment: .trailing) {
-                                Text((accountViewModel.account.currency) + " \(accountViewModel.accountTransactionList[i].currentBalance.withCommas(decimalPlace: 2))")
-                                    .font(.headline)
-                                    .foregroundColor(Color.theme.primaryText)
-                                    .padding(.horizontal)
+                                HStack {
+                                    Text(accountViewModel.account.currency)
+                                        .font(.system(size: 14))
+                                        .foregroundColor(Color.theme.secondaryText)
+                                    Text(accountViewModel.accountTransactionList[i].currentBalance.withCommas(decimalPlace: 2))
+                                        .font(.headline)
+                                        .foregroundColor(Color.theme.primaryText)
+                                }
+                                .padding(.horizontal)
                                 if( i < accountViewModel.accountTransactionList.count) {
                                     if(accountViewModel.accountTransactionList[i].balanceChange > 0) {
                                         Text("+\(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 2))")
