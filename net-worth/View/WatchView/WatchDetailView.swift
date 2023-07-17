@@ -49,7 +49,7 @@ struct WatchDetailView: View {
                                             AccountDetailView(account: Account(id: accountID), accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                                                 .toolbarRole(.editor)
                                         }, label: {
-                                            AccountRowView(account: Account(id: accountID))
+                                            AccountRowView(account: Account(id: accountID), fromWatchView: true)
                                                 .contextMenu {
                                                     Label(accountID, systemImage: "info.square")
                                                     // MARK: Delete

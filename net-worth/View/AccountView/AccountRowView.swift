@@ -10,6 +10,7 @@ import SwiftUI
 struct AccountRowView: View {
     
     var account: Account
+    var fromWatchView: Bool = false
     
     @StateObject var accountViewModel = AccountViewModel()
     
@@ -21,25 +22,19 @@ struct AccountRowView: View {
                     .foregroundColor(Color.theme.primaryText)
                     .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)
-                Spacer()
-                if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
-                    Image(systemName: "bell.fill")
-                        .foregroundColor(Color.theme.primaryText)
-                        .font(.caption.bold())
-                    Text("\(accountViewModel.account.paymentDate)")
-                        .foregroundColor(Color.theme.primaryText)
-                        .font(.caption.bold())
-                } else if(accountViewModel.account.accountType != "Saving") {
-                    Image(systemName: "bell.slash.fill")
-                        .foregroundColor(Color.theme.primaryText)
-                        .font(.caption.bold())
+                if(fromWatchView) {
+                    Spacer()
+                    Text(accountViewModel.account.accountType)
+                        .foregroundColor(Color.theme.secondaryText)
+                        .font(.caption)
+                        .multilineTextAlignment(.leading)
                 }
             }
             Spacer()
             HStack {
                 Text(accountViewModel.account.currency)
-                    .foregroundColor(Color.theme.primaryText)
-                    .font(.caption.bold())
+                    .foregroundColor(Color.theme.secondaryText)
+                    .font(.caption)
                 Text("\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 2))")
                     .foregroundColor(Color.theme.primaryText)
                     .font(.caption.bold())
@@ -58,6 +53,19 @@ struct AccountRowView: View {
                     Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
                         .foregroundColor(Color.theme.green)
                         .font(.caption.bold())
+                    Spacer()
+                    if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
+                        Image(systemName: "bell.fill")
+                            .foregroundColor(Color.theme.secondaryText)
+                            .font(.caption)
+                        Text("\(accountViewModel.account.paymentDate)")
+                            .foregroundColor(Color.theme.secondaryText)
+                            .font(.caption)
+                    } else if(accountViewModel.account.accountType != "Saving") {
+                        Image(systemName: "bell.slash.fill")
+                            .foregroundColor(Color.theme.secondaryText)
+                            .font(.caption)
+                    }
                 } else {
                     Image(systemName: "arrow.down")
                         .foregroundColor(Color.theme.red)
@@ -68,6 +76,19 @@ struct AccountRowView: View {
                     Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
                         .foregroundColor(Color.theme.red)
                         .font(.caption.bold())
+                    Spacer()
+                    if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
+                        Image(systemName: "bell.fill")
+                            .foregroundColor(Color.theme.secondaryText)
+                            .font(.caption)
+                        Text("\(accountViewModel.account.paymentDate)")
+                            .foregroundColor(Color.theme.secondaryText)
+                            .font(.caption)
+                    } else if(accountViewModel.account.accountType != "Saving") {
+                        Image(systemName: "bell.slash.fill")
+                            .foregroundColor(Color.theme.secondaryText)
+                            .font(.caption)
+                    }
                 }
             }
             Spacer()
