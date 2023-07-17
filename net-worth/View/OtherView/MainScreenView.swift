@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct MainScreenView: View {
-    
-    @State var tabSelection: MainScreenTabBarItem = .account
+
     @State var scenePhaseBlur = 0
     @State var networkUnavailable = true
     
@@ -24,19 +23,35 @@ struct MainScreenView: View {
         NavigationStack {
             // MARK: Tab View
             ZStack {
-                MainScreenTabBarContainerView(accountViewModel: accountViewModel, incomeViewModel : incomeViewModel, watchViewModel: watchViewModel, selection: $tabSelection, content: {
+                TabView {
                     AccountCardList(accountViewModel: accountViewModel, watchViewModel: watchViewModel)
-                        .tabBarItem(tab: .account, selection: $tabSelection)
+                        .tabItem {
+                            Label("Accounts", systemImage: "star.circle")
+                        }
+                        .badge(accountViewModel.accountList.count)
+                    
                     WatchView(watchViewModel: watchViewModel)
-                        .tabBarItem(tab: .watchlist, selection: $tabSelection)
+                        .tabItem {
+                            Label("Watch Lists", systemImage: "bookmark")
+                        }
+                        .badge(watchViewModel.watchList.count)
+                    
                     IncomeView(incomeViewModel: incomeViewModel)
-                        .tabBarItem(tab: .income, selection: $tabSelection)
+                        .tabItem {
+                            Label("Incomes", systemImage: "indianrupeesign.circle")
+                        }
+                        .badge(incomeViewModel.incomeList.count)
+                    
                     ChartView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
-                        .tabBarItem(tab: .chart, selection: $tabSelection)
+                        .tabItem {
+                            Label("Charts", systemImage: "chart.line.uptrend.xyaxis.circle")
+                        }
+                    
                     SettingsView(isAuthenticationRequired: SettingsController().isAuthenticationRequired(), currenySelected: SettingsController().getDefaultCurrency(), incomeViewModel: incomeViewModel)
-                        .tabBarItem(tab: .setting, selection: $tabSelection)
-                })
-                // MARK: Network unavailable message
+                        .tabItem {
+                            Label("Settings", systemImage: "gearshape")
+                        }
+                }
                 .alert("Network is unavailable. You can continue to use it, it will sync automatically once the network is available.", isPresented: $networkUnavailable) {
                     Button("OK", role: .cancel) { }
                 }

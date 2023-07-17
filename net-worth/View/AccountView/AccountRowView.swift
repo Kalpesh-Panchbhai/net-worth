@@ -43,9 +43,14 @@ struct AccountRowView: View {
             HStack {
                 if(getTotalChangeForNonSymbol() >= 0) {
                     if(getTotalChangeForNonSymbol() > 0) {
-                        Image(systemName: "arrow.up")
-                            .foregroundColor(Color.theme.green)
-                            .font(.caption.bold())
+                        ZStack {
+                            Circle()
+                                .fill(Color.theme.green.opacity(0.2))
+                                .frame(width: 17, height: 17)
+                            Image(systemName: "arrow.up")
+                                .foregroundColor(Color.theme.green)
+                                .font(.caption.bold())
+                        }
                     }
                     Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.green)
@@ -67,9 +72,14 @@ struct AccountRowView: View {
                             .font(.caption)
                     }
                 } else {
-                    Image(systemName: "arrow.down")
-                        .foregroundColor(Color.theme.red)
-                        .font(.caption.bold())
+                    ZStack {
+                        Circle()
+                            .fill(Color.theme.red.opacity(0.2))
+                            .frame(width: 17, height: 17)
+                        Image(systemName: "arrow.down")
+                            .foregroundColor(Color.theme.red)
+                            .font(.caption.bold())
+                    }
                     Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.red)
                         .font(.caption.bold())

@@ -68,10 +68,6 @@
 		7D9F6F58299CE18000F964EC /* WatchDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9F6F57299CE18000F964EC /* WatchDetailView.swift */; };
 		7DA63A492995FACA00568FCA /* AccountDetailCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA63A482995FACA00568FCA /* AccountDetailCardView.swift */; };
 		7DA63A4B2996017D00568FCA /* AccountDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA63A4A2996017D00568FCA /* AccountDetailView.swift */; };
-		7DB205852A0CEB78001E03D6 /* MainScreenTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB205842A0CEB78001E03D6 /* MainScreenTabBarView.swift */; };
-		7DB205872A0CF010001E03D6 /* MainScreenTabBarContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB205862A0CF010001E03D6 /* MainScreenTabBarContainerView.swift */; };
-		7DB205892A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB205882A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift */; };
-		7DB2058B2A0CF5B6001E03D6 /* MainScreenTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2058A2A0CF5B6001E03D6 /* MainScreenTabBarItem.swift */; };
 		7DB2058D2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2058C2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift */; };
 		7DB2B0A4299515B800E4B891 /* AccountCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2B0A3299515B800E4B891 /* AccountCardView.swift */; };
 		7DB2B0A6299518A100E4B891 /* AccountCardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2B0A5299518A100E4B891 /* AccountCardList.swift */; };
@@ -182,10 +178,6 @@
 		7D9F6F57299CE18000F964EC /* WatchDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDetailView.swift; sourceTree = "<group>"; };
 		7DA63A482995FACA00568FCA /* AccountDetailCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailCardView.swift; sourceTree = "<group>"; };
 		7DA63A4A2996017D00568FCA /* AccountDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailView.swift; sourceTree = "<group>"; };
-		7DB205842A0CEB78001E03D6 /* MainScreenTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenTabBarView.swift; sourceTree = "<group>"; };
-		7DB205862A0CF010001E03D6 /* MainScreenTabBarContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenTabBarContainerView.swift; sourceTree = "<group>"; };
-		7DB205882A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenTabBarItemsPreferenceKey.swift; sourceTree = "<group>"; };
-		7DB2058A2A0CF5B6001E03D6 /* MainScreenTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenTabBarItem.swift; sourceTree = "<group>"; };
 		7DB2058C2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewGestureExtension.swift; sourceTree = "<group>"; };
 		7DB2B0A3299515B800E4B891 /* AccountCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCardView.swift; sourceTree = "<group>"; };
 		7DB2B0A5299518A100E4B891 /* AccountCardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCardList.swift; sourceTree = "<group>"; };
@@ -406,24 +398,12 @@
 				7D2461162A335AA800693BA5 /* Component */,
 				7DD7A56B29224BFD00CD5B37 /* IncomeView */,
 				7D921C58298682FB0014AC9E /* LoginView */,
-				7D87CEF62A0E0475007C1C76 /* MainScreenTabBarView */,
 				7DAC70A7294086420033050C /* OtherView */,
 				7DD7A56D29224C1D00CD5B37 /* SettingsView */,
 				7DF8CCFB299F445300267C29 /* WatchView */,
 				7DBE9EFB2A3E00E500159227 /* AdView */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		7D87CEF62A0E0475007C1C76 /* MainScreenTabBarView */ = {
-			isa = PBXGroup;
-			children = (
-				7DB205862A0CF010001E03D6 /* MainScreenTabBarContainerView.swift */,
-				7DB2058A2A0CF5B6001E03D6 /* MainScreenTabBarItem.swift */,
-				7DB205882A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift */,
-				7DB205842A0CEB78001E03D6 /* MainScreenTabBarView.swift */,
-			);
-			path = MainScreenTabBarView;
 			sourceTree = "<group>";
 		};
 		7D921C58298682FB0014AC9E /* LoginView */ = {
@@ -691,7 +671,6 @@
 				7DD8E5BB2A06383200245A98 /* IncomeData.swift in Sources */,
 				7D921C66298684790014AC9E /* +View.swift in Sources */,
 				7D4A60D12A2DFC4E00F46C1F /* AccountTransactionController.swift in Sources */,
-				7DB205852A0CEB78001E03D6 /* MainScreenTabBarView.swift in Sources */,
 				7DD8E5C12A06427300245A98 /* WatchData.swift in Sources */,
 				7DA63A492995FACA00568FCA /* AccountDetailCardView.swift in Sources */,
 				7DF878FE2A0F75B6008343EE /* DefaultCurrencyPicker.swift in Sources */,
@@ -718,7 +697,6 @@
 				7D4A60CF2A2DD1B900F46C1F /* IncomeTagController.swift in Sources */,
 				7D3D5244299105A50021047B /* CommonController.swift in Sources */,
 				7D3E3CC12A1FC87D009538BA /* RowWatchToAccountView.swift in Sources */,
-				7DB205892A0CF347001E03D6 /* MainScreenTabBarItemsPreferenceKey.swift in Sources */,
 				7D85D030298D29BE0019F85E /* Income.swift in Sources */,
 				7DB58AB329967AFE00B93592 /* AccountRowView.swift in Sources */,
 				7D4A60CD2A2DD0A500F46C1F /* IncomeTypeController.swift in Sources */,
@@ -745,7 +723,6 @@
 				7DCFE4C8292CB92900C940F0 /* StringExtension.swift in Sources */,
 				7DF9DB93298F98A800831494 /* AccountViewModel.swift in Sources */,
 				7DB2B0A6299518A100E4B891 /* AccountCardList.swift in Sources */,
-				7DB2058B2A0CF5B6001E03D6 /* MainScreenTabBarItem.swift in Sources */,
 				7D921C60298683760014AC9E /* LoginHeader.swift in Sources */,
 				7DB2058D2A0D2E36001E03D6 /* NavigationViewGestureExtension.swift in Sources */,
 				7DC46B4629A4A513000E311B /* IncomeType.swift in Sources */,
@@ -758,7 +735,6 @@
 				7D111E752A25C21B00485DB1 /* NetWorthChartView.swift in Sources */,
 				7D237BED292B672900DEF91D /* DoubleExtension.swift in Sources */,
 				7D42520F291BE95C0001C41C /* AuthenticationView.swift in Sources */,
-				7DB205872A0CF010001E03D6 /* MainScreenTabBarContainerView.swift in Sources */,
 				7DD8E5BD2A06397B00245A98 /* AccountData.swift in Sources */,
 				7D11D0092A0A59F600897B08 /* ChartView.swift in Sources */,
 				7D65547429A107950008A8E2 /* ChartViewModel.swift in Sources */,
