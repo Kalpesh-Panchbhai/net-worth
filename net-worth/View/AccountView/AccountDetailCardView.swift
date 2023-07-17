@@ -20,23 +20,23 @@ struct AccountDetailCardView: View {
             Spacer()
             HStack {
                 Text(accountViewModel.account.currency)
-                    .foregroundColor(Color.theme.primaryText)
-                    .font(.caption.bold())
+                    .foregroundColor(Color.theme.secondaryText)
+                    .font(.caption)
                 Text("\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 2))")
                     .foregroundColor(Color.theme.primaryText)
                     .font(.caption.bold())
                 Spacer()
                 if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
                     Image(systemName: "bell.fill")
-                        .foregroundColor(Color.theme.primaryText)
-                        .font(.caption.bold())
+                        .foregroundColor(Color.theme.secondaryText)
+                        .font(.caption)
                     Text("\(accountViewModel.account.paymentDate)")
-                        .foregroundColor(Color.theme.primaryText)
-                        .font(.caption.bold())
+                        .foregroundColor(Color.theme.secondaryText)
+                        .font(.caption)
                 } else if(accountViewModel.account.accountType != "Saving") {
                     Image(systemName: "bell.slash.fill")
-                        .foregroundColor(Color.theme.primaryText)
-                        .font(.caption.bold())
+                        .foregroundColor(Color.theme.secondaryText)
+                        .font(.caption)
                 }
             }
             Spacer()
