@@ -56,9 +56,8 @@ struct AccountCardList: View {
                                                         .toolbarRole(.editor)
                                                 }, label: {
                                                     Text("See all")
-                                                        .foregroundColor(Color.theme.primaryText)
-                                                        .bold()
-                                                        .font(.system(size: 15))
+                                                        .foregroundColor(Color.theme.secondaryText)
+                                                        .font(.system(size: 12))
                                                 })
                                             }
                                             .padding(.horizontal, 8)
