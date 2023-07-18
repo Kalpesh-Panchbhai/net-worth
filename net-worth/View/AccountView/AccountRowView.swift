@@ -22,6 +22,10 @@ struct AccountRowView: View {
                     .foregroundColor(Color.theme.primaryText)
                     .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)
+                Text(!accountViewModel.account.active ? "(Closed)" : "")
+                    .foregroundColor(Color.theme.secondaryText)
+                    .font(.caption2.italic())
+                    .multilineTextAlignment(.leading)
                 if(fromWatchView) {
                     Spacer()
                     Text(accountViewModel.account.accountType)
@@ -59,14 +63,14 @@ struct AccountRowView: View {
                         .foregroundColor(Color.theme.green)
                         .font(.caption.bold())
                     Spacer()
-                    if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
+                    if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving" && accountViewModel.account.active) {
                         Image(systemName: "bell.fill")
                             .foregroundColor(Color.theme.secondaryText)
                             .font(.caption)
                         Text("\(accountViewModel.account.paymentDate)")
                             .foregroundColor(Color.theme.secondaryText)
                             .font(.caption)
-                    } else if(accountViewModel.account.accountType != "Saving") {
+                    } else if(accountViewModel.account.accountType != "Saving" && accountViewModel.account.active) {
                         Image(systemName: "bell.slash.fill")
                             .foregroundColor(Color.theme.secondaryText)
                             .font(.caption)

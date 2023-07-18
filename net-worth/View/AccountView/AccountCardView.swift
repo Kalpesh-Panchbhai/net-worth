@@ -22,17 +22,24 @@ struct AccountCardView: View {
                     .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)
                 Spacer()
-                if(account.paymentReminder && account.accountType != "Saving") {
-                    Image(systemName: "bell.fill")
+                if(account.active) {
+                    if(account.paymentReminder && account.accountType != "Saving") {
+                        Image(systemName: "bell.fill")
+                            .foregroundColor(Color.theme.secondaryText)
+                            .font(.caption)
+                        Text("\(account.paymentDate)")
+                            .foregroundColor(Color.theme.secondaryText)
+                            .font(.caption)
+                    } else if(account.accountType != "Saving") {
+                        Image(systemName: "bell.slash.fill")
+                            .foregroundColor(Color.theme.secondaryText)
+                            .font(.caption)
+                    }
+                } else {
+                    Text(account.accountType)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
-                    Text("\(account.paymentDate)")
-                        .foregroundColor(Color.theme.secondaryText)
-                        .font(.caption)
-                } else if(account.accountType != "Saving") {
-                    Image(systemName: "bell.slash.fill")
-                        .foregroundColor(Color.theme.secondaryText)
-                        .font(.caption)
+                        .multilineTextAlignment(.leading)
                 }
             }
             Spacer()

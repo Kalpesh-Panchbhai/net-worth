@@ -26,17 +26,24 @@ struct AccountDetailCardView: View {
                     .foregroundColor(Color.theme.primaryText)
                     .font(.caption.bold())
                 Spacer()
-                if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
-                    Image(systemName: "bell.fill")
+                if(accountViewModel.account.active) {
+                    if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
+                        Image(systemName: "bell.fill")
+                            .foregroundColor(Color.theme.secondaryText)
+                            .font(.caption)
+                        Text("\(accountViewModel.account.paymentDate)")
+                            .foregroundColor(Color.theme.secondaryText)
+                            .font(.caption)
+                    } else if(accountViewModel.account.accountType != "Saving") {
+                        Image(systemName: "bell.slash.fill")
+                            .foregroundColor(Color.theme.secondaryText)
+                            .font(.caption)
+                    }
+                } else {
+                    Text("(Closed)")
                         .foregroundColor(Color.theme.secondaryText)
-                        .font(.caption)
-                    Text("\(accountViewModel.account.paymentDate)")
-                        .foregroundColor(Color.theme.secondaryText)
-                        .font(.caption)
-                } else if(accountViewModel.account.accountType != "Saving") {
-                    Image(systemName: "bell.slash.fill")
-                        .foregroundColor(Color.theme.secondaryText)
-                        .font(.caption)
+                        .font(.caption2.italic())
+                        .multilineTextAlignment(.leading)
                 }
             }
             Spacer()
