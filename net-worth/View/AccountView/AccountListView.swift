@@ -41,7 +41,7 @@ struct AccountListView: View {
                             NavigationLink(destination: {
                                 AccountDetailView(account: account, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                             }, label: {
-                                AccountRowView(account: account)
+                                AccountRowView(account: account, fromWatchView: accountType.elementsEqual("Inactive Account"))
                                     .contextMenu {
                                         
                                         Label(account.id!, systemImage: "info.square")
