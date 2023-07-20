@@ -80,6 +80,7 @@
 		7DB98804299B682F004ED6D2 /* NewWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB98803299B682F004ED6D2 /* NewWatchView.swift */; };
 		7DB98806299B708C004ED6D2 /* UpdateWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB98805299B708C004ED6D2 /* UpdateWatchView.swift */; };
 		7DB98808299B8A99004ED6D2 /* AccountToWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB98807299B8A99004ED6D2 /* AccountToWatchView.swift */; };
+		7DBBED682A690D2B00D83DD7 /* WatchRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBBED672A690D2B00D83DD7 /* WatchRowView.swift */; };
 		7DBE9EF82A3DFB8900159227 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 7DBE9EF72A3DFB8900159227 /* GoogleMobileAds */; };
 		7DBE9EFA2A3DFD2100159227 /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBE9EF92A3DFD2100159227 /* AdBannerView.swift */; };
 		7DC1C4972A1BBD3F00BE24A7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7DC1C4962A1BBD3F00BE24A7 /* GoogleService-Info.plist */; };
@@ -190,6 +191,7 @@
 		7DB98803299B682F004ED6D2 /* NewWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewWatchView.swift; sourceTree = "<group>"; };
 		7DB98805299B708C004ED6D2 /* UpdateWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateWatchView.swift; sourceTree = "<group>"; };
 		7DB98807299B8A99004ED6D2 /* AccountToWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountToWatchView.swift; sourceTree = "<group>"; };
+		7DBBED672A690D2B00D83DD7 /* WatchRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRowView.swift; sourceTree = "<group>"; };
 		7DBE9EF92A3DFD2100159227 /* AdBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdBannerView.swift; sourceTree = "<group>"; };
 		7DC1C4962A1BBD3F00BE24A7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7DC46B4329A4A4B9000E311B /* NewIncomeTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewIncomeTypeView.swift; sourceTree = "<group>"; };
@@ -529,6 +531,7 @@
 				7D3E3CBE2A1FC4FC009538BA /* RowAccountToWatchView.swift */,
 				7DB98805299B708C004ED6D2 /* UpdateWatchView.swift */,
 				7D9F6F57299CE18000F964EC /* WatchDetailView.swift */,
+				7DBBED672A690D2B00D83DD7 /* WatchRowView.swift */,
 				7DF8CCF8299F444000267C29 /* WatchView.swift */,
 			);
 			path = WatchView;
@@ -696,6 +699,7 @@
 				7D1188362A03F3000005EA32 /* AccountWatchView.swift in Sources */,
 				7D4A60CF2A2DD1B900F46C1F /* IncomeTagController.swift in Sources */,
 				7D3D5244299105A50021047B /* CommonController.swift in Sources */,
+				7DBBED682A690D2B00D83DD7 /* WatchRowView.swift in Sources */,
 				7D3E3CC12A1FC87D009538BA /* RowWatchToAccountView.swift in Sources */,
 				7D85D030298D29BE0019F85E /* Income.swift in Sources */,
 				7DB58AB329967AFE00B93592 /* AccountRowView.swift in Sources */,

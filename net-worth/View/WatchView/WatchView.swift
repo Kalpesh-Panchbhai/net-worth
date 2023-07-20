@@ -24,27 +24,22 @@ struct WatchView: View {
                     LoadingView()
                 } else {
                     List {
-                        ForEach(watchViewModel.watchList, id: \.self) { watchList in
+                        ForEach(watchViewModel.watchList, id: \.self) { watch in
                             NavigationLink(destination: {
-                                WatchDetailView(watch: watchList, watchViewModel: watchViewModel)
+                                WatchDetailView(watch: watch, watchViewModel: watchViewModel)
                                     .toolbarRole(.editor)
                             }, label: {
-                                HStack {
-                                    Text(watchList.accountName)
-                                    Spacer()
-                                    Text("\(watchList.accountID.count)")
-                                        .font(.system(size: 12))
-                                }
+                                WatchViewRow(watch: watch)
                             })
                             .contextMenu {
-                                Label(watchList.id!, systemImage: "info.square")
+                                Label(watch.id!, systemImage: "info.square")
                             }
                             // MARK: Update
                             .swipeActions(edge: .leading, content: {
-                                if(watchList.accountName != "All") {
+                                if(watch.accountName != "All") {
                                     Button("Update") {
                                         Task.init {
-                                            await watchViewModel.getWatchList(id: watchList.id!)
+                                            await watchViewModel.getWatchList(id: watch.id!)
                                         }
                                         self.updateWatchViewOpen.toggle()
                                     }
@@ -53,9 +48,9 @@ struct WatchView: View {
                             })
                             // MARK: Delete
                             .swipeActions(edge: .trailing, content: {
-                                if(watchList.accountName != "All") {
+                                if(watch.accountName != "All") {
                                     Button("Delete") {
-                                        watchController.deleteWatchList(watchList: watchList)
+                                        watchController.deleteWatchList(watchList: watch)
                                         Task.init {
                                             await watchViewModel.getAllWatchList()
                                         }
