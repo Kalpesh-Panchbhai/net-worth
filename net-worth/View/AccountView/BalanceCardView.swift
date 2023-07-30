@@ -46,7 +46,7 @@ struct BalanceCardView: View {
                             .foregroundColor(Color.theme.green)
                             .font(.system(size: 14))
                             .bold()
-                        Text("(\(getOneDayPercentageChange().withCommas(decimalPlace: 2))%)")
+                        Text("(\(getOneDayPercentageChange()))")
                             .foregroundColor(Color.theme.green)
                             .font(.system(size: 14))
                             .bold()
@@ -64,7 +64,7 @@ struct BalanceCardView: View {
                             .foregroundColor(Color.theme.red)
                             .font(.system(size: 14))
                             .bold()
-                        Text("(\(getOneDayPercentageChange().withCommas(decimalPlace: 2))%)")
+                        Text("(\(getOneDayPercentageChange()))")
                             .foregroundColor(Color.theme.red)
                             .font(.system(size: 14))
                             .bold()
@@ -82,7 +82,7 @@ struct BalanceCardView: View {
         }
     }
     
-    func getOneDayPercentageChange() -> Double {
-        return (accountViewModel.totalBalance.oneDayChange) / (accountViewModel.totalBalance.currentValue - accountViewModel.totalBalance.oneDayChange) * 100
+    func getOneDayPercentageChange() -> String {
+        return CommonController.getGrowthPercentage(previousBalance: accountViewModel.totalBalance.currentValue - accountViewModel.totalBalance.oneDayChange, currentBalance: accountViewModel.totalBalance.currentValue)
     }
 }

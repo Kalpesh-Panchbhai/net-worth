@@ -62,7 +62,7 @@ struct AccountDetailCardView: View {
                     Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.green)
                         .font(.caption.bold())
-                    Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
+                    Text("(\(getOneDayPercentageChangeForNonSymbol()))")
                         .foregroundColor(Color.theme.green)
                         .font(.caption.bold())
                 } else {
@@ -77,7 +77,7 @@ struct AccountDetailCardView: View {
                     Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.red)
                         .font(.caption.bold())
-                    Text("(\(getOneDayPercentageChangeForNonSymbol().withCommas(decimalPlace: 2))%)")
+                    Text("(\(getOneDayPercentageChangeForNonSymbol()))")
                         .foregroundColor(Color.theme.red)
                         .font(.caption.bold())
                 }
@@ -94,7 +94,7 @@ struct AccountDetailCardView: View {
         return accountViewModel.accountLastTwoTransactionList.count > 1 ? (accountViewModel.accountLastTwoTransactionList[0].balanceChange) : 0.0
     }
     
-    func getOneDayPercentageChangeForNonSymbol() -> Double {
-        return accountViewModel.accountLastTwoTransactionList.count > 1 ? ((getTotalChangeForNonSymbol() * 100 ) / accountViewModel.accountLastTwoTransactionList[1].currentBalance) : 0.0
+    func getOneDayPercentageChangeForNonSymbol() -> String {
+        return accountViewModel.accountLastTwoTransactionList.count > 1 ? (CommonController.getGrowthPercentage(previousBalance: accountViewModel.accountLastTwoTransactionList[1].currentBalance, currentBalance: accountViewModel.accountLastTwoTransactionList[0].currentBalance)) : "0.0"
     }
 }

@@ -53,7 +53,7 @@ struct WatchViewRow: View {
                     Text(accountViewModel.totalBalance.oneDayChange.withCommas(decimalPlace: 2))
                         .foregroundColor(Color.theme.green)
                         .font(.caption.bold())
-                    Text("(\(getOneDayPercentageChange().withCommas(decimalPlace: 2))%)")
+                    Text("(\(getOneDayPercentageChange()))")
                         .foregroundColor(Color.theme.green)
                         .font(.caption.bold())
                 } else {
@@ -69,7 +69,7 @@ struct WatchViewRow: View {
                     Text(accountViewModel.totalBalance.oneDayChange.withCommas(decimalPlace: 2))
                         .foregroundColor(Color.theme.red)
                         .font(.caption.bold())
-                    Text("(\(getOneDayPercentageChange().withCommas(decimalPlace: 2))%)")
+                    Text("(\(getOneDayPercentageChange()))")
                         .foregroundColor(Color.theme.red)
                         .font(.caption.bold())
                 }
@@ -93,7 +93,8 @@ struct WatchViewRow: View {
         .cornerRadius(10)
     }
     
-    func getOneDayPercentageChange() -> Double {
-        return (accountViewModel.totalBalance.oneDayChange) / (accountViewModel.totalBalance.currentValue - accountViewModel.totalBalance.oneDayChange) * 100
+    func getOneDayPercentageChange() -> String {
+        return CommonController.getGrowthPercentage(previousBalance: accountViewModel.totalBalance.currentValue - accountViewModel.totalBalance.oneDayChange, currentBalance: accountViewModel.totalBalance.currentValue)
     }
+    
 }

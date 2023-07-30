@@ -53,13 +53,15 @@ class CommonController {
         }
     }
     
-    public static func getGrowthPercentage(first: Double, last: Double) -> String {
+    public static func getGrowthPercentage(previousBalance: Double, currentBalance: Double) -> String {
         
-        var percentage = first.distance(to: last) / first * 100
+        var percentage = previousBalance.distance(to: currentBalance) / previousBalance * 100
         
-        if((first.distance(to: last) > 0 && percentage < 0) || (first.distance(to: last) < 0 && percentage > 0)) {
+        if((previousBalance.distance(to: currentBalance) > 0 && percentage < 0) || (previousBalance.distance(to: currentBalance) < 0 && percentage > 0)) {
             percentage = percentage * -1.0
-        } else if(percentage.stringFormat.elementsEqual("-0")) {
+        } else if(String(percentage).elementsEqual("-0")) {
+            percentage = percentage * -1.0
+        } else if(percentage.isZero && percentage.sign == .minus) {
             percentage = percentage * -1.0
         }
         return percentage.withCommas(decimalPlace: 2) + "%"

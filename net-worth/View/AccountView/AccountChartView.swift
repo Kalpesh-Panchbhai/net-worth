@@ -69,6 +69,6 @@ struct AccountChartView: View {
     }
     
     private func getGrowthPercentage() -> String {
-        return CommonController.getGrowthPercentage(first: chartViewModel.chartDataList.first?.value ?? 0.0, last: chartViewModel.chartDataList.last?.value ?? 0.0)
+        return CommonController.getGrowthPercentage(previousBalance: chartViewModel.chartDataList.first?.value ?? 0.0, currentBalance: chartViewModel.chartDataList.last?.value ?? 0.0)
     }
 }
