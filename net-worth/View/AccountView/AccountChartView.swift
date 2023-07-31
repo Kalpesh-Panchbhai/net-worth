@@ -23,9 +23,9 @@ struct AccountChartView: View {
                 List {
                     if(chartViewModel.chartDataList.count > 0) {
                         HStack {
-                            Text("Growth Rate")
+                            Text("CAGR")
                             Spacer()
-                            Text(getGrowthPercentage())
+                            Text(getCAGRPercentage())
                         }
                         .listRowBackground(Color.theme.foreground)
                         .foregroundColor(Color.theme.primaryText)
@@ -68,7 +68,7 @@ struct AccountChartView: View {
         }
     }
     
-    private func getGrowthPercentage() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: chartViewModel.chartDataList.first?.value ?? 0.0, currentBalance: chartViewModel.chartDataList.last?.value ?? 0.0)
+    private func getCAGRPercentage() -> String {
+        return CommonController.CalculateCAGR(firstBalance: chartViewModel.chartDataList.first?.value ?? 0.0, lastBalance: chartViewModel.chartDataList.last?.value ?? 0.0, days: (chartViewModel.chartDataList.first!.date.distance(to: chartViewModel.chartDataList.last!.date) + 86400)/86400)
     }
 }

@@ -66,4 +66,14 @@ class CommonController {
         }
         return percentage.withCommas(decimalPlace: 2) + "%"
     }
+    
+    public static func CalculateCAGR(firstBalance: Double, lastBalance: Double, days: Double) -> String {
+        var firstBalance = firstBalance
+        var lastBalance = lastBalance
+        let years = days/365
+        
+        let cagr = (pow((lastBalance/firstBalance), 1/years) - 1) * 100
+        
+        return Double(cagr).withCommas(decimalPlace: 2) + "%"
+    }
 }
