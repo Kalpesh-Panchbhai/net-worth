@@ -190,7 +190,7 @@ struct IncomeView: View {
                                             
                                             Menu(content: {
                                                 Toggle(isOn: $groupByType, label: {
-                                                    Text("Type")
+                                                    Label("Type", systemImage: "tray.and.arrow.down")
                                                 })
                                                 .onChange(of: groupByType, perform: { _ in
                                                     if(groupByType) {
@@ -209,7 +209,7 @@ struct IncomeView: View {
                                                 
                                                 // MARK: Hide Zero Balance
                                                 Toggle(isOn: $groupByTag, label: {
-                                                    Text("Tag")
+                                                    Label("Tag", systemImage: "tag.square")
                                                 })
                                                 .onChange(of: groupByTag, perform: { _ in
                                                     if(groupByTag) {
@@ -227,17 +227,17 @@ struct IncomeView: View {
                                                 })
                                                 
                                             }, label: {
-                                                Label("Group by", systemImage: "line.3.horizontal.decrease.circle")
+                                                Label("Group by", systemImage: "rectangle.3.group")
                                             })
                                             
                                             // MARK: Show Tax View
                                             Toggle(isOn: $showTaxPaidData, label: {
-                                                Text("Show Tax View")
+                                                Label("Show Tax View", systemImage: "indianrupeesign.square")
                                             })
                                             
                                             // MARK: Hide Zero Balance
                                             Toggle(isOn: $hideZeroAmount, label: {
-                                                Text("Hide Zero amount")
+                                                Label("Hide Zero amount", systemImage: "0.square")
                                             })
                                         }, label: {
                                             Image(systemName: "ellipsis")
