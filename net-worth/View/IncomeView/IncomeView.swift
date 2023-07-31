@@ -196,7 +196,7 @@ struct IncomeView: View {
                                                     if(groupByType) {
                                                         self.groupByTag = false
                                                         Task.init {
-                                                            await incomeViewModel.getIncomeListByGroup(groupBy: "Type")
+                                                            await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Type")
                                                         }
                                                     }
                                                     
@@ -215,7 +215,7 @@ struct IncomeView: View {
                                                     if(groupByTag) {
                                                         self.groupByType = false
                                                         Task.init {
-                                                            await incomeViewModel.getIncomeListByGroup(groupBy: "Tag")
+                                                            await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Tag")
                                                         }
                                                     }
                                                     
@@ -349,7 +349,15 @@ struct IncomeView: View {
         Task.init {
             await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
             await incomeViewModel.getTotalTaxPaid(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+            if(groupByTag || groupByType) {
+                if(groupByTag) {
+                    await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Tag")
+                } else {
+                    await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Type")
+                }
+            } else {
+                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+            }
         }
     }
 }

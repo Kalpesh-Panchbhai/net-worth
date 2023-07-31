@@ -34,8 +34,8 @@ class IncomeViewModel: ObservableObject {
         }
     }
     
-    func getIncomeListByGroup(groupBy: String) async {
-        let list = await incomeController.getIncomeList()
+    func getIncomeListByGroup(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "", groupBy: String) async {
+        let list = await incomeController.getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
         if(groupBy.elementsEqual("Type")) {
             let groupByType = Dictionary(grouping: list, by: {$0.type})
             var incomeListByGroupUpdated = [String: [IncomeCalculation]]()
