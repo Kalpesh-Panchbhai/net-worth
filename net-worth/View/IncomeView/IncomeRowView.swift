@@ -10,21 +10,38 @@ import SwiftUI
 struct IncomeRowView: View {
     
     var income: IncomeCalculation
+    var groupBy: String = ""
     
     @Binding var showTaxPaid: Bool
     
     var body: some View {
         HStack{
             VStack {
-                Text(income.type)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundColor(Color.theme.primaryText)
-                Text(income.creditedOn.getDateAndFormat()).font(.system(size: 12))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundColor(Color.theme.primaryText.opacity(0.5))
-                Text(income.tag).font(.system(size: 10))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundColor(Color.theme.primaryText.opacity(0.5))
+                if(groupBy.elementsEqual("")) {
+                    Text(income.type)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(Color.theme.primaryText)
+                    Text(income.creditedOn.getDateAndFormat()).font(.system(size: 12))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(Color.theme.primaryText.opacity(0.5))
+                    Text(income.tag).font(.system(size: 10))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(Color.theme.primaryText.opacity(0.5))
+                } else if(groupBy.elementsEqual("Tag")) {
+                    Text(income.type)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(Color.theme.primaryText)
+                    Text(income.creditedOn.getDateAndFormat()).font(.system(size: 12))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(Color.theme.primaryText.opacity(0.5))
+                } else if(groupBy.elementsEqual("Type")) {
+                    Text(income.tag)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(Color.theme.primaryText)
+                    Text(income.creditedOn.getDateAndFormat()).font(.system(size: 12))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(Color.theme.primaryText.opacity(0.5))
+                }
             }
             if(showTaxPaid) {
                 VStack {

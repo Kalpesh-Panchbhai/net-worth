@@ -24,6 +24,9 @@ struct IncomeView: View {
     @State var showTaxPaidData = false
     @State var hideZeroAmount = true
     
+    @State var groupByType = false
+    @State var groupByTag = false
+    
     @StateObject var incomeViewModel: IncomeViewModel
     
     var body: some View {
@@ -51,23 +54,47 @@ struct IncomeView: View {
                             // MARK: List View
                             VStack {
                                 List {
-                                    ForEach(incomeViewModel.incomeList, id: \.self) { income in
-                                        if((hideZeroAmount && ((!income.taxpaid.isZero && showTaxPaidData) || (!income.amount.isZero && !showTaxPaidData)) || !hideZeroAmount)) {
-                                            NavigationLink(destination: {
-                                                IncomeDetailView(income: income)
-                                                    .toolbarRole(.editor)
-                                            }, label: {
-                                                IncomeRowView(income: income, showTaxPaid: $showTaxPaidData)
-                                            })
-                                            .contextMenu {
-                                                Label(income.id!, systemImage: "info.square")
+                                    if(groupByType || groupByTag) {
+                                        ForEach(incomeViewModel.incomeListByGroup.sorted(by: { $0.key < $1.key}), id: \.key) { key, value in
+                                            Section(key) {
+                                                ForEach(value, id: \.self) { income in
+                                                    if((hideZeroAmount && ((!income.taxpaid.isZero && showTaxPaidData) || (!income.amount.isZero && !showTaxPaidData)) || !hideZeroAmount)) {
+                                                        NavigationLink(destination: {
+                                                            IncomeDetailView(income: income)
+                                                                .toolbarRole(.editor)
+                                                        }, label: {
+                                                            IncomeRowView(income: income, groupBy: groupByTag ? "Tag" : (groupByType ? "Type" : ""), showTaxPaid: $showTaxPaidData)
+                                                        })
+                                                        .contextMenu {
+                                                            Label(income.id!, systemImage: "info.square")
+                                                        }
+                                                    }
+                                                }
+                                                .onDelete(perform: deleteIncome)
+                                                .listRowBackground(Color.theme.foreground)
+                                                .foregroundColor(Color.theme.primaryText)
                                             }
                                         }
+                                    } else {
+                                        ForEach(incomeViewModel.incomeList, id: \.self) { income in
+                                            if((hideZeroAmount && ((!income.taxpaid.isZero && showTaxPaidData) || (!income.amount.isZero && !showTaxPaidData)) || !hideZeroAmount)) {
+                                                NavigationLink(destination: {
+                                                    IncomeDetailView(income: income)
+                                                        .toolbarRole(.editor)
+                                                }, label: {
+                                                    IncomeRowView(income: income, showTaxPaid: $showTaxPaidData)
+                                                })
+                                                .contextMenu {
+                                                    Label(income.id!, systemImage: "info.square")
+                                                }
+                                            }
+                                        }
+                                        .onDelete(perform: deleteIncome)
+                                        .listRowBackground(Color.theme.foreground)
+                                        .foregroundColor(Color.theme.primaryText)
                                     }
-                                    .onDelete(perform: deleteIncome)
-                                    .listRowBackground(Color.theme.foreground)
-                                    .foregroundColor(Color.theme.primaryText)
                                 }
+                                .listStyle(SidebarListStyle())
                                 // MARK: List View Scroll Indicator
                                 .scrollIndicators(ScrollIndicatorVisibility.hidden)
                                 // MARK: List View Refreshable
@@ -159,6 +186,48 @@ struct IncomeView: View {
                                                 
                                             }, label: {
                                                 Label("Filter by", systemImage: "line.3.horizontal.decrease.circle")
+                                            })
+                                            
+                                            Menu(content: {
+                                                Toggle(isOn: $groupByType, label: {
+                                                    Text("Type")
+                                                })
+                                                .onChange(of: groupByType, perform: { _ in
+                                                    if(groupByType) {
+                                                        self.groupByTag = false
+                                                        Task.init {
+                                                            await incomeViewModel.getIncomeListByGroup(groupBy: "Type")
+                                                        }
+                                                    }
+                                                    
+                                                    if(!(groupByType || groupByTag)) {
+                                                        Task.init {
+                                                            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                        }
+                                                    }
+                                                })
+                                                
+                                                // MARK: Hide Zero Balance
+                                                Toggle(isOn: $groupByTag, label: {
+                                                    Text("Tag")
+                                                })
+                                                .onChange(of: groupByTag, perform: { _ in
+                                                    if(groupByTag) {
+                                                        self.groupByType = false
+                                                        Task.init {
+                                                            await incomeViewModel.getIncomeListByGroup(groupBy: "Tag")
+                                                        }
+                                                    }
+                                                    
+                                                    if(!(groupByType || groupByTag)) {
+                                                        Task.init {
+                                                            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                        }
+                                                    }
+                                                })
+                                                
+                                            }, label: {
+                                                Label("Group by", systemImage: "line.3.horizontal.decrease.circle")
                                             })
                                             
                                             // MARK: Show Tax View
