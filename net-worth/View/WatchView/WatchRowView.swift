@@ -86,7 +86,6 @@ struct WatchViewRow: View {
                 } else {
                     accountViewModel.totalBalance = Balance(currentValue: 0.0)
                 }
-                
             }
         }
         .background(Color.theme.foreground)
@@ -96,5 +95,4 @@ struct WatchViewRow: View {
     func getOneDayPercentageChange() -> String {
         return CommonController.getGrowthPercentage(previousBalance: accountViewModel.totalBalance.currentValue - accountViewModel.totalBalance.oneDayChange, currentBalance: accountViewModel.totalBalance.currentValue)
     }
-    
 }
