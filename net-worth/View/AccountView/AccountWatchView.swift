@@ -19,12 +19,7 @@ struct AccountWatchView: View {
                         WatchDetailView(watch: watch, watchViewModel: watchViewModel)
                             .toolbarRole(.editor)
                     }, label: {
-                        HStack {
-                            Text(watch.accountName)
-                            Spacer()
-                            Text("\(watch.accountID.count)")
-                                .font(.system(size: 12))
-                        }
+                        WatchViewRow(watch: watch)
                     })
                     .contextMenu {
                         Label(watch.id!, systemImage: "info.square")
