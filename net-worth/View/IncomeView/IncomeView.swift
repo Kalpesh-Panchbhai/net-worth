@@ -26,6 +26,7 @@ struct IncomeView: View {
     
     @State var groupByType = false
     @State var groupByTag = false
+    @State var groupByYear = false
     
     @StateObject var incomeViewModel: IncomeViewModel
     
@@ -54,8 +55,8 @@ struct IncomeView: View {
                             // MARK: List View
                             VStack {
                                 List {
-                                    if(groupByType || groupByTag) {
-                                        ForEach(incomeViewModel.incomeListByGroup.sorted(by: { $0.key < $1.key}), id: \.key) { key, value in
+                                    if(groupByType || groupByTag || groupByYear) {
+                                        ForEach(incomeViewModel.incomeListByGroup.sorted(by: { groupByYear ? $0.key > $1.key : $0.key < $1.key}), id: \.key) { key, value in
                                             Section(key) {
                                                 ForEach(value, id: \.self) { income in
                                                     if((hideZeroAmount && ((!income.taxpaid.isZero && showTaxPaidData) || (!income.amount.isZero && !showTaxPaidData)) || !hideZeroAmount)) {
@@ -190,36 +191,56 @@ struct IncomeView: View {
                                             
                                             Menu(content: {
                                                 Toggle(isOn: $groupByType, label: {
-                                                    Label("Type", systemImage: "tray.and.arrow.down")
+                                                    Label("Income Type", systemImage: "tray.and.arrow.down")
                                                 })
                                                 .onChange(of: groupByType, perform: { _ in
                                                     if(groupByType) {
                                                         self.groupByTag = false
+                                                        self.groupByYear = false
                                                         Task.init {
                                                             await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Type")
                                                         }
                                                     }
                                                     
-                                                    if(!(groupByType || groupByTag)) {
+                                                    if(!(groupByType || groupByTag || groupByYear)) {
                                                         Task.init {
                                                             await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                                                         }
                                                     }
                                                 })
                                                 
-                                                // MARK: Hide Zero Balance
                                                 Toggle(isOn: $groupByTag, label: {
-                                                    Label("Tag", systemImage: "tag.square")
+                                                    Label("Income Tag", systemImage: "tag.square")
                                                 })
                                                 .onChange(of: groupByTag, perform: { _ in
                                                     if(groupByTag) {
                                                         self.groupByType = false
+                                                        self.groupByYear = false
                                                         Task.init {
                                                             await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Tag")
                                                         }
                                                     }
                                                     
-                                                    if(!(groupByType || groupByTag)) {
+                                                    if(!(groupByType || groupByTag || groupByYear)) {
+                                                        Task.init {
+                                                            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                        }
+                                                    }
+                                                })
+                                                
+                                                Toggle(isOn: $groupByYear, label: {
+                                                    Label("Year", systemImage: "calendar.badge.clock")
+                                                })
+                                                .onChange(of: groupByYear, perform: { _ in
+                                                    if(groupByYear) {
+                                                        self.groupByType = false
+                                                        self.groupByTag = false
+                                                        Task.init {
+                                                            await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Year")
+                                                        }
+                                                    }
+                                                    
+                                                    if(!(groupByType || groupByTag || groupByYear)) {
                                                         Task.init {
                                                             await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                                                         }

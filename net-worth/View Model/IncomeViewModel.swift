@@ -120,6 +120,53 @@ class IncomeViewModel: ObservableObject {
                 self.incomeListByGroup = groupByTagUpdated
                 self.incomeListLoaded = true
             }
+        } else if(groupBy.elementsEqual("Year")) {
+            let groupByYear = Dictionary(grouping: list) { (income) -> String in
+                let date = Calendar.current.dateComponents([.year], from: income.creditedOn)
+                
+                return String(date.year ?? 0)
+                
+            }
+            var incomeListByGroupUpdated = [String: [IncomeCalculation]]()
+            
+            for (key, value) in groupByYear {
+                var cumAmount = 0.0
+                var cumTaxPaid = 0.0
+                let returnIncomeList = value.reversed().map { value1 in
+                    var sumAmount = 0.0
+                    var sumTaxPaid = 0.0
+                    var totalMonth = 0
+                    cumAmount = cumAmount + value1.amount
+                    cumTaxPaid = cumTaxPaid + value1.taxpaid
+                    value.reversed().forEach { value2 in
+                        if(value1.creditedOn >= value2.creditedOn) {
+                            sumAmount += value2.amount
+                            sumTaxPaid += value2.taxpaid
+                            totalMonth+=1
+                        }
+                    }
+                    return IncomeCalculation(id: value1.id,
+                                             amount: value1.amount,
+                                             taxpaid: value1.taxpaid,
+                                             creditedOn: value1.creditedOn,
+                                             currency: value1.currency,
+                                             type: value1.type,
+                                             tag: value1.tag,
+                                             avgAmount: sumAmount / Double(totalMonth),
+                                             avgTaxPaid: sumTaxPaid / Double(totalMonth),
+                                             cumulativeAmount: cumAmount,
+                                             cumulativeTaxPaid: cumTaxPaid)
+                }
+                
+                incomeListByGroupUpdated.updateValue(returnIncomeList.reversed(), forKey: key)
+            }
+            
+            let groupByYearUpdated = incomeListByGroupUpdated
+            
+            DispatchQueue.main.async {
+                self.incomeListByGroup = groupByYearUpdated
+                self.incomeListLoaded = true
+            }
         }
     }
     
