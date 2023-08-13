@@ -24,7 +24,6 @@ struct NewIncomeView: View {
     
     @State var currencySelected: Currency = Currency()
     @State var filterCurrencyList = CurrencyList().currencyList
-    @State var currencyChanged = false
     @State var searchTerm: String = ""
     
     @ObservedObject var incomeViewModel : IncomeViewModel
@@ -43,10 +42,6 @@ struct NewIncomeView: View {
                         }
                     }
                     .foregroundColor(Color.theme.primaryText)
-                    .onChange(of: incomeTypeSelected) { _ in
-                        amount="0.0"
-                        taxPaid="0.0"
-                    }
                     
                     HStack {
                         Text("Amount")
@@ -191,6 +186,10 @@ struct NewIncomeView: View {
                     incomeTagSelected = incomeViewModel.incomeTagList.filter { item in
                         item.isdefault
                     }.first ?? IncomeTag()
+                    
+                    if(currencySelected.code.isEmpty) {
+                        currencySelected = SettingsController().getDefaultCurrency()
+                    }
                 }
             }
             .sheet(isPresented: $addIncomeTypeViewOpen, onDismiss: {
