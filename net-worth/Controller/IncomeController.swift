@@ -272,4 +272,238 @@ class IncomeController {
         
         print("All Incomes Deleted.")
     }
+    
+    public func groupByType(list: [IncomeCalculation]) -> [String: [IncomeCalculation]] {
+        let groupByType = Dictionary(grouping: list, by: {$0.type})
+        var incomeListByGroupUpdated = [String: [IncomeCalculation]]()
+        
+        for (key, value) in groupByType {
+            var cumAmount = 0.0
+            var cumTaxPaid = 0.0
+            let returnIncomeList = value.reversed().map { value1 in
+                var sumAmount = 0.0
+                var sumTaxPaid = 0.0
+                var totalMonth = 0
+                cumAmount = cumAmount + value1.amount
+                cumTaxPaid = cumTaxPaid + value1.taxpaid
+                value.reversed().forEach { value2 in
+                    if(value1.creditedOn >= value2.creditedOn) {
+                        sumAmount += value2.amount
+                        sumTaxPaid += value2.taxpaid
+                        totalMonth+=1
+                    }
+                }
+                return IncomeCalculation(id: value1.id,
+                                         amount: value1.amount,
+                                         taxpaid: value1.taxpaid,
+                                         creditedOn: value1.creditedOn,
+                                         currency: value1.currency,
+                                         type: value1.type,
+                                         tag: value1.tag,
+                                         avgAmount: sumAmount / Double(totalMonth),
+                                         avgTaxPaid: sumTaxPaid / Double(totalMonth),
+                                         cumulativeAmount: cumAmount,
+                                         cumulativeTaxPaid: cumTaxPaid)
+            }
+            
+            incomeListByGroupUpdated.updateValue(returnIncomeList.reversed(), forKey: key)
+        }
+        
+        return incomeListByGroupUpdated
+    }
+    
+    public func groupByTag(list: [IncomeCalculation]) -> [String: [IncomeCalculation]] {
+        let groupByTag = Dictionary(grouping: list, by: {$0.tag})
+        var incomeListByGroupUpdated = [String: [IncomeCalculation]]()
+        
+        for (key, value) in groupByTag {
+            var cumAmount = 0.0
+            var cumTaxPaid = 0.0
+            let returnIncomeList = value.reversed().map { value1 in
+                var sumAmount = 0.0
+                var sumTaxPaid = 0.0
+                var totalMonth = 0
+                cumAmount = cumAmount + value1.amount
+                cumTaxPaid = cumTaxPaid + value1.taxpaid
+                value.reversed().forEach { value2 in
+                    if(value1.creditedOn >= value2.creditedOn) {
+                        sumAmount += value2.amount
+                        sumTaxPaid += value2.taxpaid
+                        totalMonth+=1
+                    }
+                }
+                return IncomeCalculation(id: value1.id,
+                                         amount: value1.amount,
+                                         taxpaid: value1.taxpaid,
+                                         creditedOn: value1.creditedOn,
+                                         currency: value1.currency,
+                                         type: value1.type,
+                                         tag: value1.tag,
+                                         avgAmount: sumAmount / Double(totalMonth),
+                                         avgTaxPaid: sumTaxPaid / Double(totalMonth),
+                                         cumulativeAmount: cumAmount,
+                                         cumulativeTaxPaid: cumTaxPaid)
+            }
+            
+            incomeListByGroupUpdated.updateValue(returnIncomeList.reversed(), forKey: key)
+        }
+        
+        return incomeListByGroupUpdated
+    }
+    
+    public func groupByYear(list: [IncomeCalculation]) -> [String: [IncomeCalculation]] {
+        let groupByYear = Dictionary(grouping: list) { (income) -> String in
+            let date = Calendar.current.dateComponents([.year], from: income.creditedOn)
+            
+            return String(date.year ?? 0)
+            
+        }
+        var incomeListByGroupUpdated = [String: [IncomeCalculation]]()
+        
+        for (key, value) in groupByYear {
+            var cumAmount = 0.0
+            var cumTaxPaid = 0.0
+            let returnIncomeList = value.reversed().map { value1 in
+                var sumAmount = 0.0
+                var sumTaxPaid = 0.0
+                var totalMonth = 0
+                cumAmount = cumAmount + value1.amount
+                cumTaxPaid = cumTaxPaid + value1.taxpaid
+                value.reversed().forEach { value2 in
+                    if(value1.creditedOn >= value2.creditedOn) {
+                        sumAmount += value2.amount
+                        sumTaxPaid += value2.taxpaid
+                        totalMonth+=1
+                    }
+                }
+                return IncomeCalculation(id: value1.id,
+                                         amount: value1.amount,
+                                         taxpaid: value1.taxpaid,
+                                         creditedOn: value1.creditedOn,
+                                         currency: value1.currency,
+                                         type: value1.type,
+                                         tag: value1.tag,
+                                         avgAmount: sumAmount / Double(totalMonth),
+                                         avgTaxPaid: sumTaxPaid / Double(totalMonth),
+                                         cumulativeAmount: cumAmount,
+                                         cumulativeTaxPaid: cumTaxPaid)
+            }
+            
+            incomeListByGroupUpdated.updateValue(returnIncomeList.reversed(), forKey: key)
+        }
+        
+        return incomeListByGroupUpdated
+    }
+    
+    public func groupByFinancialYear(list: [IncomeCalculation]) -> [String: [IncomeCalculation]] {
+        var financialYearList = [String]()
+        
+        let firstYear = Calendar.current.dateComponents([.year], from: list.last!.creditedOn).year!
+        let lastYear = Calendar.current.dateComponents([.year], from: list.first!.creditedOn).year!
+        
+        var dateComponent = DateComponents()
+        dateComponent.year = firstYear
+        dateComponent.month = 1
+        dateComponent.day = 1
+        let firstDayOfYear = Calendar.current.date(from: dateComponent)!
+        
+        dateComponent = DateComponents()
+        dateComponent.year = firstYear
+        dateComponent.month = 3
+        dateComponent.day = 31
+        let lastDayOfFinancialYear = Calendar.current.date(from: dateComponent)!
+        
+        let firstFinancialYearAvailable = list.filter {
+            firstDayOfYear <= $0.creditedOn && $0.creditedOn <= lastDayOfFinancialYear
+        }.count > 0
+        
+        if(firstFinancialYearAvailable) {
+            financialYearList.insert("\(firstYear - 1)-\(firstYear)", at: 0)
+        }
+        
+        var nextYear = firstYear + 1
+        var financialYearAvailable = true
+        while(financialYearAvailable || nextYear <= (lastYear + 1)) {
+            dateComponent = DateComponents()
+            dateComponent.year = nextYear - 1
+            dateComponent.month = 4
+            dateComponent.day = 1
+            let firstDayOfFinancialYear = Calendar.current.date(from: dateComponent)!
+            
+            dateComponent = DateComponents()
+            dateComponent.year = nextYear
+            dateComponent.month = 3
+            dateComponent.day = 31
+            let lastDayOfFinancialYear = Calendar.current.date(from: dateComponent)!
+            
+            financialYearAvailable = list.filter {
+                firstDayOfFinancialYear <= $0.creditedOn && $0.creditedOn <= lastDayOfFinancialYear
+            }.count > 0
+            
+            if(financialYearAvailable) {
+                financialYearList.insert("\(nextYear - 1)-\(nextYear)", at: 0)
+            }
+            nextYear = nextYear + 1
+        }
+        
+        var incomeListByGroupUpdated = [String: [IncomeCalculation]]()
+        
+        if(!financialYearList.isEmpty) {
+            for financialYear in financialYearList {
+                let financialYears = financialYear.split(separator: "-")
+                let calendar = Calendar.current
+                let startDate = DateComponents(
+                    calendar: calendar,
+                    year: financialYears[0].integer,
+                    month: 4,
+                    day: 1,
+                    hour: 0,
+                    minute: 0,
+                    second: 0)
+                
+                let endDate = DateComponents(
+                    calendar: calendar,
+                    year: financialYears[1].integer,
+                    month: 3,
+                    day: 31,
+                    hour: 23,
+                    minute: 59,
+                    second: 59)
+                
+                let filterList = list.filter {
+                    $0.creditedOn <= Calendar.current.date(from: endDate)! && $0.creditedOn >= Calendar.current.date(from: startDate)!
+                }
+                
+                var cumAmount = 0.0
+                var cumTaxPaid = 0.0
+                let returnIncomeList = filterList.reversed().map { value1 in
+                    var sumAmount = 0.0
+                    var sumTaxPaid = 0.0
+                    var totalMonth = 0
+                    cumAmount = cumAmount + value1.amount
+                    cumTaxPaid = cumTaxPaid + value1.taxpaid
+                    filterList.reversed().forEach { value2 in
+                        if(value1.creditedOn >= value2.creditedOn) {
+                            sumAmount += value2.amount
+                            sumTaxPaid += value2.taxpaid
+                            totalMonth+=1
+                        }
+                    }
+                    return IncomeCalculation(id: value1.id,
+                                             amount: value1.amount,
+                                             taxpaid: value1.taxpaid,
+                                             creditedOn: value1.creditedOn,
+                                             currency: value1.currency,
+                                             type: value1.type,
+                                             tag: value1.tag,
+                                             avgAmount: sumAmount / Double(totalMonth),
+                                             avgTaxPaid: sumTaxPaid / Double(totalMonth),
+                                             cumulativeAmount: cumAmount,
+                                             cumulativeTaxPaid: cumTaxPaid)
+                }
+                incomeListByGroupUpdated.updateValue(returnIncomeList.reversed(), forKey: financialYear)
+            }
+        }
+        return incomeListByGroupUpdated
+    }
 }

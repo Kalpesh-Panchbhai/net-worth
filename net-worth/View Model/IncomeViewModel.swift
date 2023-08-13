@@ -36,135 +36,45 @@ class IncomeViewModel: ObservableObject {
     
     func getIncomeListByGroup(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "", groupBy: String) async {
         let list = await incomeController.getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
-        if(groupBy.elementsEqual("Type")) {
-            let groupByType = Dictionary(grouping: list, by: {$0.type})
-            var incomeListByGroupUpdated = [String: [IncomeCalculation]]()
-            
-            for (key, value) in groupByType {
-                var cumAmount = 0.0
-                var cumTaxPaid = 0.0
-                let returnIncomeList = value.reversed().map { value1 in
-                    var sumAmount = 0.0
-                    var sumTaxPaid = 0.0
-                    var totalMonth = 0
-                    cumAmount = cumAmount + value1.amount
-                    cumTaxPaid = cumTaxPaid + value1.taxpaid
-                    value.reversed().forEach { value2 in
-                        if(value1.creditedOn >= value2.creditedOn) {
-                            sumAmount += value2.amount
-                            sumTaxPaid += value2.taxpaid
-                            totalMonth+=1
-                        }
-                    }
-                    return IncomeCalculation(id: value1.id,
-                                             amount: value1.amount,
-                                             taxpaid: value1.taxpaid,
-                                             creditedOn: value1.creditedOn,
-                                             currency: value1.currency,
-                                             type: value1.type,
-                                             tag: value1.tag,
-                                             avgAmount: sumAmount / Double(totalMonth),
-                                             avgTaxPaid: sumTaxPaid / Double(totalMonth),
-                                             cumulativeAmount: cumAmount,
-                                             cumulativeTaxPaid: cumTaxPaid)
+        if(!list.isEmpty) {
+            if(groupBy.elementsEqual("Type")) {
+                
+                let groupByTypeUpdated = incomeController.groupByType(list: list)
+                
+                DispatchQueue.main.async {
+                    self.incomeListByGroup = groupByTypeUpdated
+                    self.incomeListLoaded = true
                 }
                 
-                incomeListByGroupUpdated.updateValue(returnIncomeList.reversed(), forKey: key)
-            }
-            
-            let groupByTypeUpdated = incomeListByGroupUpdated
-            
-            DispatchQueue.main.async {
-                self.incomeListByGroup = groupByTypeUpdated
-                self.incomeListLoaded = true
-            }
-        } else if(groupBy.elementsEqual("Tag")) {
-            let groupByTag = Dictionary(grouping: list, by: {$0.tag})
-            var incomeListByGroupUpdated = [String: [IncomeCalculation]]()
-            
-            for (key, value) in groupByTag {
-                var cumAmount = 0.0
-                var cumTaxPaid = 0.0
-                let returnIncomeList = value.reversed().map { value1 in
-                    var sumAmount = 0.0
-                    var sumTaxPaid = 0.0
-                    var totalMonth = 0
-                    cumAmount = cumAmount + value1.amount
-                    cumTaxPaid = cumTaxPaid + value1.taxpaid
-                    value.reversed().forEach { value2 in
-                        if(value1.creditedOn >= value2.creditedOn) {
-                            sumAmount += value2.amount
-                            sumTaxPaid += value2.taxpaid
-                            totalMonth+=1
-                        }
-                    }
-                    return IncomeCalculation(id: value1.id,
-                                             amount: value1.amount,
-                                             taxpaid: value1.taxpaid,
-                                             creditedOn: value1.creditedOn,
-                                             currency: value1.currency,
-                                             type: value1.type,
-                                             tag: value1.tag,
-                                             avgAmount: sumAmount / Double(totalMonth),
-                                             avgTaxPaid: sumTaxPaid / Double(totalMonth),
-                                             cumulativeAmount: cumAmount,
-                                             cumulativeTaxPaid: cumTaxPaid)
+            } else if(groupBy.elementsEqual("Tag")) {
+                
+                let groupByTagUpdated = incomeController.groupByTag(list: list)
+                
+                DispatchQueue.main.async {
+                    self.incomeListByGroup = groupByTagUpdated
+                    self.incomeListLoaded = true
                 }
                 
-                incomeListByGroupUpdated.updateValue(returnIncomeList.reversed(), forKey: key)
-            }
-            
-            let groupByTagUpdated = incomeListByGroupUpdated
-            
-            DispatchQueue.main.async {
-                self.incomeListByGroup = groupByTagUpdated
-                self.incomeListLoaded = true
-            }
-        } else if(groupBy.elementsEqual("Year")) {
-            let groupByYear = Dictionary(grouping: list) { (income) -> String in
-                let date = Calendar.current.dateComponents([.year], from: income.creditedOn)
+            } else if(groupBy.elementsEqual("Year")) {
                 
-                return String(date.year ?? 0)
+                let groupByYearUpdated = incomeController.groupByYear(list: list)
                 
-            }
-            var incomeListByGroupUpdated = [String: [IncomeCalculation]]()
-            
-            for (key, value) in groupByYear {
-                var cumAmount = 0.0
-                var cumTaxPaid = 0.0
-                let returnIncomeList = value.reversed().map { value1 in
-                    var sumAmount = 0.0
-                    var sumTaxPaid = 0.0
-                    var totalMonth = 0
-                    cumAmount = cumAmount + value1.amount
-                    cumTaxPaid = cumTaxPaid + value1.taxpaid
-                    value.reversed().forEach { value2 in
-                        if(value1.creditedOn >= value2.creditedOn) {
-                            sumAmount += value2.amount
-                            sumTaxPaid += value2.taxpaid
-                            totalMonth+=1
-                        }
-                    }
-                    return IncomeCalculation(id: value1.id,
-                                             amount: value1.amount,
-                                             taxpaid: value1.taxpaid,
-                                             creditedOn: value1.creditedOn,
-                                             currency: value1.currency,
-                                             type: value1.type,
-                                             tag: value1.tag,
-                                             avgAmount: sumAmount / Double(totalMonth),
-                                             avgTaxPaid: sumTaxPaid / Double(totalMonth),
-                                             cumulativeAmount: cumAmount,
-                                             cumulativeTaxPaid: cumTaxPaid)
+                DispatchQueue.main.async {
+                    self.incomeListByGroup = groupByYearUpdated
+                    self.incomeListLoaded = true
                 }
                 
-                incomeListByGroupUpdated.updateValue(returnIncomeList.reversed(), forKey: key)
+            } else if(groupBy.elementsEqual("Financial Year")) {
+                
+                let groupByFinancialYearUpdated = incomeController.groupByFinancialYear(list: list)
+                DispatchQueue.main.async {
+                    self.incomeListByGroup = groupByFinancialYearUpdated
+                    self.incomeListLoaded = true
+                }
             }
-            
-            let groupByYearUpdated = incomeListByGroupUpdated
-            
+        } else {
             DispatchQueue.main.async {
-                self.incomeListByGroup = groupByYearUpdated
+                self.incomeListByGroup = [String: [IncomeCalculation]]()
                 self.incomeListLoaded = true
             }
         }
@@ -185,30 +95,30 @@ class IncomeViewModel: ObservableObject {
     }
     
     func getIncomeTagList() async {
-        let list = await incomeTagController.getIncomeTagList()
+        let incomeTagList = await incomeTagController.getIncomeTagList()
         DispatchQueue.main.async {
-            self.incomeTagList = list
+            self.incomeTagList = incomeTagList
         }
     }
     
     func getIncomeTypeList() async {
-        let list = await incomeTypeController.getIncomeTypeList()
+        let incomeTypeList = await incomeTypeController.getIncomeTypeList()
         DispatchQueue.main.async {
-            self.incomeTypeList = list
+            self.incomeTypeList = incomeTypeList
         }
     }
     
     func getIncomeYearList() async {
-        let list = await incomeController.getIncomeYearList()
+        let incomeYearList = await incomeController.getIncomeYearList()
         DispatchQueue.main.async {
-            self.incomeYearList = list
+            self.incomeYearList = incomeYearList
         }
     }
     
     func getIncomeFinancialYearList() async {
-        let list = await incomeController.getIncomeFinancialYearList()
+        let incomeFinancialYearList = await incomeController.getIncomeFinancialYearList()
         DispatchQueue.main.async {
-            self.incomeFinancialYearList = list
+            self.incomeFinancialYearList = incomeFinancialYearList
         }
     }
 }
