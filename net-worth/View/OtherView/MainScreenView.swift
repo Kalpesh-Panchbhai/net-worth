@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainScreenView: View {
-
+    
     @State var scenePhaseBlur = 0
     @State var networkUnavailable = true
     
@@ -18,6 +18,16 @@ struct MainScreenView: View {
     @StateObject var networkMonitor = NetworkMonitor()
     
     @Environment(\.scenePhase) var scenePhase
+    
+    private func getTotalIncomeCount() -> Int {
+        if(incomeViewModel.groupView) {
+            return incomeViewModel.incomeListByGroup.reduce(0, {
+                $0 + $1.value.count
+            })
+        } else {
+            return incomeViewModel.incomeList.count
+        }
+    }
     
     var body: some View {
         NavigationStack {
@@ -40,7 +50,7 @@ struct MainScreenView: View {
                         .tabItem {
                             Label("Incomes", systemImage: "indianrupeesign.circle")
                         }
-                        .badge(incomeViewModel.incomeList.count)
+                        .badge(getTotalIncomeCount())
                     
                     ChartView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
                         .tabItem {

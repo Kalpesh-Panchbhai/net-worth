@@ -26,7 +26,14 @@ class IncomeViewModel: ObservableObject {
     @Published var incomeYearList = [String]()
     @Published var incomeFinancialYearList = [String]()
     
+    @Published var groupView = false
+    
     func getIncomeList(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async {
+        DispatchQueue.main.async {
+            self.incomeListLoaded = false
+            self.groupView = false
+        }
+        
         let list = await incomeController.getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
         DispatchQueue.main.async {
             self.incomeList = list
@@ -35,6 +42,11 @@ class IncomeViewModel: ObservableObject {
     }
     
     func getIncomeListByGroup(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "", groupBy: String) async {
+        DispatchQueue.main.async {
+            self.incomeListLoaded = false
+            self.groupView = true
+        }
+        
         let list = await incomeController.getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
         if(!list.isEmpty) {
             if(groupBy.elementsEqual("Type")) {
