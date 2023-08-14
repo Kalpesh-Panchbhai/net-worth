@@ -12,6 +12,7 @@ struct SingleLineLollipopChartView: View {
     
     var chartDataList: [ChartData]
     var isPercentageChart: Bool = false
+    var isColorChart: Bool = true
     
     @State private var lineWidth = 2.0
     @State private var selectedElement: ChartData?
@@ -170,6 +171,6 @@ struct SingleLineLollipopChartView: View {
     }
     
     private func getChartColor() -> Color {
-        isPositiveValue() ? Color.theme.green : Color.theme.red
+        isColorChart ? (isPositiveValue() ? Color.theme.green : Color.theme.red) : Color.theme.primaryText
     }
 }

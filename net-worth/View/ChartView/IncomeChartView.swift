@@ -22,6 +22,7 @@ struct IncomeChartView: View {
     
     @State var cumulativeView = false
     @State var taxPaidView = false
+    @State var averageView = false
     
     @State var incomeChartDataList = [ChartData]()
     @State var incomeAvg = 0.0
@@ -56,23 +57,30 @@ struct IncomeChartView: View {
                             Spacer()
                             Button("Cumulative") {
                                 self.cumulativeView.toggle()
-                                
+                                self.averageView = false
                                 updateChartData()
                             }.buttonStyle(.borderedProminent)
                                 .tint(self.cumulativeView ? Color.theme.green : .blue)
                                 .font(.system(size: 13))
                             Button("Tax Paid") {
                                 self.taxPaidView.toggle()
-                                
                                 updateChartData()
                             }.buttonStyle(.borderedProminent)
                                 .tint(self.taxPaidView ? Color.theme.green : .blue)
                                 .font(.system(size: 13))
+                            
+                            Button("Average") {
+                                self.averageView.toggle()
+                                self.cumulativeView = false
+                                updateChartData()
+                            }.buttonStyle(.borderedProminent)
+                                .tint(self.averageView ? Color.theme.green : .blue)
+                                .font(.system(size: 13))
                         }
                         .listRowBackground(Color.theme.foreground)
                         
-                        if(cumulativeView) {
-                            SingleLineLollipopChartView(chartDataList: incomeChartDataList)
+                        if(cumulativeView || averageView) {
+                            SingleLineLollipopChartView(chartDataList: incomeChartDataList, isColorChart: false)
                                 .listRowBackground(Color.theme.foreground)
                         } else {
                             BarLollipopChartView(chartDataList: incomeChartDataList, average: incomeAvg, isAverageChart: true)
@@ -218,16 +226,41 @@ struct IncomeChartView: View {
     }
     
     private func updateChartData() {
+        incomeChartDataList = [ChartData]()
+        incomeAvg = 0.0
         Task.init {
             await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-            incomeChartDataList = [ChartData]()
             for income in incomeViewModel.incomeList {
-                incomeChartDataList.append(ChartData(date: income.creditedOn, value: cumulativeView ? (taxPaidView ? income.cumulativeTaxPaid : income.cumulativeAmount) : (taxPaidView ? income.taxpaid : income.amount)))
+                incomeChartDataList.append(ChartData(date: income.creditedOn, value: getValue(income: income)))
             }
             
             incomeAvg = taxPaidView ? (incomeViewModel.incomeList.first?.avgTaxPaid ?? 0.0) : (incomeViewModel.incomeList.first?.avgAmount ?? 0.0)
             
             incomeChartDataList.reverse()
+        }
+    }
+    
+    private func getValue(income: IncomeCalculation) -> Double {
+        if(cumulativeView) {
+            if(taxPaidView) {
+                return income.cumulativeTaxPaid
+            } else {
+                return income.cumulativeAmount
+            }
+        } else {
+            if(taxPaidView) {
+                if(averageView) {
+                    return income.avgTaxPaid
+                } else {
+                    return income.taxpaid
+                }
+            } else {
+                if(averageView) {
+                    return income.avgAmount
+                } else {
+                    return income.amount
+                }
+            }
         }
     }
     
