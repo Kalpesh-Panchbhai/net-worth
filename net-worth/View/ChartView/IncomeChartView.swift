@@ -48,11 +48,11 @@ struct IncomeChartView: View {
                             if(taxPaidView) {
                                 Text(totalTaxPaid.stringFormat)
                                     .foregroundColor(Color.theme.primaryText)
-                                    .font(.title3.bold())
+                                    .font(.system(size: 15))
                             } else {
                                 Text(totalAmount.stringFormat)
                                     .foregroundColor(Color.theme.primaryText)
-                                    .font(.title3.bold())
+                                    .font(.system(size: 15))
                             }
                             Spacer()
                             Button("Cumulative") {
@@ -61,13 +61,13 @@ struct IncomeChartView: View {
                                 updateChartData()
                             }.buttonStyle(.borderedProminent)
                                 .tint(self.cumulativeView ? Color.theme.green : .blue)
-                                .font(.system(size: 13))
+                                .font(.system(size: 10))
                             Button("Tax Paid") {
                                 self.taxPaidView.toggle()
                                 updateChartData()
                             }.buttonStyle(.borderedProminent)
                                 .tint(self.taxPaidView ? Color.theme.green : .blue)
-                                .font(.system(size: 13))
+                                .font(.system(size: 10))
                             
                             Button("Average") {
                                 self.averageView.toggle()
@@ -75,7 +75,7 @@ struct IncomeChartView: View {
                                 updateChartData()
                             }.buttonStyle(.borderedProminent)
                                 .tint(self.averageView ? Color.theme.green : .blue)
-                                .font(.system(size: 13))
+                                .font(.system(size: 10))
                         }
                         .listRowBackground(Color.theme.foreground)
                         
