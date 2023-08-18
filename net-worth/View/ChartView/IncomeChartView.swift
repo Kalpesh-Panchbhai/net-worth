@@ -15,10 +15,11 @@ struct IncomeChartView: View {
     @State var currentActiveIncome: Income?
     @State var plotWidth: CGFloat = 0
     
-    @State var filterIncomeTag = ""
-    @State var filterIncomeType = ""
-    @State var filterYear = ""
-    @State var filterFinancialYear = ""
+    // MARK: List Filter Variables
+    @State var filterIncomeType = [String]()
+    @State var filterIncomeTag = [String]()
+    @State var filterYear = [String]()
+    @State var filterFinancialYear = [String]()
     
     @State var cumulativeView = false
     @State var taxPaidView = false
@@ -86,15 +87,6 @@ struct IncomeChartView: View {
                             BarLollipopChartView(chartDataList: incomeChartDataList, average: incomeAvg, isAverageChart: true)
                                 .listRowBackground(Color.theme.foreground)
                         }
-                        
-                        if(!(filterIncomeType.isEmpty && filterIncomeTag.isEmpty && filterYear.isEmpty && filterFinancialYear.isEmpty)) {
-                            HStack {
-                                Text(getAppliedFilter())
-                                    .font(.system(size: 14))
-                            }
-                            .listRowBackground(Color.theme.foreground)
-                        }
-                        
                     }
                 }
             }
@@ -108,14 +100,14 @@ struct IncomeChartView: View {
                     ToolbarItem(placement: .navigationBarLeading) {
                         if(!filterIncomeType.isEmpty || !filterIncomeTag.isEmpty || !filterYear.isEmpty || !filterFinancialYear.isEmpty) {
                             Button(action: {
-                                filterIncomeType = ""
-                                filterIncomeTag = ""
-                                filterYear = ""
-                                filterFinancialYear = ""
+                                filterIncomeType = [String]()
+                                filterIncomeTag = [String]()
+                                filterYear = [String]()
+                                filterFinancialYear = [String]()
                                 
                                 updateChartData()
                             }, label: {
-                                Text("Clear")
+                                Text("Reset")
                                     .foregroundColor(Color.theme.primaryText)
                                     .bold()
                             })
@@ -129,15 +121,24 @@ struct IncomeChartView: View {
                                     Menu(content: {
                                         ForEach(incomeViewModel.incomeTypeList, id: \.self) { item in
                                             Button(action: {
-                                                filterIncomeType = item.name
-                                                
+                                                if(filterIncomeType.contains(item.name)) {
+                                                    filterIncomeType = filterIncomeType.filter { value in
+                                                        !value.elementsEqual(item.name)
+                                                    }
+                                                } else {
+                                                    filterIncomeType.append(item.name)
+                                                }
                                                 updateChartData()
                                             }, label: {
-                                                Text(item.name)
+                                                if(filterIncomeType.contains(item.name)) {
+                                                    Label(item.name, systemImage: "checkmark")
+                                                } else {
+                                                    Text(item.name)
+                                                }
                                             })
                                         }
                                     }, label: {
-                                        Label("Income Type", systemImage: "tray.and.arrow.down")
+                                        Label("Income Type", systemImage: filterIncomeType.isEmpty ? "tray.and.arrow.down" : "tray.and.arrow.down.fill")
                                     })
                                 }
                                 
@@ -145,15 +146,24 @@ struct IncomeChartView: View {
                                     Menu(content: {
                                         ForEach(incomeViewModel.incomeTagList, id: \.self) { item in
                                             Button(action: {
-                                                filterIncomeTag = item.name
-                                                
+                                                if(filterIncomeTag.contains(item.name)) {
+                                                    filterIncomeTag = filterIncomeTag.filter { value in
+                                                        !value.elementsEqual(item.name)
+                                                    }
+                                                } else {
+                                                    filterIncomeTag.append(item.name)
+                                                }
                                                 updateChartData()
                                             }, label: {
-                                                Text(item.name)
+                                                if(filterIncomeTag.contains(item.name)) {
+                                                    Label(item.name, systemImage: "checkmark")
+                                                } else {
+                                                    Text(item.name)
+                                                }
                                             })
                                         }
                                     }, label: {
-                                        Label("Income Tag", systemImage: "tag.square")
+                                        Label("Income Tag", systemImage: filterIncomeTag.isEmpty ? "tag.square" : "tag.square.fill")
                                     })
                                 }
                                 
@@ -161,16 +171,25 @@ struct IncomeChartView: View {
                                     Menu(content: {
                                         ForEach(incomeViewModel.incomeYearList, id: \.self) { item in
                                             Button(action: {
-                                                filterYear = item
-                                                filterFinancialYear = ""
-                                                
+                                                if(filterYear.contains(item)) {
+                                                    filterYear = filterYear.filter { value in
+                                                        !value.elementsEqual(item)
+                                                    }
+                                                } else {
+                                                    filterYear.append(item)
+                                                }
+                                                filterFinancialYear = [String]()
                                                 updateChartData()
                                             }, label: {
-                                                Text(item)
+                                                if(filterYear.contains(item)) {
+                                                    Label(item, systemImage: "checkmark")
+                                                } else {
+                                                    Text(item)
+                                                }
                                             })
                                         }
                                     }, label: {
-                                        Label("Year", systemImage: "calendar.badge.clock")
+                                        Label("Year", systemImage: filterYear.isEmpty ? "calendar.circle" : "calendar.circle.fill")
                                     })
                                 }
                                 
@@ -178,16 +197,25 @@ struct IncomeChartView: View {
                                     Menu(content: {
                                         ForEach(incomeViewModel.incomeFinancialYearList, id: \.self) { item in
                                             Button(action: {
-                                                filterYear = ""
-                                                filterFinancialYear = item
-                                                
+                                                filterYear = [String]()
+                                                if(filterFinancialYear.contains(item)) {
+                                                    filterFinancialYear = filterFinancialYear.filter { value in
+                                                        !value.elementsEqual(item)
+                                                    }
+                                                } else {
+                                                    filterFinancialYear.append(item)
+                                                }
                                                 updateChartData()
                                             }, label: {
-                                                Text(item)
+                                                if(filterFinancialYear.contains(item)) {
+                                                    Label(item, systemImage: "checkmark")
+                                                } else {
+                                                    Text(item)
+                                                }
                                             })
                                         }
                                     }, label: {
-                                        Label("Financial year", systemImage: "calendar.badge.clock")
+                                        Label("Financial year", systemImage: filterFinancialYear.isEmpty ? "calendar.circle" : "calendar.circle.fill")
                                     })
                                 }
                                 
@@ -214,7 +242,7 @@ struct IncomeChartView: View {
         })
         .onAppear {
             Task.init {
-//                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                 await incomeViewModel.getIncomeTagList()
                 await incomeViewModel.getIncomeTypeList()
                 await incomeViewModel.getIncomeYearList()
@@ -229,7 +257,7 @@ struct IncomeChartView: View {
         incomeChartDataList = [ChartData]()
         incomeAvg = 0.0
         Task.init {
-//            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
             for income in incomeViewModel.incomeList {
                 incomeChartDataList.append(ChartData(date: income.creditedOn, value: getValue(income: income)))
             }
@@ -262,38 +290,5 @@ struct IncomeChartView: View {
                 }
             }
         }
-    }
-    
-    func getAppliedFilter() -> String {
-        var returnString = ""
-        var filterAlreadyApplied = false
-        if(!filterIncomeType.isEmpty) {
-            returnString = "Applied Filter: " + filterIncomeType
-            filterAlreadyApplied = true
-        }
-        if(!filterIncomeTag.isEmpty) {
-            if(filterAlreadyApplied) {
-                returnString = returnString + ", " + filterIncomeTag
-            } else {
-                returnString = "Applied Filter: " + filterIncomeTag
-                filterAlreadyApplied = true
-            }
-        }
-        if(!filterYear.isEmpty) {
-            if(filterAlreadyApplied) {
-                returnString = returnString + ", " + filterYear
-            } else {
-                returnString = "Applied Filter: " + filterYear
-                filterAlreadyApplied = true
-            }
-        }
-        if(!filterFinancialYear.isEmpty) {
-            if(filterAlreadyApplied) {
-                returnString = returnString + ", " + filterFinancialYear
-            } else {
-                returnString = "Applied Filter: " + filterFinancialYear
-            }
-        }
-        return returnString
     }
 }
