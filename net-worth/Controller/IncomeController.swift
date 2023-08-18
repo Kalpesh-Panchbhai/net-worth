@@ -53,7 +53,7 @@ class IncomeController {
         return incomeList
     }
     
-    public func getIncomeList(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async -> [IncomeCalculation] {
+    public func getIncomeList(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async -> [IncomeCalculation] {
         var incomeList = [Income]()
         
         if(await UserController().isNewIncomeAvailable()) {
@@ -64,65 +64,71 @@ class IncomeController {
         
         if(!incomeType.isEmpty) {
             incomeList = incomeList.filter {
-                $0.type.elementsEqual(incomeType)
+                incomeType.contains($0.type)
             }
         }
         
         if(!incomeTag.isEmpty) {
             incomeList = incomeList.filter {
-                $0.tag.elementsEqual(incomeTag)
+                incomeTag.contains($0.tag)
             }
         }
         
         if(!year.isEmpty) {
-            let calendar = Calendar.current
-            let startDate = DateComponents(
-                calendar: calendar,
-                year: year.integer,
-                month: 1,
-                day: 1,
-                hour: 0,
-                minute: 0,
-                second: 0)
-            
-            let endDate = DateComponents(
-                calendar: calendar,
-                year: year.integer,
-                month: 12,
-                day: 31,
-                hour: 23,
-                minute: 59,
-                second: 59)
-            
-            incomeList = incomeList.filter {
-                $0.creditedOn <= Calendar.current.date(from: endDate)! && $0.creditedOn >= Calendar.current.date(from: startDate)!
+            var filterIncomeList = [Income]()
+            for y in year {
+                let calendar = Calendar.current
+                let startDate = DateComponents(
+                    calendar: calendar,
+                    year: y.integer,
+                    month: 1,
+                    day: 1,
+                    hour: 0,
+                    minute: 0,
+                    second: 0)
+                
+                let endDate = DateComponents(
+                    calendar: calendar,
+                    year: y.integer,
+                    month: 12,
+                    day: 31,
+                    hour: 23,
+                    minute: 59,
+                    second: 59)
+                filterIncomeList.append(contentsOf: incomeList.filter {
+                    $0.creditedOn <= Calendar.current.date(from: endDate)! && $0.creditedOn >= Calendar.current.date(from: startDate)!
+                })
             }
+            incomeList = filterIncomeList.sorted(by: {$0.creditedOn < $1.creditedOn})
         }
         
         if(!financialYear.isEmpty) {
-            let financialYears = financialYear.split(separator: "-")
-            let calendar = Calendar.current
-            let startDate = DateComponents(
-                calendar: calendar,
-                year: financialYears[0].integer,
-                month: 4,
-                day: 1,
-                hour: 0,
-                minute: 0,
-                second: 0)
-            
-            let endDate = DateComponents(
-                calendar: calendar,
-                year: financialYears[1].integer,
-                month: 3,
-                day: 31,
-                hour: 23,
-                minute: 59,
-                second: 59)
-            
-            incomeList = incomeList.filter {
-                $0.creditedOn <= Calendar.current.date(from: endDate)! && $0.creditedOn >= Calendar.current.date(from: startDate)!
+            var filterIncomeList = [Income]()
+            for fy in financialYear {
+                let financialYears = fy.split(separator: "-")
+                let calendar = Calendar.current
+                let startDate = DateComponents(
+                    calendar: calendar,
+                    year: financialYears[0].integer,
+                    month: 4,
+                    day: 1,
+                    hour: 0,
+                    minute: 0,
+                    second: 0)
+                
+                let endDate = DateComponents(
+                    calendar: calendar,
+                    year: financialYears[1].integer,
+                    month: 3,
+                    day: 31,
+                    hour: 23,
+                    minute: 59,
+                    second: 59)
+                filterIncomeList.append(contentsOf: incomeList.filter {
+                    $0.creditedOn <= Calendar.current.date(from: endDate)! && $0.creditedOn >= Calendar.current.date(from: startDate)!
+                })
             }
+            incomeList = filterIncomeList.sorted(by: {$0.creditedOn < $1.creditedOn})
         }
         
         var cumAmount = 0.0
@@ -155,7 +161,7 @@ class IncomeController {
         return returnIncomeList.reversed()
     }
     
-    public func fetchTotalAmount(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async -> Double {
+    public func fetchTotalAmount(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async -> Double {
         let incomeList = await getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
         
         var total = 0.0
@@ -165,7 +171,7 @@ class IncomeController {
         return total
     }
     
-    public func fetchTotalTaxPaid(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async -> Double {
+    public func fetchTotalTaxPaid(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async -> Double {
         let incomeList = await getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
         
         var total = 0.0
@@ -176,7 +182,7 @@ class IncomeController {
     }
     
     public func getIncomeYearList() async -> [String] {
-        let incomeList = await getIncomeList(incomeType: "", incomeTag: "", year: "", financialYear: "")
+        let incomeList = await getIncomeList(incomeType: [String](), incomeTag: [String](), year: [String](), financialYear: [String]())
         
         let grouped = Dictionary(grouping: incomeList) { (income) -> Int in
             let date = Calendar.current.dateComponents([.year], from: income.creditedOn)
@@ -194,7 +200,7 @@ class IncomeController {
     }
     
     public func getIncomeFinancialYearList() async -> [String] {
-        let incomeList = await getIncomeList(incomeType: "", incomeTag: "", year: "", financialYear: "")
+        let incomeList = await getIncomeList(incomeType: [String](), incomeTag: [String](), year: [String](), financialYear: [String]())
         
         var returnResponse = [String]()
         if(incomeList.isEmpty) {

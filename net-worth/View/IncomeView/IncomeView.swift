@@ -16,10 +16,10 @@ struct IncomeView: View {
     @State var isChartViewOpen: Bool = false
     
     // MARK: List Filter Variables
-    @State var filterIncomeType = ""
-    @State var filterIncomeTag = ""
-    @State var filterYear = ""
-    @State var filterFinancialYear = ""
+    @State var filterIncomeType = [String]()
+    @State var filterIncomeTag = [String]()
+    @State var filterYear = [String]()
+    @State var filterFinancialYear = [String]()
     
     @State var showTaxPaidData = false
     @State var hideZeroAmount = true
@@ -61,10 +61,20 @@ struct IncomeView: View {
                                             Menu(content: {
                                                 ForEach(incomeViewModel.incomeTypeList, id: \.self) { item in
                                                     Button(action: {
-                                                        filterIncomeType = item.name
+                                                        if(filterIncomeType.contains(item.name)) {
+                                                            filterIncomeType = filterIncomeType.filter { value in
+                                                                !value.elementsEqual(item.name)
+                                                            }
+                                                        } else {
+                                                            filterIncomeType.append(item.name)
+                                                        }
                                                         updateData()
                                                     }, label: {
-                                                        Text(item.name)
+                                                        if(filterIncomeType.contains(item.name)) {
+                                                            Label(item.name, systemImage: "checkmark")
+                                                        } else {
+                                                            Text(item.name)
+                                                        }
                                                     })
                                                 }
                                             }, label: {
@@ -76,10 +86,20 @@ struct IncomeView: View {
                                             Menu(content: {
                                                 ForEach(incomeViewModel.incomeTagList, id: \.self) { item in
                                                     Button(action: {
-                                                        filterIncomeTag = item.name
+                                                        if(filterIncomeTag.contains(item.name)) {
+                                                            filterIncomeTag = filterIncomeTag.filter { value in
+                                                                !value.elementsEqual(item.name)
+                                                            }
+                                                        } else {
+                                                            filterIncomeTag.append(item.name)
+                                                        }
                                                         updateData()
                                                     }, label: {
-                                                        Text(item.name)
+                                                        if(filterIncomeTag.contains(item.name)) {
+                                                            Label(item.name, systemImage: "checkmark")
+                                                        } else {
+                                                            Text(item.name)
+                                                        }
                                                     })
                                                 }
                                             }, label: {
@@ -91,11 +111,21 @@ struct IncomeView: View {
                                             Menu(content: {
                                                 ForEach(incomeViewModel.incomeYearList, id: \.self) { item in
                                                     Button(action: {
-                                                        filterYear = item
-                                                        filterFinancialYear = ""
+                                                        if(filterYear.contains(item)) {
+                                                            filterYear = filterYear.filter { value in
+                                                                !value.elementsEqual(item)
+                                                            }
+                                                        } else {
+                                                            filterYear.append(item)
+                                                        }
+                                                        filterFinancialYear = [String]()
                                                         updateData()
                                                     }, label: {
-                                                        Text(item)
+                                                        if(filterYear.contains(item)) {
+                                                            Label(item, systemImage: "checkmark")
+                                                        } else {
+                                                            Text(item)
+                                                        }
                                                     })
                                                 }
                                             }, label: {
@@ -107,11 +137,21 @@ struct IncomeView: View {
                                             Menu(content: {
                                                 ForEach(incomeViewModel.incomeFinancialYearList, id: \.self) { item in
                                                     Button(action: {
-                                                        filterYear = ""
-                                                        filterFinancialYear = item
+                                                        filterYear = [String]()
+                                                        if(filterFinancialYear.contains(item)) {
+                                                            filterFinancialYear = filterFinancialYear.filter { value in
+                                                                !value.elementsEqual(item)
+                                                            }
+                                                        } else {
+                                                            filterFinancialYear.append(item)
+                                                        }
                                                         updateData()
                                                     }, label: {
-                                                        Text(item)
+                                                        if(filterFinancialYear.contains(item)) {
+                                                            Label(item, systemImage: "checkmark")
+                                                        } else {
+                                                            Text(item)
+                                                        }
                                                     })
                                                 }
                                             }, label: {
@@ -185,7 +225,7 @@ struct IncomeView: View {
                                         })
                                         
                                         Toggle(isOn: $groupByFinancialYear, label: {
-                                            Label(" Financial Year", systemImage: "calendar.badge.clock")
+                                            Label("Financial Year", systemImage: "calendar.badge.clock")
                                         })
                                         .onChange(of: groupByFinancialYear, perform: { _ in
                                             if(groupByFinancialYear) {
@@ -211,10 +251,10 @@ struct IncomeView: View {
                                     Spacer()
                                     if(isFilterApplied()) {
                                         Button(action: {
-                                            filterIncomeType = ""
-                                            filterIncomeTag = ""
-                                            filterYear = ""
-                                            filterFinancialYear = ""
+                                            filterIncomeType = [String]()
+                                            filterIncomeTag = [String]()
+                                            filterYear = [String]()
+                                            filterFinancialYear = [String]()
                                             updateData()
                                         }, label: {
                                             Text("Reset")

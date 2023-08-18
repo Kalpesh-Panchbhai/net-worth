@@ -214,7 +214,7 @@ struct IncomeChartView: View {
         })
         .onAppear {
             Task.init {
-                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+//                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                 await incomeViewModel.getIncomeTagList()
                 await incomeViewModel.getIncomeTypeList()
                 await incomeViewModel.getIncomeYearList()
@@ -229,7 +229,7 @@ struct IncomeChartView: View {
         incomeChartDataList = [ChartData]()
         incomeAvg = 0.0
         Task.init {
-            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+//            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
             for income in incomeViewModel.incomeList {
                 incomeChartDataList.append(ChartData(date: income.creditedOn, value: getValue(income: income)))
             }

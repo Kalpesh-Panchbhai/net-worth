@@ -28,7 +28,7 @@ class IncomeViewModel: ObservableObject {
     
     @Published var groupView = false
     
-    func getIncomeList(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async {
+    func getIncomeList(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async {
         DispatchQueue.main.async {
             self.incomeListLoaded = false
             self.groupView = false
@@ -41,7 +41,7 @@ class IncomeViewModel: ObservableObject {
         }
     }
     
-    func getIncomeListByGroup(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "", groupBy: String) async {
+    func getIncomeListByGroup(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String](), groupBy: String) async {
         DispatchQueue.main.async {
             self.incomeListLoaded = false
             self.groupView = true
@@ -92,14 +92,14 @@ class IncomeViewModel: ObservableObject {
         }
     }
     
-    func getTotalBalance(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async {
+    func getTotalBalance(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async {
         let amount = await incomeController.fetchTotalAmount(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
         DispatchQueue.main.async {
             self.incomeTotalAmount = amount
         }
     }
     
-    func getTotalTaxPaid(incomeType: String = "", incomeTag: String = "", year: String = "", financialYear: String = "") async {
+    func getTotalTaxPaid(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async {
         let taxPaid = await incomeController.fetchTotalTaxPaid(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
         DispatchQueue.main.async {
             self.incomeTaxPaidAmount = taxPaid
