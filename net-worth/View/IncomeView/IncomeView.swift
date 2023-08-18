@@ -249,7 +249,9 @@ struct IncomeView: View {
                                         Image(systemName: isGroupApplied() ? "rectangle.3.group.fill" : "rectangle.3.group")
                                     })
                                     .font(.system(size: 14).bold())
+                                    
                                     Spacer()
+                                    
                                     if(isFilterApplied()) {
                                         Button(action: {
                                             filterIncomeType = [String]()
