@@ -78,7 +78,7 @@ struct IncomeView: View {
                                                     })
                                                 }
                                             }, label: {
-                                                Label("Income Type", systemImage: filterIncomeType.isEmpty ? "tray.and.arrow.down" : "tray.and.arrow.down.fill")
+                                                Label("Income Type", systemImage: filterIncomeType.isEmpty ? "tray.and.arrow.down" : "\(filterIncomeType.count).circle")
                                             })
                                         }
                                         // MARK: Income Tag Menu
@@ -103,7 +103,7 @@ struct IncomeView: View {
                                                     })
                                                 }
                                             }, label: {
-                                                Label("Income Tag", systemImage: filterIncomeTag.isEmpty ? "tag.square" : "tag.square.fill")
+                                                Label("Income Tag", systemImage: filterIncomeTag.isEmpty ? "tag.square" : "\(filterIncomeTag.count).circle")
                                             })
                                         }
                                         // MARK: Income Year Menu
@@ -129,7 +129,7 @@ struct IncomeView: View {
                                                     })
                                                 }
                                             }, label: {
-                                                Label("Year", systemImage: filterYear.isEmpty ? "calendar.circle" : "calendar.circle.fill")
+                                                Label("Year", systemImage: filterYear.isEmpty ? "calendar.circle" : "\(filterYear.count).circle")
                                             })
                                         }
                                         // MARK: Income Financial Year Menu
@@ -155,7 +155,7 @@ struct IncomeView: View {
                                                     })
                                                 }
                                             }, label: {
-                                                Label("Financial year", systemImage: filterFinancialYear.isEmpty ? "calendar.circle" : "calendar.circle.fill")
+                                                Label("Financial year", systemImage: filterFinancialYear.isEmpty ? "calendar.circle" : "\(filterFinancialYear.count).circle")
                                             })
                                         }
                                         
