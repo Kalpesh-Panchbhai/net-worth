@@ -165,10 +165,9 @@ struct IncomeView: View {
                                     .font(.system(size: 14).bold())
                                     
                                     Menu(content: {
-                                        Toggle(isOn: $groupByType, label: {
-                                            Label("Income Type", systemImage: "tray.and.arrow.down")
-                                        })
-                                        .onChange(of: groupByType, perform: { _ in
+                                        
+                                        Button(action: {
+                                            self.groupByType.toggle()
                                             if(groupByType) {
                                                 self.groupByTag = false
                                                 self.groupByYear = false
@@ -176,19 +175,23 @@ struct IncomeView: View {
                                                 Task.init {
                                                     await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Type")
                                                 }
-                                            }
-                                            
-                                            if(!(groupByType || groupByTag || groupByYear || groupByFinancialYear)) {
-                                                Task.init {
-                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                            } else {
+                                                if(!(groupByType || groupByTag || groupByYear || groupByFinancialYear)) {
+                                                    Task.init {
+                                                        await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                    }
                                                 }
+                                            }
+                                        }, label: {
+                                            if(groupByType) {
+                                                Label("Income Type", systemImage: "checkmark")
+                                            } else {
+                                                Text("Income Type")
                                             }
                                         })
                                         
-                                        Toggle(isOn: $groupByTag, label: {
-                                            Label("Income Tag", systemImage: "tag.square")
-                                        })
-                                        .onChange(of: groupByTag, perform: { _ in
+                                        Button(action: {
+                                            self.groupByTag.toggle()
                                             if(groupByTag) {
                                                 self.groupByType = false
                                                 self.groupByYear = false
@@ -196,19 +199,23 @@ struct IncomeView: View {
                                                 Task.init {
                                                     await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Tag")
                                                 }
-                                            }
-                                            
-                                            if(!(groupByType || groupByTag || groupByYear || groupByFinancialYear)) {
-                                                Task.init {
-                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                            } else {
+                                                if(!(groupByType || groupByTag || groupByYear || groupByFinancialYear)) {
+                                                    Task.init {
+                                                        await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                    }
                                                 }
+                                            }
+                                        }, label: {
+                                            if(groupByTag) {
+                                                Label("Income Tag", systemImage: "checkmark")
+                                            } else {
+                                                Text("Income Tag")
                                             }
                                         })
                                         
-                                        Toggle(isOn: $groupByYear, label: {
-                                            Label("Year", systemImage: "calendar.badge.clock")
-                                        })
-                                        .onChange(of: groupByYear, perform: { _ in
+                                        Button(action: {
+                                            self.groupByYear.toggle()
                                             if(groupByYear) {
                                                 self.groupByType = false
                                                 self.groupByTag = false
@@ -216,19 +223,23 @@ struct IncomeView: View {
                                                 Task.init {
                                                     await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Year")
                                                 }
-                                            }
-                                            
-                                            if(!(groupByType || groupByTag || groupByYear || groupByFinancialYear)) {
-                                                Task.init {
-                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                            } else {
+                                                if(!(groupByType || groupByTag || groupByYear || groupByFinancialYear)) {
+                                                    Task.init {
+                                                        await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                    }
                                                 }
+                                            }
+                                        }, label: {
+                                            if(groupByYear) {
+                                                Label("Year", systemImage: "checkmark")
+                                            } else {
+                                                Text("Year")
                                             }
                                         })
                                         
-                                        Toggle(isOn: $groupByFinancialYear, label: {
-                                            Label("Financial Year", systemImage: "calendar.badge.clock")
-                                        })
-                                        .onChange(of: groupByFinancialYear, perform: { _ in
+                                        Button(action: {
+                                            self.groupByFinancialYear.toggle()
                                             if(groupByFinancialYear) {
                                                 self.groupByType = false
                                                 self.groupByTag = false
@@ -236,12 +247,18 @@ struct IncomeView: View {
                                                 Task.init {
                                                     await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Financial Year")
                                                 }
-                                            }
-                                            
-                                            if(!(groupByType || groupByTag || groupByYear || groupByFinancialYear)) {
-                                                Task.init {
-                                                    await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                            } else {
+                                                if(!(groupByType || groupByTag || groupByYear || groupByFinancialYear)) {
+                                                    Task.init {
+                                                        await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                                                    }
                                                 }
+                                            }
+                                        }, label: {
+                                            if(groupByFinancialYear) {
+                                                Label("Financial Year", systemImage: "checkmark")
+                                            } else {
+                                                Text("Financial Year")
                                             }
                                         })
                                         
