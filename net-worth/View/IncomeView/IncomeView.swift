@@ -163,6 +163,7 @@ struct IncomeView: View {
                                         Image(systemName: isFilterApplied() ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
                                     })
                                     .font(.system(size: 14).bold())
+                                    
                                     Menu(content: {
                                         Toggle(isOn: $groupByType, label: {
                                             Label("Income Type", systemImage: "tray.and.arrow.down")
