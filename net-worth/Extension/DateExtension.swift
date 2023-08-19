@@ -46,4 +46,8 @@ extension Date {
         let date = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month, .day], from: self))
         return date ?? Date()
     }
+    
+    func days(from date: Date) -> Int {
+        return Calendar.current.dateComponents([.day], from: date, to: self).day ?? 0
+    }
 }
