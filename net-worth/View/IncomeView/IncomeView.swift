@@ -68,6 +68,7 @@ struct IncomeView: View {
                                                         } else {
                                                             filterIncomeType.append(item.name)
                                                         }
+                                                        self.incomeViewModel.selectedIncomeTypeList = filterIncomeType
                                                         updateData()
                                                     }, label: {
                                                         if(filterIncomeType.contains(item.name)) {
@@ -93,6 +94,7 @@ struct IncomeView: View {
                                                         } else {
                                                             filterIncomeTag.append(item.name)
                                                         }
+                                                        self.incomeViewModel.selectedIncomeTagList = filterIncomeTag
                                                         updateData()
                                                     }, label: {
                                                         if(filterIncomeTag.contains(item.name)) {
@@ -119,6 +121,8 @@ struct IncomeView: View {
                                                             filterYear.append(item)
                                                         }
                                                         filterFinancialYear = [String]()
+                                                        self.incomeViewModel.selectedYearList = filterYear
+                                                        self.incomeViewModel.selectedFinancialYearList = filterFinancialYear
                                                         updateData()
                                                     }, label: {
                                                         if(filterYear.contains(item)) {
@@ -145,6 +149,9 @@ struct IncomeView: View {
                                                         } else {
                                                             filterFinancialYear.append(item)
                                                         }
+                                                        filterYear = [String]()
+                                                        self.incomeViewModel.selectedFinancialYearList = filterFinancialYear
+                                                        self.incomeViewModel.selectedYearList = filterYear
                                                         updateData()
                                                     }, label: {
                                                         if(filterFinancialYear.contains(item)) {
@@ -172,6 +179,8 @@ struct IncomeView: View {
                                                 self.groupByTag = false
                                                 self.groupByYear = false
                                                 self.groupByFinancialYear = false
+                                                self.incomeViewModel.groupView = true
+                                                self.incomeViewModel.selectedGroupBy = "Type"
                                                 Task.init {
                                                     await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Type")
                                                 }
@@ -196,6 +205,8 @@ struct IncomeView: View {
                                                 self.groupByType = false
                                                 self.groupByYear = false
                                                 self.groupByFinancialYear = false
+                                                self.incomeViewModel.groupView = true
+                                                self.incomeViewModel.selectedGroupBy = "Tag"
                                                 Task.init {
                                                     await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Tag")
                                                 }
@@ -220,6 +231,8 @@ struct IncomeView: View {
                                                 self.groupByType = false
                                                 self.groupByTag = false
                                                 self.groupByFinancialYear = false
+                                                self.incomeViewModel.groupView = true
+                                                self.incomeViewModel.selectedGroupBy = "Year"
                                                 Task.init {
                                                     await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Year")
                                                 }
@@ -244,6 +257,8 @@ struct IncomeView: View {
                                                 self.groupByType = false
                                                 self.groupByTag = false
                                                 self.groupByYear = false
+                                                self.incomeViewModel.groupView = true
+                                                self.incomeViewModel.selectedGroupBy = "Financial Year"
                                                 Task.init {
                                                     await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Financial Year")
                                                 }
@@ -294,7 +309,7 @@ struct IncomeView: View {
                                                 ForEach(value, id: \.self) { income in
                                                     if((hideZeroAmount && ((!income.taxpaid.isZero && showTaxPaidData) || (!income.amount.isZero && !showTaxPaidData)) || !hideZeroAmount)) {
                                                         NavigationLink(destination: {
-                                                            IncomeDetailView(income: income)
+                                                            IncomeDetailView(income: income, incomeViewModel: incomeViewModel)
                                                                 .toolbarRole(.editor)
                                                         }, label: {
                                                             IncomeRowView(income: income, groupBy: groupByTag ? "Tag" : (groupByType ? "Type" : ""), showTaxPaid: $showTaxPaidData)
@@ -313,7 +328,7 @@ struct IncomeView: View {
                                         ForEach(incomeViewModel.incomeList, id: \.self) { income in
                                             if((hideZeroAmount && ((!income.taxpaid.isZero && showTaxPaidData) || (!income.amount.isZero && !showTaxPaidData)) || !hideZeroAmount)) {
                                                 NavigationLink(destination: {
-                                                    IncomeDetailView(income: income)
+                                                    IncomeDetailView(income: income, incomeViewModel: incomeViewModel)
                                                         .toolbarRole(.editor)
                                                 }, label: {
                                                     IncomeRowView(income: income, showTaxPaid: $showTaxPaidData)

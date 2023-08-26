@@ -29,6 +29,18 @@ class IncomeController {
         }
     }
     
+    public func updateIncome(income: Income) async {
+        do {
+            try getIncomeCollection()
+                .document(income.id!)
+                .setData(from: income, merge: true)
+            
+            await UserController().updateIncomeUserData()
+        } catch {
+            print(error)
+        }
+    }
+    
     private func getIncomeList() async -> [Income] {
         var incomeList = [Income]()
         do {

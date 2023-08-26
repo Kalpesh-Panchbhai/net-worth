@@ -9,7 +9,11 @@ import SwiftUI
 
 struct IncomeDetailView: View {
     
-    var income: IncomeCalculation
+    @State var income: IncomeCalculation
+    
+    @State var modifyViewOpen = false
+    
+    @ObservedObject var incomeViewModel: IncomeViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -50,18 +54,52 @@ struct IncomeDetailView: View {
             .listRowBackground(Color.theme.foreground)
             .foregroundColor(Color.theme.primaryText)
         }
+        .toolbar {
+            ToolbarItem(content: {
+                Button(action: {
+                    self.modifyViewOpen = true
+                }, label: {
+                    Image(systemName: "square.and.pencil")
+                        .foregroundColor(Color.theme.primaryText)
+                })
+                .font(.system(size: 14).bold())
+            })
+        }
         .background(Color.theme.background)
         .scrollContentBackground(.hidden)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(
             leading: Button(action: {
                 self.presentationMode.wrappedValue.dismiss()
-            }) {
+            }, label: {
                 Image(systemName: "chevron.left")
                     .foregroundColor(Color.theme.primaryText)
-                    .bold()
-            }
-                .font(.system(size: 14).bold())
+            })
+            .font(.system(size: 14).bold())
         )
+        .sheet(isPresented: $modifyViewOpen, onDismiss: {
+            if(incomeViewModel.groupView) {
+                incomeViewModel.incomeListByGroup.forEach {
+                    let filterIncome = $0.value.filter { data in
+                        data.id!.elementsEqual(income.id!)
+                    }.first ?? IncomeCalculation(amount: 0.0, taxpaid: 0.0, creditedOn: Date(), currency: "", type: "", tag: "", avgAmount: 0.0, avgTaxPaid: 0.0, cumulativeAmount: 0.0, cumulativeTaxPaid: 0.0)
+                    if(!filterIncome.currency.isEmpty) {
+                        self.income = filterIncome
+                    }
+                }
+            } else {
+                self.income = incomeViewModel.incomeList.filter { data in
+                    data.id!.elementsEqual(income.id!)
+                }.first!
+            }
+        }, content: {
+            UpdateIncomeView(income: income, incomeViewModel: incomeViewModel)
+        })
+        .onAppear {
+            Task.init {
+                await incomeViewModel.getIncomeTypeList()
+                await incomeViewModel.getIncomeTagList()
+            }
+        }
     }
 }

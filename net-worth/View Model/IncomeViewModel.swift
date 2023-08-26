@@ -14,6 +14,11 @@ class IncomeViewModel: ObservableObject {
     var incomeController = IncomeController()
     var incomeTypeController = IncomeTypeController()
     var incomeTagController = IncomeTagController()
+    var selectedGroupBy = ""
+    var selectedIncomeTypeList = [String]()
+    var selectedIncomeTagList = [String]()
+    var selectedYearList = [String]()
+    var selectedFinancialYearList = [String]()
     
     @Published var incomeList = [IncomeCalculation]()
     @Published var incomeListByGroup = [String: [IncomeCalculation]]()
