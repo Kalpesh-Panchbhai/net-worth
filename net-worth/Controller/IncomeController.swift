@@ -157,11 +157,16 @@ class IncomeController {
                 if(value1.creditedOn >= value2.creditedOn) {
                     sumAmount += value2.amount
                     sumTaxPaid += value2.taxpaid
-                    totalDays = value1.creditedOn.removeTimeStamp().days(from: value2.creditedOn.removeTimeStamp())
+                    
+                    let date = DateComponents(
+                        calendar: Calendar.current,
+                        year: value2.creditedOn.getDateComponents().year,
+                        month: value2.creditedOn.getDateComponents().month,
+                        day: 1)
+                    totalDays = value1.creditedOn.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
                     maxDays = maxDays < totalDays ? totalDays : maxDays
                 }
             }
-            maxDays+=30
             totalMonth = Double(maxDays) / Double(30)
             return IncomeCalculation(id: value1.id,
                                      amount: value1.amount,
@@ -315,11 +320,16 @@ class IncomeController {
                     if(value1.creditedOn >= value2.creditedOn) {
                         sumAmount += value2.amount
                         sumTaxPaid += value2.taxpaid
-                        totalDays = value1.creditedOn.removeTimeStamp().days(from: value2.creditedOn.removeTimeStamp())
+                        
+                        let date = DateComponents(
+                            calendar: Calendar.current,
+                            year: value2.creditedOn.getDateComponents().year,
+                            month: value2.creditedOn.getDateComponents().month,
+                            day: 1)
+                        totalDays = value1.creditedOn.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
                         maxDays = maxDays < totalDays ? totalDays : maxDays
                     }
                 }
-                maxDays+=30
                 totalMonth = Double(maxDays) / Double(30)
                 return IncomeCalculation(id: value1.id,
                                          amount: value1.amount,
@@ -359,11 +369,16 @@ class IncomeController {
                     if(value1.creditedOn >= value2.creditedOn) {
                         sumAmount += value2.amount
                         sumTaxPaid += value2.taxpaid
-                        totalDays = value1.creditedOn.removeTimeStamp().days(from: value2.creditedOn.removeTimeStamp())
+                        
+                        let date = DateComponents(
+                            calendar: Calendar.current,
+                            year: value2.creditedOn.getDateComponents().year,
+                            month: value2.creditedOn.getDateComponents().month,
+                            day: 1)
+                        totalDays = value1.creditedOn.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
                         maxDays = maxDays < totalDays ? totalDays : maxDays
                     }
                 }
-                maxDays+=30
                 totalMonth = Double(maxDays) / Double(30)
                 return IncomeCalculation(id: value1.id,
                                          amount: value1.amount,
@@ -408,11 +423,16 @@ class IncomeController {
                     if(value1.creditedOn >= value2.creditedOn) {
                         sumAmount += value2.amount
                         sumTaxPaid += value2.taxpaid
-                        totalDays = value1.creditedOn.removeTimeStamp().days(from: value2.creditedOn.removeTimeStamp())
+                        
+                        let date = DateComponents(
+                            calendar: Calendar.current,
+                            year: value2.creditedOn.getDateComponents().year,
+                            month: value2.creditedOn.getDateComponents().month,
+                            day: 1)
+                        totalDays = value1.creditedOn.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
                         maxDays = maxDays < totalDays ? totalDays : maxDays
                     }
                 }
-                maxDays+=30
                 totalMonth = Double(maxDays) / Double(30)
                 return IncomeCalculation(id: value1.id,
                                          amount: value1.amount,
@@ -526,11 +546,16 @@ class IncomeController {
                         if(value1.creditedOn >= value2.creditedOn) {
                             sumAmount += value2.amount
                             sumTaxPaid += value2.taxpaid
-                            totalDays = value1.creditedOn.removeTimeStamp().days(from: value2.creditedOn.removeTimeStamp())
+                            
+                            let date = DateComponents(
+                                calendar: Calendar.current,
+                                year: value2.creditedOn.getDateComponents().year,
+                                month: value2.creditedOn.getDateComponents().month,
+                                day: 1)
+                            totalDays = value1.creditedOn.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
                             maxDays = maxDays < totalDays ? totalDays : maxDays
                         }
                     }
-                    maxDays+=30
                     totalMonth = Double(maxDays) / Double(30)
                     return IncomeCalculation(id: value1.id,
                                              amount: value1.amount,
