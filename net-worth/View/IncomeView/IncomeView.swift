@@ -22,6 +22,7 @@ struct IncomeView: View {
     @State var filterFinancialYear = [String]()
     
     @State var showTaxPaidData = false
+    @State var hideZeroAmount = true
     
     @State var groupByType = false
     @State var groupByTag = false
@@ -306,14 +307,16 @@ struct IncomeView: View {
                                         ForEach(incomeViewModel.incomeListByGroup.sorted(by: { (groupByYear || groupByFinancialYear) ? $0.key > $1.key : $0.key < $1.key}), id: \.key) { key, value in
                                             Section(key) {
                                                 ForEach(value, id: \.self) { income in
-                                                    NavigationLink(destination: {
-                                                        IncomeDetailView(income: income, incomeViewModel: incomeViewModel)
-                                                            .toolbarRole(.editor)
-                                                    }, label: {
-                                                        IncomeRowView(income: income, groupBy: groupByTag ? "Tag" : (groupByType ? "Type" : ""), showTaxPaid: $showTaxPaidData)
-                                                    })
-                                                    .contextMenu {
-                                                        Label(income.id!, systemImage: "info.square")
+                                                    if((hideZeroAmount && ((!income.taxpaid.isZero && showTaxPaidData) || (!income.amount.isZero && !showTaxPaidData)) || !hideZeroAmount)) {
+                                                        NavigationLink(destination: {
+                                                            IncomeDetailView(income: income, incomeViewModel: incomeViewModel)
+                                                                .toolbarRole(.editor)
+                                                        }, label: {
+                                                            IncomeRowView(income: income, groupBy: groupByTag ? "Tag" : (groupByType ? "Type" : ""), showTaxPaid: $showTaxPaidData)
+                                                        })
+                                                        .contextMenu {
+                                                            Label(income.id!, systemImage: "info.square")
+                                                        }
                                                     }
                                                 }
                                                 .onDelete(perform: deleteIncome)
@@ -323,14 +326,16 @@ struct IncomeView: View {
                                         }
                                     } else {
                                         ForEach(incomeViewModel.incomeList, id: \.self) { income in
-                                            NavigationLink(destination: {
-                                                IncomeDetailView(income: income, incomeViewModel: incomeViewModel)
-                                                    .toolbarRole(.editor)
-                                            }, label: {
-                                                IncomeRowView(income: income, showTaxPaid: $showTaxPaidData)
-                                            })
-                                            .contextMenu {
-                                                Label(income.id!, systemImage: "info.square")
+                                            if((hideZeroAmount && ((!income.taxpaid.isZero && showTaxPaidData) || (!income.amount.isZero && !showTaxPaidData)) || !hideZeroAmount)) {
+                                                NavigationLink(destination: {
+                                                    IncomeDetailView(income: income, incomeViewModel: incomeViewModel)
+                                                        .toolbarRole(.editor)
+                                                }, label: {
+                                                    IncomeRowView(income: income, showTaxPaid: $showTaxPaidData)
+                                                })
+                                                .contextMenu {
+                                                    Label(income.id!, systemImage: "info.square")
+                                                }
                                             }
                                         }
                                         .onDelete(perform: deleteIncome)
@@ -367,6 +372,11 @@ struct IncomeView: View {
                                             // MARK: Show Tax View
                                             Toggle(isOn: $showTaxPaidData, label: {
                                                 Label("Show Tax View", systemImage: "indianrupeesign.square")
+                                            })
+                                            
+                                            // MARK: Hide Zero Balance
+                                            Toggle(isOn: $hideZeroAmount, label: {
+                                                Label("Hide Zero amount", systemImage: "0.square")
                                             })
                                         }, label: {
                                             Image(systemName: "ellipsis")
