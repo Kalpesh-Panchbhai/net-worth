@@ -36,12 +36,7 @@ struct BarLollipopChartView: View {
                     RuleMark(y: .value("Value", average))
                         .foregroundStyle(Color.theme.green)
                         .annotation(alignment: .leading, content: {
-                            Text("Average")
-                                .font(.system(size: 10))
-                                .foregroundColor(Color.theme.green)
-                        })
-                        .annotation(position: .bottom, alignment: .leading, content: {
-                            Text(average.withCommas(decimalPlace: 2))
+                            Text(average.withCommas(decimalPlace: 2) + " (Avg)")
                                 .font(.system(size: 10))
                                 .foregroundColor(Color.theme.green)
                         })
@@ -49,12 +44,7 @@ struct BarLollipopChartView: View {
                     RuleMark(y: .value("Value", average))
                         .foregroundStyle(Color.theme.red)
                         .annotation(alignment: .leading, content: {
-                            Text("Average")
-                                .font(.system(size: 10))
-                                .foregroundColor(Color.theme.red)
-                        })
-                        .annotation(position: .bottom, alignment: .leading, content: {
-                            Text(average.withCommas(decimalPlace: 2))
+                            Text(average.withCommas(decimalPlace: 2) + " (Avg)")
                                 .font(.system(size: 10))
                                 .foregroundColor(Color.theme.red)
                         })
