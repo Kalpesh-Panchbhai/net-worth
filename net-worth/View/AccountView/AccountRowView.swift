@@ -56,10 +56,10 @@ struct AccountRowView: View {
                                 .font(.caption.bold())
                         }
                     }
-                    Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
+                    Text("+\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.green)
                         .font(.caption.bold())
-                    Text("(\(getOneDayPercentageChangeForNonSymbol()))")
+                    Text("(+\(getOneDayPercentageChangeForNonSymbol()))")
                         .foregroundColor(Color.theme.green)
                         .font(.caption.bold())
                     Spacer()

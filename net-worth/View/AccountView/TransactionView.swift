@@ -65,15 +65,29 @@ struct TransactionsView: View {
                                 .padding(.horizontal)
                                 if( i < accountViewModel.accountTransactionList.count) {
                                     if(accountViewModel.accountTransactionList[i].balanceChange > 0) {
-                                        Text("+\(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 2))")
-                                            .font(.system(size: 12).bold())
-                                            .foregroundColor(Color.theme.green)
-                                            .padding(.horizontal)
+                                        HStack {
+                                            Text("+\(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 2))")
+                                                .font(.system(size: 12))
+                                                .foregroundColor(Color.theme.green)
+                                            if(i < accountViewModel.accountTransactionList.count - 1) {
+                                                Text("(+" + calculatePercentChange(amount1: accountViewModel.accountTransactionList[i].currentBalance, amount2: accountViewModel.accountTransactionList[i + 1].currentBalance) + ")")
+                                                    .font(.system(size: 12))
+                                                    .foregroundColor(Color.theme.green)
+                                            }
+                                        }
+                                        .padding(.horizontal)
                                     } else if(accountViewModel.accountTransactionList[i].balanceChange < 0) {
-                                        Text("\(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 2))")
-                                            .font(.system(size: 12).bold())
-                                            .foregroundColor(Color.theme.red)
-                                            .padding(.horizontal)
+                                        HStack {
+                                            Text("\(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 2))")
+                                                .font(.system(size: 12))
+                                                .foregroundColor(Color.theme.red)
+                                            if(i < accountViewModel.accountTransactionList.count - 1) {
+                                                Text("(" + calculatePercentChange(amount1: accountViewModel.accountTransactionList[i].currentBalance, amount2: accountViewModel.accountTransactionList[i + 1].currentBalance) + ")")
+                                                    .font(.system(size: 12))
+                                                    .foregroundColor(Color.theme.red)
+                                            }
+                                        }
+                                        .padding(.horizontal)
                                     }
                                 }
                             }
@@ -160,5 +174,9 @@ struct TransactionsView: View {
             .padding(8)
             .background(Color.theme.background)
         }
+    }
+    
+    private func calculatePercentChange(amount1: Double, amount2: Double) -> String {
+        return CommonController.getGrowthPercentage(previousBalance: amount2, currentBalance: amount1)
     }
 }

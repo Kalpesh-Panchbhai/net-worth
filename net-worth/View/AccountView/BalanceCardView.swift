@@ -29,28 +29,25 @@ struct BalanceCardView: View {
                         .bold()
                 }
                 HStack {
-                    if(accountViewModel.totalBalance.oneDayChange >= 0) {
-                        if(accountViewModel.totalBalance.oneDayChange > 0) {
-                            ZStack {
-                                Circle()
-                                    .fill(Color.theme.green.opacity(0.2))
-                                    .frame(width: 20, height: 20)
-                                Image(systemName: "arrow.up")
-                                    .foregroundColor(Color.theme.green)
-                                    .font(.system(size: 14)
+                    if(accountViewModel.totalBalance.oneDayChange > 0) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.theme.green.opacity(0.2))
+                                .frame(width: 20, height: 20)
+                            Image(systemName: "arrow.up")
+                                .foregroundColor(Color.theme.green)
+                                .font(.system(size: 14)
                                     .bold())
-                            }
-                            
                         }
-                        Text("\(accountViewModel.totalBalance.oneDayChange.withCommas(decimalPlace: 2))")
+                        Text("+\(accountViewModel.totalBalance.oneDayChange.withCommas(decimalPlace: 2))")
                             .foregroundColor(Color.theme.green)
                             .font(.system(size: 14))
                             .bold()
-                        Text("(\(getOneDayPercentageChange()))")
+                        Text("(+\(getOneDayPercentageChange()))")
                             .foregroundColor(Color.theme.green)
                             .font(.system(size: 14))
                             .bold()
-                    } else {
+                    } else if(accountViewModel.totalBalance.oneDayChange < 0) {
                         ZStack {
                             Circle()
                                 .fill(Color.theme.red.opacity(0.2))
@@ -58,7 +55,7 @@ struct BalanceCardView: View {
                             Image(systemName: "arrow.down")
                                 .foregroundColor(Color.theme.red)
                                 .font(.system(size: 14)
-                                .bold())
+                                    .bold())
                         }
                         Text("\(accountViewModel.totalBalance.oneDayChange.withCommas(decimalPlace: 2))")
                             .foregroundColor(Color.theme.red)
