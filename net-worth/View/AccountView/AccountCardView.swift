@@ -54,16 +54,14 @@ struct AccountCardView: View {
             }
             Spacer()
             HStack {
-                if(getTotalChangeForNonSymbol() >= 0) {
-                    if(getTotalChangeForNonSymbol() > 0) {
-                        ZStack {
-                            Circle()
-                                .fill(Color.theme.green.opacity(0.2))
-                                .frame(width: 17, height: 17)
-                            Image(systemName: "arrow.up")
-                                .foregroundColor(Color.theme.green)
-                                .font(.system(size: 11).bold())
-                        }
+                if(getTotalChangeForNonSymbol() > 0) {
+                    ZStack {
+                        Circle()
+                            .fill(Color.theme.green.opacity(0.2))
+                            .frame(width: 17, height: 17)
+                        Image(systemName: "arrow.up")
+                            .foregroundColor(Color.theme.green)
+                            .font(.system(size: 11).bold())
                     }
                     Text("+\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.green)
@@ -71,7 +69,7 @@ struct AccountCardView: View {
                     Text("(+\(getOneDayPercentageChangeForNonSymbol()))")
                         .foregroundColor(Color.theme.green)
                         .font(.system(size: 11).bold())
-                } else {
+                } else if(getTotalChangeForNonSymbol() < 0) {
                     ZStack {
                         Circle()
                             .fill(Color.theme.red.opacity(0.2))
