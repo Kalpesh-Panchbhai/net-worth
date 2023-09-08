@@ -90,7 +90,7 @@ struct AccountCardView: View {
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getLastTwoAccountTransactionList(id: account.id ?? "")
+                await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
             }
         }
         .frame(width: 200, height: 100)
