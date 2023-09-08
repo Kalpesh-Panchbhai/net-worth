@@ -398,6 +398,7 @@
 			isa = PBXGroup;
 			children = (
 				7DD7A56C29224C1200CD5B37 /* AccountView */,
+				7DBE9EFB2A3E00E500159227 /* AdView */,
 				7DF83F902A094F3300D3233B /* ChartView */,
 				7D2461162A335AA800693BA5 /* Component */,
 				7DD7A56B29224BFD00CD5B37 /* IncomeView */,
@@ -405,7 +406,6 @@
 				7DAC70A7294086420033050C /* OtherView */,
 				7DD7A56D29224C1D00CD5B37 /* SettingsView */,
 				7DF8CCFB299F445300267C29 /* WatchView */,
-				7DBE9EFB2A3E00E500159227 /* AdView */,
 			);
 			path = View;
 			sourceTree = "<group>";
