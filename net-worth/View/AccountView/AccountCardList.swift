@@ -46,7 +46,7 @@ struct AccountCardList: View {
                                     ForEach(accountViewModel.sectionHeaders, id: \.self) { accountType in
                                         if(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 0) {
                                             HStack {
-                                                Text(accountType.uppercased())
+                                                Text(accountType)
                                                     .foregroundColor(Color.theme.primaryText)
                                                     .bold()
                                                     .font(.system(size: 15))
