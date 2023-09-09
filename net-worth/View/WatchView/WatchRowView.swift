@@ -15,64 +15,62 @@ struct WatchViewRow: View {
     @ObservedObject var watchViewModel = WatchViewModel()
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Spacer()
-            HStack {
+        HStack {
+            VStack(alignment: .leading) {
+                Spacer()
                 Text(watch.accountName)
                     .foregroundColor(Color.theme.primaryText)
                     .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)
-            }
-            Spacer()
-            HStack {
-                Text(SettingsController().getDefaultCurrency().code)
-                    .foregroundColor(Color.theme.secondaryText)
-                    .font(.caption)
-                Text("\(accountViewModel.totalBalance.currentValue.withCommas(decimalPlace: 2))")
-                    .foregroundColor(Color.theme.primaryText)
-                    .font(.caption.bold())
                 Spacer()
-                Text("\(watch.accountID.count)")
-                    .foregroundColor(Color.theme.secondaryText)
-                    .font(.caption.italic())
-            }
-            Spacer()
-            HStack {
-                if(accountViewModel.totalBalance.oneDayChange > 0) {
-                    ZStack {
-                        Circle()
-                            .fill(Color.theme.green.opacity(0.2))
-                            .frame(width: 20, height: 20)
-                        Image(systemName: "arrow.up")
-                            .foregroundColor(Color.theme.green)
-                            .font(.system(size: 14)
-                                .bold())
-                    }
-                    Text("+" + accountViewModel.totalBalance.oneDayChange.withCommas(decimalPlace: 2))
-                        .foregroundColor(Color.theme.green)
-                        .font(.caption.bold())
-                    Text("(+\(getOneDayPercentageChange()))")
-                        .foregroundColor(Color.theme.green)
-                        .font(.caption.bold())
-                } else if(accountViewModel.totalBalance.oneDayChange < 0) {
-                    ZStack {
-                        Circle()
-                            .fill(Color.theme.red.opacity(0.2))
-                            .frame(width: 20, height: 20)
-                        Image(systemName: "arrow.down")
-                            .foregroundColor(Color.theme.red)
-                            .font(.system(size: 14)
-                                .bold())
-                    }
-                    Text(accountViewModel.totalBalance.oneDayChange.withCommas(decimalPlace: 2))
-                        .foregroundColor(Color.theme.red)
-                        .font(.caption.bold())
-                    Text("(\(getOneDayPercentageChange()))")
-                        .foregroundColor(Color.theme.red)
+                HStack {
+                    Text(SettingsController().getDefaultCurrency().code)
+                        .foregroundColor(Color.theme.secondaryText)
+                        .font(.caption)
+                    Text("\(accountViewModel.totalBalance.currentValue.withCommas(decimalPlace: 2))")
+                        .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 }
+                Spacer()
+                HStack {
+                    if(accountViewModel.totalBalance.oneDayChange > 0) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.theme.green.opacity(0.2))
+                                .frame(width: 20, height: 20)
+                            Image(systemName: "arrow.up")
+                                .foregroundColor(Color.theme.green)
+                                .font(.system(size: 14)
+                                    .bold())
+                        }
+                        Text("+" + accountViewModel.totalBalance.oneDayChange.withCommas(decimalPlace: 2))
+                            .foregroundColor(Color.theme.green)
+                            .font(.caption.bold())
+                        Text("(+\(getOneDayPercentageChange()))")
+                            .foregroundColor(Color.theme.green)
+                            .font(.caption.bold())
+                    } else if(accountViewModel.totalBalance.oneDayChange < 0) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.theme.red.opacity(0.2))
+                                .frame(width: 20, height: 20)
+                            Image(systemName: "arrow.down")
+                                .foregroundColor(Color.theme.red)
+                                .font(.system(size: 14)
+                                    .bold())
+                        }
+                        Text(accountViewModel.totalBalance.oneDayChange.withCommas(decimalPlace: 2))
+                            .foregroundColor(Color.theme.red)
+                            .font(.caption.bold())
+                        Text("(\(getOneDayPercentageChange()))")
+                            .foregroundColor(Color.theme.red)
+                            .font(.caption.bold())
+                    } else {
+                        Text("")
+                    }
+                }
+                Spacer()
             }
-            Spacer()
         }
         .onAppear {
             Task.init {
@@ -87,7 +85,6 @@ struct WatchViewRow: View {
             }
         }
         .background(Color.theme.foreground)
-        .cornerRadius(10)
     }
     
     func getOneDayPercentageChange() -> String {

@@ -30,6 +30,11 @@ struct WatchView: View {
                                     .toolbarRole(.editor)
                             }, label: {
                                 WatchViewRow(watch: watch)
+                                    .badge(
+                                        Text("\(watch.accountID.count)")
+                                            .foregroundColor(Color.theme.secondaryText)
+                                            .font(.caption.italic())
+                                    )
                             })
                             .contextMenu {
                                 Label(watch.id!, systemImage: "info.square")
