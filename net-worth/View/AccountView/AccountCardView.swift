@@ -90,7 +90,7 @@ struct AccountCardView: View {
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
+                await accountViewModel.getAccountLastOneDayChange(id: account.id!)
             }
         }
         .frame(width: 200, height: 100)
@@ -100,10 +100,10 @@ struct AccountCardView: View {
     }
     
     func getTotalChangeForNonSymbol() -> Double {
-        return accountViewModel.accountLastTwoTransactionList.count > 1 ? (accountViewModel.accountLastTwoTransactionList[0].balanceChange) : 0.0
+        return accountViewModel.accountOneDayChange.oneDayChange
     }
     
     func getOneDayPercentageChangeForNonSymbol() -> String {
-        return accountViewModel.accountLastTwoTransactionList.count > 1 ? (CommonController.getGrowthPercentage(previousBalance: accountViewModel.accountLastTwoTransactionList[1].currentBalance, currentBalance: accountViewModel.accountLastTwoTransactionList[0].currentBalance)) : "0.0"
+        return CommonController.getGrowthPercentage(previousBalance: accountViewModel.accountOneDayChange.previousDayValue, currentBalance: accountViewModel.accountOneDayChange.currentValue)
     }
 }

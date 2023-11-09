@@ -256,6 +256,25 @@ class AccountTransactionController {
         }
     }
     
+    public func getAccountLastOneDayChange(accountID: String) async -> Balance {
+        var accountTransactionList = getAccountTransactionList(accountID: accountID)
+        
+        var date = Timestamp()
+        date = Timestamp.init(date: Date.now.addingTimeInterval(-86400))
+        accountTransactionList = accountTransactionList.filter {
+            $0.paid && $0.timestamp >= date.dateValue()
+        }
+        var oneDayChange = Balance()
+        if(accountTransactionList.count > 0) {
+            let currentBalance = accountTransactionList[0].currentBalance
+            let dayStartingBalance = accountTransactionList[accountTransactionList.count - 1].currentBalance - accountTransactionList[accountTransactionList.count - 1].balanceChange
+            oneDayChange.currentValue = currentBalance
+            oneDayChange.previousDayValue = dayStartingBalance
+            oneDayChange.oneDayChange = currentBalance - dayStartingBalance
+        }
+        return oneDayChange
+    }
+    
     public func updateAccountTransaction(accountID: String, accountTransaction: AccountTransaction) async {
         do {
             try AccountController().getAccountCollection()

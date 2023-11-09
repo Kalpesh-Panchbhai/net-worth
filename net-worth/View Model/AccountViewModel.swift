@@ -24,6 +24,7 @@ class AccountViewModel: ObservableObject {
     @Published var accountTransactionListWithRangeMultipleAccounts = [[AccountTransaction]]()
     @Published var accountTransactionLastTransactionBelowRange = [[AccountTransaction]]()
     @Published var accountLastTwoTransactionList = [AccountTransaction]()
+    @Published var accountOneDayChange = Balance()
     @Published var totalBalance = Balance(currentValue: 0.0)
     @Published var grouping: Grouping = .accountType
     
@@ -185,6 +186,13 @@ class AccountViewModel: ObservableObject {
         let list = await accountTransactionController.getLastTwoAccountTransactionList(accountID: id)
         DispatchQueue.main.async {
             self.accountLastTwoTransactionList = list
+        }
+    }
+    
+    func getAccountLastOneDayChange(id: String) async {
+        let oneDayChange = await accountTransactionController.getAccountLastOneDayChange(accountID: id)
+        DispatchQueue.main.async {
+            self.accountOneDayChange = oneDayChange
         }
     }
 }
