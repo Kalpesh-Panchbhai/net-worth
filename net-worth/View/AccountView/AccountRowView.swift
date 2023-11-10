@@ -45,8 +45,8 @@ struct AccountRowView: View {
             }
             Spacer()
             HStack {
-                if(getTotalChangeForNonSymbol() >= 0) {
-                    if(getTotalChangeForNonSymbol() > 0) {
+                if(getOneDayChange() >= 0) {
+                    if(getOneDayChange() > 0) {
                         ZStack {
                             Circle()
                                 .fill(Color.theme.green.opacity(0.2))
@@ -56,10 +56,10 @@ struct AccountRowView: View {
                                 .font(.caption.bold())
                         }
                     }
-                    Text("+\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
+                    Text("+\(getOneDayChange().withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.green)
                         .font(.caption.bold())
-                    Text("(+\(getOneDayPercentageChangeForNonSymbol()))")
+                    Text("(+\(getOneDayPercentageChange()))")
                         .foregroundColor(Color.theme.green)
                         .font(.caption.bold())
                     Spacer()
@@ -84,10 +84,10 @@ struct AccountRowView: View {
                             .foregroundColor(Color.theme.red)
                             .font(.caption.bold())
                     }
-                    Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
+                    Text("\(getOneDayChange().withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.red)
                         .font(.caption.bold())
-                    Text("(\(getOneDayPercentageChangeForNonSymbol()))")
+                    Text("(\(getOneDayPercentageChange()))")
                         .foregroundColor(Color.theme.red)
                         .font(.caption.bold())
                     Spacer()
@@ -110,7 +110,7 @@ struct AccountRowView: View {
         .onAppear {
             Task.init {
                 await accountViewModel.getAccount(id: account.id!)
-                await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
+                await accountViewModel.getAccountLastOneDayChange(id: account.id!)
             }
         }
         .padding(.horizontal)
@@ -118,11 +118,11 @@ struct AccountRowView: View {
         .cornerRadius(10)
     }
     
-    func getTotalChangeForNonSymbol() -> Double {
-        return accountViewModel.accountLastTwoTransactionList.count > 1 ? (accountViewModel.accountLastTwoTransactionList[0].balanceChange) : 0.0
+    func getOneDayChange() -> Double {
+        return accountViewModel.accountOneDayChange.oneDayChange
     }
     
-    func getOneDayPercentageChangeForNonSymbol() -> String {
-        return accountViewModel.accountLastTwoTransactionList.count > 1 ? (CommonController.getGrowthPercentage(previousBalance: accountViewModel.accountLastTwoTransactionList[1].currentBalance, currentBalance: accountViewModel.accountLastTwoTransactionList[0].currentBalance)) : "0.0"
+    func getOneDayPercentageChange() -> String {
+        return CommonController.getGrowthPercentage(previousBalance: accountViewModel.accountOneDayChange.previousDayValue, currentBalance: accountViewModel.accountOneDayChange.currentValue)
     }
 }
