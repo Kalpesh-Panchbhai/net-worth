@@ -22,7 +22,6 @@ struct ColorTheme {
     let accent = Color("AccentColor")
     let background = Color("BackgroundColor")
     let foreground = Color("ForegroundColor")
-    let foreground2 = Color("ForegroundColor2")
     let primaryText = Color("PrimaryTextColor")
     let secondaryText = Color("SecondaryTextColor")
     let green = Color("GreenColor")
