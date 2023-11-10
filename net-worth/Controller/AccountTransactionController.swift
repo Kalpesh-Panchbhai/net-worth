@@ -274,6 +274,7 @@ class AccountTransactionController {
         } else {
             oneDayChange.currentValue = accountTransactionList[0].currentBalance
             oneDayChange.previousDayValue = 0.0
+            oneDayChange.oneDayChange = 0.0
         }
         return oneDayChange
     }
