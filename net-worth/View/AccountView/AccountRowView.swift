@@ -39,7 +39,7 @@ struct AccountRowView: View {
                 Text(accountViewModel.account.currency)
                     .foregroundColor(Color.theme.secondaryText)
                     .font(.caption)
-                Text("\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 2))")
+                Text("\(accountViewModel.accountOneDayChange.currentValue.withCommas(decimalPlace: 2))")
                     .foregroundColor(Color.theme.primaryText)
                     .font(.caption.bold())
             }
