@@ -42,7 +42,20 @@ class ChartViewModel: ObservableObject {
             }
             startDate = startDate.removeTimeStamp()
             if(!range.elementsEqual("All")) {
-                startDate = startDate.addingTimeInterval(-86400)
+                var date = Timestamp()
+                if(range.elementsEqual("1M")) {
+                    date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000-86400))
+                } else if(range.elementsEqual("3M")) {
+                    date = Timestamp.init(date: Date.now.addingTimeInterval(-7776000-86400))
+                } else if(range.elementsEqual("6M")) {
+                    date = Timestamp.init(date: Date.now.addingTimeInterval(-15552000-86400))
+                } else if(range.elementsEqual("1Y")) {
+                    date = Timestamp.init(date: Date.now.addingTimeInterval(-31104000-86400))
+                } else if(range.elementsEqual("2Y")) {
+                    date = Timestamp.init(date: Date.now.addingTimeInterval(-62208000-86400))
+                } else if(range.elementsEqual("5Y")) {
+                    date = Timestamp.init(date: Date.now.addingTimeInterval(-155520000-86400))
+                }
                 for account in accountViewModel.accountTransactionLastTransactionBelowRange {
                     list.updateValue(account.first?.currentBalance ?? 0.0, forKey: accountUniqueIndex)
                     accountUniqueIndex+=1
@@ -51,8 +64,7 @@ class ChartViewModel: ObservableObject {
                 list.forEach({ key, value in
                     totalAmountForEachDate = totalAmountForEachDate + value
                 })
-                chartDataListResponse.append(ChartData(date: startDate, value: totalAmountForEachDate))
-                startDate = startDate.addingTimeInterval(86400)
+                chartDataListResponse.append(ChartData(date: date.dateValue().removeTimeStamp(), value: totalAmountForEachDate))
             }
             while(startDate <= Date.now) {
                 accountUniqueIndex = 0
@@ -85,12 +97,11 @@ class ChartViewModel: ObservableObject {
             var currentTotalIncome = 0.0
             var chartDataListResponse = [ChartData]()
             for chartData in self.chartDataList {
-                if(incomeViewModel.incomeList.contains {
-                    $0.creditedOn.removeTimeStamp() == chartData.date.removeTimeStamp()
-                }) {
-                    currentTotalIncome = incomeViewModel.incomeList.filter {
-                        $0.creditedOn.removeTimeStamp() == chartData.date.removeTimeStamp()
-                    }.first!.cumulativeAmount
+                let incomeList = incomeViewModel.incomeList.filter {
+                    $0.creditedOn <= chartData.date.removeTimeStamp()
+                }
+                if(!incomeList.isEmpty) {
+                    currentTotalIncome = incomeList[0].cumulativeAmount;
                 }
                 if(currentTotalIncome.isZero) {
                     chartDataListResponse.append(ChartData(date: chartData.date, value: 0))
