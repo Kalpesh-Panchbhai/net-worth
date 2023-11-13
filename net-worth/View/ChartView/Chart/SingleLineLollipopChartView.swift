@@ -28,14 +28,12 @@ struct SingleLineLollipopChartView: View {
                 .accessibilityValue("\(data.value)")
                 .lineStyle(StrokeStyle(lineWidth: lineWidth))
                 .foregroundStyle(getChartColor().gradient)
-                .interpolationMethod(.catmullRom)
                 
                 AreaMark(
                     x: .value("Date", data.date),
                     y: .value("Value", data.value)
                 )
                 .foregroundStyle(Gradient(colors: [getChartColor().opacity(0.3), .clear]))
-                .interpolationMethod(.catmullRom)
             }
         }
         .chartXAxis {

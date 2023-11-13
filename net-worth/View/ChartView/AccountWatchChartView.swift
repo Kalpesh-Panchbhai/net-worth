@@ -29,7 +29,7 @@ struct AccountWatchChartView: View {
                         List {
                             if(chartViewModel.chartDataList.count > 0) {
                                 HStack {
-                                    Text("CAGR")
+                                    Text("Yearly Growth")
                                     Spacer()
                                     Text(getCAGRPercentage())
                                 }
