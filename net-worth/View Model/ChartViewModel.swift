@@ -35,6 +35,7 @@ class ChartViewModel: ObservableObject {
             var chartDataListResponse = [ChartData]()
             var list = [Int: Double]()
             var startDate = Date.now
+            var lastDate = false
             for account in accountViewModel.accountTransactionListWithRangeMultipleAccounts {
                 if(!account.isEmpty && startDate > account.last!.timestamp) {
                     startDate = account.last!.timestamp
@@ -83,8 +84,40 @@ class ChartViewModel: ObservableObject {
                     totalAmountForEachDate = totalAmountForEachDate + value
                 })
                 chartDataListResponse.append(ChartData(date: startDate, value: totalAmountForEachDate))
-                startDate = startDate.addingTimeInterval(86400)
+                
+                if(range.elementsEqual("1M")) {
+                    startDate = Timestamp.init(date: startDate.addingTimeInterval(86400)).dateValue()
+                } else if(range.elementsEqual("3M")) {
+                    startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 2)).dateValue()
+                } else if(range.elementsEqual("6M")) {
+                    startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 3)).dateValue()
+                } else if(range.elementsEqual("1Y")) {
+                    startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 4)).dateValue()
+                } else if(range.elementsEqual("2Y")) {
+                    startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 5)).dateValue()
+                } else if(range.elementsEqual("5Y")) {
+                    startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 6)).dateValue()
+                } else if(range.elementsEqual("All")) {
+                    startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 7)).dateValue()
+                }
             }
+            startDate = Date.now.removeTimeStamp()
+            accountUniqueIndex = 0
+            for account in accountViewModel.accountTransactionListWithRangeMultipleAccounts {
+                if(account.contains(where: { value in
+                    value.timestamp.removeTimeStamp() == startDate.removeTimeStamp()
+                })) {
+                    list.updateValue(account.filter({ value in
+                        value.timestamp.removeTimeStamp() == startDate.removeTimeStamp()
+                    }).first!.currentBalance, forKey: accountUniqueIndex)
+                }
+                accountUniqueIndex+=1
+            }
+            var totalAmountForEachDate = 0.0
+            list.forEach({ key, value in
+                totalAmountForEachDate = totalAmountForEachDate + value
+            })
+            chartDataListResponse.append(ChartData(date: startDate, value: totalAmountForEachDate))
             chartDataListResponse.sort(by: {
                 $0.date < $1.date
             })
