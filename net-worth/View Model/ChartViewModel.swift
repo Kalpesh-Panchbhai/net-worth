@@ -35,7 +35,6 @@ class ChartViewModel: ObservableObject {
             var chartDataListResponse = [ChartData]()
             var list = [Int: Double]()
             var startDate = Date.now
-            var lastDate = false
             for account in accountViewModel.accountTransactionListWithRangeMultipleAccounts {
                 if(!account.isEmpty && startDate > account.last!.timestamp) {
                     startDate = account.last!.timestamp
