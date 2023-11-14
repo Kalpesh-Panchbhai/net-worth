@@ -41,6 +41,7 @@ struct AccountCardList: View {
                                     .cornerRadius(10)
                             }
                             Divider()
+                                .overlay(Color.theme.secondaryText)
                             ScrollView(.vertical, showsIndicators: false) {
                                 LazyVStack {
                                     ForEach(accountViewModel.sectionHeaders, id: \.self) { accountType in
@@ -104,11 +105,12 @@ struct AccountCardList: View {
                                                             }
                                                         }
                                                     }
-                                                    .padding(10)
+                                                    .padding(5)
                                                 }
                                                 .padding(5)
                                             }
                                             Divider()
+                                                .background(Color.theme.secondaryText)
                                         }
                                     }
                                 }
