@@ -84,6 +84,8 @@ struct AccountCardView: View {
                     Text("(\(getOneDayPercentageChange()))")
                         .foregroundColor(Color.theme.red)
                         .font(.system(size: 11).bold())
+                } else {
+                    Text("")
                 }
             }
             Spacer()
@@ -93,7 +95,7 @@ struct AccountCardView: View {
                 await accountViewModel.getAccountLastOneDayChange(id: account.id!)
             }
         }
-        .frame(width: 200, height: 100)
+        .frame(width: 150, height: 80)
         .padding(8)
         .background(Color.theme.foreground)
         .cornerRadius(10)
