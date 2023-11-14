@@ -44,6 +44,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         UIRefreshControl.appearance().tintColor = UIColor(Color.theme.primaryText)
         UIRefreshControl.appearance().attributedTitle = NSAttributedString(string: "Refreshing...", attributes: [NSAttributedString.Key.foregroundColor: UIColor(Color.theme.primaryText)])
         
+        UITabBarItem.appearance().badgeColor = UIColor(Color.theme.green.opacity(0.7))
+        
         GADMobileAds.sharedInstance().start(completionHandler: nil)
         
         return true
