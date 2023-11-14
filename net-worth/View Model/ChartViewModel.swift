@@ -69,12 +69,11 @@ class ChartViewModel: ObservableObject {
             while(startDate <= Date.now) {
                 accountUniqueIndex = 0
                 for account in accountViewModel.accountTransactionListWithRangeMultipleAccounts {
-                    if(account.contains(where: { value in
-                        value.timestamp.removeTimeStamp() == startDate.removeTimeStamp()
-                    })) {
-                        list.updateValue(account.filter({ value in
-                            value.timestamp.removeTimeStamp() == startDate.removeTimeStamp()
-                        }).first!.currentBalance, forKey: accountUniqueIndex)
+                    var accountTransactionsListBeforeDate = account.filter({ value in
+                        value.timestamp.removeTimeStamp() <= startDate.removeTimeStamp()
+                    })
+                    if(!accountTransactionsListBeforeDate.isEmpty) {
+                        list.updateValue(accountTransactionsListBeforeDate[0].currentBalance, forKey: accountUniqueIndex)
                     }
                     accountUniqueIndex+=1
                 }
@@ -103,12 +102,11 @@ class ChartViewModel: ObservableObject {
             startDate = Date.now.removeTimeStamp()
             accountUniqueIndex = 0
             for account in accountViewModel.accountTransactionListWithRangeMultipleAccounts {
-                if(account.contains(where: { value in
-                    value.timestamp.removeTimeStamp() == startDate.removeTimeStamp()
-                })) {
-                    list.updateValue(account.filter({ value in
-                        value.timestamp.removeTimeStamp() == startDate.removeTimeStamp()
-                    }).first!.currentBalance, forKey: accountUniqueIndex)
+                var accountTransactionsListBeforeDate = account.filter({ value in
+                    value.timestamp.removeTimeStamp() <= startDate.removeTimeStamp()
+                })
+                if(!accountTransactionsListBeforeDate.isEmpty) {
+                    list.updateValue(accountTransactionsListBeforeDate[0].currentBalance, forKey: accountUniqueIndex)
                 }
                 accountUniqueIndex+=1
             }
