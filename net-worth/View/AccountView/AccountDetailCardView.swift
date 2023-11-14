@@ -29,19 +29,19 @@ struct AccountDetailCardView: View {
                 if(accountViewModel.account.active) {
                     if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
                         Image(systemName: "bell.fill")
-                            .foregroundColor(Color.theme.secondaryText)
+                            .foregroundColor(Color.theme.green.opacity(0.7))
                             .font(.caption)
                         Text("\(accountViewModel.account.paymentDate)")
-                            .foregroundColor(Color.theme.secondaryText)
+                            .foregroundColor(Color.theme.green)
                             .font(.caption)
                     } else if(accountViewModel.account.accountType != "Saving") {
                         Image(systemName: "bell.slash.fill")
-                            .foregroundColor(Color.theme.secondaryText)
+                            .foregroundColor(Color.theme.red.opacity(0.7))
                             .font(.caption)
                     }
                 } else {
                     Text("(Closed)")
-                        .foregroundColor(Color.theme.secondaryText)
+                        .foregroundColor(Color.theme.red)
                         .font(.caption2.italic())
                         .multilineTextAlignment(.leading)
                 }

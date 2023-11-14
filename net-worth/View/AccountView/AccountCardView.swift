@@ -25,14 +25,14 @@ struct AccountCardView: View {
                 if(account.active) {
                     if(account.paymentReminder && account.accountType != "Saving") {
                         Image(systemName: "bell.fill")
-                            .foregroundColor(Color.theme.secondaryText)
+                            .foregroundColor(Color.theme.green.opacity(0.7))
                             .font(.caption)
                         Text("\(account.paymentDate)")
-                            .foregroundColor(Color.theme.secondaryText)
+                            .foregroundColor(Color.theme.green)
                             .font(.caption)
                     } else if(account.accountType != "Saving") {
                         Image(systemName: "bell.slash.fill")
-                            .foregroundColor(Color.theme.secondaryText)
+                            .foregroundColor(Color.theme.red.opacity(0.7))
                             .font(.caption)
                     }
                 } else {
