@@ -69,7 +69,7 @@ class ChartViewModel: ObservableObject {
             while(startDate <= Date.now) {
                 accountUniqueIndex = 0
                 for account in accountViewModel.accountTransactionListWithRangeMultipleAccounts {
-                    var accountTransactionsListBeforeDate = account.filter({ value in
+                    let accountTransactionsListBeforeDate = account.filter({ value in
                         value.timestamp.removeTimeStamp() <= startDate.removeTimeStamp()
                     })
                     if(!accountTransactionsListBeforeDate.isEmpty) {
@@ -102,7 +102,7 @@ class ChartViewModel: ObservableObject {
             startDate = Date.now.removeTimeStamp()
             accountUniqueIndex = 0
             for account in accountViewModel.accountTransactionListWithRangeMultipleAccounts {
-                var accountTransactionsListBeforeDate = account.filter({ value in
+                let accountTransactionsListBeforeDate = account.filter({ value in
                     value.timestamp.removeTimeStamp() <= startDate.removeTimeStamp()
                 })
                 if(!accountTransactionsListBeforeDate.isEmpty) {
