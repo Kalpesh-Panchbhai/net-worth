@@ -53,94 +53,107 @@ struct SettingsView: View {
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
                 }
-                // MARK: Authentication Required toggle
-                Toggle(isOn: $isAuthenticationRequired, label: {
-                    Label("Require Face ID", systemImage: "faceid")
-                }).onChange(of: isAuthenticationRequired) { newValue in
-                    settingsController.setAuthentication(newValue: newValue)
-                }
-                .foregroundColor(Color.theme.primaryText)
-                .listRowBackground(Color.theme.foreground)
-                // MARK: Notification View Link
-                NavigationLink(destination: {
-                    NotificationsView()
-                }, label: {
-                    Label("Notifications", systemImage: "play.square")
-                })
-                .foregroundColor(Color.theme.primaryText)
-                .listRowBackground(Color.theme.foreground)
-                // MARK: Default Currency Picker
-                DefaultCurrencyPicker(currenySelected: $currenySelected)
+                
+                Section() {
+                    // MARK: Authentication Required toggle
+                    Toggle(isOn: $isAuthenticationRequired, label: {
+                        Label("Require Face ID", systemImage: "faceid")
+                    }).onChange(of: isAuthenticationRequired) { newValue in
+                        settingsController.setAuthentication(newValue: newValue)
+                    }
                     .foregroundColor(Color.theme.primaryText)
                     .listRowBackground(Color.theme.foreground)
-                // MARK: Income Type View
-                NavigationLink(destination: {
-                    IncomeTypeView(incomeViewModel: incomeViewModel)
-                }, label: {
-                    Label(title: {
-                        HStack {
-                            Text("Income Type")
-                            Spacer()
-                            Text(defaultIncomeType.name)
-                        }
-                    }, icon: {
-                        Image(systemName: "tray.and.arrow.down")
+                    
+                    // MARK: Notification View Link
+                    NavigationLink(destination: {
+                        NotificationsView()
+                    }, label: {
+                        Label("Notifications", systemImage: "play.square")
                     })
-                })
-                .foregroundColor(Color.theme.primaryText)
-                .listRowBackground(Color.theme.foreground)
-                // MARK: Income Tag View
-                NavigationLink(destination: {
-                    IncomeTagView(incomeViewModel: incomeViewModel)
-                }, label: {
-                    Label(title: {
-                        HStack {
-                            Text("Income Tag")
-                            Spacer()
-                            Text(defaultIncomeTag.name)
-                        }
-                    }, icon: {
-                        Image(systemName: "tag.square")
+                    .foregroundColor(Color.theme.primaryText)
+                    .listRowBackground(Color.theme.foreground)
+                    
+                    // MARK: Default Currency Picker
+                    DefaultCurrencyPicker(currenySelected: $currenySelected)
+                        .foregroundColor(Color.theme.primaryText)
+                        .listRowBackground(Color.theme.foreground)
+                    
+                    // MARK: Income Type View
+                    NavigationLink(destination: {
+                        IncomeTypeView(incomeViewModel: incomeViewModel)
+                    }, label: {
+                        Label(title: {
+                            HStack {
+                                Text("Income Type")
+                                Spacer()
+                                Text(defaultIncomeType.name)
+                            }
+                        }, icon: {
+                            Image(systemName: "tray.and.arrow.down")
+                        })
                     })
-                })
-                .foregroundColor(Color.theme.primaryText)
-                .listRowBackground(Color.theme.foreground)
-                // MARK: Backup View
-                NavigationLink(destination: {
-                    BackupView()
-                }, label: {
-                    Label("Backup", systemImage: "folder")
-                })
-                .foregroundColor(Color.theme.primaryText)
-                .listRowBackground(Color.theme.foreground)
-                // MARK: Delete Account & Data
-                Button(action: {
-                    isPresentingDataAndAccountDeletionConfirmation.toggle()
-                }, label: {
-                    Label("Delete Account & Data", systemImage: "xmark.bin")
-                }).confirmationDialog("Are you sure?",
-                                      isPresented: $isPresentingDataAndAccountDeletionConfirmation) {
-                    Button("Delete all data and account?", role: .destructive) {
-                        Task.init {
-                            await deleteAccountAndData()
+                    .foregroundColor(Color.theme.primaryText)
+                    .listRowBackground(Color.theme.foreground)
+                    
+                    // MARK: Income Tag View
+                    NavigationLink(destination: {
+                        IncomeTagView(incomeViewModel: incomeViewModel)
+                    }, label: {
+                        Label(title: {
+                            HStack {
+                                Text("Income Tag")
+                                Spacer()
+                                Text(defaultIncomeTag.name)
+                            }
+                        }, icon: {
+                            Image(systemName: "tag.square")
+                        })
+                    })
+                    .foregroundColor(Color.theme.primaryText)
+                    .listRowBackground(Color.theme.foreground)
+                    
+                    // MARK: Backup View
+                    NavigationLink(destination: {
+                        BackupView()
+                    }, label: {
+                        Label("Backup", systemImage: "folder")
+                    })
+                    .foregroundColor(Color.theme.primaryText)
+                    .listRowBackground(Color.theme.foreground)
+                }
+                
+                Section() {
+                    // MARK: Delete Account & Data
+                    Button(action: {
+                        isPresentingDataAndAccountDeletionConfirmation.toggle()
+                    }, label: {
+                        Label("Delete Account & Data", systemImage: "xmark.bin")
+                            .foregroundColor(Color.theme.red)
+                            .listRowBackground(Color.theme.foreground)
+                    }).confirmationDialog("Are you sure?",
+                                          isPresented: $isPresentingDataAndAccountDeletionConfirmation) {
+                        Button("Delete all data and account?", role: .destructive) {
+                            Task.init {
+                                await deleteAccountAndData()
+                            }
+                        }
+                    }
+                    
+                    // MARK: Logout
+                    Button(action: {
+                        isPresentingLogoutConfirm.toggle()
+                    }, label: {
+                        Label("Logout", systemImage: "rectangle.portrait.and.arrow.right")
+                            .foregroundColor(Color.theme.primaryText)
+                            .listRowBackground(Color.theme.foreground)
+                    }).confirmationDialog("Are you sure?",
+                                          isPresented: $isPresentingLogoutConfirm) {
+                        Button("Logout?", role: .destructive) {
+                            logoutUser()
                         }
                     }
                 }
-                                      .foregroundColor(Color.theme.red)
-                                      .listRowBackground(Color.theme.foreground)
-                // MARK: Logout
-                Button(action: {
-                    isPresentingLogoutConfirm.toggle()
-                }, label: {
-                    Label("Logout", systemImage: "rectangle.portrait.and.arrow.right")
-                }).confirmationDialog("Are you sure?",
-                                      isPresented: $isPresentingLogoutConfirm) {
-                    Button("Logout?", role: .destructive) {
-                        logoutUser()
-                    }
-                }
-                                      .foregroundColor(Color.theme.primaryText)
-                                      .listRowBackground(Color.theme.foreground)
+                
                 // MARK: Application Version
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
                 let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
