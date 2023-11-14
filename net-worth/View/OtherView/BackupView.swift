@@ -31,45 +31,49 @@ struct BackupView: View {
     var body: some View {
         NavigationView {
             List {
-                VStack(alignment: .leading) {
-                    Text("Data in Local Backup")
-                        .bold()
-                    Divider()
-                    HStack {
-                        Image(systemName: "checkmark.icloud")
-                            .font(.system(size: 40))
-                        if(importExportViewModel.backupList.count > 0) {
-                            Text("Last Backup: " + importExportViewModel.backupList[0].getDateAndFormat() + ", " + importExportViewModel.backupList[0].getTimeAndFormat())
-                                .font(.system(size: 12))
-                        } else {
-                            Text("Last Backup: -")
-                                .font(.system(size: 12))
+                Section() {
+                    VStack(alignment: .leading) {
+                        Text("Data in Local Backup")
+                            .bold()
+                        Divider()
+                        HStack {
+                            Image(systemName: "checkmark.icloud")
+                                .font(.system(size: 40))
+                            if(importExportViewModel.backupList.count > 0) {
+                                Text("Last Backup: " + importExportViewModel.backupList[0].getDateAndFormat() + ", " + importExportViewModel.backupList[0].getTimeAndFormat())
+                                    .font(.system(size: 12))
+                            } else {
+                                Text("Last Backup: -")
+                                    .font(.system(size: 12))
+                            }
                         }
+                        Divider()
+                        account
+                        accountTransactions
+                        income
+                        watchList
+                        incomeTag
+                        incomeType
                     }
-                    Divider()
-                    account
-                    accountTransactions
-                    income
-                    watchList
-                    incomeTag
-                    incomeType
+                    .listRowBackground(Color.theme.foreground)
+                    .foregroundColor(Color.theme.primaryText)
                 }
-                .listRowBackground(Color.theme.foreground)
-                .foregroundColor(Color.theme.primaryText)
                 
-                VStack(alignment: .leading) {
-                    Text("Data in Cloud")
-                        .bold()
-                    Divider()
-                    accountInCloud
-                    accountTransactionInCloud
-                    incomeInCloud
-                    watchListInCloud
-                    incomeTagInCloud
-                    incomeTypeInCloud
+                Section() {
+                    VStack(alignment: .leading) {
+                        Text("Data in Cloud")
+                            .bold()
+                        Divider()
+                        accountInCloud
+                        accountTransactionInCloud
+                        incomeInCloud
+                        watchListInCloud
+                        incomeTagInCloud
+                        incomeTypeInCloud
+                    }
+                    .listRowBackground(Color.theme.foreground)
+                    .foregroundColor(Color.theme.primaryText)
                 }
-                .listRowBackground(Color.theme.foreground)
-                .foregroundColor(Color.theme.primaryText)
             }
             .background(Color.theme.background)
             .scrollContentBackground(.hidden)
