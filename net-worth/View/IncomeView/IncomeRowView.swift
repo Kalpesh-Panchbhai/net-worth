@@ -12,62 +12,58 @@ struct IncomeRowView: View {
     var income: IncomeCalculation
     var groupBy: String = ""
     
-    @Binding var showTaxPaid: Bool
-    
     var body: some View {
-        HStack{
-            VStack {
-                if(groupBy.elementsEqual("")) {
-                    Text(income.type)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(Color.theme.primaryText)
-                    Text(income.creditedOn.getDateAndFormat()).font(.system(size: 12))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(Color.theme.primaryText.opacity(0.5))
-                    Text(income.tag).font(.system(size: 10))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(Color.theme.primaryText.opacity(0.5))
-                } else if(groupBy.elementsEqual("Tag")) {
-                    Text(income.type)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(Color.theme.primaryText)
-                    Text(income.creditedOn.getDateAndFormat()).font(.system(size: 12))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(Color.theme.primaryText.opacity(0.5))
-                } else if(groupBy.elementsEqual("Type")) {
-                    Text(income.tag)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(Color.theme.primaryText)
-                    Text(income.creditedOn.getDateAndFormat()).font(.system(size: 12))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .foregroundColor(Color.theme.primaryText.opacity(0.5))
+        VStack(alignment: .leading) {
+            HStack {
+                if(!groupBy.elementsEqual("Type")) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color.theme.green.opacity(0.5))
+                            .frame(width: 60, height: 15)
+                        Text(income.type)
+                            .font(.system(size: 10))
+                            .bold()
+                    }
                 }
+                if(!groupBy.elementsEqual("Tag")) {
+                    ZStack{
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Color.blue.opacity(0.5))
+                            .frame(height: 15)
+                        HStack{
+                            Text("    " + income.tag + "    ")
+                                .font(.system(size: 10))
+                                .bold()
+                        }
+                    }.fixedSize()
+                }
+                Spacer()
+                Text(income.creditedOn.getDateAndFormat())
+                    .font(.system(size: 10))
+                    .bold()
             }
-            if(showTaxPaid) {
-                VStack {
-                    Text("\(income.currency) " + income.taxpaid.withCommas(decimalPlace: 2))
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .foregroundColor(Color.theme.primaryText)
-                    Text("\(income.currency) \(income.cumulativeTaxPaid.withCommas(decimalPlace: 2))").font(.system(size: 12))
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .foregroundColor(Color.theme.primaryText.opacity(0.5))
-                    Text("\(income.currency) \(income.avgTaxPaid.withCommas(decimalPlace: 2))").font(.system(size: 12))
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .foregroundColor(Color.theme.primaryText.opacity(0.5))
-                }
-            } else {
-                VStack {
-                    Text("\(income.currency) " + income.amount.withCommas(decimalPlace: 2))
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .foregroundColor(Color.theme.primaryText)
-                    Text("\(income.currency) \(income.cumulativeAmount.withCommas(decimalPlace: 2))").font(.system(size: 12))
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .foregroundColor(Color.theme.primaryText.opacity(0.5))
-                    Text("\(income.currency) \(income.avgAmount.withCommas(decimalPlace: 2))").font(.system(size: 12))
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .foregroundColor(Color.theme.primaryText.opacity(0.5))
-                }
+            HStack {
+                Text("\(income.currency) " + income.taxpaid.withCommas(decimalPlace: 2))
+                    .font(.system(size: 10))
+                Spacer()
+                Text("\(income.currency) " + income.amount.withCommas(decimalPlace: 2))
+                    .font(.system(size: 10))
+            }
+            HStack {
+                Text("\(income.currency) " + income.cumulativeTaxPaid.withCommas(decimalPlace: 2))
+                    .font(.system(size: 10))
+                Spacer()
+                Text("\(income.currency) " + income.cumulativeAmount.withCommas(decimalPlace: 2))
+                    .font(.system(size: 10))
+            }
+            HStack {
+                Text("\(income.currency) " + income.avgTaxPaid.withCommas(decimalPlace: 2))
+                    .font(.system(size: 10))
+                Spacer()
+                Text("\(income.currency) " + income.avgAmount.withCommas(decimalPlace: 2))
+                    .font(.system(size: 10))
             }
         }
+        .background(Color.theme.foreground)
     }
 }

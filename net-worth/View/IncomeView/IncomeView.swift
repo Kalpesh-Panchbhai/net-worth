@@ -21,9 +21,6 @@ struct IncomeView: View {
     @State var filterYear = [String]()
     @State var filterFinancialYear = [String]()
     
-    @State var showTaxPaidData = false
-    @State var hideZeroAmount = true
-    
     @State var groupByType = false
     @State var groupByTag = false
     @State var groupByYear = false
@@ -37,11 +34,7 @@ struct IncomeView: View {
                 Color.theme.background.ignoresSafeArea()
                 VStack {
                     // MARK: Total Amount View
-                    if(showTaxPaidData) {
-                        incomeTotalTaxPaid
-                    } else {
-                        incomeTotalAmount
-                    }
+                    incomeTotalAmount
                     Divider()
                     HStack {
                         if(isFilterDataAvailable()) {
@@ -301,16 +294,14 @@ struct IncomeView: View {
                                 ForEach(incomeViewModel.incomeListByGroup.sorted(by: { (groupByYear || groupByFinancialYear) ? $0.key > $1.key : $0.key < $1.key}), id: \.key) { key, value in
                                     Section(key) {
                                         ForEach(value, id: \.self) { income in
-                                            if((hideZeroAmount && ((!income.taxpaid.isZero && showTaxPaidData) || (!income.amount.isZero && !showTaxPaidData)) || !hideZeroAmount)) {
-                                                NavigationLink(destination: {
-                                                    IncomeDetailView(income: income, incomeViewModel: incomeViewModel)
-                                                        .toolbarRole(.editor)
-                                                }, label: {
-                                                    IncomeRowView(income: income, groupBy: groupByTag ? "Tag" : (groupByType ? "Type" : ""), showTaxPaid: $showTaxPaidData)
-                                                })
-                                                .contextMenu {
-                                                    Label(income.id!, systemImage: "info.square")
-                                                }
+                                            NavigationLink(destination: {
+                                                IncomeDetailView(income: income, incomeViewModel: incomeViewModel)
+                                                    .toolbarRole(.editor)
+                                            }, label: {
+                                                IncomeRowView(income: income, groupBy: groupByTag ? "Tag" : (groupByType ? "Type" : ""))
+                                            })
+                                            .contextMenu {
+                                                Label(income.id!, systemImage: "info.square")
                                             }
                                         }
                                         .onDelete(perform: deleteIncome)
@@ -320,16 +311,14 @@ struct IncomeView: View {
                                 }
                             } else {
                                 ForEach(incomeViewModel.incomeList, id: \.self) { income in
-                                    if((hideZeroAmount && ((!income.taxpaid.isZero && showTaxPaidData) || (!income.amount.isZero && !showTaxPaidData)) || !hideZeroAmount)) {
-                                        NavigationLink(destination: {
-                                            IncomeDetailView(income: income, incomeViewModel: incomeViewModel)
-                                                .toolbarRole(.editor)
-                                        }, label: {
-                                            IncomeRowView(income: income, showTaxPaid: $showTaxPaidData)
-                                        })
-                                        .contextMenu {
-                                            Label(income.id!, systemImage: "info.square")
-                                        }
+                                    NavigationLink(destination: {
+                                        IncomeDetailView(income: income, incomeViewModel: incomeViewModel)
+                                            .toolbarRole(.editor)
+                                    }, label: {
+                                        IncomeRowView(income: income)
+                                    })
+                                    .contextMenu {
+                                        Label(income.id!, systemImage: "info.square")
                                     }
                                 }
                                 .onDelete(perform: deleteIncome)
@@ -355,24 +344,6 @@ struct IncomeView: View {
                                     self.isChartViewOpen.toggle()
                                 }, label: {
                                     Image(systemName: "chart.line.uptrend.xyaxis")
-                                        .foregroundColor(Color.theme.primaryText)
-                                        .bold()
-                                })
-                                .font(.system(size: 14).bold())
-                            }
-                            ToolbarItem(placement: .navigationBarTrailing) {
-                                Menu(content: {
-                                    // MARK: Show Tax View
-                                    Toggle(isOn: $showTaxPaidData, label: {
-                                        Label("Show Tax View", systemImage: "indianrupeesign.square")
-                                    })
-                                    
-                                    // MARK: Hide Zero Balance
-                                    Toggle(isOn: $hideZeroAmount, label: {
-                                        Label("Hide Zero amount", systemImage: "0.square")
-                                    })
-                                }, label: {
-                                    Image(systemName: "ellipsis")
                                         .foregroundColor(Color.theme.primaryText)
                                         .bold()
                                 })
@@ -417,20 +388,10 @@ struct IncomeView: View {
     }
     
     private var incomeTotalAmount: some View {
-        HStack {
+        VStack {
             Text("Total Income: \(SettingsController().getDefaultCurrency().code) \(incomeViewModel.incomeTotalAmount.withCommas(decimalPlace: 2))")
                 .foregroundColor(Color.theme.primaryText)
                 .bold()
-        }
-        .padding(6)
-        .frame(width: 300, height: 50)
-        .background(Color.theme.foreground)
-        .cornerRadius(10)
-        .padding(.horizontal)
-    }
-    
-    private var incomeTotalTaxPaid: some View {
-        HStack {
             Text("Total Tax Paid: \(SettingsController().getDefaultCurrency().code) \(incomeViewModel.incomeTaxPaidAmount.withCommas(decimalPlace: 2))")
                 .foregroundColor(Color.theme.primaryText)
                 .bold()
