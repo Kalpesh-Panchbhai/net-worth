@@ -26,6 +26,9 @@ struct IncomeView: View {
     @State var groupByYear = false
     @State var groupByFinancialYear = false
     
+    @State var showCumulative = false
+    @State var showAverage = false
+    
     @StateObject var incomeViewModel: IncomeViewModel
     
     var body: some View {
@@ -264,8 +267,42 @@ struct IncomeView: View {
                                 Image(systemName: isGroupApplied() ? "rectangle.3.group.fill" : "rectangle.3.group")
                             })
                             .font(.system(size: 14).bold())
+                            
+                            Spacer()
+                            
+                            Menu(content: {
+                                
+                                Button(action: {
+                                    self.showCumulative.toggle()
+                                    if(showCumulative) {
+                                        self.showAverage = false
+                                    }
+                                }, label: {
+                                    if(showCumulative) {
+                                        Label("Show Cumulative", systemImage: "checkmark")
+                                    } else {
+                                        Text("Show Cumulative")
+                                    }
+                                })
+                                
+                                Button(action: {
+                                    self.showAverage.toggle()
+                                    if(showAverage) {
+                                        self.showCumulative = false
+                                    }
+                                }, label: {
+                                    if(showAverage) {
+                                        Label("Show Average", systemImage: "checkmark")
+                                    } else {
+                                        Text("Show Average")
+                                    }
+                                })
+                                
+                            }, label: {
+                                Image(systemName: "ellipsis")
+                            })
+                            .font(.system(size: 14).bold())
                         }
-                        Spacer()
                         
                         if(isFilterApplied()) {
                             Button(action: {
@@ -298,7 +335,7 @@ struct IncomeView: View {
                                                 IncomeDetailView(income: income, incomeViewModel: incomeViewModel)
                                                     .toolbarRole(.editor)
                                             }, label: {
-                                                IncomeRowView(income: income, groupBy: groupByTag ? "Tag" : (groupByType ? "Type" : ""))
+                                                IncomeRowView(income: income, groupBy: groupByTag ? "Tag" : (groupByType ? "Type" : ""), showCumulative: showCumulative, showAverage: showAverage)
                                             })
                                             .contextMenu {
                                                 Label(income.id!, systemImage: "info.square")
@@ -315,7 +352,7 @@ struct IncomeView: View {
                                         IncomeDetailView(income: income, incomeViewModel: incomeViewModel)
                                             .toolbarRole(.editor)
                                     }, label: {
-                                        IncomeRowView(income: income)
+                                        IncomeRowView(income: income, showCumulative: showCumulative, showAverage: showAverage)
                                     })
                                     .contextMenu {
                                         Label(income.id!, systemImage: "info.square")

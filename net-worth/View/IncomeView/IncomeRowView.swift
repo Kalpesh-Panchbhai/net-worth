@@ -12,6 +12,9 @@ struct IncomeRowView: View {
     var income: IncomeCalculation
     var groupBy: String = ""
     
+    var showCumulative: Bool
+    var showAverage: Bool
+    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -42,28 +45,95 @@ struct IncomeRowView: View {
                     .font(.system(size: 10))
                     .bold()
             }
-            HStack {
-                Text("\(income.currency) " + income.taxpaid.withCommas(decimalPlace: 2))
-                    .font(.system(size: 10))
-                Spacer()
-                Text("\(income.currency) " + income.amount.withCommas(decimalPlace: 2))
-                    .font(.system(size: 10))
-            }
-            HStack {
-                Text("\(income.currency) " + income.cumulativeTaxPaid.withCommas(decimalPlace: 2))
-                    .font(.system(size: 10))
-                Spacer()
-                Text("\(income.currency) " + income.cumulativeAmount.withCommas(decimalPlace: 2))
-                    .font(.system(size: 10))
-            }
-            HStack {
-                Text("\(income.currency) " + income.avgTaxPaid.withCommas(decimalPlace: 2))
-                    .font(.system(size: 10))
-                Spacer()
-                Text("\(income.currency) " + income.avgAmount.withCommas(decimalPlace: 2))
-                    .font(.system(size: 10))
+            if(showCumulative) {
+                HStack {
+                    Text("Cumulative Income: ")
+                        .font(.system(size: 10))
+                    Spacer()
+                    Text("\(income.currency) " + income.cumulativeAmount.withCommas(decimalPlace: 2))
+                        .font(.system(size: 10))
+                        .bold()
+                }
+                HStack {
+                    Text("Cumulative Tax Paid: ")
+                        .font(.system(size: 10))
+                    Spacer()
+                    Text("\(income.currency) " + income.cumulativeTaxPaid.withCommas(decimalPlace: 2))
+                        .font(.system(size: 10))
+                        .bold()
+                }
+                HStack {
+                    Text("Cumulative Total: ")
+                        .font(.system(size: 10))
+                    Spacer()
+                    Text("\(income.currency) " + addIncomeAndTaxPaidCumulative(income: income).withCommas(decimalPlace: 2))
+                        .font(.system(size: 10))
+                        .bold()
+                }
+            } else if(showAverage) {
+                HStack {
+                    Text("Average Income: ")
+                        .font(.system(size: 10))
+                    Spacer()
+                    Text("\(income.currency) " + income.avgAmount.withCommas(decimalPlace: 2))
+                        .font(.system(size: 10))
+                        .bold()
+                }
+                HStack {
+                    Text("Average Tax Paid: ")
+                        .font(.system(size: 10))
+                    Spacer()
+                    Text("\(income.currency) " + income.avgTaxPaid.withCommas(decimalPlace: 2))
+                        .font(.system(size: 10))
+                        .bold()
+                }
+                HStack {
+                    Text("Average Total: ")
+                        .font(.system(size: 10))
+                    Spacer()
+                    Text("\(income.currency) " + addIncomeAndTaxPaidAverage(income: income).withCommas(decimalPlace: 2))
+                        .font(.system(size: 10))
+                        .bold()
+                }
+            } else {
+                HStack {
+                    Text("Income: ")
+                        .font(.system(size: 10))
+                    Spacer()
+                    Text("\(income.currency) " + income.amount.withCommas(decimalPlace: 2))
+                        .font(.system(size: 10))
+                        .bold()
+                }
+                HStack {
+                    Text("Tax Paid: ")
+                        .font(.system(size: 10))
+                    Spacer()
+                    Text("\(income.currency) " + income.taxpaid.withCommas(decimalPlace: 2))
+                        .font(.system(size: 10))
+                        .bold()
+                }
+                HStack {
+                    Text("Total: ")
+                        .font(.system(size: 10))
+                    Spacer()
+                    Text("\(income.currency) " + addIncomeAndTaxPaid(income: income).withCommas(decimalPlace: 2))
+                        .font(.system(size: 10))
+                        .bold()
+                }
             }
         }
         .background(Color.theme.foreground)
+    }
+    
+    private func addIncomeAndTaxPaid(income: Income) -> Double {
+        return income.amount + income.taxpaid
+    }
+    
+    private func addIncomeAndTaxPaidCumulative(income: IncomeCalculation) -> Double {
+        return income.cumulativeAmount + income.cumulativeTaxPaid
+    }
+    
+    private func addIncomeAndTaxPaidAverage(income: IncomeCalculation) -> Double {
+        return income.avgAmount + income.avgTaxPaid
     }
 }
