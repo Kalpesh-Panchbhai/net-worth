@@ -426,18 +426,38 @@ struct IncomeView: View {
     
     private var incomeTotalAmount: some View {
         VStack {
-            Text("Total Income: \(SettingsController().getDefaultCurrency().code) \(incomeViewModel.incomeTotalAmount.withCommas(decimalPlace: 2))")
-                .foregroundColor(Color.theme.primaryText)
-                .bold()
-            Text("Total Tax Paid: \(SettingsController().getDefaultCurrency().code) \(incomeViewModel.incomeTaxPaidAmount.withCommas(decimalPlace: 2))")
-                .foregroundColor(Color.theme.primaryText)
-                .bold()
+            HStack {
+                Text("Total Income:")
+                Spacer()
+                Text(SettingsController().getDefaultCurrency().code)
+                    .foregroundColor(Color.theme.primaryText)
+                Text(incomeViewModel.incomeTotalAmount.withCommas(decimalPlace: 2))
+                    .foregroundColor(Color.theme.primaryText)
+                    .bold()
+            }
+            HStack {
+                Text("Total Tax Paid:")
+                Spacer()
+                Text(SettingsController().getDefaultCurrency().code)
+                    .foregroundColor(Color.theme.primaryText)
+                Text(incomeViewModel.incomeTaxPaidAmount.withCommas(decimalPlace: 2))
+                    .foregroundColor(Color.theme.primaryText)
+                    .bold()
+            }
+            HStack {
+                Text("Total:")
+                Spacer()
+                Text(SettingsController().getDefaultCurrency().code)
+                    .foregroundColor(Color.theme.primaryText)
+                Text("\((incomeViewModel.incomeTotalAmount + incomeViewModel.incomeTaxPaidAmount).withCommas(decimalPlace: 2))")
+                    .foregroundColor(Color.theme.primaryText)
+                    .bold()
+            }
         }
-        .padding(6)
-        .frame(width: 300, height: 50)
+        .padding(15)
+        .frame(width: 360, height: 80)
         .background(Color.theme.foreground)
         .cornerRadius(10)
-        .padding(.horizontal)
     }
     
     private func deleteIncome(offsets: IndexSet) {
