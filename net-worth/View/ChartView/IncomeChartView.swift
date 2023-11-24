@@ -28,6 +28,8 @@ struct IncomeChartView: View {
     @State var incomeChartDataList = [ChartData]()
     @State var incomeAvg = 0.0
     
+    @State var showTotal = false
+    
     @ObservedObject var incomeViewModel = IncomeViewModel()
     
     @Environment(\.scenePhase) var scenePhase
@@ -37,7 +39,7 @@ struct IncomeChartView: View {
             VStack {
                 VStack(alignment: .leading) {
                     List {
-                        let totalAmount = incomeViewModel.incomeList.reduce(0.0) { partialResult, item in
+                        let totalIncomeAmount = incomeViewModel.incomeList.reduce(0.0) { partialResult, item in
                             item.amount + partialResult
                         }
                         
@@ -45,15 +47,23 @@ struct IncomeChartView: View {
                             item.taxpaid + partialResult
                         }
                         
+                        let totalAmount = totalIncomeAmount + totalTaxPaid
+                        
                         HStack {
-                            if(taxPaidView) {
-                                Text(totalTaxPaid.stringFormat)
-                                    .foregroundColor(Color.theme.primaryText)
-                                    .font(.system(size: 15))
-                            } else {
+                            if(showTotal) {
                                 Text(totalAmount.stringFormat)
                                     .foregroundColor(Color.theme.primaryText)
                                     .font(.system(size: 15))
+                            } else {
+                                if(taxPaidView) {
+                                    Text(totalTaxPaid.stringFormat)
+                                        .foregroundColor(Color.theme.primaryText)
+                                        .font(.system(size: 15))
+                                } else {
+                                    Text(totalIncomeAmount.stringFormat)
+                                        .foregroundColor(Color.theme.primaryText)
+                                        .font(.system(size: 15))
+                                }
                             }
                             Spacer()
                             Button("Cumulative") {
@@ -63,12 +73,14 @@ struct IncomeChartView: View {
                             }.buttonStyle(.borderedProminent)
                                 .tint(self.cumulativeView ? Color.theme.green : .blue)
                                 .font(.system(size: 10))
-                            Button("Tax Paid") {
-                                self.taxPaidView.toggle()
-                                updateChartData()
-                            }.buttonStyle(.borderedProminent)
-                                .tint(self.taxPaidView ? Color.theme.green : .blue)
-                                .font(.system(size: 10))
+                            if(!showTotal) {
+                                Button("Tax Paid") {
+                                    self.taxPaidView.toggle()
+                                    updateChartData()
+                                }.buttonStyle(.borderedProminent)
+                                    .tint(self.taxPaidView ? Color.theme.green : .blue)
+                                    .font(.system(size: 10))
+                            }
                             
                             Button("Average") {
                                 self.averageView.toggle()
@@ -222,6 +234,12 @@ struct IncomeChartView: View {
                             }, label: {
                                 Label("Filter by", systemImage: "line.3.horizontal.decrease.circle")
                             })
+                            
+                            Toggle("Show Total", isOn: $showTotal)
+                                .onChange(of: showTotal, perform: { _ in
+                                    self.taxPaidView = false
+                                    updateChartData()
+                                })
                         }, label: {
                             Image(systemName: "ellipsis")
                                 .foregroundColor(Color.theme.primaryText)
@@ -261,32 +279,45 @@ struct IncomeChartView: View {
             for income in incomeViewModel.incomeList {
                 incomeChartDataList.append(ChartData(date: income.creditedOn, value: getValue(income: income)))
             }
-            
-            incomeAvg = taxPaidView ? (incomeViewModel.incomeList.first?.avgTaxPaid ?? 0.0) : (incomeViewModel.incomeList.first?.avgAmount ?? 0.0)
+            if(showTotal) {
+                incomeAvg = (incomeViewModel.incomeList.first?.avgAmount ?? 0.0) + (incomeViewModel.incomeList.first?.avgTaxPaid ?? 0.0)
+            } else {
+                incomeAvg = taxPaidView ? (incomeViewModel.incomeList.first?.avgTaxPaid ?? 0.0) : (incomeViewModel.incomeList.first?.avgAmount ?? 0.0)
+            }
             
             incomeChartDataList.reverse()
         }
     }
     
     private func getValue(income: IncomeCalculation) -> Double {
-        if(cumulativeView) {
-            if(taxPaidView) {
-                return income.cumulativeTaxPaid
+        if(showTotal) {
+            if(cumulativeView) {
+                return income.cumulativeAmount + income.cumulativeTaxPaid
+            } else if(averageView ){
+                return income.avgAmount + income.avgTaxPaid
             } else {
-                return income.cumulativeAmount
+                return income.amount + income.taxpaid
             }
         } else {
-            if(taxPaidView) {
-                if(averageView) {
-                    return income.avgTaxPaid
+            if(cumulativeView) {
+                if(taxPaidView) {
+                    return income.cumulativeTaxPaid
                 } else {
-                    return income.taxpaid
+                    return income.cumulativeAmount
                 }
             } else {
-                if(averageView) {
-                    return income.avgAmount
+                if(taxPaidView) {
+                    if(averageView) {
+                        return income.avgTaxPaid
+                    } else {
+                        return income.taxpaid
+                    }
                 } else {
-                    return income.amount
+                    if(averageView) {
+                        return income.avgAmount
+                    } else {
+                        return income.amount
+                    }
                 }
             }
         }
