@@ -148,7 +148,7 @@ struct IncomeView: View {
                                             })
                                         }
                                     }, label: {
-                                        Label("Financial year", systemImage: filterFinancialYear.isEmpty ? "calendar.circle" : "\(filterFinancialYear.count).circle")
+                                        Label("Financial Year", systemImage: filterFinancialYear.isEmpty ? "calendar.circle" : "\(filterFinancialYear.count).circle")
                                     })
                                 }
                                 

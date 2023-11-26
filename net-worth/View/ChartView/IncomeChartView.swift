@@ -21,11 +21,17 @@ struct IncomeChartView: View {
     @State var filterYear = [String]()
     @State var filterFinancialYear = [String]()
     
+    @State var groupByType = false
+    @State var groupByTag = false
+    @State var groupByYear = false
+    @State var groupByFinancialYear = false
+    
     @State var cumulativeView = false
     @State var taxPaidView = false
     @State var averageView = false
     
     @State var incomeChartDataList = [ChartData]()
+    @State var incomeListByGroup = [String: Double]()
     @State var incomeAvg = 0.0
     
     @State var showTotal = false
@@ -66,38 +72,44 @@ struct IncomeChartView: View {
                                 }
                             }
                             Spacer()
-                            Button("Cumulative") {
-                                self.cumulativeView.toggle()
-                                self.averageView = false
-                                updateChartData()
-                            }.buttonStyle(.borderedProminent)
-                                .tint(self.cumulativeView ? Color.theme.green : .blue)
-                                .font(.system(size: 10))
-                            if(!showTotal) {
-                                Button("Tax Paid") {
-                                    self.taxPaidView.toggle()
+                            if(!(groupByType || groupByTag || groupByYear || groupByFinancialYear)) {
+                                Button("Cumulative") {
+                                    self.cumulativeView.toggle()
+                                    self.averageView = false
                                     updateChartData()
                                 }.buttonStyle(.borderedProminent)
-                                    .tint(self.taxPaidView ? Color.theme.green : .blue)
+                                    .tint(self.cumulativeView ? Color.theme.green : .blue)
+                                    .font(.system(size: 10))
+                                if(!showTotal) {
+                                    Button("Tax Paid") {
+                                        self.taxPaidView.toggle()
+                                        updateChartData()
+                                    }.buttonStyle(.borderedProminent)
+                                        .tint(self.taxPaidView ? Color.theme.green : .blue)
+                                        .font(.system(size: 10))
+                                }
+                                
+                                Button("Average") {
+                                    self.averageView.toggle()
+                                    self.cumulativeView = false
+                                    updateChartData()
+                                }.buttonStyle(.borderedProminent)
+                                    .tint(self.averageView ? Color.theme.green : .blue)
                                     .font(.system(size: 10))
                             }
-                            
-                            Button("Average") {
-                                self.averageView.toggle()
-                                self.cumulativeView = false
-                                updateChartData()
-                            }.buttonStyle(.borderedProminent)
-                                .tint(self.averageView ? Color.theme.green : .blue)
-                                .font(.system(size: 10))
                         }
                         .listRowBackground(Color.theme.foreground)
                         
-                        if(cumulativeView || averageView) {
-                            SingleLineLollipopChartView(chartDataList: incomeChartDataList, isColorChart: false)
-                                .listRowBackground(Color.theme.foreground)
+                        if(groupByType || groupByTag || groupByYear || groupByFinancialYear) {
+                            BarLollipopGroupChartView(chartDataList: incomeListByGroup)
                         } else {
-                            BarLollipopChartView(chartDataList: incomeChartDataList, average: incomeAvg, isAverageChart: true)
-                                .listRowBackground(Color.theme.foreground)
+                            if(cumulativeView || averageView) {
+                                SingleLineLollipopChartView(chartDataList: incomeChartDataList, isColorChart: false)
+                                    .listRowBackground(Color.theme.foreground)
+                            } else {
+                                BarLollipopChartView(chartDataList: incomeChartDataList, average: incomeAvg, isAverageChart: true)
+                                    .listRowBackground(Color.theme.foreground)
+                            }
                         }
                     }
                 }
@@ -227,12 +239,89 @@ struct IncomeChartView: View {
                                             })
                                         }
                                     }, label: {
-                                        Label("Financial year", systemImage: filterFinancialYear.isEmpty ? "calendar.circle" : "\(filterFinancialYear.count).circle")
+                                        Label("Financial Year", systemImage: filterFinancialYear.isEmpty ? "calendar.circle" : "\(filterFinancialYear.count).circle")
                                     })
                                 }
                                 
                             }, label: {
                                 Label("Filter by", systemImage: "line.3.horizontal.decrease.circle")
+                            })
+                            
+                            Menu(content: {
+                                
+                                Button(action: {
+                                    self.groupByType.toggle()
+                                    if(groupByType) {
+                                        self.groupByTag = false
+                                        self.groupByYear = false
+                                        self.groupByFinancialYear = false
+                                        updateChartData()
+                                    } else {
+                                        updateChartData()
+                                    }
+                                }, label: {
+                                    if(groupByType) {
+                                        Label("Income Type", systemImage: "checkmark")
+                                    } else {
+                                        Text("Income Type")
+                                    }
+                                })
+                                
+                                Button(action: {
+                                    self.groupByTag.toggle()
+                                    if(groupByTag) {
+                                        self.groupByType = false
+                                        self.groupByYear = false
+                                        self.groupByFinancialYear = false
+                                        updateChartData()
+                                    } else {
+                                        updateChartData()
+                                    }
+                                }, label: {
+                                    if(groupByTag) {
+                                        Label("Income Tag", systemImage: "checkmark")
+                                    } else {
+                                        Text("Income Tag")
+                                    }
+                                })
+                                
+                                Button(action: {
+                                    self.groupByYear.toggle()
+                                    if(groupByYear) {
+                                        self.groupByTag = false
+                                        self.groupByType = false
+                                        self.groupByFinancialYear = false
+                                        updateChartData()
+                                    } else {
+                                        updateChartData()
+                                    }
+                                }, label: {
+                                    if(groupByYear) {
+                                        Label("Year", systemImage: "checkmark")
+                                    } else {
+                                        Text("Year")
+                                    }
+                                })
+                                
+                                Button(action: {
+                                    self.groupByFinancialYear.toggle()
+                                    if(groupByFinancialYear) {
+                                        self.groupByTag = false
+                                        self.groupByYear = false
+                                        self.groupByType = false
+                                        updateChartData()
+                                    } else {
+                                        updateChartData()
+                                    }
+                                }, label: {
+                                    if(groupByFinancialYear) {
+                                        Label("Financial Year", systemImage: "checkmark")
+                                    } else {
+                                        Text("Financial Year")
+                                    }
+                                })
+                            }, label: {
+                                Label("Group by", systemImage: "rectangle.3.group")
                             })
                             
                             Toggle("Show Total", isOn: $showTotal)
@@ -273,19 +362,37 @@ struct IncomeChartView: View {
     
     private func updateChartData() {
         incomeChartDataList = [ChartData]()
+        incomeListByGroup = [String: Double]()
         incomeAvg = 0.0
         Task.init {
-            await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-            for income in incomeViewModel.incomeList {
-                incomeChartDataList.append(ChartData(date: income.creditedOn, value: getValue(income: income)))
-            }
-            if(showTotal) {
-                incomeAvg = (incomeViewModel.incomeList.first?.avgAmount ?? 0.0) + (incomeViewModel.incomeList.first?.avgTaxPaid ?? 0.0)
+            if(!(groupByType || groupByTag || groupByYear || groupByFinancialYear)) {
+                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+                for income in incomeViewModel.incomeList {
+                    incomeChartDataList.append(ChartData(date: income.creditedOn, value: getValue(income: income)))
+                }
+                if(showTotal) {
+                    incomeAvg = (incomeViewModel.incomeList.first?.avgAmount ?? 0.0) + (incomeViewModel.incomeList.first?.avgTaxPaid ?? 0.0)
+                } else {
+                    incomeAvg = taxPaidView ? (incomeViewModel.incomeList.first?.avgTaxPaid ?? 0.0) : (incomeViewModel.incomeList.first?.avgAmount ?? 0.0)
+                }
+                
+                incomeChartDataList.reverse()
             } else {
-                incomeAvg = taxPaidView ? (incomeViewModel.incomeList.first?.avgTaxPaid ?? 0.0) : (incomeViewModel.incomeList.first?.avgAmount ?? 0.0)
+                if(groupByType) {
+                    await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Type")
+                } else if(groupByTag) {
+                    await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Tag")
+                } else if(groupByYear) {
+                    await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Year")
+                } else if(groupByFinancialYear) {
+                    await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Financial Year")
+                }
+                for income in incomeViewModel.incomeListByGroup {
+                    incomeListByGroup.updateValue(income.value.map {
+                        $0.cumulativeAmount
+                    }.first!, forKey: income.key)
+                }
             }
-            
-            incomeChartDataList.reverse()
         }
     }
     
