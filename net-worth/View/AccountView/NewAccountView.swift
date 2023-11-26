@@ -23,7 +23,7 @@ struct NewAccountView: View {
     @State var currencySelected: Currency = Currency()
     @State var filterCurrencyList = CurrencyList().currencyList
     @State var currencyChanged = false
-    @State var currentBalance: Double = 0.0
+    @State var currentBalance: String = "0.0"
     @State var monthlyEmi: Double = 0.0
     @State var paymentReminder = false
     @State var paymentDate = 1
@@ -52,7 +52,7 @@ struct NewAccountView: View {
                     .foregroundColor(Color.theme.primaryText)
                     .onChange(of: accountType) { _ in
                         accountName=""
-                        currentBalance = 0.0
+                        currentBalance = "0.0"
                         paymentDate = 1
                         paymentReminder = false
                         currencySelected = SettingsController().getDefaultCurrency()
@@ -144,7 +144,7 @@ struct NewAccountView: View {
                             newAccount.loanType = loanType
                         }
                         newAccount.accountName = accountName
-                        newAccount.currentBalance = isPlus ? currentBalance : currentBalance * -1
+                        newAccount.currentBalance = isPlus ? currentBalance.toDouble()! : currentBalance.toDouble()! * -1
                         newAccount.currency = currencySelected.code
                         newAccount.paymentReminder = paymentReminder
                         
@@ -243,25 +243,25 @@ struct NewAccountView: View {
             } else {
                 return true
             }
-        }else if accountType == "Credit Card" {
+        } else if accountType == "Credit Card" {
             if accountName.isEmpty || currencySelected.name.isEmpty  {
                 return false
             } else {
                 return true
             }
-        }else if accountType == "Loan" {
-            if accountName.isEmpty || currentBalance.isZero || currencySelected.name.isEmpty  {
+        } else if accountType == "Loan" {
+            if accountName.isEmpty || currentBalance.isEmpty || currencySelected.name.isEmpty  {
                 return false
             } else {
                 return true
             }
-        }else if accountType == "Other" {
+        } else if accountType == "Other" {
             if accountName.isEmpty || currencySelected.name.isEmpty  {
                 return false
             } else {
                 return true
             }
-        }else {
+        } else {
             return false
         }
     }
@@ -294,8 +294,34 @@ struct NewAccountView: View {
                 .font(.system(size: 14).bold())
             }
             Spacer()
-            TextField("Current Balance", value: $currentBalance, formatter: Double().formatter())
+            TextField("Current Balance", text: $currentBalance)
                 .keyboardType(.decimalPad)
+                .onChange(of: currentBalance, perform: { _ in
+                    let filtered = currentBalance.filter {"0123456789.".contains($0)}
+                    
+                    if filtered.contains(".") {
+                        let splitted = filtered.split(separator: ".")
+                        if splitted.count >= 2 {
+                            let preDecimal = String(splitted[0])
+                            if String(splitted[1]).count == 3 {
+                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
+                                currentBalance = "\(preDecimal).\(afterDecimal)"
+                            }else {
+                                let afterDecimal = String(splitted[1])
+                                currentBalance = "\(preDecimal).\(afterDecimal)"
+                            }
+                        }else if splitted.count == 1 {
+                            let preDecimal = String(splitted[0])
+                            currentBalance = "\(preDecimal)."
+                        }else {
+                            currentBalance = "0."
+                        }
+                    } else if filtered.isEmpty && !currentBalance.isEmpty {
+                        currentBalance = ""
+                    } else if !filtered.isEmpty {
+                        currentBalance = filtered
+                    }
+                })
                 .multilineTextAlignment(.trailing)
         }
     }

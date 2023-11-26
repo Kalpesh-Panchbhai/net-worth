@@ -12,7 +12,7 @@ struct UpdateBalanceAccountView: View {
     var accountController = AccountController()
     var accountTransactionController = AccountTransactionController()
     
-    @State var amount: Double = 0.0
+    @State var amount: String = "0.0"
     @State var date = Date()
     @State var isPlus = true
     @State var scenePhaseBlur = 0
@@ -38,8 +38,8 @@ struct UpdateBalanceAccountView: View {
                 ToolbarItem {
                     Button(action: {
                         var updatedAccount = accountViewModel.account
-                        amount = isPlus ? amount : amount * -1
-                        updatedAccount.currentBalance = amount
+                        var newAmount = isPlus ? amount.toDouble() : amount.toDouble()! * -1
+                        updatedAccount.currentBalance = newAmount!
                         Task.init {
                             await accountTransactionController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Update")
                         }
@@ -55,8 +55,8 @@ struct UpdateBalanceAccountView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
                         var updatedAccount = accountViewModel.account
-                        amount = isPlus ? amount : amount * -1
-                        updatedAccount.currentBalance = amount
+                        var newAmount = isPlus ? amount.toDouble() : amount.toDouble()! * -1
+                        updatedAccount.currentBalance = newAmount!
                         Task.init {
                             await accountTransactionController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Add")
                         }
@@ -106,8 +106,35 @@ struct UpdateBalanceAccountView: View {
                 .font(.system(size: 14).bold())
             }
             Spacer()
-            TextField("Amount", value: $amount, formatter: Double().formatter())
+            TextField("Amount", text: $amount)
                 .keyboardType(.decimalPad)
+                .onChange(of: amount, perform: { _ in
+                    let filtered = amount.filter {"0123456789.".contains($0)}
+                    
+                    if filtered.contains(".") {
+                        let splitted = filtered.split(separator: ".")
+                        if splitted.count >= 2 {
+                            let preDecimal = String(splitted[0])
+                            if String(splitted[1]).count == 3 {
+                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
+                                amount = "\(preDecimal).\(afterDecimal)"
+                            }else {
+                                let afterDecimal = String(splitted[1])
+                                amount = "\(preDecimal).\(afterDecimal)"
+                            }
+                        }else if splitted.count == 1 {
+                            let preDecimal = String(splitted[0])
+                            amount = "\(preDecimal)."
+                        }else {
+                            amount = "0."
+                        }
+                    } else if filtered.isEmpty && !amount.isEmpty {
+                        amount = ""
+                    } else if !filtered.isEmpty {
+                        amount = filtered
+                    }
+                })
+                .multilineTextAlignment(.trailing)
         }
     }
 }
