@@ -102,6 +102,7 @@ struct IncomeChartView: View {
                         
                         if(groupByType || groupByTag || groupByYear || groupByFinancialYear) {
                             BarLollipopGroupChartView(chartDataList: incomeListByGroup)
+                                .listRowBackground(Color.theme.foreground)
                         } else {
                             if(cumulativeView || averageView) {
                                 SingleLineLollipopChartView(chartDataList: incomeChartDataList, isColorChart: false)

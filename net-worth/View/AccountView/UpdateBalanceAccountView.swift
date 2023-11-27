@@ -38,7 +38,7 @@ struct UpdateBalanceAccountView: View {
                 ToolbarItem {
                     Button(action: {
                         var updatedAccount = accountViewModel.account
-                        var newAmount = isPlus ? amount.toDouble() : amount.toDouble()! * -1
+                        let newAmount = isPlus ? amount.toDouble() : amount.toDouble()! * -1
                         updatedAccount.currentBalance = newAmount!
                         Task.init {
                             await accountTransactionController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Update")
@@ -55,7 +55,7 @@ struct UpdateBalanceAccountView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
                         var updatedAccount = accountViewModel.account
-                        var newAmount = isPlus ? amount.toDouble() : amount.toDouble()! * -1
+                        let newAmount = isPlus ? amount.toDouble() : amount.toDouble()! * -1
                         updatedAccount.currentBalance = newAmount!
                         Task.init {
                             await accountTransactionController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Add")
