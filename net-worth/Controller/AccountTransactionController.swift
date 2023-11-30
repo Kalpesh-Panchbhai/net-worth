@@ -272,7 +272,7 @@ class AccountTransactionController {
             oneDayChange.previousDayValue = dayStartingBalance
             oneDayChange.oneDayChange = currentBalance - dayStartingBalance
         } else {
-            oneDayChange.currentValue = accountTransactionList[0].currentBalance
+            oneDayChange.currentValue = accountTransactionList.isEmpty ? 0.0 : accountTransactionList[0].currentBalance
             oneDayChange.previousDayValue = 0.0
             oneDayChange.oneDayChange = 0.0
         }

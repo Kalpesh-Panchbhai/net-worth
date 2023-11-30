@@ -115,6 +115,12 @@ struct NewAccountView: View {
                         }
                         watchListPicker
                         accountOpenedDatePicker
+                    } else if(accountType == "Broker") {
+                        nameField(labelName: "Broker Name")
+                            .foregroundColor(Color.theme.primaryText)
+                        CurrencyPicker(currenySelected: $currencySelected)
+                            .foregroundColor(Color.theme.primaryText)
+                        watchListPicker
                     } else if(accountType == "Other") {
                         nameField(labelName: "Account Name")
                             .foregroundColor(Color.theme.primaryText)
@@ -251,6 +257,12 @@ struct NewAccountView: View {
             }
         } else if accountType == "Loan" {
             if accountName.isEmpty || currentBalance.isEmpty || currencySelected.name.isEmpty  {
+                return false
+            } else {
+                return true
+            }
+        } else if accountType == "Broker" {
+            if accountName.isEmpty || currencySelected.name.isEmpty  {
                 return false
             } else {
                 return true

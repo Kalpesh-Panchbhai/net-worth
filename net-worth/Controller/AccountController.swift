@@ -39,7 +39,9 @@ class AccountController {
             let accountID = try getAccountCollection()
                 .addDocument(from: newAccount).documentID
             let accountTransaction = AccountTransaction(timestamp: accountOpenedDate, balanceChange: newAccount.currentBalance, currentBalance: newAccount.currentBalance)
-            await accountTransactionController.addTransaction(accountID: accountID, accountTransaction: accountTransaction)
+            if(newAccount.accountType != "Broker") {
+                await accountTransactionController.addTransaction(accountID: accountID, accountTransaction: accountTransaction)
+            }
             
             await UserController().updateAccountUserData()
             return accountID
