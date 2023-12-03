@@ -9,7 +9,8 @@ import SwiftUI
 
 struct AccountBrokerRowView: View {
     
-    var accountBroker: AccountBroker
+    var brokerID: String
+    var accountID: String
     
     @StateObject var financeViewModel = FinanceViewModel()
     @StateObject var accountViewModel = AccountViewModel()
@@ -17,12 +18,12 @@ struct AccountBrokerRowView: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(accountBroker.name)
+                Text(accountViewModel.accountBroker.name)
                     .font(.headline)
                     .foregroundColor(Color.theme.primaryText)
                     .padding(.horizontal)
                 HStack {
-                    Text(accountBroker.currentUnit.withCommas(decimalPlace: 2))
+                    Text(accountViewModel.accountBroker.currentUnit.withCommas(decimalPlace: 2))
                         .font(.system(size: 12))
                         .foregroundColor(Color.theme.secondaryText)
                         .padding(.leading)
@@ -64,9 +65,10 @@ struct AccountBrokerRowView: View {
         }
         .onAppear(perform: {
             Task.init {
-                let symbol = accountBroker.symbol
+                await accountViewModel.getBrokerAccount(brokerID: brokerID, accountID: accountID)
+                let symbol = accountViewModel.accountBroker.symbol
                 await financeViewModel.getSymbolDetail(symbol: symbol)
-                await accountViewModel.getBrokerAccountCurrentBalance(accountBroker: accountBroker)
+                await accountViewModel.getBrokerAccountCurrentBalance(accountBroker: accountViewModel.accountBroker)
             }
         })
     }

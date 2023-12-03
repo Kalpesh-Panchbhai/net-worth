@@ -16,4 +16,11 @@ struct AccountBroker: Codable, Hashable {
     var name: String
     var currentUnit: Double
     
+    init(id: String = "", timestamp: Date = Date(), symbol: String = "", name: String = "", currentUnit: Double = 0.0) {
+        self.id = id
+        self.timestamp = timestamp
+        self.symbol = symbol
+        self.name = name
+        self.currentUnit = currentUnit
+    }
 }

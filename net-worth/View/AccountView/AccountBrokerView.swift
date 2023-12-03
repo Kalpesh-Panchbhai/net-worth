@@ -20,9 +20,9 @@ struct AccountBrokerView: View {
                     Spacer()
                     ForEach(0..<accountViewModel.accountsInBroker.count, id: \.self) { i in
                         NavigationLink(destination: {
-                            AccountBrokerDetailView(brokerID: brokerID, accountBroker: accountViewModel.accountsInBroker[i])
+                            AccountBrokerDetailView(brokerID: brokerID, accountID: accountViewModel.accountsInBroker[i].id!)
                         }, label: {
-                            AccountBrokerRowView(accountBroker: accountViewModel.accountsInBroker[i])
+                            AccountBrokerRowView(brokerID: brokerID, accountID: accountViewModel.accountsInBroker[i].id!)
                                 .frame(width: 360)
                                 .padding(8)
                                 .background(Color.theme.foreground)

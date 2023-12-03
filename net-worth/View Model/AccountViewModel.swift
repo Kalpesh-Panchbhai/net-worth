@@ -30,6 +30,7 @@ class AccountViewModel: ObservableObject {
     @Published var grouping: Grouping = .accountType
     
     @Published var accountsInBroker = [AccountBroker]()
+    @Published var accountBroker = AccountBroker()
     @Published var accountBrokerCurrentBalance = Balance(currentValue: 0.0)
     
     enum Grouping: String, CaseIterable, Identifiable {
@@ -197,6 +198,13 @@ class AccountViewModel: ObservableObject {
         let oneDayChange = await accountTransactionController.getAccountLastOneDayChange(accountID: id)
         DispatchQueue.main.async {
             self.accountOneDayChange = oneDayChange
+        }
+    }
+    
+    func getBrokerAccount(brokerID: String, accountID: String) async {
+        let accountBroker = await brokerAccountController.getBrokerAccount(brokerID: brokerID, accountID: accountID)
+        DispatchQueue.main.async {
+            self.accountBroker = accountBroker
         }
     }
     

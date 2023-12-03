@@ -86,6 +86,21 @@ class BrokerAccountController {
         return accountBrokerList
     }
     
+    public func getBrokerAccount(brokerID: String, accountID: String) async -> AccountBroker {
+        var accountBroker = AccountBroker()
+        do {
+            accountBroker = try await AccountController()
+                .getAccountCollection()
+                .document(brokerID)
+                .collection(ConstantUtils.accountBrokerCollectionName)
+                .document(accountID)
+                .getDocument(as: AccountBroker.self)
+        } catch {
+            print(error)
+        }
+        return accountBroker
+    }
+    
     public func getAccountTransactionsInBrokerAccountList(brokerID: String, accountID: String) async -> [AccountTransaction] {
         var accountTransactionList = [AccountTransaction]()
         do {

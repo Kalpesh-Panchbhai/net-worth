@@ -11,7 +11,7 @@ struct AccountBrokerDetailView: View {
     
     var brokerID: String
     
-    var accountBroker: AccountBroker
+    var accountID: String
     
     @State var tabItem = 1
     @State var isNewTransactionViewOpen = false
@@ -41,7 +41,7 @@ struct AccountBrokerDetailView: View {
                 AccountChartView(accountID: brokerID)
             }
         }
-        .navigationTitle(accountBroker.name)
+        .navigationTitle(accountViewModel.accountBroker.name)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(
@@ -72,17 +72,19 @@ struct AccountBrokerDetailView: View {
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getBrokerAccountCurrentBalance(accountBroker: accountBroker)
-                await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountBroker.id!)
+                await accountViewModel.getBrokerAccount(brokerID: brokerID, accountID: accountID)
+                await accountViewModel.getBrokerAccountCurrentBalance(accountBroker: accountViewModel.accountBroker)
+                await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID)
             }
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             Task.init {
-                await accountViewModel.getBrokerAccountCurrentBalance(accountBroker: accountBroker)
-                await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountBroker.id!)
+                await accountViewModel.getBrokerAccount(brokerID: brokerID, accountID: accountID)
+                await accountViewModel.getBrokerAccountCurrentBalance(accountBroker: accountViewModel.accountBroker)
+                await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID)
             }
         }, content: {
-            UpdateBalanceAccountBrokerView(brokerID: brokerID, accountBroker: accountBroker)
+            UpdateBalanceAccountBrokerView(brokerID: brokerID, accountBroker: accountViewModel.accountBroker)
                 .presentationDetents([.medium])
         })
     }
