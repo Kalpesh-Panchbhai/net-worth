@@ -129,15 +129,27 @@ class AccountController {
                 for account in accounts {
                     group.addTask {
                         var balance = Balance()
-                        if(account.currency != SettingsController().getDefaultCurrency().code) {
-                            let financeDetailModel = await FinanceController().getSymbolDetails(accountCurrency: account.currency)
-                            balance.currentValue = financeDetailModel.regularMarketPrice ?? 0.0
-                            balance.previousDayValue = financeDetailModel.chartPreviousClose ?? 0.0
+                        if(account.accountType == "Broker") {
+                            balance.currentValue = 0.0
+                            balance.previousDayValue = 0.0
+                            let brokerAccounts = await BrokerAccountController().getAccountInBrokerList(brokerID: account.id!)
+                            for brokerAccount in brokerAccounts {
+                                let brokerAccountBalance = await BrokerAccountController().getBrokerAccountCurrentBalance(accountBroker: brokerAccount)
+                                balance.currentValue = balance.currentValue + brokerAccountBalance.currentValue
+                                balance.previousDayValue = balance.previousDayValue + brokerAccountBalance.previousDayValue
+                                balance.oneDayChange = balance.currentValue - balance.previousDayValue
+                            }
+                        } else {
+                            if(account.currency != SettingsController().getDefaultCurrency().code) {
+                                let financeDetailModel = await FinanceController().getSymbolDetails(accountCurrency: account.currency)
+                                balance.currentValue = financeDetailModel.regularMarketPrice ?? 0.0
+                                balance.previousDayValue = financeDetailModel.chartPreviousClose ?? 0.0
+                            }
+                            let oneDayChange = await self.accountTransactionController.getAccountLastOneDayChange(accountID: account.id!)
+                            balance.currentValue = balance.currentValue * oneDayChange.currentValue
+                            balance.previousDayValue = balance.previousDayValue * oneDayChange.previousDayValue
+                            balance.oneDayChange = oneDayChange.oneDayChange
                         }
-                        let oneDayChange = await self.accountTransactionController.getAccountLastOneDayChange(accountID: account.id!)
-                        balance.currentValue = balance.currentValue * oneDayChange.currentValue
-                        balance.previousDayValue = balance.previousDayValue * oneDayChange.previousDayValue
-                        balance.oneDayChange = oneDayChange.oneDayChange
                         return balance
                     }
                 }

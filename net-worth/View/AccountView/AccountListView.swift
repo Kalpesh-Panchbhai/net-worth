@@ -41,7 +41,7 @@ struct AccountListView: View {
                             NavigationLink(destination: {
                                 AccountDetailView(account: account, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                             }, label: {
-                                AccountRowView(account: account, fromWatchView: accountType.elementsEqual("Inactive Account"))
+                                AccountRowView(accountID: account.id!, fromWatchView: accountType.elementsEqual("Inactive Account"))
                                     .contextMenu {
                                         
                                         Label(account.id!, systemImage: "info.square")
@@ -124,12 +124,12 @@ struct AccountListView: View {
                 }
             }
         }
-        .searchable(text: $searchText)
-        .onAppear {
-            Task.init {
-                await accountViewModel.getAccountList()
-            }
-        }
+                            .searchable(text: $searchText)
+                            .onAppear {
+                                Task.init {
+                                    await accountViewModel.getAccountList()
+                                }
+                            }
     }
 }
 

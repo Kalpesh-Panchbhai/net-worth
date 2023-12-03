@@ -22,77 +22,129 @@ struct AccountCardView: View {
                     .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)
                 Spacer()
-                if(account.active) {
-                    if(account.paymentReminder && account.accountType != "Saving") {
-                        Image(systemName: "bell.fill")
-                            .foregroundColor(Color.theme.green.opacity(0.7))
+                if(account.accountType != "Broker") {
+                    if(account.active) {
+                        if(account.paymentReminder && account.accountType != "Saving") {
+                            Image(systemName: "bell.fill")
+                                .foregroundColor(Color.theme.green.opacity(0.7))
+                                .font(.caption)
+                            Text("\(account.paymentDate)")
+                                .foregroundColor(Color.theme.green)
+                                .font(.caption)
+                        } else if(account.accountType != "Saving") {
+                            Image(systemName: "bell.slash.fill")
+                                .foregroundColor(Color.theme.red.opacity(0.7))
+                                .font(.caption)
+                        }
+                    } else {
+                        Text(account.accountType)
+                            .foregroundColor(Color.theme.secondaryText)
                             .font(.caption)
-                        Text("\(account.paymentDate)")
-                            .foregroundColor(Color.theme.green)
-                            .font(.caption)
-                    } else if(account.accountType != "Saving") {
-                        Image(systemName: "bell.slash.fill")
-                            .foregroundColor(Color.theme.red.opacity(0.7))
-                            .font(.caption)
+                            .multilineTextAlignment(.leading)
                     }
-                } else {
-                    Text(account.accountType)
-                        .foregroundColor(Color.theme.secondaryText)
-                        .font(.caption)
-                        .multilineTextAlignment(.leading)
                 }
             }
             Spacer()
             Spacer()
             HStack(alignment: .center) {
-                Text(account.currency)
-                    .foregroundColor(Color.theme.secondaryText)
-                    .font(.caption)
-                Text("\(accountViewModel.accountOneDayChange.currentValue.withCommas(decimalPlace: 2))")
-                    .foregroundColor(Color.theme.primaryText)
-                    .font(.caption.bold())
+                if(account.accountType == "Broker") {
+                    Text(SettingsController().getDefaultCurrency().code)
+                        .foregroundColor(Color.theme.secondaryText)
+                        .font(.caption)
+                    Text("\(accountViewModel.accountBrokerCurrentBalance.currentValue.withCommas(decimalPlace: 2))")
+                        .foregroundColor(Color.theme.primaryText)
+                        .font(.caption.bold())
+                } else {
+                    Text(account.currency)
+                        .foregroundColor(Color.theme.secondaryText)
+                        .font(.caption)
+                    Text("\(accountViewModel.accountOneDayChange.currentValue.withCommas(decimalPlace: 2))")
+                        .foregroundColor(Color.theme.primaryText)
+                        .font(.caption.bold())
+                }
             }
             Spacer()
             HStack {
-                if(getOneDayChange() > 0) {
-                    ZStack {
-                        Circle()
-                            .fill(Color.theme.green.opacity(0.2))
-                            .frame(width: 17, height: 17)
-                        Image(systemName: "arrow.up")
+                if(account.accountType == "Broker") {
+                    if(calculateOneDayChange() > 0) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.theme.green.opacity(0.2))
+                                .frame(width: 17, height: 17)
+                            Image(systemName: "arrow.up")
+                                .foregroundColor(Color.theme.green)
+                                .font(.system(size: 11).bold())
+                        }
+                        Text("+\(calculateOneDayChange().withCommas(decimalPlace: 2))")
                             .foregroundColor(Color.theme.green)
                             .font(.system(size: 11).bold())
-                    }
-                    Text("+\(getOneDayChange().withCommas(decimalPlace: 2))")
-                        .foregroundColor(Color.theme.green)
-                        .font(.system(size: 11).bold())
-                    Text("(+\(getOneDayPercentageChange()))")
-                        .foregroundColor(Color.theme.green)
-                        .font(.system(size: 11).bold())
-                } else if(getOneDayChange() < 0) {
-                    ZStack {
-                        Circle()
-                            .fill(Color.theme.red.opacity(0.2))
-                            .frame(width: 17, height: 17)
-                        Image(systemName: "arrow.down")
+                        Text("(+\(calculatePercentChangeForOneDay()))")
+                            .foregroundColor(Color.theme.green)
+                            .font(.system(size: 11).bold())
+                    } else if(calculateOneDayChange() < 0) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.theme.red.opacity(0.2))
+                                .frame(width: 17, height: 17)
+                            Image(systemName: "arrow.down")
+                                .foregroundColor(Color.theme.red)
+                                .font(.system(size: 11).bold())
+                        }
+                        Text("\(calculateOneDayChange().withCommas(decimalPlace: 2))")
                             .foregroundColor(Color.theme.red)
                             .font(.system(size: 11).bold())
+                        Text("(\(calculatePercentChangeForOneDay()))")
+                            .foregroundColor(Color.theme.red)
+                            .font(.system(size: 11).bold())
+                    } else {
+                        Text("")
                     }
-                    Text("\(getOneDayChange().withCommas(decimalPlace: 2))")
-                        .foregroundColor(Color.theme.red)
-                        .font(.system(size: 11).bold())
-                    Text("(\(getOneDayPercentageChange()))")
-                        .foregroundColor(Color.theme.red)
-                        .font(.system(size: 11).bold())
                 } else {
-                    Text("")
+                    if(getOneDayChange() > 0) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.theme.green.opacity(0.2))
+                                .frame(width: 17, height: 17)
+                            Image(systemName: "arrow.up")
+                                .foregroundColor(Color.theme.green)
+                                .font(.system(size: 11).bold())
+                        }
+                        Text("+\(getOneDayChange().withCommas(decimalPlace: 2))")
+                            .foregroundColor(Color.theme.green)
+                            .font(.system(size: 11).bold())
+                        Text("(+\(getOneDayPercentageChange()))")
+                            .foregroundColor(Color.theme.green)
+                            .font(.system(size: 11).bold())
+                    } else if(getOneDayChange() < 0) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.theme.red.opacity(0.2))
+                                .frame(width: 17, height: 17)
+                            Image(systemName: "arrow.down")
+                                .foregroundColor(Color.theme.red)
+                                .font(.system(size: 11).bold())
+                        }
+                        Text("\(getOneDayChange().withCommas(decimalPlace: 2))")
+                            .foregroundColor(Color.theme.red)
+                            .font(.system(size: 11).bold())
+                        Text("(\(getOneDayPercentageChange()))")
+                            .foregroundColor(Color.theme.red)
+                            .font(.system(size: 11).bold())
+                    } else {
+                        Text("")
+                    }
                 }
             }
             Spacer()
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getAccountLastOneDayChange(id: account.id!)
+                if(account.accountType == "Broker") {
+                    await accountViewModel.getAccountInBrokerList(brokerID: account.id!)
+                    await accountViewModel.getBrokerAllAccountCurrentBalance(accountBrokerList: accountViewModel.accountsInBroker)
+                } else {
+                    await accountViewModel.getAccountLastOneDayChange(id: account.id!)
+                }
             }
         }
         .frame(width: 150, height: 80)
@@ -101,11 +153,19 @@ struct AccountCardView: View {
         .cornerRadius(10)
     }
     
-    func getOneDayChange() -> Double {
+    private func getOneDayChange() -> Double {
         return accountViewModel.accountOneDayChange.oneDayChange
     }
     
-    func getOneDayPercentageChange() -> String {
+    private func getOneDayPercentageChange() -> String {
         return CommonController.getGrowthPercentage(previousBalance: accountViewModel.accountOneDayChange.previousDayValue, currentBalance: accountViewModel.accountOneDayChange.currentValue)
+    }
+    
+    private func calculateOneDayChange() -> Double {
+        return accountViewModel.accountBrokerCurrentBalance.currentValue - accountViewModel.accountBrokerCurrentBalance.previousDayValue
+    }
+    
+    private func calculatePercentChangeForOneDay() -> String {
+        return CommonController.getGrowthPercentage(previousBalance: accountViewModel.accountBrokerCurrentBalance.previousDayValue, currentBalance: accountViewModel.accountBrokerCurrentBalance.currentValue)
     }
 }

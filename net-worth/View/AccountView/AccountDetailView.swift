@@ -17,6 +17,7 @@ struct AccountDetailView: View {
     @State var initialLoadForPaymentButton = false
     @State var showAddWatchListView = false
     @State var isNewTransactionViewOpen = false
+    @State var isNewAccountInBrokerViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
     @State var paymentDate = 0
     @State var isActive = true
@@ -42,10 +43,19 @@ struct AccountDetailView: View {
     var body: some View {
         VStack {
             VStack {
-                AccountDetailCardView(accountViewModel: accountViewModel)
-                    .cornerRadius(10)
+                if(accountViewModel.account.accountType == "Broker") {
+                    AccountBrokerDetailCardView(accountViewModel: accountViewModel)
+                        .cornerRadius(10)
+                } else {
+                    AccountDetailCardView(accountViewModel: accountViewModel)
+                        .cornerRadius(10)
+                }
                 Picker(selection: $tabItem, content: {
-                    Text("Transactions (\(accountViewModel.accountTransactionList.count))").tag(1)
+                    if(accountViewModel.account.accountType == "Broker") {
+                        Text("Accounts (\(accountViewModel.accountsInBroker.count))").tag(1)
+                    } else {
+                        Text("Transactions (\(accountViewModel.accountTransactionList.count))").tag(1)
+                    }
                     Text("Chart").tag(2)
                     Text("WatchLists (\(watchViewModel.watchListForAccount.count))").tag(3)
                 }, label: {
@@ -57,7 +67,11 @@ struct AccountDetailView: View {
                     impact.impactOccurred()
                 })
                 if(tabItem == 1) {
-                    TransactionsView(accountViewModel: accountViewModel)
+                    if(accountViewModel.account.accountType == "Broker") {
+                        AccountBrokerView(brokerID: account.id!, accountViewModel: accountViewModel)
+                    } else {
+                        TransactionsView(accountViewModel: accountViewModel)
+                    }
                 } else if(tabItem == 2) {
                     AccountChartView(account: account)
                 } else {
@@ -159,11 +173,19 @@ struct AccountDetailView: View {
                     })
                     
                     if(isActive) {
-                        Button(action: {
-                            self.isNewTransactionViewOpen.toggle()
-                        }, label: {
-                            Label("New Transaction", systemImage: "square.and.pencil")
-                        })
+                        if(accountViewModel.account.accountType == "Broker") {
+                            Button(action: {
+                                self.isNewAccountInBrokerViewOpen.toggle()
+                            }, label: {
+                                Label("New Account", systemImage: "square.and.pencil")
+                            })
+                        } else {
+                            Button(action: {
+                                self.isNewTransactionViewOpen.toggle()
+                            }, label: {
+                                Label("New Transaction", systemImage: "square.and.pencil")
+                            })
+                        }
                         
                         if(accountViewModel.account.accountType != "Saving") {
                             if(!accountViewModel.account.paymentReminder) {
@@ -242,8 +264,13 @@ struct AccountDetailView: View {
                 if(!isActive) {
                     initialLoadForActiveButton = true
                 }
-                accountViewModel.getAccountTransactionList(id: account.id!)
-                await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
+                if(accountViewModel.account.accountType == "Broker") {
+                    await accountViewModel.getAccountInBrokerList(brokerID: account.id!)
+                    await accountViewModel.getBrokerAllAccountCurrentBalance(accountBrokerList: accountViewModel.accountsInBroker)
+                } else {
+                    accountViewModel.getAccountTransactionList(id: account.id!)
+                    await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
+                }
                 await watchViewModel.getWatchListByAccount(accountID: account.id!)
             }
         }
@@ -259,6 +286,14 @@ struct AccountDetailView: View {
         }, content: {
             UpdateBalanceAccountView(accountViewModel: accountViewModel)
                 .presentationDetents([.medium])
+        })
+        .sheet(isPresented: $isNewAccountInBrokerViewOpen, onDismiss: {
+            Task.init {
+                await accountViewModel.getAccountInBrokerList(brokerID: account.id!)
+                await accountViewModel.getBrokerAllAccountCurrentBalance(accountBrokerList: accountViewModel.accountsInBroker)
+            }
+        }, content: {
+            NewAccountInBrokerView(brokerAccount: account)
         })
         .sheet(isPresented: $showAddWatchListView, onDismiss: {
             Task.init {

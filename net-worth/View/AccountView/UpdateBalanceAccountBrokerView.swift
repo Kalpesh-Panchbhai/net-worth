@@ -1,22 +1,23 @@
 //
-//  AddNewBalanceAccountView.swift
+//  UpdateBalanceAccountBrokerView.swift
 //  net-worth
 //
-//  Created by Kalpesh Panchbhai on 28/11/22.
+//  Created by Kalpesh Panchbhai on 02/12/23.
 //
 
 import SwiftUI
 
-struct UpdateBalanceAccountView: View {
+struct UpdateBalanceAccountBrokerView: View {
     
-    var accountTransactionController = AccountTransactionController()
+    var brokerID: String
+    var accountBroker: AccountBroker
     
-    @State var amount: String = "0.0"
+    var brokerAccountController = BrokerAccountController()
+    
+    @State var unit: String = "0.0"
     @State var date = Date()
     @State var isPlus = true
     @State var scenePhaseBlur = 0
-    
-    @ObservedObject var accountViewModel: AccountViewModel
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.scenePhase) var scenePhase
@@ -25,7 +26,7 @@ struct UpdateBalanceAccountView: View {
         NavigationView {
             Form {
                 Section("Transaction detail") {
-                    currentBalanceField
+                    currenUnitField
                         .foregroundColor(Color.theme.primaryText)
                     DatePicker("Transaction date", selection: $date, in: ...Date(), displayedComponents: [.date, .hourAndMinute])
                         .foregroundColor(Color.theme.primaryText)
@@ -36,11 +37,11 @@ struct UpdateBalanceAccountView: View {
             .toolbar {
                 ToolbarItem {
                     Button(action: {
-                        var updatedAccount = accountViewModel.account
-                        let newAmount = isPlus ? amount.toDouble() : amount.toDouble()! * -1
-                        updatedAccount.currentBalance = newAmount!
                         Task.init {
-                            await accountTransactionController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Update")
+                            var updatedAccount = accountBroker
+                            let newAmount = isPlus ? unit.toDouble() : unit.toDouble()! * -1
+                            updatedAccount.currentUnit = newAmount!
+                            await brokerAccountController.addBrokerAccountTransaction(brokerID: brokerID, accountBroker: updatedAccount, timeStamp: date)
                         }
                         dismiss()
                     }, label: {
@@ -53,11 +54,11 @@ struct UpdateBalanceAccountView: View {
                 
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        var updatedAccount = accountViewModel.account
-                        let newAmount = isPlus ? amount.toDouble() : amount.toDouble()! * -1
-                        updatedAccount.currentBalance = newAmount!
+                        var updatedAccount = accountBroker
+                        let newAmount = isPlus ? unit.toDouble() : unit.toDouble()! * -1
+                        updatedAccount.currentUnit = updatedAccount.currentUnit + newAmount!
                         Task.init {
-                            await accountTransactionController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Add")
+                            await brokerAccountController.addBrokerAccountTransaction(brokerID: brokerID,accountBroker: updatedAccount, timeStamp: date)
                         }
                         dismiss()
                     }, label: {
@@ -68,7 +69,7 @@ struct UpdateBalanceAccountView: View {
                     .font(.system(size: 14).bold())
                 }
             }
-            .navigationTitle(accountViewModel.account.accountName)
+            .navigationTitle(accountBroker.name)
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.theme.background)
             .scrollContentBackground(.hidden)
@@ -83,9 +84,9 @@ struct UpdateBalanceAccountView: View {
         })
     }
     
-    private var currentBalanceField: some View {
+    private var currenUnitField: some View {
         HStack {
-            Text("Amount")
+            Text("Unit")
             Spacer()
             ZStack {
                 RoundedRectangle(cornerRadius: 6)
@@ -105,32 +106,32 @@ struct UpdateBalanceAccountView: View {
                 .font(.system(size: 14).bold())
             }
             Spacer()
-            TextField("Amount", text: $amount)
+            TextField("Unit", text: $unit)
                 .keyboardType(.decimalPad)
-                .onChange(of: amount, perform: { _ in
-                    let filtered = amount.filter {"0123456789.".contains($0)}
+                .onChange(of: unit, perform: { _ in
+                    let filtered = unit.filter {"0123456789.".contains($0)}
                     
                     if filtered.contains(".") {
                         let splitted = filtered.split(separator: ".")
                         if splitted.count >= 2 {
                             let preDecimal = String(splitted[0])
-                            if String(splitted[1]).count == 3 {
+                            if String(splitted[1]).count == 5 {
                                 let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
-                                amount = "\(preDecimal).\(afterDecimal)"
+                                unit = "\(preDecimal).\(afterDecimal)"
                             }else {
                                 let afterDecimal = String(splitted[1])
-                                amount = "\(preDecimal).\(afterDecimal)"
+                                unit = "\(preDecimal).\(afterDecimal)"
                             }
                         }else if splitted.count == 1 {
                             let preDecimal = String(splitted[0])
-                            amount = "\(preDecimal)."
+                            unit = "\(preDecimal)."
                         }else {
-                            amount = "0."
+                            unit = "0."
                         }
-                    } else if filtered.isEmpty && !amount.isEmpty {
-                        amount = ""
+                    } else if filtered.isEmpty && !unit.isEmpty {
+                        unit = ""
                     } else if !filtered.isEmpty {
-                        amount = filtered
+                        unit = filtered
                     }
                 })
                 .multilineTextAlignment(.trailing)

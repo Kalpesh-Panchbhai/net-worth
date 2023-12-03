@@ -15,6 +15,7 @@ class AccountViewModel: ObservableObject {
     var originalAccountList = [Account]()
     var accountController = AccountController()
     var accountTransactionController = AccountTransactionController()
+    var brokerAccountController = BrokerAccountController()
     
     @Published var accountList = [Account]()
     @Published var accountListLoaded = false
@@ -27,6 +28,9 @@ class AccountViewModel: ObservableObject {
     @Published var accountOneDayChange = Balance()
     @Published var totalBalance = Balance(currentValue: 0.0)
     @Published var grouping: Grouping = .accountType
+    
+    @Published var accountsInBroker = [AccountBroker]()
+    @Published var accountBrokerCurrentBalance = Balance(currentValue: 0.0)
     
     enum Grouping: String, CaseIterable, Identifiable {
         case accountType = "Account Type"
@@ -195,4 +199,39 @@ class AccountViewModel: ObservableObject {
             self.accountOneDayChange = oneDayChange
         }
     }
+    
+    func getAccountInBrokerList(brokerID: String) async {
+        let list = await brokerAccountController.getAccountInBrokerList(brokerID: brokerID)
+        DispatchQueue.main.async {
+            self.accountsInBroker = list
+        }
+    }
+    
+    func getAccountTransactionsInBrokerAccountList(brokerID: String, accountID: String) async {
+        let list = await brokerAccountController.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID)
+        DispatchQueue.main.async {
+            self.accountTransactionList = list
+        }
+    }
+    
+    func getBrokerAccountCurrentBalance(accountBroker: AccountBroker) async {
+        let accountBrokerCurrentBalance = await brokerAccountController.getBrokerAccountCurrentBalance(accountBroker: accountBroker)
+        DispatchQueue.main.async {
+            self.accountBrokerCurrentBalance = accountBrokerCurrentBalance
+        }
+    }
+    
+    func getBrokerAllAccountCurrentBalance(accountBrokerList: [AccountBroker]) async {
+        var Balance = Balance(currentValue: 0.0, previousDayValue: 0.0)
+        for accountBroker in accountBrokerList {
+            let accountBrokerCurrentBalance = await brokerAccountController.getBrokerAccountCurrentBalance(accountBroker: accountBroker)
+            Balance.currentValue = Balance.currentValue + accountBrokerCurrentBalance.currentValue
+            Balance.previousDayValue = Balance.previousDayValue + accountBrokerCurrentBalance.previousDayValue
+        }
+        let newBalance = Balance
+        DispatchQueue.main.async {
+            self.accountBrokerCurrentBalance = newBalance
+        }
+    }
+    
 }
