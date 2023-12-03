@@ -69,7 +69,7 @@ struct AccountCardList: View {
                                                             AccountDetailView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id!, accountViewModel:  accountViewModel, watchViewModel: watchViewModel)
                                                                 .toolbarRole(.editor)
                                                         }) {
-                                                            AccountCardView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i])
+                                                            AccountCardView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id!)
                                                                 .contextMenu {
                                                                     
                                                                     Label(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i].id!, systemImage: "info.square")

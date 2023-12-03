@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AccountCardView: View {
     
-    var account: Account
+    var accountID: String
     
     @StateObject var accountViewModel = AccountViewModel()
     
@@ -17,27 +17,27 @@ struct AccountCardView: View {
         VStack(alignment: .leading) {
             Spacer()
             HStack {
-                Text(account.accountName)
+                Text(accountViewModel.account.accountName)
                     .foregroundColor(Color.theme.primaryText)
                     .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)
                 Spacer()
-                if(account.accountType != "Broker") {
-                    if(account.active) {
-                        if(account.paymentReminder && account.accountType != "Saving") {
+                if(accountViewModel.account.accountType != "Broker") {
+                    if(accountViewModel.account.active) {
+                        if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
                             Image(systemName: "bell.fill")
                                 .foregroundColor(Color.theme.green.opacity(0.7))
                                 .font(.caption)
-                            Text("\(account.paymentDate)")
+                            Text("\(accountViewModel.account.paymentDate)")
                                 .foregroundColor(Color.theme.green)
                                 .font(.caption)
-                        } else if(account.accountType != "Saving") {
+                        } else if(accountViewModel.account.accountType != "Saving") {
                             Image(systemName: "bell.slash.fill")
                                 .foregroundColor(Color.theme.red.opacity(0.7))
                                 .font(.caption)
                         }
                     } else {
-                        Text(account.accountType)
+                        Text(accountViewModel.account.accountType)
                             .foregroundColor(Color.theme.secondaryText)
                             .font(.caption)
                             .multilineTextAlignment(.leading)
@@ -47,7 +47,7 @@ struct AccountCardView: View {
             Spacer()
             Spacer()
             HStack(alignment: .center) {
-                if(account.accountType == "Broker") {
+                if(accountViewModel.account.accountType == "Broker") {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
@@ -55,7 +55,7 @@ struct AccountCardView: View {
                         .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 } else {
-                    Text(account.currency)
+                    Text(accountViewModel.account.currency)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
                     Text("\(accountViewModel.accountOneDayChange.currentValue.withCommas(decimalPlace: 2))")
@@ -65,7 +65,7 @@ struct AccountCardView: View {
             }
             Spacer()
             HStack {
-                if(account.accountType == "Broker") {
+                if(accountViewModel.account.accountType == "Broker") {
                     if(calculateOneDayChange() > 0) {
                         ZStack {
                             Circle()
@@ -139,11 +139,12 @@ struct AccountCardView: View {
         }
         .onAppear {
             Task.init {
-                if(account.accountType == "Broker") {
-                    await accountViewModel.getAccountInBrokerList(brokerID: account.id!)
+                await accountViewModel.getAccount(id: accountID)
+                if(accountViewModel.account.accountType == "Broker") {
+                    await accountViewModel.getAccountInBrokerList(brokerID: accountID)
                     await accountViewModel.getBrokerAllAccountCurrentBalance(accountBrokerList: accountViewModel.accountsInBroker)
                 } else {
-                    await accountViewModel.getAccountLastOneDayChange(id: account.id!)
+                    await accountViewModel.getAccountLastOneDayChange(id: accountID)
                 }
             }
         }
