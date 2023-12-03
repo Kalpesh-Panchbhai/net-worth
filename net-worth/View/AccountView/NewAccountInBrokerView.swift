@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NewAccountInBrokerView: View {
     
-    var brokerAccount: Account
+    var brokerAccountID: String
     var brokerAccountController = BrokerAccountController()
     
     @State var scenePhaseBlur = 0
@@ -37,7 +37,7 @@ struct NewAccountInBrokerView: View {
                 ToolbarItem {
                     Button(action: {
                         let accountBroker = AccountBroker(timestamp: accountOpenedDate, symbol: symbolSelected.symbol!, name: symbolSelected.longname!, currentUnit: Double(currentUnit)!)
-                        brokerAccountController.addAccountInBroker(brokerID: brokerAccount.id!, accountBroker: accountBroker)
+                        brokerAccountController.addAccountInBroker(brokerID: brokerAccountID, accountBroker: accountBroker)
                         
                         dismiss()
                     }, label: {

@@ -39,7 +39,7 @@ struct AccountListView: View {
                     LazyVStack {
                         ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
                             NavigationLink(destination: {
-                                AccountDetailView(account: account, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
+                                AccountDetailView(accountID: account.id!, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                             }, label: {
                                 AccountRowView(accountID: account.id!, fromWatchView: accountType.elementsEqual("Inactive Account"))
                                     .contextMenu {
@@ -116,7 +116,7 @@ struct AccountListView: View {
                             isPresented: $isPresentingAccountDeleteConfirm) {
             Button("Delete account " + deletedAccount.accountName + "?", role: .destructive) {
                 Task.init {
-                    await accountController.deleteAccount(account: deletedAccount)
+                    await accountController.deleteAccount(accountID: deletedAccount.id!)
                     await accountViewModel.getAccountList()
                     await watchViewModel.getAllWatchList()
                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)

@@ -181,16 +181,16 @@ class AccountController {
         }
     }
     
-    public func deleteAccount(account: Account) async {
+    public func deleteAccount(accountID: String) async {
         let watchList = await watchController.getAllWatchList()
         watchList.forEach { watch in
-            if(watch.accountID.contains(account.id!)) {
-                watchController.deleteAccountFromWatchList(watchList: watch, accountID: account.id!)
+            if(watch.accountID.contains(accountID)) {
+                watchController.deleteAccountFromWatchList(watchList: watch, accountID: accountID)
             }
         }
-        CommonController.delete(collection: getAccountCollection().document(account.id!).collection(ConstantUtils.accountTransactionCollectionName))
+        CommonController.delete(collection: getAccountCollection().document(accountID).collection(ConstantUtils.accountTransactionCollectionName))
         do {
-            try await getAccountCollection().document(account.id!).delete()
+            try await getAccountCollection().document(accountID).delete()
         } catch {
             print(error)
         }
@@ -201,7 +201,7 @@ class AccountController {
     public func deleteAccounts() async {
         let accountList = await getAccountList()
         for account in accountList {
-            await deleteAccount(account: account)
+            await deleteAccount(accountID: account.id!)
         }
     }
 }

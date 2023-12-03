@@ -38,7 +38,7 @@ struct AccountBrokerDetailView: View {
             if(tabItem == 1) {
                 TransactionsView(accountViewModel: accountViewModel)
             } else {
-                AccountChartView(account: Account())
+                AccountChartView(accountID: brokerID)
             }
         }
         .navigationTitle(accountBroker.name)

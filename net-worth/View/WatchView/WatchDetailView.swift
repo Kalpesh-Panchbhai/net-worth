@@ -46,7 +46,7 @@ struct WatchDetailView: View {
                                     if((hideInactiveAccount && isAccountActive(id: accountID)) || !hideInactiveAccount) {
                                         NavigationLink(destination: {
                                             // MARK: Account Detail View
-                                            AccountDetailView(account: Account(id: accountID), accountViewModel: accountViewModel, watchViewModel: watchViewModel)
+                                            AccountDetailView(accountID: accountID, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                                                 .toolbarRole(.editor)
                                         }, label: {
                                             AccountRowView(accountID: accountID, fromWatchView: true)

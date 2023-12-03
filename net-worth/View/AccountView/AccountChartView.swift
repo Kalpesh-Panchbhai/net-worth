@@ -10,7 +10,7 @@ import Charts
 
 struct AccountChartView: View {
     
-    var account: Account
+    var accountID: String
     
     @State var range = "1M"
     
@@ -47,7 +47,7 @@ struct AccountChartView: View {
                     })
                     .onChange(of: range) { value in
                         Task.init {
-                            await accountViewModel.getAccountTransactionListWithRange(id: account.id!, range: range)
+                            await accountViewModel.getAccountTransactionListWithRange(id: accountID, range: range)
                             await chartViewModel.getChartData(accountViewModel: accountViewModel)
                         }
                         let impact = UIImpactFeedbackGenerator(style: .light)
@@ -62,7 +62,7 @@ struct AccountChartView: View {
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getAccountTransactionListWithRange(id: account.id!, range: range)
+                await accountViewModel.getAccountTransactionListWithRange(id: accountID, range: range)
                 await chartViewModel.getChartData(accountViewModel: accountViewModel)
             }
         }

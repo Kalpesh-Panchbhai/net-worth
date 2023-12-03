@@ -66,7 +66,7 @@ struct AccountCardList: View {
                                                 LazyHStack {
                                                     ForEach(0..<((accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 5) ? 5 : accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count), id: \.self) { i in
                                                         NavigationLink(destination: {
-                                                            AccountDetailView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i],accountViewModel:  accountViewModel, watchViewModel: watchViewModel)
+                                                            AccountDetailView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id!, accountViewModel:  accountViewModel, watchViewModel: watchViewModel)
                                                                 .toolbarRole(.editor)
                                                         }) {
                                                             AccountCardView(account: accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i])
@@ -97,7 +97,7 @@ struct AccountCardList: View {
                                                                             isPresented: $isPresentingAccountDeleteConfirm) {
                                                             Button("Delete account " + deletedAccount.accountName + "?", role: .destructive) {
                                                                 Task.init {
-                                                                    await accountController.deleteAccount(account: deletedAccount)
+                                                                    await accountController.deleteAccount(accountID: deletedAccount.id!)
                                                                     await accountViewModel.getAccountList()
                                                                     await watchViewModel.getAllWatchList()
                                                                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)

@@ -10,7 +10,7 @@ import SwiftUI
 struct AccountDetailView: View {
     
     var dates = Array(1...28)
-    var account: Account
+    var accountID: String
     var accountController = AccountController()
     
     @State var initialLoadForActiveButton = false
@@ -30,8 +30,8 @@ struct AccountDetailView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
-    init(account: Account, accountViewModel: AccountViewModel, watchViewModel: WatchViewModel) {
-        self.account = account
+    init(accountID: String, accountViewModel: AccountViewModel, watchViewModel: WatchViewModel) {
+        self.accountID = accountID
         self.accountViewModel = accountViewModel
         self.watchViewModel = watchViewModel
         
@@ -68,12 +68,12 @@ struct AccountDetailView: View {
                 })
                 if(tabItem == 1) {
                     if(accountViewModel.account.accountType == "Broker") {
-                        AccountBrokerView(brokerID: account.id!, accountViewModel: accountViewModel)
+                        AccountBrokerView(brokerID: accountID, accountViewModel: accountViewModel)
                     } else {
                         TransactionsView(accountViewModel: accountViewModel)
                     }
                 } else if(tabItem == 2) {
-                    AccountChartView(account: account)
+                    AccountChartView(accountID: accountID)
                 } else {
                     AccountWatchView(watchViewModel: watchViewModel)
                 }
@@ -83,9 +83,9 @@ struct AccountDetailView: View {
             }
             .confirmationDialog("Are you sure?",
                                 isPresented: $isPresentingAccountDeleteConfirm) {
-                Button("Delete account " + account.accountName + "?", role: .destructive) {
+                Button("Delete account " + accountViewModel.account.accountName + "?", role: .destructive) {
                     Task.init {
-                        await accountController.deleteAccount(account: account)
+                        await accountController.deleteAccount(accountID: accountID)
                         await accountViewModel.getAccountList()
                         await watchViewModel.getAllWatchList()
                     }
@@ -255,7 +255,7 @@ struct AccountDetailView: View {
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getAccount(id: account.id!)
+                await accountViewModel.getAccount(id: accountID)
                 paymentDate = accountViewModel.account.paymentDate
                 if(accountViewModel.account.paymentReminder) {
                     initialLoadForPaymentButton = true
@@ -265,13 +265,13 @@ struct AccountDetailView: View {
                     initialLoadForActiveButton = true
                 }
                 if(accountViewModel.account.accountType == "Broker") {
-                    await accountViewModel.getAccountInBrokerList(brokerID: account.id!)
+                    await accountViewModel.getAccountInBrokerList(brokerID: accountID)
                     await accountViewModel.getBrokerAllAccountCurrentBalance(accountBrokerList: accountViewModel.accountsInBroker)
                 } else {
-                    accountViewModel.getAccountTransactionList(id: account.id!)
-                    await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
+                    accountViewModel.getAccountTransactionList(id: accountID)
+                    await accountViewModel.getLastTwoAccountTransactionList(id: accountID)
                 }
-                await watchViewModel.getWatchListByAccount(accountID: account.id!)
+                await watchViewModel.getWatchListByAccount(accountID: accountID)
             }
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
@@ -289,19 +289,19 @@ struct AccountDetailView: View {
         })
         .sheet(isPresented: $isNewAccountInBrokerViewOpen, onDismiss: {
             Task.init {
-                await accountViewModel.getAccountInBrokerList(brokerID: account.id!)
+                await accountViewModel.getAccountInBrokerList(brokerID: accountID)
                 await accountViewModel.getBrokerAllAccountCurrentBalance(accountBrokerList: accountViewModel.accountsInBroker)
             }
         }, content: {
-            NewAccountInBrokerView(brokerAccount: account)
+            NewAccountInBrokerView(brokerAccountID: accountID)
         })
         .sheet(isPresented: $showAddWatchListView, onDismiss: {
             Task.init {
-                await watchViewModel.getWatchListByAccount(accountID: account.id!)
+                await watchViewModel.getWatchListByAccount(accountID: accountID)
                 await watchViewModel.getAllWatchList()
             }
         }, content: {
-            WatchToAccountView(account: account, watchViewModel: watchViewModel)
+            WatchToAccountView(accountID: accountID, watchViewModel: watchViewModel)
         })
         .background(Color.theme.background)
     }

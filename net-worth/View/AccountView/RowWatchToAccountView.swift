@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RowWatchToAccountView: View {
     
-    var account: Account
+    var accountID: String
     var watchController = WatchController()
     
     @State var watch: Watch
@@ -30,7 +30,7 @@ struct RowWatchToAccountView: View {
                         .onTapGesture {
                             isAdded.toggle()
                             self.watch.accountID = self.watch.accountID.filter { item in
-                                item != account.id
+                                item != accountID
                             }
                             watchController.addAccountToWatchList(watch: watch)
                         }
@@ -40,7 +40,7 @@ struct RowWatchToAccountView: View {
                         .bold()
                         .onTapGesture {
                             isAdded.toggle()
-                            self.watch.accountID.append(account.id!)
+                            self.watch.accountID.append(accountID)
                             watchController.addAccountToWatchList(watch: watch)
                         }
                 }
