@@ -23,7 +23,7 @@ struct AccountBrokerView: View {
                             AccountBrokerDetailView(brokerID: brokerID, accountID: accountViewModel.accountsInBroker[i].id!)
                         }, label: {
                             AccountBrokerRowView(brokerID: brokerID, accountID: accountViewModel.accountsInBroker[i].id!)
-                                .frame(width: 360)
+                                .frame(width: 360, height: 40)
                                 .padding(8)
                                 .background(Color.theme.foreground)
                                 .cornerRadius(10)
