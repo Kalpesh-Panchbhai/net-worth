@@ -32,7 +32,7 @@ class AccountViewModel: ObservableObject {
     
     @Published var accountsInBroker = [AccountBroker]()
     @Published var accountBroker = AccountBroker()
-    @Published var accountBrokerCurrentBalance = Balance(currentValue: 0.0)
+    @Published var accountBrokerCurrentBalance = Balance(currentValue: 0.0, previousDayValue: 0.0)
     
     enum Grouping: String, CaseIterable, Identifiable {
         case accountType = "Account Type"
