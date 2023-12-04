@@ -14,8 +14,9 @@ class FinanceController {
     var financeDetailModel = FinanceDetailModel()
     var symbolDetailModel = [SymbolDetailModel]()
     
-    public func getSymbolDetails(accountCurrency: String) async -> FinanceDetailModel {
+    public func getCurrencyDetail(accountCurrency: String) async -> FinanceDetailModel {
         do {
+            self.financeDetailModel = FinanceDetailModel()
             guard let url = URL(string: "https://query1.finance.yahoo.com/v8/finance/chart/" + accountCurrency + "USD" + "=X") else {
                 return financeDetailModel
             }
@@ -32,7 +33,7 @@ class FinanceController {
             
             for response in financeDetailModelResponse.chart.result {
                 self.financeDetailModel.currency = response.meta.currency
-                self.financeDetailModel.symbol = response.meta.currency
+                self.financeDetailModel.symbol = response.meta.symbol
                 self.financeDetailModel.regularMarketPrice = response.meta.regularMarketPrice
                 self.financeDetailModel.chartPreviousClose = response.meta.chartPreviousClose
                 self.financeDetailModel.oneDayChange = (self.financeDetailModel.regularMarketPrice ?? 0.0) - (self.financeDetailModel.chartPreviousClose ?? 0.0)
@@ -53,9 +54,71 @@ class FinanceController {
             
             for response in financeDetailModelResponse.chart.result {
                 self.financeDetailModel.currency = response.meta.currency
-                self.financeDetailModel.symbol = response.meta.currency
+                self.financeDetailModel.symbol = response.meta.symbol
                 self.financeDetailModel.regularMarketPrice = (response.meta.regularMarketPrice ?? 1.0) * (self.financeDetailModel.regularMarketPrice ?? 1.0)
                 self.financeDetailModel.chartPreviousClose = (response.meta.chartPreviousClose ?? 1.0) * (self.financeDetailModel.chartPreviousClose ?? 1.0)
+                self.financeDetailModel.oneDayChange = (self.financeDetailModel.regularMarketPrice ?? 0.0) - (self.financeDetailModel.chartPreviousClose ?? 0.0)
+                self.financeDetailModel.oneDayPercentChange = (self.financeDetailModel.oneDayChange ?? 1.0) / (self.financeDetailModel.regularMarketPrice ?? 1.0) * 100
+                
+            }
+        }
+        catch {
+            print(error)
+        }
+        return financeDetailModel
+    }
+    
+    public func getCurrencyDetail(accountCurrency: String, range: String) async -> FinanceDetailModel {
+        do {
+            self.financeDetailModel = FinanceDetailModel()
+            guard let url = URL(string: "https://query1.finance.yahoo.com/v8/finance/chart/" + accountCurrency + "USD" + "=X?interval=1d&range=" + range) else {
+                return financeDetailModel
+            }
+            
+            var (data, response) = try await URLSession.shared.data(from: url)
+            
+            guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+                return financeDetailModel
+            }
+            
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            var financeDetailModelResponse = try! decoder.decode(FinanceDetailModelResponse.self, from: data)
+            
+            for response in financeDetailModelResponse.chart.result {
+                self.financeDetailModel.currency = response.meta.currency
+                self.financeDetailModel.symbol = response.meta.symbol
+                self.financeDetailModel.regularMarketPrice = response.meta.regularMarketPrice
+                self.financeDetailModel.chartPreviousClose = response.meta.chartPreviousClose
+                self.financeDetailModel.dataGranularity = response.meta.dataGranularity
+                self.financeDetailModel.range = response.meta.range
+                self.financeDetailModel.timestamp = response.timestamp!
+                self.financeDetailModel.valueAtTimestamp = response.indicators.quote[0].close!
+                self.financeDetailModel.oneDayChange = (self.financeDetailModel.regularMarketPrice ?? 0.0) - (self.financeDetailModel.chartPreviousClose ?? 0.0)
+                self.financeDetailModel.oneDayPercentChange = (self.financeDetailModel.oneDayChange ?? 1.0) / (self.financeDetailModel.regularMarketPrice ?? 1.0) * 100
+            }
+            
+            guard let url = URL(string: "https://query1.finance.yahoo.com/v8/finance/chart/USD" + SettingsController().getDefaultCurrency().code + "=X?interval=1d&range=" + range) else {
+                return financeDetailModel
+            }
+            
+            (data, response) = try await URLSession.shared.data(from: url)
+            
+            guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+                return financeDetailModel
+            }
+            
+            financeDetailModelResponse = try! decoder.decode(FinanceDetailModelResponse.self, from: data)
+            
+            for response in financeDetailModelResponse.chart.result {
+                self.financeDetailModel.currency = response.meta.currency
+                self.financeDetailModel.symbol = response.meta.symbol
+                self.financeDetailModel.regularMarketPrice = (response.meta.regularMarketPrice ?? 1.0) * (self.financeDetailModel.regularMarketPrice ?? 1.0)
+                self.financeDetailModel.chartPreviousClose = (response.meta.chartPreviousClose ?? 1.0) * (self.financeDetailModel.chartPreviousClose ?? 1.0)
+                self.financeDetailModel.dataGranularity = response.meta.dataGranularity
+                self.financeDetailModel.range = response.meta.range
+                self.financeDetailModel.timestamp = response.timestamp!
+                self.financeDetailModel.valueAtTimestamp = response.indicators.quote[0].close!
                 self.financeDetailModel.oneDayChange = (self.financeDetailModel.regularMarketPrice ?? 0.0) - (self.financeDetailModel.chartPreviousClose ?? 0.0)
                 self.financeDetailModel.oneDayPercentChange = (self.financeDetailModel.oneDayChange ?? 1.0) / (self.financeDetailModel.regularMarketPrice ?? 1.0) * 100
                 
@@ -74,7 +137,7 @@ class FinanceController {
                 return financeDetailModel
             }
             
-            var (data, response) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await URLSession.shared.data(from: url)
             
             guard (response as? HTTPURLResponse)?.statusCode == 200 else {
                 return financeDetailModel
@@ -82,13 +145,47 @@ class FinanceController {
             
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
-            var financeDetailModelResponse = try! decoder.decode(FinanceDetailModelResponse.self, from: data)
+            let financeDetailModelResponse = try! decoder.decode(FinanceDetailModelResponse.self, from: data)
             
             for response in financeDetailModelResponse.chart.result {
                 self.financeDetailModel.currency = response.meta.currency
-                self.financeDetailModel.symbol = response.meta.currency
+                self.financeDetailModel.symbol = response.meta.symbol
                 self.financeDetailModel.regularMarketPrice = response.meta.regularMarketPrice
                 self.financeDetailModel.chartPreviousClose = response.meta.chartPreviousClose
+            }
+        }
+        catch {
+            print(error)
+        }
+        return financeDetailModel
+    }
+    
+    public func getSymbolDetail(symbol: String, range: String) async -> FinanceDetailModel {
+        do {
+            self.financeDetailModel = FinanceDetailModel()
+            guard let url = URL(string: "https://query1.finance.yahoo.com/v8/finance/chart/" + symbol + "?interval=1d&range=" + range) else {
+                return financeDetailModel
+            }
+            
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+                return financeDetailModel
+            }
+            
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            let financeDetailModelResponse = try! decoder.decode(FinanceDetailModelResponse.self, from: data)
+            
+            for response in financeDetailModelResponse.chart.result {
+                self.financeDetailModel.currency = response.meta.currency
+                self.financeDetailModel.symbol = response.meta.symbol
+                self.financeDetailModel.regularMarketPrice = response.meta.regularMarketPrice
+                self.financeDetailModel.chartPreviousClose = response.meta.chartPreviousClose
+                self.financeDetailModel.dataGranularity = response.meta.dataGranularity
+                self.financeDetailModel.range = response.meta.range
+                self.financeDetailModel.timestamp = response.timestamp!
+                self.financeDetailModel.valueAtTimestamp = response.indicators.quote[0].close!
             }
         }
         catch {
@@ -104,7 +201,7 @@ class FinanceController {
                 return symbolDetailModel
             }
             
-            var (data, response) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await URLSession.shared.data(from: url)
             
             guard (response as? HTTPURLResponse)?.statusCode == 200 else {
                 return symbolDetailModel
@@ -112,7 +209,7 @@ class FinanceController {
             
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
-            var symbolDetailResponse = try! decoder.decode(SymbolDetailResponse.self, from: data)
+            let symbolDetailResponse = try! decoder.decode(SymbolDetailResponse.self, from: data)
             
             for quote in symbolDetailResponse.quotes {
                 var symbol = SymbolDetailModel()

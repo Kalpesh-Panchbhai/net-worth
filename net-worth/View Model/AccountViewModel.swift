@@ -22,6 +22,7 @@ class AccountViewModel: ObservableObject {
     @Published var account = Account()
     @Published var accountTransactionList = [AccountTransaction]()
     @Published var accountTransactionListWithRange = [AccountTransaction]()
+    @Published var accountTransactionListBelowRange = [AccountTransaction]()
     @Published var accountTransactionListWithRangeMultipleAccounts = [[AccountTransaction]]()
     @Published var accountTransactionLastTransactionBelowRange = [[AccountTransaction]]()
     @Published var accountLastTwoTransactionList = [AccountTransaction]()
@@ -219,6 +220,15 @@ class AccountViewModel: ObservableObject {
         let list = await brokerAccountController.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID)
         DispatchQueue.main.async {
             self.accountTransactionList = list
+        }
+    }
+    
+    func getAccountTransactionsInBrokerAccountList(brokerID: String, accountID: String, range: String) async {
+        let accountTransactionListWithRange = await brokerAccountController.getAccountTransactionsInBrokerAccountListWithRange(brokerID: brokerID, accountID: accountID, range: range)
+        let accountTransactionListBelowRange = await brokerAccountController.getAccountTransactionsInBrokerAccountListBelowRange(brokerID: brokerID, accountID: accountID, range: range)
+        DispatchQueue.main.async {
+            self.accountTransactionListWithRange = accountTransactionListWithRange
+            self.accountTransactionListBelowRange = accountTransactionListBelowRange
         }
     }
     

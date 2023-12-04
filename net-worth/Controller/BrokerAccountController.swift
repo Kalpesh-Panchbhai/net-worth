@@ -126,6 +126,88 @@ class BrokerAccountController {
         return accountTransactionList
     }
     
+    public func getAccountTransactionsInBrokerAccountListWithRange(brokerID: String, accountID: String, range: String) async -> [AccountTransaction] {
+        var date = Timestamp()
+        if(range.elementsEqual("1M")) {
+            date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000))
+        } else if(range.elementsEqual("3M")) {
+            date = Timestamp.init(date: Date.now.addingTimeInterval(-7776000))
+        } else if(range.elementsEqual("6M")) {
+            date = Timestamp.init(date: Date.now.addingTimeInterval(-15552000))
+        } else if(range.elementsEqual("1Y")) {
+            date = Timestamp.init(date: Date.now.addingTimeInterval(-31104000))
+        } else if(range.elementsEqual("2Y")) {
+            date = Timestamp.init(date: Date.now.addingTimeInterval(-62208000))
+        } else if(range.elementsEqual("5Y")) {
+            date = Timestamp.init(date: Date.now.addingTimeInterval(-155520000))
+        }
+        
+        var accountTransactionList = [AccountTransaction]()
+        do {
+            accountTransactionList = try await AccountController()
+                .getAccountCollection()
+                .document(brokerID)
+                .collection(ConstantUtils.accountBrokerCollectionName)
+                .document(accountID)
+                .collection(ConstantUtils.accountTransactionCollectionName)
+                .whereField(ConstantUtils.accountTransactionKeytimestamp, isGreaterThanOrEqualTo: date)
+                .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
+                .getDocuments()
+                .documents
+                .map { doc in
+                    return AccountTransaction(id: doc.documentID,
+                                              timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
+                                              balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0,
+                                              currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0,
+                                              paid: doc[ConstantUtils.accountTransactionKeyPaid] as? Bool ?? true)
+                }
+        } catch {
+            print(error)
+        }
+        return accountTransactionList
+    }
+    
+    public func getAccountTransactionsInBrokerAccountListBelowRange(brokerID: String, accountID: String, range: String) async -> [AccountTransaction] {
+        var date = Timestamp()
+        if(range.elementsEqual("1M")) {
+            date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000))
+        } else if(range.elementsEqual("3M")) {
+            date = Timestamp.init(date: Date.now.addingTimeInterval(-7776000))
+        } else if(range.elementsEqual("6M")) {
+            date = Timestamp.init(date: Date.now.addingTimeInterval(-15552000))
+        } else if(range.elementsEqual("1Y")) {
+            date = Timestamp.init(date: Date.now.addingTimeInterval(-31104000))
+        } else if(range.elementsEqual("2Y")) {
+            date = Timestamp.init(date: Date.now.addingTimeInterval(-62208000))
+        } else if(range.elementsEqual("5Y")) {
+            date = Timestamp.init(date: Date.now.addingTimeInterval(-155520000))
+        }
+        
+        var accountTransactionList = [AccountTransaction]()
+        do {
+            accountTransactionList = try await AccountController()
+                .getAccountCollection()
+                .document(brokerID)
+                .collection(ConstantUtils.accountBrokerCollectionName)
+                .document(accountID)
+                .collection(ConstantUtils.accountTransactionCollectionName)
+                .whereField(ConstantUtils.accountTransactionKeytimestamp, isLessThan: date)
+                .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
+                .getDocuments()
+                .documents
+                .map { doc in
+                    return AccountTransaction(id: doc.documentID,
+                                              timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
+                                              balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0,
+                                              currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0,
+                                              paid: doc[ConstantUtils.accountTransactionKeyPaid] as? Bool ?? true)
+                }
+        } catch {
+            print(error)
+        }
+        return accountTransactionList
+    }
+    
     public func getBrokerAccountCurrentBalance(accountBroker: AccountBroker) async -> Balance {
         var balance = Balance()
         let financeDetailModel = await FinanceController().getSymbolDetail(symbol: accountBroker.symbol)
@@ -133,7 +215,7 @@ class BrokerAccountController {
         balance.previousDayValue = (financeDetailModel.chartPreviousClose ?? 0.0) * accountBroker.currentUnit
         
         if(financeDetailModel.currency != SettingsController().getDefaultCurrency().code) {
-            let currencyModel = await FinanceController().getSymbolDetails(accountCurrency: financeDetailModel.currency!)
+            let currencyModel = await FinanceController().getCurrencyDetail(accountCurrency: financeDetailModel.currency!)
             balance.currentValue = balance.currentValue * currencyModel.regularMarketPrice!
             balance.previousDayValue = balance.previousDayValue * currencyModel.chartPreviousClose!
         }

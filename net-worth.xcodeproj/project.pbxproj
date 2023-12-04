@@ -39,6 +39,7 @@
 		7D4A60D12A2DFC4E00F46C1F /* AccountTransactionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4A60D02A2DFC4E00F46C1F /* AccountTransactionController.swift */; };
 		7D4A60D32A2E5FEA00F46C1F /* DictionaryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4A60D22A2E5FEA00F46C1F /* DictionaryExtension.swift */; };
 		7D4E671329F7D4C900EB6B24 /* IncomeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4E671229F7D4C900EB6B24 /* IncomeDetailView.swift */; };
+		7D559DAF2B1CCD6500967F10 /* AccountBrokerChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D559DAE2B1CCD6500967F10 /* AccountBrokerChartView.swift */; };
 		7D596278294105A40008A6B9 /* Balance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D596277294105A40008A6B9 /* Balance.swift */; };
 		7D5A75602A04FB11001646A2 /* WatchToAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5A755F2A04FB11001646A2 /* WatchToAccountView.swift */; };
 		7D5B9F93299A896300D0477B /* BalanceCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5B9F92299A896300D0477B /* BalanceCardView.swift */; };
@@ -168,6 +169,7 @@
 		7D4A60D02A2DFC4E00F46C1F /* AccountTransactionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTransactionController.swift; sourceTree = "<group>"; };
 		7D4A60D22A2E5FEA00F46C1F /* DictionaryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryExtension.swift; sourceTree = "<group>"; };
 		7D4E671229F7D4C900EB6B24 /* IncomeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeDetailView.swift; sourceTree = "<group>"; };
+		7D559DAE2B1CCD6500967F10 /* AccountBrokerChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountBrokerChartView.swift; sourceTree = "<group>"; };
 		7D596277294105A40008A6B9 /* Balance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Balance.swift; sourceTree = "<group>"; };
 		7D5A755F2A04FB11001646A2 /* WatchToAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchToAccountView.swift; sourceTree = "<group>"; };
 		7D5B9F92299A896300D0477B /* BalanceCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceCardView.swift; sourceTree = "<group>"; };
@@ -527,6 +529,7 @@
 				7DE42FBF2934F69200D4DA0A /* UpdateBalanceAccountView.swift */,
 				7D5A755F2A04FB11001646A2 /* WatchToAccountView.swift */,
 				7DBEAD7D2B1B4987006EAB32 /* UpdateBalanceAccountBrokerView.swift */,
+				7D559DAE2B1CCD6500967F10 /* AccountBrokerChartView.swift */,
 			);
 			path = AccountView;
 			sourceTree = "<group>";
@@ -731,6 +734,7 @@
 				7D4A60D12A2DFC4E00F46C1F /* AccountTransactionController.swift in Sources */,
 				7DD8E5C12A06427300245A98 /* WatchData.swift in Sources */,
 				7DA63A492995FACA00568FCA /* AccountDetailCardView.swift in Sources */,
+				7D559DAF2B1CCD6500967F10 /* AccountBrokerChartView.swift in Sources */,
 				7DF878FE2A0F75B6008343EE /* DefaultCurrencyPicker.swift in Sources */,
 				7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */,
 				7D11D0052A0A551300897B08 /* PieSliceView.swift in Sources */,

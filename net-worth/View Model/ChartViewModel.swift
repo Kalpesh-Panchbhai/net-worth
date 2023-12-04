@@ -15,11 +15,11 @@ class ChartViewModel: ObservableObject {
     func getChartData(accountViewModel: AccountViewModel) async {
         DispatchQueue.main.async {
             var chartDataListResponse = [ChartData]()
-            for account in accountViewModel.accountTransactionListWithRange {
+            for transaction in accountViewModel.accountTransactionListWithRange {
                 if(!chartDataListResponse.contains(where: {
-                    $0.date == account.timestamp.removeTimeStamp()
+                    $0.date == transaction.timestamp.removeTimeStamp()
                 })) {
-                    chartDataListResponse.append(ChartData(date: account.timestamp.removeTimeStamp(), value: account.currentBalance))
+                    chartDataListResponse.append(ChartData(date: transaction.timestamp.removeTimeStamp(), value: transaction.currentBalance))
                 }
             }
             chartDataListResponse.sort(by: {
@@ -144,5 +144,70 @@ class ChartViewModel: ObservableObject {
             })
             self.chartDataList = chartDataListResponse
         }
+    }
+    
+    func getBrokerChartData(accountViewModel: AccountViewModel, financeViewModel: FinanceViewModel) async {
+        DispatchQueue.main.async {
+            var chartDataListResponse = [ChartData]()
+            let accountTransactionListWithRange = accountViewModel.accountTransactionListWithRange
+            let accountTransactionListBelowRange = accountViewModel.accountTransactionListBelowRange
+            
+            let symbolMappedDataList = self.convertRawDataToMap(symbol: financeViewModel.symbol)
+            let currencyMappedDataList = self.convertRawDataToMap(symbol: financeViewModel.currency)
+            
+            var zeroUnits = false
+            for symbolMappedData in symbolMappedDataList {
+                var filterTransactions = accountTransactionListWithRange.filter({
+                    $0.timestamp.removeTimeStamp() <= symbolMappedData.date.removeTimeStamp()
+                })
+                if(filterTransactions.isEmpty) {
+                    filterTransactions = accountTransactionListBelowRange.filter({
+                        $0.timestamp.removeTimeStamp() <= symbolMappedData.date.removeTimeStamp()
+                    })
+                }
+                if((!filterTransactions.isEmpty && !zeroUnits) || (!filterTransactions.isEmpty && zeroUnits && filterTransactions[0].currentBalance != 0)) {
+                    var currencyValue = 1.0
+                    if(financeViewModel.symbol.currency != SettingsController().getDefaultCurrency().code) {
+                        let currencyMappedData = currencyMappedDataList.filter({
+                            $0.date.removeTimeStamp() <= symbolMappedData.date.removeTimeStamp()
+                        })
+                        if(!currencyMappedData.isEmpty) {
+                            currencyValue = currencyMappedData.last!.value
+                        }
+                    }
+                    let currentUnits = filterTransactions[0].currentBalance
+                    if(currentUnits == 0) {
+                        zeroUnits = true
+                    } else {
+                        zeroUnits = false
+                    }
+                    let currentBalance = currentUnits * symbolMappedData.value * currencyValue
+                    let chartData = ChartData(date: symbolMappedData.date.removeTimeStamp(), value: currentBalance)
+                    chartDataListResponse.append(chartData)
+                }
+            }
+            self.chartDataList = chartDataListResponse
+        }
+    }
+    
+    private func convertRawDataToMap(symbol: FinanceDetailModel) -> [ChartData] {
+        var returnData = [ChartData]()
+        let timestampEpochList = symbol.timestamp
+        let valueAtTimestampList = symbol.valueAtTimestamp
+        
+        for i in 0..<timestampEpochList.count {
+            let date = convertEpochToDate(epochTime: Double(timestampEpochList[i]!))
+            let value = valueAtTimestampList[i] ?? nil
+            if(value != nil) {
+                returnData.append(ChartData(date: date, value: value!))
+            }
+        }
+        
+        return returnData
+    }
+    
+    func convertEpochToDate(epochTime: Double) -> Date {
+        let date = Date(timeIntervalSince1970: TimeInterval(floatLiteral: epochTime))
+        return date
     }
 }

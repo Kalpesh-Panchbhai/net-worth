@@ -141,7 +141,7 @@ class AccountController {
                             }
                         } else {
                             if(account.currency != SettingsController().getDefaultCurrency().code) {
-                                let financeDetailModel = await FinanceController().getSymbolDetails(accountCurrency: account.currency)
+                                let financeDetailModel = await FinanceController().getCurrencyDetail(accountCurrency: account.currency)
                                 balance.currentValue = financeDetailModel.regularMarketPrice ?? 0.0
                                 balance.previousDayValue = financeDetailModel.chartPreviousClose ?? 0.0
                             }
