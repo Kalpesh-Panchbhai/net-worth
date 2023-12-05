@@ -47,7 +47,7 @@ struct NetWorthChartView: View {
                                 if(!range.elementsEqual("All")) {
                                     await accountViewModel.getAccountTransactionListMultipleAccountsBelowRange(accountList: accountList, range: range)
                                 }
-                                await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel, range: range)
+                                await chartViewModel.getChartDataForNonBrokerAccounts(accountViewModel: accountViewModel, range: range)
                                 await chartViewModel.getChartDataForNetworth(incomeViewModel: incomeViewModel)
                             }
                             let impact = UIImpactFeedbackGenerator(style: .light)
@@ -75,7 +75,7 @@ struct NetWorthChartView: View {
                     if(!range.elementsEqual("All")) {
                         await accountViewModel.getAccountTransactionListMultipleAccountsBelowRange(accountList: accountList, range: range)
                     }
-                    await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel, range: range)
+                    await chartViewModel.getChartDataForNonBrokerAccounts(accountViewModel: accountViewModel, range: range)
                     await chartViewModel.getChartDataForNetworth(incomeViewModel: incomeViewModel)
                 }
             }

@@ -17,6 +17,7 @@ struct AccountWatchChartView: View {
     
     @StateObject var chartViewModel = ChartViewModel()
     @StateObject var accountViewModel = AccountViewModel()
+    @StateObject var financeViewModel = FinanceViewModel()
     
     @Environment(\.scenePhase) var scenePhase
     
@@ -53,11 +54,12 @@ struct AccountWatchChartView: View {
                             })
                             .onChange(of: range) { value in
                                 Task.init {
-                                    await accountViewModel.getAccountTransactionListMultipleAccountsWithRange(accountList: accountList, range: range)
+                                    let accountBrokerList = await accountViewModel.getAccountTransactionListForAllAccountsWithRange(accountList: accountList, range: range)
                                     if(!range.elementsEqual("All")) {
-                                        await accountViewModel.getAccountTransactionListMultipleAccountsBelowRange(accountList: accountList, range: range)
+                                        await accountViewModel.getAccountTransactionListForAllAccountsBelowRange(accountList: accountList, range: range)
                                     }
-                                    await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel, range: range)
+                                    await financeViewModel.getMultipleSymbolDetail(brokerAccountList: accountBrokerList, range: range)
+                                    await chartViewModel.getChartDataForAllAccounts(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
                                 }
                                 let impact = UIImpactFeedbackGenerator(style: .light)
                                 impact.impactOccurred()
@@ -77,11 +79,12 @@ struct AccountWatchChartView: View {
                     })
                     .onAppear {
                         Task.init {
-                            await accountViewModel.getAccountTransactionListMultipleAccountsWithRange(accountList: accountList, range: range)
+                            let accountBrokerList = await accountViewModel.getAccountTransactionListForAllAccountsWithRange(accountList: accountList, range: range)
                             if(!range.elementsEqual("All")) {
-                                await accountViewModel.getAccountTransactionListMultipleAccountsBelowRange(accountList: accountList, range: range)
+                                await accountViewModel.getAccountTransactionListForAllAccountsBelowRange(accountList: accountList, range: range)
                             }
-                            await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel, range: range)
+                            await financeViewModel.getMultipleSymbolDetail(brokerAccountList: accountBrokerList, range: range)
+                            await chartViewModel.getChartDataForAllAccounts(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
                         }
                     }
                     .navigationTitle("Chart")

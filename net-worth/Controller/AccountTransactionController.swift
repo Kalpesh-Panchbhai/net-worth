@@ -224,7 +224,7 @@ class AccountTransactionController {
         }
     }
     
-    public func getAccountLastTransactionBelowRange(accountID: String, range: String) async -> [AccountTransaction] {
+    public func getAccountTransactionListBelowRange(accountID: String, range: String) async -> [AccountTransaction] {
         var date = Timestamp()
         if(range.elementsEqual("1M")) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000))
