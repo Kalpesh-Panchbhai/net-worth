@@ -15,6 +15,9 @@ class FinanceViewModel: ObservableObject {
     @Published var symbol = FinanceDetailModel()
     @Published var currency = FinanceDetailModel()
     
+    @Published var multipleSymbolList = [FinanceDetailModel]()
+    @Published var multipleCurrencyList = [FinanceDetailModel]()
+    
     func getAllSymbol(search: String) async {
         let symbolList = await financeController.getAllSymbol(search: search)
         DispatchQueue.main.async {
@@ -26,6 +29,28 @@ class FinanceViewModel: ObservableObject {
         let symbol = await financeController.getSymbolDetail(symbol: symbol)
         DispatchQueue.main.async {
             self.symbol = symbol
+        }
+    }
+    
+    func getMultipleSymbolDetail(brokerAccountList: [AccountBroker], range: String) async {
+        var multipleSymbolList = [FinanceDetailModel]()
+        var multipleCurrencyList = [FinanceDetailModel]()
+        for brokerAccount in brokerAccountList {
+            let symbol = await financeController.getSymbolDetail(symbol: brokerAccount.symbol, range: getValidRange(range: range))
+            multipleSymbolList.append(symbol)
+            if(symbol.currency != SettingsController().getDefaultCurrency().code) {
+                let currency = await financeController.getCurrencyDetail(accountCurrency: SettingsController().getDefaultCurrency().code, range: getNextValidRange(range: range))
+                multipleCurrencyList.append(currency)
+            } else {
+                multipleCurrencyList.append(FinanceDetailModel())
+            }
+        }
+        
+        let updatedMultipleSymbolList = multipleSymbolList
+        let updatedMultipleCurrencyList = multipleCurrencyList
+        DispatchQueue.main.async {
+            self.multipleSymbolList = updatedMultipleSymbolList
+            self.multipleCurrencyList = updatedMultipleCurrencyList
         }
     }
     

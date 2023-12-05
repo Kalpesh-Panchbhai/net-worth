@@ -35,7 +35,7 @@ class ChartViewModel: ObservableObject {
             var chartDataListResponse = [ChartData]()
             var list = [Int: Double]()
             var startDate = Date.now
-            for account in accountViewModel.accountTransactionListWithRangeMultipleAccounts {
+            for account in accountViewModel.accountTransactionListMultipleAccountsWithRange {
                 if(!account.isEmpty && startDate > account.last!.timestamp) {
                     startDate = account.last!.timestamp
                 }
@@ -56,7 +56,7 @@ class ChartViewModel: ObservableObject {
                 } else if(range.elementsEqual("5Y")) {
                     date = Timestamp.init(date: Date.now.addingTimeInterval(-155520000-86400))
                 }
-                for account in accountViewModel.accountTransactionLastTransactionBelowRange {
+                for account in accountViewModel.accountTransactionListMultipleAccountsBelowRange {
                     list.updateValue(account.first?.currentBalance ?? 0.0, forKey: accountUniqueIndex)
                     accountUniqueIndex+=1
                 }
@@ -68,7 +68,7 @@ class ChartViewModel: ObservableObject {
             }
             while(startDate <= Date.now) {
                 accountUniqueIndex = 0
-                for account in accountViewModel.accountTransactionListWithRangeMultipleAccounts {
+                for account in accountViewModel.accountTransactionListMultipleAccountsWithRange {
                     let accountTransactionsListBeforeDate = account.filter({ value in
                         value.timestamp.removeTimeStamp() <= startDate.removeTimeStamp()
                     })
@@ -101,7 +101,7 @@ class ChartViewModel: ObservableObject {
             }
             startDate = Date.now.removeTimeStamp()
             accountUniqueIndex = 0
-            for account in accountViewModel.accountTransactionListWithRangeMultipleAccounts {
+            for account in accountViewModel.accountTransactionListMultipleAccountsWithRange {
                 let accountTransactionsListBeforeDate = account.filter({ value in
                     value.timestamp.removeTimeStamp() <= startDate.removeTimeStamp()
                 })
@@ -147,47 +147,84 @@ class ChartViewModel: ObservableObject {
     }
     
     func getBrokerChartData(accountViewModel: AccountViewModel, financeViewModel: FinanceViewModel) async {
-        DispatchQueue.main.async {
-            var chartDataListResponse = [ChartData]()
-            let accountTransactionListWithRange = accountViewModel.accountTransactionListWithRange
-            let accountTransactionListBelowRange = accountViewModel.accountTransactionListBelowRange
-            
-            let symbolMappedDataList = self.convertRawDataToMap(symbol: financeViewModel.symbol)
-            let currencyMappedDataList = self.convertRawDataToMap(symbol: financeViewModel.currency)
-            
-            var zeroUnits = false
-            for symbolMappedData in symbolMappedDataList {
-                var filterTransactions = accountTransactionListWithRange.filter({
+        let accountTransactionListWithRange = accountViewModel.accountTransactionListWithRange
+        let accountTransactionListBelowRange = accountViewModel.accountTransactionListBelowRange
+        
+        let chartDataListResponse = await self.getBrokerChartData(accountTransactionListWithRange: accountTransactionListWithRange, accountTransactionListBelowRange: accountTransactionListBelowRange, symbol: financeViewModel.symbol, currency: financeViewModel.currency)
+        self.chartDataList = chartDataListResponse
+    }
+    
+    private func getBrokerChartData(accountTransactionListWithRange: [AccountTransaction], accountTransactionListBelowRange: [AccountTransaction], symbol: FinanceDetailModel, currency: FinanceDetailModel) async -> [ChartData] {
+        var chartDataListResponse = [ChartData]()
+        
+        let symbolMappedDataList = self.convertRawDataToMap(symbol: symbol)
+        let currencyMappedDataList = self.convertRawDataToMap(symbol: currency)
+        
+        var zeroUnits = false
+        for symbolMappedData in symbolMappedDataList {
+            var filterTransactions = accountTransactionListWithRange.filter({
+                $0.timestamp.removeTimeStamp() <= symbolMappedData.date.removeTimeStamp()
+            })
+            if(filterTransactions.isEmpty) {
+                filterTransactions = accountTransactionListBelowRange.filter({
                     $0.timestamp.removeTimeStamp() <= symbolMappedData.date.removeTimeStamp()
                 })
-                if(filterTransactions.isEmpty) {
-                    filterTransactions = accountTransactionListBelowRange.filter({
-                        $0.timestamp.removeTimeStamp() <= symbolMappedData.date.removeTimeStamp()
+            }
+            if((!filterTransactions.isEmpty && !zeroUnits) || (!filterTransactions.isEmpty && zeroUnits && filterTransactions[0].currentBalance != 0)) {
+                var currencyValue = 1.0
+                if(symbol.currency != SettingsController().getDefaultCurrency().code) {
+                    let currencyMappedData = currencyMappedDataList.filter({
+                        $0.date.removeTimeStamp() <= symbolMappedData.date.removeTimeStamp()
                     })
+                    if(!currencyMappedData.isEmpty) {
+                        currencyValue = currencyMappedData.last!.value
+                    }
                 }
-                if((!filterTransactions.isEmpty && !zeroUnits) || (!filterTransactions.isEmpty && zeroUnits && filterTransactions[0].currentBalance != 0)) {
-                    var currencyValue = 1.0
-                    if(financeViewModel.symbol.currency != SettingsController().getDefaultCurrency().code) {
-                        let currencyMappedData = currencyMappedDataList.filter({
-                            $0.date.removeTimeStamp() <= symbolMappedData.date.removeTimeStamp()
-                        })
-                        if(!currencyMappedData.isEmpty) {
-                            currencyValue = currencyMappedData.last!.value
+                let currentUnits = filterTransactions[0].currentBalance
+                if(currentUnits == 0) {
+                    zeroUnits = true
+                } else {
+                    zeroUnits = false
+                }
+                let currentBalance = currentUnits * symbolMappedData.value * currencyValue
+                let chartData = ChartData(date: symbolMappedData.date.removeTimeStamp(), value: currentBalance)
+                chartDataListResponse.append(chartData)
+            }
+        }
+        return chartDataListResponse
+    }
+    
+    func getAllAccountsInBrokerChartData(accountViewModel: AccountViewModel, financeViewModel: FinanceViewModel) async {
+        let accountTransactionListMultipleAccountsWithRange = accountViewModel.accountTransactionListMultipleAccountsWithRange
+        let accountTransactionListMultipleAccountsBelowRange = accountViewModel.accountTransactionListMultipleAccountsBelowRange
+        let multipleSymbolList = financeViewModel.multipleSymbolList
+        let multipleCurrencyList = financeViewModel.multipleCurrencyList
+        
+        var multipleAccountsChartData = [ChartData]()
+        
+        for i in 0..<accountTransactionListMultipleAccountsWithRange.count {
+            let chartDataListResponse = await self.getBrokerChartData(accountTransactionListWithRange: accountTransactionListMultipleAccountsWithRange[i], accountTransactionListBelowRange: accountTransactionListMultipleAccountsBelowRange[i], symbol: multipleSymbolList[i], currency: multipleCurrencyList[i])
+            
+            for chartData in chartDataListResponse {
+                if(multipleAccountsChartData.contains(where: {
+                    $0.date.removeTimeStamp() == chartData.date.removeTimeStamp()
+                })) {
+                    multipleAccountsChartData = multipleAccountsChartData.map {
+                        var newValue = $0
+                        if($0.date.removeTimeStamp() == chartData.date.removeTimeStamp()) {
+                            newValue.value = newValue.value + chartData.value
                         }
+                        return newValue
                     }
-                    let currentUnits = filterTransactions[0].currentBalance
-                    if(currentUnits == 0) {
-                        zeroUnits = true
-                    } else {
-                        zeroUnits = false
-                    }
-                    let currentBalance = currentUnits * symbolMappedData.value * currencyValue
-                    let chartData = ChartData(date: symbolMappedData.date.removeTimeStamp(), value: currentBalance)
-                    chartDataListResponse.append(chartData)
+                } else {
+                    multipleAccountsChartData.append(chartData)
                 }
             }
-            self.chartDataList = chartDataListResponse
         }
+        multipleAccountsChartData.sort(by: {
+            $0.date < $1.date
+        })
+        self.chartDataList = multipleAccountsChartData
     }
     
     private func convertRawDataToMap(symbol: FinanceDetailModel) -> [ChartData] {

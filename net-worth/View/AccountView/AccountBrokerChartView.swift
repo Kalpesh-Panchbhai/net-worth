@@ -49,9 +49,15 @@ struct AccountBrokerChartView: View {
                     })
                     .onChange(of: range) { value in
                         Task.init {
-                            await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID, range: range)
-                            await financeViewModel.getSymbolDetail(symbol: symbol, range: range)
-                            await chartViewModel.getBrokerChartData(accountViewModel: accountViewModel, financeViewModel: financeViewModel)
+                            if(accountID.isEmpty) {
+                                let accountList = await accountViewModel.getAccountTransactionsOfAllAccountsInBroker(brokerID: brokerID, range: range)
+                                await financeViewModel.getMultipleSymbolDetail(brokerAccountList: accountList, range: range)
+                                await chartViewModel.getAllAccountsInBrokerChartData(accountViewModel: accountViewModel, financeViewModel: financeViewModel)
+                            } else {
+                                await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID, range: range)
+                                await financeViewModel.getSymbolDetail(symbol: symbol, range: range)
+                                await chartViewModel.getBrokerChartData(accountViewModel: accountViewModel, financeViewModel: financeViewModel)
+                            }
                         }
                         let impact = UIImpactFeedbackGenerator(style: .light)
                         impact.impactOccurred()
@@ -65,9 +71,15 @@ struct AccountBrokerChartView: View {
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID, range: range)
-                await financeViewModel.getSymbolDetail(symbol: symbol, range: range)
-                await chartViewModel.getBrokerChartData(accountViewModel: accountViewModel, financeViewModel: financeViewModel)
+                if(accountID.isEmpty) {
+                    let accountList = await accountViewModel.getAccountTransactionsOfAllAccountsInBroker(brokerID: brokerID, range: range)
+                    await financeViewModel.getMultipleSymbolDetail(brokerAccountList: accountList, range: range)
+                    await chartViewModel.getAllAccountsInBrokerChartData(accountViewModel: accountViewModel, financeViewModel: financeViewModel)
+                } else {
+                    await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID, range: range)
+                    await financeViewModel.getSymbolDetail(symbol: symbol, range: range)
+                    await chartViewModel.getBrokerChartData(accountViewModel: accountViewModel, financeViewModel: financeViewModel)
+                }
             }
         }
     }

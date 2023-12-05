@@ -23,8 +23,8 @@ class AccountViewModel: ObservableObject {
     @Published var accountTransactionList = [AccountTransaction]()
     @Published var accountTransactionListWithRange = [AccountTransaction]()
     @Published var accountTransactionListBelowRange = [AccountTransaction]()
-    @Published var accountTransactionListWithRangeMultipleAccounts = [[AccountTransaction]]()
-    @Published var accountTransactionLastTransactionBelowRange = [[AccountTransaction]]()
+    @Published var accountTransactionListMultipleAccountsWithRange = [[AccountTransaction]]()
+    @Published var accountTransactionListMultipleAccountsBelowRange = [[AccountTransaction]]()
     @Published var accountLastTwoTransactionList = [AccountTransaction]()
     @Published var accountOneDayChange = Balance()
     @Published var totalBalance = Balance(currentValue: 0.0)
@@ -166,24 +166,24 @@ class AccountViewModel: ObservableObject {
     
     func getAccountTransactionListWithRangeMultipleAccounts(accountList: [Account], range: String) async {
         DispatchQueue.main.async {
-            self.accountTransactionListWithRangeMultipleAccounts = [[AccountTransaction]]()
+            self.accountTransactionListMultipleAccountsWithRange = [[AccountTransaction]]()
         }
         for account in accountList {
             let list = await accountTransactionController.getAccountTransactionListWithRange(accountID: account.id!, range: range)
             DispatchQueue.main.async {
-                self.accountTransactionListWithRangeMultipleAccounts.append(list)
+                self.accountTransactionListMultipleAccountsWithRange.append(list)
             }
         }
     }
     
     func getAccountLastTransactionBelowRange(accountList: [Account], range: String) async {
         DispatchQueue.main.async {
-            self.accountTransactionLastTransactionBelowRange = [[AccountTransaction]]()
+            self.accountTransactionListMultipleAccountsBelowRange = [[AccountTransaction]]()
         }
         for account in accountList {
             let list = await accountTransactionController.getAccountLastTransactionBelowRange(accountID: account.id!, range: range)
             DispatchQueue.main.async {
-                self.accountTransactionLastTransactionBelowRange.append(list)
+                self.accountTransactionListMultipleAccountsBelowRange.append(list)
             }
         }
     }
@@ -210,9 +210,9 @@ class AccountViewModel: ObservableObject {
     }
     
     func getAccountInBrokerList(brokerID: String) async {
-        let list = await brokerAccountController.getAccountInBrokerList(brokerID: brokerID)
+        let accountList = await brokerAccountController.getAccountInBrokerList(brokerID: brokerID)
         DispatchQueue.main.async {
-            self.accountsInBroker = list
+            self.accountsInBroker = accountList
         }
     }
     
@@ -221,6 +221,19 @@ class AccountViewModel: ObservableObject {
         DispatchQueue.main.async {
             self.accountTransactionList = list
         }
+    }
+    
+    func getAccountTransactionsOfAllAccountsInBroker(brokerID: String, range: String) async -> [AccountBroker] {
+        accountTransactionListMultipleAccountsWithRange = [[AccountTransaction]]()
+        accountTransactionListMultipleAccountsBelowRange = [[AccountTransaction]]()
+        let accountList = await brokerAccountController.getAccountInBrokerList(brokerID: brokerID)
+        for account in accountList {
+            let accountTransactionListWithRange = await brokerAccountController.getAccountTransactionsInBrokerAccountListWithRange(brokerID: brokerID, accountID: account.id!, range: range)
+            let accountTransactionListBelowRange = await brokerAccountController.getAccountTransactionsInBrokerAccountListBelowRange(brokerID: brokerID, accountID: account.id!, range: range)
+            accountTransactionListMultipleAccountsWithRange.append(accountTransactionListWithRange)
+            accountTransactionListMultipleAccountsBelowRange.append(accountTransactionListBelowRange)
+        }
+        return accountList
     }
     
     func getAccountTransactionsInBrokerAccountList(brokerID: String, accountID: String, range: String) async {
