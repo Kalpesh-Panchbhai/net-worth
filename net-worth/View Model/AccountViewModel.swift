@@ -164,7 +164,7 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func getAccountTransactionListWithRangeMultipleAccounts(accountList: [Account], range: String) async {
+    func getAccountTransactionListMultipleAccountsWithRange(accountList: [Account], range: String) async {
         DispatchQueue.main.async {
             self.accountTransactionListMultipleAccountsWithRange = [[AccountTransaction]]()
         }
@@ -176,7 +176,7 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func getAccountLastTransactionBelowRange(accountList: [Account], range: String) async {
+    func getAccountTransactionListMultipleAccountsBelowRange(accountList: [Account], range: String) async {
         DispatchQueue.main.async {
             self.accountTransactionListMultipleAccountsBelowRange = [[AccountTransaction]]()
         }

@@ -53,9 +53,9 @@ struct AccountWatchChartView: View {
                             })
                             .onChange(of: range) { value in
                                 Task.init {
-                                    await accountViewModel.getAccountTransactionListWithRangeMultipleAccounts(accountList: accountList, range: range)
+                                    await accountViewModel.getAccountTransactionListMultipleAccountsWithRange(accountList: accountList, range: range)
                                     if(!range.elementsEqual("All")) {
-                                        await accountViewModel.getAccountLastTransactionBelowRange(accountList: accountList, range: range)
+                                        await accountViewModel.getAccountTransactionListMultipleAccountsBelowRange(accountList: accountList, range: range)
                                     }
                                     await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel, range: range)
                                 }
@@ -77,9 +77,9 @@ struct AccountWatchChartView: View {
                     })
                     .onAppear {
                         Task.init {
-                            await accountViewModel.getAccountTransactionListWithRangeMultipleAccounts(accountList: accountList, range: range)
+                            await accountViewModel.getAccountTransactionListMultipleAccountsWithRange(accountList: accountList, range: range)
                             if(!range.elementsEqual("All")) {
-                                await accountViewModel.getAccountLastTransactionBelowRange(accountList: accountList, range: range)
+                                await accountViewModel.getAccountTransactionListMultipleAccountsBelowRange(accountList: accountList, range: range)
                             }
                             await chartViewModel.getChartDataForAccounts(accountViewModel: accountViewModel, range: range)
                         }
