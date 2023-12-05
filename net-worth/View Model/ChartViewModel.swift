@@ -86,21 +86,7 @@ class ChartViewModel: ObservableObject {
             })
             chartDataListResponse.append(ChartData(date: startDate, value: totalAmountForEachDate))
             
-            if(range.elementsEqual("1M")) {
-                startDate = Timestamp.init(date: startDate.addingTimeInterval(86400)).dateValue()
-            } else if(range.elementsEqual("3M")) {
-                startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 2)).dateValue()
-            } else if(range.elementsEqual("6M")) {
-                startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 3)).dateValue()
-            } else if(range.elementsEqual("1Y")) {
-                startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 4)).dateValue()
-            } else if(range.elementsEqual("2Y")) {
-                startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 5)).dateValue()
-            } else if(range.elementsEqual("5Y")) {
-                startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 6)).dateValue()
-            } else if(range.elementsEqual("All")) {
-                startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 7)).dateValue()
-            }
+            startDate = CommonController.getIntervalForDateRange(date: startDate, range: range)
         }
         startDate = Date.now.removeTimeStamp()
         accountUniqueIndex = 0
