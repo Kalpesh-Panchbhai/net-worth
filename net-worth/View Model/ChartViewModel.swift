@@ -14,15 +14,15 @@ class ChartViewModel: ObservableObject {
     
     private var chartController = ChartController()
     
-    func getChartData(accountViewModel: AccountViewModel) async {
+    public func getChartData(accountViewModel: AccountViewModel) async {
         self.chartDataList = await chartController.getChartDataForOneAccountInANonBroker(accountViewModel: accountViewModel)
     }
     
-    func getChartDataForNonBrokerAccounts(accountViewModel: AccountViewModel, range: String) async {
+    public func getChartDataForNonBrokerAccounts(accountViewModel: AccountViewModel, range: String) async {
         self.chartDataList = await chartController.getChartDataForAllAccountsInANonBroker(accountViewModel: accountViewModel, range: range)
     }
     
-    func getBrokerChartData(accountViewModel: AccountViewModel, financeViewModel: FinanceViewModel, range: String) async {
+    public func getBrokerChartData(accountViewModel: AccountViewModel, financeViewModel: FinanceViewModel, range: String) async {
         let accountTransactionListWithRange = accountViewModel.accountTransactionListWithRange
         let accountTransactionListBelowRange = accountViewModel.accountTransactionListBelowRange
         
@@ -30,14 +30,15 @@ class ChartViewModel: ObservableObject {
         self.chartDataList = chartDataListResponse
     }
     
-    func getChartDataForBrokerAccounts(accountViewModel: AccountViewModel, financeViewModel: FinanceViewModel) async {
+    public func getChartDataForBrokerAccounts(accountViewModel: AccountViewModel, financeViewModel: FinanceViewModel) async {
         self.chartDataList = await chartController.getChartDataForAllAccountsInABroker(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: "1M")
     }
     
-    func getChartDataForAllAccounts(accountViewModel: AccountViewModel, financeViewModel: FinanceViewModel, range: String) async {
+    public func getChartDataForAllAccounts(accountViewModel: AccountViewModel, financeViewModel: FinanceViewModel, range: String) async {
         self.chartDataList = await chartController.getChartDataForAllAccounts(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
     }
-    func getChartDataForNetworth(incomeViewModel: IncomeViewModel) async {
+    
+    public func getChartDataForNetworth(incomeViewModel: IncomeViewModel) async {
         DispatchQueue.main.async {
             var currentTotalIncome = 0.0
             var chartDataListResponse = [ChartData]()
