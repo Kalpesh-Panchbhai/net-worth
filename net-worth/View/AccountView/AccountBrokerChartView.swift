@@ -56,7 +56,7 @@ struct AccountBrokerChartView: View {
                             } else {
                                 await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID, range: range)
                                 await financeViewModel.getSymbolDetail(symbol: symbol, range: range)
-                                await chartViewModel.getBrokerChartData(accountViewModel: accountViewModel, financeViewModel: financeViewModel)
+                                await chartViewModel.getBrokerChartData(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
                             }
                         }
                         let impact = UIImpactFeedbackGenerator(style: .light)
@@ -78,7 +78,7 @@ struct AccountBrokerChartView: View {
                 } else {
                     await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID, range: range)
                     await financeViewModel.getSymbolDetail(symbol: symbol, range: range)
-                    await chartViewModel.getBrokerChartData(accountViewModel: accountViewModel, financeViewModel: financeViewModel)
+                    await chartViewModel.getBrokerChartData(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
                 }
             }
         }
