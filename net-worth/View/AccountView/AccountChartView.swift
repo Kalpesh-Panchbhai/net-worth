@@ -48,7 +48,8 @@ struct AccountChartView: View {
                     .onChange(of: range) { value in
                         Task.init {
                             await accountViewModel.getAccountTransactionListWithRange(id: accountID, range: range)
-                            await chartViewModel.getChartDataForOneAccountInANonBroker(accountViewModel: accountViewModel)
+                            await accountViewModel.getAccountTransactionListBelowRange(id: accountID, range: range)
+                            await chartViewModel.getChartDataForOneAccountInANonBroker(accountViewModel: accountViewModel, range: range)
                         }
                         let impact = UIImpactFeedbackGenerator(style: .light)
                         impact.impactOccurred()
@@ -63,7 +64,8 @@ struct AccountChartView: View {
         .onAppear {
             Task.init {
                 await accountViewModel.getAccountTransactionListWithRange(id: accountID, range: range)
-                await chartViewModel.getChartDataForOneAccountInANonBroker(accountViewModel: accountViewModel)
+                await accountViewModel.getAccountTransactionListBelowRange(id: accountID, range: range)
+                await chartViewModel.getChartDataForOneAccountInANonBroker(accountViewModel: accountViewModel, range: range)
             }
         }
     }

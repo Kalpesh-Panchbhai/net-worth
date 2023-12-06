@@ -238,6 +238,8 @@ class AccountTransactionController {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-62208000))
         } else if(range.elementsEqual("5Y")) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-155520000))
+        } else {
+            return [AccountTransaction]()
         }
         let accountTransactionList = getAccountTransactionList(accountID: accountID)
         return accountTransactionList.filter {

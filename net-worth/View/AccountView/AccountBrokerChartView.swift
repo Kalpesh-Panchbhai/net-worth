@@ -52,7 +52,7 @@ struct AccountBrokerChartView: View {
                             if(accountID.isEmpty) {
                                 let accountList = await accountViewModel.getAccountTransactionsOfAllAccountsInBroker(brokerID: brokerID, range: range)
                                 await financeViewModel.getMultipleSymbolDetail(brokerAccountList: accountList, range: range)
-                                await chartViewModel.getChartDataForAllAccountsInABroker(accountViewModel: accountViewModel, financeViewModel: financeViewModel)
+                                await chartViewModel.getChartDataForAllAccountsInABroker(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
                             } else {
                                 await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID, range: range)
                                 await financeViewModel.getSymbolDetail(symbol: symbol, range: range)
@@ -74,7 +74,7 @@ struct AccountBrokerChartView: View {
                 if(accountID.isEmpty) {
                     let accountList = await accountViewModel.getAccountTransactionsOfAllAccountsInBroker(brokerID: brokerID, range: range)
                     await financeViewModel.getMultipleSymbolDetail(brokerAccountList: accountList, range: range)
-                    await chartViewModel.getChartDataForAllAccountsInABroker(accountViewModel: accountViewModel, financeViewModel: financeViewModel)
+                    await chartViewModel.getChartDataForAllAccountsInABroker(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
                 } else {
                     await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID, range: range)
                     await financeViewModel.getSymbolDetail(symbol: symbol, range: range)

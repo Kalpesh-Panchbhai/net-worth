@@ -166,6 +166,13 @@ class AccountViewModel: ObservableObject {
         }
     }
     
+    func getAccountTransactionListBelowRange(id: String, range: String) async {
+        let list = await accountTransactionController.getAccountTransactionListBelowRange(accountID: id, range: range)
+        DispatchQueue.main.async {
+            self.accountTransactionListBelowRange = list
+        }
+    }
+    
     func getAccountTransactionListForAllAccountsWithRange(accountList: [Account], range: String) async -> [AccountBroker] {
         var brokerList = [AccountBroker]()
         var accountTransactionListMultipleBrokerAccountsWithRange = [[AccountTransaction]]()
