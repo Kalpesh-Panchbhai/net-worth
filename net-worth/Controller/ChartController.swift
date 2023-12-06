@@ -94,18 +94,18 @@ class ChartController {
                 $0.date.removeTimeStamp() <= startDate.removeTimeStamp()
             })
             var filterTransactions = accountTransactionListWithRange.filter({
-                $0.timestamp.removeTimeStamp() <= symbolMappedData!.date.removeTimeStamp()
+                $0.timestamp.removeTimeStamp() <= startDate.removeTimeStamp()
             })
             if(filterTransactions.isEmpty) {
                 filterTransactions = accountTransactionListBelowRange.filter({
-                    $0.timestamp.removeTimeStamp() <= symbolMappedData!.date.removeTimeStamp()
+                    $0.timestamp.removeTimeStamp() <= startDate.removeTimeStamp()
                 })
             }
             if((!filterTransactions.isEmpty && !zeroUnits) || (!filterTransactions.isEmpty && zeroUnits && filterTransactions[0].currentBalance != 0)) {
                 var currencyValue = 1.0
                 if(symbol.currency != SettingsController().getDefaultCurrency().code) {
                     let currencyMappedData = currencyMappedDataList.filter({
-                        $0.date.removeTimeStamp() <= symbolMappedData!.date.removeTimeStamp()
+                        $0.date.removeTimeStamp() <= startDate.removeTimeStamp()
                     })
                     if(!currencyMappedData.isEmpty) {
                         currencyValue = currencyMappedData.last!.value
@@ -117,11 +117,11 @@ class ChartController {
                 } else {
                     zeroUnits = false
                 }
-                let currentBalance = currentUnits * symbolMappedData!.value * currencyValue
+                let currentBalance = currentUnits * (symbolMappedData?.value ?? 1.0) * currencyValue
                 let chartData = ChartData(date: startDate.removeTimeStamp(), value: currentBalance)
                 chartDataListResponse.append(chartData)
             }
-            startDate.addTimeInterval(86400)
+            startDate = CommonController.getIntervalForDateRange(date: startDate, range: range)
         }
         return chartDataListResponse
     }
@@ -182,7 +182,7 @@ class ChartController {
                 })?.value ?? 0.0
                 let chartData = ChartData(date: startDate, value: (value1 + value2))
                 chartDataList.append(chartData)
-                startDate = startDate.addingTimeInterval(86400)
+                startDate = CommonController.getIntervalForDateRange(date: startDate, range: range)
             }
         }
         return chartDataList
