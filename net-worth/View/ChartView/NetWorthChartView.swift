@@ -17,6 +17,7 @@ struct NetWorthChartView: View {
     
     @StateObject var chartViewModel = ChartViewModel()
     @StateObject var accountViewModel = AccountViewModel()
+    @StateObject var financeViewModel = FinanceViewModel()
     @StateObject var incomeViewModel = IncomeViewModel()
     
     @Environment(\.scenePhase) var scenePhase
@@ -43,11 +44,12 @@ struct NetWorthChartView: View {
                         .onChange(of: range) { value in
                             Task.init {
                                 await incomeViewModel.getIncomeList()
-                                await accountViewModel.getAccountTransactionListMultipleAccountsWithRange(accountList: accountList, range: range)
+                                let accountBrokerList = await accountViewModel.getAccountTransactionListForAllAccountsWithRange(accountList: accountList, range: range)
                                 if(!range.elementsEqual("All")) {
-                                    await accountViewModel.getAccountTransactionListMultipleAccountsBelowRange(accountList: accountList, range: range)
+                                    await accountViewModel.getAccountTransactionListForAllAccountsBelowRange(accountList: accountList, range: range)
                                 }
-                                await chartViewModel.getChartDataForAllAccountsInANonBroker(accountViewModel: accountViewModel, range: range)
+                                await financeViewModel.getMultipleSymbolDetail(brokerAccountList: accountBrokerList, range: range)
+                                await chartViewModel.getChartDataForAllAccounts(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
                                 await chartViewModel.getChartDataForNetworth(incomeViewModel: incomeViewModel)
                             }
                             let impact = UIImpactFeedbackGenerator(style: .light)
@@ -71,11 +73,12 @@ struct NetWorthChartView: View {
             .onAppear {
                 Task.init {
                     await incomeViewModel.getIncomeList()
-                    await accountViewModel.getAccountTransactionListMultipleAccountsWithRange(accountList: accountList, range: range)
+                    let accountBrokerList = await accountViewModel.getAccountTransactionListForAllAccountsWithRange(accountList: accountList, range: range)
                     if(!range.elementsEqual("All")) {
-                        await accountViewModel.getAccountTransactionListMultipleAccountsBelowRange(accountList: accountList, range: range)
+                        await accountViewModel.getAccountTransactionListForAllAccountsBelowRange(accountList: accountList, range: range)
                     }
-                    await chartViewModel.getChartDataForAllAccountsInANonBroker(accountViewModel: accountViewModel, range: range)
+                    await financeViewModel.getMultipleSymbolDetail(brokerAccountList: accountBrokerList, range: range)
+                    await chartViewModel.getChartDataForAllAccounts(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
                     await chartViewModel.getChartDataForNetworth(incomeViewModel: incomeViewModel)
                 }
             }

@@ -18,10 +18,6 @@ class ChartViewModel: ObservableObject {
         self.chartDataList = await chartController.getChartDataForOneAccountInANonBroker(accountViewModel: accountViewModel, range: range)
     }
     
-    public func getChartDataForAllAccountsInANonBroker(accountViewModel: AccountViewModel, range: String) async {
-        self.chartDataList = await chartController.getChartDataForAllAccountsInANonBroker(accountViewModel: accountViewModel, range: range)
-    }
-    
     public func getChartDataForOneAccountInABroker(accountViewModel: AccountViewModel, financeViewModel: FinanceViewModel, range: String) async {
         let accountTransactionListWithRange = accountViewModel.accountTransactionListWithRange
         let accountTransactionListBelowRange = accountViewModel.accountTransactionListBelowRange
