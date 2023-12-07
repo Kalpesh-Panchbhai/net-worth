@@ -72,7 +72,9 @@ class ChartController {
             list.forEach({ key, value in
                 totalAmountForEachDate = totalAmountForEachDate + value
             })
-            chartDataListResponse.append(ChartData(date: startDate, value: totalAmountForEachDate))
+            if(!list.isEmpty) {
+                chartDataListResponse.append(ChartData(date: startDate, value: totalAmountForEachDate))
+            }
             
             startDate = CommonController.getIntervalForDateRange(date: startDate, range: range)
         }
