@@ -37,6 +37,7 @@ struct net_worthApp: App {
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        FirebaseConfiguration.shared.setLoggerLevel(.error)
         FirebaseApp.configure()
         UINavigationBar.appearance().barTintColor = UIColor(Color.theme.background)
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(Color.theme.primaryText)]
