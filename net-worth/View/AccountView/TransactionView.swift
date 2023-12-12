@@ -58,7 +58,7 @@ struct TransactionsView: View {
                                     Text(accountViewModel.account.currency)
                                         .font(.system(size: 14))
                                         .foregroundColor(Color.theme.secondaryText)
-                                    Text(accountViewModel.accountTransactionList[i].currentBalance.withCommas(decimalPlace: 2))
+                                    Text(accountViewModel.accountTransactionList[i].currentBalance.withCommas(decimalPlace: 4))
                                         .font(.headline)
                                         .foregroundColor(Color.theme.primaryText)
                                 }
@@ -66,7 +66,7 @@ struct TransactionsView: View {
                                 if( i < accountViewModel.accountTransactionList.count) {
                                     if(accountViewModel.accountTransactionList[i].balanceChange > 0) {
                                         HStack {
-                                            Text("+\(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 2))")
+                                            Text("+\(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 4))")
                                                 .font(.system(size: 12))
                                                 .foregroundColor(Color.theme.green)
                                             if(i < accountViewModel.accountTransactionList.count - 1) {
@@ -78,7 +78,7 @@ struct TransactionsView: View {
                                         .padding(.horizontal)
                                     } else if(accountViewModel.accountTransactionList[i].balanceChange < 0) {
                                         HStack {
-                                            Text("\(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 2))")
+                                            Text("\(accountViewModel.accountTransactionList[i].balanceChange.withCommas(decimalPlace: 4))")
                                                 .font(.system(size: 12))
                                                 .foregroundColor(Color.theme.red)
                                             if(i < accountViewModel.accountTransactionList.count - 1) {

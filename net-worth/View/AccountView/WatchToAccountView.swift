@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WatchToAccountView: View {
     
-    var account: Account
+    var accountID: String
     
     @State var scenePhaseBlur = 0
     
@@ -24,7 +24,7 @@ struct WatchToAccountView: View {
                 ScrollView(.vertical) {
                     LazyVStack {
                         ForEach(watchViewModel.watchList, id: \.self) { watchList in
-                            RowWatchToAccountView(account: account, watch: watchList, isAdded: watchList.accountID.contains(account.id!))
+                            RowWatchToAccountView(accountID: accountID, watch: watchList, isAdded: watchList.accountID.contains(accountID))
                                 .padding(.top, 10)
                         }
                     }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AccountRowView: View {
     
-    var account: Account
+    var accountID: String
     var fromWatchView: Bool = false
     
     @StateObject var accountViewModel = AccountViewModel()
@@ -36,72 +36,119 @@ struct AccountRowView: View {
             }
             Spacer()
             HStack {
-                Text(accountViewModel.account.currency)
-                    .foregroundColor(Color.theme.secondaryText)
-                    .font(.caption)
-                Text("\(accountViewModel.accountOneDayChange.currentValue.withCommas(decimalPlace: 2))")
-                    .foregroundColor(Color.theme.primaryText)
-                    .font(.caption.bold())
+                if(accountViewModel.account.accountType == "Broker") {
+                    Text(SettingsController().getDefaultCurrency().code)
+                        .foregroundColor(Color.theme.secondaryText)
+                        .font(.caption)
+                    Text("\(accountViewModel.accountBrokerCurrentBalance.currentValue.withCommas(decimalPlace: 2))")
+                        .foregroundColor(Color.theme.primaryText)
+                        .font(.caption.bold())
+                } else {
+                    Text(accountViewModel.account.currency)
+                        .foregroundColor(Color.theme.secondaryText)
+                        .font(.caption)
+                    Text("\(accountViewModel.accountOneDayChange.currentValue.withCommas(decimalPlace: 2))")
+                        .foregroundColor(Color.theme.primaryText)
+                        .font(.caption.bold())
+                }
             }
             Spacer()
             HStack {
-                if(getOneDayChange() >= 0) {
-                    if(getOneDayChange() > 0) {
+                if(accountViewModel.account.accountType == "Broker") {
+                    if(calculateOneDayChange() >= 0) {
+                        if(calculateOneDayChange() > 0) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.theme.green.opacity(0.2))
+                                    .frame(width: 17, height: 17)
+                                Image(systemName: "arrow.up")
+                                    .foregroundColor(Color.theme.green)
+                                    .font(.caption.bold())
+                            }
+                        }
+                        Text("+\(calculateOneDayChange().withCommas(decimalPlace: 2))")
+                            .foregroundColor(Color.theme.green)
+                            .font(.caption.bold())
+                        Text("(+\(calculatePercentChangeForOneDay()))")
+                            .foregroundColor(Color.theme.green)
+                            .font(.caption.bold())
+                        Spacer()
+                    } else {
                         ZStack {
                             Circle()
-                                .fill(Color.theme.green.opacity(0.2))
+                                .fill(Color.theme.red.opacity(0.2))
                                 .frame(width: 17, height: 17)
-                            Image(systemName: "arrow.up")
-                                .foregroundColor(Color.theme.green)
+                            Image(systemName: "arrow.down")
+                                .foregroundColor(Color.theme.red)
                                 .font(.caption.bold())
                         }
-                    }
-                    Text("+\(getOneDayChange().withCommas(decimalPlace: 2))")
-                        .foregroundColor(Color.theme.green)
-                        .font(.caption.bold())
-                    Text("(+\(getOneDayPercentageChange()))")
-                        .foregroundColor(Color.theme.green)
-                        .font(.caption.bold())
-                    Spacer()
-                    if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving" && accountViewModel.account.active) {
-                        Image(systemName: "bell.fill")
-                            .foregroundColor(Color.theme.secondaryText)
-                            .font(.caption)
-                        Text("\(accountViewModel.account.paymentDate)")
-                            .foregroundColor(Color.theme.secondaryText)
-                            .font(.caption)
-                    } else if(accountViewModel.account.accountType != "Saving" && accountViewModel.account.active) {
-                        Image(systemName: "bell.slash.fill")
-                            .foregroundColor(Color.theme.secondaryText)
-                            .font(.caption)
-                    }
-                } else {
-                    ZStack {
-                        Circle()
-                            .fill(Color.theme.red.opacity(0.2))
-                            .frame(width: 17, height: 17)
-                        Image(systemName: "arrow.down")
+                        Text("\(calculateOneDayChange().withCommas(decimalPlace: 2))")
                             .foregroundColor(Color.theme.red)
                             .font(.caption.bold())
+                        Text("(\(calculatePercentChangeForOneDay()))")
+                            .foregroundColor(Color.theme.red)
+                            .font(.caption.bold())
+                        Spacer()
                     }
-                    Text("\(getOneDayChange().withCommas(decimalPlace: 2))")
-                        .foregroundColor(Color.theme.red)
-                        .font(.caption.bold())
-                    Text("(\(getOneDayPercentageChange()))")
-                        .foregroundColor(Color.theme.red)
-                        .font(.caption.bold())
-                    Spacer()
-                    if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
-                        Image(systemName: "bell.fill")
-                            .foregroundColor(Color.theme.secondaryText)
-                            .font(.caption)
-                        Text("\(accountViewModel.account.paymentDate)")
-                            .foregroundColor(Color.theme.secondaryText)
-                            .font(.caption)
-                    } else if(accountViewModel.account.accountType != "Saving") {
-                        Image(systemName: "bell.slash.fill")
-                            .foregroundColor(Color.theme.secondaryText)
-                            .font(.caption)
+                } else {
+                    if(getOneDayChange() >= 0) {
+                        if(getOneDayChange() > 0) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.theme.green.opacity(0.2))
+                                    .frame(width: 17, height: 17)
+                                Image(systemName: "arrow.up")
+                                    .foregroundColor(Color.theme.green)
+                                    .font(.caption.bold())
+                            }
+                        }
+                        Text("+\(getOneDayChange().withCommas(decimalPlace: 2))")
+                            .foregroundColor(Color.theme.green)
+                            .font(.caption.bold())
+                        Text("(+\(getOneDayPercentageChange()))")
+                            .foregroundColor(Color.theme.green)
+                            .font(.caption.bold())
+                        Spacer()
+                        if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving" && accountViewModel.account.active) {
+                            Image(systemName: "bell.fill")
+                                .foregroundColor(Color.theme.secondaryText)
+                                .font(.caption)
+                            Text("\(accountViewModel.account.paymentDate)")
+                                .foregroundColor(Color.theme.secondaryText)
+                                .font(.caption)
+                        } else if(accountViewModel.account.accountType != "Saving" && accountViewModel.account.active) {
+                            Image(systemName: "bell.slash.fill")
+                                .foregroundColor(Color.theme.secondaryText)
+                                .font(.caption)
+                        }
+                    } else {
+                        ZStack {
+                            Circle()
+                                .fill(Color.theme.red.opacity(0.2))
+                                .frame(width: 17, height: 17)
+                            Image(systemName: "arrow.down")
+                                .foregroundColor(Color.theme.red)
+                                .font(.caption.bold())
+                        }
+                        Text("\(getOneDayChange().withCommas(decimalPlace: 2))")
+                            .foregroundColor(Color.theme.red)
+                            .font(.caption.bold())
+                        Text("(\(getOneDayPercentageChange()))")
+                            .foregroundColor(Color.theme.red)
+                            .font(.caption.bold())
+                        Spacer()
+                        if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
+                            Image(systemName: "bell.fill")
+                                .foregroundColor(Color.theme.secondaryText)
+                                .font(.caption)
+                            Text("\(accountViewModel.account.paymentDate)")
+                                .foregroundColor(Color.theme.secondaryText)
+                                .font(.caption)
+                        } else if(accountViewModel.account.accountType != "Saving") {
+                            Image(systemName: "bell.slash.fill")
+                                .foregroundColor(Color.theme.secondaryText)
+                                .font(.caption)
+                        }
                     }
                 }
             }
@@ -109,8 +156,13 @@ struct AccountRowView: View {
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getAccount(id: account.id!)
-                await accountViewModel.getAccountLastOneDayChange(id: account.id!)
+                await accountViewModel.getAccount(id: accountID)
+                if(accountViewModel.account.accountType == "Broker") {
+                    await accountViewModel.getAccountInBrokerList(brokerID: accountID)
+                    await accountViewModel.getBrokerAllAccountCurrentBalance(accountBrokerList: accountViewModel.accountsInBroker)
+                } else {
+                    await accountViewModel.getAccountLastOneDayChange(id: accountID)
+                }
             }
         }
         .padding(.horizontal)
@@ -118,11 +170,19 @@ struct AccountRowView: View {
         .cornerRadius(10)
     }
     
-    func getOneDayChange() -> Double {
+    private func getOneDayChange() -> Double {
         return accountViewModel.accountOneDayChange.oneDayChange
     }
     
-    func getOneDayPercentageChange() -> String {
+    private func getOneDayPercentageChange() -> String {
         return CommonController.getGrowthPercentage(previousBalance: accountViewModel.accountOneDayChange.previousDayValue, currentBalance: accountViewModel.accountOneDayChange.currentValue)
+    }
+    
+    private func calculateOneDayChange() -> Double {
+        return accountViewModel.accountBrokerCurrentBalance.currentValue - accountViewModel.accountBrokerCurrentBalance.previousDayValue
+    }
+    
+    private func calculatePercentChangeForOneDay() -> String {
+        return CommonController.getGrowthPercentage(previousBalance: accountViewModel.accountBrokerCurrentBalance.previousDayValue, currentBalance: accountViewModel.accountBrokerCurrentBalance.currentValue)
     }
 }

@@ -14,6 +14,7 @@ class ConstantUtils {
         case saving = "Saving"
         case creditcard = "Credit Card"
         case loan = "Loan"
+        case broker = "Broker"
         case other = "Other"
     }
     
@@ -23,6 +24,7 @@ class ConstantUtils {
     static var incomeTypeCollectionName = "incometypes"
     static var accountCollectionName = "accounts"
     static var accountTransactionCollectionName = "accountsTransaction"
+    static var accountBrokerCollectionName = "accountsBroker"
     static var watchCollectionName = "watches"
     
     static var incomeKeyAmount = "amount"
@@ -47,6 +49,11 @@ class ConstantUtils {
     static var accountTransactionKeytimestamp = "timestamp"
     static var accountTransactionKeyCurrentBalance = "currentBalance"
     static var accountTransactionKeyPaid = "paid"
+    
+    static var accountBrokerKeyCurrentUnit = "currentUnit"
+    static var accountBrokerKeySymbol = "symbol"
+    static var accountBrokerKeyName = "name"
+    static var accountBrokerKeyTimeStamp = "timestamp"
     
     static var watchKeyWatchName = "accountName"
     static var watchKeyAccountID = "accountID"

@@ -224,7 +224,7 @@ class AccountTransactionController {
         }
     }
     
-    public func getAccountLastTransactionBelowRange(accountID: String, range: String) async -> [AccountTransaction] {
+    public func getAccountTransactionListBelowRange(accountID: String, range: String) async -> [AccountTransaction] {
         var date = Timestamp()
         if(range.elementsEqual("1M")) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000))
@@ -238,6 +238,8 @@ class AccountTransactionController {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-62208000))
         } else if(range.elementsEqual("5Y")) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-155520000))
+        } else {
+            return [AccountTransaction]()
         }
         let accountTransactionList = getAccountTransactionList(accountID: accountID)
         return accountTransactionList.filter {
@@ -272,7 +274,7 @@ class AccountTransactionController {
             oneDayChange.previousDayValue = dayStartingBalance
             oneDayChange.oneDayChange = currentBalance - dayStartingBalance
         } else {
-            oneDayChange.currentValue = accountTransactionList[0].currentBalance
+            oneDayChange.currentValue = accountTransactionList.isEmpty ? 0.0 : accountTransactionList[0].currentBalance
             oneDayChange.previousDayValue = 0.0
             oneDayChange.oneDayChange = 0.0
         }

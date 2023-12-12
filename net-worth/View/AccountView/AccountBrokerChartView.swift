@@ -1,21 +1,23 @@
 //
-//  AccountChartView.swift
+//  AccountBrokerChartView.swift
 //  net-worth
 //
-//  Created by Kalpesh Panchbhai on 17/02/23.
+//  Created by Kalpesh Panchbhai on 03/12/23.
 //
 
 import SwiftUI
-import Charts
 
-struct AccountChartView: View {
+struct AccountBrokerChartView: View {
     
+    var brokerID: String
     var accountID: String
+    var symbol: String
     
     @State var range = "1M"
     
     @StateObject var chartViewModel = ChartViewModel()
     @StateObject var accountViewModel = AccountViewModel()
+    @StateObject var financeViewModel = FinanceViewModel()
     
     var body: some View {
         VStack {
@@ -41,15 +43,21 @@ struct AccountChartView: View {
                         Text("1Y").tag("1Y")
                         Text("2Y").tag("2Y")
                         Text("5Y").tag("5Y")
-                        Text("All").tag("All")
+                        //                        Text("All").tag("All")
                     }, label: {
                         
                     })
                     .onChange(of: range) { value in
                         Task.init {
-                            await accountViewModel.getAccountTransactionListWithRange(id: accountID, range: range)
-                            await accountViewModel.getAccountTransactionListBelowRange(id: accountID, range: range)
-                            await chartViewModel.getChartDataForOneAccountInANonBroker(accountViewModel: accountViewModel, range: range)
+                            if(accountID.isEmpty) {
+                                let accountList = await accountViewModel.getAccountTransactionsOfAllAccountsInBroker(brokerID: brokerID, range: range)
+                                await financeViewModel.getMultipleSymbolDetail(brokerAccountList: accountList, range: range)
+                                await chartViewModel.getChartDataForAllAccountsInABroker(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
+                            } else {
+                                await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID, range: range)
+                                await financeViewModel.getSymbolDetail(symbol: symbol, range: range)
+                                await chartViewModel.getChartDataForOneAccountInABroker(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
+                            }
                         }
                         let impact = UIImpactFeedbackGenerator(style: .light)
                         impact.impactOccurred()
@@ -63,9 +71,15 @@ struct AccountChartView: View {
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getAccountTransactionListWithRange(id: accountID, range: range)
-                await accountViewModel.getAccountTransactionListBelowRange(id: accountID, range: range)
-                await chartViewModel.getChartDataForOneAccountInANonBroker(accountViewModel: accountViewModel, range: range)
+                if(accountID.isEmpty) {
+                    let accountList = await accountViewModel.getAccountTransactionsOfAllAccountsInBroker(brokerID: brokerID, range: range)
+                    await financeViewModel.getMultipleSymbolDetail(brokerAccountList: accountList, range: range)
+                    await chartViewModel.getChartDataForAllAccountsInABroker(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
+                } else {
+                    await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID, range: range)
+                    await financeViewModel.getSymbolDetail(symbol: symbol, range: range)
+                    await chartViewModel.getChartDataForOneAccountInABroker(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
+                }
             }
         }
     }

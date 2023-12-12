@@ -13,6 +13,10 @@ struct FinanceDetailModel: Hashable {
     
     var symbol: String? = ""
     
+    var dataGranularity: String? = ""
+    
+    var range: String? = ""
+    
     var regularMarketPrice: Double? = 0.0
     
     var chartPreviousClose: Double? = 0.0
@@ -68,5 +72,9 @@ struct FinanceDetailMetaDetailResponse: Decodable {
     let regularMarketPrice: Double?
     
     let chartPreviousClose: Double?
+    
+    let dataGranularity: String?
+    
+    let range: String?
     
 }

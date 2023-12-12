@@ -12,117 +12,29 @@ class ChartViewModel: ObservableObject {
     
     @Published var chartDataList = [ChartData]()
     
-    func getChartData(accountViewModel: AccountViewModel) async {
-        DispatchQueue.main.async {
-            var chartDataListResponse = [ChartData]()
-            for account in accountViewModel.accountTransactionListWithRange {
-                if(!chartDataListResponse.contains(where: {
-                    $0.date == account.timestamp.removeTimeStamp()
-                })) {
-                    chartDataListResponse.append(ChartData(date: account.timestamp.removeTimeStamp(), value: account.currentBalance))
-                }
-            }
-            chartDataListResponse.sort(by: {
-                $0.date < $1.date
-            })
-            self.chartDataList = chartDataListResponse
-        }
+    private var chartController = ChartController()
+    
+    public func getChartDataForOneAccountInANonBroker(accountViewModel: AccountViewModel, range: String) async {
+        self.chartDataList = await chartController.getChartDataForOneAccountInANonBroker(accountViewModel: accountViewModel, range: range)
     }
     
-    func getChartDataForAccounts(accountViewModel: AccountViewModel, range: String) async {
-        DispatchQueue.main.async {
-            var accountUniqueIndex = 0
-            var chartDataListResponse = [ChartData]()
-            var list = [Int: Double]()
-            var startDate = Date.now
-            for account in accountViewModel.accountTransactionListWithRangeMultipleAccounts {
-                if(!account.isEmpty && startDate > account.last!.timestamp) {
-                    startDate = account.last!.timestamp
-                }
-            }
-            startDate = startDate.removeTimeStamp()
-            if(!range.elementsEqual("All")) {
-                var date = Timestamp()
-                if(range.elementsEqual("1M")) {
-                    date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000-86400))
-                } else if(range.elementsEqual("3M")) {
-                    date = Timestamp.init(date: Date.now.addingTimeInterval(-7776000-86400))
-                } else if(range.elementsEqual("6M")) {
-                    date = Timestamp.init(date: Date.now.addingTimeInterval(-15552000-86400))
-                } else if(range.elementsEqual("1Y")) {
-                    date = Timestamp.init(date: Date.now.addingTimeInterval(-31104000-86400))
-                } else if(range.elementsEqual("2Y")) {
-                    date = Timestamp.init(date: Date.now.addingTimeInterval(-62208000-86400))
-                } else if(range.elementsEqual("5Y")) {
-                    date = Timestamp.init(date: Date.now.addingTimeInterval(-155520000-86400))
-                }
-                for account in accountViewModel.accountTransactionLastTransactionBelowRange {
-                    list.updateValue(account.first?.currentBalance ?? 0.0, forKey: accountUniqueIndex)
-                    accountUniqueIndex+=1
-                }
-                var totalAmountForEachDate = 0.0
-                list.forEach({ key, value in
-                    totalAmountForEachDate = totalAmountForEachDate + value
-                })
-                chartDataListResponse.append(ChartData(date: date.dateValue().removeTimeStamp(), value: totalAmountForEachDate))
-            }
-            while(startDate <= Date.now) {
-                accountUniqueIndex = 0
-                for account in accountViewModel.accountTransactionListWithRangeMultipleAccounts {
-                    let accountTransactionsListBeforeDate = account.filter({ value in
-                        value.timestamp.removeTimeStamp() <= startDate.removeTimeStamp()
-                    })
-                    if(!accountTransactionsListBeforeDate.isEmpty) {
-                        list.updateValue(accountTransactionsListBeforeDate[0].currentBalance, forKey: accountUniqueIndex)
-                    }
-                    accountUniqueIndex+=1
-                }
-                var totalAmountForEachDate = 0.0
-                list.forEach({ key, value in
-                    totalAmountForEachDate = totalAmountForEachDate + value
-                })
-                chartDataListResponse.append(ChartData(date: startDate, value: totalAmountForEachDate))
-                
-                if(range.elementsEqual("1M")) {
-                    startDate = Timestamp.init(date: startDate.addingTimeInterval(86400)).dateValue()
-                } else if(range.elementsEqual("3M")) {
-                    startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 2)).dateValue()
-                } else if(range.elementsEqual("6M")) {
-                    startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 3)).dateValue()
-                } else if(range.elementsEqual("1Y")) {
-                    startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 4)).dateValue()
-                } else if(range.elementsEqual("2Y")) {
-                    startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 5)).dateValue()
-                } else if(range.elementsEqual("5Y")) {
-                    startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 6)).dateValue()
-                } else if(range.elementsEqual("All")) {
-                    startDate = Timestamp.init(date: startDate.addingTimeInterval(86400 * 7)).dateValue()
-                }
-            }
-            startDate = Date.now.removeTimeStamp()
-            accountUniqueIndex = 0
-            for account in accountViewModel.accountTransactionListWithRangeMultipleAccounts {
-                let accountTransactionsListBeforeDate = account.filter({ value in
-                    value.timestamp.removeTimeStamp() <= startDate.removeTimeStamp()
-                })
-                if(!accountTransactionsListBeforeDate.isEmpty) {
-                    list.updateValue(accountTransactionsListBeforeDate[0].currentBalance, forKey: accountUniqueIndex)
-                }
-                accountUniqueIndex+=1
-            }
-            var totalAmountForEachDate = 0.0
-            list.forEach({ key, value in
-                totalAmountForEachDate = totalAmountForEachDate + value
-            })
-            chartDataListResponse.append(ChartData(date: startDate, value: totalAmountForEachDate))
-            chartDataListResponse.sort(by: {
-                $0.date < $1.date
-            })
-            self.chartDataList = chartDataListResponse
-        }
+    public func getChartDataForOneAccountInABroker(accountViewModel: AccountViewModel, financeViewModel: FinanceViewModel, range: String) async {
+        let accountTransactionListWithRange = accountViewModel.accountTransactionListWithRange
+        let accountTransactionListBelowRange = accountViewModel.accountTransactionListBelowRange
+        
+        let chartDataListResponse = await chartController.getChartDataForOneAccountInABroker(accountTransactionListWithRange: accountTransactionListWithRange, accountTransactionListBelowRange: accountTransactionListBelowRange, symbol: financeViewModel.symbol, currency: financeViewModel.currency, range: range)
+        self.chartDataList = chartDataListResponse
     }
     
-    func getChartDataForNetworth(incomeViewModel: IncomeViewModel) async {
+    public func getChartDataForAllAccountsInABroker(accountViewModel: AccountViewModel, financeViewModel: FinanceViewModel, range: String) async {
+        self.chartDataList = await chartController.getChartDataForAllAccountsInABroker(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
+    }
+    
+    public func getChartDataForAllAccounts(accountViewModel: AccountViewModel, financeViewModel: FinanceViewModel, range: String) async {
+        self.chartDataList = await chartController.getChartDataForAllAccounts(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
+    }
+    
+    public func getChartDataForNetworth(incomeViewModel: IncomeViewModel) async {
         DispatchQueue.main.async {
             var currentTotalIncome = 0.0
             var chartDataListResponse = [ChartData]()

@@ -46,10 +46,10 @@ struct WatchDetailView: View {
                                     if((hideInactiveAccount && isAccountActive(id: accountID)) || !hideInactiveAccount) {
                                         NavigationLink(destination: {
                                             // MARK: Account Detail View
-                                            AccountDetailView(account: Account(id: accountID), accountViewModel: accountViewModel, watchViewModel: watchViewModel)
+                                            AccountDetailView(accountID: accountID, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                                                 .toolbarRole(.editor)
                                         }, label: {
-                                            AccountRowView(account: Account(id: accountID), fromWatchView: true)
+                                            AccountRowView(accountID: accountID, fromWatchView: true)
                                                 .contextMenu {
                                                     Label(accountID, systemImage: "info.square")
                                                     // MARK: Delete

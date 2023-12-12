@@ -39,7 +39,9 @@ class AccountController {
             let accountID = try getAccountCollection()
                 .addDocument(from: newAccount).documentID
             let accountTransaction = AccountTransaction(timestamp: accountOpenedDate, balanceChange: newAccount.currentBalance, currentBalance: newAccount.currentBalance)
-            await accountTransactionController.addTransaction(accountID: accountID, accountTransaction: accountTransaction)
+            if(newAccount.accountType != "Broker") {
+                await accountTransactionController.addTransaction(accountID: accountID, accountTransaction: accountTransaction)
+            }
             
             await UserController().updateAccountUserData()
             return accountID
@@ -127,15 +129,27 @@ class AccountController {
                 for account in accounts {
                     group.addTask {
                         var balance = Balance()
-                        if(account.currency != SettingsController().getDefaultCurrency().code) {
-                            let financeDetailModel = await FinanceController().getSymbolDetails(accountCurrency: account.currency)
-                            balance.currentValue = financeDetailModel.regularMarketPrice ?? 0.0
-                            balance.previousDayValue = financeDetailModel.chartPreviousClose ?? 0.0
+                        if(account.accountType == "Broker") {
+                            balance.currentValue = 0.0
+                            balance.previousDayValue = 0.0
+                            let brokerAccounts = await BrokerAccountController().getAccountInBrokerList(brokerID: account.id!)
+                            for brokerAccount in brokerAccounts {
+                                let brokerAccountBalance = await BrokerAccountController().getBrokerAccountCurrentBalance(accountBroker: brokerAccount)
+                                balance.currentValue = balance.currentValue + brokerAccountBalance.currentValue
+                                balance.previousDayValue = balance.previousDayValue + brokerAccountBalance.previousDayValue
+                                balance.oneDayChange = balance.currentValue - balance.previousDayValue
+                            }
+                        } else {
+                            if(account.currency != SettingsController().getDefaultCurrency().code) {
+                                let financeDetailModel = await FinanceController().getCurrencyDetail(accountCurrency: account.currency)
+                                balance.currentValue = financeDetailModel.regularMarketPrice ?? 0.0
+                                balance.previousDayValue = financeDetailModel.chartPreviousClose ?? 0.0
+                            }
+                            let oneDayChange = await self.accountTransactionController.getAccountLastOneDayChange(accountID: account.id!)
+                            balance.currentValue = balance.currentValue * oneDayChange.currentValue
+                            balance.previousDayValue = balance.previousDayValue * oneDayChange.previousDayValue
+                            balance.oneDayChange = oneDayChange.oneDayChange
                         }
-                        let oneDayChange = await self.accountTransactionController.getAccountLastOneDayChange(accountID: account.id!)
-                        balance.currentValue = balance.currentValue * oneDayChange.currentValue
-                        balance.previousDayValue = balance.previousDayValue * oneDayChange.previousDayValue
-                        balance.oneDayChange = oneDayChange.oneDayChange
                         return balance
                     }
                 }
@@ -167,16 +181,16 @@ class AccountController {
         }
     }
     
-    public func deleteAccount(account: Account) async {
+    public func deleteAccount(accountID: String) async {
         let watchList = await watchController.getAllWatchList()
         watchList.forEach { watch in
-            if(watch.accountID.contains(account.id!)) {
-                watchController.deleteAccountFromWatchList(watchList: watch, accountID: account.id!)
+            if(watch.accountID.contains(accountID)) {
+                watchController.deleteAccountFromWatchList(watchList: watch, accountID: accountID)
             }
         }
-        CommonController.delete(collection: getAccountCollection().document(account.id!).collection(ConstantUtils.accountTransactionCollectionName))
+        CommonController.delete(collection: getAccountCollection().document(accountID).collection(ConstantUtils.accountTransactionCollectionName))
         do {
-            try await getAccountCollection().document(account.id!).delete()
+            try await getAccountCollection().document(accountID).delete()
         } catch {
             print(error)
         }
@@ -187,7 +201,7 @@ class AccountController {
     public func deleteAccounts() async {
         let accountList = await getAccountList()
         for account in accountList {
-            await deleteAccount(account: account)
+            await deleteAccount(accountID: account.id!)
         }
     }
 }
