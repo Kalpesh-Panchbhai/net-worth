@@ -181,14 +181,27 @@ class AccountController {
         }
     }
     
-    public func deleteAccount(accountID: String) async {
+    public func deleteAccount(accountID: String, isBrokerAccount: Bool) async {
         let watchList = await watchController.getAllWatchList()
         watchList.forEach { watch in
             if(watch.accountID.contains(accountID)) {
                 watchController.deleteAccountFromWatchList(watchList: watch, accountID: accountID)
             }
         }
-        CommonController.delete(collection: getAccountCollection().document(accountID).collection(ConstantUtils.accountTransactionCollectionName))
+        if(isBrokerAccount) {
+            let accountInBrokerList = await BrokerAccountController().getAccountInBrokerList(brokerID: accountID)
+            for account in accountInBrokerList {
+                CommonController.delete(collection: getAccountCollection().document(accountID).collection(ConstantUtils.accountBrokerCollectionName).document(account.id!).collection(ConstantUtils.accountTransactionCollectionName))
+                do {
+                    try await getAccountCollection().document(accountID).collection(ConstantUtils.accountBrokerCollectionName).document(account.id!).delete()
+                } catch {
+                    print(error)
+                }
+            }
+        } else {
+            CommonController.delete(collection: getAccountCollection().document(accountID).collection(ConstantUtils.accountTransactionCollectionName))
+        }
+        
         do {
             try await getAccountCollection().document(accountID).delete()
         } catch {
@@ -201,7 +214,7 @@ class AccountController {
     public func deleteAccounts() async {
         let accountList = await getAccountList()
         for account in accountList {
-            await deleteAccount(accountID: account.id!)
+            await deleteAccount(accountID: account.id!, isBrokerAccount: account.accountType == "Broker")
         }
     }
 }
