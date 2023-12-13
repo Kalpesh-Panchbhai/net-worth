@@ -270,7 +270,7 @@ struct AccountDetailView: View {
                 }
                 if(accountViewModel.account.accountType == "Broker") {
                     await accountViewModel.getAccountInBrokerList(brokerID: accountID)
-                    await accountViewModel.getBrokerAllAccountCurrentBalance(accountBrokerList: accountViewModel.accountsInBroker)
+                    await accountViewModel.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountViewModel.accountsInBroker)
                 } else {
                     accountViewModel.getAccountTransactionList(id: accountID)
                     await accountViewModel.getLastTwoAccountTransactionList(id: accountID)
@@ -294,7 +294,7 @@ struct AccountDetailView: View {
         .sheet(isPresented: $isNewAccountInBrokerViewOpen, onDismiss: {
             Task.init {
                 await accountViewModel.getAccountInBrokerList(brokerID: accountID)
-                await accountViewModel.getBrokerAllAccountCurrentBalance(accountBrokerList: accountViewModel.accountsInBroker)
+                await accountViewModel.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountViewModel.accountsInBroker)
             }
         }, content: {
             NewAccountInBrokerView(brokerAccountID: accountID)

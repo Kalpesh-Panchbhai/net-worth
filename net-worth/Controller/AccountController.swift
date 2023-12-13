@@ -134,7 +134,7 @@ class AccountController {
                             balance.previousDayValue = 0.0
                             let brokerAccounts = await BrokerAccountController().getAccountInBrokerList(brokerID: account.id!)
                             for brokerAccount in brokerAccounts {
-                                let brokerAccountBalance = await BrokerAccountController().getBrokerAccountCurrentBalance(accountBroker: brokerAccount)
+                                let brokerAccountBalance = await BrokerAccountController().getCurrentBalanceOfAnAccountInBroker(accountBroker: brokerAccount)
                                 balance.currentValue = balance.currentValue + brokerAccountBalance.currentValue
                                 balance.previousDayValue = balance.previousDayValue + brokerAccountBalance.previousDayValue
                                 balance.oneDayChange = balance.currentValue - balance.previousDayValue

@@ -73,14 +73,14 @@ struct AccountBrokerDetailView: View {
         .onAppear {
             Task.init {
                 await accountViewModel.getBrokerAccount(brokerID: brokerID, accountID: accountID)
-                await accountViewModel.getBrokerAccountCurrentBalance(accountBroker: accountViewModel.accountBroker)
+                await accountViewModel.getCurrentBalanceOfAnAccountInBroker(accountBroker: accountViewModel.accountBroker)
                 await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID)
             }
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             Task.init {
                 await accountViewModel.getBrokerAccount(brokerID: brokerID, accountID: accountID)
-                await accountViewModel.getBrokerAccountCurrentBalance(accountBroker: accountViewModel.accountBroker)
+                await accountViewModel.getCurrentBalanceOfAnAccountInBroker(accountBroker: accountViewModel.accountBroker)
                 await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID)
             }
         }, content: {

@@ -40,22 +40,22 @@ struct AccountBrokerRowView: View {
                         .foregroundColor(Color.theme.primaryText)
                 }
                 .padding(.horizontal)
-                if(calculateOneDayChange() > 0) {
+                if(accountViewModel.accountBrokerCurrentBalance.oneDayChange > 0) {
                     HStack {
-                        Text(calculateOneDayChange().withCommas(decimalPlace: 2))
+                        Text(accountViewModel.accountBrokerCurrentBalance.oneDayChange.withCommas(decimalPlace: 2))
                             .font(.system(size: 12))
                             .foregroundColor(Color.theme.green)
-                        Text("(+" + calculatePercentChangeForOneDay() + ")")
+                        Text("(+" + getOneDayPercentageChangeForBroker() + ")")
                             .font(.system(size: 12))
                             .foregroundColor(Color.theme.green)
                     }
                     .padding(.horizontal)
-                } else if(calculateOneDayChange() < 0) {
+                } else if(accountViewModel.accountBrokerCurrentBalance.oneDayChange < 0) {
                     HStack {
-                        Text(calculateOneDayChange().withCommas(decimalPlace: 2))
+                        Text(accountViewModel.accountBrokerCurrentBalance.oneDayChange.withCommas(decimalPlace: 2))
                             .font(.system(size: 12))
                             .foregroundColor(Color.theme.red)
-                        Text("(" + calculatePercentChangeForOneDay() + ")")
+                        Text("(" + getOneDayPercentageChangeForBroker() + ")")
                             .font(.system(size: 12))
                             .foregroundColor(Color.theme.red)
                     }
@@ -68,16 +68,12 @@ struct AccountBrokerRowView: View {
                 await accountViewModel.getBrokerAccount(brokerID: brokerID, accountID: accountID)
                 let symbol = accountViewModel.accountBroker.symbol
                 await financeViewModel.getSymbolDetail(symbol: symbol)
-                await accountViewModel.getBrokerAccountCurrentBalance(accountBroker: accountViewModel.accountBroker)
+                await accountViewModel.getCurrentBalanceOfAnAccountInBroker(accountBroker: accountViewModel.accountBroker)
             }
         })
     }
     
-    private func calculateOneDayChange() -> Double {
-        return accountViewModel.accountBrokerCurrentBalance.currentValue - accountViewModel.accountBrokerCurrentBalance.previousDayValue
-    }
-    
-    private func calculatePercentChangeForOneDay() -> String {
+    private func getOneDayPercentageChangeForBroker() -> String {
         return CommonController.getGrowthPercentage(previousBalance: accountViewModel.accountBrokerCurrentBalance.previousDayValue, currentBalance: accountViewModel.accountBrokerCurrentBalance.currentValue)
     }
 }

@@ -208,19 +208,29 @@ class BrokerAccountController {
         return accountTransactionList
     }
     
-    public func getBrokerAccountCurrentBalance(accountBroker: AccountBroker) async -> Balance {
-        var balance = Balance()
+    public func getCurrentBalanceOfAnAccountInBroker(accountBroker: AccountBroker) async -> Balance {
+        var currentBalance = Balance(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
         let financeDetailModel = await FinanceController().getSymbolDetail(symbol: accountBroker.symbol)
-        balance.currentValue = (financeDetailModel.regularMarketPrice ?? 0.0) * accountBroker.currentUnit
-        balance.previousDayValue = (financeDetailModel.chartPreviousClose ?? 0.0) * accountBroker.currentUnit
+        currentBalance.currentValue = (financeDetailModel.regularMarketPrice ?? 0.0) * accountBroker.currentUnit
+        currentBalance.previousDayValue = (financeDetailModel.chartPreviousClose ?? 0.0) * accountBroker.currentUnit
         
         if(financeDetailModel.currency != SettingsController().getDefaultCurrency().code) {
             let currencyModel = await FinanceController().getCurrencyDetail(accountCurrency: financeDetailModel.currency!)
-            balance.currentValue = balance.currentValue * currencyModel.regularMarketPrice!
-            balance.previousDayValue = balance.previousDayValue * currencyModel.chartPreviousClose!
+            currentBalance.currentValue = currentBalance.currentValue * currencyModel.regularMarketPrice!
+            currentBalance.previousDayValue = currentBalance.previousDayValue * currencyModel.chartPreviousClose!
         }
-        
-        return balance
+        return currentBalance
+    }
+    
+    public func getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: [AccountBroker]) async -> Balance {
+        var currentBalance = Balance(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
+        for accountBroker in accountBrokerList {
+            let accountBrokerCurrentBalance = await getCurrentBalanceOfAnAccountInBroker(accountBroker: accountBroker)
+            currentBalance.currentValue = currentBalance.currentValue + accountBrokerCurrentBalance.currentValue
+            currentBalance.previousDayValue = currentBalance.previousDayValue + accountBrokerCurrentBalance.previousDayValue
+        }
+        currentBalance.oneDayChange = currentBalance.currentValue - currentBalance.previousDayValue
+        return currentBalance
     }
     
     public func addBrokerAccountTransaction(brokerID: String, accountBroker: AccountBroker, timeStamp: Date) async {

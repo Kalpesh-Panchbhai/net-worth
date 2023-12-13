@@ -341,23 +341,17 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func getBrokerAccountCurrentBalance(accountBroker: AccountBroker) async {
-        let accountBrokerCurrentBalance = await brokerAccountController.getBrokerAccountCurrentBalance(accountBroker: accountBroker)
+    func getCurrentBalanceOfAnAccountInBroker(accountBroker: AccountBroker) async {
+        let accountBrokerCurrentBalance = await brokerAccountController.getCurrentBalanceOfAnAccountInBroker(accountBroker: accountBroker)
         DispatchQueue.main.async {
             self.accountBrokerCurrentBalance = accountBrokerCurrentBalance
         }
     }
     
-    func getBrokerAllAccountCurrentBalance(accountBrokerList: [AccountBroker]) async {
-        var Balance = Balance(currentValue: 0.0, previousDayValue: 0.0)
-        for accountBroker in accountBrokerList {
-            let accountBrokerCurrentBalance = await brokerAccountController.getBrokerAccountCurrentBalance(accountBroker: accountBroker)
-            Balance.currentValue = Balance.currentValue + accountBrokerCurrentBalance.currentValue
-            Balance.previousDayValue = Balance.previousDayValue + accountBrokerCurrentBalance.previousDayValue
-        }
-        let newBalance = Balance
+    func getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: [AccountBroker]) async {
+        let accountBrokerCurrentBalance = await brokerAccountController.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountBrokerList)
         DispatchQueue.main.async {
-            self.accountBrokerCurrentBalance = newBalance
+            self.accountBrokerCurrentBalance = accountBrokerCurrentBalance
         }
     }
     

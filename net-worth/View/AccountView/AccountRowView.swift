@@ -55,8 +55,8 @@ struct AccountRowView: View {
             Spacer()
             HStack {
                 if(accountViewModel.account.accountType == "Broker") {
-                    if(calculateOneDayChange() >= 0) {
-                        if(calculateOneDayChange() > 0) {
+                    if(accountViewModel.accountBrokerCurrentBalance.oneDayChange >= 0) {
+                        if(accountViewModel.accountBrokerCurrentBalance.oneDayChange > 0) {
                             ZStack {
                                 Circle()
                                     .fill(Color.theme.green.opacity(0.2))
@@ -66,10 +66,10 @@ struct AccountRowView: View {
                                     .font(.caption.bold())
                             }
                         }
-                        Text("+\(calculateOneDayChange().withCommas(decimalPlace: 2))")
+                        Text("+\(accountViewModel.accountBrokerCurrentBalance.oneDayChange.withCommas(decimalPlace: 2))")
                             .foregroundColor(Color.theme.green)
                             .font(.caption.bold())
-                        Text("(+\(calculatePercentChangeForOneDay()))")
+                        Text("(+\(getOneDayPercentageChangeForBroker()))")
                             .foregroundColor(Color.theme.green)
                             .font(.caption.bold())
                         Spacer()
@@ -82,17 +82,17 @@ struct AccountRowView: View {
                                 .foregroundColor(Color.theme.red)
                                 .font(.caption.bold())
                         }
-                        Text("\(calculateOneDayChange().withCommas(decimalPlace: 2))")
+                        Text("\(accountViewModel.accountBrokerCurrentBalance.oneDayChange.withCommas(decimalPlace: 2))")
                             .foregroundColor(Color.theme.red)
                             .font(.caption.bold())
-                        Text("(\(calculatePercentChangeForOneDay()))")
+                        Text("(\(getOneDayPercentageChangeForBroker()))")
                             .foregroundColor(Color.theme.red)
                             .font(.caption.bold())
                         Spacer()
                     }
                 } else {
-                    if(getOneDayChange() >= 0) {
-                        if(getOneDayChange() > 0) {
+                    if(accountViewModel.accountOneDayChange.oneDayChange >= 0) {
+                        if(accountViewModel.accountOneDayChange.oneDayChange > 0) {
                             ZStack {
                                 Circle()
                                     .fill(Color.theme.green.opacity(0.2))
@@ -102,10 +102,10 @@ struct AccountRowView: View {
                                     .font(.caption.bold())
                             }
                         }
-                        Text("+\(getOneDayChange().withCommas(decimalPlace: 2))")
+                        Text("+\(accountViewModel.accountOneDayChange.oneDayChange.withCommas(decimalPlace: 2))")
                             .foregroundColor(Color.theme.green)
                             .font(.caption.bold())
-                        Text("(+\(getOneDayPercentageChange()))")
+                        Text("(+\(getOneDayPercentageChangeForNonBroker()))")
                             .foregroundColor(Color.theme.green)
                             .font(.caption.bold())
                         Spacer()
@@ -130,10 +130,10 @@ struct AccountRowView: View {
                                 .foregroundColor(Color.theme.red)
                                 .font(.caption.bold())
                         }
-                        Text("\(getOneDayChange().withCommas(decimalPlace: 2))")
+                        Text("\(accountViewModel.accountOneDayChange.oneDayChange.withCommas(decimalPlace: 2))")
                             .foregroundColor(Color.theme.red)
                             .font(.caption.bold())
-                        Text("(\(getOneDayPercentageChange()))")
+                        Text("(\(getOneDayPercentageChangeForNonBroker()))")
                             .foregroundColor(Color.theme.red)
                             .font(.caption.bold())
                         Spacer()
@@ -159,7 +159,7 @@ struct AccountRowView: View {
                 await accountViewModel.getAccount(id: accountID)
                 if(accountViewModel.account.accountType == "Broker") {
                     await accountViewModel.getAccountInBrokerList(brokerID: accountID)
-                    await accountViewModel.getBrokerAllAccountCurrentBalance(accountBrokerList: accountViewModel.accountsInBroker)
+                    await accountViewModel.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountViewModel.accountsInBroker)
                 } else {
                     await accountViewModel.getAccountLastOneDayChange(id: accountID)
                 }
@@ -170,19 +170,11 @@ struct AccountRowView: View {
         .cornerRadius(10)
     }
     
-    private func getOneDayChange() -> Double {
-        return accountViewModel.accountOneDayChange.oneDayChange
-    }
-    
-    private func getOneDayPercentageChange() -> String {
+    private func getOneDayPercentageChangeForNonBroker() -> String {
         return CommonController.getGrowthPercentage(previousBalance: accountViewModel.accountOneDayChange.previousDayValue, currentBalance: accountViewModel.accountOneDayChange.currentValue)
     }
     
-    private func calculateOneDayChange() -> Double {
-        return accountViewModel.accountBrokerCurrentBalance.currentValue - accountViewModel.accountBrokerCurrentBalance.previousDayValue
-    }
-    
-    private func calculatePercentChangeForOneDay() -> String {
+    private func getOneDayPercentageChangeForBroker() -> String {
         return CommonController.getGrowthPercentage(previousBalance: accountViewModel.accountBrokerCurrentBalance.previousDayValue, currentBalance: accountViewModel.accountBrokerCurrentBalance.currentValue)
     }
 }
