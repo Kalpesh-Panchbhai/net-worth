@@ -12,4 +12,6 @@ struct ChartData: Codable, Hashable {
     var date: Date
     
     var value: Double
+    
+    var future: Bool = false
 }

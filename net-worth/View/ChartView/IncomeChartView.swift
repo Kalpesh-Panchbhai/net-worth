@@ -368,16 +368,29 @@ struct IncomeChartView: View {
         Task.init {
             if(!(groupByType || groupByTag || groupByYear || groupByFinancialYear)) {
                 await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                for income in incomeViewModel.incomeList {
-                    incomeChartDataList.append(ChartData(date: income.creditedOn, value: getValue(income: income)))
+                
+                for income in incomeViewModel.incomeList.reversed() {
+                    incomeChartDataList.append(ChartData(date: income.creditedOn.removeTimeStamp(), value: getValue(income: income)))
                 }
+                
                 if(showTotal) {
                     incomeAvg = (incomeViewModel.incomeList.first?.avgAmount ?? 0.0) + (incomeViewModel.incomeList.first?.avgTaxPaid ?? 0.0)
                 } else {
                     incomeAvg = taxPaidView ? (incomeViewModel.incomeList.first?.avgTaxPaid ?? 0.0) : (incomeViewModel.incomeList.first?.avgAmount ?? 0.0)
                 }
                 
-                incomeChartDataList.reverse()
+                if(!incomeChartDataList.isEmpty && (cumulativeView)) {
+                    let lastDataPoint = incomeChartDataList.last!
+                    var currentAmount = lastDataPoint.value
+                    var lastDate = lastDataPoint.date
+                    lastDate = lastDate.endOfMonth()
+                    lastDate = Calendar.current.date(byAdding: .month, value: 1, to: lastDate)!
+                    for _ in 0..<60 {
+                        currentAmount = currentAmount + incomeAvg
+                        incomeChartDataList.append(ChartData(date: lastDate.removeTimeStamp(), value: currentAmount, future: true))
+                        lastDate = Calendar.current.date(byAdding: .month, value: 1, to: lastDate)!
+                    }
+                }
             } else {
                 if(groupByType) {
                     await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Type")
