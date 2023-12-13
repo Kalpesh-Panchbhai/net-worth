@@ -28,6 +28,9 @@ struct AccountBrokerView: View {
                                 .background(Color.theme.foreground)
                                 .cornerRadius(10)
                         })
+                        .contextMenu {
+                            Label(accountViewModel.accountsInBroker[i].id!, systemImage: "info.square")
+                        }
                     }
                 }
             }
