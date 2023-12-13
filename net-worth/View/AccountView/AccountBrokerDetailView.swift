@@ -13,8 +13,11 @@ struct AccountBrokerDetailView: View {
     
     var accountID: String
     
+    var brokerAccountController = BrokerAccountController()
+    
     @State var tabItem = 1
     @State var isNewTransactionViewOpen = false
+    @State var isPresentingAccountDeleteConfirm = false
     
     @StateObject var accountViewModel = AccountViewModel()
     
@@ -41,6 +44,15 @@ struct AccountBrokerDetailView: View {
                 AccountBrokerChartView(brokerID: brokerID, accountID: accountID, symbol: accountViewModel.accountBroker.symbol)
             }
         }
+        .confirmationDialog("Are you sure?",
+                            isPresented: $isPresentingAccountDeleteConfirm) {
+            Button("Delete account " + accountViewModel.accountBroker.name + "?", role: .destructive) {
+                Task.init {
+                    await brokerAccountController.deleteAccountInBroker(brokerID: brokerID, accountID: accountID)
+                }
+                self.presentationMode.wrappedValue.dismiss()
+            }
+        }
         .navigationTitle(accountViewModel.accountBroker.name)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
@@ -57,6 +69,12 @@ struct AccountBrokerDetailView: View {
         .toolbar {
             ToolbarItem(content: {
                 Menu(content: {
+                    Button(role: .destructive, action: {
+                        isPresentingAccountDeleteConfirm.toggle()
+                    }, label: {
+                        Label("Delete", systemImage: "trash")
+                    })
+                    
                     Button(action: {
                         self.isNewTransactionViewOpen.toggle()
                     }, label: {

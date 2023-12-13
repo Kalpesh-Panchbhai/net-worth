@@ -256,4 +256,13 @@ class BrokerAccountController {
         }
     }
     
+    public func deleteAccountInBroker(brokerID: String, accountID: String) async {
+        CommonController.delete(collection: getAccountCollection().document(brokerID).collection(ConstantUtils.accountBrokerCollectionName).document(accountID).collection(ConstantUtils.accountTransactionCollectionName))
+        do {
+            try await getAccountCollection().document(brokerID).collection(ConstantUtils.accountBrokerCollectionName).document(accountID).delete()
+        } catch {
+            print(error)
+        }
+    }
+    
 }
