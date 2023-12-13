@@ -219,6 +219,7 @@ class BrokerAccountController {
             currentBalance.currentValue = currentBalance.currentValue * currencyModel.regularMarketPrice!
             currentBalance.previousDayValue = currentBalance.previousDayValue * currencyModel.chartPreviousClose!
         }
+        currentBalance.oneDayChange = currentBalance.currentValue - currentBalance.previousDayValue
         return currentBalance
     }
     
