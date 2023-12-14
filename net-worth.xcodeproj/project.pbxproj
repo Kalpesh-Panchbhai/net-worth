@@ -298,9 +298,9 @@
 				7DEC3B7F2938A38B002E9C8B /* FinanceDetailModel.swift */,
 				7D433CF729386002007FA625 /* FinanceModel.swift */,
 				7D6885C62A399F0600B47392 /* IncomeCalculation.swift */,
+				7D0C29042B18895500823F7B /* SymbolDetailModel.swift */,
 				7DD8E5AD2A06310A00245A98 /* Backup */,
 				7D4FF8032A1BBAE90060CE44 /* FirebaseModel */,
-				7D0C29042B18895500823F7B /* SymbolDetailModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -331,6 +331,7 @@
 			isa = PBXGroup;
 			children = (
 				7DF9DB90298F978600831494 /* Account.swift */,
+				7D6E821C2B19A9F300D764EC /* AccountBroker.swift */,
 				7DF9DB94298F9C2600831494 /* AccountTransaction.swift */,
 				7D65547529A107DC0008A8E2 /* ChartData.swift */,
 				7D76015C2B14B59D0047E407 /* GroupChartData.swift */,
@@ -339,7 +340,6 @@
 				7DC46B4529A4A513000E311B /* IncomeType.swift */,
 				7D85D06B298D2D650019F85E /* User.swift */,
 				7DB987FD299B6365004ED6D2 /* Watch.swift */,
-				7D6E821C2B19A9F300D764EC /* AccountBroker.swift */,
 			);
 			path = FirebaseModel;
 			sourceTree = "<group>";
@@ -512,6 +512,7 @@
 		7DD7A56C29224C1200CD5B37 /* AccountView */ = {
 			isa = PBXGroup;
 			children = (
+				7D559DAE2B1CCD6500967F10 /* AccountBrokerChartView.swift */,
 				7D6E82242B19D61800D764EC /* AccountBrokerDetailCardView.swift */,
 				7D6E82222B19BF0700D764EC /* AccountBrokerDetailView.swift */,
 				7D6E82202B19BAE500D764EC /* AccountBrokerRowView.swift */,
@@ -529,10 +530,9 @@
 				7D79FA8B291BA152004A2ECF /* NewAccountView.swift */,
 				7D3E3CC02A1FC87D009538BA /* RowWatchToAccountView.swift */,
 				7DB2B0A72995638700E4B891 /* TransactionView.swift */,
+				7DBEAD7D2B1B4987006EAB32 /* UpdateBalanceAccountBrokerView.swift */,
 				7DE42FBF2934F69200D4DA0A /* UpdateBalanceAccountView.swift */,
 				7D5A755F2A04FB11001646A2 /* WatchToAccountView.swift */,
-				7DBEAD7D2B1B4987006EAB32 /* UpdateBalanceAccountBrokerView.swift */,
-				7D559DAE2B1CCD6500967F10 /* AccountBrokerChartView.swift */,
 			);
 			path = AccountView;
 			sourceTree = "<group>";
