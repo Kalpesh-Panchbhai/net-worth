@@ -72,13 +72,13 @@ struct AccountCardList: View {
                                                             AccountCardView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id!)
                                                                 .contextMenu {
                                                                     
-                                                                    Label(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i].id!, systemImage: "info.square")
+                                                                    Label(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i].id!, systemImage: ConstantUtils.infoIconImageName)
                                                                     
                                                                     Button(role: .destructive, action: {
                                                                         isPresentingAccountDeleteConfirm.toggle()
                                                                         deletedAccount = accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i];
                                                                     }, label: {
-                                                                        Label("Delete", systemImage: "trash")
+                                                                        Label("Delete", systemImage: ConstantUtils.deleteImageName)
                                                                     })
                                                                     
                                                                     if(accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].active) {
@@ -88,7 +88,7 @@ struct AccountCardList: View {
                                                                             }
                                                                             isNewTransactionViewOpen.toggle()
                                                                         } label: {
-                                                                            Label("New Transaction", systemImage: "square.and.pencil")
+                                                                            Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
                                                                         }
                                                                     }
                                                                 }
@@ -132,7 +132,7 @@ struct AccountCardList: View {
                     Button(action: {
                         isNewAccountAccountViewOpen.toggle()
                     }, label: {
-                        Image(systemName: "plus")
+                        Image(systemName: ConstantUtils.plusImageName)
                             .foregroundColor(Color.theme.primaryText)
                             .bold()
                     })

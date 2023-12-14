@@ -58,7 +58,7 @@ struct IncomeView: View {
                                                 updateData()
                                             }, label: {
                                                 if(filterIncomeType.contains(item.name)) {
-                                                    Label(item.name, systemImage: "checkmark")
+                                                    Label(item.name, systemImage: ConstantUtils.checkmarkImageName)
                                                 } else {
                                                     Text(item.name)
                                                 }
@@ -84,7 +84,7 @@ struct IncomeView: View {
                                                 updateData()
                                             }, label: {
                                                 if(filterIncomeTag.contains(item.name)) {
-                                                    Label(item.name, systemImage: "checkmark")
+                                                    Label(item.name, systemImage: ConstantUtils.checkmarkImageName)
                                                 } else {
                                                     Text(item.name)
                                                 }
@@ -112,7 +112,7 @@ struct IncomeView: View {
                                                 updateData()
                                             }, label: {
                                                 if(filterYear.contains(item)) {
-                                                    Label(item, systemImage: "checkmark")
+                                                    Label(item, systemImage: ConstantUtils.checkmarkImageName)
                                                 } else {
                                                     Text(item)
                                                 }
@@ -141,7 +141,7 @@ struct IncomeView: View {
                                                 updateData()
                                             }, label: {
                                                 if(filterFinancialYear.contains(item)) {
-                                                    Label(item, systemImage: "checkmark")
+                                                    Label(item, systemImage: ConstantUtils.checkmarkImageName)
                                                 } else {
                                                     Text(item)
                                                 }
@@ -179,7 +179,7 @@ struct IncomeView: View {
                                     }
                                 }, label: {
                                     if(groupByType) {
-                                        Label("Income Type", systemImage: "checkmark")
+                                        Label("Income Type", systemImage: ConstantUtils.checkmarkImageName)
                                     } else {
                                         Text("Income Type")
                                     }
@@ -205,7 +205,7 @@ struct IncomeView: View {
                                     }
                                 }, label: {
                                     if(groupByTag) {
-                                        Label("Income Tag", systemImage: "checkmark")
+                                        Label("Income Tag", systemImage: ConstantUtils.checkmarkImageName)
                                     } else {
                                         Text("Income Tag")
                                     }
@@ -231,7 +231,7 @@ struct IncomeView: View {
                                     }
                                 }, label: {
                                     if(groupByYear) {
-                                        Label("Year", systemImage: "checkmark")
+                                        Label("Year", systemImage: ConstantUtils.checkmarkImageName)
                                     } else {
                                         Text("Year")
                                     }
@@ -257,7 +257,7 @@ struct IncomeView: View {
                                     }
                                 }, label: {
                                     if(groupByFinancialYear) {
-                                        Label("Financial Year", systemImage: "checkmark")
+                                        Label("Financial Year", systemImage: ConstantUtils.checkmarkImageName)
                                     } else {
                                         Text("Financial Year")
                                     }
@@ -279,7 +279,7 @@ struct IncomeView: View {
                                     }
                                 }, label: {
                                     if(showCumulative) {
-                                        Label("Show Cumulative", systemImage: "checkmark")
+                                        Label("Show Cumulative", systemImage: ConstantUtils.checkmarkImageName)
                                     } else {
                                         Text("Show Cumulative")
                                     }
@@ -292,14 +292,14 @@ struct IncomeView: View {
                                     }
                                 }, label: {
                                     if(showAverage) {
-                                        Label("Show Average", systemImage: "checkmark")
+                                        Label("Show Average", systemImage: ConstantUtils.checkmarkImageName)
                                     } else {
                                         Text("Show Average")
                                     }
                                 })
                                 
                             }, label: {
-                                Image(systemName: "ellipsis")
+                                Image(systemName: ConstantUtils.menuImageName)
                             })
                             .font(.system(size: 14).bold())
                         }
@@ -338,7 +338,7 @@ struct IncomeView: View {
                                                 IncomeRowView(income: income, groupBy: groupByTag ? "Tag" : (groupByType ? "Type" : ""), showCumulative: showCumulative, showAverage: showAverage)
                                             })
                                             .contextMenu {
-                                                Label(income.id!, systemImage: "info.square")
+                                                Label(income.id!, systemImage: ConstantUtils.infoIconImageName)
                                             }
                                         }
                                         .onDelete(perform: deleteIncome)
@@ -355,7 +355,7 @@ struct IncomeView: View {
                                         IncomeRowView(income: income, showCumulative: showCumulative, showAverage: showAverage)
                                     })
                                     .contextMenu {
-                                        Label(income.id!, systemImage: "info.square")
+                                        Label(income.id!, systemImage: ConstantUtils.infoIconImageName)
                                     }
                                 }
                                 .onDelete(perform: deleteIncome)
@@ -380,7 +380,7 @@ struct IncomeView: View {
                                 Button(action: {
                                     self.isChartViewOpen.toggle()
                                 }, label: {
-                                    Image(systemName: "chart.line.uptrend.xyaxis")
+                                    Image(systemName: ConstantUtils.chartImageName)
                                         .foregroundColor(Color.theme.primaryText)
                                         .bold()
                                 })
@@ -398,7 +398,7 @@ struct IncomeView: View {
                     Button(action: {
                         self.isNewIncomeViewOpen.toggle()
                     }, label: {
-                        Image(systemName: "plus")
+                        Image(systemName: ConstantUtils.plusImageName)
                             .foregroundColor(Color.theme.primaryText)
                             .bold()
                     })

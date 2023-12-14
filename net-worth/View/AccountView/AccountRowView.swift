@@ -61,7 +61,7 @@ struct AccountRowView: View {
                                 Circle()
                                     .fill(Color.theme.green.opacity(0.2))
                                     .frame(width: 17, height: 17)
-                                Image(systemName: "arrow.up")
+                                Image(systemName: ConstantUtils.arrowUpImageName)
                                     .foregroundColor(Color.theme.green)
                                     .font(.caption.bold())
                             }
@@ -78,7 +78,7 @@ struct AccountRowView: View {
                             Circle()
                                 .fill(Color.theme.red.opacity(0.2))
                                 .frame(width: 17, height: 17)
-                            Image(systemName: "arrow.down")
+                            Image(systemName: ConstantUtils.arrowDownImageName)
                                 .foregroundColor(Color.theme.red)
                                 .font(.caption.bold())
                         }
@@ -97,7 +97,7 @@ struct AccountRowView: View {
                                 Circle()
                                     .fill(Color.theme.green.opacity(0.2))
                                     .frame(width: 17, height: 17)
-                                Image(systemName: "arrow.up")
+                                Image(systemName: ConstantUtils.arrowUpImageName)
                                     .foregroundColor(Color.theme.green)
                                     .font(.caption.bold())
                             }
@@ -110,14 +110,14 @@ struct AccountRowView: View {
                             .font(.caption.bold())
                         Spacer()
                         if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving" && accountViewModel.account.active) {
-                            Image(systemName: "bell.fill")
+                            Image(systemName: ConstantUtils.notificationOnImageName)
                                 .foregroundColor(Color.theme.secondaryText)
                                 .font(.caption)
                             Text("\(accountViewModel.account.paymentDate)")
                                 .foregroundColor(Color.theme.secondaryText)
                                 .font(.caption)
                         } else if(accountViewModel.account.accountType != "Saving" && accountViewModel.account.active) {
-                            Image(systemName: "bell.slash.fill")
+                            Image(systemName: ConstantUtils.notificationOffImageName)
                                 .foregroundColor(Color.theme.secondaryText)
                                 .font(.caption)
                         }
@@ -126,7 +126,7 @@ struct AccountRowView: View {
                             Circle()
                                 .fill(Color.theme.red.opacity(0.2))
                                 .frame(width: 17, height: 17)
-                            Image(systemName: "arrow.down")
+                            Image(systemName: ConstantUtils.arrowDownImageName)
                                 .foregroundColor(Color.theme.red)
                                 .font(.caption.bold())
                         }
@@ -138,14 +138,14 @@ struct AccountRowView: View {
                             .font(.caption.bold())
                         Spacer()
                         if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
-                            Image(systemName: "bell.fill")
+                            Image(systemName: ConstantUtils.notificationOnImageName)
                                 .foregroundColor(Color.theme.secondaryText)
                                 .font(.caption)
                             Text("\(accountViewModel.account.paymentDate)")
                                 .foregroundColor(Color.theme.secondaryText)
                                 .font(.caption)
                         } else if(accountViewModel.account.accountType != "Saving") {
-                            Image(systemName: "bell.slash.fill")
+                            Image(systemName: ConstantUtils.notificationOffImageName)
                                 .foregroundColor(Color.theme.secondaryText)
                                 .font(.caption)
                         }

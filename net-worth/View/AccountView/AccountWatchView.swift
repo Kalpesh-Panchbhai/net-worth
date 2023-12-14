@@ -27,7 +27,7 @@ struct AccountWatchView: View {
                             )
                     })
                     .contextMenu {
-                        Label(watch.id!, systemImage: "info.square")
+                        Label(watch.id!, systemImage: ConstantUtils.infoIconImageName)
                     }
                 })
                 .listRowBackground(Color.theme.foreground)

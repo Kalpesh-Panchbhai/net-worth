@@ -59,7 +59,7 @@ struct IncomeDetailView: View {
                 Button(action: {
                     self.modifyViewOpen = true
                 }, label: {
-                    Image(systemName: "square.and.pencil")
+                    Image(systemName: ConstantUtils.newTransactionImageName)
                         .foregroundColor(Color.theme.primaryText)
                 })
                 .font(.system(size: 14).bold())
@@ -72,7 +72,7 @@ struct IncomeDetailView: View {
             leading: Button(action: {
                 self.presentationMode.wrappedValue.dismiss()
             }, label: {
-                Image(systemName: "chevron.left")
+                Image(systemName: ConstantUtils.backbuttonImageName)
                     .foregroundColor(Color.theme.primaryText)
             })
             .font(.system(size: 14).bold())

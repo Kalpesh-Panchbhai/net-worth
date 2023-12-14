@@ -26,7 +26,7 @@ struct IncomeTagView: View {
                     Color.theme.background.ignoresSafeArea()
                     HStack {
                         Text("Click on")
-                        Image(systemName: "plus")
+                        Image(systemName: ConstantUtils.plusImageName)
                         Text("Icon to add new Income Tag.")
                     }
                     .foregroundColor(Color.theme.primaryText)
@@ -50,7 +50,7 @@ struct IncomeTagView: View {
                             }
                         }
                         .contextMenu {
-                            Label(item.id!, systemImage: "info.square")
+                            Label(item.id!, systemImage: ConstantUtils.infoIconImageName)
                             
                             if(!item.isdefault) {
                                 Button(action: {
@@ -81,7 +81,7 @@ struct IncomeTagView: View {
                 Button(action: {
                     self.addNewIncomeTagOpenView.toggle()
                 }, label: {
-                    Image(systemName: "plus")
+                    Image(systemName: ConstantUtils.plusImageName)
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
                 })
@@ -104,7 +104,7 @@ struct IncomeTagView: View {
             leading: Button(action: {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
-                Image(systemName: "chevron.left")
+                Image(systemName: ConstantUtils.backbuttonImageName)
                     .foregroundColor(Color.theme.primaryText)
                     .bold()
             }

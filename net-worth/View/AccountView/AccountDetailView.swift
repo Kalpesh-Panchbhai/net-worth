@@ -104,7 +104,7 @@ struct AccountDetailView: View {
             leading: Button(action: {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
-                Image(systemName: "chevron.left")
+                Image(systemName: ConstantUtils.backbuttonImageName)
                     .foregroundColor(Color.theme.primaryText)
                     .bold()
             }
@@ -116,11 +116,11 @@ struct AccountDetailView: View {
                     self.showAddWatchListView.toggle()
                 }, label: {
                     if(watchViewModel.watchListForAccount.count > 1) {
-                        Image(systemName: "bookmark.fill")
+                        Image(systemName: ConstantUtils.bookmarkImageName)
                             .foregroundColor(Color.theme.primaryText)
                             .bold()
                     } else {
-                        Image(systemName: "bookmark")
+                        Image(systemName: ConstantUtils.notBookmarkImageName)
                             .foregroundColor(Color.theme.primaryText)
                             .bold()
                     }
@@ -133,7 +133,7 @@ struct AccountDetailView: View {
                     Button(role: .destructive, action: {
                         isPresentingAccountDeleteConfirm.toggle()
                     }, label: {
-                        Label("Delete", systemImage: "trash")
+                        Label("Delete", systemImage: ConstantUtils.deleteImageName)
                     })
                     
                     Button(action: {
@@ -181,13 +181,13 @@ struct AccountDetailView: View {
                             Button(action: {
                                 self.isNewAccountInBrokerViewOpen.toggle()
                             }, label: {
-                                Label("New Account", systemImage: "square.and.pencil")
+                                Label("New Account", systemImage: ConstantUtils.newTransactionImageName)
                             })
                         } else {
                             Button(action: {
                                 self.isNewTransactionViewOpen.toggle()
                             }, label: {
-                                Label("New Transaction", systemImage: "square.and.pencil")
+                                Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
                             })
                         }
                         
@@ -250,7 +250,7 @@ struct AccountDetailView: View {
                     }
                     
                 }, label: {
-                    Image(systemName: "ellipsis")
+                    Image(systemName: ConstantUtils.menuImageName)
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
                 })

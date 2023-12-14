@@ -63,4 +63,19 @@ class ConstantUtils {
     
     static var incomeTypeKeyName = "name"
     static var incomeTypeKeyIsDefault = "isdefault"
+    
+    static var newTransactionImageName = "square.and.pencil"
+    static var deleteImageName = "trash"
+    static var infoIconImageName = "info.square"
+    static var arrowUpImageName = "arrow.up"    
+    static var arrowDownImageName = "arrow.down"
+    static var checkmarkImageName = "checkmark"
+    static var backbuttonImageName = "chevron.left"
+    static var notificationOnImageName = "bell.fill"
+    static var notificationOffImageName = "bell.slash.fill"
+    static var plusImageName = "plus"
+    static var menuImageName = "ellipsis"
+    static var notBookmarkImageName = "bookmark"
+    static var bookmarkImageName = "bookmark.fill"
+    static var chartImageName = "chart.line.uptrend.xyaxis"
 }

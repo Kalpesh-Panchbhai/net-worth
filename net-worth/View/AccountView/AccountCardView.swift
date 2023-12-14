@@ -25,14 +25,14 @@ struct AccountCardView: View {
                 if(accountViewModel.account.accountType != "Broker") {
                     if(accountViewModel.account.active) {
                         if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
-                            Image(systemName: "bell.fill")
+                            Image(systemName: ConstantUtils.notificationOnImageName)
                                 .foregroundColor(Color.theme.green.opacity(0.7))
                                 .font(.caption)
                             Text("\(accountViewModel.account.paymentDate)")
                                 .foregroundColor(Color.theme.green)
                                 .font(.caption)
                         } else if(accountViewModel.account.accountType != "Saving") {
-                            Image(systemName: "bell.slash.fill")
+                            Image(systemName: ConstantUtils.notificationOffImageName)
                                 .foregroundColor(Color.theme.red.opacity(0.7))
                                 .font(.caption)
                         }
@@ -71,7 +71,7 @@ struct AccountCardView: View {
                             Circle()
                                 .fill(Color.theme.green.opacity(0.2))
                                 .frame(width: 17, height: 17)
-                            Image(systemName: "arrow.up")
+                            Image(systemName: ConstantUtils.arrowUpImageName)
                                 .foregroundColor(Color.theme.green)
                                 .font(.system(size: 11).bold())
                         }
@@ -86,7 +86,7 @@ struct AccountCardView: View {
                             Circle()
                                 .fill(Color.theme.red.opacity(0.2))
                                 .frame(width: 17, height: 17)
-                            Image(systemName: "arrow.down")
+                            Image(systemName: ConstantUtils.arrowDownImageName)
                                 .foregroundColor(Color.theme.red)
                                 .font(.system(size: 11).bold())
                         }
@@ -105,7 +105,7 @@ struct AccountCardView: View {
                             Circle()
                                 .fill(Color.theme.green.opacity(0.2))
                                 .frame(width: 17, height: 17)
-                            Image(systemName: "arrow.up")
+                            Image(systemName: ConstantUtils.arrowUpImageName)
                                 .foregroundColor(Color.theme.green)
                                 .font(.system(size: 11).bold())
                         }
@@ -120,7 +120,7 @@ struct AccountCardView: View {
                             Circle()
                                 .fill(Color.theme.red.opacity(0.2))
                                 .frame(width: 17, height: 17)
-                            Image(systemName: "arrow.down")
+                            Image(systemName: ConstantUtils.arrowDownImageName)
                                 .foregroundColor(Color.theme.red)
                                 .font(.system(size: 11).bold())
                         }

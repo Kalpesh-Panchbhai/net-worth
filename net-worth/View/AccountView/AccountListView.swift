@@ -44,13 +44,13 @@ struct AccountListView: View {
                                 AccountRowView(accountID: account.id!, fromWatchView: accountType.elementsEqual("Inactive Account"))
                                     .contextMenu {
                                         
-                                        Label(account.id!, systemImage: "info.square")
+                                        Label(account.id!, systemImage: ConstantUtils.infoIconImageName)
                                         
                                         Button(role: .destructive, action: {
                                             isPresentingAccountDeleteConfirm.toggle()
                                             deletedAccount = account
                                         }, label: {
-                                            Label("Delete", systemImage: "trash")
+                                            Label("Delete", systemImage: ConstantUtils.deleteImageName)
                                         })
                                         
                                         if(account.active) {
@@ -60,7 +60,7 @@ struct AccountListView: View {
                                                 }
                                                 isNewTransactionViewOpen.toggle()
                                             } label: {
-                                                Label("New Transaction", systemImage: "square.and.pencil")
+                                                Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
                                             }
                                         }
                                     }
@@ -79,7 +79,7 @@ struct AccountListView: View {
             leading: Button(action: {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
-                Image(systemName: "chevron.left")
+                Image(systemName: ConstantUtils.backbuttonImageName)
                     .foregroundColor(Color.theme.primaryText)
                     .bold()
             }
@@ -90,7 +90,7 @@ struct AccountListView: View {
                 Button(action: {
                     self.isChartViewOpen.toggle()
                 }, label: {
-                    Image(systemName: "chart.line.uptrend.xyaxis")
+                    Image(systemName: ConstantUtils.chartImageName)
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
                 })

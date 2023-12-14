@@ -192,11 +192,11 @@ struct NewAccountView: View {
                         dismiss()
                     }, label: {
                         if(!allFieldsFilled()) {
-                            Image(systemName: "checkmark")
+                            Image(systemName: ConstantUtils.checkmarkImageName)
                                 .foregroundColor(Color.theme.primaryText.opacity(0.3))
                                 .bold()
                         } else {
-                            Image(systemName: "checkmark")
+                            Image(systemName: ConstantUtils.checkmarkImageName)
                                 .foregroundColor(Color.theme.primaryText)
                                 .bold()
                         }
@@ -299,7 +299,7 @@ struct NewAccountView: View {
                         isPlus = true
                     }
                 }, label: {
-                    Image(systemName: isPlus ? "plus" : "minus")
+                    Image(systemName: isPlus ? ConstantUtils.plusImageName : "minus")
                         .foregroundColor(isPlus ? Color.theme.green : Color.theme.red)
                         .bold()
                 })

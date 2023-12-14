@@ -120,7 +120,7 @@ struct NotificationsView: View {
                 leading: Button(action: {
                     self.presentationMode.wrappedValue.dismiss()
                 }) {
-                    Image(systemName: "chevron.left")
+                    Image(systemName: ConstantUtils.backbuttonImageName)
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
                 }

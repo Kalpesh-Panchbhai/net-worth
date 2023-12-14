@@ -24,7 +24,7 @@ struct RowWatchToAccountView: View {
             Spacer()
             VStack {
                 if(isAdded) {
-                    Image(systemName: "bookmark.fill")
+                    Image(systemName: ConstantUtils.bookmarkImageName)
                         .foregroundColor(watch.accountName.elementsEqual("All") ? .gray : Color.theme.primaryText)
                         .bold()
                         .onTapGesture {
@@ -35,7 +35,7 @@ struct RowWatchToAccountView: View {
                             watchController.addAccountToWatchList(watch: watch)
                         }
                 } else {
-                    Image(systemName: "bookmark")
+                    Image(systemName: ConstantUtils.notBookmarkImageName)
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
                         .onTapGesture {

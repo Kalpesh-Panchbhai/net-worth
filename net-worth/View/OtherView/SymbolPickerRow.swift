@@ -44,7 +44,7 @@ struct SymbolPickerRow: View {
                         }
                     }.fixedSize()
                     if self.isSelected {
-                        Image(systemName: "checkmark")
+                        Image(systemName: ConstantUtils.checkmarkImageName)
                     }
                 }
             }

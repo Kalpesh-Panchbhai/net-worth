@@ -143,11 +143,11 @@ struct NewIncomeView: View {
                         dismiss()
                     }, label: {
                         if(!allFieldsFilled()) {
-                            Image(systemName: "checkmark")
+                            Image(systemName: ConstantUtils.checkmarkImageName)
                                 .foregroundColor(Color.theme.primaryText.opacity(0.3))
                                 .bold()
                         } else {
-                            Image(systemName: "checkmark")
+                            Image(systemName: ConstantUtils.checkmarkImageName)
                                 .foregroundColor(Color.theme.primaryText)
                                 .bold()
                         }
@@ -169,7 +169,7 @@ struct NewIncomeView: View {
                             Label("Add Income Tag", systemImage: "tag.square")
                         })
                     }, label: {
-                        Image(systemName: "ellipsis")
+                        Image(systemName: ConstantUtils.menuImageName)
                             .foregroundColor(Color.theme.primaryText)
                             .bold()
                     })

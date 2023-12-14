@@ -34,13 +34,13 @@ struct AccountBrokerView: View {
                                 .cornerRadius(10)
                         })
                         .contextMenu {
-                            Label(accountViewModel.accountsInBroker[i].id!, systemImage: "info.square")
+                            Label(accountViewModel.accountsInBroker[i].id!, systemImage: ConstantUtils.infoIconImageName)
                             
                             Button(role: .destructive, action: {
                                 isPresentingAccountDeleteConfirm.toggle()
                                 deletedAccount = accountViewModel.accountsInBroker[i]
                             }, label: {
-                                Label("Delete", systemImage: "trash")
+                                Label("Delete", systemImage: ConstantUtils.deleteImageName)
                             })
                         }
                         .confirmationDialog("Are you sure?",

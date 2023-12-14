@@ -30,7 +30,7 @@ struct AccountBrokerDetailCardView: View {
                         Circle()
                             .fill(Color.theme.green.opacity(0.2))
                             .frame(width: 17, height: 17)
-                        Image(systemName: "arrow.up")
+                        Image(systemName: ConstantUtils.arrowUpImageName)
                             .foregroundColor(Color.theme.green)
                             .font(.caption.bold())
                     }
@@ -45,7 +45,7 @@ struct AccountBrokerDetailCardView: View {
                         Circle()
                             .fill(Color.theme.red.opacity(0.2))
                             .frame(width: 17, height: 17)
-                        Image(systemName: "arrow.down")
+                        Image(systemName: ConstantUtils.arrowDownImageName)
                             .foregroundColor(Color.theme.red)
                             .font(.caption.bold())
                     }
