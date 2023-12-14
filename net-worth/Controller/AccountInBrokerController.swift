@@ -11,15 +11,11 @@ import FirebaseFirestore
 
 class AccountInBrokerController {
     
-    public func getAccountCollection() -> CollectionReference {
-        return UserController()
-            .getCurrentUserDocument()
-            .collection(ConstantUtils.accountCollectionName)
-    }
+    private var accountController = AccountController()
     
     public func addAccountInBroker(brokerID: String, accountInBroker: AccountInBroker) {
         do {
-            let accountID = try getAccountCollection()
+            let accountID = try accountController.getAccountCollection()
                 .document(brokerID)
                 .collection(ConstantUtils.accountBrokerCollectionName)
                 .addDocument(from: accountInBroker).documentID
@@ -36,7 +32,7 @@ class AccountInBrokerController {
     
     public func updateAccountInBroker(brokerID: String, accountBroker: AccountInBroker) {
         do {
-            try getAccountCollection()
+            try accountController.getAccountCollection()
                 .document(brokerID)
                 .collection(ConstantUtils.accountBrokerCollectionName)
                 .document(accountBroker.id!)
@@ -49,7 +45,7 @@ class AccountInBrokerController {
     
     public func addTransactionInBrokerAccount(brokerID: String, accountID: String, accountTransaction: AccountTransaction) {
         do {
-            let documentID = try getAccountCollection()
+            let documentID = try accountController.getAccountCollection()
                 .document(brokerID)
                 .collection(ConstantUtils.accountBrokerCollectionName)
                 .document(accountID)
@@ -66,7 +62,7 @@ class AccountInBrokerController {
     public func getAccountInBrokerList(brokerID: String) async -> [AccountInBroker] {
         var accountBrokerList = [AccountInBroker]()
         do {
-            accountBrokerList = try await AccountController()
+            accountBrokerList = try await accountController
                 .getAccountCollection()
                 .document(brokerID)
                 .collection(ConstantUtils.accountBrokerCollectionName)
@@ -75,10 +71,10 @@ class AccountInBrokerController {
                 .documents
                 .map { doc in
                     return AccountInBroker(id: doc.documentID,
-                                         timestamp: (doc[ConstantUtils.accountBrokerKeyTimeStamp] as? Timestamp)?.dateValue() ?? Date(),
-                                         symbol: doc[ConstantUtils.accountBrokerKeySymbol] as? String ?? "",
-                                         name: doc[ConstantUtils.accountBrokerKeyName] as? String ?? "",
-                                         currentUnit: doc[ConstantUtils.accountBrokerKeyCurrentUnit] as? Double ?? 0.0)
+                                           timestamp: (doc[ConstantUtils.accountBrokerKeyTimeStamp] as? Timestamp)?.dateValue() ?? Date(),
+                                           symbol: doc[ConstantUtils.accountBrokerKeySymbol] as? String ?? "",
+                                           name: doc[ConstantUtils.accountBrokerKeyName] as? String ?? "",
+                                           currentUnit: doc[ConstantUtils.accountBrokerKeyCurrentUnit] as? Double ?? 0.0)
                 }
         } catch {
             print(error)
@@ -89,7 +85,7 @@ class AccountInBrokerController {
     public func getBrokerAccount(brokerID: String, accountID: String) async -> AccountInBroker {
         var accountBroker = AccountInBroker()
         do {
-            accountBroker = try await AccountController()
+            accountBroker = try await accountController
                 .getAccountCollection()
                 .document(brokerID)
                 .collection(ConstantUtils.accountBrokerCollectionName)
@@ -104,7 +100,7 @@ class AccountInBrokerController {
     public func getAccountTransactionsInBrokerAccountList(brokerID: String, accountID: String) async -> [AccountTransaction] {
         var accountTransactionList = [AccountTransaction]()
         do {
-            accountTransactionList = try await AccountController()
+            accountTransactionList = try await accountController
                 .getAccountCollection()
                 .document(brokerID)
                 .collection(ConstantUtils.accountBrokerCollectionName)
@@ -144,7 +140,7 @@ class AccountInBrokerController {
         
         var accountTransactionList = [AccountTransaction]()
         do {
-            accountTransactionList = try await AccountController()
+            accountTransactionList = try await accountController
                 .getAccountCollection()
                 .document(brokerID)
                 .collection(ConstantUtils.accountBrokerCollectionName)
@@ -185,7 +181,7 @@ class AccountInBrokerController {
         
         var accountTransactionList = [AccountTransaction]()
         do {
-            accountTransactionList = try await AccountController()
+            accountTransactionList = try await accountController
                 .getAccountCollection()
                 .document(brokerID)
                 .collection(ConstantUtils.accountBrokerCollectionName)
@@ -240,7 +236,7 @@ class AccountInBrokerController {
         let balanceChange = accountBroker.currentUnit - accountTransactionList.first!.currentBalance
         let accountTransaction = AccountTransaction(timestamp: timeStamp, balanceChange: balanceChange, currentBalance: accountBroker.currentUnit)
         do {
-            try AccountController()
+            try accountController
                 .getAccountCollection()
                 .document(brokerID)
                 .collection(ConstantUtils.accountBrokerCollectionName)
@@ -258,9 +254,9 @@ class AccountInBrokerController {
     }
     
     public func deleteAccountInBroker(brokerID: String, accountID: String) async {
-        CommonController.delete(collection: getAccountCollection().document(brokerID).collection(ConstantUtils.accountBrokerCollectionName).document(accountID).collection(ConstantUtils.accountTransactionCollectionName))
+        CommonController.delete(collection: accountController.getAccountCollection().document(brokerID).collection(ConstantUtils.accountBrokerCollectionName).document(accountID).collection(ConstantUtils.accountTransactionCollectionName))
         do {
-            try await getAccountCollection().document(brokerID).collection(ConstantUtils.accountBrokerCollectionName).document(accountID).delete()
+            try await accountController.getAccountCollection().document(brokerID).collection(ConstantUtils.accountBrokerCollectionName).document(accountID).delete()
         } catch {
             print(error)
         }
