@@ -17,16 +17,16 @@ class BrokerAccountController {
             .collection(ConstantUtils.accountCollectionName)
     }
     
-    public func addAccountInBroker(brokerID: String, accountBroker: AccountInBroker) {
+    public func addAccountInBroker(brokerID: String, accountInBroker: AccountInBroker) {
         do {
             let accountID = try getAccountCollection()
                 .document(brokerID)
                 .collection(ConstantUtils.accountBrokerCollectionName)
-                .addDocument(from: accountBroker).documentID
+                .addDocument(from: accountInBroker).documentID
             
             print("New Account added in Broker : " + accountID)
             
-            let accountTransaction = AccountTransaction(timestamp: accountBroker.timestamp, balanceChange: accountBroker.currentUnit, currentBalance: accountBroker.currentUnit)
+            let accountTransaction = AccountTransaction(timestamp: accountInBroker.timestamp, balanceChange: accountInBroker.currentUnit, currentBalance: accountInBroker.currentUnit)
             addTransactionInBrokerAccount(brokerID: brokerID, accountID: accountID, accountTransaction: accountTransaction)
             
         } catch {
