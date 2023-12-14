@@ -23,7 +23,7 @@ class AccountInBrokerController {
             print("New Account added in Broker : " + accountID)
             
             let accountTransaction = AccountTransaction(timestamp: accountInBroker.timestamp, balanceChange: accountInBroker.currentUnit, currentBalance: accountInBroker.currentUnit)
-            addTransactionInBrokerAccount(brokerID: brokerID, accountID: accountID, accountTransaction: accountTransaction)
+            addTransactionInAccountInBroker(brokerID: brokerID, accountID: accountID, accountTransaction: accountTransaction)
             
         } catch {
             print(error)
@@ -43,7 +43,7 @@ class AccountInBrokerController {
         }
     }
     
-    public func addTransactionInBrokerAccount(brokerID: String, accountID: String, accountTransaction: AccountTransaction) {
+    public func addTransactionInAccountInBroker(brokerID: String, accountID: String, accountTransaction: AccountTransaction) {
         do {
             let documentID = try accountController.getAccountCollection()
                 .document(brokerID)
@@ -59,7 +59,7 @@ class AccountInBrokerController {
         }
     }
     
-    public func getAccountInBrokerList(brokerID: String) async -> [AccountInBroker] {
+    public func getAccountListInBroker(brokerID: String) async -> [AccountInBroker] {
         var accountBrokerList = [AccountInBroker]()
         do {
             accountBrokerList = try await accountController
@@ -82,7 +82,7 @@ class AccountInBrokerController {
         return accountBrokerList
     }
     
-    public func getBrokerAccount(brokerID: String, accountID: String) async -> AccountInBroker {
+    public func getAccountInBroker(brokerID: String, accountID: String) async -> AccountInBroker {
         var accountBroker = AccountInBroker()
         do {
             accountBroker = try await accountController
@@ -97,7 +97,7 @@ class AccountInBrokerController {
         return accountBroker
     }
     
-    public func getAccountTransactionsInBrokerAccountList(brokerID: String, accountID: String) async -> [AccountTransaction] {
+    public func getAccountTransactionListInAccountInBroker(brokerID: String, accountID: String) async -> [AccountTransaction] {
         var accountTransactionList = [AccountTransaction]()
         do {
             accountTransactionList = try await accountController
@@ -122,7 +122,7 @@ class AccountInBrokerController {
         return accountTransactionList
     }
     
-    public func getAccountTransactionsInBrokerAccountListWithRange(brokerID: String, accountID: String, range: String) async -> [AccountTransaction] {
+    public func getAccountTransactionListInAccountInBrokerWithRange(brokerID: String, accountID: String, range: String) async -> [AccountTransaction] {
         var date = Timestamp()
         if(range.elementsEqual("1M")) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000))
@@ -163,7 +163,7 @@ class AccountInBrokerController {
         return accountTransactionList
     }
     
-    public func getAccountTransactionsInBrokerAccountListBelowRange(brokerID: String, accountID: String, range: String) async -> [AccountTransaction] {
+    public func getAccountTransactionListInAccountInBrokerBelowRange(brokerID: String, accountID: String, range: String) async -> [AccountTransaction] {
         var date = Timestamp()
         if(range.elementsEqual("1M")) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000))
@@ -232,7 +232,7 @@ class AccountInBrokerController {
     
     public func addBrokerAccountTransaction(brokerID: String, accountBroker: AccountInBroker, timeStamp: Date) async {
         
-        let accountTransactionList = await getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountBroker.id!)
+        let accountTransactionList = await getAccountTransactionListInAccountInBroker(brokerID: brokerID, accountID: accountBroker.id!)
         let balanceChange = accountBroker.currentUnit - accountTransactionList.first!.currentBalance
         let accountTransaction = AccountTransaction(timestamp: timeStamp, balanceChange: balanceChange, currentBalance: accountBroker.currentUnit)
         do {
