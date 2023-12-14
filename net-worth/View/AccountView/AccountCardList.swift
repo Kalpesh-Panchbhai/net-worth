@@ -13,7 +13,7 @@ struct AccountCardList: View {
     
     @State var isNewAccountAccountViewOpen = false
     @State var isNewTransactionViewOpen = false
-    @State var accountTypeSelected = "None"
+    @State var accountTypeSelected = ConstantUtils.noneAccountType
     @State var selectedAccount = Account()
     @State var searchText = ""
     @State var isPresentingAccountDeleteConfirm = false
@@ -97,7 +97,7 @@ struct AccountCardList: View {
                                                                             isPresented: $isPresentingAccountDeleteConfirm) {
                                                             Button("Delete account " + deletedAccount.accountName + "?", role: .destructive) {
                                                                 Task.init {
-                                                                    await accountController.deleteAccount(accountID: deletedAccount.id!, isBrokerAccount: deletedAccount.accountType == "Broker")
+                                                                    await accountController.deleteAccount(accountID: deletedAccount.id!, isBrokerAccount: deletedAccount.accountType == ConstantUtils.brokerAccountType)
                                                                     await accountViewModel.getAccountList()
                                                                     await watchViewModel.getAllWatchList()
                                                                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
@@ -157,7 +157,7 @@ struct AccountCardList: View {
                 await watchViewModel.getAllWatchList()
             }
         }, content: {
-            NewAccountView(accountType: "None", accountViewModel: accountViewModel)
+            NewAccountView(accountType: ConstantUtils.noneAccountType, accountViewModel: accountViewModel)
         })
     }
 }

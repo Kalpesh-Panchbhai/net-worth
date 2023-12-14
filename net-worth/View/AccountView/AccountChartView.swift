@@ -12,7 +12,7 @@ struct AccountChartView: View {
     
     var accountID: String
     
-    @State var range = "1M"
+    @State var range = ConstantUtils.oneMonthRange
     
     @StateObject var chartViewModel = ChartViewModel()
     @StateObject var accountViewModel = AccountViewModel()
@@ -35,12 +35,12 @@ struct AccountChartView: View {
                         .listRowBackground(Color.theme.foreground)
                     
                     Picker(selection: $range, content: {
-                        Text("1M").tag("1M")
-                        Text("3M").tag("3M")
-                        Text("6M").tag("6M")
-                        Text("1Y").tag("1Y")
-                        Text("2Y").tag("2Y")
-                        Text("5Y").tag("5Y")
+                        Text(ConstantUtils.oneMonthRange).tag(ConstantUtils.oneMonthRange)
+                        Text(ConstantUtils.threeMonthRange).tag(ConstantUtils.threeMonthRange)
+                        Text(ConstantUtils.sixMonthRange).tag(ConstantUtils.sixMonthRange)
+                        Text(ConstantUtils.oneYearRange).tag(ConstantUtils.oneYearRange)
+                        Text(ConstantUtils.twoYearRange).tag(ConstantUtils.twoYearRange)
+                        Text(ConstantUtils.fiveYearRange).tag(ConstantUtils.fiveYearRange)
                         Text("All").tag("All")
                     }, label: {
                         

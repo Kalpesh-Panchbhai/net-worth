@@ -202,17 +202,17 @@ class AccountTransactionController {
     
     public func getAccountTransactionListWithRange(accountID: String, range: String) async -> [AccountTransaction] {
         var date = Timestamp()
-        if(range.elementsEqual("1M")) {
+        if(range.elementsEqual(ConstantUtils.oneMonthRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000))
-        } else if(range.elementsEqual("3M")) {
+        } else if(range.elementsEqual(ConstantUtils.threeMonthRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-7776000))
-        } else if(range.elementsEqual("6M")) {
+        } else if(range.elementsEqual(ConstantUtils.sixMonthRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-15552000))
-        } else if(range.elementsEqual("1Y")) {
+        } else if(range.elementsEqual(ConstantUtils.oneYearRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-31104000))
-        } else if(range.elementsEqual("2Y")) {
+        } else if(range.elementsEqual(ConstantUtils.twoYearRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-62208000))
-        } else if(range.elementsEqual("5Y")) {
+        } else if(range.elementsEqual(ConstantUtils.fiveYearRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-155520000))
         } else if(range.elementsEqual("All")) {
             return getAccountTransactionList(accountID: accountID)
@@ -226,17 +226,17 @@ class AccountTransactionController {
     
     public func getAccountTransactionListBelowRange(accountID: String, range: String) async -> [AccountTransaction] {
         var date = Timestamp()
-        if(range.elementsEqual("1M")) {
+        if(range.elementsEqual(ConstantUtils.oneMonthRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000))
-        } else if(range.elementsEqual("3M")) {
+        } else if(range.elementsEqual(ConstantUtils.threeMonthRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-7776000))
-        } else if(range.elementsEqual("6M")) {
+        } else if(range.elementsEqual(ConstantUtils.sixMonthRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-15552000))
-        } else if(range.elementsEqual("1Y")) {
+        } else if(range.elementsEqual(ConstantUtils.oneYearRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-31104000))
-        } else if(range.elementsEqual("2Y")) {
+        } else if(range.elementsEqual(ConstantUtils.twoYearRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-62208000))
-        } else if(range.elementsEqual("5Y")) {
+        } else if(range.elementsEqual(ConstantUtils.fiveYearRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-155520000))
         } else {
             return [AccountTransaction]()

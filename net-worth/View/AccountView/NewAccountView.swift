@@ -18,7 +18,7 @@ struct NewAccountView: View {
     @State var scenePhaseBlur = 0
     @State var accountType: String
     @State var loanType: String = "Consumer"
-    @State var symbolType: String = "None"
+    @State var symbolType: String = ConstantUtils.noneAccountType
     @State var accountName: String = ""
     @State var currencySelected: Currency = Currency()
     @State var filterCurrencyList = CurrencyList().currencyList
@@ -62,7 +62,7 @@ struct NewAccountView: View {
                         monthlyEmi = 0.0
                         accountOpenedDate = Date()
                     }
-                    if(accountType == "Saving") {
+                    if(accountType == ConstantUtils.savingAccountType) {
                         nameField(labelName: "Account Name")
                             .foregroundColor(Color.theme.primaryText)
                         currentBalanceField
@@ -72,7 +72,7 @@ struct NewAccountView: View {
                         watchListPicker
                         accountOpenedDatePicker
                     }
-                    else if(accountType == "Credit Card") {
+                    else if(accountType == ConstantUtils.creditCardAccountType) {
                         nameField(labelName: "Credit Card Name")
                             .foregroundColor(Color.theme.primaryText)
                         currentBalanceField
@@ -88,7 +88,7 @@ struct NewAccountView: View {
                         watchListPicker
                         accountOpenedDatePicker
                     }
-                    else if(accountType == "Loan") {
+                    else if(accountType == ConstantUtils.loanAccountType) {
                         Picker(selection: $loanType, label: Text("Loan Type")) {
                             Text("Consumer").tag("Consumer")
                             Text("Non Consumer").tag("Non Consumer")
@@ -115,13 +115,13 @@ struct NewAccountView: View {
                         }
                         watchListPicker
                         accountOpenedDatePicker
-                    } else if(accountType == "Broker") {
+                    } else if(accountType == ConstantUtils.brokerAccountType) {
                         nameField(labelName: "Broker Name")
                             .foregroundColor(Color.theme.primaryText)
                         CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
                         watchListPicker
-                    } else if(accountType == "Other") {
+                    } else if(accountType == ConstantUtils.otherAccountType) {
                         nameField(labelName: "Account Name")
                             .foregroundColor(Color.theme.primaryText)
                         currentBalanceField
@@ -146,7 +146,7 @@ struct NewAccountView: View {
                     Button(action: {
                         var newAccount = Account()
                         newAccount.accountType = accountType
-                        if(accountType.elementsEqual("Loan")) {
+                        if(accountType.elementsEqual(ConstantUtils.loanAccountType)) {
                             newAccount.loanType = loanType
                         }
                         newAccount.accountName = accountName
@@ -183,7 +183,7 @@ struct NewAccountView: View {
                             })
                             watchController.addAccountToWatchList(watch: watch)
                             await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                            if(accountType.elementsEqual("Loan") && loanType.elementsEqual("Consumer")) {
+                            if(accountType.elementsEqual(ConstantUtils.loanAccountType) && loanType.elementsEqual("Consumer")) {
                                 Task.init {
                                     await accountTransactionController.addLoanAccountEMITransaction(account: newAccount, emiDate: loanPaymentDate, accountOpenedDate: accountOpenedDate, monthlyEmiAmount: monthlyEmi)
                                 }
@@ -243,31 +243,31 @@ struct NewAccountView: View {
     }
     
     private func allFieldsFilled () -> Bool {
-        if accountType == "Saving" {
+        if accountType == ConstantUtils.savingAccountType {
             if accountName.isEmpty || currencySelected.name.isEmpty {
                 return false
             } else {
                 return true
             }
-        } else if accountType == "Credit Card" {
+        } else if accountType == ConstantUtils.creditCardAccountType {
             if accountName.isEmpty || currencySelected.name.isEmpty  {
                 return false
             } else {
                 return true
             }
-        } else if accountType == "Loan" {
+        } else if accountType == ConstantUtils.loanAccountType {
             if accountName.isEmpty || currentBalance.isEmpty || currencySelected.name.isEmpty  {
                 return false
             } else {
                 return true
             }
-        } else if accountType == "Broker" {
+        } else if accountType == ConstantUtils.brokerAccountType {
             if accountName.isEmpty || currencySelected.name.isEmpty  {
                 return false
             } else {
                 return true
             }
-        } else if accountType == "Other" {
+        } else if accountType == ConstantUtils.otherAccountType {
             if accountName.isEmpty || currencySelected.name.isEmpty  {
                 return false
             } else {

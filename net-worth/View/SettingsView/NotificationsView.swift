@@ -29,9 +29,9 @@ struct NotificationsView: View {
 //        cryptoCurrencyNotification = notificationController.isNotificationEnabled(accountType: "CRYPTOCURRENCY")
 //        futureNotification = notificationController.isNotificationEnabled(accountType: "FUTURE")
 //        optionNotification = notificationController.isNotificationEnabled(accountType: "OPTION")
-//        creditCardNotification = notificationController.isNotificationEnabled(accountType: "Credit Card")
-//        loanNotification = notificationController.isNotificationEnabled(accountType: "Loan")
-//        otherNotification = notificationController.isNotificationEnabled(accountType: "Other")
+//        creditCardNotification = notificationController.isNotificationEnabled(accountType: ConstantUtils.creditCardAccountType)
+//        loanNotification = notificationController.isNotificationEnabled(accountType: ConstantUtils.loanAccountType)
+//        otherNotification = notificationController.isNotificationEnabled(accountType: ConstantUtils.otherAccountType)
 //    }
     
     var body: some View {
@@ -88,7 +88,7 @@ struct NotificationsView: View {
                 Section("Credit Card Notifications") {
                     Toggle("Show Notifications", isOn: $creditCardNotification)
                         .onChange(of: creditCardNotification) { newValue in
-                            notificationController.setNotification(newValue: newValue, accountType: "Credit Card")
+                            notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.creditCardAccountType)
                         }
                 }
                 .listRowBackground(Color.theme.foreground)
@@ -96,7 +96,7 @@ struct NotificationsView: View {
                 Section("Loan Notifications") {
                     Toggle("Show Notifications", isOn: $loanNotification)
                         .onChange(of: loanNotification) { newValue in
-                            notificationController.setNotification(newValue: newValue, accountType: "Loan")
+                            notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.loanAccountType)
                         }
                 }
                 .listRowBackground(Color.theme.foreground)
@@ -104,7 +104,7 @@ struct NotificationsView: View {
                 Section("Other Notifications") {
                     Toggle("Show Notifications", isOn: $otherNotification)
                         .onChange(of: otherNotification) { newValue in
-                            notificationController.setNotification(newValue: newValue, accountType: "Other")
+                            notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.otherAccountType)
                         }
                 }
                 .listRowBackground(Color.theme.foreground)

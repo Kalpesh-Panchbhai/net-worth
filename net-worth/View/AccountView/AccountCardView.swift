@@ -22,16 +22,16 @@ struct AccountCardView: View {
                     .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)
                 Spacer()
-                if(accountViewModel.account.accountType != "Broker") {
+                if(accountViewModel.account.accountType != ConstantUtils.brokerAccountType) {
                     if(accountViewModel.account.active) {
-                        if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
+                        if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != ConstantUtils.savingAccountType) {
                             Image(systemName: ConstantUtils.notificationOnImageName)
                                 .foregroundColor(Color.theme.green.opacity(0.7))
                                 .font(.caption)
                             Text("\(accountViewModel.account.paymentDate)")
                                 .foregroundColor(Color.theme.green)
                                 .font(.caption)
-                        } else if(accountViewModel.account.accountType != "Saving") {
+                        } else if(accountViewModel.account.accountType != ConstantUtils.savingAccountType) {
                             Image(systemName: ConstantUtils.notificationOffImageName)
                                 .foregroundColor(Color.theme.red.opacity(0.7))
                                 .font(.caption)
@@ -47,7 +47,7 @@ struct AccountCardView: View {
             Spacer()
             Spacer()
             HStack(alignment: .center) {
-                if(accountViewModel.account.accountType == "Broker") {
+                if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
@@ -65,7 +65,7 @@ struct AccountCardView: View {
             }
             Spacer()
             HStack {
-                if(accountViewModel.account.accountType == "Broker") {
+                if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
                     if(accountViewModel.accountBrokerCurrentBalance.oneDayChange > 0) {
                         ZStack {
                             Circle()
@@ -140,7 +140,7 @@ struct AccountCardView: View {
         .onAppear {
             Task.init {
                 await accountViewModel.getAccount(id: accountID)
-                if(accountViewModel.account.accountType == "Broker") {
+                if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
                     await accountViewModel.getAccountInBrokerList(brokerID: accountID)
                     await accountViewModel.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountViewModel.accountsInBroker)
                 } else {

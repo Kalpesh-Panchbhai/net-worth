@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NewIncomeView: View {
     
-    var incomeTypes =  ["None", "Salary", "Portfolio","Other"]
+    var incomeTypes =  [ConstantUtils.noneAccountType, "Salary", "Portfolio",ConstantUtils.otherAccountType]
     var incomeController = IncomeController()
     var currencyList = CurrencyList().currencyList
     

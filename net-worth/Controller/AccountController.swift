@@ -39,7 +39,7 @@ class AccountController {
             let accountID = try getAccountCollection()
                 .addDocument(from: newAccount).documentID
             let accountTransaction = AccountTransaction(timestamp: accountOpenedDate, balanceChange: newAccount.currentBalance, currentBalance: newAccount.currentBalance)
-            if(newAccount.accountType != "Broker") {
+            if(newAccount.accountType != ConstantUtils.brokerAccountType) {
                 await accountTransactionController.addTransaction(accountID: accountID, accountTransaction: accountTransaction)
             }
             
@@ -129,7 +129,7 @@ class AccountController {
                 for account in accounts {
                     group.addTask {
                         var balance = Balance()
-                        if(account.accountType == "Broker") {
+                        if(account.accountType == ConstantUtils.brokerAccountType) {
                             balance.currentValue = 0.0
                             balance.previousDayValue = 0.0
                             let brokerAccounts = await AccountInBrokerController().getAccountListInBroker(brokerID: account.id!)
@@ -214,7 +214,7 @@ class AccountController {
     public func deleteAccounts() async {
         let accountList = await getAccountList()
         for account in accountList {
-            await deleteAccount(accountID: account.id!, isBrokerAccount: account.accountType == "Broker")
+            await deleteAccount(accountID: account.id!, isBrokerAccount: account.accountType == ConstantUtils.brokerAccountType)
         }
     }
 }

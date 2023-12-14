@@ -47,11 +47,11 @@ class NotificationController {
     }
     
     private func getContent(accountType: String, accountName: String) -> UNMutableNotificationContent {
-        if(accountType == "Credit Card") {
+        if(accountType == ConstantUtils.creditCardAccountType) {
             return getCreditCardContent(accountName: accountName)
-        } else if(accountType == "Loan") {
+        } else if(accountType == ConstantUtils.loanAccountType) {
             return getLoanContent(accountName: accountName)
-        } else if(accountType == "Other") {
+        } else if(accountType == ConstantUtils.otherAccountType) {
             return getOtherContent(accountName: accountName)
         } else {
             return getSymbolContent(accountName: accountName)

@@ -34,7 +34,7 @@ class IncomeTagController {
     public func addDefaultIncomeTag() async {
         let count = await getIncomeTagList().count
         if(count == 0) {
-            let incomeTag = IncomeTag(name: "None", isdefault: false)
+            let incomeTag = IncomeTag(name: ConstantUtils.noneAccountType, isdefault: false)
             await addIncomeTag(tag: incomeTag)
         }
     }

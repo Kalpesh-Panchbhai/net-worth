@@ -79,17 +79,17 @@ class CommonController {
     
     public static func getIntervalForDateRange(date: Date, range: String) -> Date {
         var date = date
-        if(range.elementsEqual("1M")) {
+        if(range.elementsEqual(ConstantUtils.oneMonthRange)) {
             date = Timestamp.init(date: date.addingTimeInterval(86400)).dateValue()
-        } else if(range.elementsEqual("3M")) {
+        } else if(range.elementsEqual(ConstantUtils.threeMonthRange)) {
             date = Timestamp.init(date: date.addingTimeInterval(86400 * 2)).dateValue()
-        } else if(range.elementsEqual("6M")) {
+        } else if(range.elementsEqual(ConstantUtils.sixMonthRange)) {
             date = Timestamp.init(date: date.addingTimeInterval(86400 * 3)).dateValue()
-        } else if(range.elementsEqual("1Y")) {
+        } else if(range.elementsEqual(ConstantUtils.oneYearRange)) {
             date = Timestamp.init(date: date.addingTimeInterval(86400 * 4)).dateValue()
-        } else if(range.elementsEqual("2Y")) {
+        } else if(range.elementsEqual(ConstantUtils.twoYearRange)) {
             date = Timestamp.init(date: date.addingTimeInterval(86400 * 5)).dateValue()
-        } else if(range.elementsEqual("5Y")) {
+        } else if(range.elementsEqual(ConstantUtils.fiveYearRange)) {
             date = Timestamp.init(date: date.addingTimeInterval(86400 * 6)).dateValue()
         } else if(range.elementsEqual("All")) {
             date = Timestamp.init(date: date.addingTimeInterval(86400 * 7)).dateValue()
@@ -99,17 +99,17 @@ class CommonController {
     
     public static func getStartDateForRange(range: String) -> Date {
         var date = Timestamp().dateValue().removeTimeStamp()
-        if(range.elementsEqual("1M")) {
+        if(range.elementsEqual(ConstantUtils.oneMonthRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000)).dateValue()
-        } else if(range.elementsEqual("3M")) {
+        } else if(range.elementsEqual(ConstantUtils.threeMonthRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-7776000)).dateValue()
-        } else if(range.elementsEqual("6M")) {
+        } else if(range.elementsEqual(ConstantUtils.sixMonthRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-15552000)).dateValue()
-        } else if(range.elementsEqual("1Y")) {
+        } else if(range.elementsEqual(ConstantUtils.oneYearRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-31104000)).dateValue()
-        } else if(range.elementsEqual("2Y")) {
+        } else if(range.elementsEqual(ConstantUtils.twoYearRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-62208000)).dateValue()
-        } else if(range.elementsEqual("5Y")) {
+        } else if(range.elementsEqual(ConstantUtils.fiveYearRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-155520000)).dateValue()
         }
         return date.removeTimeStamp()

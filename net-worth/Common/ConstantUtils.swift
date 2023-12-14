@@ -78,4 +78,20 @@ class ConstantUtils {
     static var notBookmarkImageName = "bookmark"
     static var bookmarkImageName = "bookmark.fill"
     static var chartImageName = "chart.line.uptrend.xyaxis"
+    
+    static var noneAccountType = "None"
+    static var savingAccountType = "Saving"
+    static var creditCardAccountType = "Credit Card"
+    static var loanAccountType = "Loan"
+    static var brokerAccountType = "Broker"
+    static var otherAccountType = "Other"
+    
+    static var oneMonthRange = "1M"
+    static var threeMonthRange = "3M"
+    static var sixMonthRange = "6M"
+    static var oneYearRange = "1Y"
+    static var twoYearRange = "2Y"
+    static var fiveYearRange = "5Y"
+    static var allRange = "All"
+    
 }

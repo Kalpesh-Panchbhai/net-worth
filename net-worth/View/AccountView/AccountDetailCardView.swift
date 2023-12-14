@@ -27,14 +27,14 @@ struct AccountDetailCardView: View {
                     .font(.caption.bold())
                 Spacer()
                 if(accountViewModel.account.active) {
-                    if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
+                    if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != ConstantUtils.savingAccountType) {
                         Image(systemName: ConstantUtils.notificationOnImageName)
                             .foregroundColor(Color.theme.green.opacity(0.7))
                             .font(.caption)
                         Text("\(accountViewModel.account.paymentDate)")
                             .foregroundColor(Color.theme.green)
                             .font(.caption)
-                    } else if(accountViewModel.account.accountType != "Saving") {
+                    } else if(accountViewModel.account.accountType != ConstantUtils.savingAccountType) {
                         Image(systemName: ConstantUtils.notificationOffImageName)
                             .foregroundColor(Color.theme.red.opacity(0.7))
                             .font(.caption)

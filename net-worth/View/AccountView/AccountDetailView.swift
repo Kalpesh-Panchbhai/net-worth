@@ -43,7 +43,7 @@ struct AccountDetailView: View {
     var body: some View {
         VStack {
             VStack {
-                if(accountViewModel.account.accountType == "Broker") {
+                if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
                     AccountBrokerDetailCardView(accountViewModel: accountViewModel)
                         .cornerRadius(10)
                 } else {
@@ -51,7 +51,7 @@ struct AccountDetailView: View {
                         .cornerRadius(10)
                 }
                 Picker(selection: $tabItem, content: {
-                    if(accountViewModel.account.accountType == "Broker") {
+                    if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
                         Text("Accounts (\(accountViewModel.accountsInBroker.count))").tag(1)
                     } else {
                         Text("Transactions (\(accountViewModel.accountTransactionList.count))").tag(1)
@@ -67,13 +67,13 @@ struct AccountDetailView: View {
                     impact.impactOccurred()
                 })
                 if(tabItem == 1) {
-                    if(accountViewModel.account.accountType == "Broker") {
+                    if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
                         AccountBrokerView(brokerID: accountID, accountViewModel: accountViewModel)
                     } else {
                         TransactionsView(accountViewModel: accountViewModel)
                     }
                 } else if(tabItem == 2) {
-                    if(accountViewModel.account.accountType == "Broker") {
+                    if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
                         AccountBrokerChartView(brokerID: accountViewModel.account.id!, accountID: "", symbol: "")
                     } else {
                         AccountChartView(accountID: accountID)
@@ -89,7 +89,7 @@ struct AccountDetailView: View {
                                 isPresented: $isPresentingAccountDeleteConfirm) {
                 Button("Delete account " + accountViewModel.account.accountName + "?", role: .destructive) {
                     Task.init {
-                        await accountController.deleteAccount(accountID: accountID, isBrokerAccount: accountViewModel.account.accountType == "Broker")
+                        await accountController.deleteAccount(accountID: accountID, isBrokerAccount: accountViewModel.account.accountType == ConstantUtils.brokerAccountType)
                         await accountViewModel.getAccountList()
                         await watchViewModel.getAllWatchList()
                     }
@@ -177,7 +177,7 @@ struct AccountDetailView: View {
                     })
                     
                     if(isActive) {
-                        if(accountViewModel.account.accountType == "Broker") {
+                        if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
                             Button(action: {
                                 self.isNewAccountInBrokerViewOpen.toggle()
                             }, label: {
@@ -191,7 +191,7 @@ struct AccountDetailView: View {
                             })
                         }
                         
-                        if(accountViewModel.account.accountType != "Saving") {
+                        if(accountViewModel.account.accountType != ConstantUtils.savingAccountType) {
                             if(!accountViewModel.account.paymentReminder) {
                                 Picker(selection: $paymentDate, content: {
                                     ForEach(dates, id: \.self) {
@@ -268,7 +268,7 @@ struct AccountDetailView: View {
                 if(!isActive) {
                     initialLoadForActiveButton = true
                 }
-                if(accountViewModel.account.accountType == "Broker") {
+                if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
                     await accountViewModel.getAccountInBrokerList(brokerID: accountID)
                     await accountViewModel.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountViewModel.accountsInBroker)
                 } else {
