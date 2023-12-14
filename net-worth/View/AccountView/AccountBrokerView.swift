@@ -11,7 +11,7 @@ struct AccountBrokerView: View {
     
     var brokerID: String
     
-    var brokerAccountController = BrokerAccountController()
+    var accountInBrokerController = AccountInBrokerController()
     
     @State var isPresentingAccountDeleteConfirm = false
     @State var deletedAccount = AccountInBroker()
@@ -48,7 +48,7 @@ struct AccountBrokerView: View {
                             Button("Delete account " + deletedAccount.name + "?", role: .destructive) {
                                 Task.init {
                                     let id = deletedAccount.id!
-                                    await brokerAccountController.deleteAccountInBroker(brokerID: brokerID, accountID: id)
+                                    await accountInBrokerController.deleteAccountInBroker(brokerID: brokerID, accountID: id)
                                     await accountViewModel.getAccountInBrokerList(brokerID: brokerID)
                                     await accountViewModel.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountViewModel.accountsInBroker)
                                 }

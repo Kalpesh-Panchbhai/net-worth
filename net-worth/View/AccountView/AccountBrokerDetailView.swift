@@ -13,7 +13,7 @@ struct AccountBrokerDetailView: View {
     
     var accountID: String
     
-    var brokerAccountController = BrokerAccountController()
+    var accountInBrokerController = AccountInBrokerController()
     
     @State var tabItem = 1
     @State var isNewTransactionViewOpen = false
@@ -48,7 +48,7 @@ struct AccountBrokerDetailView: View {
                             isPresented: $isPresentingAccountDeleteConfirm) {
             Button("Delete account " + accountViewModel.accountBroker.name + "?", role: .destructive) {
                 Task.init {
-                    await brokerAccountController.deleteAccountInBroker(brokerID: brokerID, accountID: accountID)
+                    await accountInBrokerController.deleteAccountInBroker(brokerID: brokerID, accountID: accountID)
                 }
                 self.presentationMode.wrappedValue.dismiss()
             }

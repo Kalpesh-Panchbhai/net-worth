@@ -1,5 +1,5 @@
 //
-//  BrokerAccountController.swift
+//  AccountInBrokerController.swift
 //  net-worth
 //
 //  Created by Kalpesh Panchbhai on 30/11/23.
@@ -9,7 +9,7 @@ import Foundation
 import Firebase
 import FirebaseFirestore
 
-class BrokerAccountController {
+class AccountInBrokerController {
     
     public func getAccountCollection() -> CollectionReference {
         return UserController()

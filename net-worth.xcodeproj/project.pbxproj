@@ -33,7 +33,7 @@
 		7D42520F291BE95C0001C41C /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D42520E291BE95C0001C41C /* AuthenticationView.swift */; };
 		7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D433CF529385DBB007FA625 /* FinanceController.swift */; };
 		7D433CF829386002007FA625 /* FinanceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D433CF729386002007FA625 /* FinanceModel.swift */; };
-		7D4987432B18C75B00EF57EC /* BrokerAccountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4987422B18C75B00EF57EC /* BrokerAccountController.swift */; };
+		7D4987432B18C75B00EF57EC /* AccountInBrokerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4987422B18C75B00EF57EC /* AccountInBrokerController.swift */; };
 		7D4A60CD2A2DD0A500F46C1F /* IncomeTypeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4A60CC2A2DD0A500F46C1F /* IncomeTypeController.swift */; };
 		7D4A60CF2A2DD1B900F46C1F /* IncomeTagController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4A60CE2A2DD1B900F46C1F /* IncomeTagController.swift */; };
 		7D4A60D12A2DFC4E00F46C1F /* AccountTransactionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4A60D02A2DFC4E00F46C1F /* AccountTransactionController.swift */; };
@@ -164,7 +164,7 @@
 		7D42520E291BE95C0001C41C /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		7D433CF529385DBB007FA625 /* FinanceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceController.swift; sourceTree = "<group>"; };
 		7D433CF729386002007FA625 /* FinanceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceModel.swift; sourceTree = "<group>"; };
-		7D4987422B18C75B00EF57EC /* BrokerAccountController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrokerAccountController.swift; sourceTree = "<group>"; };
+		7D4987422B18C75B00EF57EC /* AccountInBrokerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInBrokerController.swift; sourceTree = "<group>"; };
 		7D4A60CC2A2DD0A500F46C1F /* IncomeTypeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTypeController.swift; sourceTree = "<group>"; };
 		7D4A60CE2A2DD1B900F46C1F /* IncomeTagController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTagController.swift; sourceTree = "<group>"; };
 		7D4A60D02A2DFC4E00F46C1F /* AccountTransactionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTransactionController.swift; sourceTree = "<group>"; };
@@ -414,8 +414,8 @@
 			isa = PBXGroup;
 			children = (
 				7D79FA86291B803A004A2ECF /* AccountController.swift */,
+				7D4987422B18C75B00EF57EC /* AccountInBrokerController.swift */,
 				7D4A60D02A2DFC4E00F46C1F /* AccountTransactionController.swift */,
-				7D4987422B18C75B00EF57EC /* BrokerAccountController.swift */,
 				7DF09EE72B1F7E4B00F72245 /* ChartController.swift */,
 				7D3D5243299105A50021047B /* CommonController.swift */,
 				7D433CF529385DBB007FA625 /* FinanceController.swift */,
@@ -733,7 +733,7 @@
 				7DD8E5BB2A06383200245A98 /* IncomeData.swift in Sources */,
 				7D2F37592A91E6C400404A26 /* UpdateIncomeView.swift in Sources */,
 				7DF09EE82B1F7E4B00F72245 /* ChartController.swift in Sources */,
-				7D4987432B18C75B00EF57EC /* BrokerAccountController.swift in Sources */,
+				7D4987432B18C75B00EF57EC /* AccountInBrokerController.swift in Sources */,
 				7D921C66298684790014AC9E /* +View.swift in Sources */,
 				7D4A60D12A2DFC4E00F46C1F /* AccountTransactionController.swift in Sources */,
 				7DD8E5C12A06427300245A98 /* WatchData.swift in Sources */,
