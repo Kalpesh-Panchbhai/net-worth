@@ -36,15 +36,15 @@ struct Account: Codable, Hashable {
     }
     
     init(doc: QueryDocumentSnapshot) {
-        id = doc.documentID
-        accountType = doc[ConstantUtils.accountKeyAccountType] as? String ?? ""
-        loanType = doc[ConstantUtils.accountKeyLoanType] as? String ?? ""
-        accountName = doc[ConstantUtils.accountKeyAccountName] as? String ?? ""
-        currentBalance = doc[ConstantUtils.accountKeyCurrentBalance] as? Double ?? 0.0
-        paymentReminder = doc[ConstantUtils.accountKeyPaymentReminder] as? Bool ?? false
-        paymentDate = doc[ConstantUtils.accountKeyPaymentDate] as? Int ?? 0
-        currency = doc[ConstantUtils.accountKeyCurrency] as? String ?? ""
-        active =  doc[ConstantUtils.accountKeyActive] as? Bool ?? true
-        lastUpdated = (doc[ConstantUtils.accountKeyLastUpdated] as? Timestamp)?.dateValue() ?? Date()
+        self.id = doc.documentID
+        self.accountType = doc[ConstantUtils.accountKeyAccountType] as? String ?? ""
+        self.loanType = doc[ConstantUtils.accountKeyLoanType] as? String ?? ""
+        self.accountName = doc[ConstantUtils.accountKeyAccountName] as? String ?? ""
+        self.currentBalance = doc[ConstantUtils.accountKeyCurrentBalance] as? Double ?? 0.0
+        self.paymentReminder = doc[ConstantUtils.accountKeyPaymentReminder] as? Bool ?? false
+        self.paymentDate = doc[ConstantUtils.accountKeyPaymentDate] as? Int ?? 0
+        self.currency = doc[ConstantUtils.accountKeyCurrency] as? String ?? ""
+        self.active =  doc[ConstantUtils.accountKeyActive] as? Bool ?? true
+        self.lastUpdated = (doc[ConstantUtils.accountKeyLastUpdated] as? Timestamp)?.dateValue() ?? Date()
     }
 }

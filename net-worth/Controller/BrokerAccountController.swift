@@ -17,7 +17,7 @@ class BrokerAccountController {
             .collection(ConstantUtils.accountCollectionName)
     }
     
-    public func addAccountInBroker(brokerID: String, accountBroker: AccountBroker) {
+    public func addAccountInBroker(brokerID: String, accountBroker: AccountInBroker) {
         do {
             let accountID = try getAccountCollection()
                 .document(brokerID)
@@ -34,7 +34,7 @@ class BrokerAccountController {
         }
     }
     
-    public func updateAccountInBroker(brokerID: String, accountBroker: AccountBroker) {
+    public func updateAccountInBroker(brokerID: String, accountBroker: AccountInBroker) {
         do {
             try getAccountCollection()
                 .document(brokerID)
@@ -63,8 +63,8 @@ class BrokerAccountController {
         }
     }
     
-    public func getAccountInBrokerList(brokerID: String) async -> [AccountBroker] {
-        var accountBrokerList = [AccountBroker]()
+    public func getAccountInBrokerList(brokerID: String) async -> [AccountInBroker] {
+        var accountBrokerList = [AccountInBroker]()
         do {
             accountBrokerList = try await AccountController()
                 .getAccountCollection()
@@ -74,7 +74,7 @@ class BrokerAccountController {
                 .getDocuments()
                 .documents
                 .map { doc in
-                    return AccountBroker(id: doc.documentID,
+                    return AccountInBroker(id: doc.documentID,
                                          timestamp: (doc[ConstantUtils.accountBrokerKeyTimeStamp] as? Timestamp)?.dateValue() ?? Date(),
                                          symbol: doc[ConstantUtils.accountBrokerKeySymbol] as? String ?? "",
                                          name: doc[ConstantUtils.accountBrokerKeyName] as? String ?? "",
@@ -86,15 +86,15 @@ class BrokerAccountController {
         return accountBrokerList
     }
     
-    public func getBrokerAccount(brokerID: String, accountID: String) async -> AccountBroker {
-        var accountBroker = AccountBroker()
+    public func getBrokerAccount(brokerID: String, accountID: String) async -> AccountInBroker {
+        var accountBroker = AccountInBroker()
         do {
             accountBroker = try await AccountController()
                 .getAccountCollection()
                 .document(brokerID)
                 .collection(ConstantUtils.accountBrokerCollectionName)
                 .document(accountID)
-                .getDocument(as: AccountBroker.self)
+                .getDocument(as: AccountInBroker.self)
         } catch {
             print(error)
         }
@@ -208,7 +208,7 @@ class BrokerAccountController {
         return accountTransactionList
     }
     
-    public func getCurrentBalanceOfAnAccountInBroker(accountBroker: AccountBroker) async -> Balance {
+    public func getCurrentBalanceOfAnAccountInBroker(accountBroker: AccountInBroker) async -> Balance {
         var currentBalance = Balance(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
         let financeDetailModel = await FinanceController().getSymbolDetail(symbol: accountBroker.symbol)
         currentBalance.currentValue = (financeDetailModel.regularMarketPrice ?? 0.0) * accountBroker.currentUnit
@@ -223,7 +223,7 @@ class BrokerAccountController {
         return currentBalance
     }
     
-    public func getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: [AccountBroker]) async -> Balance {
+    public func getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: [AccountInBroker]) async -> Balance {
         var currentBalance = Balance(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
         for accountBroker in accountBrokerList {
             let accountBrokerCurrentBalance = await getCurrentBalanceOfAnAccountInBroker(accountBroker: accountBroker)
@@ -234,7 +234,7 @@ class BrokerAccountController {
         return currentBalance
     }
     
-    public func addBrokerAccountTransaction(brokerID: String, accountBroker: AccountBroker, timeStamp: Date) async {
+    public func addBrokerAccountTransaction(brokerID: String, accountBroker: AccountInBroker, timeStamp: Date) async {
         
         let accountTransactionList = await getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountBroker.id!)
         let balanceChange = accountBroker.currentUnit - accountTransactionList.first!.currentBalance

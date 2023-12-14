@@ -32,7 +32,7 @@ class FinanceViewModel: ObservableObject {
         }
     }
     
-    func getMultipleSymbolDetail(brokerAccountList: [AccountBroker], range: String) async {
+    func getMultipleSymbolDetail(brokerAccountList: [AccountInBroker], range: String) async {
         var multipleSymbolList = [FinanceDetailModel]()
         var multipleCurrencyList = [FinanceDetailModel]()
         for brokerAccount in brokerAccountList {

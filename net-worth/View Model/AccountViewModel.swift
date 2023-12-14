@@ -32,8 +32,8 @@ class AccountViewModel: ObservableObject {
     @Published var totalBalance = Balance(currentValue: 0.0)
     @Published var grouping: Grouping = .accountType
     
-    @Published var accountsInBroker = [AccountBroker]()
-    @Published var accountBroker = AccountBroker()
+    @Published var accountsInBroker = [AccountInBroker]()
+    @Published var accountBroker = AccountInBroker()
     @Published var accountBrokerCurrentBalance = Balance(currentValue: 0.0, previousDayValue: 0.0)
     
     enum Grouping: String, CaseIterable, Identifiable {
@@ -173,8 +173,8 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func getAccountTransactionListForAllAccountsWithRange(accountList: [Account], range: String) async -> [AccountBroker] {
-        var brokerList = [AccountBroker]()
+    func getAccountTransactionListForAllAccountsWithRange(accountList: [Account], range: String) async -> [AccountInBroker] {
+        var brokerList = [AccountInBroker]()
         var accountTransactionListMultipleBrokerAccountsWithRange = [[AccountTransaction]]()
         var accountTransactionListMultipleNonBrokerAccountsWithRange = [[AccountTransaction]]()
         for account in accountList {
@@ -300,7 +300,7 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func getAccountTransactionsOfAllAccountsInBroker(brokerID: String, range: String) async -> [AccountBroker] {
+    func getAccountTransactionsOfAllAccountsInBroker(brokerID: String, range: String) async -> [AccountInBroker] {
         let accountList = await brokerAccountController.getAccountInBrokerList(brokerID: brokerID)
         
         let accountTransactionListMultipleBrokerAccountsWithRange = await getAccountTransactionListMultipleBrokerAccountsWithRange(brokerID: brokerID, accountList: accountList, range: range)
@@ -314,7 +314,7 @@ class AccountViewModel: ObservableObject {
         return accountList
     }
     
-    private func getAccountTransactionListMultipleBrokerAccountsWithRange(brokerID: String, accountList: [AccountBroker], range: String) async -> [[AccountTransaction]] {
+    private func getAccountTransactionListMultipleBrokerAccountsWithRange(brokerID: String, accountList: [AccountInBroker], range: String) async -> [[AccountTransaction]] {
         var transactionList = [[AccountTransaction]]()
         for account in accountList {
             let list = await brokerAccountController.getAccountTransactionsInBrokerAccountListWithRange(brokerID: brokerID, accountID: account.id!, range: range)
@@ -323,7 +323,7 @@ class AccountViewModel: ObservableObject {
         return transactionList
     }
     
-    private func getAccountTransactionListMultipleBrokerAccountsBelowRange(brokerID: String, accountList: [AccountBroker], range: String) async -> [[AccountTransaction]] {
+    private func getAccountTransactionListMultipleBrokerAccountsBelowRange(brokerID: String, accountList: [AccountInBroker], range: String) async -> [[AccountTransaction]] {
         var transactionList = [[AccountTransaction]]()
         for account in accountList {
             let list = await brokerAccountController.getAccountTransactionsInBrokerAccountListBelowRange(brokerID: brokerID, accountID: account.id!, range: range)
@@ -341,14 +341,14 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func getCurrentBalanceOfAnAccountInBroker(accountBroker: AccountBroker) async {
+    func getCurrentBalanceOfAnAccountInBroker(accountBroker: AccountInBroker) async {
         let accountBrokerCurrentBalance = await brokerAccountController.getCurrentBalanceOfAnAccountInBroker(accountBroker: accountBroker)
         DispatchQueue.main.async {
             self.accountBrokerCurrentBalance = accountBrokerCurrentBalance
         }
     }
     
-    func getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: [AccountBroker]) async {
+    func getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: [AccountInBroker]) async {
         let accountBrokerCurrentBalance = await brokerAccountController.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountBrokerList)
         DispatchQueue.main.async {
             self.accountBrokerCurrentBalance = accountBrokerCurrentBalance

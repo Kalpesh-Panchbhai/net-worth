@@ -14,7 +14,7 @@ struct AccountBrokerView: View {
     var brokerAccountController = BrokerAccountController()
     
     @State var isPresentingAccountDeleteConfirm = false
-    @State var deletedAccount = AccountBroker()
+    @State var deletedAccount = AccountInBroker()
     
     @ObservedObject var accountViewModel: AccountViewModel
     

@@ -36,7 +36,7 @@ struct NewAccountInBrokerView: View {
             .toolbar {
                 ToolbarItem {
                     Button(action: {
-                        let accountBroker = AccountBroker(timestamp: accountOpenedDate, symbol: symbolSelected.symbol!, name: symbolSelected.longname!, currentUnit: Double(currentUnit)!)
+                        let accountBroker = AccountInBroker(timestamp: accountOpenedDate, symbol: symbolSelected.symbol!, name: symbolSelected.longname!, currentUnit: Double(currentUnit)!)
                         brokerAccountController.addAccountInBroker(brokerID: brokerAccountID, accountBroker: accountBroker)
                         
                         dismiss()

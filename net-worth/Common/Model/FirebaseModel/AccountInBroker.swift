@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import FirebaseFirestore
 import FirebaseFirestoreSwift
 
-struct AccountBroker: Codable, Hashable {
+struct AccountInBroker: Codable, Hashable {
     
     @DocumentID var id: String?
     var timestamp: Date
@@ -22,5 +23,13 @@ struct AccountBroker: Codable, Hashable {
         self.symbol = symbol
         self.name = name
         self.currentUnit = currentUnit
+    }
+    
+    init(doc: QueryDocumentSnapshot) {
+        self.id = doc.documentID
+        self.timestamp = (doc[ConstantUtils.accountBrokerKeyTimeStamp] as? Timestamp)?.dateValue() ?? Date()
+        self.symbol = doc[ConstantUtils.accountBrokerKeySymbol] as? String ?? ""
+        self.name = doc[ConstantUtils.accountBrokerKeyName] as? String ?? ""
+        self.currentUnit = doc[ConstantUtils.accountBrokerKeyCurrentUnit] as? Double ?? 0.0
     }
 }
