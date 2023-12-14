@@ -43,7 +43,6 @@ struct AccountBrokerChartView: View {
                         Text("1Y").tag("1Y")
                         Text("2Y").tag("2Y")
                         Text("5Y").tag("5Y")
-                        //                        Text("All").tag("All")
                     }, label: {
                         
                     })
