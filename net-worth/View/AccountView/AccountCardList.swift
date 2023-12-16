@@ -13,7 +13,7 @@ struct AccountCardList: View {
     
     @State var isNewAccountAccountViewOpen = false
     @State var isNewTransactionViewOpen = false
-    @State var accountTypeSelected = "None"
+    @State var accountTypeSelected = ConstantUtils.noneAccountType
     @State var selectedAccount = Account()
     @State var searchText = ""
     @State var isPresentingAccountDeleteConfirm = false
@@ -72,13 +72,13 @@ struct AccountCardList: View {
                                                             AccountCardView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id!)
                                                                 .contextMenu {
                                                                     
-                                                                    Label(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i].id!, systemImage: "info.square")
+                                                                    Label(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i].id!, systemImage: ConstantUtils.infoIconImageName)
                                                                     
                                                                     Button(role: .destructive, action: {
                                                                         isPresentingAccountDeleteConfirm.toggle()
                                                                         deletedAccount = accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i];
                                                                     }, label: {
-                                                                        Label("Delete", systemImage: "trash")
+                                                                        Label("Delete", systemImage: ConstantUtils.deleteImageName)
                                                                     })
                                                                     
                                                                     if(accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].active) {
@@ -88,7 +88,7 @@ struct AccountCardList: View {
                                                                             }
                                                                             isNewTransactionViewOpen.toggle()
                                                                         } label: {
-                                                                            Label("New Transaction", systemImage: "square.and.pencil")
+                                                                            Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
                                                                         }
                                                                     }
                                                                 }
@@ -97,7 +97,7 @@ struct AccountCardList: View {
                                                                             isPresented: $isPresentingAccountDeleteConfirm) {
                                                             Button("Delete account " + deletedAccount.accountName + "?", role: .destructive) {
                                                                 Task.init {
-                                                                    await accountController.deleteAccount(accountID: deletedAccount.id!, isBrokerAccount: deletedAccount.accountType == "Broker")
+                                                                    await accountController.deleteAccount(accountID: deletedAccount.id!, isBrokerAccount: deletedAccount.accountType == ConstantUtils.brokerAccountType)
                                                                     await accountViewModel.getAccountList()
                                                                     await watchViewModel.getAllWatchList()
                                                                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
@@ -132,7 +132,7 @@ struct AccountCardList: View {
                     Button(action: {
                         isNewAccountAccountViewOpen.toggle()
                     }, label: {
-                        Image(systemName: "plus")
+                        Image(systemName: ConstantUtils.plusImageName)
                             .foregroundColor(Color.theme.primaryText)
                             .bold()
                     })
@@ -157,7 +157,7 @@ struct AccountCardList: View {
                 await watchViewModel.getAllWatchList()
             }
         }, content: {
-            NewAccountView(accountType: "None", accountViewModel: accountViewModel)
+            NewAccountView(accountType: ConstantUtils.noneAccountType, accountViewModel: accountViewModel)
         })
     }
 }

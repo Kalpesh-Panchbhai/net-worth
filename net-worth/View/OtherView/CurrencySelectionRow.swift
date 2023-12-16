@@ -22,7 +22,7 @@ struct CurrencySelectionRow: View {
                     .frame(maxWidth: .infinity, alignment: .trailing)
                 if self.isSelected {
                     Spacer()
-                    Image(systemName: "checkmark")
+                    Image(systemName: ConstantUtils.checkmarkImageName)
                 }
             }
         }

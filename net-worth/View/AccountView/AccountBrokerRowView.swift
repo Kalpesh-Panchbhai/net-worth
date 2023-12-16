@@ -23,7 +23,7 @@ struct AccountBrokerRowView: View {
                     .foregroundColor(Color.theme.primaryText)
                     .padding(.horizontal)
                 HStack {
-                    Text("Units : " + accountViewModel.accountBroker.currentUnit.withCommas(decimalPlace: 4))
+                    Text("Qty. " + accountViewModel.accountBroker.currentUnit.withCommas(decimalPlace: 4))
                         .font(.system(size: 12))
                         .foregroundColor(Color.theme.secondaryText)
                         .padding(.leading)

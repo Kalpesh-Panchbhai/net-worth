@@ -94,7 +94,7 @@ struct TransactionsView: View {
                         }
                         .frame(width: 360)
                         .contextMenu {
-                            Label(accountViewModel.accountTransactionList[i].id!, systemImage: "info.square")
+                            Label(accountViewModel.accountTransactionList[i].id!, systemImage: ConstantUtils.infoIconImageName)
                             
                             if(accountViewModel.accountTransactionList.count > 1 && !accountViewModel.account.loanType.elementsEqual("Consumer")) {
                                 Button(role: .destructive, action: {
@@ -141,7 +141,7 @@ struct TransactionsView: View {
                                         }
                                     }
                                 }, label: {
-                                    Label("Delete", systemImage: "trash")
+                                    Label("Delete", systemImage: ConstantUtils.deleteImageName)
                                 })
                             } else if(accountViewModel.account.loanType.elementsEqual("Consumer")) {
                                 if((i == (accountViewModel.accountTransactionList.count - accountViewModel.accountTransactionList.filter { item in

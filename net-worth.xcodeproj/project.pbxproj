@@ -33,7 +33,7 @@
 		7D42520F291BE95C0001C41C /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D42520E291BE95C0001C41C /* AuthenticationView.swift */; };
 		7D433CF629385DBB007FA625 /* FinanceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D433CF529385DBB007FA625 /* FinanceController.swift */; };
 		7D433CF829386002007FA625 /* FinanceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D433CF729386002007FA625 /* FinanceModel.swift */; };
-		7D4987432B18C75B00EF57EC /* BrokerAccountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4987422B18C75B00EF57EC /* BrokerAccountController.swift */; };
+		7D4987432B18C75B00EF57EC /* AccountInBrokerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4987422B18C75B00EF57EC /* AccountInBrokerController.swift */; };
 		7D4A60CD2A2DD0A500F46C1F /* IncomeTypeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4A60CC2A2DD0A500F46C1F /* IncomeTypeController.swift */; };
 		7D4A60CF2A2DD1B900F46C1F /* IncomeTagController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4A60CE2A2DD1B900F46C1F /* IncomeTagController.swift */; };
 		7D4A60D12A2DFC4E00F46C1F /* AccountTransactionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4A60D02A2DFC4E00F46C1F /* AccountTransactionController.swift */; };
@@ -48,7 +48,7 @@
 		7D65547629A107DC0008A8E2 /* ChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D65547529A107DC0008A8E2 /* ChartData.swift */; };
 		7D6885C72A399F0600B47392 /* IncomeCalculation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6885C62A399F0600B47392 /* IncomeCalculation.swift */; };
 		7D69DD732932312400F024A6 /* ConstantUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D69DD722932312400F024A6 /* ConstantUtils.swift */; };
-		7D6E821D2B19A9F300D764EC /* AccountBroker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6E821C2B19A9F300D764EC /* AccountBroker.swift */; };
+		7D6E821D2B19A9F300D764EC /* AccountInBroker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6E821C2B19A9F300D764EC /* AccountInBroker.swift */; };
 		7D6E821F2B19B36100D764EC /* AccountBrokerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6E821E2B19B36100D764EC /* AccountBrokerView.swift */; };
 		7D6E82212B19BAE500D764EC /* AccountBrokerRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6E82202B19BAE500D764EC /* AccountBrokerRowView.swift */; };
 		7D6E82232B19BF0700D764EC /* AccountBrokerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6E82222B19BF0700D764EC /* AccountBrokerDetailView.swift */; };
@@ -164,7 +164,7 @@
 		7D42520E291BE95C0001C41C /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		7D433CF529385DBB007FA625 /* FinanceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceController.swift; sourceTree = "<group>"; };
 		7D433CF729386002007FA625 /* FinanceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceModel.swift; sourceTree = "<group>"; };
-		7D4987422B18C75B00EF57EC /* BrokerAccountController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrokerAccountController.swift; sourceTree = "<group>"; };
+		7D4987422B18C75B00EF57EC /* AccountInBrokerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInBrokerController.swift; sourceTree = "<group>"; };
 		7D4A60CC2A2DD0A500F46C1F /* IncomeTypeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTypeController.swift; sourceTree = "<group>"; };
 		7D4A60CE2A2DD1B900F46C1F /* IncomeTagController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTagController.swift; sourceTree = "<group>"; };
 		7D4A60D02A2DFC4E00F46C1F /* AccountTransactionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTransactionController.swift; sourceTree = "<group>"; };
@@ -179,7 +179,7 @@
 		7D65547529A107DC0008A8E2 /* ChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartData.swift; sourceTree = "<group>"; };
 		7D6885C62A399F0600B47392 /* IncomeCalculation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeCalculation.swift; sourceTree = "<group>"; };
 		7D69DD722932312400F024A6 /* ConstantUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstantUtils.swift; sourceTree = "<group>"; };
-		7D6E821C2B19A9F300D764EC /* AccountBroker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountBroker.swift; sourceTree = "<group>"; };
+		7D6E821C2B19A9F300D764EC /* AccountInBroker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInBroker.swift; sourceTree = "<group>"; };
 		7D6E821E2B19B36100D764EC /* AccountBrokerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountBrokerView.swift; sourceTree = "<group>"; };
 		7D6E82202B19BAE500D764EC /* AccountBrokerRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountBrokerRowView.swift; sourceTree = "<group>"; };
 		7D6E82222B19BF0700D764EC /* AccountBrokerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountBrokerDetailView.swift; sourceTree = "<group>"; };
@@ -295,8 +295,10 @@
 			children = (
 				7D2D38402A2C8945006C0AD2 /* ApplicationData.swift */,
 				7D596277294105A40008A6B9 /* Balance.swift */,
+				7D65547529A107DC0008A8E2 /* ChartData.swift */,
 				7DEC3B7F2938A38B002E9C8B /* FinanceDetailModel.swift */,
 				7D433CF729386002007FA625 /* FinanceModel.swift */,
+				7D76015C2B14B59D0047E407 /* GroupChartData.swift */,
 				7D6885C62A399F0600B47392 /* IncomeCalculation.swift */,
 				7D0C29042B18895500823F7B /* SymbolDetailModel.swift */,
 				7DD8E5AD2A06310A00245A98 /* Backup */,
@@ -331,10 +333,8 @@
 			isa = PBXGroup;
 			children = (
 				7DF9DB90298F978600831494 /* Account.swift */,
-				7D6E821C2B19A9F300D764EC /* AccountBroker.swift */,
+				7D6E821C2B19A9F300D764EC /* AccountInBroker.swift */,
 				7DF9DB94298F9C2600831494 /* AccountTransaction.swift */,
-				7D65547529A107DC0008A8E2 /* ChartData.swift */,
-				7D76015C2B14B59D0047E407 /* GroupChartData.swift */,
 				7D85D02F298D29BE0019F85E /* Income.swift */,
 				7D76290429A385EA00F71D7C /* IncomeTag.swift */,
 				7DC46B4529A4A513000E311B /* IncomeType.swift */,
@@ -414,8 +414,8 @@
 			isa = PBXGroup;
 			children = (
 				7D79FA86291B803A004A2ECF /* AccountController.swift */,
+				7D4987422B18C75B00EF57EC /* AccountInBrokerController.swift */,
 				7D4A60D02A2DFC4E00F46C1F /* AccountTransactionController.swift */,
-				7D4987422B18C75B00EF57EC /* BrokerAccountController.swift */,
 				7DF09EE72B1F7E4B00F72245 /* ChartController.swift */,
 				7D3D5243299105A50021047B /* CommonController.swift */,
 				7D433CF529385DBB007FA625 /* FinanceController.swift */,
@@ -728,12 +728,12 @@
 				7D0C29012B1884CD00823F7B /* SymbolPicker.swift in Sources */,
 				7D596278294105A40008A6B9 /* Balance.swift in Sources */,
 				7D6F885229F8FBFB000AE48A /* IncomeChartView.swift in Sources */,
-				7D6E821D2B19A9F300D764EC /* AccountBroker.swift in Sources */,
+				7D6E821D2B19A9F300D764EC /* AccountInBroker.swift in Sources */,
 				7DD8E5AC2A0630A000245A98 /* Data.swift in Sources */,
 				7DD8E5BB2A06383200245A98 /* IncomeData.swift in Sources */,
 				7D2F37592A91E6C400404A26 /* UpdateIncomeView.swift in Sources */,
 				7DF09EE82B1F7E4B00F72245 /* ChartController.swift in Sources */,
-				7D4987432B18C75B00EF57EC /* BrokerAccountController.swift in Sources */,
+				7D4987432B18C75B00EF57EC /* AccountInBrokerController.swift in Sources */,
 				7D921C66298684790014AC9E /* +View.swift in Sources */,
 				7D4A60D12A2DFC4E00F46C1F /* AccountTransactionController.swift in Sources */,
 				7DD8E5C12A06427300245A98 /* WatchData.swift in Sources */,

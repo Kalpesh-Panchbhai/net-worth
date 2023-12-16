@@ -32,7 +32,7 @@ class FinanceViewModel: ObservableObject {
         }
     }
     
-    func getMultipleSymbolDetail(brokerAccountList: [AccountBroker], range: String) async {
+    func getMultipleSymbolDetail(brokerAccountList: [AccountInBroker], range: String) async {
         var multipleSymbolList = [FinanceDetailModel]()
         var multipleCurrencyList = [FinanceDetailModel]()
         for brokerAccount in brokerAccountList {
@@ -68,17 +68,17 @@ class FinanceViewModel: ObservableObject {
     }
     
     private func getNextValidRange(range: String) -> String {
-        if(range.elementsEqual("1M")) {
+        if(range.elementsEqual(ConstantUtils.oneMonthRange)) {
             return "3mo"
-        } else if(range.elementsEqual("3M")) {
+        } else if(range.elementsEqual(ConstantUtils.threeMonthRange)) {
             return "6mo"
-        } else if(range.elementsEqual("6M")) {
-            return "1y"
-        } else if(range.elementsEqual("1Y")) {
-            return "2y"
-        } else if(range.elementsEqual("2Y")) {
-            return "5y"
-        } else if(range.elementsEqual("5Y")) {
+        } else if(range.elementsEqual(ConstantUtils.sixMonthRange)) {
+            return ConstantUtils.oneYearRange
+        } else if(range.elementsEqual(ConstantUtils.oneYearRange)) {
+            return ConstantUtils.twoYearRange
+        } else if(range.elementsEqual(ConstantUtils.twoYearRange)) {
+            return ConstantUtils.fiveYearRange
+        } else if(range.elementsEqual(ConstantUtils.fiveYearRange)) {
             return "10y"
         }
         return ""

@@ -10,9 +10,9 @@ import SwiftUI
 struct UpdateBalanceAccountBrokerView: View {
     
     var brokerID: String
-    var accountBroker: AccountBroker
+    var accountBroker: AccountInBroker
     
-    var brokerAccountController = BrokerAccountController()
+    var accountInBrokerController = AccountInBrokerController()
     
     @State var unit: String = "0.0"
     @State var date = Date()
@@ -41,7 +41,7 @@ struct UpdateBalanceAccountBrokerView: View {
                             var updatedAccount = accountBroker
                             let newAmount = isPlus ? unit.toDouble() : unit.toDouble()! * -1
                             updatedAccount.currentUnit = newAmount!
-                            await brokerAccountController.addBrokerAccountTransaction(brokerID: brokerID, accountBroker: updatedAccount, timeStamp: date)
+                            await accountInBrokerController.addBrokerAccountTransaction(brokerID: brokerID, accountBroker: updatedAccount, timeStamp: date)
                         }
                         dismiss()
                     }, label: {
@@ -58,7 +58,7 @@ struct UpdateBalanceAccountBrokerView: View {
                         let newAmount = isPlus ? unit.toDouble() : unit.toDouble()! * -1
                         updatedAccount.currentUnit = updatedAccount.currentUnit + newAmount!
                         Task.init {
-                            await brokerAccountController.addBrokerAccountTransaction(brokerID: brokerID,accountBroker: updatedAccount, timeStamp: date)
+                            await accountInBrokerController.addBrokerAccountTransaction(brokerID: brokerID,accountBroker: updatedAccount, timeStamp: date)
                         }
                         dismiss()
                     }, label: {
@@ -99,7 +99,7 @@ struct UpdateBalanceAccountBrokerView: View {
                         isPlus = true
                     }
                 }, label: {
-                    Image(systemName: isPlus ? "plus" : "minus")
+                    Image(systemName: isPlus ? ConstantUtils.plusImageName : "minus")
                         .foregroundColor(isPlus ? Color.theme.green : Color.theme.red)
                         .bold()
                 })

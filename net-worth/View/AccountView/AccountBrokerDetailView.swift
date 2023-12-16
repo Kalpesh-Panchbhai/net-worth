@@ -13,7 +13,7 @@ struct AccountBrokerDetailView: View {
     
     var accountID: String
     
-    var brokerAccountController = BrokerAccountController()
+    var accountInBrokerController = AccountInBrokerController()
     
     @State var tabItem = 1
     @State var isNewTransactionViewOpen = false
@@ -48,7 +48,7 @@ struct AccountBrokerDetailView: View {
                             isPresented: $isPresentingAccountDeleteConfirm) {
             Button("Delete account " + accountViewModel.accountBroker.name + "?", role: .destructive) {
                 Task.init {
-                    await brokerAccountController.deleteAccountInBroker(brokerID: brokerID, accountID: accountID)
+                    await accountInBrokerController.deleteAccountInBroker(brokerID: brokerID, accountID: accountID)
                 }
                 self.presentationMode.wrappedValue.dismiss()
             }
@@ -60,7 +60,7 @@ struct AccountBrokerDetailView: View {
             leading: Button(action: {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
-                Image(systemName: "chevron.left")
+                Image(systemName: ConstantUtils.backbuttonImageName)
                     .foregroundColor(Color.theme.primaryText)
                     .bold()
             }
@@ -72,16 +72,16 @@ struct AccountBrokerDetailView: View {
                     Button(role: .destructive, action: {
                         isPresentingAccountDeleteConfirm.toggle()
                     }, label: {
-                        Label("Delete", systemImage: "trash")
+                        Label("Delete", systemImage: ConstantUtils.deleteImageName)
                     })
                     
                     Button(action: {
                         self.isNewTransactionViewOpen.toggle()
                     }, label: {
-                        Label("New Transaction", systemImage: "square.and.pencil")
+                        Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
                     })
                 }, label: {
-                    Image(systemName: "ellipsis")
+                    Image(systemName: ConstantUtils.menuImageName)
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
                 })

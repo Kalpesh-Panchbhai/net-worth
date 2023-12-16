@@ -37,7 +37,7 @@ struct WatchView: View {
                                     )
                             })
                             .contextMenu {
-                                Label(watch.id!, systemImage: "info.square")
+                                Label(watch.id!, systemImage: ConstantUtils.infoIconImageName)
                             }
                             // MARK: Update
                             .swipeActions(edge: .leading, content: {
@@ -80,7 +80,7 @@ struct WatchView: View {
                     Button(action: {
                         self.newWatchListViewOpen.toggle()
                     }, label: {
-                        Image(systemName: "plus")
+                        Image(systemName: ConstantUtils.plusImageName)
                             .foregroundColor(Color.theme.primaryText)
                             .bold()
                     })

@@ -63,4 +63,35 @@ class ConstantUtils {
     
     static var incomeTypeKeyName = "name"
     static var incomeTypeKeyIsDefault = "isdefault"
+    
+    static var newTransactionImageName = "square.and.pencil"
+    static var deleteImageName = "trash"
+    static var infoIconImageName = "info.square"
+    static var arrowUpImageName = "arrow.up"    
+    static var arrowDownImageName = "arrow.down"
+    static var checkmarkImageName = "checkmark"
+    static var backbuttonImageName = "chevron.left"
+    static var notificationOnImageName = "bell.fill"
+    static var notificationOffImageName = "bell.slash.fill"
+    static var plusImageName = "plus"
+    static var menuImageName = "ellipsis"
+    static var notBookmarkImageName = "bookmark"
+    static var bookmarkImageName = "bookmark.fill"
+    static var chartImageName = "chart.line.uptrend.xyaxis"
+    
+    static var noneAccountType = "None"
+    static var savingAccountType = "Saving"
+    static var creditCardAccountType = "Credit Card"
+    static var loanAccountType = "Loan"
+    static var brokerAccountType = "Broker"
+    static var otherAccountType = "Other"
+    
+    static var oneMonthRange = "1M"
+    static var threeMonthRange = "3M"
+    static var sixMonthRange = "6M"
+    static var oneYearRange = "1Y"
+    static var twoYearRange = "2Y"
+    static var fiveYearRange = "5Y"
+    static var allRange = "All"
+    
 }

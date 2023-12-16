@@ -252,7 +252,7 @@ struct MultipleSelectionRow: View {
                 Text(self.title)
                 if self.isSelected {
                     Spacer()
-                    Image(systemName: "checkmark")
+                    Image(systemName: ConstantUtils.checkmarkImageName)
                 }
             }
         }

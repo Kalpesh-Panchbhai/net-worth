@@ -214,26 +214,26 @@ extension OnboardingView {
             }
             
             Toggle(isOn: $creditCardNotification, label: {
-                Text("Credit Card")
+                Text(ConstantUtils.creditCardAccountType)
             }).onChange(of: creditCardNotification) { newValue in
                 allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
-                notificationController.setNotification(newValue: newValue, accountType: "Credit Card")
+                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.creditCardAccountType)
             }
             
             Toggle(isOn: $loanNotification, label: {
-                Text("Loan")
+                Text(ConstantUtils.loanAccountType)
             })
             .onChange(of: loanNotification) { newValue in
                 allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
-                notificationController.setNotification(newValue: newValue, accountType: "Loan")
+                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.loanAccountType)
             }
             
             Toggle(isOn: $otherNotification, label: {
-                Text("Other")
+                Text(ConstantUtils.otherAccountType)
             })
             .onChange(of: otherNotification) { newValue in
                 allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
-                notificationController.setNotification(newValue: newValue, accountType: "Other")
+                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.otherAccountType)
             }
         }
     }
@@ -263,9 +263,9 @@ extension OnboardingView {
                 notificationController.setNotification(newValue: newValue, accountType: "CRYPTOCURRENCY")
                 notificationController.setNotification(newValue: newValue, accountType: "FUTURE")
                 notificationController.setNotification(newValue: newValue, accountType: "OPTION")
-                notificationController.setNotification(newValue: newValue, accountType: "Credit Card")
-                notificationController.setNotification(newValue: newValue, accountType: "Loan")
-                notificationController.setNotification(newValue: newValue, accountType: "Other")
+                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.creditCardAccountType)
+                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.loanAccountType)
+                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.otherAccountType)
             }
             
             notifications

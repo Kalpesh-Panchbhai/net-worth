@@ -98,7 +98,7 @@ struct UpdateBalanceAccountView: View {
                         isPlus = true
                     }
                 }, label: {
-                    Image(systemName: isPlus ? "plus" : "minus")
+                    Image(systemName: isPlus ? ConstantUtils.plusImageName : "minus")
                         .foregroundColor(isPlus ? Color.theme.green : Color.theme.red)
                         .bold()
                 })

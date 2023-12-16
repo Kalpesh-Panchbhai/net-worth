@@ -51,7 +51,7 @@ struct WatchDetailView: View {
                                         }, label: {
                                             AccountRowView(accountID: accountID, fromWatchView: true)
                                                 .contextMenu {
-                                                    Label(accountID, systemImage: "info.square")
+                                                    Label(accountID, systemImage: ConstantUtils.infoIconImageName)
                                                     // MARK: Delete
                                                     if(watch.accountName != "All") {
                                                         Button(role: .destructive, action: {
@@ -98,7 +98,7 @@ struct WatchDetailView: View {
                                                                 }
                                                             }
                                                         }, label: {
-                                                            Label("Delete", systemImage: "trash")
+                                                            Label("Delete", systemImage: ConstantUtils.deleteImageName)
                                                         })
                                                     }
                                                     
@@ -110,7 +110,7 @@ struct WatchDetailView: View {
                                                             }
                                                             isNewTransactionViewOpen.toggle()
                                                         } label: {
-                                                            Label("New Transaction", systemImage: "square.and.pencil")
+                                                            Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
                                                         }
                                                     }
                                                 }
@@ -174,7 +174,7 @@ struct WatchDetailView: View {
             leading: Button(action: {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
-                Image(systemName: "chevron.left")
+                Image(systemName: ConstantUtils.backbuttonImageName)
                     .foregroundColor(Color.theme.primaryText)
                     .bold()
             }
@@ -186,7 +186,7 @@ struct WatchDetailView: View {
                     Button(action: {
                         self.addAccountViewOpen.toggle()
                     }, label: {
-                        Image(systemName: "plus")
+                        Image(systemName: ConstantUtils.plusImageName)
                             .foregroundColor(Color.theme.primaryText)
                             .bold()
                     })
@@ -199,7 +199,7 @@ struct WatchDetailView: View {
                     Button(action: {
                         self.isChartViewOpen.toggle()
                     }, label: {
-                        Image(systemName: "chart.line.uptrend.xyaxis")
+                        Image(systemName: ConstantUtils.chartImageName)
                             .foregroundColor(Color.theme.primaryText)
                             .bold()
                     })
@@ -275,7 +275,7 @@ struct WatchDetailView: View {
                             Text("Hide Inactive Accounts")
                         })
                     }, label: {
-                        Image(systemName: "ellipsis")
+                        Image(systemName: ConstantUtils.menuImageName)
                             .foregroundColor(Color.theme.primaryText)
                             .bold()
                     })

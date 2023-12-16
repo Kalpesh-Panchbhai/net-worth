@@ -10,7 +10,7 @@ import SwiftUI
 struct NewAccountInBrokerView: View {
     
     var brokerAccountID: String
-    var brokerAccountController = BrokerAccountController()
+    var accountInBrokerController = AccountInBrokerController()
     
     @State var scenePhaseBlur = 0
     
@@ -36,17 +36,17 @@ struct NewAccountInBrokerView: View {
             .toolbar {
                 ToolbarItem {
                     Button(action: {
-                        let accountBroker = AccountBroker(timestamp: accountOpenedDate, symbol: symbolSelected.symbol!, name: symbolSelected.longname!, currentUnit: Double(currentUnit)!)
-                        brokerAccountController.addAccountInBroker(brokerID: brokerAccountID, accountBroker: accountBroker)
+                        let accountBroker = AccountInBroker(timestamp: accountOpenedDate, symbol: symbolSelected.symbol!, name: symbolSelected.longname!, currentUnit: Double(currentUnit)!)
+                        accountInBrokerController.addAccountInBroker(brokerID: brokerAccountID, accountInBroker: accountBroker)
                         
                         dismiss()
                     }, label: {
                         if(!allFieldsFilled()) {
-                            Image(systemName: "checkmark")
+                            Image(systemName: ConstantUtils.checkmarkImageName)
                                 .foregroundColor(Color.theme.primaryText.opacity(0.3))
                                 .bold()
                         } else {
-                            Image(systemName: "checkmark")
+                            Image(systemName: ConstantUtils.checkmarkImageName)
                                 .foregroundColor(Color.theme.primaryText)
                                 .bold()
                         }

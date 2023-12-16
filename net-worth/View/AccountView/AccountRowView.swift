@@ -36,7 +36,7 @@ struct AccountRowView: View {
             }
             Spacer()
             HStack {
-                if(accountViewModel.account.accountType == "Broker") {
+                if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
@@ -54,14 +54,14 @@ struct AccountRowView: View {
             }
             Spacer()
             HStack {
-                if(accountViewModel.account.accountType == "Broker") {
+                if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
                     if(accountViewModel.accountBrokerCurrentBalance.oneDayChange >= 0) {
                         if(accountViewModel.accountBrokerCurrentBalance.oneDayChange > 0) {
                             ZStack {
                                 Circle()
                                     .fill(Color.theme.green.opacity(0.2))
                                     .frame(width: 17, height: 17)
-                                Image(systemName: "arrow.up")
+                                Image(systemName: ConstantUtils.arrowUpImageName)
                                     .foregroundColor(Color.theme.green)
                                     .font(.caption.bold())
                             }
@@ -78,7 +78,7 @@ struct AccountRowView: View {
                             Circle()
                                 .fill(Color.theme.red.opacity(0.2))
                                 .frame(width: 17, height: 17)
-                            Image(systemName: "arrow.down")
+                            Image(systemName: ConstantUtils.arrowDownImageName)
                                 .foregroundColor(Color.theme.red)
                                 .font(.caption.bold())
                         }
@@ -97,7 +97,7 @@ struct AccountRowView: View {
                                 Circle()
                                     .fill(Color.theme.green.opacity(0.2))
                                     .frame(width: 17, height: 17)
-                                Image(systemName: "arrow.up")
+                                Image(systemName: ConstantUtils.arrowUpImageName)
                                     .foregroundColor(Color.theme.green)
                                     .font(.caption.bold())
                             }
@@ -109,15 +109,15 @@ struct AccountRowView: View {
                             .foregroundColor(Color.theme.green)
                             .font(.caption.bold())
                         Spacer()
-                        if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving" && accountViewModel.account.active) {
-                            Image(systemName: "bell.fill")
+                        if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != ConstantUtils.savingAccountType && accountViewModel.account.active) {
+                            Image(systemName: ConstantUtils.notificationOnImageName)
                                 .foregroundColor(Color.theme.secondaryText)
                                 .font(.caption)
                             Text("\(accountViewModel.account.paymentDate)")
                                 .foregroundColor(Color.theme.secondaryText)
                                 .font(.caption)
-                        } else if(accountViewModel.account.accountType != "Saving" && accountViewModel.account.active) {
-                            Image(systemName: "bell.slash.fill")
+                        } else if(accountViewModel.account.accountType != ConstantUtils.savingAccountType && accountViewModel.account.active) {
+                            Image(systemName: ConstantUtils.notificationOffImageName)
                                 .foregroundColor(Color.theme.secondaryText)
                                 .font(.caption)
                         }
@@ -126,7 +126,7 @@ struct AccountRowView: View {
                             Circle()
                                 .fill(Color.theme.red.opacity(0.2))
                                 .frame(width: 17, height: 17)
-                            Image(systemName: "arrow.down")
+                            Image(systemName: ConstantUtils.arrowDownImageName)
                                 .foregroundColor(Color.theme.red)
                                 .font(.caption.bold())
                         }
@@ -137,15 +137,15 @@ struct AccountRowView: View {
                             .foregroundColor(Color.theme.red)
                             .font(.caption.bold())
                         Spacer()
-                        if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != "Saving") {
-                            Image(systemName: "bell.fill")
+                        if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != ConstantUtils.savingAccountType) {
+                            Image(systemName: ConstantUtils.notificationOnImageName)
                                 .foregroundColor(Color.theme.secondaryText)
                                 .font(.caption)
                             Text("\(accountViewModel.account.paymentDate)")
                                 .foregroundColor(Color.theme.secondaryText)
                                 .font(.caption)
-                        } else if(accountViewModel.account.accountType != "Saving") {
-                            Image(systemName: "bell.slash.fill")
+                        } else if(accountViewModel.account.accountType != ConstantUtils.savingAccountType) {
+                            Image(systemName: ConstantUtils.notificationOffImageName)
                                 .foregroundColor(Color.theme.secondaryText)
                                 .font(.caption)
                         }
@@ -157,7 +157,7 @@ struct AccountRowView: View {
         .onAppear {
             Task.init {
                 await accountViewModel.getAccount(id: accountID)
-                if(accountViewModel.account.accountType == "Broker") {
+                if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
                     await accountViewModel.getAccountInBrokerList(brokerID: accountID)
                     await accountViewModel.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountViewModel.accountsInBroker)
                 } else {

@@ -11,10 +11,10 @@ struct AccountBrokerView: View {
     
     var brokerID: String
     
-    var brokerAccountController = BrokerAccountController()
+    var accountInBrokerController = AccountInBrokerController()
     
     @State var isPresentingAccountDeleteConfirm = false
-    @State var deletedAccount = AccountBroker()
+    @State var deletedAccount = AccountInBroker()
     
     @ObservedObject var accountViewModel: AccountViewModel
     
@@ -34,13 +34,13 @@ struct AccountBrokerView: View {
                                 .cornerRadius(10)
                         })
                         .contextMenu {
-                            Label(accountViewModel.accountsInBroker[i].id!, systemImage: "info.square")
+                            Label(accountViewModel.accountsInBroker[i].id!, systemImage: ConstantUtils.infoIconImageName)
                             
                             Button(role: .destructive, action: {
                                 isPresentingAccountDeleteConfirm.toggle()
                                 deletedAccount = accountViewModel.accountsInBroker[i]
                             }, label: {
-                                Label("Delete", systemImage: "trash")
+                                Label("Delete", systemImage: ConstantUtils.deleteImageName)
                             })
                         }
                         .confirmationDialog("Are you sure?",
@@ -48,7 +48,7 @@ struct AccountBrokerView: View {
                             Button("Delete account " + deletedAccount.name + "?", role: .destructive) {
                                 Task.init {
                                     let id = deletedAccount.id!
-                                    await brokerAccountController.deleteAccountInBroker(brokerID: brokerID, accountID: id)
+                                    await accountInBrokerController.deleteAccountInBroker(brokerID: brokerID, accountID: id)
                                     await accountViewModel.getAccountInBrokerList(brokerID: brokerID)
                                     await accountViewModel.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountViewModel.accountsInBroker)
                                 }

@@ -34,7 +34,7 @@ class IncomeTypeController {
     public func addDefaultIncomeType() async {
         let count = await getIncomeTypeList().count
         if(count == 0) {
-            let incomeType = IncomeType(name: "None", isdefault: false)
+            let incomeType = IncomeType(name: ConstantUtils.noneAccountType, isdefault: false)
             await addIncomeType(type: incomeType)
         }
     }

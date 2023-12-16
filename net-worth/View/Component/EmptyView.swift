@@ -16,7 +16,7 @@ struct EmptyView: View {
             Color.theme.background.ignoresSafeArea()
             HStack {
                 Text("Click on")
-                Image(systemName: "plus")
+                Image(systemName: ConstantUtils.plusImageName)
                 Text("Icon to add new " + name + ".")
             }
             .foregroundColor(Color.theme.primaryText)

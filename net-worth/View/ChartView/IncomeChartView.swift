@@ -156,7 +156,7 @@ struct IncomeChartView: View {
                                                 updateChartData()
                                             }, label: {
                                                 if(filterIncomeType.contains(item.name)) {
-                                                    Label(item.name, systemImage: "checkmark")
+                                                    Label(item.name, systemImage: ConstantUtils.checkmarkImageName)
                                                 } else {
                                                     Text(item.name)
                                                 }
@@ -181,7 +181,7 @@ struct IncomeChartView: View {
                                                 updateChartData()
                                             }, label: {
                                                 if(filterIncomeTag.contains(item.name)) {
-                                                    Label(item.name, systemImage: "checkmark")
+                                                    Label(item.name, systemImage: ConstantUtils.checkmarkImageName)
                                                 } else {
                                                     Text(item.name)
                                                 }
@@ -207,7 +207,7 @@ struct IncomeChartView: View {
                                                 updateChartData()
                                             }, label: {
                                                 if(filterYear.contains(item)) {
-                                                    Label(item, systemImage: "checkmark")
+                                                    Label(item, systemImage: ConstantUtils.checkmarkImageName)
                                                 } else {
                                                     Text(item)
                                                 }
@@ -233,7 +233,7 @@ struct IncomeChartView: View {
                                                 updateChartData()
                                             }, label: {
                                                 if(filterFinancialYear.contains(item)) {
-                                                    Label(item, systemImage: "checkmark")
+                                                    Label(item, systemImage: ConstantUtils.checkmarkImageName)
                                                 } else {
                                                     Text(item)
                                                 }
@@ -262,7 +262,7 @@ struct IncomeChartView: View {
                                     }
                                 }, label: {
                                     if(groupByType) {
-                                        Label("Income Type", systemImage: "checkmark")
+                                        Label("Income Type", systemImage: ConstantUtils.checkmarkImageName)
                                     } else {
                                         Text("Income Type")
                                     }
@@ -280,7 +280,7 @@ struct IncomeChartView: View {
                                     }
                                 }, label: {
                                     if(groupByTag) {
-                                        Label("Income Tag", systemImage: "checkmark")
+                                        Label("Income Tag", systemImage: ConstantUtils.checkmarkImageName)
                                     } else {
                                         Text("Income Tag")
                                     }
@@ -298,7 +298,7 @@ struct IncomeChartView: View {
                                     }
                                 }, label: {
                                     if(groupByYear) {
-                                        Label("Year", systemImage: "checkmark")
+                                        Label("Year", systemImage: ConstantUtils.checkmarkImageName)
                                     } else {
                                         Text("Year")
                                     }
@@ -316,7 +316,7 @@ struct IncomeChartView: View {
                                     }
                                 }, label: {
                                     if(groupByFinancialYear) {
-                                        Label("Financial Year", systemImage: "checkmark")
+                                        Label("Financial Year", systemImage: ConstantUtils.checkmarkImageName)
                                     } else {
                                         Text("Financial Year")
                                     }
@@ -331,7 +331,7 @@ struct IncomeChartView: View {
                                     updateChartData()
                                 })
                         }, label: {
-                            Image(systemName: "ellipsis")
+                            Image(systemName: ConstantUtils.menuImageName)
                                 .foregroundColor(Color.theme.primaryText)
                                 .font(.system(size: 14).bold())
                         })
