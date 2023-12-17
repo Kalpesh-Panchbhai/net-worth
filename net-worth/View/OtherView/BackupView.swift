@@ -11,6 +11,7 @@ struct BackupView: View {
     
     var importExportController = ImportExportController()
     var accountController = AccountController()
+    var accountInBrokerController = AccountInBrokerController()
     var accountTransactionController = AccountTransactionController()
     var incomeController = IncomeController()
     var incomeTypeController = IncomeTypeController()
@@ -18,6 +19,7 @@ struct BackupView: View {
     var watchController = WatchController()
     
     @State var totalAccountInCloud = 0
+    @State var totalAccountsInBrokerInCloud = 0
     @State var totalAccountTransactionInCloud = 0
     @State var totalIncomeInCloud = 0
     @State var totalWatchListInCloud = 0
@@ -49,6 +51,7 @@ struct BackupView: View {
                         }
                         Divider()
                         account
+                        accountsInBroker
                         accountTransactions
                         income
                         watchList
@@ -65,6 +68,7 @@ struct BackupView: View {
                             .bold()
                         Divider()
                         accountInCloud
+                        accountsInBrokerInCloud
                         accountTransactionInCloud
                         incomeInCloud
                         watchListInCloud
@@ -84,6 +88,7 @@ struct BackupView: View {
                 await importExportViewModel.readLocalBackup()
                 
                 await getTotalAccountInCloud()
+                await getTotalAccountsInBrokerInCloud()
                 await getTotalAccountTransactionInCloud()
                 await getTotalIncomeInCloud()
                 await getTotalWatchListInCloud()
@@ -129,6 +134,25 @@ struct BackupView: View {
         }
     }
     
+    private var accountsInBroker: some View {
+        HStack {
+            Text("Accounts in Broker")
+            Spacer()
+            Text("\(getAccountsInBroker())")
+        }
+    }
+    
+    private func getAccountsInBroker() -> Int {
+        var totalAccountsInBroker = 0
+        importExportViewModel.backupData.account.forEach {
+            if($0.accountType == ConstantUtils.brokerAccountType) {
+                totalAccountsInBroker += $0.accountInBroker.count
+            }
+        }
+        
+        return totalAccountsInBroker
+    }
+    
     private var accountTransactions: some View {
         HStack {
             Text("Accounts Transactions")
@@ -140,7 +164,13 @@ struct BackupView: View {
     private func getTotalTransaction() -> Int {
         var totalTransactions = 0
         importExportViewModel.backupData.account.forEach {
-            totalTransactions += $0.accountTransaction.count
+            if($0.accountType == ConstantUtils.brokerAccountType) {
+                for account in $0.accountInBroker {
+                    totalTransactions += account.accountTransaction.count
+                }
+            } else {
+                totalTransactions += $0.accountTransaction.count
+            }
         }
         
         return totalTransactions
@@ -190,6 +220,23 @@ struct BackupView: View {
         totalAccountInCloud = await accountController.getAccountList().count
     }
     
+    private var accountsInBrokerInCloud: some View {
+        HStack {
+            Text("Accounts in Broker")
+            Spacer()
+            Text("\(totalAccountsInBrokerInCloud)")
+        }
+    }
+    
+    private func getTotalAccountsInBrokerInCloud() async {
+        let accountList  = await accountController.getAccountList()
+        for account in accountList {
+            if(account.accountType == ConstantUtils.brokerAccountType) {
+                totalAccountsInBrokerInCloud += await accountInBrokerController.getAccountListInBroker(brokerID: account.id!).count
+            }
+        }
+    }
+    
     private var accountTransactionInCloud: some View {
         HStack {
             Text("Accounts Transactions")
@@ -201,7 +248,14 @@ struct BackupView: View {
     private func getTotalAccountTransactionInCloud() async {
         let accountlist = await accountController.getAccountList()
         for account in accountlist {
-            totalAccountTransactionInCloud += accountTransactionController.getAccountTransactionList(accountID: account.id!).count
+            if(account.accountType == ConstantUtils.brokerAccountType) {
+                let accountsInBroker = await accountInBrokerController.getAccountListInBroker(brokerID: account.id!)
+                for accountInBroker in accountsInBroker {
+                    totalAccountTransactionInCloud += await accountInBrokerController.getAccountTransactionListInAccountInBroker(brokerID: account.id!, accountID: accountInBroker.id!).count
+                }
+            } else {
+                totalAccountTransactionInCloud += accountTransactionController.getAccountTransactionList(accountID: account.id!).count
+            }
         }
     }
     

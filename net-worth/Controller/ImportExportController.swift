@@ -13,6 +13,7 @@ class ImportExportController {
     var incomeTypeController = IncomeTypeController()
     var incomeTagController = IncomeTagController()
     var accountController = AccountController()
+    var accountInBrokerController = AccountInBrokerController()
     var accountTransactionController = AccountTransactionController()
     var watchController = WatchController()
     
@@ -146,20 +147,38 @@ class ImportExportController {
     
     private func exportAccount() async {
         let accountList = await accountController.getAccountList()
-        var accountTransactionList = [String: [AccountTransaction]]()
-        for account in accountList {
-            let accountTransactions = accountTransactionController.getAccountTransactionList(accountID: account.id!)
-            accountTransactionList.updateValue(accountTransactions, forKey: account.id!)
-        }
+        var accountDataList = [AccountData]()
         
-        data.account = accountList.map { account in
-            let accountTransaction = accountTransactionList.filter {
-                $0.key.elementsEqual(account.id!)
-            }.first?.value.map { accountTransaction in
-                return AccountTransactionData(timestamp: accountTransaction.timestamp, balanceChange: accountTransaction.balanceChange, currentBalance: accountTransaction.currentBalance, paid: accountTransaction.paid)
+        for account in accountList {
+            if(account.accountType == ConstantUtils.brokerAccountType) {
+                let accountsInBroker = await accountInBrokerController.getAccountListInBroker(brokerID: account.id!)
+                var accountsInBrokerDataList = [AccountInBrokerData]()
+                for accountInBroker in accountsInBroker {
+                    let accountTransactions = await accountInBrokerController.getAccountTransactionListInAccountInBroker(brokerID: account.id!, accountID: accountInBroker.id!)
+                    let accountTransactionsData = accountTransactions.map { accountTransaction in
+                        return AccountTransactionData(timestamp: accountTransaction.timestamp, balanceChange: accountTransaction.balanceChange, currentBalance: accountTransaction.currentBalance, paid: accountTransaction.paid)
+                        
+                    }
+                    let accountInBrokerData = AccountInBrokerData(timestamp: accountInBroker.timestamp, symbol: accountInBroker.symbol, name: accountInBroker.name, currentUnit: accountInBroker.currentUnit, accountTransaction: accountTransactionsData)
+                    accountsInBrokerDataList.append(accountInBrokerData)
+                }
+                
+                let accountData = AccountData(accountType: account.accountType, loanType: account.loanType, accountName: account.accountName, currentBalance: account.currentBalance, paymentReminder: account.paymentReminder, paymentDate: account.paymentDate, currency: account.currency, active: account.active, accountInBroker: accountsInBrokerDataList, accountTransaction: [AccountTransactionData]())
+                
+                accountDataList.append(accountData)
+            } else {
+                let accountTransactions = accountTransactionController.getAccountTransactionList(accountID: account.id!)
+                let accountTransactionsData = accountTransactions.map { accountTransaction in
+                    return AccountTransactionData(timestamp: accountTransaction.timestamp, balanceChange: accountTransaction.balanceChange, currentBalance: accountTransaction.currentBalance, paid: accountTransaction.paid)
+                    
+                }
+                
+                let accountData = AccountData(accountType: account.accountType, loanType: account.loanType, accountName: account.accountName, currentBalance: account.currentBalance, paymentReminder: account.paymentReminder, paymentDate: account.paymentDate, currency: account.currency, active: account.active, accountInBroker: [AccountInBrokerData](), accountTransaction: accountTransactionsData)
+                
+                accountDataList.append(accountData)
             }
-            return AccountData(accountType: account.accountType, loanType: account.loanType, accountName: account.accountName, currentBalance: account.currentBalance, paymentReminder: account.paymentReminder, paymentDate: account.paymentDate, currency: account.currency, active: account.active, accountTransaction: accountTransaction ?? [AccountTransactionData]())
         }
+        data.account = accountDataList
     }
     
     private func exportWatch() async {

@@ -65,6 +65,7 @@
 		7D79FA8A291B9CE6004A2ECF /* MainScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA89291B9CE6004A2ECF /* MainScreenView.swift */; };
 		7D79FA8C291BA152004A2ECF /* NewAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79FA8B291BA152004A2ECF /* NewAccountView.swift */; };
 		7D7AA909298D8DA2004C9776 /* UserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7AA908298D8DA2004C9776 /* UserController.swift */; };
+		7D7ABCFC2B2EDF74004D41F7 /* AccountInBrokerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7ABCFB2B2EDF74004D41F7 /* AccountInBrokerData.swift */; };
 		7D80ECF0291CE0C500A22496 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D80ECEF291CE0C500A22496 /* LaunchScreen.storyboard */; };
 		7D85D030298D29BE0019F85E /* Income.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D85D02F298D29BE0019F85E /* Income.swift */; };
 		7D85D032298D2ADD0019F85E /* IncomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D85D031298D2ADD0019F85E /* IncomeViewModel.swift */; };
@@ -198,6 +199,7 @@
 		7D79FA89291B9CE6004A2ECF /* MainScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenView.swift; sourceTree = "<group>"; };
 		7D79FA8B291BA152004A2ECF /* NewAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAccountView.swift; sourceTree = "<group>"; };
 		7D7AA908298D8DA2004C9776 /* UserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserController.swift; sourceTree = "<group>"; };
+		7D7ABCFB2B2EDF74004D41F7 /* AccountInBrokerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInBrokerData.swift; sourceTree = "<group>"; };
 		7D80ECEF291CE0C500A22496 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7D85D02F298D29BE0019F85E /* Income.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Income.swift; sourceTree = "<group>"; };
 		7D85D031298D2ADD0019F85E /* IncomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeViewModel.swift; sourceTree = "<group>"; };
@@ -556,6 +558,7 @@
 				7DD8E5B62A06369800245A98 /* IncomeTagData.swift */,
 				7DD8E5B82A06375F00245A98 /* IncomeTypeData.swift */,
 				7DD8E5C02A06427300245A98 /* WatchData.swift */,
+				7D7ABCFB2B2EDF74004D41F7 /* AccountInBrokerData.swift */,
 			);
 			path = Backup;
 			sourceTree = "<group>";
@@ -772,6 +775,7 @@
 				7DD8E5B72A06369800245A98 /* IncomeTagData.swift in Sources */,
 				7D76290529A385EA00F71D7C /* IncomeTag.swift in Sources */,
 				7D921C62298683B30014AC9E /* LoginScreen.swift in Sources */,
+				7D7ABCFC2B2EDF74004D41F7 /* AccountInBrokerData.swift in Sources */,
 				7D85D06C298D2D650019F85E /* User.swift in Sources */,
 				7D0C29052B18895500823F7B /* SymbolDetailModel.swift in Sources */,
 				7DF879022A0F7872008343EE /* CurrencySelectionRow.swift in Sources */,

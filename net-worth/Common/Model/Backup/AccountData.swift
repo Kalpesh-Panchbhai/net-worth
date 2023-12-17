@@ -18,6 +18,8 @@ struct AccountData: Codable {
     var currency: String
     var active: Bool
     
+    var accountInBroker: [AccountInBrokerData]
+    
     var accountTransaction: [AccountTransactionData]
     
 }
