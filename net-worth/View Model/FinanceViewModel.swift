@@ -73,11 +73,11 @@ class FinanceViewModel: ObservableObject {
         } else if(range.elementsEqual(ConstantUtils.threeMonthRange)) {
             return "6mo"
         } else if(range.elementsEqual(ConstantUtils.sixMonthRange)) {
-            return ConstantUtils.oneYearRange
+            return "1y"
         } else if(range.elementsEqual(ConstantUtils.oneYearRange)) {
-            return ConstantUtils.twoYearRange
+            return "2y"
         } else if(range.elementsEqual(ConstantUtils.twoYearRange)) {
-            return ConstantUtils.fiveYearRange
+            return "5y"
         } else if(range.elementsEqual(ConstantUtils.fiveYearRange)) {
             return "10y"
         }
