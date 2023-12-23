@@ -21,7 +21,7 @@ class UserController {
     
     func isNewIncomeAvailable() async -> Bool {
         let user = await getCurrentUser()
-        return ApplicationData.shared.incomeListUpdatedDate < user.incomeDataUpdatedDate
+        return ApplicationData.shared.data.incomeDataListUpdatedDate < user.incomeDataUpdatedDate
     }
     
     func isNewAccountAvailable() async -> Bool {

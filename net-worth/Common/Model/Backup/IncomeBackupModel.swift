@@ -1,5 +1,5 @@
 //
-//  IncomeData.swift
+//  IncomeBackupModel.swift
 //  net-worth
 //
 //  Created by Kalpesh Panchbhai on 06/05/23.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct IncomeData: Codable {
+struct IncomeBackupModel: Codable {
     
     var amount: Double
     var taxpaid: Double

@@ -78,6 +78,9 @@ struct MainScreenView: View {
         .onAppear {
             networkUnavailable = !networkMonitor.isConnected
             Task.init {
+                
+                await ApplicationData.loadData()
+                
                 await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                 

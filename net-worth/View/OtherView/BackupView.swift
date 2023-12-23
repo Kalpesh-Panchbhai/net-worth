@@ -268,7 +268,7 @@ struct BackupView: View {
     }
     
     private func getTotalIncomeInCloud() async {
-        totalIncomeInCloud = await incomeController.getIncomeList().count
+        totalIncomeInCloud = ApplicationData.shared.data.incomeDataList.count
     }
     
     private var watchListInCloud: some View {

@@ -24,6 +24,8 @@ class IncomeController {
             print("New Income Added : " + documentID)
             
             await UserController().updateIncomeUserData()
+            
+            await ApplicationData.loadData()
         } catch {
             print(error)
         }
@@ -36,12 +38,14 @@ class IncomeController {
                 .setData(from: income, merge: true)
             
             await UserController().updateIncomeUserData()
+            
+            await ApplicationData.loadData()
         } catch {
             print(error)
         }
     }
     
-    private func getIncomeList() async -> [Income] {
+    public func getIncomeList() async -> [Income] {
         var incomeList = [Income]()
         do {
             incomeList = try await getIncomeCollection()
@@ -57,8 +61,6 @@ class IncomeController {
                                   type: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
                                   tag: doc[ConstantUtils.incomeKeyIncomeTag] as? String ?? "")
                 }
-            ApplicationData.shared.incomeListUpdatedDate = await UserController().getCurrentUser().incomeDataUpdatedDate
-            ApplicationData.shared.incomeList = incomeList
         } catch {
             print(error)
         }
@@ -68,10 +70,8 @@ class IncomeController {
     public func getIncomeList(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async -> [IncomeCalculation] {
         var incomeList = [Income]()
         
-        if(await UserController().isNewIncomeAvailable()) {
-            incomeList = await getIncomeList()
-        } else {
-            incomeList = ApplicationData.shared.incomeList
+        incomeList = ApplicationData.shared.data.incomeDataList.map {
+            return Income(id: $0.id, amount: $0.amount, taxpaid: $0.taxpaid, creditedOn: $0.creditedOn, currency: $0.currency, type: $0.type, tag: $0.tag)
         }
         
         if(!incomeType.isEmpty) {
@@ -289,6 +289,8 @@ class IncomeController {
             print("Income Deleted : " + id)
             
             await UserController().updateIncomeUserData()
+            
+            await ApplicationData.loadData()
         } catch {
             print(error)
         }

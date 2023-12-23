@@ -17,7 +17,7 @@ class ImportExportController {
     var accountTransactionController = AccountTransactionController()
     var watchController = WatchController()
     
-    var data = Data()
+    var data = BackupModel()
     
     public func importLocal(date: Date, importType: String) async {
         let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
@@ -26,7 +26,7 @@ class ImportExportController {
         do {
             let jsonString = try String(contentsOf: pathWithFileName, encoding: .utf8)
             if let dataFromJsonString = jsonString.data(using: .utf8) {
-                data = try JSONDecoder().decode(Data.self,
+                data = try JSONDecoder().decode(BackupModel.self,
                                                 from: dataFromJsonString)
             }
         } catch {
@@ -127,53 +127,53 @@ class ImportExportController {
     private func exportIncomeTag() async {
         let incomeTagList = await incomeTagController.getIncomeTagList()
         data.incomeTag = incomeTagList.map { item in
-            return IncomeTagData(name: item.name, isdefault: item.isdefault)
+            return IncomeTagBackupModel(name: item.name, isdefault: item.isdefault)
         }
     }
     
     private func exportIncomeType() async {
         let incomeTypeList = await incomeTypeController.getIncomeTypeList()
         data.incomeType = incomeTypeList.map { item in
-            return IncomeTypeData(name: item.name, isdefault: item.isdefault)
+            return IncomeTypeBackupModel(name: item.name, isdefault: item.isdefault)
         }
     }
     
     private func exportIncome() async {
-        let incomeList = await incomeController.getIncomeList()
+        let incomeList = ApplicationData.shared.data.incomeDataList
         data.income = incomeList.map { item in
-            return IncomeData(amount: item.amount, taxpaid: item.taxpaid, creditedOn: item.creditedOn, currency: item.currency, type: item.type, tag: item.tag)
+            return IncomeBackupModel(amount: item.amount, taxpaid: item.taxpaid, creditedOn: item.creditedOn, currency: item.currency, type: item.type, tag: item.tag)
         }
     }
     
     private func exportAccount() async {
         let accountList = await accountController.getAccountList()
-        var accountDataList = [AccountData]()
+        var accountDataList = [AccountBackupModel]()
         
         for account in accountList {
             if(account.accountType == ConstantUtils.brokerAccountType) {
                 let accountsInBroker = await accountInBrokerController.getAccountListInBroker(brokerID: account.id!)
-                var accountsInBrokerDataList = [AccountInBrokerData]()
+                var accountsInBrokerDataList = [AccountInBrokerBackupModel]()
                 for accountInBroker in accountsInBroker {
                     let accountTransactions = await accountInBrokerController.getAccountTransactionListInAccountInBroker(brokerID: account.id!, accountID: accountInBroker.id!)
                     let accountTransactionsData = accountTransactions.map { accountTransaction in
-                        return AccountTransactionData(timestamp: accountTransaction.timestamp, balanceChange: accountTransaction.balanceChange, currentBalance: accountTransaction.currentBalance, paid: accountTransaction.paid)
+                        return AccountTransactionBackupModel(timestamp: accountTransaction.timestamp, balanceChange: accountTransaction.balanceChange, currentBalance: accountTransaction.currentBalance, paid: accountTransaction.paid)
                         
                     }
-                    let accountInBrokerData = AccountInBrokerData(timestamp: accountInBroker.timestamp, symbol: accountInBroker.symbol, name: accountInBroker.name, currentUnit: accountInBroker.currentUnit, accountTransaction: accountTransactionsData)
+                    let accountInBrokerData = AccountInBrokerBackupModel(timestamp: accountInBroker.timestamp, symbol: accountInBroker.symbol, name: accountInBroker.name, currentUnit: accountInBroker.currentUnit, accountTransaction: accountTransactionsData)
                     accountsInBrokerDataList.append(accountInBrokerData)
                 }
                 
-                let accountData = AccountData(accountType: account.accountType, loanType: account.loanType, accountName: account.accountName, currentBalance: account.currentBalance, paymentReminder: account.paymentReminder, paymentDate: account.paymentDate, currency: account.currency, active: account.active, accountInBroker: accountsInBrokerDataList, accountTransaction: [AccountTransactionData]())
+                let accountData = AccountBackupModel(accountType: account.accountType, loanType: account.loanType, accountName: account.accountName, currentBalance: account.currentBalance, paymentReminder: account.paymentReminder, paymentDate: account.paymentDate, currency: account.currency, active: account.active, accountInBroker: accountsInBrokerDataList, accountTransaction: [AccountTransactionBackupModel]())
                 
                 accountDataList.append(accountData)
             } else {
                 let accountTransactions = accountTransactionController.getAccountTransactionList(accountID: account.id!)
                 let accountTransactionsData = accountTransactions.map { accountTransaction in
-                    return AccountTransactionData(timestamp: accountTransaction.timestamp, balanceChange: accountTransaction.balanceChange, currentBalance: accountTransaction.currentBalance, paid: accountTransaction.paid)
+                    return AccountTransactionBackupModel(timestamp: accountTransaction.timestamp, balanceChange: accountTransaction.balanceChange, currentBalance: accountTransaction.currentBalance, paid: accountTransaction.paid)
                     
                 }
                 
-                let accountData = AccountData(accountType: account.accountType, loanType: account.loanType, accountName: account.accountName, currentBalance: account.currentBalance, paymentReminder: account.paymentReminder, paymentDate: account.paymentDate, currency: account.currency, active: account.active, accountInBroker: [AccountInBrokerData](), accountTransaction: accountTransactionsData)
+                let accountData = AccountBackupModel(accountType: account.accountType, loanType: account.loanType, accountName: account.accountName, currentBalance: account.currentBalance, paymentReminder: account.paymentReminder, paymentDate: account.paymentDate, currency: account.currency, active: account.active, accountInBroker: [AccountInBrokerBackupModel](), accountTransaction: accountTransactionsData)
                 
                 accountDataList.append(accountData)
             }
@@ -190,7 +190,7 @@ class ImportExportController {
                     account.id!.elementsEqual(accountID)
                 }.first!.accountName
             }
-            return WatchData(accountName: watch.accountName, accountID: accounts)
+            return WatchBackupModel(accountName: watch.accountName, accountID: accounts)
         }
     }
     
@@ -201,8 +201,8 @@ class ImportExportController {
         return dateFormatter.string(from: date)
     }
     
-    public func readLocalBackup() async -> Data {
-        var returnData = Data()
+    public func readLocalBackup() async -> BackupModel {
+        var returnData = BackupModel()
         do {
             let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
             let directoryContents = try FileManager.default.contentsOfDirectory(
@@ -218,7 +218,7 @@ class ImportExportController {
                 do {
                     let jsonString = try String(contentsOf: backupList[0].absoluteURL, encoding: .utf8)
                     if let dataFromJsonString = jsonString.data(using: .utf8) {
-                        returnData = try JSONDecoder().decode(Data.self,
+                        returnData = try JSONDecoder().decode(BackupModel.self,
                                                               from: dataFromJsonString)
                         
                     }

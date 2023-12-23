@@ -12,7 +12,7 @@ class ImportExportViewModel: ObservableObject {
     var importExportController = ImportExportController()
     
     @Published var backupList = [Date]()
-    @Published var backupData = Data()
+    @Published var backupData = BackupModel()
     
     func getLocalBackup() async {
         let amount = importExportController.getLocalBackup()

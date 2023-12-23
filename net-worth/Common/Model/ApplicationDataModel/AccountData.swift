@@ -2,13 +2,14 @@
 //  AccountData.swift
 //  net-worth
 //
-//  Created by Kalpesh Panchbhai on 06/05/23.
+//  Created by Kalpesh Panchbhai on 22/12/23.
 //
 
 import Foundation
 
 struct AccountData: Codable {
     
+    var id: String
     var accountType: String
     var loanType: String
     var accountName: String
@@ -17,9 +18,9 @@ struct AccountData: Codable {
     var paymentDate: Int
     var currency: String
     var active: Bool
+    var lastUpdated: Date
     
-    var accountInBroker: [AccountInBrokerData]
+    var accountInBrokerData: [AccountInBrokerData]
     
-    var accountTransaction: [AccountTransactionData]
-    
+    var accountTransactionData: [AccountTransactionData]
 }

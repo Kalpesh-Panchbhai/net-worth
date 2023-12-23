@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import FirebaseFirestoreSwift
 
 struct User: Codable {
     
@@ -14,7 +13,7 @@ struct User: Codable {
     var incomeDataUpdatedDate: Date
     var accountDataUpdatedDate: Date
     
-    init(id: String, incomeDataUpdatedDate: Date =  Date().getEarliestDate(), accountDataUpdatedDate: Date =  Date().getEarliestDate()) {
+    init(id: String = "", incomeDataUpdatedDate: Date =  Date().getEarliestDate(), accountDataUpdatedDate: Date =  Date().getEarliestDate()) {
         self.id = id
         self.incomeDataUpdatedDate = incomeDataUpdatedDate
         self.accountDataUpdatedDate = accountDataUpdatedDate
