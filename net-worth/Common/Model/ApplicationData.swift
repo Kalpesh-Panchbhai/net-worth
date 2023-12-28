@@ -77,7 +77,7 @@ struct ApplicationData: Codable {
     private static func loadIncomeData() async {
         let incomeDataList = await IncomeController().getIncomeList()
         shared.data.incomeDataList = incomeDataList.map {
-            return IncomeData(id: $0.id!, amount: $0.amount, taxpaid: $0.taxpaid, creditedOn: $0.creditedOn, currency: $0.currency, type: $0.type, tag: $0.tag)
+            return IncomeData(income: Income(id: $0.id!, amount: $0.amount, taxpaid: $0.taxpaid, creditedOn: $0.creditedOn, currency: $0.currency, type: $0.type, tag: $0.tag))
         }
     }
     

@@ -9,11 +9,5 @@ import Foundation
 
 struct IncomeData: Codable {
     
-    var id: String
-    var amount: Double
-    var taxpaid: Double
-    var creditedOn: Date
-    var currency: String
-    var type: String
-    var tag: String
+    var income: Income
 }

@@ -71,7 +71,7 @@ class IncomeController {
         var incomeList = [Income]()
         
         incomeList = ApplicationData.shared.data.incomeDataList.map {
-            return Income(id: $0.id, amount: $0.amount, taxpaid: $0.taxpaid, creditedOn: $0.creditedOn, currency: $0.currency, type: $0.type, tag: $0.tag)
+            return Income(id: $0.income.id, amount: $0.income.amount, taxpaid: $0.income.taxpaid, creditedOn: $0.income.creditedOn, currency: $0.income.currency, type: $0.income.type, tag: $0.income.tag)
         }
         
         if(!incomeType.isEmpty) {

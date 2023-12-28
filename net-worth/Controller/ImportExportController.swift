@@ -141,7 +141,7 @@ class ImportExportController {
     private func exportIncome() async {
         let incomeList = ApplicationData.shared.data.incomeDataList
         data.income = incomeList.map { item in
-            return IncomeBackupModel(amount: item.amount, taxpaid: item.taxpaid, creditedOn: item.creditedOn, currency: item.currency, type: item.type, tag: item.tag)
+            return IncomeBackupModel(amount: item.income.amount, taxpaid: item.income.taxpaid, creditedOn: item.income.creditedOn, currency: item.income.currency, type: item.income.type, tag: item.income.tag)
         }
     }
     
