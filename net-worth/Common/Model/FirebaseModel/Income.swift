@@ -18,7 +18,7 @@ class Income: Codable, Hashable, Equatable {
         return false
     }
     
-    @DocumentID var id: String?
+    var id: String?
     var amount: Double
     var taxpaid: Double
     var creditedOn: Date

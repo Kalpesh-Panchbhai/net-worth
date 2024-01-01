@@ -9,11 +9,7 @@ import Foundation
 
 struct AccountInBrokerData: Codable {
     
-    var id: String
-    var timestamp: Date
-    var symbol: String
-    var name: String
-    var currentUnit: Double
+    var accountInBroker: AccountInBroker
     
-    var accountTransactionData: [AccountTransactionData]
+    var accountTransaction: [AccountTransaction]
 }

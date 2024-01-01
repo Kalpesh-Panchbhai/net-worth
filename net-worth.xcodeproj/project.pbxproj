@@ -44,7 +44,6 @@
 		7D5426332B3573B0001F67B2 /* IncomeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5426322B3573B0001F67B2 /* IncomeData.swift */; };
 		7D5426352B357414001F67B2 /* AccountData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5426342B357414001F67B2 /* AccountData.swift */; };
 		7D5426372B357450001F67B2 /* AccountInBrokerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5426362B357450001F67B2 /* AccountInBrokerData.swift */; };
-		7D5426392B357488001F67B2 /* AccountTransactionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5426382B357488001F67B2 /* AccountTransactionData.swift */; };
 		7D559DAF2B1CCD6500967F10 /* AccountBrokerChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D559DAE2B1CCD6500967F10 /* AccountBrokerChartView.swift */; };
 		7D596278294105A40008A6B9 /* Balance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D596277294105A40008A6B9 /* Balance.swift */; };
 		7D5A75602A04FB11001646A2 /* WatchToAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5A755F2A04FB11001646A2 /* WatchToAccountView.swift */; };
@@ -182,7 +181,6 @@
 		7D5426322B3573B0001F67B2 /* IncomeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeData.swift; sourceTree = "<group>"; };
 		7D5426342B357414001F67B2 /* AccountData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountData.swift; sourceTree = "<group>"; };
 		7D5426362B357450001F67B2 /* AccountInBrokerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInBrokerData.swift; sourceTree = "<group>"; };
-		7D5426382B357488001F67B2 /* AccountTransactionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTransactionData.swift; sourceTree = "<group>"; };
 		7D559DAE2B1CCD6500967F10 /* AccountBrokerChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountBrokerChartView.swift; sourceTree = "<group>"; };
 		7D596277294105A40008A6B9 /* Balance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Balance.swift; sourceTree = "<group>"; };
 		7D5A755F2A04FB11001646A2 /* WatchToAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchToAccountView.swift; sourceTree = "<group>"; };
@@ -364,7 +362,6 @@
 			children = (
 				7D5426342B357414001F67B2 /* AccountData.swift */,
 				7D5426362B357450001F67B2 /* AccountInBrokerData.swift */,
-				7D5426382B357488001F67B2 /* AccountTransactionData.swift */,
 				7D1429F12B36BCA400111205 /* Data.swift */,
 				7D5426322B3573B0001F67B2 /* IncomeData.swift */,
 			);
@@ -740,7 +737,6 @@
 				7D5A75602A04FB11001646A2 /* WatchToAccountView.swift in Sources */,
 				7DB58AB529967B2E00B93592 /* AccountListView.swift in Sources */,
 				7D14A8F02A0253A9002FC324 /* AccountWatchChartView.swift in Sources */,
-				7D5426392B357488001F67B2 /* AccountTransactionData.swift in Sources */,
 				7D6E82212B19BAE500D764EC /* AccountBrokerRowView.swift in Sources */,
 				7D3E3CBF2A1FC4FC009538BA /* RowAccountToWatchView.swift in Sources */,
 				7D2C76202A0B5B8900CE606C /* Color.swift in Sources */,

@@ -11,7 +11,7 @@ import FirebaseFirestoreSwift
 
 struct AccountInBroker: Codable, Hashable {
     
-    @DocumentID var id: String?
+    var id: String?
     var timestamp: Date
     var symbol: String
     var name: String

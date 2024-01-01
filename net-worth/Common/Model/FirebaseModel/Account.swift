@@ -11,7 +11,7 @@ import FirebaseFirestoreSwift
 
 struct Account: Codable, Hashable {
     
-    @DocumentID var id: String?
+    var id: String?
     var accountType: String
     var loanType: String
     var accountName: String

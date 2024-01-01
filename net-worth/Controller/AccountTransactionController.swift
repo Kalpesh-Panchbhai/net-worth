@@ -55,10 +55,11 @@ class AccountTransactionController {
                     var updatedAccount = account
                     updatedAccount.currentBalance = currentBalance
                     
-                    let account = ApplicationData.shared.accountList.filter {
-                        $0.key.id!.elementsEqual(updatedAccount.id!)
-                    }.first!.key
-                    ApplicationData.shared.accountList.switchKey(fromKey: account, toKey: updatedAccount)
+                    let account = ApplicationData.shared.data.accountDataList.first(where: {
+                        $0.account.id!.elementsEqual(updatedAccount.id!)
+                    })
+                    
+//                    ApplicationData.shared.data.accountDataList.switchKey(fromKey: account, toKey: updatedAccount)
                     
                     let newTransaction = AccountTransaction(timestamp: timestamp, balanceChange: balanceChange, currentBalance: currentBalance)
                     
@@ -89,10 +90,10 @@ class AccountTransactionController {
                     }
                     await AccountController().updateAccount(account: account)
                     
-                    let oldAccount = ApplicationData.shared.accountList.filter {
-                        $0.key.id!.elementsEqual(account.id!)
-                    }.first!.key
-                    ApplicationData.shared.accountList.switchKey(fromKey: oldAccount, toKey: account)
+                    let oldAccount = ApplicationData.shared.data.accountDataList.first(where: {
+                        $0.account.id!.elementsEqual(account.id!)
+                    })
+//                    ApplicationData.shared.accountList.switchKey(fromKey: oldAccount, toKey: account)
                 }
             } else {
                 var first = AccountTransaction(timestamp: Date(), balanceChange: 0.0, currentBalance: 0.0)
@@ -122,9 +123,11 @@ class AccountTransactionController {
             }
         }
         
-        var updatedAccount = ApplicationData.shared.accountList.filter {
-            $0.key.id!.elementsEqual(accountID)
-        }.first!.key
+        var updatedAccount = ApplicationData.shared.data.accountDataList.first(where: {
+            $0.account.id!.elementsEqual(accountID)
+        }).map {
+            $0.account
+        }!
         
         updatedAccount.lastUpdated = Date.now
         
@@ -163,9 +166,11 @@ class AccountTransactionController {
             }
         }
         
-        var updatedAccount = ApplicationData.shared.accountList.filter {
-            $0.key.id!.elementsEqual(account.id!)
-        }.first!.key
+        var updatedAccount = ApplicationData.shared.data.accountDataList.first(where: {
+            $0.account.id!.elementsEqual(account.id!)
+        }).map {
+            $0.account
+        }!
         
         updatedAccount.lastUpdated = Date.now
         
@@ -195,9 +200,11 @@ class AccountTransactionController {
     }
     
     public func getAccountTransactionList(accountID: String) -> [AccountTransaction] {
-        return ApplicationData.shared.accountList.filter {
-            $0.key.id!.elementsEqual(accountID)
-        }.first?.value ?? [AccountTransaction]()
+        return ApplicationData.shared.data.accountDataList.first(where: {
+            $0.account.id!.elementsEqual(accountID)
+        }).map {
+            $0.accountTransaction
+        }!
     }
     
     public func getAccountTransactionListWithRange(accountID: String, range: String) async -> [AccountTransaction] {
@@ -289,9 +296,11 @@ class AccountTransactionController {
                 .document(accountTransaction.id!)
                 .setData(from: accountTransaction, merge: true)
             
-            var updatedAccount = ApplicationData.shared.accountList.filter {
-                $0.key.id!.elementsEqual(accountID)
-            }.first!.key
+            var updatedAccount = ApplicationData.shared.data.accountDataList.first(where: {
+                $0.account.id!.elementsEqual(accountID)
+            }).map {
+                $0.account
+            }!
             
             updatedAccount.lastUpdated = Date.now
             
@@ -309,9 +318,11 @@ class AccountTransactionController {
                 .document(id)
                 .delete()
             
-            var deletedAccount = ApplicationData.shared.accountList.filter {
-                $0.key.id!.elementsEqual(accountID)
-            }.first!.key
+            var deletedAccount = ApplicationData.shared.data.accountDataList.first(where: {
+                $0.account.id!.elementsEqual(accountID)
+            }).map {
+                $0.account
+            }!
             
             deletedAccount.lastUpdated = Date.now
             

@@ -14,9 +14,16 @@ struct Data: Codable {
     var incomeDataList: [IncomeData]
     var incomeDataListUpdatedDate: Date
     
+    var accountDataList: [AccountData]
+    var accountDataListUpdatedDate: Date
+    
     public init() {
         userData = User()
+        
         incomeDataList = [IncomeData]()
         incomeDataListUpdatedDate = Date().getEarliestDate().addingTimeInterval(-86400)
+        
+        accountDataList = [AccountData]()
+        accountDataListUpdatedDate = Date().getEarliestDate().addingTimeInterval(-86400)
     }
 }

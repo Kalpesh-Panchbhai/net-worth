@@ -26,7 +26,7 @@ class UserController {
     
     func isNewAccountAvailable() async -> Bool {
         let user = await getCurrentUser()
-        return ApplicationData.shared.accountListUpdatedDate < user.accountDataUpdatedDate
+        return ApplicationData.shared.data.accountDataListUpdatedDate < user.accountDataUpdatedDate
     }
     
     func getCurrentUserUID() -> String {
