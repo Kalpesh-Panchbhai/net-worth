@@ -480,7 +480,11 @@ struct IncomeView: View {
     private func updateData() {
         Task.init {
             await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+        }
+        Task.init {
             await incomeViewModel.getTotalTaxPaid(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+        }
+        Task.init {
             if(groupByTag || groupByType || groupByYear || groupByFinancialYear) {
                 if(groupByTag) {
                     await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Tag")

@@ -112,7 +112,7 @@ class AccountInBrokerController {
     }
     
     public func getAccountListInBroker(brokerID: String) async -> [AccountInBroker] {
-        var accountBrokerList = ApplicationData.shared.data.accountDataList.first(where: {
+        let accountBrokerList = ApplicationData.shared.data.accountDataList.first(where: {
             return $0.account.id!.elementsEqual(brokerID)
         }).map {
             return $0.accountInBroker
@@ -139,7 +139,7 @@ class AccountInBrokerController {
     }
     
     public func getAccountTransactionListInAccountInBroker(brokerID: String, accountID: String) async -> [AccountTransaction] {
-        var accountTransactionList = ApplicationData.shared.data.accountDataList.filter {
+        let accountTransactionList = ApplicationData.shared.data.accountDataList.filter {
             return $0.account.id == brokerID
         }.first!.accountInBroker.first(where: {
             return $0.accountInBroker.id == accountID

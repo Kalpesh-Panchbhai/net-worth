@@ -15,6 +15,32 @@ class IncomeController {
             .collection(ConstantUtils.incomeCollectionName)
     }
     
+    public func fetchLastestIncomeList() async -> [Income] {
+        var incomeList = [Income]()
+        do {
+            
+            let createdDate = ApplicationData.shared.data.incomeDataListUpdatedDate
+            
+            incomeList = try await getIncomeCollection()
+                .whereField(ConstantUtils.incomeKeyCreatedDate, isGreaterThanOrEqualTo: createdDate)
+                .getDocuments()
+                .documents
+                .map { doc in
+                    return Income(id: doc.documentID,
+                                  amount: doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0,
+                                  taxpaid: doc[ConstantUtils.incomeKeyTaxPaid] as? Double ?? 0.0,
+                                  creditedOn: (doc[ConstantUtils.incomeKeyCreditedOn] as? Timestamp)?.dateValue() ?? Date(),
+                                  currency: doc[ConstantUtils.incomeKeyCurrency] as? String ?? "",
+                                  type: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
+                                  tag: doc[ConstantUtils.incomeKeyIncomeTag] as? String ?? "",
+                                  deleted: doc[ConstantUtils.incomeKeyDeleted] as? Bool ?? false)
+                }
+        } catch {
+            print(error)
+        }
+        return incomeList
+    }
+    
     public func addIncome(income: Income) async {
         do {
             let documentID = try getIncomeCollection()
@@ -52,32 +78,6 @@ class IncomeController {
             .delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeCollectionName))
         
         print("All Incomes Deleted.")
-    }
-    
-    public func getIncomeList() async -> [Income] {
-        var incomeList = [Income]()
-        do {
-            
-            let createdDate = ApplicationData.shared.data.incomeDataListUpdatedDate
-            
-            incomeList = try await getIncomeCollection()
-                .whereField(ConstantUtils.incomeKeyCreatedDate, isGreaterThanOrEqualTo: createdDate)
-                .getDocuments()
-                .documents
-                .map { doc in
-                    return Income(id: doc.documentID,
-                                  amount: doc[ConstantUtils.incomeKeyAmount] as? Double ?? 0.0,
-                                  taxpaid: doc[ConstantUtils.incomeKeyTaxPaid] as? Double ?? 0.0,
-                                  creditedOn: (doc[ConstantUtils.incomeKeyCreditedOn] as? Timestamp)?.dateValue() ?? Date(),
-                                  currency: doc[ConstantUtils.incomeKeyCurrency] as? String ?? "",
-                                  type: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
-                                  tag: doc[ConstantUtils.incomeKeyIncomeTag] as? String ?? "",
-                                  deleted: doc[ConstantUtils.incomeKeyDeleted] as? Bool ?? false)
-                }
-        } catch {
-            print(error)
-        }
-        return incomeList
     }
     
     public func getIncomeList(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async -> [IncomeCalculation] {
@@ -196,22 +196,16 @@ class IncomeController {
         return returnIncomeList.reversed()
     }
     
-    public func fetchTotalAmount(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async -> Double {
+    public func fetchTotal(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String](), field: String) async -> Double {
         let incomeList = await getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
         
         var total = 0.0
         incomeList.forEach {
-            total += $0.amount
-        }
-        return total
-    }
-    
-    public func fetchTotalTaxPaid(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async -> Double {
-        let incomeList = await getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
-        
-        var total = 0.0
-        incomeList.forEach {
-            total += $0.taxpaid
+            if(field.elementsEqual("Amount")) {
+                total += $0.amount
+            } else if(field.elementsEqual("Tax")) {
+                total += $0.taxpaid
+            }
         }
         return total
     }
@@ -293,11 +287,23 @@ class IncomeController {
         return returnResponse
     }
     
-    public func groupByType(list: [IncomeCalculation]) -> [String: [IncomeCalculation]] {
-        let groupByType = Dictionary(grouping: list, by: {$0.type})
-        var incomeListByGroupUpdated = [String: [IncomeCalculation]]()
+    public func incomeListGroupBy(list: [IncomeCalculation], groupBy: String) -> [String: [IncomeCalculation]] {
+        var groupByIncomeList = [String: [IncomeCalculation]]()
+        var returnGroupByIncomeList = [String: [IncomeCalculation]]()
+        if(groupBy.elementsEqual("Type")) {
+            groupByIncomeList = Dictionary(grouping: list, by: {$0.type})
+        } else if(groupBy.elementsEqual("Tag")) {
+            groupByIncomeList = Dictionary(grouping: list, by: {$0.tag})
+        } else if(groupBy.elementsEqual("Year")) {
+            groupByIncomeList = Dictionary(grouping: list) { (income) -> String in
+                let date = Calendar.current.dateComponents([.year], from: income.creditedOn)
+                return String(date.year ?? 0)
+            }
+        } else if(groupBy.elementsEqual("Financial Year")) {
+            return incomeListGroupByFinancialYear(list: list)
+        }
         
-        for (key, value) in groupByType {
+        for (key, value) in groupByIncomeList {
             var cumAmount = 0.0
             var cumTaxPaid = 0.0
             let returnIncomeList = value.reversed().map { value1 in
@@ -336,116 +342,13 @@ class IncomeController {
                                          cumulativeTaxPaid: cumTaxPaid)
             }
             
-            incomeListByGroupUpdated.updateValue(returnIncomeList.reversed(), forKey: key)
+            returnGroupByIncomeList.updateValue(returnIncomeList.reversed(), forKey: key)
         }
         
-        return incomeListByGroupUpdated
+        return returnGroupByIncomeList
     }
     
-    public func groupByTag(list: [IncomeCalculation]) -> [String: [IncomeCalculation]] {
-        let groupByTag = Dictionary(grouping: list, by: {$0.tag})
-        var incomeListByGroupUpdated = [String: [IncomeCalculation]]()
-        
-        for (key, value) in groupByTag {
-            var cumAmount = 0.0
-            var cumTaxPaid = 0.0
-            let returnIncomeList = value.reversed().map { value1 in
-                var sumAmount = 0.0
-                var sumTaxPaid = 0.0
-                var totalMonth = 0.0
-                var totalDays = 0
-                var maxDays = 0
-                cumAmount = cumAmount + value1.amount
-                cumTaxPaid = cumTaxPaid + value1.taxpaid
-                value.reversed().forEach { value2 in
-                    if(value1.creditedOn >= value2.creditedOn) {
-                        sumAmount += value2.amount
-                        sumTaxPaid += value2.taxpaid
-                        
-                        let date = DateComponents(
-                            calendar: Calendar.current,
-                            year: value2.creditedOn.getDateComponents().year,
-                            month: value2.creditedOn.getDateComponents().month,
-                            day: 1)
-                        totalDays = value1.creditedOn.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
-                        maxDays = maxDays < totalDays ? totalDays : maxDays
-                    }
-                }
-                totalMonth = Double(maxDays) / Double(30)
-                return IncomeCalculation(id: value1.id,
-                                         amount: value1.amount,
-                                         taxpaid: value1.taxpaid,
-                                         creditedOn: value1.creditedOn,
-                                         currency: value1.currency,
-                                         type: value1.type,
-                                         tag: value1.tag,
-                                         avgAmount: sumAmount / Double(totalMonth),
-                                         avgTaxPaid: sumTaxPaid / Double(totalMonth),
-                                         cumulativeAmount: cumAmount,
-                                         cumulativeTaxPaid: cumTaxPaid)
-            }
-            
-            incomeListByGroupUpdated.updateValue(returnIncomeList.reversed(), forKey: key)
-        }
-        
-        return incomeListByGroupUpdated
-    }
-    
-    public func groupByYear(list: [IncomeCalculation]) -> [String: [IncomeCalculation]] {
-        let groupByYear = Dictionary(grouping: list) { (income) -> String in
-            let date = Calendar.current.dateComponents([.year], from: income.creditedOn)
-            
-            return String(date.year ?? 0)
-            
-        }
-        var incomeListByGroupUpdated = [String: [IncomeCalculation]]()
-        
-        for (key, value) in groupByYear {
-            var cumAmount = 0.0
-            var cumTaxPaid = 0.0
-            let returnIncomeList = value.reversed().map { value1 in
-                var sumAmount = 0.0
-                var sumTaxPaid = 0.0
-                var totalMonth = 0.0
-                var totalDays = 0
-                var maxDays = 0
-                cumAmount = cumAmount + value1.amount
-                cumTaxPaid = cumTaxPaid + value1.taxpaid
-                value.reversed().forEach { value2 in
-                    if(value1.creditedOn >= value2.creditedOn) {
-                        sumAmount += value2.amount
-                        sumTaxPaid += value2.taxpaid
-                        
-                        let date = DateComponents(
-                            calendar: Calendar.current,
-                            year: value2.creditedOn.getDateComponents().year,
-                            month: value2.creditedOn.getDateComponents().month,
-                            day: 1)
-                        totalDays = value1.creditedOn.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
-                        maxDays = maxDays < totalDays ? totalDays : maxDays
-                    }
-                }
-                totalMonth = Double(maxDays) / Double(30)
-                return IncomeCalculation(id: value1.id,
-                                         amount: value1.amount,
-                                         taxpaid: value1.taxpaid,
-                                         creditedOn: value1.creditedOn,
-                                         currency: value1.currency,
-                                         type: value1.type,
-                                         tag: value1.tag,
-                                         avgAmount: sumAmount / Double(totalMonth),
-                                         avgTaxPaid: sumTaxPaid / Double(totalMonth),
-                                         cumulativeAmount: cumAmount,
-                                         cumulativeTaxPaid: cumTaxPaid)
-            }
-            
-            incomeListByGroupUpdated.updateValue(returnIncomeList.reversed(), forKey: key)
-        }
-        
-        return incomeListByGroupUpdated
-    }
-    
-    public func groupByFinancialYear(list: [IncomeCalculation]) -> [String: [IncomeCalculation]] {
+    public func incomeListGroupByFinancialYear(list: [IncomeCalculation]) -> [String: [IncomeCalculation]] {
         var financialYearList = [String]()
         
         let firstYear = Calendar.current.dateComponents([.year], from: list.last!.creditedOn).year!

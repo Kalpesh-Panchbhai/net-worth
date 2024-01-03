@@ -54,40 +54,11 @@ class IncomeViewModel: ObservableObject {
         
         let list = await incomeController.getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
         if(!list.isEmpty) {
-            if(groupBy.elementsEqual("Type")) {
-                
-                let groupByTypeUpdated = incomeController.groupByType(list: list)
-                
-                DispatchQueue.main.async {
-                    self.incomeListByGroup = groupByTypeUpdated
-                    self.incomeListLoaded = true
-                }
-                
-            } else if(groupBy.elementsEqual("Tag")) {
-                
-                let groupByTagUpdated = incomeController.groupByTag(list: list)
-                
-                DispatchQueue.main.async {
-                    self.incomeListByGroup = groupByTagUpdated
-                    self.incomeListLoaded = true
-                }
-                
-            } else if(groupBy.elementsEqual("Year")) {
-                
-                let groupByYearUpdated = incomeController.groupByYear(list: list)
-                
-                DispatchQueue.main.async {
-                    self.incomeListByGroup = groupByYearUpdated
-                    self.incomeListLoaded = true
-                }
-                
-            } else if(groupBy.elementsEqual("Financial Year")) {
-                
-                let groupByFinancialYearUpdated = incomeController.groupByFinancialYear(list: list)
-                DispatchQueue.main.async {
-                    self.incomeListByGroup = groupByFinancialYearUpdated
-                    self.incomeListLoaded = true
-                }
+            let incomeListByGroup = incomeController.incomeListGroupBy(list: list, groupBy: groupBy)
+            
+            DispatchQueue.main.async {
+                self.incomeListByGroup = incomeListByGroup
+                self.incomeListLoaded = true
             }
         } else {
             DispatchQueue.main.async {
@@ -98,16 +69,16 @@ class IncomeViewModel: ObservableObject {
     }
     
     func getTotalBalance(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async {
-        let amount = await incomeController.fetchTotalAmount(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
+        let amount = await incomeController.fetchTotal(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear, field: "Amount")
         DispatchQueue.main.async {
             self.incomeTotalAmount = amount
         }
     }
     
     func getTotalTaxPaid(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async {
-        let taxPaid = await incomeController.fetchTotalTaxPaid(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
+        let amount = await incomeController.fetchTotal(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear, field: "Tax")
         DispatchQueue.main.async {
-            self.incomeTaxPaidAmount = taxPaid
+            self.incomeTaxPaidAmount = amount
         }
     }
     
