@@ -32,12 +32,4 @@ struct AccountInBroker: Codable, Hashable {
         self.name = doc[ConstantUtils.accountBrokerKeyName] as? String ?? ""
         self.currentUnit = doc[ConstantUtils.accountBrokerKeyCurrentUnit] as? Double ?? 0.0
     }
-    
-    init(doc1: DocumentSnapshot) {
-        self.id = doc1.documentID
-        self.timestamp = (doc1[ConstantUtils.accountBrokerKeyTimeStamp] as? Timestamp)?.dateValue() ?? Date()
-        self.symbol = doc1[ConstantUtils.accountBrokerKeySymbol] as? String ?? ""
-        self.name = doc1[ConstantUtils.accountBrokerKeyName] as? String ?? ""
-        self.currentUnit = doc1[ConstantUtils.accountBrokerKeyCurrentUnit] as? Double ?? 0.0
-    }
 }
