@@ -10,6 +10,30 @@ import FirebaseFirestore
 
 class AccountTransactionController {
     
+    public func fetchLastestAccountTransactionList(accountID: String) async -> [AccountTransaction] {
+        var accountTransactionList = [AccountTransaction]()
+        do {
+            
+            let lastUpdatedDateTime = ApplicationData.shared.data.accountDataListUpdatedDate
+            accountTransactionList = try await AccountController().getAccountCollection()
+                .document(accountID)
+                .collection(ConstantUtils.accountTransactionCollectionName)
+                .whereField(ConstantUtils.accountTransactionKeyCreatedDate, isGreaterThanOrEqualTo: lastUpdatedDateTime)
+                .getDocuments()
+                .documents
+                .map { doc in
+                    return AccountTransaction(id: doc.documentID,
+                                              timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
+                                              balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0,
+                                              currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0,
+                                              paid: doc[ConstantUtils.accountTransactionKeyPaid] as? Bool ?? true)
+                }
+        } catch {
+            print(error)
+        }
+        return accountTransactionList
+    }
+    
     public func addTransaction(accountID: String, accountTransaction: AccountTransaction) async {
         do {
             let documentID = try AccountController().getAccountCollection()
@@ -177,34 +201,12 @@ class AccountTransactionController {
         await AccountController().updateAccount(account: updatedAccount)
     }
     
-    public func getAccountTransactionDataList(accountID: String) async -> [AccountTransaction] {
-        var accountTransactionList = [AccountTransaction]()
-        do {
-            accountTransactionList = try await AccountController().getAccountCollection()
-                .document(accountID)
-                .collection(ConstantUtils.accountTransactionCollectionName)
-                .order(by: ConstantUtils.accountTransactionKeytimestamp, descending: true)
-                .getDocuments()
-                .documents
-                .map { doc in
-                    return AccountTransaction(id: doc.documentID,
-                                              timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
-                                              balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0,
-                                              currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0,
-                                              paid: doc[ConstantUtils.accountTransactionKeyPaid] as? Bool ?? true)
-                }
-        } catch {
-            print(error)
-        }
-        return accountTransactionList
-    }
-    
     public func getAccountTransactionList(accountID: String) -> [AccountTransaction] {
         return ApplicationData.shared.data.accountDataList.first(where: {
             $0.account.id!.elementsEqual(accountID)
         }).map {
             $0.accountTransaction
-        }!
+        } ?? [AccountTransaction]()
     }
     
     public func getAccountTransactionListWithRange(accountID: String, range: String) async -> [AccountTransaction] {

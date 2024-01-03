@@ -21,9 +21,9 @@ struct Data: Codable {
         userData = User()
         
         incomeDataList = [IncomeData]()
-        incomeDataListUpdatedDate = Date().getEarliestDate().addingTimeInterval(-86400)
+        incomeDataListUpdatedDate = Date().getEarliestDate()
         
         accountDataList = [AccountData]()
-        accountDataListUpdatedDate = Date().getEarliestDate().addingTimeInterval(-86400)
+        accountDataListUpdatedDate = Date().getEarliestDate()
     }
 }

@@ -23,7 +23,7 @@ class IncomeController {
             
             print("New Income Added : " + documentID)
             
-            await UserController().updateIncomeUserData()
+            await UserController().updateIncomeUserData(updatedDate: income.createdDate)
             
             await ApplicationData.loadData()
         } catch {
@@ -33,11 +33,13 @@ class IncomeController {
     
     public func updateIncome(income: Income) async {
         do {
+            let incomeId = income.id!
+            income.id = nil
             try getIncomeCollection()
-                .document(income.id!)
+                .document(incomeId)
                 .setData(from: income, merge: true)
             
-            await UserController().updateIncomeUserData()
+            await UserController().updateIncomeUserData(updatedDate: income.createdDate)
             
             await ApplicationData.loadData()
         } catch {
@@ -45,11 +47,21 @@ class IncomeController {
         }
     }
     
+    public func deleteIncomes() {
+        CommonController
+            .delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeCollectionName))
+        
+        print("All Incomes Deleted.")
+    }
+    
     public func getIncomeList() async -> [Income] {
         var incomeList = [Income]()
         do {
+            
+            let createdDate = ApplicationData.shared.data.incomeDataListUpdatedDate
+            
             incomeList = try await getIncomeCollection()
-                .order(by: ConstantUtils.incomeKeyCreditedOn)
+                .whereField(ConstantUtils.incomeKeyCreatedDate, isGreaterThanOrEqualTo: createdDate)
                 .getDocuments()
                 .documents
                 .map { doc in
@@ -59,7 +71,8 @@ class IncomeController {
                                   creditedOn: (doc[ConstantUtils.incomeKeyCreditedOn] as? Timestamp)?.dateValue() ?? Date(),
                                   currency: doc[ConstantUtils.incomeKeyCurrency] as? String ?? "",
                                   type: doc[ConstantUtils.incomeKeyIncomeType] as? String ?? "",
-                                  tag: doc[ConstantUtils.incomeKeyIncomeTag] as? String ?? "")
+                                  tag: doc[ConstantUtils.incomeKeyIncomeTag] as? String ?? "",
+                                  deleted: doc[ConstantUtils.incomeKeyDeleted] as? Bool ?? false)
                 }
         } catch {
             print(error)
@@ -278,29 +291,6 @@ class IncomeController {
         }
         
         return returnResponse
-    }
-    
-    public func deleteIncome(id: String) async {
-        do {
-            try await getIncomeCollection()
-                .document(id)
-                .delete()
-            
-            print("Income Deleted : " + id)
-            
-            await UserController().updateIncomeUserData()
-            
-            await ApplicationData.loadData()
-        } catch {
-            print(error)
-        }
-    }
-    
-    public func deleteIncomes() {
-        CommonController
-            .delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeCollectionName))
-        
-        print("All Incomes Deleted.")
     }
     
     public func groupByType(list: [IncomeCalculation]) -> [String: [IncomeCalculation]] {

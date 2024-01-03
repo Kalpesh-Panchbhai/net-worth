@@ -355,7 +355,7 @@ struct IncomeView: View {
                                         IncomeRowView(income: income, showCumulative: showCumulative, showAverage: showAverage)
                                     })
                                     .contextMenu {
-                                        Label(income.id!, systemImage: ConstantUtils.infoIconImageName)
+                                        Label(income.id ?? "", systemImage: ConstantUtils.infoIconImageName)
                                     }
                                 }
                                 .onDelete(perform: deleteIncome)
@@ -461,13 +461,14 @@ struct IncomeView: View {
     }
     
     private func deleteIncome(offsets: IndexSet) {
-        var id = ""
+        var deletedIncome = Income()
         withAnimation {
             offsets.map {
-                id = incomeViewModel.incomeList[$0].id ?? ""
+                deletedIncome = incomeViewModel.incomeList[$0]
+                deletedIncome.deleted = true
             }.forEach {
                 Task.init {
-                    await incomeController.deleteIncome(id: id)
+                    await incomeController.updateIncome(income: deletedIncome)
                     updateData()
                     await incomeViewModel.getIncomeYearList()
                     await incomeViewModel.getIncomeFinancialYearList()

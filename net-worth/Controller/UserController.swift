@@ -12,10 +12,20 @@ import FirebaseFirestore
 class UserController {
     
     func addCurrentUser() {
-        do {
-            try getCurrentUserDocument().setData(from: User(id: getCurrentUserUID()))
-        } catch {
-            print(error)
+        let currentUserDocument = getCurrentUserDocument()
+        currentUserDocument.getDocument { [self] (document, error) in
+            if let error = error {
+                print("Error getting document: \(error)")
+            } else if let document = document, document.exists {
+                let data = document.data()
+                print("Document data: \(data ?? [:])")
+            } else {
+                do {
+                    try currentUserDocument.setData(from: User(id: getCurrentUserUID()))
+                } catch {
+                    print(error)
+                }
+            }
         }
     }
     
@@ -60,9 +70,9 @@ class UserController {
         }
     }
     
-    func updateIncomeUserData() async {
+    func updateIncomeUserData(updatedDate: Date) async {
         var user = await getCurrentUser()
-        user.incomeDataUpdatedDate = Date.now
+        user.incomeDataUpdatedDate = updatedDate
         
         updateUser(user: user)
     }

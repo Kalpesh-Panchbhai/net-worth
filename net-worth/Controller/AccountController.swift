@@ -21,12 +21,32 @@ class AccountController {
             .collection(ConstantUtils.accountCollectionName)
     }
     
+    public func fetchLastestAccountList() async -> [Account] {
+        var accountList = [Account]()
+        
+        let date = ApplicationData.shared.data.accountDataListUpdatedDate
+        do {
+            accountList = try await getAccountCollection()
+                .whereField(ConstantUtils.accountKeyLastUpdated, isGreaterThanOrEqualTo: date)
+                .getDocuments()
+                .documents
+                .map { doc in
+                    return Account(doc: doc)
+                }
+        } catch {
+            print(error)
+        }
+        return accountList
+    }
+    
     public func addAccount(newAccount: Account) async -> String {
         do {
             let accountID = try getAccountCollection()
                 .addDocument(from: newAccount).documentID
             
             await UserController().updateAccountUserData()
+            
+            await ApplicationData.loadData()
             return accountID
         } catch {
             print(error)
@@ -44,27 +64,13 @@ class AccountController {
             }
             
             await UserController().updateAccountUserData()
+            
+            await ApplicationData.loadData()
             return accountID
         } catch {
             print(error)
         }
         return ""
-    }
-    
-    public func getAccountDataList() async -> [Account] {
-        var accountList = [Account]()
-        do {
-            accountList = try await getAccountCollection()
-                .order(by: ConstantUtils.accountKeyAccountName)
-                .getDocuments()
-                .documents
-                .map { doc in
-                    return Account(doc: doc)
-                }
-        } catch {
-            print(error)
-        }
-        return accountList
     }
     
     public func getAccount(id: String) -> Account {
@@ -74,7 +80,7 @@ class AccountController {
         
         return account.map {
             $0.account
-        }!
+        } ?? Account()
     }
     
     public func getAccount(accountType: String) -> [Account]{
@@ -159,6 +165,8 @@ class AccountController {
                 .setData(from: account, merge: true)
             
             await UserController().updateAccountUserData()
+            
+            await ApplicationData.loadData()
         } catch {
             print(error)
         }
@@ -192,6 +200,8 @@ class AccountController {
         }
         
         await UserController().updateAccountUserData()
+        
+        await ApplicationData.loadData()
     }
     
     public func deleteAccounts() async {
