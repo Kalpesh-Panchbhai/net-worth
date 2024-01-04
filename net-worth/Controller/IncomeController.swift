@@ -348,7 +348,7 @@ class IncomeController {
         return returnGroupByIncomeList
     }
     
-    public func incomeListGroupByFinancialYear(list: [IncomeCalculation]) -> [String: [IncomeCalculation]] {
+    private func incomeListGroupByFinancialYear(list: [IncomeCalculation]) -> [String: [IncomeCalculation]] {
         var financialYearList = [String]()
         
         let firstYear = Calendar.current.dateComponents([.year], from: list.last!.creditedOn).year!

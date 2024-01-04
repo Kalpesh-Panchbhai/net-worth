@@ -11,7 +11,6 @@ import FirebaseFirestore
 
 class AccountController {
     
-    var notificationController = NotificationController()
     var watchController = WatchController()
     var accountTransactionController = AccountTransactionController()
     
