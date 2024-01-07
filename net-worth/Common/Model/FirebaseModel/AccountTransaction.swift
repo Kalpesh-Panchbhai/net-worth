@@ -16,12 +16,16 @@ struct AccountTransaction: Codable, Hashable {
     var currentBalance: Double
     
     var paid: Bool = true
+    var createdDate: Date
+    var deleted: Bool = false
     
-    init(id: String = "", timestamp: Date = Date(), balanceChange: Double = 0.0, currentBalance: Double = 0.0, paid: Bool = true) {
+    init(id: String? = nil, timestamp: Date = Date(), balanceChange: Double = 0.0, currentBalance: Double = 0.0, paid: Bool = true, createdDate: Date = Date.now, deleted: Bool = false) {
         self.id = id
         self.timestamp = timestamp
         self.balanceChange = balanceChange
         self.currentBalance = currentBalance
         self.paid = paid
+        self.createdDate = createdDate
+        self.deleted = deleted
     }
 }

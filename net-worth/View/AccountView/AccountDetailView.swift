@@ -89,7 +89,11 @@ struct AccountDetailView: View {
                                 isPresented: $isPresentingAccountDeleteConfirm) {
                 Button("Delete account " + accountViewModel.account.accountName + "?", role: .destructive) {
                     Task.init {
-                        await accountController.deleteAccount(accountID: accountID, isBrokerAccount: accountViewModel.account.accountType == ConstantUtils.brokerAccountType)
+                        var deletedAccount =  accountViewModel.account
+                        deletedAccount.lastUpdated = Date.now
+                        deletedAccount.deleted = true
+                        await accountController.updateAccount(account: deletedAccount)
+                        await ApplicationData.loadData()
                         await accountViewModel.getAccountList()
                         await watchViewModel.getAllWatchList()
                     }
@@ -280,12 +284,12 @@ struct AccountDetailView: View {
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             Task.init {
-                await accountViewModel.getAccountList()
+                await ApplicationData.loadData()
                 await accountViewModel.getAccount(id: accountViewModel.account.id!)
-                accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
                 await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
                 await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+                accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
             }
         }, content: {
             UpdateBalanceAccountView(accountViewModel: accountViewModel)

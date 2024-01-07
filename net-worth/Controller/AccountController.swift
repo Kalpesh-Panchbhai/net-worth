@@ -43,7 +43,7 @@ class AccountController {
             let accountID = try getAccountCollection()
                 .addDocument(from: newAccount).documentID
             
-            await UserController().updateAccountUserData()
+            await UserController().updateAccountUserData(updatedDate: newAccount.lastUpdated)
             
             await ApplicationData.loadData()
             return accountID
@@ -57,12 +57,12 @@ class AccountController {
         do {
             let accountID = try getAccountCollection()
                 .addDocument(from: newAccount).documentID
-            let accountTransaction = AccountTransaction(timestamp: accountOpenedDate, balanceChange: newAccount.currentBalance, currentBalance: newAccount.currentBalance)
             if(newAccount.accountType != ConstantUtils.brokerAccountType) {
+                let accountTransaction = AccountTransaction(timestamp: accountOpenedDate, balanceChange: newAccount.currentBalance, currentBalance: newAccount.currentBalance, createdDate: newAccount.lastUpdated)
                 await accountTransactionController.addTransaction(accountID: accountID, accountTransaction: accountTransaction)
             }
             
-            await UserController().updateAccountUserData()
+            await UserController().updateAccountUserData(updatedDate: newAccount.lastUpdated)
             
             await ApplicationData.loadData()
             return accountID
@@ -159,15 +159,31 @@ class AccountController {
     
     public func updateAccount(account: Account) async {
         do {
+            let id = account.id!
+            var updatedAccount = account
+            updatedAccount.id = nil
             try getAccountCollection()
-                .document(account.id!)
-                .setData(from: account, merge: true)
+                .document(id)
+                .setData(from: updatedAccount, merge: true)
             
-            await UserController().updateAccountUserData()
+            if(updatedAccount.deleted) {
+                await updateWatchListIfAccountDeleted(accountID: account.id!)
+            }
+            
+            await UserController().updateAccountUserData(updatedDate: account.lastUpdated)
             
             await ApplicationData.loadData()
         } catch {
             print(error)
+        }
+    }
+    
+    private func updateWatchListIfAccountDeleted(accountID: String) async {
+        let watchList = await watchController.getAllWatchList()
+        watchList.forEach { watch in
+            if(watch.accountID.contains(accountID)) {
+                watchController.deleteAccountFromWatchList(watchList: watch, accountID: accountID)
+            }
         }
     }
     
@@ -198,7 +214,7 @@ class AccountController {
             print(error)
         }
         
-        await UserController().updateAccountUserData()
+//        await UserController().updateAccountUserData(updatedDate: <#Date#>)
         
         await ApplicationData.loadData()
     }

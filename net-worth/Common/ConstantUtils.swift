@@ -46,12 +46,14 @@ class ConstantUtils {
     static var accountKeySymbol = "symbol"
     static var accountKeyActive = "active"
     static var accountKeyLastUpdated = "lastUpdated"
+    static var accountKeyDeleted = "deleted"
     
     static var accountTransactionKeyBalanceChange = "balanceChange"
     static var accountTransactionKeytimestamp = "timestamp"
     static var accountTransactionKeyCurrentBalance = "currentBalance"
     static var accountTransactionKeyPaid = "paid"
     static var accountTransactionKeyCreatedDate = "createdDate"
+    static var accountTransactionKeyDeleted = "deleted"
     
     static var accountBrokerKeyCurrentUnit = "currentUnit"
     static var accountBrokerKeySymbol = "symbol"

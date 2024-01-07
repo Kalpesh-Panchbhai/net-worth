@@ -99,41 +99,59 @@ struct TransactionsView: View {
                             if(accountViewModel.accountTransactionList.count > 1 && !accountViewModel.account.loanType.elementsEqual("Consumer")) {
                                 Button(role: .destructive, action: {
                                     if(i==0) {
+                                        let updatedDate = Date.now
                                         var account = accountViewModel.account
-                                        let accountTransactionID = accountViewModel.accountTransactionList[i].id!
+                                        var accountTransaction = accountViewModel.accountTransactionList[i]
+                                        accountTransaction.createdDate = updatedDate
+                                        accountTransaction.deleted = true
                                         let newCurrentBalance = accountViewModel.accountTransactionList[1].currentBalance
                                         Task.init {
-                                            await accountTransactionController.deleteAccountTransaction(accountID: account.id!, id: accountTransactionID)
+                                            await accountTransactionController.updateAccountTransaction(accountID: account.id!, accountTransaction: accountTransaction)
                                             account.currentBalance = newCurrentBalance
-                                            account.lastUpdated = Date.now
+                                            account.lastUpdated = updatedDate
                                             await accountController.updateAccount(account: account)
+                                            await ApplicationData.loadData()
                                             await accountViewModel.getAccountList()
                                             accountViewModel.getAccountTransactionList(id: account.id!)
                                             await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
                                             await accountViewModel.getAccount(id: account.id!)
                                         }
                                     } else if(i == accountViewModel.accountTransactionList.count - 1) {
-                                        let account = accountViewModel.account
-                                        let accountTransactionID = accountViewModel.accountTransactionList[i].id!
+                                        let updatedDate = Date.now
+                                        var account = accountViewModel.account
+                                        var accountTransaction = accountViewModel.accountTransactionList[i]
+                                        accountTransaction.createdDate = updatedDate
+                                        accountTransaction.deleted = true
                                         var currentLastTransaction = accountViewModel.accountTransactionList[i - 1]
                                         currentLastTransaction.balanceChange = currentLastTransaction.currentBalance
+                                        currentLastTransaction.createdDate = updatedDate
                                         Task.init {
-                                            await accountTransactionController.deleteAccountTransaction(accountID: account.id!, id: accountTransactionID)
+                                            await accountTransactionController.updateAccountTransaction(accountID: account.id!, accountTransaction: accountTransaction)
                                             await accountTransactionController.updateAccountTransaction(accountID: account.id!, accountTransaction: currentLastTransaction)
+                                            account.lastUpdated = updatedDate
+                                            await accountController.updateAccount(account: account)
+                                            await ApplicationData.loadData()
                                             await accountViewModel.getAccountList()
                                             accountViewModel.getAccountTransactionList(id: account.id!)
                                             await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
                                             await accountViewModel.getAccount(id: account.id!)
                                         }
                                     } else {
-                                        let account = accountViewModel.account
-                                        let accountTransactionID = accountViewModel.accountTransactionList[i].id!
+                                        let updatedDate = Date.now
+                                        var account = accountViewModel.account
+                                        var accountTransaction = accountViewModel.accountTransactionList[i]
+                                        accountTransaction.createdDate = updatedDate
+                                        accountTransaction.deleted = true
                                         var currentLastTransaction = accountViewModel.accountTransactionList[i - 1]
                                         let currentFirstTransaction = accountViewModel.accountTransactionList[i + 1]
                                         currentLastTransaction.balanceChange = currentLastTransaction.currentBalance - currentFirstTransaction.currentBalance
+                                        currentLastTransaction.createdDate = updatedDate
                                         Task.init {
-                                            await accountTransactionController.deleteAccountTransaction(accountID: account.id!, id: accountTransactionID)
+                                            await accountTransactionController.updateAccountTransaction(accountID: account.id!, accountTransaction: accountTransaction)
                                             await accountTransactionController.updateAccountTransaction(accountID: account.id!, accountTransaction: currentLastTransaction)
+                                            account.lastUpdated = updatedDate
+                                            await accountController.updateAccount(account: account)
+                                            await ApplicationData.loadData()
                                             await accountViewModel.getAccountList()
                                             accountViewModel.getAccountTransactionList(id: account.id!)
                                             await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)

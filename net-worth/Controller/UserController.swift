@@ -77,9 +77,9 @@ class UserController {
         updateUser(user: user)
     }
     
-    func updateAccountUserData() async {
+    func updateAccountUserData(updatedDate: Date) async {
         var user = await getCurrentUser()
-        user.accountDataUpdatedDate = Date.now
+        user.accountDataUpdatedDate = updatedDate
         
         updateUser(user: user)
     }

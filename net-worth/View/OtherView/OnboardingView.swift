@@ -17,7 +17,7 @@ struct OnboardingView: View {
         removal: .move(edge: .leading))
     
     @State var onboardingState: Int = 0
-    @State var currenySelected: Currency = Currency()
+    @State var currenySelected: Currency = Currency(code: "INR", symbol: "₹", name: "Indian rupee")
     @State var filterCurrencyList = CurrencyList().currencyList
     @State var isAuthenticationRequired: Bool = false
     @State var allNotification: Bool = false
