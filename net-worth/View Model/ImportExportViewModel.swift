@@ -15,16 +15,16 @@ class ImportExportViewModel: ObservableObject {
     @Published var backupData = BackupModel()
     
     func getLocalBackup() async {
-        let amount = importExportController.getLocalBackup()
+        let backupList = importExportController.getLocalBackup()
         DispatchQueue.main.async {
-            self.backupList = amount
+            self.backupList = backupList
         }
     }
     
     func readLocalBackup() async {
-        let data = await importExportController.readLocalBackup()
+        let backupData = await importExportController.readLocalBackup()
         DispatchQueue.main.async {
-            self.backupData = data
+            self.backupData = backupData
         }
     }
 }

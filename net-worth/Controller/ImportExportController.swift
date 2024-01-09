@@ -112,7 +112,7 @@ class ImportExportController {
             if let jsonData = jsonString!.data(using: .utf8),
                let documentDirectory = FileManager.default.urls(for: .documentDirectory,
                                                                 in: .userDomainMask).first {
-                let pathWithFileName = documentDirectory.appendingPathComponent("Backup_" + getCurrentDateTimeStamp())
+                let pathWithFileName = documentDirectory.appendingPathComponent("Backup_" + getCurrentDateTimeStamp() + ".txt")
                 do {
                     try jsonData.write(to: pathWithFileName)
                 } catch {
@@ -250,7 +250,8 @@ class ImportExportController {
             }
             
             return backupList.map {
-                $0.lastPathComponent.replacingOccurrences(of: "Backup_", with: "").toDate()
+                var fileName = $0.lastPathComponent
+                return fileName.replacingOccurrences(of: ".txt", with: "").replacingOccurrences(of: "Backup_", with: "").toDate()
             }.sorted().reversed()
             
         } catch {
