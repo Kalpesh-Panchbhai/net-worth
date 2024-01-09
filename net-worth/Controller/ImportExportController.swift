@@ -250,7 +250,7 @@ class ImportExportController {
             }
             
             return backupList.map {
-                var fileName = $0.lastPathComponent
+                let fileName = $0.lastPathComponent
                 return fileName.replacingOccurrences(of: ".txt", with: "").replacingOccurrences(of: "Backup_", with: "").toDate()
             }.sorted().reversed()
             
