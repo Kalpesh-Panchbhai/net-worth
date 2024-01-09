@@ -22,7 +22,7 @@ class AccountInBrokerController {
                 .getAccountCollection()
                 .document(brokerID)
                 .collection(ConstantUtils.accountBrokerCollectionName)
-                .whereField(ConstantUtils.accountBrokerKeyTimeStampLastUpdated, isGreaterThanOrEqualTo: lastUpdatedDateTime)
+                .whereField(ConstantUtils.accountBrokerKeyLastUpdated, isGreaterThanOrEqualTo: lastUpdatedDateTime)
                 .getDocuments()
                 .documents
                 .map { doc in
@@ -30,7 +30,9 @@ class AccountInBrokerController {
                                            timestamp: (doc[ConstantUtils.accountBrokerKeyTimeStamp] as? Timestamp)?.dateValue() ?? Date(),
                                            symbol: doc[ConstantUtils.accountBrokerKeySymbol] as? String ?? "",
                                            name: doc[ConstantUtils.accountBrokerKeyName] as? String ?? "",
-                                           currentUnit: doc[ConstantUtils.accountBrokerKeyCurrentUnit] as? Double ?? 0.0)
+                                           currentUnit: doc[ConstantUtils.accountBrokerKeyCurrentUnit] as? Double ?? 0.0,
+                                           lastUpdated: (doc[ConstantUtils.accountBrokerKeyLastUpdated] as? Timestamp)?.dateValue() ?? Date(),
+                                           deleted: doc[ConstantUtils.accountBrokerKeyDeleted] as? Bool ?? false)
                 }
         } catch {
             print(error)
@@ -57,7 +59,8 @@ class AccountInBrokerController {
                                               timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
                                               balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0,
                                               currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0,
-                                              paid: doc[ConstantUtils.accountTransactionKeyPaid] as? Bool ?? true)
+                                              paid: doc[ConstantUtils.accountTransactionKeyPaid] as? Bool ?? true,
+                                              createdDate: (doc[ConstantUtils.accountTransactionKeyCreatedDate] as? Timestamp)?.dateValue() ?? Date())
                 }
         } catch {
             print(error)
@@ -65,7 +68,7 @@ class AccountInBrokerController {
         return accountTransactionList
     }
     
-    public func addAccountInBroker(brokerID: String, accountInBroker: AccountInBroker) {
+    public func addAccountInBroker(brokerID: String, accountInBroker: AccountInBroker) async {
         do {
             let accountID = try accountController.getAccountCollection()
                 .document(brokerID)
@@ -74,21 +77,36 @@ class AccountInBrokerController {
             
             print("New Account added in Broker : " + accountID)
             
-            let accountTransaction = AccountTransaction(timestamp: accountInBroker.timestamp, balanceChange: accountInBroker.currentUnit, currentBalance: accountInBroker.currentUnit)
+            let accountTransaction = AccountTransaction(timestamp: accountInBroker.timestamp, balanceChange: accountInBroker.currentUnit, currentBalance: accountInBroker.currentUnit, createdDate: accountInBroker.lastUpdated)
             addTransactionInAccountInBroker(brokerID: brokerID, accountID: accountID, accountTransaction: accountTransaction)
             
+            var updatedAccount = ApplicationData.shared.data.accountDataList.first(where: {
+                return $0.account.id!.elementsEqual(brokerID)
+            })!.account
+            updatedAccount.lastUpdated = accountInBroker.lastUpdated
+            
+            await AccountController().updateAccount(account: updatedAccount)
         } catch {
             print(error)
         }
     }
     
-    public func updateAccountInBroker(brokerID: String, accountBroker: AccountInBroker) {
+    public func updateAccountInBroker(brokerID: String, accountBroker: AccountInBroker) async {
         do {
+            let id = accountBroker.id!
+            var updatedAccountBroker = accountBroker
+            updatedAccountBroker.id = nil
             try accountController.getAccountCollection()
                 .document(brokerID)
                 .collection(ConstantUtils.accountBrokerCollectionName)
-                .document(accountBroker.id!)
-                .setData(from: accountBroker, merge: true)
+                .document(id)
+                .setData(from: updatedAccountBroker, merge: true)
+            
+            var updatedAccount = ApplicationData.shared.data.accountDataList.first(where: {
+                return $0.account.id!.elementsEqual(brokerID)
+            })!.account
+            updatedAccount.lastUpdated = accountBroker.lastUpdated
+            await AccountController().updateAccount(account: updatedAccount)
             
         } catch {
             print(error)
@@ -242,7 +260,7 @@ class AccountInBrokerController {
             var updatedBrokerAccount = accountBroker
             updatedBrokerAccount.timestamp = timeStamp
             
-            updateAccountInBroker(brokerID: brokerID, accountBroker: updatedBrokerAccount)
+            await updateAccountInBroker(brokerID: brokerID, accountBroker: updatedBrokerAccount)
         } catch {
             print(error)
         }

@@ -19,7 +19,7 @@ struct AccountBrokerDetailView: View {
     @State var isNewTransactionViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
     
-    @StateObject var accountViewModel = AccountViewModel()
+    @StateObject var accountViewModel: AccountViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -48,7 +48,13 @@ struct AccountBrokerDetailView: View {
                             isPresented: $isPresentingAccountDeleteConfirm) {
             Button("Delete account " + accountViewModel.accountBroker.name + "?", role: .destructive) {
                 Task.init {
-                    await accountInBrokerController.deleteAccountInBroker(brokerID: brokerID, accountID: accountID)
+                    var deletedAccount = accountViewModel.accountBroker
+                    deletedAccount.deleted = true
+                    deletedAccount.lastUpdated = Date.now
+                    await accountInBrokerController.updateAccountInBroker(brokerID: brokerID, accountBroker: deletedAccount)
+                    await ApplicationData.loadData()
+                    await accountViewModel.getAccountInBrokerList(brokerID: brokerID)
+                    await accountViewModel.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountViewModel.accountsInBroker)
                 }
                 self.presentationMode.wrappedValue.dismiss()
             }

@@ -26,7 +26,7 @@ struct SymbolPicker: View {
                 .listRowBackground(Color.theme.foreground)
             }
             .scrollIndicators(.hidden)
-            .navigationTitle("Currency")
+            .navigationTitle("Symbol")
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.theme.background)
             .scrollContentBackground(.hidden)

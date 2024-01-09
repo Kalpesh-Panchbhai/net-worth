@@ -59,7 +59,8 @@ class ConstantUtils {
     static var accountBrokerKeySymbol = "symbol"
     static var accountBrokerKeyName = "name"
     static var accountBrokerKeyTimeStamp = "timestamp"
-    static var accountBrokerKeyTimeStampLastUpdated = "lastUpdated"
+    static var accountBrokerKeyLastUpdated = "lastUpdated"
+    static var accountBrokerKeyDeleted = "deleted"
     
     static var watchKeyWatchName = "accountName"
     static var watchKeyAccountID = "accountID"

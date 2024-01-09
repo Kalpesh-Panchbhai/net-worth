@@ -161,6 +161,7 @@ struct AccountDetailView: View {
                                     accountViewModel.account.active = isActive
                                     accountViewModel.account.paymentReminder = false
                                     accountViewModel.account.paymentDate = 0
+                                    accountViewModel.account.lastUpdated = Date.now
                                     Task.init {
                                         await accountController.updateAccount(account: accountViewModel.account)
                                         await accountViewModel.getAccountList()
@@ -173,6 +174,7 @@ struct AccountDetailView: View {
                             }
                         } else if(!failedToMarkInActive){
                             accountViewModel.account.active = isActive
+                            accountViewModel.account.lastUpdated = Date.now
                             Task.init {
                                 await accountController.updateAccount(account: accountViewModel.account)
                                 await accountViewModel.getAccountList()

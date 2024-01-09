@@ -16,13 +16,17 @@ struct AccountInBroker: Codable, Hashable {
     var symbol: String
     var name: String
     var currentUnit: Double
+    var lastUpdated: Date
+    var deleted: Bool
     
-    init(id: String = "", timestamp: Date = Date(), symbol: String = "", name: String = "", currentUnit: Double = 0.0) {
+    init(id: String? = nil, timestamp: Date = Date(), symbol: String = "", name: String = "", currentUnit: Double = 0.0, lastUpdated: Date = Date.now, deleted: Bool = false) {
         self.id = id
         self.timestamp = timestamp
         self.symbol = symbol
         self.name = name
         self.currentUnit = currentUnit
+        self.lastUpdated = lastUpdated
+        self.deleted = deleted
     }
     
     init(doc: QueryDocumentSnapshot) {
@@ -31,5 +35,7 @@ struct AccountInBroker: Codable, Hashable {
         self.symbol = doc[ConstantUtils.accountBrokerKeySymbol] as? String ?? ""
         self.name = doc[ConstantUtils.accountBrokerKeyName] as? String ?? ""
         self.currentUnit = doc[ConstantUtils.accountBrokerKeyCurrentUnit] as? Double ?? 0.0
+        self.lastUpdated = (doc[ConstantUtils.accountBrokerKeyLastUpdated] as? Timestamp)?.dateValue() ?? Date()
+        self.deleted = doc[ConstantUtils.accountBrokerKeyDeleted] as? Bool ?? false
     }
 }

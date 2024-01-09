@@ -129,6 +129,9 @@ struct ApplicationData: Codable {
                 if(!newAccountDataList[i].account.deleted) {
                     if(newAccountDataList[i].account.accountType == ConstantUtils.brokerAccountType) {
                         var accountInbrokerList = await AccountInBrokerController().fetchLastestAccountListInBroker(brokerID: newAccountDataList[i].account.id!)
+                        accountInbrokerList = accountInbrokerList.filter {
+                            return !$0.deleted
+                        }
                         
                         accountInbrokerList.sort(by: {
                             return $0.name < $1.name
@@ -159,18 +162,33 @@ struct ApplicationData: Codable {
                     oldAccount.account = newAccountDataList[i].account
                     
                     if(oldAccount.account.accountType == ConstantUtils.brokerAccountType) {
+                        let oldAccountInBroker = oldAccount.accountInBroker
                         var accountInbrokerList = await AccountInBrokerController().fetchLastestAccountListInBroker(brokerID: newAccountDataList[i].account.id!)
                         
                         accountInbrokerList.sort(by: {
                             return $0.name < $1.name
                         })
                         for accountInBroker in accountInbrokerList {
-                            var accountTransactionList = await AccountInBrokerController().fetchLastestAccountTransactionListInAccountInBroker(brokerID: newAccountDataList[i].account.id!, accountID: accountInBroker.id!)
-                            accountTransactionList.sort(by: {
-                                return $0.timestamp > $1.timestamp
-                            })
-                            let accountInBrokerData = AccountInBrokerData(accountInBroker: accountInBroker, accountTransaction: accountTransactionList)
-                            newAccountDataList[i].accountInBroker.append(accountInBrokerData)
+                            if(!accountInBroker.deleted) {
+                                let oldAccountTransactionList = oldAccountInBroker.first(where: {
+                                    return $0.accountInBroker.id!.elementsEqual(accountInBroker.id!)
+                                })?.accountTransaction ?? [AccountTransaction]()
+                                var accountTransactionList = await AccountInBrokerController().fetchLastestAccountTransactionListInAccountInBroker(brokerID: newAccountDataList[i].account.id!, accountID: accountInBroker.id!)
+                                accountTransactionList.append(contentsOf: oldAccountTransactionList)
+                                accountTransactionList.sort(by: {
+                                    return $0.timestamp > $1.timestamp
+                                })
+                                let accountInBrokerData = AccountInBrokerData(accountInBroker: accountInBroker, accountTransaction: accountTransactionList)
+                                
+                                oldAccount.accountInBroker.removeAll(where: {
+                                    return $0.accountInBroker.id!.elementsEqual(accountInBroker.id!)
+                                })
+                                oldAccount.accountInBroker.append(accountInBrokerData)
+                            } else {
+                                oldAccount.accountInBroker.removeAll(where: {
+                                    return $0.accountInBroker.id!.elementsEqual(accountInBroker.id!)
+                                })
+                            }
                         }
                     } else {
                         var oldAccountTransactionList = oldAccount.accountTransaction
