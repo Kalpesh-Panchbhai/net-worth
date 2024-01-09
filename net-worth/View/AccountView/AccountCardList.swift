@@ -43,7 +43,7 @@ struct AccountCardList: View {
                             Divider()
                                 .overlay(Color.theme.secondaryText)
                             ScrollView(.vertical, showsIndicators: false) {
-                                LazyVStack {
+                                VStack {
                                     ForEach(accountViewModel.sectionHeaders, id: \.self) { accountType in
                                         if(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 0) {
                                             HStack {
@@ -63,7 +63,7 @@ struct AccountCardList: View {
                                             }
                                             .padding(.horizontal, 8)
                                             ScrollView(.horizontal, showsIndicators: false) {
-                                                LazyHStack {
+                                                HStack {
                                                     ForEach(0..<((accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 5) ? 5 : accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count), id: \.self) { i in
                                                         NavigationLink(destination: {
                                                             AccountDetailView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id!, accountViewModel:  accountViewModel, watchViewModel: watchViewModel)
