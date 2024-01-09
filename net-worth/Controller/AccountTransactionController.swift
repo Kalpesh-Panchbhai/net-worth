@@ -311,26 +311,4 @@ class AccountTransactionController {
         }
     }
     
-    public func deleteAccountTransaction(accountID: String, id: String) async {
-        do {
-            try await AccountController().getAccountCollection()
-                .document(accountID)
-                .collection(ConstantUtils.accountTransactionCollectionName)
-                .document(id)
-                .delete()
-            
-            var deletedAccount = ApplicationData.shared.data.accountDataList.first(where: {
-                $0.account.id!.elementsEqual(accountID)
-            }).map {
-                $0.account
-            }!
-            
-            deletedAccount.lastUpdated = Date.now
-            
-            await AccountController().updateAccount(account: deletedAccount)
-        } catch {
-            print(error)
-        }
-    }
-    
 }
