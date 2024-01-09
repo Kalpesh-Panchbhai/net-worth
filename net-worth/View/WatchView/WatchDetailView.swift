@@ -353,8 +353,8 @@ struct WatchDetailView: View {
     }
     
     private func isAccountActive(id: String) -> Bool {
-        return ApplicationData.shared.accountList.filter {
-            $0.key.id!.elementsEqual(id) && $0.key.active
+        return ApplicationData.shared.data.accountDataList.filter {
+            $0.account.id!.elementsEqual(id) && $0.account.active
         }.count > 0
     }
 }

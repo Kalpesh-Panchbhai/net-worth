@@ -9,18 +9,9 @@ import Foundation
 
 struct AccountData: Codable {
     
-    var id: String
-    var accountType: String
-    var loanType: String
-    var accountName: String
-    var currentBalance: Double
-    var paymentReminder: Bool
-    var paymentDate: Int
-    var currency: String
-    var active: Bool
-    var lastUpdated: Date
+    var account: Account
     
-    var accountInBrokerData: [AccountInBrokerData]
+    var accountInBroker: [AccountInBrokerData]
     
-    var accountTransactionData: [AccountTransactionData]
+    var accountTransaction: [AccountTransaction]
 }

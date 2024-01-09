@@ -355,7 +355,7 @@ struct IncomeView: View {
                                         IncomeRowView(income: income, showCumulative: showCumulative, showAverage: showAverage)
                                     })
                                     .contextMenu {
-                                        Label(income.id!, systemImage: ConstantUtils.infoIconImageName)
+                                        Label(income.id ?? "", systemImage: ConstantUtils.infoIconImageName)
                                     }
                                 }
                                 .onDelete(perform: deleteIncome)
@@ -461,13 +461,14 @@ struct IncomeView: View {
     }
     
     private func deleteIncome(offsets: IndexSet) {
-        var id = ""
+        var deletedIncome = Income()
         withAnimation {
             offsets.map {
-                id = incomeViewModel.incomeList[$0].id ?? ""
+                deletedIncome = incomeViewModel.incomeList[$0]
+                deletedIncome.deleted = true
             }.forEach {
                 Task.init {
-                    await incomeController.deleteIncome(id: id)
+                    await incomeController.updateIncome(income: deletedIncome)
                     updateData()
                     await incomeViewModel.getIncomeYearList()
                     await incomeViewModel.getIncomeFinancialYearList()
@@ -479,7 +480,11 @@ struct IncomeView: View {
     private func updateData() {
         Task.init {
             await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+        }
+        Task.init {
             await incomeViewModel.getTotalTaxPaid(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
+        }
+        Task.init {
             if(groupByTag || groupByType || groupByYear || groupByFinancialYear) {
                 if(groupByTag) {
                     await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Tag")

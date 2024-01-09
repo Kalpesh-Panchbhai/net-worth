@@ -58,7 +58,6 @@ struct BarLollipopGroupChartView: View {
                             .onEnded { value in
                                 let element = findElement(location: value.location, proxy: proxy, geometry: geo)
                                 if selectedElement?.groupType == element?.groupType {
-                                    // If tapping the same element, clear the selection.
                                     selectedElement = nil
                                 } else {
                                     selectedElement = element

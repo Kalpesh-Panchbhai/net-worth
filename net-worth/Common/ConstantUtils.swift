@@ -30,9 +30,11 @@ class ConstantUtils {
     static var incomeKeyAmount = "amount"
     static var incomeKeyTaxPaid = "taxpaid"
     static var incomeKeyCreditedOn = "creditedOn"
+    static var incomeKeyCreatedDate = "createdDate"
     static var incomeKeyCurrency = "currency"
     static var incomeKeyIncomeType = "type"
     static var incomeKeyIncomeTag = "tag"
+    static var incomeKeyDeleted = "deleted"
     
     static var accountKeyAccountName = "accountName"
     static var accountKeyAccountType = "accountType"
@@ -44,16 +46,21 @@ class ConstantUtils {
     static var accountKeySymbol = "symbol"
     static var accountKeyActive = "active"
     static var accountKeyLastUpdated = "lastUpdated"
+    static var accountKeyDeleted = "deleted"
     
     static var accountTransactionKeyBalanceChange = "balanceChange"
     static var accountTransactionKeytimestamp = "timestamp"
     static var accountTransactionKeyCurrentBalance = "currentBalance"
     static var accountTransactionKeyPaid = "paid"
+    static var accountTransactionKeyCreatedDate = "createdDate"
+    static var accountTransactionKeyDeleted = "deleted"
     
     static var accountBrokerKeyCurrentUnit = "currentUnit"
     static var accountBrokerKeySymbol = "symbol"
     static var accountBrokerKeyName = "name"
     static var accountBrokerKeyTimeStamp = "timestamp"
+    static var accountBrokerKeyLastUpdated = "lastUpdated"
+    static var accountBrokerKeyDeleted = "deleted"
     
     static var watchKeyWatchName = "accountName"
     static var watchKeyAccountID = "accountID"

@@ -72,7 +72,6 @@ struct SingleLineLollipopChartView: View {
                             .onEnded { value in
                                 let element = findElement(location: value.location, proxy: proxy, geometry: geo)
                                 if selectedElement?.date == element?.date {
-                                    // If tapping the same element, clear the selection.
                                     selectedElement = nil
                                 } else {
                                     selectedElement = element

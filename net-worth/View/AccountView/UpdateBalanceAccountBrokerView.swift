@@ -41,7 +41,9 @@ struct UpdateBalanceAccountBrokerView: View {
                             var updatedAccount = accountBroker
                             let newAmount = isPlus ? unit.toDouble() : unit.toDouble()! * -1
                             updatedAccount.currentUnit = newAmount!
+                            updatedAccount.lastUpdated = Date.now
                             await accountInBrokerController.addBrokerAccountTransaction(brokerID: brokerID, accountBroker: updatedAccount, timeStamp: date)
+                            await ApplicationData.loadData()
                         }
                         dismiss()
                     }, label: {
@@ -54,11 +56,13 @@ struct UpdateBalanceAccountBrokerView: View {
                 
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        var updatedAccount = accountBroker
-                        let newAmount = isPlus ? unit.toDouble() : unit.toDouble()! * -1
-                        updatedAccount.currentUnit = updatedAccount.currentUnit + newAmount!
                         Task.init {
+                            var updatedAccount = accountBroker
+                            let newAmount = isPlus ? unit.toDouble() : unit.toDouble()! * -1
+                            updatedAccount.currentUnit = updatedAccount.currentUnit + newAmount!
+                            updatedAccount.lastUpdated = Date.now
                             await accountInBrokerController.addBrokerAccountTransaction(brokerID: brokerID,accountBroker: updatedAccount, timeStamp: date)
+                            await ApplicationData.loadData()
                         }
                         dismiss()
                     }, label: {
