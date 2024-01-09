@@ -13,7 +13,9 @@ class FileViewModel: ObservableObject {
     
     public func loadData() async {
         await ApplicationData.loadData()
-        self.dataLoadingCompleted = !ApplicationData.shared.dataLoading
+        DispatchQueue.main.async {
+            self.dataLoadingCompleted = !ApplicationData.shared.dataLoading
+        }
     }
     
 }

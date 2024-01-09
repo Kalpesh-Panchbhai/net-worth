@@ -274,7 +274,7 @@ class AccountInBrokerController {
         let accountTransactionList = await getAccountTransactionListInAccountInBroker(brokerID: brokerID, accountID: accountID)
         let accountInBroker = await getAccountInBroker(brokerID: brokerID, accountID: accountID)
         var lastAccountTransaction =  accountTransactionList.first!
-        var transactionID = lastAccountTransaction.id!
+        let transactionID = lastAccountTransaction.id!
         lastAccountTransaction.createdDate = currentDateTime
         lastAccountTransaction.deleted = true
         lastAccountTransaction.id = nil
