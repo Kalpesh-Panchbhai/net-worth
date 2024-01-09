@@ -62,16 +62,6 @@ class AccountTransactionController {
                 await addMiddleTransaction(accountID: accountID, account: account, accountTransactionsList: accountTransactionsList, timestamp: timestamp, currentDateTime: currentDateTime)
             }
         }
-        
-        //        var updatedAccount = ApplicationData.shared.data.accountDataList.first(where: {
-        //            $0.account.id!.elementsEqual(accountID)
-        //        }).map {
-        //            $0.account
-        //        }!
-        //
-        //        updatedAccount.lastUpdated = Date.now
-        //
-        //        await AccountController().updateAccount(account: updatedAccount)
     }
     
     private func addLatestTransaction(accountID: String, account: Account, accountTransactionsList: [AccountTransaction], timestamp: Date, operation: String, currentDateTime: Date) async {

@@ -214,8 +214,6 @@ class AccountController {
             print(error)
         }
         
-//        await UserController().updateAccountUserData(updatedDate: <#Date#>)
-        
         await ApplicationData.loadData()
     }
     
