@@ -14,11 +14,11 @@ class AccountTransactionController {
         var accountTransactionList = [AccountTransaction]()
         do {
             
-            let lastUpdatedDateTime = ApplicationData.shared.data.accountDataListUpdatedDate
+            let lastFetchedDateTime = ApplicationData.shared.data.accountDataListUpdatedDate
             accountTransactionList = try await AccountController().getAccountCollection()
                 .document(accountID)
                 .collection(ConstantUtils.accountTransactionCollectionName)
-                .whereField(ConstantUtils.accountTransactionKeyCreatedDate, isGreaterThanOrEqualTo: lastUpdatedDateTime)
+                .whereField(ConstantUtils.accountTransactionKeyCreatedDate, isGreaterThanOrEqualTo: lastFetchedDateTime)
                 .getDocuments()
                 .documents
                 .map { doc in

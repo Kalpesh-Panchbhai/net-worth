@@ -23,10 +23,10 @@ class AccountController {
     public func fetchLastestAccountList() async -> [Account] {
         var accountList = [Account]()
         
-        let date = ApplicationData.shared.data.accountDataListUpdatedDate
+        let lastFetchedDateTime = ApplicationData.shared.data.accountDataListUpdatedDate
         do {
             accountList = try await getAccountCollection()
-                .whereField(ConstantUtils.accountKeyLastUpdated, isGreaterThanOrEqualTo: date)
+                .whereField(ConstantUtils.accountKeyLastUpdated, isGreaterThanOrEqualTo: lastFetchedDateTime)
                 .getDocuments()
                 .documents
                 .map { doc in
