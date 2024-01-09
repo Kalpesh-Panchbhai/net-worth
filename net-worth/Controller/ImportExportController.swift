@@ -83,7 +83,7 @@ class ImportExportController {
     private func importWatch() async {
         for watch in data.watch {
             var newWatch = Watch()
-            let accountList = await accountController.getAccountList()
+            let accountList = accountController.getAccountList()
             newWatch.accountID = watch.accountID.map { accountID in
                 accountList.filter { account in
                     account.accountName.elementsEqual(accountID)
@@ -146,7 +146,7 @@ class ImportExportController {
     }
     
     private func exportAccount() async {
-        let accountList = await accountController.getAccountList()
+        let accountList = accountController.getAccountList()
         var accountDataList = [AccountBackupModel]()
         
         for account in accountList {
@@ -183,7 +183,7 @@ class ImportExportController {
     
     private func exportWatch() async {
         let watchList = await watchController.getAllWatchList()
-        let accountList = await accountController.getAccountList()
+        let accountList = accountController.getAccountList()
         data.watch = watchList.map { watch in
             let accounts = watch.accountID.map { accountID in
                 accountList.filter { account in

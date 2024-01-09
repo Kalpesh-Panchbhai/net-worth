@@ -82,7 +82,7 @@ class AccountController {
         } ?? Account()
     }
     
-    public func getAccount(accountType: String) -> [Account]{
+    public func getAccountList(accountType: String) -> [Account]{
         let accountList = ApplicationData.shared.data.accountDataList.filter {
             $0.account.accountType.elementsEqual(accountType)
         }
@@ -92,7 +92,7 @@ class AccountController {
         }
     }
     
-    public func getAccountList() async -> [Account] {
+    public func getAccountList() -> [Account] {
         var accountList = [Account]()
         accountList = ApplicationData.shared.data.accountDataList.map {
             $0.account
@@ -102,10 +102,10 @@ class AccountController {
         })
     }
     
-    public func fetchTotalBalance(accountList: [Account]) async -> Balance {
+    public func calculateTotalBalance(accountList: [Account]) async -> Balance {
         var accounts: [Account] = []
         if(accountList.isEmpty) {
-            accounts = await getAccountList()
+            accounts = getAccountList()
         } else {
             accounts = accountList
         }
@@ -218,7 +218,7 @@ class AccountController {
     }
     
     public func deleteAccounts() async {
-        let accountList = await getAccountList()
+        let accountList = getAccountList()
         for account in accountList {
             await deleteAccount(accountID: account.id!, isBrokerAccount: account.accountType == ConstantUtils.brokerAccountType)
         }

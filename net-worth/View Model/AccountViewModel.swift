@@ -137,7 +137,7 @@ class AccountViewModel: ObservableObject {
     }
     
     func getAccountList() async {
-        let list = await accountController.getAccountList()
+        let list = accountController.getAccountList()
         DispatchQueue.main.async {
             self.accountList = list
             self.originalAccountList = list
@@ -146,7 +146,7 @@ class AccountViewModel: ObservableObject {
     }
     
     func getTotalBalance(accountList: [Account]) async {
-        let balance = await accountController.fetchTotalBalance(accountList: accountList)
+        let balance = await accountController.calculateTotalBalance(accountList: accountList)
         DispatchQueue.main.async {
             self.totalBalance = balance
         }
