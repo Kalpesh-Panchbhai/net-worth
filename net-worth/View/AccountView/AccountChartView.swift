@@ -41,7 +41,6 @@ struct AccountChartView: View {
                         Text(ConstantUtils.oneYearRange).tag(ConstantUtils.oneYearRange)
                         Text(ConstantUtils.twoYearRange).tag(ConstantUtils.twoYearRange)
                         Text(ConstantUtils.fiveYearRange).tag(ConstantUtils.fiveYearRange)
-                        Text("All").tag("All")
                     }, label: {
                         
                     })

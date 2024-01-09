@@ -37,7 +37,9 @@ class ChartController {
                         $0.timestamp.removeTimeStamp() <= startDate.removeTimeStamp()
                     })
                 }
-                chartDataListResponse.append(ChartData(date: startDate.removeTimeStamp(), value: accountTransaction!.currentBalance))
+                if(accountTransaction != nil) {
+                    chartDataListResponse.append(ChartData(date: startDate.removeTimeStamp(), value: accountTransaction!.currentBalance))
+                }
                 startDate = CommonController.getIntervalForDateRange(date: startDate, range: range)
             }
         }
