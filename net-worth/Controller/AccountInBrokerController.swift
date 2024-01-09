@@ -247,7 +247,7 @@ class AccountInBrokerController {
         
         let accountTransactionList = await getAccountTransactionListInAccountInBroker(brokerID: brokerID, accountID: accountBroker.id!)
         let balanceChange = accountBroker.currentUnit - accountTransactionList.first!.currentBalance
-        let accountTransaction = AccountTransaction(timestamp: timeStamp, balanceChange: balanceChange, currentBalance: accountBroker.currentUnit)
+        let accountTransaction = AccountTransaction(timestamp: timeStamp, balanceChange: balanceChange, currentBalance: accountBroker.currentUnit, createdDate: accountBroker.lastUpdated)
         do {
             try accountController
                 .getAccountCollection()
