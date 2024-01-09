@@ -232,7 +232,7 @@ struct BackupView: View {
         let accountList = accountController.getAccountList()
         for account in accountList {
             if(account.accountType == ConstantUtils.brokerAccountType) {
-                totalAccountsInBrokerInCloud += await accountInBrokerController.getAccountListInBroker(brokerID: account.id!).count
+                totalAccountsInBrokerInCloud += accountInBrokerController.getAccountListInBroker(brokerID: account.id!).count
             }
         }
     }
@@ -249,9 +249,9 @@ struct BackupView: View {
         let accountlist = accountController.getAccountList()
         for account in accountlist {
             if(account.accountType == ConstantUtils.brokerAccountType) {
-                let accountsInBroker = await accountInBrokerController.getAccountListInBroker(brokerID: account.id!)
+                let accountsInBroker = accountInBrokerController.getAccountListInBroker(brokerID: account.id!)
                 for accountInBroker in accountsInBroker {
-                    totalAccountTransactionInCloud += await accountInBrokerController.getAccountTransactionListInAccountInBroker(brokerID: account.id!, accountID: accountInBroker.id!).count
+                    totalAccountTransactionInCloud += accountInBrokerController.getAccountTransactionListInAccountInBroker(brokerID: account.id!, accountID: accountInBroker.id!).count
                 }
             } else {
                 totalAccountTransactionInCloud += accountTransactionController.getAccountTransactionList(accountID: account.id!).count

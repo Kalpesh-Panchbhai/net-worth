@@ -151,10 +151,10 @@ class ImportExportController {
         
         for account in accountList {
             if(account.accountType == ConstantUtils.brokerAccountType) {
-                let accountsInBroker = await accountInBrokerController.getAccountListInBroker(brokerID: account.id!)
+                let accountsInBroker = accountInBrokerController.getAccountListInBroker(brokerID: account.id!)
                 var accountsInBrokerDataList = [AccountInBrokerBackupModel]()
                 for accountInBroker in accountsInBroker {
-                    let accountTransactions = await accountInBrokerController.getAccountTransactionListInAccountInBroker(brokerID: account.id!, accountID: accountInBroker.id!)
+                    let accountTransactions = accountInBrokerController.getAccountTransactionListInAccountInBroker(brokerID: account.id!, accountID: accountInBroker.id!)
                     let accountTransactionsData = accountTransactions.map { accountTransaction in
                         return AccountTransactionBackupModel(timestamp: accountTransaction.timestamp, balanceChange: accountTransaction.balanceChange, currentBalance: accountTransaction.currentBalance, paid: accountTransaction.paid)
                         

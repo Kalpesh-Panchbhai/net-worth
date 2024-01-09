@@ -130,7 +130,7 @@ class AccountInBrokerController {
         }
     }
     
-    public func getAccountListInBroker(brokerID: String) async -> [AccountInBroker] {
+    public func getAccountListInBroker(brokerID: String) -> [AccountInBroker] {
         let accountBrokerList = ApplicationData.shared.data.accountDataList.first(where: {
             return $0.account.id!.elementsEqual(brokerID)
         }).map {
@@ -148,7 +148,7 @@ class AccountInBrokerController {
         return accountBrokerList
     }
     
-    public func getAccountInBroker(brokerID: String, accountID: String) async -> AccountInBroker {
+    public func getAccountInBroker(brokerID: String, accountID: String) -> AccountInBroker {
         let accountBroker = ApplicationData.shared.data.accountDataList.filter {
             return $0.account.id == brokerID
         }.first!.accountInBroker.first(where: {
@@ -157,7 +157,7 @@ class AccountInBrokerController {
         return accountBroker
     }
     
-    public func getAccountTransactionListInAccountInBroker(brokerID: String, accountID: String) async -> [AccountTransaction] {
+    public func getAccountTransactionListInAccountInBroker(brokerID: String, accountID: String) -> [AccountTransaction] {
         let accountTransactionList = ApplicationData.shared.data.accountDataList.filter {
             return $0.account.id == brokerID
         }.first!.accountInBroker.first(where: {
@@ -166,7 +166,7 @@ class AccountInBrokerController {
         return accountTransactionList
     }
     
-    public func getAccountTransactionListInAccountInBrokerWithRange(brokerID: String, accountID: String, range: String) async -> [AccountTransaction] {
+    public func getAccountTransactionListInAccountInBrokerWithRange(brokerID: String, accountID: String, range: String) -> [AccountTransaction] {
         var date = Date()
         if(range.elementsEqual(ConstantUtils.oneMonthRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000)).dateValue()
@@ -192,7 +192,7 @@ class AccountInBrokerController {
         return accountTransactionList
     }
     
-    public func getAccountTransactionListInAccountInBrokerBelowRange(brokerID: String, accountID: String, range: String) async -> [AccountTransaction] {
+    public func getAccountTransactionListInAccountInBrokerBelowRange(brokerID: String, accountID: String, range: String) -> [AccountTransaction] {
         var date = Date()
         if(range.elementsEqual(ConstantUtils.oneMonthRange)) {
             date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000)).dateValue()
@@ -246,7 +246,7 @@ class AccountInBrokerController {
     
     public func addBrokerAccountTransaction(brokerID: String, accountBroker: AccountInBroker, timeStamp: Date) async {
         
-        let accountTransactionList = await getAccountTransactionListInAccountInBroker(brokerID: brokerID, accountID: accountBroker.id!)
+        let accountTransactionList = getAccountTransactionListInAccountInBroker(brokerID: brokerID, accountID: accountBroker.id!)
         let lastCurrentBalance = accountTransactionList.count > 0 ? accountTransactionList.first!.currentBalance : 0.0
         let balanceChange = accountBroker.currentUnit - lastCurrentBalance
         let accountTransaction = AccountTransaction(timestamp: timeStamp, balanceChange: balanceChange, currentBalance: accountBroker.currentUnit, createdDate: accountBroker.lastUpdated)
@@ -271,8 +271,8 @@ class AccountInBrokerController {
     public func deleteTransactionInAccountInBroker(brokerID: String, accountID: String) async {
         
         let currentDateTime = Date.now
-        let accountTransactionList = await getAccountTransactionListInAccountInBroker(brokerID: brokerID, accountID: accountID)
-        let accountInBroker = await getAccountInBroker(brokerID: brokerID, accountID: accountID)
+        let accountTransactionList = getAccountTransactionListInAccountInBroker(brokerID: brokerID, accountID: accountID)
+        let accountInBroker = getAccountInBroker(brokerID: brokerID, accountID: accountID)
         var lastAccountTransaction =  accountTransactionList.first!
         let transactionID = lastAccountTransaction.id!
         lastAccountTransaction.createdDate = currentDateTime
