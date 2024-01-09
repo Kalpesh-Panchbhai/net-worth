@@ -138,6 +138,9 @@ struct ApplicationData: Codable {
                         })
                         for accountInBroker in accountInbrokerList {
                             var accountTransactionList = await AccountInBrokerController().fetchLastestAccountTransactionListInAccountInBroker(brokerID: newAccountDataList[i].account.id!, accountID: accountInBroker.id!)
+                            accountTransactionList = accountTransactionList.filter {
+                                return !$0.deleted
+                            }
                             accountTransactionList.sort(by: {
                                 return $0.timestamp > $1.timestamp
                             })
@@ -170,11 +173,19 @@ struct ApplicationData: Codable {
                         })
                         for accountInBroker in accountInbrokerList {
                             if(!accountInBroker.deleted) {
-                                let oldAccountTransactionList = oldAccountInBroker.first(where: {
+                                var oldAccountTransactionList = oldAccountInBroker.first(where: {
                                     return $0.accountInBroker.id!.elementsEqual(accountInBroker.id!)
                                 })?.accountTransaction ?? [AccountTransaction]()
                                 var accountTransactionList = await AccountInBrokerController().fetchLastestAccountTransactionListInAccountInBroker(brokerID: newAccountDataList[i].account.id!, accountID: accountInBroker.id!)
+                                oldAccountTransactionList.removeAll(where: { transaction in
+                                    return accountTransactionList.contains(where: {
+                                        return $0.id!.elementsEqual(transaction.id!)
+                                    })
+                                })
                                 accountTransactionList.append(contentsOf: oldAccountTransactionList)
+                                accountTransactionList = accountTransactionList.filter {
+                                    return !$0.deleted
+                                }
                                 accountTransactionList.sort(by: {
                                     return $0.timestamp > $1.timestamp
                                 })

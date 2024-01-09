@@ -96,7 +96,7 @@ struct TransactionsView: View {
                         .contextMenu {
                             Label(accountViewModel.accountTransactionList[i].id!, systemImage: ConstantUtils.infoIconImageName)
                             
-                            if(accountViewModel.accountTransactionList.count > 1 && !accountViewModel.account.loanType.elementsEqual("Consumer")) {
+                            if(accountViewModel.accountTransactionList.count > 1 && !accountViewModel.account.loanType.elementsEqual("Consumer") && !accountViewModel.account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
                                 Button(role: .destructive, action: {
                                     if(i==0) {
                                         let updatedDate = Date.now
@@ -181,6 +181,18 @@ struct TransactionsView: View {
                                         Label("Pay", systemImage: "indianrupeesign")
                                     })
                                 }
+                            } else if(accountViewModel.account.accountType.elementsEqual(ConstantUtils.brokerAccountType) && i == 0) {
+                                Button(role: .destructive, action: {
+                                    Task.init {
+                                        await AccountInBrokerController().deleteTransactionInAccountInBroker(brokerID: accountViewModel.account.id!, accountID: accountViewModel.accountBroker.id!)
+                                        await ApplicationData.loadData()
+                                        await accountViewModel.getBrokerAccount(brokerID: accountViewModel.account.id!, accountID: accountViewModel.accountBroker.id!)
+                                        await accountViewModel.getCurrentBalanceOfAnAccountInBroker(accountBroker: accountViewModel.accountBroker)
+                                        await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: accountViewModel.account.id!, accountID: accountViewModel.accountBroker.id!)
+                                    }
+                                }, label: {
+                                    Label("Delete", systemImage: ConstantUtils.deleteImageName)
+                                })
                             }
                         }
                         .padding(8)

@@ -60,7 +60,8 @@ class AccountInBrokerController {
                                               balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0,
                                               currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0,
                                               paid: doc[ConstantUtils.accountTransactionKeyPaid] as? Bool ?? true,
-                                              createdDate: (doc[ConstantUtils.accountTransactionKeyCreatedDate] as? Timestamp)?.dateValue() ?? Date())
+                                              createdDate: (doc[ConstantUtils.accountTransactionKeyCreatedDate] as? Timestamp)?.dateValue() ?? Date(),
+                                              deleted: doc[ConstantUtils.accountTransactionKeyDeleted] as? Bool ?? false)
                 }
         } catch {
             print(error)
@@ -246,7 +247,8 @@ class AccountInBrokerController {
     public func addBrokerAccountTransaction(brokerID: String, accountBroker: AccountInBroker, timeStamp: Date) async {
         
         let accountTransactionList = await getAccountTransactionListInAccountInBroker(brokerID: brokerID, accountID: accountBroker.id!)
-        let balanceChange = accountBroker.currentUnit - accountTransactionList.first!.currentBalance
+        let lastCurrentBalance = accountTransactionList.count > 0 ? accountTransactionList.first!.currentBalance : 0.0
+        let balanceChange = accountBroker.currentUnit - lastCurrentBalance
         let accountTransaction = AccountTransaction(timestamp: timeStamp, balanceChange: balanceChange, currentBalance: accountBroker.currentUnit, createdDate: accountBroker.lastUpdated)
         do {
             try accountController
@@ -259,6 +261,36 @@ class AccountInBrokerController {
             
             var updatedBrokerAccount = accountBroker
             updatedBrokerAccount.timestamp = timeStamp
+            
+            await updateAccountInBroker(brokerID: brokerID, accountBroker: updatedBrokerAccount)
+        } catch {
+            print(error)
+        }
+    }
+    
+    public func deleteTransactionInAccountInBroker(brokerID: String, accountID: String) async {
+        
+        let currentDateTime = Date.now
+        let accountTransactionList = await getAccountTransactionListInAccountInBroker(brokerID: brokerID, accountID: accountID)
+        let accountInBroker = await getAccountInBroker(brokerID: brokerID, accountID: accountID)
+        var lastAccountTransaction =  accountTransactionList.first!
+        var transactionID = lastAccountTransaction.id!
+        lastAccountTransaction.createdDate = currentDateTime
+        lastAccountTransaction.deleted = true
+        lastAccountTransaction.id = nil
+        do {
+            try accountController
+                .getAccountCollection()
+                .document(brokerID)
+                .collection(ConstantUtils.accountBrokerCollectionName)
+                .document(accountID)
+                .collection(ConstantUtils.accountTransactionCollectionName)
+                .document(transactionID)
+                .setData(from: lastAccountTransaction, merge: true)
+            
+            var updatedBrokerAccount = accountInBroker
+            updatedBrokerAccount.lastUpdated = currentDateTime
+            updatedBrokerAccount.currentUnit = accountTransactionList.count > 1 ? accountTransactionList[1].currentBalance : 0
             
             await updateAccountInBroker(brokerID: brokerID, accountBroker: updatedBrokerAccount)
         } catch {
