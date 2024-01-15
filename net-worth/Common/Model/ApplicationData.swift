@@ -626,7 +626,7 @@ struct ApplicationData: Codable {
             let date = convertEpochToDate(epochTime: Double(timestampEpochList[i]!))
             let value = valueAtTimestampList[i] ?? nil
             if(value != nil) {
-                returnData.append(ChartData(date: date, value: value!))
+                returnData.append(ChartData(date: date.removeTimeStamp(), value: value!))
             }
         }
         
