@@ -329,7 +329,7 @@ struct WatchDetailView: View {
             AccountToWatchView(watch: watchViewModel.watch)
         }
         .sheet(isPresented: $isChartViewOpen, content: {
-            AccountWatchChartView(accountList: accountViewModel.accountList)
+            AccountWatchChartView(id: watch.id!, accountList: accountViewModel.accountList)
         })
         .onAppear {
             Task.init {

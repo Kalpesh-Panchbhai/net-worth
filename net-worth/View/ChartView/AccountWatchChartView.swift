@@ -10,6 +10,8 @@ import Charts
 
 struct AccountWatchChartView: View {
     
+    var id: String
+    
     var accountList: [Account]
     
     @State var scenePhaseBlur = 0
@@ -53,12 +55,7 @@ struct AccountWatchChartView: View {
                             })
                             .onChange(of: range) { value in
                                 Task.init {
-                                    let accountBrokerList = await accountViewModel.getAccountTransactionListForAllAccountsWithRange(accountList: accountList, range: range)
-                                    if(!range.elementsEqual("All")) {
-                                        await accountViewModel.getAccountTransactionListForAllAccountsBelowRange(accountList: accountList, range: range)
-                                    }
-                                    await financeViewModel.getMultipleSymbolDetail(brokerAccountList: accountBrokerList, range: range)
-                                    await chartViewModel.getChartDataForAllAccounts(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
+                                    await chartViewModel.getChartData(id: id, range: range)
                                 }
                                 let impact = UIImpactFeedbackGenerator(style: .light)
                                 impact.impactOccurred()
@@ -78,12 +75,7 @@ struct AccountWatchChartView: View {
                     })
                     .onAppear {
                         Task.init {
-                            let accountBrokerList = await accountViewModel.getAccountTransactionListForAllAccountsWithRange(accountList: accountList, range: range)
-                            if(!range.elementsEqual("All")) {
-                                await accountViewModel.getAccountTransactionListForAllAccountsBelowRange(accountList: accountList, range: range)
-                            }
-                            await financeViewModel.getMultipleSymbolDetail(brokerAccountList: accountBrokerList, range: range)
-                            await chartViewModel.getChartDataForAllAccounts(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
+                            await chartViewModel.getChartData(id: id, range: range)
                         }
                     }
                     .navigationTitle("Chart")

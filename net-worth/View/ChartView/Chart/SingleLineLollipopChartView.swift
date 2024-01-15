@@ -37,7 +37,7 @@ struct SingleLineLollipopChartView: View {
                 .foregroundStyle(Gradient(colors: [getChartColor().opacity(0.05), .clear]))
             }
         }
-        .chartYScale(domain: getMinValue()...getMaxValue())
+//        .chartYScale(domain: getMinValue()...getMaxValue())
         .chartXAxis {
             AxisMarks(values: .automatic) { _ in
                 AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 0.1, dash: [0]))

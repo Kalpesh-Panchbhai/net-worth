@@ -37,19 +37,13 @@ struct NetWorthChartView: View {
                             Text(ConstantUtils.oneYearRange).tag(ConstantUtils.oneYearRange)
                             Text(ConstantUtils.twoYearRange).tag(ConstantUtils.twoYearRange)
                             Text(ConstantUtils.fiveYearRange).tag(ConstantUtils.fiveYearRange)
-                            Text("All").tag("All")
                         }, label: {
                             
                         })
                         .onChange(of: range) { value in
                             Task.init {
                                 await incomeViewModel.getIncomeList()
-                                let accountBrokerList = await accountViewModel.getAccountTransactionListForAllAccountsWithRange(accountList: accountList, range: range)
-                                if(!range.elementsEqual("All")) {
-                                    await accountViewModel.getAccountTransactionListForAllAccountsBelowRange(accountList: accountList, range: range)
-                                }
-                                await financeViewModel.getMultipleSymbolDetail(brokerAccountList: accountBrokerList, range: range)
-                                await chartViewModel.getChartDataForAllAccounts(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
+                                await chartViewModel.getChartData(id: WatchController().getDefaultWatchList().id!, range: range)
                                 await chartViewModel.getChartDataForNetworth(incomeViewModel: incomeViewModel)
                             }
                             let impact = UIImpactFeedbackGenerator(style: .light)
@@ -73,12 +67,7 @@ struct NetWorthChartView: View {
             .onAppear {
                 Task.init {
                     await incomeViewModel.getIncomeList()
-                    let accountBrokerList = await accountViewModel.getAccountTransactionListForAllAccountsWithRange(accountList: accountList, range: range)
-                    if(!range.elementsEqual("All")) {
-                        await accountViewModel.getAccountTransactionListForAllAccountsBelowRange(accountList: accountList, range: range)
-                    }
-                    await financeViewModel.getMultipleSymbolDetail(brokerAccountList: accountBrokerList, range: range)
-                    await chartViewModel.getChartDataForAllAccounts(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
+                    await chartViewModel.getChartData(id: WatchController().getDefaultWatchList().id!, range: range)
                     await chartViewModel.getChartDataForNetworth(incomeViewModel: incomeViewModel)
                 }
             }

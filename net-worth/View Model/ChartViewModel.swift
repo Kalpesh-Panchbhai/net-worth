@@ -14,32 +14,8 @@ class ChartViewModel: ObservableObject {
     
     private var chartController = ChartController()
     
-    public func getChartDataForOneAccountInANonBroker(accountViewModel: AccountViewModel, range: String) async {
-        let chartDataList = await chartController.getChartDataForOneAccountInANonBroker(accountViewModel: accountViewModel, range: range)
-        DispatchQueue.main.async {
-            self.chartDataList = chartDataList
-        }
-    }
-    
-    public func getChartDataForOneAccountInABroker(accountViewModel: AccountViewModel, financeViewModel: FinanceViewModel, range: String) async {
-        let accountTransactionListWithRange = accountViewModel.accountTransactionListWithRange
-        let accountTransactionListBelowRange = accountViewModel.accountTransactionListBelowRange
-        
-        let chartDataListResponse = await chartController.getChartDataForOneAccountInABroker(accountTransactionListWithRange: accountTransactionListWithRange, accountTransactionListBelowRange: accountTransactionListBelowRange, symbol: financeViewModel.symbol, currency: financeViewModel.currency, range: range)
-        DispatchQueue.main.async {
-            self.chartDataList = chartDataListResponse
-        }
-    }
-    
-    public func getChartDataForAllAccountsInABroker(accountViewModel: AccountViewModel, financeViewModel: FinanceViewModel, range: String) async {
-        let chartDataList = await chartController.getChartDataForAllAccountsInABroker(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
-        DispatchQueue.main.async {
-            self.chartDataList = chartDataList
-        }
-    }
-    
-    public func getChartDataForAllAccounts(accountViewModel: AccountViewModel, financeViewModel: FinanceViewModel, range: String) async {
-        let chartDataList = await chartController.getChartDataForAllAccounts(accountViewModel: accountViewModel, financeViewModel: financeViewModel, range: range)
+    public func getChartData(id: String, range: String) async {
+        let chartDataList = await chartController.getChartData(id: id, range: range)
         DispatchQueue.main.async {
             self.chartDataList = chartDataList
         }

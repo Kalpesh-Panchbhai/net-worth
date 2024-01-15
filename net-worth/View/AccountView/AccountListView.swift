@@ -110,7 +110,7 @@ struct AccountListView: View {
                 .presentationDetents([.medium])
         })
         .sheet(isPresented: $isChartViewOpen, content: {
-            AccountWatchChartView(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
+            AccountWatchChartView(id: accountType, accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
         })
         .confirmationDialog("Are you sure?",
                             isPresented: $isPresentingAccountDeleteConfirm) {

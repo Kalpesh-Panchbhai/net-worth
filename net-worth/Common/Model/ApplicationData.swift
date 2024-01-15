@@ -12,15 +12,33 @@ struct ApplicationData: Codable {
     static var shared = ApplicationData()
     
     var data: Data
+    var chartDataList: [String: [ChartData]]
+    var chartDataListByEachType: [String: [ChartData]]
     
     var dataLoading = false
     
     private init() {
         data = Data()
+        chartDataList = [String: [ChartData]]()
+        chartDataListByEachType = [String: [ChartData]]()
     }
     
     public static func loadData() async {
         shared.dataLoading = true
+        print(Date.now)
+        await fetchData()
+        await fetchChartData()
+        await manipulateChartData()
+        print(Date.now)
+        shared.dataLoading = false
+    }
+    
+    public static func clear() {
+        shared = ApplicationData()
+        UserDefaults.standard.removeObject(forKey: "data")
+    }
+    
+    private static func fetchData() async {
         if let data = UserDefaults.standard.data(forKey: "data") {
             do {
                 let decoder = JSONDecoder()
@@ -68,12 +86,6 @@ struct ApplicationData: Codable {
                 print("Unable to Encode Note (\(error))")
             }
         }
-        shared.dataLoading = false
-    }
-    
-    public static func clear() {
-        shared = ApplicationData()
-        UserDefaults.standard.removeObject(forKey: "data")
     }
     
     private static func loadIncomeData() async {
@@ -236,5 +248,393 @@ struct ApplicationData: Codable {
         })
         shared.data.accountDataList = oldAccountDataList
         shared.data.accountDataListUpdatedDate = Date.now
+    }
+    
+    private static func fetchChartData() async {
+        if let chartData = UserDefaults.standard.data(forKey: "chartData") {
+            do {
+                let decoder = JSONDecoder()
+                
+                shared.chartDataList = try decoder.decode([String: [ChartData]].self, from: chartData)
+            } catch {
+                print("Unable to Decode Note (\(error))")
+            }
+        } else {
+            await loadChartData()
+            
+            do {
+                let encoder = JSONEncoder()
+                
+                let chartDataList = try encoder.encode(shared.chartDataList)
+                
+                UserDefaults.standard.set(chartDataList, forKey: "chartData")
+                
+            } catch {
+                print("Unable to Encode Note (\(error))")
+            }
+        }
+    }
+    
+    private static func loadChartData() async {
+        var symbolDataList = [String: [ChartData]]()
+        var chartDataList = [String: [ChartData]]()
+        let accountDataList = shared.data.accountDataList
+        for accountData in accountDataList {
+            if(accountData.account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
+                let accountInBrokerList = accountData.accountInBroker
+                for accountInBroker in accountInBrokerList {
+                    if(accountInBroker.accountTransaction.count > 0) {
+                        let symbol = accountInBroker.accountInBroker.symbol
+                        if(!symbolDataList.contains(where: {
+                            return $0.key.elementsEqual(symbol)
+                        })) {
+                            let symbolList = await FinanceController().getSymbolDetail(symbol: symbol, range: "5y")
+                            
+                            let rawSymbolConvertedToMap = convertRawDataToMap(symbol: symbolList)
+                            
+                            if(!symbolList.currency!.elementsEqual(SettingsController().getDefaultCurrency().code) && !symbolDataList.contains(where: {
+                                return $0.key.elementsEqual(symbolList.currency!)
+                            })) {
+                                let currencyList = await FinanceController().getCurrencyDetail(accountCurrency: SettingsController().getDefaultCurrency().code, range: "10y")
+                                let rawCurrencyConvertedToMap = convertRawDataToMap(symbol: currencyList)
+                                symbolDataList.updateValue(rawCurrencyConvertedToMap, forKey: symbolList.currency!)
+                            }
+                            
+                            if(!symbolList.currency!.elementsEqual(SettingsController().getDefaultCurrency().code)) {
+                                let currencyData = symbolDataList.first(where: {
+                                    return $0.key.elementsEqual(symbolList.currency!)
+                                })!.value
+                                
+                                var chartDataList = [ChartData]()
+                                for symbol in rawSymbolConvertedToMap {
+                                    let data = currencyData.last(where: {
+                                        return $0.date.removeTimeStamp() <= symbol.date.removeTimeStamp()
+                                    })!
+                                    
+                                    chartDataList.append(ChartData(date: symbol.date.removeTimeStamp(), value: symbol.value * data.value))
+                                }
+                                
+                                symbolDataList.updateValue(chartDataList, forKey: symbol)
+                            } else {
+                                symbolDataList.updateValue(rawSymbolConvertedToMap, forKey: symbol)
+                            }
+                        }
+                        
+                        let transactionList = accountInBroker.accountTransaction
+                        let symbolData = symbolDataList.first(where: {
+                            return $0.key.elementsEqual(symbol)
+                        })!.value
+                        
+                        var startDate = transactionList.last!.timestamp.removeTimeStamp()
+                        
+                        let symbolStartDate = symbolData.first!.date.removeTimeStamp()
+                        if(symbolStartDate > startDate) {
+                            startDate = symbolStartDate
+                        }
+                        var chartData = [ChartData]()
+                        while(startDate <= Date.now.removeTimeStamp()) {
+                            let latestTransaction = transactionList.first(where: {
+                                return $0.timestamp.removeTimeStamp() <= startDate.removeTimeStamp()
+                            })!
+                            let oldestSymbolData = symbolData.last(where: {
+                                return $0.date.removeTimeStamp() <= startDate.removeTimeStamp()
+                            })!
+                            chartData.append(ChartData(date: startDate, value: latestTransaction.currentBalance * oldestSymbolData.value))
+                            startDate.addTimeInterval(86400)
+                        }
+                        chartDataList.updateValue(chartData, forKey: accountInBroker.accountInBroker.id!)
+                    }
+                }
+            } else {
+                let transactionList = accountData.accountTransaction
+                var startDate = transactionList.last!.timestamp.removeTimeStamp()
+                var chartData = [ChartData]()
+                while(startDate <= Date.now.removeTimeStamp()) {
+                    let latestTransaction = transactionList.first(where: {
+                        return $0.timestamp.removeTimeStamp() <= startDate.removeTimeStamp()
+                    })!
+                    chartData.append(ChartData(date: startDate, value: latestTransaction.currentBalance))
+                    startDate.addTimeInterval(86400)
+                }
+                chartDataList.updateValue(chartData, forKey: accountData.account.id!)
+            }
+        }
+        shared.chartDataList = chartDataList
+    }
+    
+    private static func manipulateChartData() async {
+        if let chartDataListByEachType = UserDefaults.standard.data(forKey: "chartDataListByEachType") {
+            do {
+                let decoder = JSONDecoder()
+                
+                shared.chartDataListByEachType = try decoder.decode([String: [ChartData]].self, from: chartDataListByEachType)
+            } catch {
+                print("Unable to Decode Note (\(error))")
+            }
+        } else {
+            generateChartDataForEachAccount()
+            await generateChartDataForEachAccountType()
+            await generateChartDataForEachWatchList()
+            
+            do {
+                let encoder = JSONEncoder()
+                
+                let chartDataListByEachType = try encoder.encode(shared.chartDataListByEachType)
+                
+                UserDefaults.standard.set(chartDataListByEachType, forKey: "chartDataListByEachType")
+                
+            } catch {
+                print("Unable to Encode Note (\(error))")
+            }
+        }
+    }
+    
+    private static func generateChartDataForEachAccount() {
+        shared.chartDataListByEachType = shared.chartDataList
+    }
+    
+    private static func generateChartDataForEachAccountType() async {
+        let accountDataList = shared.data.accountDataList
+        let accountDataListByAccountType = Dictionary(grouping: accountDataList) {
+            if($0.account.active) {
+                return $0.account.accountType
+            } else {
+                return "Inactive Account"
+            }
+        }
+        
+        for (accountType, accountDataList) in accountDataListByAccountType {
+            if(accountType.elementsEqual(ConstantUtils.brokerAccountType) || accountType.elementsEqual("Inactive Account")) {
+                if(accountType.elementsEqual("Inactive Account")) {
+                    let chartDataListResult = await generateChartdataForMixedAccounts(accountDataList: accountDataList)
+                    shared.chartDataListByEachType.updateValue(chartDataListResult, forKey: "Inactive Account")
+                } else {
+                    let chartDataListResult = await generateChartDataForMultipleBrokerAccounts(accountDataList: accountDataList)
+                    shared.chartDataListByEachType.updateValue(chartDataListResult, forKey: ConstantUtils.brokerAccountType)
+                }
+            } else {
+                let chartDataListResult = await generateChartDataForMultipleNonBrokerAccount(accountDataList: accountDataList)
+                shared.chartDataListByEachType.updateValue(chartDataListResult, forKey: accountType)
+            }
+        }
+    }
+    
+    private static func generateChartDataForEachWatchList() async {
+        let watchList = await WatchController().getAllWatchList()
+        for watch in watchList {
+            let chartDataListResult = generateChartDataForWatchAccount(accountIDList: watch.accountID)
+            shared.chartDataListByEachType.updateValue(chartDataListResult, forKey: watch.id!)
+        }
+    }
+    
+    private static func generateChartDataForWatchAccount(accountIDList: [String]) -> [ChartData] {
+        let chartDataList = shared.chartDataListByEachType
+        var chartDataListResult = [ChartData]()
+        var dummy = [[ChartData]]()
+        for accountID in accountIDList {
+            let chartData = chartDataList.first(where: {
+                return $0.key.elementsEqual(accountID)
+            })!.value
+            
+            dummy.append(chartData)
+        }
+        
+        var startDate = dummy.min(by: {
+            return $0.min(by: {
+                return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
+            })!.date <= $1.min(by: {
+                return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
+            })!.date
+        })!.first!.date.removeTimeStamp()
+        while(startDate <= Date.now) {
+            var totalValue = 0.0
+            for d in dummy {
+                totalValue += d.last(where: {
+                    return $0.date.removeTimeStamp() <= startDate
+                })?.value ?? 0.0
+            }
+            chartDataListResult.append(ChartData(date: startDate.removeTimeStamp(), value: totalValue))
+            startDate.addTimeInterval(86400)
+        }
+        
+        return chartDataListResult
+    }
+    
+    private static func generateChartDataForMultipleNonBrokerAccount(accountDataList: [AccountData]) async -> [ChartData] {
+        let chartDataList = shared.chartDataListByEachType
+        var chartDataListResult = [ChartData]()
+        var dummy = [[ChartData]]()
+        for accountData in accountDataList {
+            let chartData = chartDataList.first(where: {
+                return $0.key.elementsEqual(accountData.account.id!)
+            })!.value
+            
+            dummy.append(chartData)
+        }
+        
+        var startDate = dummy.min(by: {
+            return $0.min(by: {
+                return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
+            })!.date <= $1.min(by: {
+                return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
+            })!.date
+        })!.first!.date.removeTimeStamp()
+        while(startDate <= Date.now) {
+            var totalValue = 0.0
+            for d in dummy {
+                totalValue += d.last(where: {
+                    return $0.date.removeTimeStamp() <= startDate
+                })?.value ?? 0.0
+            }
+            chartDataListResult.append(ChartData(date: startDate.removeTimeStamp(), value: totalValue))
+            startDate.addTimeInterval(86400)
+        }
+        
+        return chartDataListResult
+    }
+    
+    private static func generateChartdataForMixedAccounts(accountDataList: [AccountData]) async -> [ChartData] {
+        var chartDataListResult = [ChartData]()
+        
+        var nonBrokerAccountList = [AccountData]()
+        var brokerAccountList = [AccountData]()
+        
+        for accountData in accountDataList {
+            if(accountData.account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
+                brokerAccountList.append(accountData)
+            } else {
+                nonBrokerAccountList.append(accountData)
+            }
+        }
+        
+        let chartDataForNonBrokerAccountList = await generateChartDataForMultipleNonBrokerAccount(accountDataList: nonBrokerAccountList)
+        let chartDataForBrokerAccountList = await generateChartDataForMultipleBrokerAccounts(accountDataList: brokerAccountList)
+        var startDate = getStartDate(chartDataForNonBrokerAccountList: chartDataForNonBrokerAccountList, chartDataForBrokerAccountList: chartDataForBrokerAccountList)
+        
+        while(startDate <= Date.now) {
+            
+            var totalValue = 0.0
+            
+            let transaction1 = chartDataForBrokerAccountList.last(where: {
+                return $0.date.removeTimeStamp() <= startDate.removeTimeStamp()
+            })
+            
+            if(transaction1 != nil) {
+                totalValue += transaction1!.value
+            }
+            
+            let transaction2 = chartDataForNonBrokerAccountList.last(where: {
+                return $0.date.removeTimeStamp() <= startDate.removeTimeStamp()
+            })
+            
+            if(transaction2 != nil) {
+                totalValue += transaction2!.value
+            }
+            chartDataListResult.append(ChartData(date: startDate.removeTimeStamp(), value: totalValue))
+            startDate.addTimeInterval(86400)
+        }
+        return chartDataListResult
+    }
+    
+    private static func getStartDate(chartDataForNonBrokerAccountList: [ChartData], chartDataForBrokerAccountList: [ChartData]) -> Date {
+        if(chartDataForBrokerAccountList.count > 0 && chartDataForNonBrokerAccountList.count > 0) {
+            return (chartDataForBrokerAccountList.first!.date.removeTimeStamp() >= chartDataForNonBrokerAccountList.first!.date.removeTimeStamp()) ? chartDataForNonBrokerAccountList.first!.date : chartDataForBrokerAccountList.first!.date
+        } else if(chartDataForBrokerAccountList.count > 0) {
+            return chartDataForBrokerAccountList.first!.date.removeTimeStamp()
+        } else if(chartDataForNonBrokerAccountList.count > 0) {
+            return chartDataForNonBrokerAccountList.first!.date.removeTimeStamp()
+        }
+        return Date.now.removeTimeStamp().addingTimeInterval(86400)
+    }
+    
+    private static func generateChartDataForOneBrokerAccount(accountData: AccountData) -> [ChartData] {
+        let chartDataList = shared.chartDataListByEachType
+        
+        var chartDataListResult = [ChartData]()
+        var dummy = [[ChartData]]()
+        for accountInBroker in accountData.accountInBroker {
+            let chartData = chartDataList.first(where: {
+                return $0.key.elementsEqual(accountInBroker.accountInBroker.id!)
+            })!.value
+            
+            dummy.append(chartData)
+        }
+        
+        var startDate = dummy.min(by: {
+            return $0.min(by: {
+                return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
+            })!.date <= $1.min(by: {
+                return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
+            })!.date
+        })!.first!.date.removeTimeStamp()
+        while(startDate <= Date.now) {
+            var totalValue = 0.0
+            for d in dummy {
+                totalValue += d.last(where: {
+                    return $0.date.removeTimeStamp() <= startDate
+                })?.value ?? 0.0
+            }
+            chartDataListResult.append(ChartData(date: startDate.removeTimeStamp(), value: totalValue))
+            startDate.addTimeInterval(86400)
+        }
+        return chartDataListResult
+    }
+    
+    private static func generateChartDataForMultipleBrokerAccounts(accountDataList: [AccountData]) async -> [ChartData] {
+        for accountData in accountDataList {
+            let chartDataList = generateChartDataForOneBrokerAccount(accountData: accountData)
+            shared.chartDataListByEachType.updateValue(chartDataList, forKey: accountData.account.id!)
+        }
+        
+        let chartDataList = shared.chartDataListByEachType
+        var chartDataListResult = [ChartData]()
+        var dummy = [[ChartData]]()
+        for accountInBroker in accountDataList {
+            let chartData = chartDataList.first(where: {
+                return $0.key.elementsEqual(accountInBroker.account.id!)
+            })!.value
+            
+            dummy.append(chartData)
+        }
+        
+        var startDate = dummy.min(by: {
+            return $0.min(by: {
+                return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
+            })!.date <= $1.min(by: {
+                return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
+            })!.date
+        })!.first!.date.removeTimeStamp()
+        while(startDate <= Date.now) {
+            var totalValue = 0.0
+            for d in dummy {
+                totalValue += d.last(where: {
+                    return $0.date.removeTimeStamp() <= startDate
+                })?.value ?? 0.0
+            }
+            chartDataListResult.append(ChartData(date: startDate.removeTimeStamp(), value: totalValue))
+            startDate.addTimeInterval(86400)
+        }
+        return chartDataListResult
+    }
+    
+    private static func convertRawDataToMap(symbol: FinanceDetailModel) -> [ChartData] {
+        var returnData = [ChartData]()
+        let timestampEpochList = symbol.timestamp
+        let valueAtTimestampList = symbol.valueAtTimestamp
+        
+        for i in 0..<timestampEpochList.count {
+            let date = convertEpochToDate(epochTime: Double(timestampEpochList[i]!))
+            let value = valueAtTimestampList[i] ?? nil
+            if(value != nil) {
+                returnData.append(ChartData(date: date, value: value!))
+            }
+        }
+        
+        return returnData
+    }
+    
+    private static func convertEpochToDate(epochTime: Double) -> Date {
+        let date = Date(timeIntervalSince1970: TimeInterval(floatLiteral: epochTime))
+        return date
     }
 }

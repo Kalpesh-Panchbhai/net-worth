@@ -82,7 +82,7 @@ class AccountController {
         } ?? Account()
     }
     
-    public func getAccountList(accountType: String) -> [Account]{
+    public func getAccountList(accountType: String) -> [Account] {
         let accountList = ApplicationData.shared.data.accountDataList.filter {
             $0.account.accountType.elementsEqual(accountType)
         }
