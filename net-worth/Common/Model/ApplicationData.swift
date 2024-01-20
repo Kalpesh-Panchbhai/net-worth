@@ -13,22 +13,21 @@ struct ApplicationData: Codable {
     
     var data: Data
     var chartDataList: [String: [ChartData]]
-    var chartDataListByEachType: [String: [ChartData]]
     
     var dataLoading = false
     
     private init() {
         data = Data()
         chartDataList = [String: [ChartData]]()
-        chartDataListByEachType = [String: [ChartData]]()
     }
     
     public static func loadData() async {
         shared.dataLoading = true
+//        UserDefaults.standard.removeObject(forKey: "data")
+//        UserDefaults.standard.removeObject(forKey: "chartData")
         print(Date.now)
         await fetchData()
         await fetchChartData()
-        await manipulateChartData()
         print(Date.now)
         shared.dataLoading = false
     }
@@ -261,6 +260,8 @@ struct ApplicationData: Codable {
             }
         } else {
             await loadChartData()
+            await generateChartDataForEachAccountType()
+            await generateChartDataForEachWatchList()
             
             do {
                 let encoder = JSONEncoder()
@@ -277,7 +278,6 @@ struct ApplicationData: Codable {
     
     private static func loadChartData() async {
         var symbolDataList = [String: [ChartData]]()
-        var chartDataList = [String: [ChartData]]()
         let accountDataList = shared.data.accountDataList
         for accountData in accountDataList {
             if(accountData.account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
@@ -342,9 +342,11 @@ struct ApplicationData: Codable {
                             chartData.append(ChartData(date: startDate, value: latestTransaction.currentBalance * oldestSymbolData.value))
                             startDate.addTimeInterval(86400)
                         }
-                        chartDataList.updateValue(chartData, forKey: accountInBroker.accountInBroker.id!)
+                        shared.chartDataList.updateValue(chartData, forKey: accountInBroker.accountInBroker.id!)
                     }
                 }
+                let chartDataList = generateChartDataForOneBrokerAccount(accountData: accountData)
+                shared.chartDataList.updateValue(chartDataList, forKey: accountData.account.id!)
             } else {
                 let transactionList = accountData.accountTransaction
                 var startDate = transactionList.last!.timestamp.removeTimeStamp()
@@ -356,41 +358,9 @@ struct ApplicationData: Codable {
                     chartData.append(ChartData(date: startDate, value: latestTransaction.currentBalance))
                     startDate.addTimeInterval(86400)
                 }
-                chartDataList.updateValue(chartData, forKey: accountData.account.id!)
+                shared.chartDataList.updateValue(chartData, forKey: accountData.account.id!)
             }
         }
-        shared.chartDataList = chartDataList
-    }
-    
-    private static func manipulateChartData() async {
-        if let chartDataListByEachType = UserDefaults.standard.data(forKey: "chartDataListByEachType") {
-            do {
-                let decoder = JSONDecoder()
-                
-                shared.chartDataListByEachType = try decoder.decode([String: [ChartData]].self, from: chartDataListByEachType)
-            } catch {
-                print("Unable to Decode Note (\(error))")
-            }
-        } else {
-            generateChartDataForEachAccount()
-            await generateChartDataForEachAccountType()
-            await generateChartDataForEachWatchList()
-            
-            do {
-                let encoder = JSONEncoder()
-                
-                let chartDataListByEachType = try encoder.encode(shared.chartDataListByEachType)
-                
-                UserDefaults.standard.set(chartDataListByEachType, forKey: "chartDataListByEachType")
-                
-            } catch {
-                print("Unable to Encode Note (\(error))")
-            }
-        }
-    }
-    
-    private static func generateChartDataForEachAccount() {
-        shared.chartDataListByEachType = shared.chartDataList
     }
     
     private static func generateChartDataForEachAccountType() async {
@@ -407,14 +377,14 @@ struct ApplicationData: Codable {
             if(accountType.elementsEqual(ConstantUtils.brokerAccountType) || accountType.elementsEqual("Inactive Account")) {
                 if(accountType.elementsEqual("Inactive Account")) {
                     let chartDataListResult = await generateChartdataForMixedAccounts(accountDataList: accountDataList)
-                    shared.chartDataListByEachType.updateValue(chartDataListResult, forKey: "Inactive Account")
+                    shared.chartDataList.updateValue(chartDataListResult, forKey: "Inactive Account")
                 } else {
                     let chartDataListResult = await generateChartDataForMultipleBrokerAccounts(accountDataList: accountDataList)
-                    shared.chartDataListByEachType.updateValue(chartDataListResult, forKey: ConstantUtils.brokerAccountType)
+                    shared.chartDataList.updateValue(chartDataListResult, forKey: ConstantUtils.brokerAccountType)
                 }
             } else {
                 let chartDataListResult = await generateChartDataForMultipleNonBrokerAccount(accountDataList: accountDataList)
-                shared.chartDataListByEachType.updateValue(chartDataListResult, forKey: accountType)
+                shared.chartDataList.updateValue(chartDataListResult, forKey: accountType)
             }
         }
     }
@@ -423,16 +393,15 @@ struct ApplicationData: Codable {
         let watchList = await WatchController().getAllWatchList()
         for watch in watchList {
             let chartDataListResult = generateChartDataForWatchAccount(accountIDList: watch.accountID)
-            shared.chartDataListByEachType.updateValue(chartDataListResult, forKey: watch.id!)
+            shared.chartDataList.updateValue(chartDataListResult, forKey: watch.id!)
         }
     }
     
     private static func generateChartDataForWatchAccount(accountIDList: [String]) -> [ChartData] {
-        let chartDataList = shared.chartDataListByEachType
         var chartDataListResult = [ChartData]()
         var dummy = [[ChartData]]()
         for accountID in accountIDList {
-            let chartData = chartDataList.first(where: {
+            let chartData = shared.chartDataList.first(where: {
                 return $0.key.elementsEqual(accountID)
             })!.value
             
@@ -461,11 +430,10 @@ struct ApplicationData: Codable {
     }
     
     private static func generateChartDataForMultipleNonBrokerAccount(accountDataList: [AccountData]) async -> [ChartData] {
-        let chartDataList = shared.chartDataListByEachType
         var chartDataListResult = [ChartData]()
         var dummy = [[ChartData]]()
         for accountData in accountDataList {
-            let chartData = chartDataList.first(where: {
+            let chartData = shared.chartDataList.first(where: {
                 return $0.key.elementsEqual(accountData.account.id!)
             })!.value
             
@@ -548,12 +516,10 @@ struct ApplicationData: Codable {
     }
     
     private static func generateChartDataForOneBrokerAccount(accountData: AccountData) -> [ChartData] {
-        let chartDataList = shared.chartDataListByEachType
-        
         var chartDataListResult = [ChartData]()
         var dummy = [[ChartData]]()
         for accountInBroker in accountData.accountInBroker {
-            let chartData = chartDataList.first(where: {
+            let chartData = shared.chartDataList.first(where: {
                 return $0.key.elementsEqual(accountInBroker.accountInBroker.id!)
             })!.value
             
@@ -581,16 +547,10 @@ struct ApplicationData: Codable {
     }
     
     private static func generateChartDataForMultipleBrokerAccounts(accountDataList: [AccountData]) async -> [ChartData] {
-        for accountData in accountDataList {
-            let chartDataList = generateChartDataForOneBrokerAccount(accountData: accountData)
-            shared.chartDataListByEachType.updateValue(chartDataList, forKey: accountData.account.id!)
-        }
-        
-        let chartDataList = shared.chartDataListByEachType
         var chartDataListResult = [ChartData]()
         var dummy = [[ChartData]]()
         for accountInBroker in accountDataList {
-            let chartData = chartDataList.first(where: {
+            let chartData = shared.chartDataList.first(where: {
                 return $0.key.elementsEqual(accountInBroker.account.id!)
             })!.value
             

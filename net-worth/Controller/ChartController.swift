@@ -11,7 +11,7 @@ import FirebaseFirestore
 class ChartController {
     
     public func getChartData(id: String, range: String) async -> [ChartData] {
-        let chartDataList = ApplicationData.shared.chartDataListByEachType.first(where: {
+        let chartDataList = ApplicationData.shared.chartDataList.first(where: {
             return $0.key.elementsEqual(id)
         })!.value
         var chartDataListResponse = [ChartData]()
