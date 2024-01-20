@@ -23,8 +23,6 @@ struct ApplicationData: Codable {
     
     public static func loadData() async {
         shared.dataLoading = true
-//        UserDefaults.standard.removeObject(forKey: "data")
-//        UserDefaults.standard.removeObject(forKey: "chartData")
         print(Date.now)
         await fetchData()
         await fetchChartData()
@@ -35,6 +33,7 @@ struct ApplicationData: Codable {
     public static func clear() {
         shared = ApplicationData()
         UserDefaults.standard.removeObject(forKey: "data")
+        UserDefaults.standard.removeObject(forKey: "chartData")
     }
     
     private static func fetchData() async {
