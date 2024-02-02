@@ -160,6 +160,12 @@ struct SettingsView: View {
                 Label("Version " + (appVersion ?? "") + " Build(" + (buildVersion ?? "Unknown Build Version)") + ")", systemImage: "gear.badge.checkmark")
                     .foregroundColor(Color.theme.primaryText)
                     .listRowBackground(Color.theme.foreground)
+                
+                // MARK: Chart last updated
+                let dateTime = UserDefaults.standard.string(forKey: "chartLastUpdated") ?? ""
+                Label("Date Time: " + dateTime, systemImage: "gear.badge.checkmark")
+                    .foregroundColor(Color.theme.primaryText)
+                    .listRowBackground(Color.theme.foreground)
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)

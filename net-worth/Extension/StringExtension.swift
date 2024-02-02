@@ -25,4 +25,10 @@ extension String {
         dateFormatter.dateFormat = "yyyyMMddHHmmss"
         return dateFormatter.date(from: self)!
     }
+    
+    func toFullDateFormat() -> Date {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MMM-yyyy 'at' HH:mm:ss aa"
+        return dateFormatter.date(from: self)!
+    }
 }
