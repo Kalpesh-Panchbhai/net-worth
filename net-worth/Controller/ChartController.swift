@@ -13,7 +13,7 @@ class ChartController {
     public func getChartData(id: String, range: String) async -> [ChartData] {
         let chartDataList = ApplicationData.shared.chartDataList.first(where: {
             return $0.key.elementsEqual(id)
-        })!.value
+        })?.value ?? [ChartData]()
         var chartDataListResponse = [ChartData]()
         var startDate = Date().removeTimeStamp()
         startDate = CommonController.getStartDateForRange(range: range)

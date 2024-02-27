@@ -15,25 +15,18 @@ struct ApplicationData: Codable {
     var chartDataList: [String: [ChartData]]
     
     var dataLoading = false
-    var lastUpdatedChartTimestamp: Date
     
     var symbolDataList = [String: [ChartData]]()
     
     private init() {
         data = Data()
         chartDataList = [String: [ChartData]]()
-        lastUpdatedChartTimestamp = Date.now
     }
     
-    public static func loadData() async {
+    public static func loadData(fetchLatest: Bool = false) async {
         shared.dataLoading = true
-        let date = UserDefaults.standard.string(forKey: "chartLastUpdated") ?? Date.now.getEarliestDate().format()
-        shared.lastUpdatedChartTimestamp = date.toFullDateFormat()
-        print(Date.now)
         await fetchData()
-        await fetchChartData()
-        print(Date.now)
-        UserDefaults.standard.set(Date.now.format(), forKey: "chartLastUpdated")
+        await fetchChartData(fetchLatest: fetchLatest)
         shared.dataLoading = false
     }
     
@@ -255,7 +248,7 @@ struct ApplicationData: Codable {
         shared.data.accountDataListUpdatedDate = Date.now
     }
     
-    private static func fetchChartData() async {
+    private static func fetchChartData(fetchLatest: Bool) async {
         if let chartData = UserDefaults.standard.data(forKey: "chartData") {
             do {
                 let decoder = JSONDecoder()
@@ -265,244 +258,56 @@ struct ApplicationData: Codable {
                 print("Unable to Decode Note (\(error))")
             }
             
-            let refreshChartStartDate = await loadChartData()
-            await generateChartDataForEachAccountType(isRefreshOperation: true, refreshChartStartDate: refreshChartStartDate)
-            await generateChartDataForEachWatchList(isRefreshOperation: true, refreshChartStartDate: refreshChartStartDate)
-            
-            do {
-                let encoder = JSONEncoder()
-                
-                let chartDataList = try encoder.encode(shared.chartDataList)
-                
-                UserDefaults.standard.set(chartDataList, forKey: "chartData")
-                
-            } catch {
-                print("Unable to Encode Note (\(error))")
+            if(fetchLatest) {
+                await updateChartData()
             }
         } else {
-            let refreshChartStartDate = await loadChartData()
-            await generateChartDataForEachAccountType()
-            await generateChartDataForEachWatchList()
-            
-            do {
-                let encoder = JSONEncoder()
-                
-                let chartDataList = try encoder.encode(shared.chartDataList)
-                
-                UserDefaults.standard.set(chartDataList, forKey: "chartData")
-                
-            } catch {
-                print("Unable to Encode Note (\(error))")
+            if(fetchLatest) {
+                await updateChartData()
             }
         }
     }
     
-    private static func loadChartData() async -> Date {
-        var refreshChartStartDate = Date.now.removeTimeStamp()
+    private static func updateChartData() async {
+        shared.chartDataList = [String: [ChartData]]()
+        await loadChartData()
+        await generateChartDataForEachAccountType()
+        await generateChartDataForEachWatchList()
+        
+        do {
+            let encoder = JSONEncoder()
+            
+            let chartDataList = try encoder.encode(shared.chartDataList)
+            
+            UserDefaults.standard.set(chartDataList, forKey: "chartData")
+            
+        } catch {
+            print("Unable to Encode Note (\(error))")
+        }
+        UserDefaults.standard.set(Date.now.format(), forKey: "chartLastUpdated")
+    }
+    
+    private static func loadChartData() async {
         let accountDataList = shared.data.accountDataList
         for accountData in accountDataList {
             if(accountData.account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
-                let chartStartDate = await loadChartDataForBrokerAccount(accountData: accountData)
-                if(chartStartDate <= refreshChartStartDate) {
-                    refreshChartStartDate = chartStartDate
-                }
+                await loadChartDataForBrokerAccount(accountData: accountData)
             } else {
-                let chartStartDate = await loadChartDataForNonBrokerAccount(accountData: accountData)
-                if(chartStartDate <= refreshChartStartDate) {
-                    refreshChartStartDate = chartStartDate
-                }
+                await loadChartDataForNonBrokerAccount(accountData: accountData)
             }
         }
-        return refreshChartStartDate
     }
     
-    private static func loadChartDataForBrokerAccount(accountData: AccountData) async -> Date {
+    private static func loadChartDataForBrokerAccount(accountData: AccountData) async {
         let accountInBrokerList = accountData.accountInBroker
-        var refreshChartStartDate = Date.now.removeTimeStamp()
         for accountInBroker in accountInBrokerList {
-            if(shared.chartDataList.contains(where: {
-                return $0.key.elementsEqual(accountInBroker.accountInBroker.id!)
-            })) {
-                let chartStartDate = await loadChartDataForExistingBrokerAccount(accountInBroker: accountInBroker)
-                if(chartStartDate <= refreshChartStartDate) {
-                    refreshChartStartDate = chartStartDate
-                }
-            } else {
-                let chartStartDate = await loadChartDataForNonExistingBrokerAccount(accountInBroker: accountInBroker)
-                if(chartStartDate <= refreshChartStartDate) {
-                    refreshChartStartDate = chartStartDate
-                }
-            }
+            await loadChartDataForNonExistingBrokerAccount(accountInBroker: accountInBroker)
         }
-        if(shared.chartDataList.contains(where: {
-            return $0.key.elementsEqual(accountData.account.id!)
-        })) {
-            let chartDataList = generateChartDataForOneBrokerAccount(accountData: accountData, isRefreshOperation: true, refreshChartStartDate: refreshChartStartDate)
-            shared.chartDataList.updateValue(chartDataList, forKey: accountData.account.id!)
-        } else {
-            let chartDataList = generateChartDataForOneBrokerAccount(accountData: accountData)
-            shared.chartDataList.updateValue(chartDataList, forKey: accountData.account.id!)
-        }
-        return refreshChartStartDate
+        let chartDataList = generateChartDataForOneBrokerAccount(accountData: accountData)
+        shared.chartDataList.updateValue(chartDataList, forKey: accountData.account.id!)
     }
     
-    private static func loadChartDataForExistingBrokerAccount(accountInBroker: AccountInBrokerData) async -> Date {
-        if(accountInBroker.accountInBroker.lastUpdated > shared.lastUpdatedChartTimestamp) {
-            return await loadChartDataForExistingBrokerAccountWithLatestCloudData(accountInBroker: accountInBroker)
-        } else {
-            return await loadChartDataForExistingBrokerAccountWithExistingData(accountInBroker: accountInBroker)
-        }
-    }
-    
-    private static func loadChartDataForExistingBrokerAccountWithLatestCloudData(accountInBroker: AccountInBrokerData) async -> Date {
-        var refreshChartStartDate = Date.now.removeTimeStamp()
-        if(accountInBroker.accountTransaction.count > 0) {
-            let symbol = accountInBroker.accountInBroker.symbol
-            let transactionList = accountInBroker.accountTransaction
-            let newTransactionList = transactionList.filter {
-                return $0.createdDate >= shared.lastUpdatedChartTimestamp
-            }
-            var chartData = shared.chartDataList.first(where: {
-                return $0.key.elementsEqual(accountInBroker.accountInBroker.id!)
-            })!.value
-            chartData.removeAll(where: {
-                return $0.date.removeTimeStamp() >= newTransactionList.last!.timestamp
-            })
-            if(!chartData.isEmpty) {
-                chartData.removeLast()
-            }
-            var startDate = Date.now
-            if(chartData.isEmpty) {
-                startDate = newTransactionList.last!.timestamp.removeTimeStamp()
-            } else {
-                startDate = chartData.last!.date.addingTimeInterval(86400).removeTimeStamp()
-            }
-            refreshChartStartDate = startDate
-            
-            if(!shared.symbolDataList.contains(where: {
-                return $0.key.elementsEqual(symbol)
-            })) {
-                let symbolList = await FinanceController().getSymbolDetail(symbol: symbol, range: "5y")
-                
-                let rawSymbolConvertedToMap = convertRawDataToMap(symbol: symbolList)
-                
-                if(!symbolList.currency!.elementsEqual(SettingsController().getDefaultCurrency().code) && !shared.symbolDataList.contains(where: {
-                    return $0.key.elementsEqual(symbolList.currency!)
-                })) {
-                    let currencyList = await FinanceController().getCurrencyDetail(accountCurrency: SettingsController().getDefaultCurrency().code, range: "10y")
-                    let rawCurrencyConvertedToMap = convertRawDataToMap(symbol: currencyList)
-                    shared.symbolDataList.updateValue(rawCurrencyConvertedToMap, forKey: symbolList.currency!)
-                }
-                
-                if(!symbolList.currency!.elementsEqual(SettingsController().getDefaultCurrency().code)) {
-                    let currencyData = shared.symbolDataList.first(where: {
-                        return $0.key.elementsEqual(symbolList.currency!)
-                    })!.value
-                    
-                    var chartDataList = [ChartData]()
-                    for symbol in rawSymbolConvertedToMap {
-                        let data = currencyData.last(where: {
-                            return $0.date.removeTimeStamp() <= symbol.date.removeTimeStamp()
-                        })!
-                        
-                        chartDataList.append(ChartData(date: symbol.date.removeTimeStamp(), value: symbol.value * data.value))
-                    }
-                    
-                    shared.symbolDataList.updateValue(chartDataList, forKey: symbol)
-                } else {
-                    shared.symbolDataList.updateValue(rawSymbolConvertedToMap, forKey: symbol)
-                }
-            }
-            
-            let symbolData = shared.symbolDataList.first(where: {
-                return $0.key.elementsEqual(symbol)
-            })!.value
-            
-            while(startDate <= Date.now.removeTimeStamp()) {
-                let latestTransaction = transactionList.first(where: {
-                    return $0.timestamp.removeTimeStamp() <= startDate.removeTimeStamp()
-                })!
-                let oldestSymbolData = symbolData.last(where: {
-                    return $0.date.removeTimeStamp() <= startDate.removeTimeStamp()
-                })!
-                chartData.append(ChartData(date: startDate, value: latestTransaction.currentBalance * oldestSymbolData.value))
-                startDate.addTimeInterval(86400)
-            }
-            shared.chartDataList.updateValue(chartData, forKey: accountInBroker.accountInBroker.id!)
-        } else {
-            shared.chartDataList.removeValue(forKey: accountInBroker.accountInBroker.id!)
-        }
-        
-        return refreshChartStartDate
-    }
-    
-    private static func loadChartDataForExistingBrokerAccountWithExistingData(accountInBroker: AccountInBrokerData) async -> Date {
-        var refreshChartStartDate = Date.now.removeTimeStamp()
-        if(accountInBroker.accountTransaction.count > 0) {
-            let symbol = accountInBroker.accountInBroker.symbol
-            let latestTransaction = accountInBroker.accountTransaction.first!
-            var chartData = shared.chartDataList.first(where: {
-                return $0.key.elementsEqual(accountInBroker.accountInBroker.id!)
-            })!.value
-            var startDate = chartData.last!.date.removeTimeStamp().addingTimeInterval(86400)
-            refreshChartStartDate = startDate
-            
-            if(!shared.symbolDataList.contains(where: {
-                return $0.key.elementsEqual(symbol)
-            })) {
-                let symbolList = await FinanceController().getSymbolDetail(symbol: symbol, range: "5y")
-                
-                let rawSymbolConvertedToMap = convertRawDataToMap(symbol: symbolList)
-                
-                if(!symbolList.currency!.elementsEqual(SettingsController().getDefaultCurrency().code) && !shared.symbolDataList.contains(where: {
-                    return $0.key.elementsEqual(symbolList.currency!)
-                })) {
-                    let currencyList = await FinanceController().getCurrencyDetail(accountCurrency: SettingsController().getDefaultCurrency().code, range: "10y")
-                    let rawCurrencyConvertedToMap = convertRawDataToMap(symbol: currencyList)
-                    shared.symbolDataList.updateValue(rawCurrencyConvertedToMap, forKey: symbolList.currency!)
-                }
-                
-                if(!symbolList.currency!.elementsEqual(SettingsController().getDefaultCurrency().code)) {
-                    let currencyData = shared.symbolDataList.first(where: {
-                        return $0.key.elementsEqual(symbolList.currency!)
-                    })!.value
-                    
-                    var chartDataList = [ChartData]()
-                    for symbol in rawSymbolConvertedToMap {
-                        let data = currencyData.last(where: {
-                            return $0.date.removeTimeStamp() <= symbol.date.removeTimeStamp()
-                        })!
-                        
-                        chartDataList.append(ChartData(date: symbol.date.removeTimeStamp(), value: symbol.value * data.value))
-                    }
-                    
-                    shared.symbolDataList.updateValue(chartDataList, forKey: symbol)
-                } else {
-                    shared.symbolDataList.updateValue(rawSymbolConvertedToMap, forKey: symbol)
-                }
-            }
-            
-            let symbolData = shared.symbolDataList.first(where: {
-                return $0.key.elementsEqual(symbol)
-            })!.value
-            
-            while(startDate <= Date.now.removeTimeStamp()) {
-                let oldestSymbolData = symbolData.last(where: {
-                    return $0.date.removeTimeStamp() <= startDate.removeTimeStamp()
-                })!
-                chartData.append(ChartData(date: startDate, value: latestTransaction.currentBalance * oldestSymbolData.value))
-                startDate.addTimeInterval(86400)
-            }
-            shared.chartDataList.updateValue(chartData, forKey: accountInBroker.accountInBroker.id!)
-        } else {
-            shared.chartDataList.removeValue(forKey: accountInBroker.accountInBroker.id!)
-        }
-        
-        return refreshChartStartDate
-    }
-    
-    private static func loadChartDataForNonExistingBrokerAccount(accountInBroker: AccountInBrokerData) async -> Date {
-        var refreshChartStartDate = Date.now.removeTimeStamp()
+    private static func loadChartDataForNonExistingBrokerAccount(accountInBroker: AccountInBrokerData) async {
         if(accountInBroker.accountTransaction.count > 0) {
             let symbol = accountInBroker.accountInBroker.symbol
             if(!shared.symbolDataList.contains(where: {
@@ -551,7 +356,6 @@ struct ApplicationData: Codable {
             if(symbolStartDate > startDate) {
                 startDate = symbolStartDate
             }
-            refreshChartStartDate = startDate
             
             var chartData = [ChartData]()
             while(startDate <= Date.now.removeTimeStamp()) {
@@ -568,81 +372,15 @@ struct ApplicationData: Codable {
         } else {
             shared.chartDataList.removeValue(forKey: accountInBroker.accountInBroker.id!)
         }
-        return refreshChartStartDate
     }
     
-    private static func loadChartDataForNonBrokerAccount(accountData: AccountData) async -> Date {
-        if(shared.chartDataList.contains(where: {
-            return $0.key.elementsEqual(accountData.account.id!)
-        })) {
-            return await loadChartDataForExistingNonBrokerAccount(accountData: accountData)
-        } else {
-            return await loadChartDataForNonExistingNonBrokerAccount(accountData: accountData)
-        }
+    private static func loadChartDataForNonBrokerAccount(accountData: AccountData) async {
+        await loadChartDataForNonExistingNonBrokerAccount(accountData: accountData)
     }
     
-    private static func loadChartDataForExistingNonBrokerAccount(accountData: AccountData) async -> Date {
-        if(accountData.account.lastUpdated > shared.lastUpdatedChartTimestamp) {
-            return await loadChartDataForExistingNonBrokerAccountWithLatestCloudData(accountData: accountData)
-        } else {
-            return await loadChartDataForExistingNonBrokerAccountWithExistingData(accountData: accountData)
-        }
-    }
-    
-    private static func loadChartDataForExistingNonBrokerAccountWithLatestCloudData(accountData: AccountData) async -> Date {
-        let transactionList = accountData.accountTransaction
-        var refreshChartStartDate = Date.now.removeTimeStamp()
-        let newTransactionList = transactionList.filter {
-            return $0.createdDate >= shared.lastUpdatedChartTimestamp
-        }
-        var chartData = shared.chartDataList.first(where: {
-            return $0.key.elementsEqual(accountData.account.id!)
-        })!.value
-        chartData.removeAll(where: {
-            return $0.date.removeTimeStamp() >= newTransactionList.last!.timestamp
-        })
-        if(!chartData.isEmpty) {
-            chartData.removeLast()
-        }
-        var startDate = Date.now
-        if(chartData.isEmpty) {
-            startDate = newTransactionList.last!.timestamp.removeTimeStamp()
-        } else {
-            startDate = chartData.last!.date.addingTimeInterval(86400).removeTimeStamp()
-        }
-        refreshChartStartDate = startDate
-        
-        while(startDate <= Date.now.removeTimeStamp()) {
-            let latestTransaction = newTransactionList.first(where: {
-                return $0.timestamp.removeTimeStamp() <= startDate.removeTimeStamp()
-            })!
-            chartData.append(ChartData(date: startDate, value: latestTransaction.currentBalance))
-            startDate.addTimeInterval(86400)
-        }
-        shared.chartDataList.updateValue(chartData, forKey: accountData.account.id!)
-        return refreshChartStartDate
-    }
-    
-    private static func loadChartDataForExistingNonBrokerAccountWithExistingData(accountData: AccountData) async -> Date {
-        let latestTransaction = accountData.accountTransaction.first!
-        var refreshChartStartDate = Date.now.removeTimeStamp()
-        var chartData = shared.chartDataList.first(where: {
-            return $0.key.elementsEqual(accountData.account.id!)
-        })!.value
-        var startDate = chartData.last!.date.removeTimeStamp().addingTimeInterval(86400)
-        refreshChartStartDate = startDate
-        while(startDate <= Date.now.removeTimeStamp()) {
-            chartData.append(ChartData(date: startDate, value: latestTransaction.currentBalance))
-            startDate.addTimeInterval(86400)
-        }
-        shared.chartDataList.updateValue(chartData, forKey: accountData.account.id!)
-        return refreshChartStartDate
-    }
-    
-    private static func loadChartDataForNonExistingNonBrokerAccount(accountData: AccountData) async -> Date {
+    private static func loadChartDataForNonExistingNonBrokerAccount(accountData: AccountData) async {
         let transactionList = accountData.accountTransaction
         var startDate = transactionList.last!.timestamp.removeTimeStamp()
-        var refreshChartStartDate = startDate
         var chartData = [ChartData]()
         while(startDate <= Date.now.removeTimeStamp()) {
             let latestTransaction = transactionList.first(where: {
@@ -652,10 +390,9 @@ struct ApplicationData: Codable {
             startDate.addTimeInterval(86400)
         }
         shared.chartDataList.updateValue(chartData, forKey: accountData.account.id!)
-        return refreshChartStartDate
     }
     
-    private static func generateChartDataForEachAccountType(isRefreshOperation: Bool = false, refreshChartStartDate: Date = Date()) async {
+    private static func generateChartDataForEachAccountType() async {
         let accountDataList = shared.data.accountDataList
         let accountDataListByAccountType = Dictionary(grouping: accountDataList) {
             if($0.account.active) {
@@ -668,37 +405,29 @@ struct ApplicationData: Codable {
         for (accountType, accountDataList) in accountDataListByAccountType {
             if(accountType.elementsEqual(ConstantUtils.brokerAccountType) || accountType.elementsEqual("Inactive Account")) {
                 if(accountType.elementsEqual("Inactive Account")) {
-                    let chartDataListResult = await generateChartdataForMixedAccounts(accountType: "Inactive Account", accountDataList: accountDataList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
+                    let chartDataListResult = await generateChartdataForMixedAccounts(accountType: "Inactive Account", accountDataList: accountDataList)
                     shared.chartDataList.updateValue(chartDataListResult, forKey: "Inactive Account")
                 } else {
-                    let chartDataListResult = await generateChartDataForMultipleBrokerAccounts(accountType: ConstantUtils.brokerAccountType, accountDataList: accountDataList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
+                    let chartDataListResult = await generateChartDataForMultipleBrokerAccounts(accountType: ConstantUtils.brokerAccountType, accountDataList: accountDataList)
                     shared.chartDataList.updateValue(chartDataListResult, forKey: ConstantUtils.brokerAccountType)
                 }
             } else {
-                let chartDataListResult = await generateChartDataForMultipleNonBrokerAccount(accountType: accountType, accountDataList: accountDataList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
+                let chartDataListResult = await generateChartDataForMultipleNonBrokerAccount(accountType: accountType, accountDataList: accountDataList)
                 shared.chartDataList.updateValue(chartDataListResult, forKey: accountType)
             }
         }
     }
     
-    private static func generateChartDataForEachWatchList(isRefreshOperation: Bool = false, refreshChartStartDate: Date = Date()) async {
+    private static func generateChartDataForEachWatchList() async {
         let watchList = await WatchController().getAllWatchList()
         for watch in watchList {
-            let chartDataListResult = generateChartDataForWatchAccount(id: watch.id!, accountIDList: watch.accountID, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
+            let chartDataListResult = generateChartDataForWatchAccount(id: watch.id!, accountIDList: watch.accountID)
             shared.chartDataList.updateValue(chartDataListResult, forKey: watch.id!)
         }
     }
     
-    private static func generateChartDataForWatchAccount(id: String, accountIDList: [String], isRefreshOperation: Bool = false, refreshChartStartDate: Date = Date()) -> [ChartData] {
+    private static func generateChartDataForWatchAccount(id: String, accountIDList: [String]) -> [ChartData] {
         var chartDataListResult = [ChartData]()
-        if(isRefreshOperation) {
-            chartDataListResult = shared.chartDataList.first(where: {
-                return $0.key.elementsEqual(id)
-            })!.value
-            chartDataListResult.removeAll(where: {
-                return $0.date >= refreshChartStartDate
-            })
-        }
         var dummy = [[ChartData]]()
         for accountID in accountIDList {
             let chartData = shared.chartDataList.first(where: {
@@ -708,18 +437,13 @@ struct ApplicationData: Codable {
             dummy.append(chartData)
         }
         
-        var startDate = Date.now
-        if(isRefreshOperation) {
-            startDate = refreshChartStartDate
-        } else {
-            startDate = dummy.min(by: {
-                return $0.min(by: {
-                    return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
-                })!.date <= $1.min(by: {
-                    return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
-                })!.date
-            })!.first!.date.removeTimeStamp()
-        }
+        var startDate = dummy.min(by: {
+            return $0.min(by: {
+                return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
+            })!.date <= $1.min(by: {
+                return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
+            })!.date
+        })!.first!.date.removeTimeStamp()
         
         while(startDate <= Date.now) {
             var totalValue = 0.0
@@ -735,16 +459,8 @@ struct ApplicationData: Codable {
         return chartDataListResult
     }
     
-    private static func generateChartDataForMultipleNonBrokerAccount(accountType: String, accountDataList: [AccountData], isRefreshOperation: Bool = false, refreshChartStartDate: Date = Date()) async -> [ChartData] {
+    private static func generateChartDataForMultipleNonBrokerAccount(accountType: String, accountDataList: [AccountData]) async -> [ChartData] {
         var chartDataListResult = [ChartData]()
-        if(isRefreshOperation) {
-            chartDataListResult = shared.chartDataList.first(where: {
-                return $0.key.elementsEqual(accountType)
-            })!.value
-            chartDataListResult.removeAll(where: {
-                return $0.date >= refreshChartStartDate
-            })
-        }
         var dummy = [[ChartData]]()
         for accountData in accountDataList {
             let chartData = shared.chartDataList.first(where: {
@@ -754,18 +470,13 @@ struct ApplicationData: Codable {
             dummy.append(chartData)
         }
         
-        var startDate = Date.now
-        if(isRefreshOperation) {
-            startDate = refreshChartStartDate
-        } else {
-            startDate = dummy.min(by: {
-                return $0.min(by: {
-                    return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
-                })!.date <= $1.min(by: {
-                    return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
-                })!.date
-            })!.first!.date.removeTimeStamp()
-        }
+        var startDate = dummy.min(by: {
+            return $0.min(by: {
+                return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
+            })!.date <= $1.min(by: {
+                return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
+            })!.date
+        })!.first!.date.removeTimeStamp()
         
         while(startDate <= Date.now) {
             var totalValue = 0.0
@@ -781,16 +492,8 @@ struct ApplicationData: Codable {
         return chartDataListResult
     }
     
-    private static func generateChartDataForMultipleBrokerAccounts(accountType: String, accountDataList: [AccountData], isRefreshOperation: Bool = false, refreshChartStartDate: Date = Date()) async -> [ChartData] {
+    private static func generateChartDataForMultipleBrokerAccounts(accountType: String, accountDataList: [AccountData]) async -> [ChartData] {
         var chartDataListResult = [ChartData]()
-        if(isRefreshOperation) {
-            chartDataListResult = shared.chartDataList.first(where: {
-                return $0.key.elementsEqual(accountType)
-            })!.value
-            chartDataListResult.removeAll(where: {
-                return $0.date >= refreshChartStartDate
-            })
-        }
         var dummy = [[ChartData]]()
         for accountInBroker in accountDataList {
             let chartData = shared.chartDataList.first(where: {
@@ -800,18 +503,13 @@ struct ApplicationData: Codable {
             dummy.append(chartData)
         }
         
-        var startDate = Date.now
-        if(isRefreshOperation) {
-            startDate = refreshChartStartDate
-        } else {
-            startDate = dummy.min(by: {
-                return $0.min(by: {
-                    return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
-                })!.date <= $1.min(by: {
-                    return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
-                })!.date
-            })!.first!.date.removeTimeStamp()
-        }
+        var startDate = dummy.min(by: {
+            return $0.min(by: {
+                return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
+            })!.date <= $1.min(by: {
+                return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
+            })!.date
+        })!.first!.date.removeTimeStamp()
         
         while(startDate <= Date.now) {
             var totalValue = 0.0
@@ -826,17 +524,8 @@ struct ApplicationData: Codable {
         return chartDataListResult
     }
     
-    private static func generateChartdataForMixedAccounts(accountType: String, accountDataList: [AccountData], isRefreshOperation: Bool = false, refreshChartStartDate: Date = Date()) async -> [ChartData] {
+    private static func generateChartdataForMixedAccounts(accountType: String, accountDataList: [AccountData]) async -> [ChartData] {
         var chartDataListResult = [ChartData]()
-        if(isRefreshOperation) {
-            chartDataListResult = shared.chartDataList.first(where: {
-                return $0.key.elementsEqual(accountType)
-            })!.value
-            chartDataListResult.removeAll(where: {
-                return $0.date >= refreshChartStartDate
-            })
-        }
-        
         var nonBrokerAccountList = [AccountData]()
         var brokerAccountList = [AccountData]()
         
@@ -848,15 +537,10 @@ struct ApplicationData: Codable {
             }
         }
         
-        let chartDataForNonBrokerAccountList = await generateChartDataForMultipleNonBrokerAccount(accountType: accountType, accountDataList: nonBrokerAccountList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
-        let chartDataForBrokerAccountList = await generateChartDataForMultipleBrokerAccounts(accountType: accountType, accountDataList: brokerAccountList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
+        let chartDataForNonBrokerAccountList = await generateChartDataForMultipleNonBrokerAccount(accountType: accountType, accountDataList: nonBrokerAccountList)
+        let chartDataForBrokerAccountList = await generateChartDataForMultipleBrokerAccounts(accountType: accountType, accountDataList: brokerAccountList)
         
-        var startDate = Date.now
-        if(isRefreshOperation) {
-            startDate = refreshChartStartDate
-        } else {
-            startDate = getStartDate(chartDataForNonBrokerAccountList: chartDataForNonBrokerAccountList, chartDataForBrokerAccountList: chartDataForBrokerAccountList)
-        }
+        var startDate = getStartDate(chartDataForNonBrokerAccountList: chartDataForNonBrokerAccountList, chartDataForBrokerAccountList: chartDataForBrokerAccountList)
         
         while(startDate <= Date.now) {
             
@@ -894,16 +578,8 @@ struct ApplicationData: Codable {
         return Date.now.removeTimeStamp().addingTimeInterval(86400)
     }
     
-    private static func generateChartDataForOneBrokerAccount(accountData: AccountData, isRefreshOperation: Bool = false, refreshChartStartDate: Date = Date()) -> [ChartData] {
+    private static func generateChartDataForOneBrokerAccount(accountData: AccountData) -> [ChartData] {
         var chartDataListResult = [ChartData]()
-        if(isRefreshOperation) {
-            chartDataListResult = shared.chartDataList.first(where: {
-                return $0.key.elementsEqual(accountData.account.id!)
-            })!.value
-            chartDataListResult.removeAll(where: {
-                return $0.date >= refreshChartStartDate
-            })
-        }
         var dummy = [[ChartData]]()
         for accountInBroker in accountData.accountInBroker {
             let chartData = shared.chartDataList.first(where: {
@@ -913,18 +589,13 @@ struct ApplicationData: Codable {
             dummy.append(chartData)
         }
         
-        var startDate = Date.now
-        if(isRefreshOperation) {
-            startDate = refreshChartStartDate
-        } else {
-            startDate = dummy.min(by: {
-                return $0.min(by: {
-                    return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
-                })!.date <= $1.min(by: {
-                    return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
-                })!.date
-            })!.first!.date.removeTimeStamp()
-        }
+        var startDate = dummy.min(by: {
+            return $0.min(by: {
+                return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
+            })!.date <= $1.min(by: {
+                return $0.date.removeTimeStamp() <= $1.date.removeTimeStamp()
+            })!.date
+        })!.first!.date.removeTimeStamp()
         
         while(startDate <= Date.now) {
             var totalValue = 0.0

@@ -22,6 +22,7 @@ struct SettingsView: View {
     @State var logout =  false
     @State var isPresentingDataAndAccountDeletionConfirmation = false
     @State var isPresentingLogoutConfirm = false
+    @State var isPresentingUpdateChartDataConfirm = false
     
     @State var currenySelected: Currency
     @State var defaultIncomeType = IncomeType()
@@ -162,10 +163,21 @@ struct SettingsView: View {
                     .listRowBackground(Color.theme.foreground)
                 
                 // MARK: Chart last updated
-                let dateTime = UserDefaults.standard.string(forKey: "chartLastUpdated") ?? ""
-                Label("Date Time: " + dateTime, systemImage: "gear.badge.checkmark")
-                    .foregroundColor(Color.theme.primaryText)
-                    .listRowBackground(Color.theme.foreground)
+                Button(action: {
+                    isPresentingUpdateChartDataConfirm.toggle()
+                }, label: {
+                    let dateTime = UserDefaults.standard.string(forKey: "chartLastUpdated") ?? ""
+                    Label("Date Time: " + dateTime, systemImage: "gear.badge.checkmark")
+                        .foregroundColor(Color.theme.primaryText)
+                        .listRowBackground(Color.theme.foreground)
+                }).confirmationDialog("Are you sure?",
+                                      isPresented: $isPresentingUpdateChartDataConfirm) {
+                    Button("Do you want to update chart data?", role: .destructive) {
+                        Task.init {
+                            await ApplicationData.loadData(fetchLatest: true)
+                        }
+                    }
+                }
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
