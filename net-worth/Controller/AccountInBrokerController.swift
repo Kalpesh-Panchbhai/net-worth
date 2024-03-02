@@ -219,17 +219,17 @@ class AccountInBrokerController {
     }
     
     public func getCurrentBalanceOfAnAccountInBroker(accountBroker: AccountInBroker) async -> Balance {
+        let chartData = ApplicationData.shared.chartDataList.first(where: {
+            return $0.key.elementsEqual(accountBroker.id ?? "")
+        })?.value ?? [ChartData]()
         var currentBalance = Balance(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
-        let financeDetailModel = await FinanceController().getSymbolDetail(symbol: accountBroker.symbol)
-        currentBalance.currentValue = (financeDetailModel.regularMarketPrice ?? 0.0) * accountBroker.currentUnit
-        currentBalance.previousDayValue = (financeDetailModel.chartPreviousClose ?? 0.0) * accountBroker.currentUnit
-        
-        if(financeDetailModel.currency != SettingsController().getDefaultCurrency().code) {
-            let currencyModel = await FinanceController().getCurrencyDetail(accountCurrency: financeDetailModel.currency!)
-            currentBalance.currentValue = currentBalance.currentValue * currencyModel.regularMarketPrice!
-            currentBalance.previousDayValue = currentBalance.previousDayValue * currencyModel.chartPreviousClose!
+        if(chartData.count > 0) {
+            currentBalance.currentValue = chartData.last!.value
+            if(chartData.count > 1) {
+                currentBalance.previousDayValue = chartData[chartData.count - 2].value
+            }
+            currentBalance.oneDayChange = currentBalance.currentValue - currentBalance.previousDayValue
         }
-        currentBalance.oneDayChange = currentBalance.currentValue - currentBalance.previousDayValue
         return currentBalance
     }
     
