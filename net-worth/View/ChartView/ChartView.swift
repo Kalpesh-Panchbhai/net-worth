@@ -22,141 +22,8 @@ struct ChartView: View {
     var body: some View {
         NavigationView {
             VStack {
-                HStack {
-                    Button(action: {
-                        if(showingAssetsData) {
-                            chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
-                                $0.currentBalance < 0
-                            }.sorted(by: {
-                                $0.currentBalance < $1.currentBalance
-                            })
-                            showingAssetsData.toggle()
-                        } else {
-                            chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
-                                $0.currentBalance > 0
-                            }.sorted(by: {
-                                $0.currentBalance > $1.currentBalance
-                            })
-                            showingAssetsData.toggle()
-                        }
-                    }, label: {
-                        if(showingAssetsData) {
-                            Text("Show Liabilities")
-                        } else {
-                            Text("Show Assets")
-                        }
-                    })
-                    .font(.system(size: 14))
-                    .disabled(watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty)
-                    .foregroundColor((watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty) ? Color.gray : Color.theme.primaryText)
-                    .bold()
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        watchListSelected = Watch()
-                        showingAssetsData = true
-                        chartDataList = [Account]()
-                        compareAssetsToLiabilities = false
-                        multipleWatchListSelection = Set<Watch>()
-                    }, label: {
-                        Text("Reset")
-                    })
-                    .font(.system(size: 14))
-                    .disabled((watchListSelected.accountName.isEmpty && chartDataList.isEmpty && !compareAssetsToLiabilities && multipleWatchListSelection.isEmpty))
-                    .foregroundColor(((watchListSelected.accountName.isEmpty && chartDataList.isEmpty && !compareAssetsToLiabilities && multipleWatchListSelection.isEmpty) ? Color.gray : Color.theme.primaryText))
-                    .bold()
-                }
-                .padding(.horizontal, 20)
-                List {
-                    Picker(selection: $watchListSelected, content: {
-                        Text("Select").tag(Watch())
-                        ForEach(watchViewModel.watchList, id: \.self, content: {
-                            Text($0.accountName).tag($0)
-                        })
-                    }, label: {
-                        Text("Watch List")
-                    })
-                    .listRowBackground(Color.theme.foreground)
-                    
-                    .onChange(of: watchListSelected, perform: { _ in
-                        if(watchListSelected.accountName.elementsEqual("Select")) {
-                            compareAssetsToLiabilities = true
-                        } else {
-                            compareAssetsToLiabilities = false
-                            multipleWatchListSelection = Set<Watch>()
-                            var accountList = getAccountsForWatchList(watch: watchListSelected).filter {
-                                $0.currentBalance > 0
-                            }
-                            accountList.sort(by: {
-                                $0.currentBalance > $1.currentBalance
-                            })
-                            self.chartDataList = accountList
-                            
-                            showingAssetsData = true
-                        }
-                    })
-                    .listRowBackground(Color.theme.foreground)
-                    
-                    Toggle("Compare Assets and Liabilities", isOn: $compareAssetsToLiabilities)
-                        .onChange(of: compareAssetsToLiabilities) { value in
-                            if(value) {
-                                watchListSelected = Watch()
-                                multipleWatchListSelection = Set<Watch>()
-                                Task.init {
-                                    self.chartDataList = [Account]()
-                                    var assetAccount = Account()
-                                    assetAccount.accountName = "Assets"
-                                    assetAccount.currentBalance = getAccounts().filter {
-                                        $0.currentBalance > 0
-                                    }.map {
-                                        $0.currentBalance
-                                    }.reduce(0, +)
-                                    
-                                    self.chartDataList.append(assetAccount)
-                                    
-                                    var liabilitiesAccount = Account()
-                                    liabilitiesAccount.accountName = "Liabilities"
-                                    liabilitiesAccount.currentBalance = getAccounts().filter {
-                                        $0.currentBalance < 0
-                                    }.map {
-                                        $0.currentBalance
-                                    }.reduce(0, -)
-                                    
-                                    self.chartDataList.append(liabilitiesAccount)
-                                    self.chartDataList.sort(by: {
-                                        $0.currentBalance > $1.currentBalance
-                                    })
-                                }
-                            }
-                            else {
-                                self.chartDataList = [Account]()
-                            }
-                        }
-                        .listRowBackground(Color.theme.foreground)
-                    
-                    NavigationLink(destination: {
-                        selectMultipleWatchListForCompare
-                    }, label: {
-                        Text("Compare Multiple WatchLists")
-                    })
-                    .listRowBackground(Color.theme.foreground)
-                    
-                    PieChartView(
-                        values: chartDataList.map {
-                            $0.currentBalance
-                        },
-                        names: chartDataList.map {
-                            $0.accountName
-                        },
-                        formatter: {value in String(format: "%.2f", value)},
-                        colors: chartDataList.map { _ in
-                                .random
-                        }, backgroundColor: Color.theme.foreground)
-                    .frame(minHeight: 550)
-                    .listRowBackground(Color.theme.foreground)
-                }
-                .foregroundColor(Color.theme.primaryText)
+                topView
+                bottomView
             }
             .toolbar {
                 ToolbarItem {
@@ -178,6 +45,76 @@ struct ChartView: View {
             .background(Color.theme.background)
             .scrollContentBackground(.hidden)
         }
+    }
+    
+    var topView: some View {
+        HStack {
+            leftTopView
+            Spacer()
+            rightTopView
+        }
+        .padding(.horizontal, 20)
+    }
+    
+    var leftTopView: some View {
+        Button(action: {
+            if(showingAssetsData) {
+                chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
+                    $0.currentBalance < 0
+                }.sorted(by: {
+                    $0.currentBalance < $1.currentBalance
+                })
+                showingAssetsData.toggle()
+            } else {
+                chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
+                    $0.currentBalance > 0
+                }.sorted(by: {
+                    $0.currentBalance > $1.currentBalance
+                })
+                showingAssetsData.toggle()
+            }
+        }, label: {
+            if(showingAssetsData) {
+                Text("Show Liabilities")
+            } else {
+                Text("Show Assets")
+            }
+        })
+        .font(.system(size: 14))
+        .disabled(watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty)
+        .foregroundColor((watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty) ? Color.gray : Color.theme.primaryText)
+        .bold()
+    }
+    
+    var rightTopView: some View {
+        Button(action: {
+            watchListSelected = Watch()
+            showingAssetsData = true
+            chartDataList = [Account]()
+            compareAssetsToLiabilities = false
+            multipleWatchListSelection = Set<Watch>()
+        }, label: {
+            Text("Reset")
+        })
+        .font(.system(size: 14))
+        .disabled((watchListSelected.accountName.isEmpty && chartDataList.isEmpty && !compareAssetsToLiabilities && multipleWatchListSelection.isEmpty))
+        .foregroundColor(((watchListSelected.accountName.isEmpty && chartDataList.isEmpty && !compareAssetsToLiabilities && multipleWatchListSelection.isEmpty) ? Color.gray : Color.theme.primaryText))
+        .bold()
+    }
+    
+    var bottomView: some View {
+        List {
+            watchListPicker
+            compareAssetsAndLiabilitiesToggle
+            NavigationLink(destination: {
+                selectMultipleWatchListForCompare
+            }, label: {
+                Text("Compare Multiple WatchLists")
+            })
+            .listRowBackground(Color.theme.foreground)
+            chartView
+        }
+        .foregroundColor(Color.theme.primaryText)
     }
     
     var selectMultipleWatchListForCompare: some View {
