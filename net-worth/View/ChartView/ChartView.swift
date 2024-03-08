@@ -220,6 +220,90 @@ struct ChartView: View {
         .scrollContentBackground(.hidden)
     }
     
+    var watchListPicker: some View {
+        Picker(selection: $watchListSelected, content: {
+            Text("Select").tag(Watch())
+            ForEach(watchViewModel.watchList, id: \.self, content: {
+                Text($0.accountName).tag($0)
+            })
+        }, label: {
+            Text("Watch List")
+        })
+        .listRowBackground(Color.theme.foreground)
+        .onChange(of: watchListSelected, perform: { _ in
+            if(watchListSelected.accountName.elementsEqual("Select")) {
+                compareAssetsToLiabilities = true
+            } else {
+                compareAssetsToLiabilities = false
+                multipleWatchListSelection = Set<Watch>()
+                var accountList = getAccountsForWatchList(watch: watchListSelected).filter {
+                    $0.currentBalance > 0
+                }
+                accountList.sort(by: {
+                    $0.currentBalance > $1.currentBalance
+                })
+                self.chartDataList = accountList
+                
+                showingAssetsData = true
+            }
+        })
+    }
+    
+    var compareAssetsAndLiabilitiesToggle: some View {
+        Toggle("Compare Assets and Liabilities", isOn: $compareAssetsToLiabilities)
+            .onChange(of: compareAssetsToLiabilities) { value in
+                if(value) {
+                    watchListSelected = Watch()
+                    multipleWatchListSelection = Set<Watch>()
+                    Task.init {
+                        self.chartDataList = [Account]()
+                        var assetAccount = Account()
+                        assetAccount.accountName = "Assets"
+                        assetAccount.currentBalance = getAccounts().filter {
+                            $0.currentBalance > 0
+                        }.map {
+                            $0.currentBalance
+                        }.reduce(0, +)
+                        
+                        self.chartDataList.append(assetAccount)
+                        
+                        var liabilitiesAccount = Account()
+                        liabilitiesAccount.accountName = "Liabilities"
+                        liabilitiesAccount.currentBalance = getAccounts().filter {
+                            $0.currentBalance < 0
+                        }.map {
+                            $0.currentBalance
+                        }.reduce(0, -)
+                        
+                        self.chartDataList.append(liabilitiesAccount)
+                        self.chartDataList.sort(by: {
+                            $0.currentBalance > $1.currentBalance
+                        })
+                    }
+                }
+                else {
+                    self.chartDataList = [Account]()
+                }
+            }
+            .listRowBackground(Color.theme.foreground)
+    }
+    
+    var chartView: some View {
+        PieChartView(
+            values: chartDataList.map {
+                $0.currentBalance
+            },
+            names: chartDataList.map {
+                $0.accountName
+            },
+            formatter: {value in String(format: "%.2f", value)},
+            colors: chartDataList.map { _ in
+                    .random
+            }, backgroundColor: Color.theme.foreground)
+        .frame(minHeight: 550)
+        .listRowBackground(Color.theme.foreground)
+    }
+    
     private func getAccounts() -> [Account] {
         return accountViewModel.accountList
     }
