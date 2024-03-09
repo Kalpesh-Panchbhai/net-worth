@@ -19,7 +19,7 @@ class ChartController {
         var lastDate = Date().removeTimeStamp()
         lastDate = CommonController.getStartDateForRange(range: range)
         
-        var count = chartDataList.filter {
+        let count = chartDataList.filter {
             return $0.date >= lastDate
         }.count
         while(lastDate <= startDate) {
@@ -35,7 +35,7 @@ class ChartController {
     }
     
     private func getNextStartDate(startDate: Date, count: Double) -> Date {
-        var daysInternal = count / 100.0
+        let daysInternal = count / 100.0
         return startDate.addingTimeInterval(-86400 * daysInternal).removeTimeStamp()
     }
     
