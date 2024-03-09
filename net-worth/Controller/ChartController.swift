@@ -16,21 +16,30 @@ class ChartController {
         })?.value ?? [ChartData]()
         var chartDataListResponse = [ChartData]()
         var startDate = Date().removeTimeStamp()
-        startDate = CommonController.getStartDateForRange(range: range)
+        var lastDate = Date().removeTimeStamp()
+        lastDate = CommonController.getStartDateForRange(range: range)
         
-        while(startDate <= Date.now.removeTimeStamp()) {
+        var count = chartDataList.filter {
+            return $0.date >= lastDate
+        }.count
+        while(lastDate <= startDate) {
             let chartData = chartDataList.last {
-                return $0.date.removeTimeStamp() <= startDate
+                return startDate >= $0.date.removeTimeStamp()
             }
             if(chartData != nil) {
                 chartDataListResponse.append(ChartData(date: startDate.removeTimeStamp(), value: chartData!.value))
             }
-            startDate = CommonController.getIntervalForDateRange(date: startDate, range: range)
+            startDate = getNextStartDate(startDate: startDate, count: Double(count))
         }
-        return chartDataListResponse
+        return chartDataListResponse.reversed()
     }
     
-    private func convertRawDataToMap(symbol: FinanceDetailModel) -> [ChartData] {
+    private func getNextStartDate(startDate: Date, count: Double) -> Date {
+        var daysInternal = count / 100.0
+        return startDate.addingTimeInterval(-86400 * daysInternal).removeTimeStamp()
+    }
+    
+    public func convertRawDataToMap(symbol: FinanceDetailModel) -> [ChartData] {
         var returnData = [ChartData]()
         let timestampEpochList = symbol.timestamp
         let valueAtTimestampList = symbol.valueAtTimestamp
