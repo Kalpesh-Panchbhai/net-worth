@@ -281,7 +281,6 @@ struct ApplicationData: Codable {
                 }
                 UserDefaults.standard.set(Date.now.format(), forKey: "chartLastUpdated")
             }
-            
         } else {
             if(fetchLatest) {
                 getChartLastUpdatedDate()
