@@ -29,7 +29,7 @@ struct ApplicationData: Codable {
         shared.dataLoading = true
         print(Date.now)
         await fetchData()
-        await fetchChartData(fetchLatest: fetchLatest)
+//        await fetchChartData(fetchLatest: fetchLatest)
         print(Date.now)
         shared.dataLoading = false
     }
