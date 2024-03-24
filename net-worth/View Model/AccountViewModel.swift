@@ -10,7 +10,6 @@ import FirebaseFirestore
 
 class AccountViewModel: ObservableObject {
     
-    
     var watchList = [Account]()
     var originalAccountList = [Account]()
     var accountController = AccountController()

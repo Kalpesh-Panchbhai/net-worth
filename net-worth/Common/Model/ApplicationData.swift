@@ -18,6 +18,7 @@ struct ApplicationData: Codable {
     var lastUpdatedChartTimestamp: Date
     
     var symbolDataList = [String: [ChartData]]()
+    var totalAccount = Int()
     
     private init() {
         data = Data()
@@ -25,13 +26,24 @@ struct ApplicationData: Codable {
         lastUpdatedChartTimestamp = Date.now
     }
     
-    public static func loadData(fetchLatest: Bool = false) async {
+    public static func loadData() async {
         shared.dataLoading = true
-        print(Date.now)
         await fetchData()
-        await CommonChartController().fetchChartData(fetchLatest: fetchLatest)
-        print(Date.now)
         shared.dataLoading = false
+        await countTotalAccount()
+    }
+    
+    public static func countTotalAccount() async {
+        var totalAccount = shared.data.accountDataList.count
+        totalAccount += Dictionary(grouping: shared.data.accountDataList) {
+            if($0.account.active) {
+                return $0.account.accountType
+            } else {
+                return "Inactive Account"
+            }
+        }.count
+        totalAccount += await WatchController().getAllWatchList().count
+        shared.totalAccount = totalAccount
     }
     
     public static func clear() {

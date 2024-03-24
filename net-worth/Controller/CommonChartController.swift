@@ -7,9 +7,11 @@
 
 import Foundation
 
-class CommonChartController {
+class CommonChartController: ObservableObject {
     
-    public func fetchChartData(fetchLatest: Bool) async {
+    @Published public var count = 0
+    
+    public func fetchChartData() async {
         if let chartData = UserDefaults.standard.data(forKey: "chartData") {
             do {
                 let decoder = JSONDecoder()
@@ -19,23 +21,25 @@ class CommonChartController {
                 print("Unable to Decode Note (\(error))")
             }
             
-            if(fetchLatest) {
-                ApplicationData.shared.chartDataList = [String: [ChartData]]()
-                let _ = await CommonChartController().loadChartData()
-                await CommonChartController().generateChartDataForEachAccountType()
-                await CommonChartController().generateChartDataForEachWatchList()
-                
-                updateChartData()
+            ApplicationData.shared.chartDataList = [String: [ChartData]]()
+            DispatchQueue.main.async {
+                self.count = 0
             }
+            let _ = await loadChartData()
+            await generateChartDataForEachAccountType()
+            await generateChartDataForEachWatchList()
+            
+            updateChartData()
         } else {
-            if(fetchLatest) {
-                ApplicationData.shared.chartDataList = [String: [ChartData]]()
-                let _ = await CommonChartController().loadChartData()
-                await CommonChartController().generateChartDataForEachAccountType()
-                await CommonChartController().generateChartDataForEachWatchList()
-                
-                updateChartData()
+            ApplicationData.shared.chartDataList = [String: [ChartData]]()
+            DispatchQueue.main.async {
+                self.count = 0
             }
+            let _ = await loadChartData()
+            await generateChartDataForEachAccountType()
+            await generateChartDataForEachWatchList()
+            
+            updateChartData()
         }
     }
     
@@ -81,6 +85,9 @@ class CommonChartController {
                     refreshChartStartDate = chartStartDate
                 }
             }
+            DispatchQueue.main.async {
+                self.count += 1
+            }
         }
         return refreshChartStartDate
     }
@@ -108,6 +115,9 @@ class CommonChartController {
                 let chartDataListResult = await generateChartDataForMultipleNonBrokerAccount(accountType: accountType, accountDataList: accountDataList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
                 ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: accountType)
             }
+            DispatchQueue.main.async {
+                self.count += 1
+            }
         }
     }
     
@@ -116,6 +126,9 @@ class CommonChartController {
         for watch in watchList {
             let chartDataListResult = generateChartDataForWatchAccount(id: watch.id!, accountIDList: watch.accountID, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
             ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: watch.id!)
+            DispatchQueue.main.async {
+                self.count += 1
+            }
         }
     }
     
