@@ -20,18 +20,16 @@ class CommonChartController {
             }
             
             if(fetchLatest) {
-                getChartLastUpdatedDate()
-                removeChartDataListUptoLastUpdatedDate()
-                let refreshChartStartDate = await CommonChartController().loadChartData()
-                await CommonChartController().generateChartDataForEachAccountType(isRefreshOperation: true, refreshChartStartDate: refreshChartStartDate)
-                await CommonChartController().generateChartDataForEachWatchList(isRefreshOperation: true, refreshChartStartDate: refreshChartStartDate)
+                ApplicationData.shared.chartDataList = [String: [ChartData]]()
+                let _ = await CommonChartController().loadChartData()
+                await CommonChartController().generateChartDataForEachAccountType()
+                await CommonChartController().generateChartDataForEachWatchList()
                 
                 updateChartData()
             }
         } else {
             if(fetchLatest) {
-                getChartLastUpdatedDate()
-                removeChartDataListUptoLastUpdatedDate()
+                ApplicationData.shared.chartDataList = [String: [ChartData]]()
                 let _ = await CommonChartController().loadChartData()
                 await CommonChartController().generateChartDataForEachAccountType()
                 await CommonChartController().generateChartDataForEachWatchList()

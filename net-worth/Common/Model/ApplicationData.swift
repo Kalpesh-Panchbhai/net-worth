@@ -166,6 +166,9 @@ struct ApplicationData: Codable {
                         accountTransactionList.sort(by: {
                             return $0.timestamp > $1.timestamp
                         })
+                        accountTransactionList = accountTransactionList.filter {
+                            return !$0.deleted
+                        }
                         newAccountDataList[i].accountTransaction = accountTransactionList
                     }
                     oldAccountDataList.append(newAccountDataList[i])
