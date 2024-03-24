@@ -11,7 +11,7 @@ class CommonChartController: ObservableObject {
     
     @Published public var count = 0
     
-    public func fetchChartData() async {
+    public func fetchChartData(fetchLatest: Bool) async {
         if let chartData = UserDefaults.standard.data(forKey: "chartData") {
             do {
                 let decoder = JSONDecoder()
@@ -20,27 +20,23 @@ class CommonChartController: ObservableObject {
             } catch {
                 print("Unable to Decode Note (\(error))")
             }
-            
-            ApplicationData.shared.chartDataList = [String: [ChartData]]()
-            DispatchQueue.main.async {
-                self.count = 0
-            }
-            let _ = await loadChartData()
-            await generateChartDataForEachAccountType()
-            await generateChartDataForEachWatchList()
-            
-            updateChartData()
-        } else {
-            ApplicationData.shared.chartDataList = [String: [ChartData]]()
-            DispatchQueue.main.async {
-                self.count = 0
-            }
-            let _ = await loadChartData()
-            await generateChartDataForEachAccountType()
-            await generateChartDataForEachWatchList()
-            
-            updateChartData()
         }
+        
+        if(fetchLatest) {
+            await fetchChartData()
+        }
+    }
+    
+    private func fetchChartData() async {
+        ApplicationData.shared.chartDataList = [String: [ChartData]]()
+        DispatchQueue.main.async {
+            self.count = 0
+        }
+        let _ = await loadChartData()
+        await generateChartDataForEachAccountType()
+        await generateChartDataForEachWatchList()
+        
+        updateChartData()
     }
     
     public func getChartLastUpdatedDate() {
@@ -75,7 +71,7 @@ class CommonChartController: ObservableObject {
         let accountDataList = ApplicationData.shared.data.accountDataList
         for accountData in accountDataList {
             if(accountData.account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
-                let chartStartDate = await BrokerChartController().loadChartDataForBrokerAccount(accountData: accountData)
+                let chartStartDate = await BrokerChartController().loadChartDataForBrokerAccount(accountData: accountData, count: &self.count)
                 if(chartStartDate <= refreshChartStartDate) {
                     refreshChartStartDate = chartStartDate
                 }

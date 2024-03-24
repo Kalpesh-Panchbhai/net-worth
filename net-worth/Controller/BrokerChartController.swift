@@ -11,7 +11,7 @@ class BrokerChartController {
     
     var chartController = ChartController()
     
-    public func loadChartDataForBrokerAccount(accountData: AccountData) async -> Date {
+    public func loadChartDataForBrokerAccount(accountData: AccountData, count: inout Int) async -> Date {
         let accountInBrokerList = accountData.accountInBroker
         var refreshChartStartDate = Date.now.removeTimeStamp()
         for accountInBroker in accountInBrokerList {
@@ -28,6 +28,7 @@ class BrokerChartController {
                     refreshChartStartDate = chartStartDate
                 }
             }
+            count += 1
         }
         if(CommonChartController().isAccountAvailableInChartDataList(accountID: accountData.account.id!)) {
             let chartDataList = CommonChartController().generateChartDataForOneBrokerAccount(accountData: accountData, isRefreshOperation: true, refreshChartStartDate: refreshChartStartDate)

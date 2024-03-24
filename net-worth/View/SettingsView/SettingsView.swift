@@ -183,7 +183,7 @@ struct SettingsView: View {
                         Button("Do you want to update chart data?", role: .destructive) {
                             inProgress = true
                             Task.init {
-                                await commonChartController.fetchChartData()
+                                await commonChartController.fetchChartData(fetchLatest: true)
                                 inProgress = false
                             }
                         }

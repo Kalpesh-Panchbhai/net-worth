@@ -29,12 +29,18 @@ struct ApplicationData: Codable {
     public static func loadData() async {
         shared.dataLoading = true
         await fetchData()
+        await CommonChartController().fetchChartData(fetchLatest: false)
         shared.dataLoading = false
         await countTotalAccount()
     }
     
     public static func countTotalAccount() async {
         var totalAccount = shared.data.accountDataList.count
+        shared.data.accountDataList.forEach { account in
+            if(account.account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
+                totalAccount += account.accountInBroker.count
+            }
+        }
         totalAccount += Dictionary(grouping: shared.data.accountDataList) {
             if($0.account.active) {
                 return $0.account.accountType
