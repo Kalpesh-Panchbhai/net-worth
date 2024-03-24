@@ -23,12 +23,14 @@ struct SettingsView: View {
     @State var isPresentingDataAndAccountDeletionConfirmation = false
     @State var isPresentingLogoutConfirm = false
     @State var isPresentingUpdateChartDataConfirm = false
+    @State var inProgress = false
     
     @State var currenySelected: Currency
     @State var defaultIncomeType = IncomeType()
     @State var defaultIncomeTag = IncomeTag()
     
     @StateObject var incomeViewModel: IncomeViewModel
+    @StateObject var commonChartController: CommonChartController
     
     var body: some View {
         NavigationView(){
@@ -163,21 +165,31 @@ struct SettingsView: View {
                     .listRowBackground(Color.theme.foreground)
                 
                 // MARK: Chart last updated
-                Button(action: {
-                    isPresentingUpdateChartDataConfirm.toggle()
-                }, label: {
-                    let dateTime = UserDefaults.standard.string(forKey: "chartLastUpdated") ?? ""
-                    Label("Date Time: " + dateTime, systemImage: "gear.badge.checkmark")
-                        .foregroundColor(Color.theme.primaryText)
-                        .listRowBackground(Color.theme.foreground)
-                }).confirmationDialog("Are you sure?",
-                                      isPresented: $isPresentingUpdateChartDataConfirm) {
-                    Button("Do you want to update chart data?", role: .destructive) {
-                        Task.init {
-                            await ApplicationData.loadData(fetchLatest: true)
+                
+                if inProgress {
+                    HStack {
+                        ProgressView("Waiting... \((Double(commonChartController.count) / Double(ApplicationData.shared.totalAccount) * 100).withCommas(decimalPlace: 2))%", value: Double(commonChartController.count), total: Double(ApplicationData.shared.totalAccount))
+                    }
+                } else {
+                    Button(action: {
+                        isPresentingUpdateChartDataConfirm.toggle()
+                    }, label: {
+                        let dateTime = UserDefaults.standard.string(forKey: "chartLastUpdated") ?? ""
+                        Label("Date Time: " + dateTime, systemImage: "gear.badge.checkmark")
+                            .foregroundColor(Color.theme.primaryText)
+                            .listRowBackground(Color.theme.foreground)
+                    }).confirmationDialog("Are you sure?",
+                                          isPresented: $isPresentingUpdateChartDataConfirm) {
+                        Button("Do you want to update chart data?", role: .destructive) {
+                            inProgress = true
+                            Task.init {
+                                await commonChartController.fetchChartData()
+                                inProgress = false
+                            }
                         }
                     }
                 }
+                
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)

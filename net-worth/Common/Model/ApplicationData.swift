@@ -18,6 +18,7 @@ struct ApplicationData: Codable {
     var lastUpdatedChartTimestamp: Date
     
     var symbolDataList = [String: [ChartData]]()
+    var totalAccount = Int()
     
     private init() {
         data = Data()
@@ -25,13 +26,24 @@ struct ApplicationData: Codable {
         lastUpdatedChartTimestamp = Date.now
     }
     
-    public static func loadData(fetchLatest: Bool = false) async {
+    public static func loadData() async {
         shared.dataLoading = true
-        print(Date.now)
         await fetchData()
-//        await fetchChartData(fetchLatest: fetchLatest)
-        print(Date.now)
         shared.dataLoading = false
+        await countTotalAccount()
+    }
+    
+    public static func countTotalAccount() async {
+        var totalAccount = shared.data.accountDataList.count
+        totalAccount += Dictionary(grouping: shared.data.accountDataList) {
+            if($0.account.active) {
+                return $0.account.accountType
+            } else {
+                return "Inactive Account"
+            }
+        }.count
+        totalAccount += await WatchController().getAllWatchList().count
+        shared.totalAccount = totalAccount
     }
     
     public static func clear() {
@@ -166,6 +178,9 @@ struct ApplicationData: Codable {
                         accountTransactionList.sort(by: {
                             return $0.timestamp > $1.timestamp
                         })
+                        accountTransactionList = accountTransactionList.filter {
+                            return !$0.deleted
+                        }
                         newAccountDataList[i].accountTransaction = accountTransactionList
                     }
                     oldAccountDataList.append(newAccountDataList[i])
@@ -250,94 +265,5 @@ struct ApplicationData: Codable {
         })
         shared.data.accountDataList = oldAccountDataList
         shared.data.accountDataListUpdatedDate = Date.now
-    }
-    
-    private static func fetchChartData(fetchLatest: Bool) async {
-        if let chartData = UserDefaults.standard.data(forKey: "chartData") {
-            do {
-                let decoder = JSONDecoder()
-                
-                shared.chartDataList = try decoder.decode([String: [ChartData]].self, from: chartData)
-            } catch {
-                print("Unable to Decode Note (\(error))")
-            }
-            
-            if(fetchLatest) {
-                getChartLastUpdatedDate()
-                removeChartDataListUptoLastUpdatedDate()
-                let refreshChartStartDate = await loadChartData()
-                await CommonChartController().generateChartDataForEachAccountType(isRefreshOperation: true, refreshChartStartDate: refreshChartStartDate)
-                await CommonChartController().generateChartDataForEachWatchList(isRefreshOperation: true, refreshChartStartDate: refreshChartStartDate)
-                
-                do {
-                    let encoder = JSONEncoder()
-                    
-                    let chartDataList = try encoder.encode(shared.chartDataList)
-                    
-                    UserDefaults.standard.set(chartDataList, forKey: "chartData")
-                    
-                } catch {
-                    print("Unable to Encode Note (\(error))")
-                }
-                UserDefaults.standard.set(Date.now.format(), forKey: "chartLastUpdated")
-            }
-        } else {
-            if(fetchLatest) {
-                getChartLastUpdatedDate()
-                removeChartDataListUptoLastUpdatedDate()
-                let _ = await loadChartData()
-                await CommonChartController().generateChartDataForEachAccountType()
-                await CommonChartController().generateChartDataForEachWatchList()
-                
-                do {
-                    let encoder = JSONEncoder()
-                    
-                    let chartDataList = try encoder.encode(shared.chartDataList)
-                    
-                    UserDefaults.standard.set(chartDataList, forKey: "chartData")
-                    
-                } catch {
-                    print("Unable to Encode Note (\(error))")
-                }
-                UserDefaults.standard.set(Date.now.format(), forKey: "chartLastUpdated")
-            }
-        }
-    }
-    
-    private static func loadChartData() async -> Date {
-        var refreshChartStartDate = Date.now.removeTimeStamp()
-        let accountDataList = shared.data.accountDataList
-        for accountData in accountDataList {
-            if(accountData.account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
-                let chartStartDate = await BrokerChartController().loadChartDataForBrokerAccount(accountData: accountData)
-                if(chartStartDate <= refreshChartStartDate) {
-                    refreshChartStartDate = chartStartDate
-                }
-            } else {
-                let chartStartDate = await NonBrokerChartController().loadChartDataForNonBrokerAccount(accountData: accountData)
-                if(chartStartDate <= refreshChartStartDate) {
-                    refreshChartStartDate = chartStartDate
-                }
-            }
-        }
-        return refreshChartStartDate
-    }
-    
-    private static func convertEpochToDate(epochTime: Double) -> Date {
-        let date = Date(timeIntervalSince1970: TimeInterval(floatLiteral: epochTime))
-        return date
-    }
-    
-    private static func getChartLastUpdatedDate() {
-        let date = UserDefaults.standard.string(forKey: "chartLastUpdated") ?? Date.now.getEarliestDate().format()
-        shared.lastUpdatedChartTimestamp = date.toFullDateFormat()
-    }
-    
-    private static func removeChartDataListUptoLastUpdatedDate() {
-        shared.chartDataList = shared.chartDataList.mapValues {
-            return $0.filter {
-                return $0.date.removeTimeStamp() < shared.lastUpdatedChartTimestamp.removeTimeStamp()
-            }
-        }
     }
 }
