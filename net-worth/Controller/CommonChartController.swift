@@ -39,19 +39,6 @@ class CommonChartController: ObservableObject {
         updateChartData()
     }
     
-    public func getChartLastUpdatedDate() {
-        let date = UserDefaults.standard.string(forKey: "chartLastUpdated") ?? "\(Date.now.getEarliestDate())"
-        ApplicationData.shared.lastUpdatedChartTimestamp = date.toFullDateFormat()
-    }
-    
-    public func removeChartDataListUptoLastUpdatedDate() {
-        ApplicationData.shared.chartDataList = ApplicationData.shared.chartDataList.mapValues {
-            return $0.filter {
-                return $0.date.removeTimeStamp() < ApplicationData.shared.lastUpdatedChartTimestamp.removeTimeStamp()
-            }
-        }
-    }
-    
     public func updateChartData() {
         do {
             let encoder = JSONEncoder()
@@ -63,7 +50,7 @@ class CommonChartController: ObservableObject {
         } catch {
             print("Unable to Encode Note (\(error))")
         }
-        UserDefaults.standard.set("\(Date.now)", forKey: "chartLastUpdated")
+        UserDefaults.standard.set(Date.now.format(), forKey: "chartLastUpdated")
     }
     
     public func loadChartData() async -> Date {
