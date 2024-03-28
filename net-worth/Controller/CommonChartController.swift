@@ -23,7 +23,10 @@ class CommonChartController: ObservableObject {
         }
         
         if(fetchLatest) {
+            print(Date.now)
             await fetchChartData()
+            print(Date.now)
+            print()
         }
     }
     
@@ -58,7 +61,7 @@ class CommonChartController: ObservableObject {
         let accountDataList = ApplicationData.shared.data.accountDataList
         for accountData in accountDataList {
             if(accountData.account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
-                let chartStartDate = await BrokerChartController().loadChartDataForBrokerAccount(accountData: accountData, count: &self.count)
+                let chartStartDate = await BrokerChartController().loadChartDataForBrokerAccount(accountData: accountData)
                 if(chartStartDate <= refreshChartStartDate) {
                     refreshChartStartDate = chartStartDate
                 }

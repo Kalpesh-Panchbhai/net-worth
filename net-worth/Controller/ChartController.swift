@@ -22,14 +22,27 @@ class ChartController {
         let count = chartDataList.filter {
             return $0.date >= lastDate
         }.count
-        while(lastDate <= startDate) {
-            let chartData = chartDataList.last {
-                return startDate >= $0.date.removeTimeStamp()
+        if(count == 0) {
+            let daysDifference = startDate.days(from: lastDate)
+            let lastTransaction = chartDataList.last!
+            while(lastDate <= startDate) {
+                chartDataListResponse.append(ChartData(date: startDate.removeTimeStamp(), value: lastTransaction.value))
+                startDate = getNextStartDate(startDate: startDate, count: Double(daysDifference))
             }
-            if(chartData != nil) {
-                chartDataListResponse.append(ChartData(date: startDate.removeTimeStamp(), value: chartData!.value))
+        } else {
+            lastDate = chartDataList.filter {
+                return $0.date >= lastDate
+            }.first!.date.removeTimeStamp()
+            let daysDifference = startDate.days(from: lastDate)
+            while(lastDate <= startDate) {
+                let chartData = chartDataList.last {
+                    return startDate >= $0.date.removeTimeStamp()
+                }
+                if(chartData != nil) {
+                    chartDataListResponse.append(ChartData(date: startDate.removeTimeStamp(), value: chartData!.value))
+                }
+                startDate = getNextStartDate(startDate: startDate, count: Double(daysDifference))
             }
-            startDate = getNextStartDate(startDate: startDate, count: Double(count))
         }
         return chartDataListResponse.reversed()
     }

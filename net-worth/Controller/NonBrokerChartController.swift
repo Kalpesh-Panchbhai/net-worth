@@ -77,15 +77,16 @@ class NonBrokerChartController {
     
     public func loadChartDataForNonExistingNonBrokerAccount(accountData: AccountData) async -> Date {
         let transactionList = accountData.accountTransaction
-        var startDate = transactionList.last!.timestamp.removeTimeStamp()
-        let refreshChartStartDate = startDate
+        let refreshChartStartDate = transactionList.last!.timestamp.removeTimeStamp()
         var chartData = [ChartData]()
-        while(startDate <= Date.now.removeTimeStamp()) {
-            let latestTransaction = transactionList.first(where: {
-                return $0.timestamp.removeTimeStamp() <= startDate.removeTimeStamp()
-            })!
-            chartData.append(ChartData(date: startDate, value: latestTransaction.currentBalance))
-            startDate.addTimeInterval(86400)
+        var chart = [Date: Bool]()
+        for i in 0..<transactionList.count {
+            if(!chart.contains(where: {
+                return $0.key == transactionList[i].timestamp.removeTimeStamp()
+            })) {
+                chart.updateValue(true, forKey: transactionList[i].timestamp.removeTimeStamp())
+                chartData.insert(ChartData(date: transactionList[i].timestamp.removeTimeStamp(), value: transactionList[i].currentBalance), at: 0)
+            }
         }
         ApplicationData.shared.chartDataList.updateValue(chartData, forKey: accountData.account.id!)
         return refreshChartStartDate
