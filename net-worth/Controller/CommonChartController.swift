@@ -66,13 +66,11 @@ class CommonChartController: ObservableObject {
         await withThrowingTaskGroup(of: Void.self) { group in
             for accountData in accountDataList {
                 group.addTask {
-                    print(accountData.account.accountName + " : started")
                     if(accountData.account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
                         await BrokerChartController().loadChartDataForBrokerAccount(accountData: accountData)
                     } else {
                         await NonBrokerChartController().loadChartDataForNonBrokerAccount(accountData: accountData)
                     }
-                    print(accountData.account.accountName + " : ended")
                     DispatchQueue.main.async {
                         self.count += 1
                     }
@@ -94,7 +92,6 @@ class CommonChartController: ObservableObject {
         await withThrowingTaskGroup(of: Void.self) { group in
             for (accountType, accountDataList) in accountDataListByAccountType {
                 group.addTask {
-                    print(accountType + " :started")
                     if(accountType.elementsEqual(ConstantUtils.brokerAccountType) || accountType.elementsEqual("Inactive Account")) {
                         if(accountType.elementsEqual("Inactive Account")) {
                             let chartDataListResult = await self.generateChartdataForMixedAccounts(accountType: "Inactive Account", accountDataList: accountDataList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
@@ -110,7 +107,6 @@ class CommonChartController: ObservableObject {
                     DispatchQueue.main.async {
                         self.count += 1
                     }
-                    print(accountType + " :ended")
                 }
             }
         }
@@ -121,13 +117,11 @@ class CommonChartController: ObservableObject {
         await withThrowingTaskGroup(of: Void.self) { group in
             for watch in watchList {
                 group.addTask {
-                    print(watch.accountName + " :started")
                     let chartDataListResult = self.generateChartDataForWatchAccount(id: watch.id!, accountIDList: watch.accountID, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
                     ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: watch.id!)
                     DispatchQueue.main.async {
                         self.count += 1
                     }
-                    print(watch.accountName + " :ended")
                 }
             }
         }
