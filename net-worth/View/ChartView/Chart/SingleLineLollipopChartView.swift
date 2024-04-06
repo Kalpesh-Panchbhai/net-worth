@@ -37,7 +37,7 @@ struct SingleLineLollipopChartView: View {
                 .foregroundStyle(Gradient(colors: [getChartColor().opacity(0.05), .clear]))
             }
         }
-//        .chartYScale(domain: getMinValue()...getMaxValue())
+        .chartYScale(domain: getMinValue()...getMaxValue())
         .chartXAxis {
             AxisMarks(values: .automatic) { _ in
                 AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 0.1, dash: [0]))
@@ -168,13 +168,21 @@ struct SingleLineLollipopChartView: View {
     private func getMinValue() -> Double {
         return (chartDataList.map {
             $0.value
-        }.min() ?? 0.0)
+        }.min() ?? 0.0) > 0.0 ? ((chartDataList.map {
+            $0.value
+        }.min() ?? 0.0) * 0.99) : ((chartDataList.map {
+            $0.value
+        }.min() ?? 0.0)) * 1.05
     }
     
     private func getMaxValue() -> Double {
         return (chartDataList.map {
             $0.value
-        }.max() ?? 0.0) * 1.05
+        }.max() ?? 0.0) > 0.0 ? ((chartDataList.map {
+            $0.value
+        }.max() ?? 0.0) * 1.05) : ((chartDataList.map {
+            $0.value
+        }.max() ?? 0.0)) * 0.99
     }
     
     private func isPositiveValue() -> Bool {
