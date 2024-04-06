@@ -26,7 +26,6 @@ class CommonChartController: ObservableObject {
             print(Date.now)
             await fetchChartData()
             print(Date.now)
-            print()
         }
     }
     
