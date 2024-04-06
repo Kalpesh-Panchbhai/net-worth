@@ -11,45 +11,34 @@ class BrokerChartController {
     
     var chartController = ChartController()
     
-    public func loadChartDataForBrokerAccount(accountData: AccountData, count: inout Int) async -> Date {
+    public func loadChartDataForBrokerAccount(accountData: AccountData) async {
         let accountInBrokerList = accountData.accountInBroker
-        var refreshChartStartDate = Date.now.removeTimeStamp()
-        for accountInBroker in accountInBrokerList {
-            if(ApplicationData.shared.chartDataList.contains(where: {
-                return $0.key.elementsEqual(accountInBroker.accountInBroker.id!)
-            })) {
-                let chartStartDate = await loadChartDataForExistingBrokerAccount(accountInBroker: accountInBroker)
-                if(chartStartDate <= refreshChartStartDate) {
-                    refreshChartStartDate = chartStartDate
-                }
-            } else {
-                let chartStartDate = await loadChartDataForNonExistingBrokerAccount(accountInBroker: accountInBroker)
-                if(chartStartDate <= refreshChartStartDate) {
-                    refreshChartStartDate = chartStartDate
+        await withThrowingTaskGroup(of: Void.self) { group in
+            for accountInBroker in accountInBrokerList {
+                group.addTask {
+                    if(ApplicationData.shared.chartDataList.contains(where: {
+                        return $0.key.elementsEqual(accountInBroker.accountInBroker.id!)
+                    })) {
+                        await self.loadChartDataForExistingBrokerAccount(accountInBroker: accountInBroker)
+                    } else {
+                        await self.loadChartDataForNonExistingBrokerAccount(accountInBroker: accountInBroker)
+                    }
                 }
             }
-            count += 1
         }
-        if(CommonChartController().isAccountAvailableInChartDataList(accountID: accountData.account.id!)) {
-            let chartDataList = CommonChartController().generateChartDataForOneBrokerAccount(accountData: accountData, isRefreshOperation: true, refreshChartStartDate: refreshChartStartDate)
-            ApplicationData.shared.chartDataList.updateValue(chartDataList, forKey: accountData.account.id!)
-        } else {
-            let chartDataList = CommonChartController().generateChartDataForOneBrokerAccount(accountData: accountData)
-            ApplicationData.shared.chartDataList.updateValue(chartDataList, forKey: accountData.account.id!)
-        }
-        return refreshChartStartDate
+        let chartDataList = CommonChartController().generateChartDataForOneBrokerAccount(accountData: accountData)
+        ApplicationData.shared.chartDataList.updateValue(chartDataList, forKey: accountData.account.id!)
     }
     
-    public func loadChartDataForExistingBrokerAccount(accountInBroker: AccountInBrokerData) async -> Date {
+    public func loadChartDataForExistingBrokerAccount(accountInBroker: AccountInBrokerData) async {
         if(accountInBroker.accountInBroker.lastUpdated > ApplicationData.shared.lastUpdatedChartTimestamp) {
-            return await loadChartDataForExistingBrokerAccountWithLatestCloudData(accountInBroker: accountInBroker)
+            await loadChartDataForExistingBrokerAccountWithLatestCloudData(accountInBroker: accountInBroker)
         } else {
-            return await loadChartDataForExistingBrokerAccountWithExistingData(accountInBroker: accountInBroker)
+            await loadChartDataForExistingBrokerAccountWithExistingData(accountInBroker: accountInBroker)
         }
     }
     
-    public func loadChartDataForExistingBrokerAccountWithLatestCloudData(accountInBroker: AccountInBrokerData) async -> Date {
-        var refreshChartStartDate = Date.now.removeTimeStamp()
+    public func loadChartDataForExistingBrokerAccountWithLatestCloudData(accountInBroker: AccountInBrokerData) async {
         if(accountInBroker.accountTransaction.count > 0) {
             let symbol = accountInBroker.accountInBroker.symbol
             let transactionList = accountInBroker.accountTransaction
@@ -71,7 +60,6 @@ class BrokerChartController {
             } else {
                 startDate = chartData.last!.date.addingTimeInterval(86400).removeTimeStamp()
             }
-            refreshChartStartDate = startDate
             
             if(!ApplicationData.shared.symbolDataList.contains(where: {
                 return $0.key.elementsEqual(symbol)
@@ -126,12 +114,9 @@ class BrokerChartController {
         } else {
             ApplicationData.shared.chartDataList.removeValue(forKey: accountInBroker.accountInBroker.id!)
         }
-        
-        return refreshChartStartDate
     }
     
-    public func loadChartDataForExistingBrokerAccountWithExistingData(accountInBroker: AccountInBrokerData) async -> Date {
-        var refreshChartStartDate = Date.now.removeTimeStamp()
+    public func loadChartDataForExistingBrokerAccountWithExistingData(accountInBroker: AccountInBrokerData) async {
         if(accountInBroker.accountTransaction.count > 0) {
             let symbol = accountInBroker.accountInBroker.symbol
             let latestTransaction = accountInBroker.accountTransaction.first!
@@ -139,7 +124,6 @@ class BrokerChartController {
                 return $0.key.elementsEqual(accountInBroker.accountInBroker.id!)
             })!.value
             var startDate = chartData.last!.date.removeTimeStamp().addingTimeInterval(86400)
-            refreshChartStartDate = startDate
             
             if(!ApplicationData.shared.symbolDataList.contains(where: {
                 return $0.key.elementsEqual(symbol)
@@ -191,12 +175,9 @@ class BrokerChartController {
         } else {
             ApplicationData.shared.chartDataList.removeValue(forKey: accountInBroker.accountInBroker.id!)
         }
-        
-        return refreshChartStartDate
     }
     
-    public func loadChartDataForNonExistingBrokerAccount(accountInBroker: AccountInBrokerData) async -> Date {
-        var refreshChartStartDate = Date.now.removeTimeStamp()
+    public func loadChartDataForNonExistingBrokerAccount(accountInBroker: AccountInBrokerData) async {
         if(accountInBroker.accountTransaction.count > 0) {
             let symbol = accountInBroker.accountInBroker.symbol
             if(!ApplicationData.shared.symbolDataList.contains(where: {
@@ -245,7 +226,6 @@ class BrokerChartController {
             if(symbolStartDate > startDate) {
                 startDate = symbolStartDate
             }
-            refreshChartStartDate = startDate
             
             var chartData = [ChartData]()
             while(startDate <= Date.now.removeTimeStamp()) {
@@ -262,6 +242,5 @@ class BrokerChartController {
         } else {
             ApplicationData.shared.chartDataList.removeValue(forKey: accountInBroker.accountInBroker.id!)
         }
-        return refreshChartStartDate
     }
 }

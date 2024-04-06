@@ -402,9 +402,15 @@ struct IncomeChartView: View {
                     await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Financial Year")
                 }
                 for income in incomeViewModel.incomeListByGroup {
-                    incomeListByGroup.updateValue(income.value.map {
-                        $0.cumulativeAmount
-                    }.first!, forKey: income.key)
+                    if(showTotal) {
+                        incomeListByGroup.updateValue(income.value.map {
+                            $0.cumulativeAmount + $0.cumulativeTaxPaid
+                        }.first!, forKey: income.key)
+                    } else {
+                        incomeListByGroup.updateValue(income.value.map {
+                            $0.cumulativeAmount
+                        }.first!, forKey: income.key)
+                    }
                 }
             }
         }

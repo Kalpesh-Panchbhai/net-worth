@@ -23,7 +23,9 @@ class CommonChartController: ObservableObject {
         }
         
         if(fetchLatest) {
+            print(Date.now)
             await fetchChartData()
+            print(Date.now)
         }
     }
     
@@ -32,9 +34,15 @@ class CommonChartController: ObservableObject {
         DispatchQueue.main.async {
             self.count = 0
         }
-        let _ = await loadChartData()
-        await generateChartDataForEachAccountType()
-        await generateChartDataForEachWatchList()
+        await loadChartData()
+        await withThrowingTaskGroup(of: Void.self) { group in
+            group.addTask {
+                await self.generateChartDataForEachAccountType()
+            }
+            group.addTask {
+                await self.generateChartDataForEachWatchList()
+            }
+        }
         
         updateChartData()
     }
@@ -53,26 +61,22 @@ class CommonChartController: ObservableObject {
         UserDefaults.standard.set(Date.now.format(), forKey: "chartLastUpdated")
     }
     
-    public func loadChartData() async -> Date {
-        var refreshChartStartDate = Date.now.removeTimeStamp()
+    public func loadChartData() async {
         let accountDataList = ApplicationData.shared.data.accountDataList
-        for accountData in accountDataList {
-            if(accountData.account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
-                let chartStartDate = await BrokerChartController().loadChartDataForBrokerAccount(accountData: accountData, count: &self.count)
-                if(chartStartDate <= refreshChartStartDate) {
-                    refreshChartStartDate = chartStartDate
+        await withThrowingTaskGroup(of: Void.self) { group in
+            for accountData in accountDataList {
+                group.addTask {
+                    if(accountData.account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
+                        await BrokerChartController().loadChartDataForBrokerAccount(accountData: accountData)
+                    } else {
+                        await NonBrokerChartController().loadChartDataForNonBrokerAccount(accountData: accountData)
+                    }
+                    DispatchQueue.main.async {
+                        self.count += 1
+                    }
                 }
-            } else {
-                let chartStartDate = await NonBrokerChartController().loadChartDataForNonBrokerAccount(accountData: accountData)
-                if(chartStartDate <= refreshChartStartDate) {
-                    refreshChartStartDate = chartStartDate
-                }
-            }
-            DispatchQueue.main.async {
-                self.count += 1
             }
         }
-        return refreshChartStartDate
     }
     
     public func generateChartDataForEachAccountType(isRefreshOperation: Bool = false, refreshChartStartDate: Date = Date()) async {
@@ -85,32 +89,40 @@ class CommonChartController: ObservableObject {
             }
         }
         
-        for (accountType, accountDataList) in accountDataListByAccountType {
-            if(accountType.elementsEqual(ConstantUtils.brokerAccountType) || accountType.elementsEqual("Inactive Account")) {
-                if(accountType.elementsEqual("Inactive Account")) {
-                    let chartDataListResult = await generateChartdataForMixedAccounts(accountType: "Inactive Account", accountDataList: accountDataList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
-                    ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: "Inactive Account")
-                } else {
-                    let chartDataListResult = await generateChartDataForMultipleBrokerAccounts(accountType: ConstantUtils.brokerAccountType, accountDataList: accountDataList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
-                    ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: ConstantUtils.brokerAccountType)
+        await withThrowingTaskGroup(of: Void.self) { group in
+            for (accountType, accountDataList) in accountDataListByAccountType {
+                group.addTask {
+                    if(accountType.elementsEqual(ConstantUtils.brokerAccountType) || accountType.elementsEqual("Inactive Account")) {
+                        if(accountType.elementsEqual("Inactive Account")) {
+                            let chartDataListResult = await self.generateChartdataForMixedAccounts(accountType: "Inactive Account", accountDataList: accountDataList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
+                            ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: "Inactive Account")
+                        } else {
+                            let chartDataListResult = await self.generateChartDataForMultipleBrokerAccounts(accountType: ConstantUtils.brokerAccountType, accountDataList: accountDataList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
+                            ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: ConstantUtils.brokerAccountType)
+                        }
+                    } else {
+                        let chartDataListResult = await self.generateChartDataForMultipleNonBrokerAccount(accountType: accountType, accountDataList: accountDataList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
+                        ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: accountType)
+                    }
+                    DispatchQueue.main.async {
+                        self.count += 1
+                    }
                 }
-            } else {
-                let chartDataListResult = await generateChartDataForMultipleNonBrokerAccount(accountType: accountType, accountDataList: accountDataList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
-                ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: accountType)
-            }
-            DispatchQueue.main.async {
-                self.count += 1
             }
         }
     }
     
     public func generateChartDataForEachWatchList(isRefreshOperation: Bool = false, refreshChartStartDate: Date = Date()) async {
         let watchList = await WatchController().getAllWatchList()
-        for watch in watchList {
-            let chartDataListResult = generateChartDataForWatchAccount(id: watch.id!, accountIDList: watch.accountID, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
-            ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: watch.id!)
-            DispatchQueue.main.async {
-                self.count += 1
+        await withThrowingTaskGroup(of: Void.self) { group in
+            for watch in watchList {
+                group.addTask {
+                    let chartDataListResult = self.generateChartDataForWatchAccount(id: watch.id!, accountIDList: watch.accountID, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
+                    ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: watch.id!)
+                    DispatchQueue.main.async {
+                        self.count += 1
+                    }
+                }
             }
         }
     }
