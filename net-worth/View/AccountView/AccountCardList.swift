@@ -18,6 +18,8 @@ struct AccountCardList: View {
     @State var searchText = ""
     @State var isPresentingAccountDeleteConfirm = false
     @State var deletedAccount = Account()
+    @State var hideInactiveAccount = true
+    @State var hideZeroBalanceAccount = true
     
     @StateObject var accountViewModel: AccountViewModel
     @ObservedObject var watchViewModel: WatchViewModel
@@ -45,75 +47,79 @@ struct AccountCardList: View {
                             ScrollView(.vertical, showsIndicators: false) {
                                 VStack {
                                     ForEach(accountViewModel.sectionHeaders, id: \.self) { accountType in
-                                        if(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 0) {
-                                            HStack {
-                                                Text(accountType)
-                                                    .foregroundColor(Color.theme.primaryText)
-                                                    .bold()
-                                                    .font(.system(size: 15))
-                                                Spacer()
-                                                NavigationLink(destination: {
-                                                    AccountListView(accountType: accountType, watchViewModel: watchViewModel)
-                                                        .toolbarRole(.editor)
-                                                }, label: {
-                                                    Text("See all")
-                                                        .foregroundColor(Color.theme.secondaryText)
-                                                        .font(.system(size: 12))
-                                                })
-                                            }
-                                            .padding(.horizontal, 8)
-                                            ScrollView(.horizontal, showsIndicators: false) {
+                                        if(((accountType.elementsEqual("Inactive Account") && !hideInactiveAccount) || (!accountType.elementsEqual("Inactive Account"))) && ((hideZeroBalanceAccount && isAllAccountsInAAccountTypeAreZero(accountType: accountType, searchText: searchText)) || !hideZeroBalanceAccount)) {
+                                            if(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 0) {
                                                 HStack {
-                                                    ForEach(0..<((accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 5) ? 5 : accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count), id: \.self) { i in
-                                                        NavigationLink(destination: {
-                                                            AccountDetailView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id!, accountViewModel:  accountViewModel, watchViewModel: watchViewModel)
-                                                                .toolbarRole(.editor)
-                                                        }) {
-                                                            AccountCardView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id!)
-                                                                .contextMenu {
-                                                                    
-                                                                    Label(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i].id!, systemImage: ConstantUtils.infoIconImageName)
-                                                                    
-                                                                    Button(role: .destructive, action: {
-                                                                        isPresentingAccountDeleteConfirm.toggle()
-                                                                        deletedAccount = accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i];
-                                                                    }, label: {
-                                                                        Label("Delete", systemImage: ConstantUtils.deleteImageName)
-                                                                    })
-                                                                    
-                                                                    if(accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].active) {
-                                                                        Button {
-                                                                            Task.init {
-                                                                                await accountViewModel.getAccount(id: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].id!)
+                                                    Text(accountType)
+                                                        .foregroundColor(Color.theme.primaryText)
+                                                        .bold()
+                                                        .font(.system(size: 15))
+                                                    Spacer()
+                                                    NavigationLink(destination: {
+                                                        AccountListView(accountType: accountType, watchViewModel: watchViewModel)
+                                                            .toolbarRole(.editor)
+                                                    }, label: {
+                                                        Text("See all")
+                                                            .foregroundColor(Color.theme.secondaryText)
+                                                            .font(.system(size: 12))
+                                                    })
+                                                }
+                                                .padding(.horizontal, 8)
+                                                ScrollView(.horizontal, showsIndicators: false) {
+                                                    HStack {
+                                                        ForEach(0..<((accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 5) ? 5 : accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count), id: \.self) { i in
+                                                            if((hideZeroBalanceAccount && isAccountBalanceIsZero(id: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id!)) || !hideZeroBalanceAccount) {
+                                                                NavigationLink(destination: {
+                                                                    AccountDetailView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id!, accountViewModel:  accountViewModel, watchViewModel: watchViewModel)
+                                                                        .toolbarRole(.editor)
+                                                                }) {
+                                                                    AccountCardView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id!)
+                                                                        .contextMenu {
+                                                                            
+                                                                            Label(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i].id!, systemImage: ConstantUtils.infoIconImageName)
+                                                                            
+                                                                            Button(role: .destructive, action: {
+                                                                                isPresentingAccountDeleteConfirm.toggle()
+                                                                                deletedAccount = accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i];
+                                                                            }, label: {
+                                                                                Label("Delete", systemImage: ConstantUtils.deleteImageName)
+                                                                            })
+                                                                            
+                                                                            if(accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].active) {
+                                                                                Button {
+                                                                                    Task.init {
+                                                                                        await accountViewModel.getAccount(id: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].id!)
+                                                                                    }
+                                                                                    isNewTransactionViewOpen.toggle()
+                                                                                } label: {
+                                                                                    Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
+                                                                                }
                                                                             }
-                                                                            isNewTransactionViewOpen.toggle()
-                                                                        } label: {
-                                                                            Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
+                                                                        }
+                                                                }
+                                                                .confirmationDialog("Are you sure?",
+                                                                                    isPresented: $isPresentingAccountDeleteConfirm) {
+                                                                    Button("Delete account " + deletedAccount.accountName + "?", role: .destructive) {
+                                                                        Task.init {
+                                                                            deletedAccount.lastUpdated = Date.now
+                                                                            deletedAccount.deleted = true
+                                                                            await accountController.updateAccount(account: deletedAccount)
+                                                                            await ApplicationData.loadData()
+                                                                            await accountViewModel.getAccountList()
+                                                                            await watchViewModel.getAllWatchList()
+                                                                            await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                                                                         }
                                                                     }
                                                                 }
-                                                        }
-                                                        .confirmationDialog("Are you sure?",
-                                                                            isPresented: $isPresentingAccountDeleteConfirm) {
-                                                            Button("Delete account " + deletedAccount.accountName + "?", role: .destructive) {
-                                                                Task.init {
-                                                                    deletedAccount.lastUpdated = Date.now
-                                                                    deletedAccount.deleted = true
-                                                                    await accountController.updateAccount(account: deletedAccount)
-                                                                    await ApplicationData.loadData()
-                                                                    await accountViewModel.getAccountList()
-                                                                    await watchViewModel.getAllWatchList()
-                                                                    await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                                                                }
                                                             }
                                                         }
+                                                        .padding(5)
                                                     }
                                                     .padding(5)
                                                 }
-                                                .padding(5)
+                                                Divider()
+                                                    .background(Color.theme.secondaryText)
                                             }
-                                            Divider()
-                                                .background(Color.theme.secondaryText)
                                         }
                                     }
                                 }
@@ -131,11 +137,27 @@ struct AccountCardList: View {
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing , content: {
+                ToolbarItem(placement: .navigationBarTrailing, content: {
                     Button(action: {
                         isNewAccountAccountViewOpen.toggle()
                     }, label: {
                         Image(systemName: ConstantUtils.plusImageName)
+                            .foregroundColor(Color.theme.primaryText)
+                            .bold()
+                    })
+                    .font(.system(size: 14).bold())
+                })
+                ToolbarItem(placement: .navigationBarLeading, content: {
+                    Menu(content: {
+                        Toggle(isOn: $hideInactiveAccount, label: {
+                            Text("Hide Inactive Accounts")
+                        })
+                        
+                        Toggle(isOn: $hideZeroBalanceAccount, label: {
+                            Text("Hide Zero Balance Accounts")
+                        })
+                    }, label: {
+                        Image(systemName: ConstantUtils.menuImageName)
                             .foregroundColor(Color.theme.primaryText)
                             .bold()
                     })
@@ -162,5 +184,30 @@ struct AccountCardList: View {
         }, content: {
             NewAccountView(accountType: ConstantUtils.noneAccountType, accountViewModel: accountViewModel)
         })
+    }
+    
+    private func isAccountActive(id: String) -> Bool {
+        return ApplicationData.shared.data.accountDataList.filter {
+            $0.account.id!.elementsEqual(id) && $0.account.active
+        }.count > 0
+    }
+    
+    private func isAccountBalanceIsZero(id: String) -> Bool {
+        let accountList = ApplicationData.shared.chartDataList
+        return accountList.first(where: {
+            return $0.key.elementsEqual(id)
+        })!.value.last!.value != 0
+    }
+    
+    private func isAllAccountsInAAccountTypeAreZero(accountType: String, searchText: String) -> Bool {
+        let accountList = accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)
+        var isAllAccountsInAAccountTypeAreZero = true
+        for account in accountList {
+            if(!isAccountBalanceIsZero(id: account.id!)) {
+                isAllAccountsInAAccountTypeAreZero = false
+                break
+            }
+        }
+        return isAllAccountsInAAccountTypeAreZero
     }
 }
