@@ -383,6 +383,6 @@ struct WatchDetailView: View {
         let accountList = ApplicationData.shared.chartDataList
         return accountList.first(where: {
             return $0.key.elementsEqual(id)
-        })!.value.last!.value != 0
+        })?.value.last?.value != 0
     }
 }
