@@ -145,7 +145,9 @@ class AccountInBrokerController {
             }
         } ?? [AccountInBroker]()
         
-        return accountBrokerList
+        return accountBrokerList.sorted(by: {
+            return $0.name < $1.name
+        })
     }
     
     public func getAccountInBroker(brokerID: String, accountID: String) -> AccountInBroker {

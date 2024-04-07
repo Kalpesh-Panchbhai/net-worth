@@ -256,7 +256,7 @@ struct ChartView: View {
     }
     
     private func getAccountList(accountList: [Account]) -> [Account] {
-        var chartDataList = ApplicationData.shared.chartDataList
+        let chartDataList = ApplicationData.shared.chartDataList
         var returnAccountList = [Account]()
         for account in accountList {
             let currentBalance = chartDataList.filter {

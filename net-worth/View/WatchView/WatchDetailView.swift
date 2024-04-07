@@ -20,6 +20,7 @@ struct WatchDetailView: View {
     @State var isAscendingByAmount = true
     @State var isAscendingByAmountEnabled = false
     @State var hideInactiveAccount = true
+    @State var hideZeroBalanceAccount = true
     
     @StateObject var accountViewModel = AccountViewModel()
     @ObservedObject var watchViewModel: WatchViewModel
@@ -43,7 +44,7 @@ struct WatchDetailView: View {
                         ScrollView(.vertical, showsIndicators: false) {
                             LazyVStack {
                                 ForEach(watchViewModel.watch.accountID, id: \.self) { accountID in
-                                    if((hideInactiveAccount && isAccountActive(id: accountID)) || !hideInactiveAccount) {
+                                    if(((hideInactiveAccount && isAccountActive(id: accountID)) || !hideInactiveAccount) && ((hideZeroBalanceAccount && isAccountBalanceIsZero(id: accountID)) || !hideZeroBalanceAccount)) {
                                         NavigationLink(destination: {
                                             // MARK: Account Detail View
                                             AccountDetailView(accountID: accountID, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
@@ -237,7 +238,15 @@ struct WatchDetailView: View {
                                     self.isAscendingByAmountEnabled = false
                                 }
                             }, label: {
-                                Text("Alphabet")
+                                if(isAscendingByAlphabetEnabled) {
+                                    if(isAscendingByAlphabet) {
+                                        Label("Alphabet", systemImage: "arrow.up")
+                                    } else {
+                                        Label("Alphabet", systemImage: "arrow.down")
+                                    }
+                                } else {
+                                    Text("Alphabet")
+                                }
                             })
                             
                             Button(action: {
@@ -265,14 +274,26 @@ struct WatchDetailView: View {
                                     self.isAscendingByAlphabetEnabled = false
                                 }
                             }, label: {
-                                Text("Amount")
+                                if(isAscendingByAmountEnabled) {
+                                    if(isAscendingByAmount) {
+                                        Label("Amount", systemImage: "arrow.up")
+                                    } else {
+                                        Label("Amount", systemImage: "arrow.down")
+                                    }
+                                } else {
+                                    Text("Amount")
+                                }
                             })
                         }, label: {
-                            Text("Sort by")
+                            Label("Sort by", systemImage: "arrow.up.arrow.down")
                         })
                         
                         Toggle(isOn: $hideInactiveAccount, label: {
                             Text("Hide Inactive Accounts")
+                        })
+                        
+                        Toggle(isOn: $hideZeroBalanceAccount, label: {
+                            Text("Hide Zero Balance Accounts")
                         })
                     }, label: {
                         Image(systemName: ConstantUtils.menuImageName)
@@ -356,5 +377,12 @@ struct WatchDetailView: View {
         return ApplicationData.shared.data.accountDataList.filter {
             $0.account.id!.elementsEqual(id) && $0.account.active
         }.count > 0
+    }
+    
+    private func isAccountBalanceIsZero(id: String) -> Bool {
+        let accountList = ApplicationData.shared.chartDataList
+        return accountList.first(where: {
+            return $0.key.elementsEqual(id)
+        })!.value.last!.value != 0
     }
 }
