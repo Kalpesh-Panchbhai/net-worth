@@ -172,7 +172,7 @@ struct SingleLineLollipopChartView: View {
             $0.value
         }.min() ?? 0.0) * 0.99) : ((chartDataList.map {
             $0.value
-        }.min() ?? 0.0)) * 1.05
+        }.min() ?? 0.0)) * 1.01
     }
     
     private func getMaxValue() -> Double {
@@ -180,7 +180,7 @@ struct SingleLineLollipopChartView: View {
             $0.value
         }.max() ?? 0.0) > 0.0 ? ((chartDataList.map {
             $0.value
-        }.max() ?? 0.0) * 1.05) : ((chartDataList.map {
+        }.max() ?? 0.0) * 1.01) : ((chartDataList.map {
             $0.value
         }.max() ?? 0.0)) * 0.99
     }

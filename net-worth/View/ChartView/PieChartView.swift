@@ -93,7 +93,7 @@ public struct PieChartView: View {
                     Text(getAccountName())
                         .font(.system(size: 14))
                         .foregroundColor(Color.theme.primaryText)
-                    Text(getAccountAmount())
+                    Text(SettingsController().getDefaultCurrency().code + " " + getAccountAmount())
                         .font(.system(size: 14))
                         .foregroundColor(Color.theme.primaryText)
                 }
@@ -141,7 +141,7 @@ struct PieChartRows: View {
                             .font(.system(size: 14))
                         Spacer()
                         VStack(alignment: .trailing) {
-                            Text((Double(self.values[i])?.withCommas(decimalPlace: 2))!)
+                            Text(SettingsController().getDefaultCurrency().code + " " + (Double(self.values[i])?.withCommas(decimalPlace: 2))!)
                                 .foregroundColor(Color.theme.primaryText)
                                 .font(.system(size: 14))
                             Text(self.percents[i])
