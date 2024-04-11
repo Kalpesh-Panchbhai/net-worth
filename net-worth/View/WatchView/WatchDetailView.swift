@@ -15,12 +15,11 @@ struct WatchDetailView: View {
     @State var isNewTransactionViewOpen = false
     @State var isChartViewOpen = false
     @State var addAccountViewOpen = false
-    @State var isAscendingByAlphabet = true
-    @State var isAscendingByAlphabetEnabled = false
-    @State var isAscendingByAmount = true
+    @State var isAscendingByAlphabetEnabled = true
     @State var isAscendingByAmountEnabled = false
     @State var hideInactiveAccount = true
     @State var hideZeroBalanceAccount = true
+    @State var isAscendingEnabled = true
     
     @StateObject var accountViewModel = AccountViewModel()
     @ObservedObject var watchViewModel: WatchViewModel
@@ -62,7 +61,7 @@ struct WatchDetailView: View {
                                                                 await watchViewModel.getWatchList(id: watch.id!)
                                                                 await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
                                                                 if(isAscendingByAlphabetEnabled) {
-                                                                    if(isAscendingByAlphabet) {
+                                                                    if(isAscendingEnabled) {
                                                                         watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
                                                                             $0.accountName < $1.accountName
                                                                         }).map({
@@ -77,7 +76,7 @@ struct WatchDetailView: View {
                                                                     }
                                                                     self.isAscendingByAmountEnabled = false
                                                                 } else if(isAscendingByAmountEnabled) {
-                                                                    if(isAscendingByAmount) {
+                                                                    if(isAscendingEnabled) {
                                                                         watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
                                                                             $0.currentBalance < $1.currentBalance
                                                                         }).map({
@@ -131,7 +130,7 @@ struct WatchDetailView: View {
                         await watchViewModel.getWatchList(id: watch.id!)
                         await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
                         if(isAscendingByAlphabetEnabled) {
-                            if(isAscendingByAlphabet) {
+                            if(isAscendingEnabled) {
                                 watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
                                     $0.accountName < $1.accountName
                                 }).map({
@@ -146,7 +145,7 @@ struct WatchDetailView: View {
                             }
                             self.isAscendingByAmountEnabled = false
                         } else if(isAscendingByAmountEnabled) {
-                            if(isAscendingByAmount) {
+                            if(isAscendingEnabled) {
                                 watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
                                     $0.currentBalance < $1.currentBalance
                                 }).map({
@@ -214,18 +213,7 @@ struct WatchDetailView: View {
                     Menu(content: {
                         Menu(content: {
                             Button(action: {
-                                if(isAscendingByAlphabet) {
-                                    watchViewModel.watch.accountID = accountViewModel
-                                        .accountList
-                                        .sorted(by: {
-                                            $0.accountName > $1.accountName
-                                        }).map({
-                                            $0.id!
-                                        })
-                                    self.isAscendingByAlphabet.toggle()
-                                    self.isAscendingByAlphabetEnabled = true
-                                    self.isAscendingByAmountEnabled = false
-                                } else {
+                                if(isAscendingEnabled) {
                                     watchViewModel.watch.accountID = accountViewModel
                                         .accountList
                                         .sorted(by: {
@@ -233,24 +221,39 @@ struct WatchDetailView: View {
                                         }).map({
                                             $0.id!
                                         })
-                                    self.isAscendingByAlphabet.toggle()
+                                    self.isAscendingByAlphabetEnabled = true
+                                    self.isAscendingByAmountEnabled = false
+                                } else {
+                                    watchViewModel.watch.accountID = accountViewModel
+                                        .accountList
+                                        .sorted(by: {
+                                            $0.accountName > $1.accountName
+                                        }).map({
+                                            $0.id!
+                                        })
                                     self.isAscendingByAlphabetEnabled = true
                                     self.isAscendingByAmountEnabled = false
                                 }
                             }, label: {
                                 if(isAscendingByAlphabetEnabled) {
-                                    if(isAscendingByAlphabet) {
-                                        Label("Alphabet", systemImage: "arrow.up")
-                                    } else {
-                                        Label("Alphabet", systemImage: "arrow.down")
-                                    }
+                                    Label("Name", systemImage: "checkmark")
                                 } else {
-                                    Text("Alphabet")
+                                    Text("Name")
                                 }
                             })
                             
                             Button(action: {
-                                if(isAscendingByAmount) {
+                                if(isAscendingEnabled) {
+                                    watchViewModel.watch.accountID = accountViewModel
+                                        .accountList
+                                        .sorted(by: {
+                                            $0.currentBalance < $1.currentBalance
+                                        }).map({
+                                            $0.id!
+                                        })
+                                    self.isAscendingByAmountEnabled = true
+                                    self.isAscendingByAlphabetEnabled = false
+                                } else {
                                     watchViewModel.watch.accountID = accountViewModel
                                         .accountList
                                         .sorted(by: {
@@ -258,9 +261,29 @@ struct WatchDetailView: View {
                                         }).map({
                                             $0.id!
                                         })
-                                    self.isAscendingByAmount.toggle()
                                     self.isAscendingByAmountEnabled = true
                                     self.isAscendingByAlphabetEnabled = false
+                                }
+                            }, label: {
+                                if(isAscendingByAmountEnabled) {
+                                    Label("Amount", systemImage: "checkmark")
+                                } else {
+                                    Text("Amount")
+                                }
+                            })
+                            
+                            Divider()
+                            
+                            Button(action: {
+                                isAscendingEnabled = true
+                                if(isAscendingByAlphabetEnabled) {
+                                    watchViewModel.watch.accountID = accountViewModel
+                                        .accountList
+                                        .sorted(by: {
+                                            $0.accountName < $1.accountName
+                                        }).map({
+                                            $0.id!
+                                        })
                                 } else {
                                     watchViewModel.watch.accountID = accountViewModel
                                         .accountList
@@ -269,24 +292,52 @@ struct WatchDetailView: View {
                                         }).map({
                                             $0.id!
                                         })
-                                    self.isAscendingByAmount.toggle()
-                                    self.isAscendingByAmountEnabled = true
-                                    self.isAscendingByAlphabetEnabled = false
                                 }
                             }, label: {
-                                if(isAscendingByAmountEnabled) {
-                                    if(isAscendingByAmount) {
-                                        Label("Amount", systemImage: "arrow.up")
-                                    } else {
-                                        Label("Amount", systemImage: "arrow.down")
-                                    }
+                                if(isAscendingEnabled) {
+                                    Label("Ascending", systemImage: "checkmark")
                                 } else {
-                                    Text("Amount")
+                                    Text("Ascending")
                                 }
                             })
+                            
+                            Button(action: {
+                                isAscendingEnabled = false
+                                if(isAscendingByAlphabetEnabled) {
+                                    watchViewModel.watch.accountID = accountViewModel
+                                        .accountList
+                                        .sorted(by: {
+                                            $0.accountName > $1.accountName
+                                        }).map({
+                                            $0.id!
+                                        })
+                                } else {
+                                    watchViewModel.watch.accountID = accountViewModel
+                                        .accountList
+                                        .sorted(by: {
+                                            $0.currentBalance > $1.currentBalance
+                                        }).map({
+                                            $0.id!
+                                        })
+                                }
+                            }, label: {
+                                if(!isAscendingEnabled) {
+                                    Label("Descending", systemImage: "checkmark")
+                                } else {
+                                    Text("Descending")
+                                }
+                            })
+                            
                         }, label: {
-                            Label("Sort by", systemImage: "arrow.up.arrow.down")
+                            Label("Sort Account By", systemImage: "arrow.up.arrow.down")
+                            if(isAscendingByAlphabetEnabled) {
+                                Text("Name")
+                            } else {
+                                Text("Amount")
+                            }
                         })
+                        
+                        Divider()
                         
                         Toggle(isOn: $hideInactiveAccount, label: {
                             Text("Hide Inactive Accounts")
@@ -309,7 +360,7 @@ struct WatchDetailView: View {
                 await watchViewModel.getWatchList(id: watch.id!)
                 await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
                 if(isAscendingByAlphabetEnabled) {
-                    if(isAscendingByAlphabet) {
+                    if(isAscendingEnabled) {
                         watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
                             $0.accountName < $1.accountName
                         }).map({
@@ -324,7 +375,7 @@ struct WatchDetailView: View {
                     }
                     self.isAscendingByAmountEnabled = false
                 } else if(isAscendingByAmountEnabled) {
-                    if(isAscendingByAmount) {
+                    if(isAscendingEnabled) {
                         watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
                             $0.currentBalance < $1.currentBalance
                         }).map({
@@ -357,12 +408,37 @@ struct WatchDetailView: View {
                 await accountViewModel.getAccountList()
                 await watchViewModel.getWatchList(id: watch.id!)
                 await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
-                watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
-                    $0.accountName < $1.accountName
-                }).map({
-                    $0.id!
-                })
-                self.isAscendingByAlphabetEnabled.toggle()
+                if(isAscendingByAlphabetEnabled) {
+                    if(isAscendingEnabled) {
+                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                            $0.accountName < $1.accountName
+                        }).map({
+                            $0.id!
+                        })
+                    } else {
+                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                            $0.accountName > $1.accountName
+                        }).map({
+                            $0.id!
+                        })
+                    }
+                    self.isAscendingByAmountEnabled = false
+                } else if(isAscendingByAmountEnabled) {
+                    if(isAscendingEnabled) {
+                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                            $0.currentBalance < $1.currentBalance
+                        }).map({
+                            $0.id!
+                        })
+                    } else {
+                        watchViewModel.watch.accountID = accountViewModel.accountList.sorted(by: {
+                            $0.currentBalance > $1.currentBalance
+                        }).map({
+                            $0.id!
+                        })
+                    }
+                    self.isAscendingByAlphabetEnabled = false
+                }
                 if(!watchViewModel.watch.accountID.isEmpty) {
                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                 } else {
@@ -384,5 +460,12 @@ struct WatchDetailView: View {
         return accountList.first(where: {
             return $0.key.elementsEqual(id)
         })?.value.last?.value != 0
+    }
+    
+    func not(_ value: Binding<Bool>) -> Binding<Bool> {
+        Binding<Bool>(
+            get: { !value.wrappedValue },
+            set: { value.wrappedValue = !$0 }
+        )
     }
 }
