@@ -22,12 +22,11 @@ struct SingleLineLollipopChartView: View {
             ForEach(chartDataList, id: \.self) { data in
                 LineMark(
                     x: .value("Date", data.date),
-                    y: .value("Value", data.value),
-                    series: .value("Type", data.future ? "Future" : "Present")
+                    y: .value("Value", data.value)
                 )
                 .accessibilityLabel(data.date.formatted(date: .complete, time: .omitted))
                 .accessibilityValue("\(data.value)")
-                .lineStyle(data.future ? StrokeStyle(lineWidth: lineWidth, dash: [1, 0, 1]) : StrokeStyle(lineWidth: lineWidth))
+                .lineStyle(StrokeStyle(lineWidth: lineWidth))
                 .foregroundStyle(getChartColor().gradient)
                 
                 AreaMark(
