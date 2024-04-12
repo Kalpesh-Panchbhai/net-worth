@@ -67,7 +67,7 @@ struct ChartView: View {
                 showingAssetsData.toggle()
             } else {
                 chartDataList = getAccountList(accountList: getAccountsForWatchList(watch: watchListSelected)).filter {
-                    $0.currentBalance > 0
+                    $0.currentBalance >= 0
                 }.sorted(by: {
                     $0.currentBalance > $1.currentBalance
                 })
@@ -174,7 +174,7 @@ struct ChartView: View {
                 compareAssetsToLiabilities = false
                 multipleWatchListSelection = Set<Watch>()
                 var accountList = getAccountList(accountList: getAccountsForWatchList(watch: watchListSelected)).filter {
-                    $0.currentBalance > 0
+                    $0.currentBalance >= 0
                 }
                 accountList.sort(by: {
                     $0.currentBalance > $1.currentBalance
@@ -261,8 +261,8 @@ struct ChartView: View {
         for account in accountList {
             let currentBalance = chartDataList.filter {
                 return $0.key.elementsEqual(account.id!)
-            }.first!.value.last!.value
-            returnAccountList.append(Account(accountName: account.accountName, currentBalance: currentBalance))
+            }.first?.value.last!.value
+            returnAccountList.append(Account(accountName: account.accountName, currentBalance: currentBalance ?? 0.0))
         }
         return returnAccountList
     }
