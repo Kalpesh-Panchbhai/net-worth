@@ -130,9 +130,9 @@ class AccountViewModel: ObservableObject {
         for i in 0..<accountID.count {
             let currentBalance = chartDataList.first(where: {
                 return $0.key.elementsEqual(accountID[i])
-            })!.value.last!.value
+            })?.value.last?.value
             var account = accountController.getAccount(id: accountID[i])
-            account.currentBalance = currentBalance
+            account.currentBalance = currentBalance ?? 0.0
             watchList.append(account)
         }
         DispatchQueue.main.async {
