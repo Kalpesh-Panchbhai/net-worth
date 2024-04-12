@@ -65,7 +65,8 @@ struct IncomeView: View {
                                             })
                                         }
                                     }, label: {
-                                        Label("Income Type", systemImage: filterIncomeType.isEmpty ? "tray.and.arrow.down" : "\(filterIncomeType.count).circle")
+                                        Label("Income Type", systemImage: "tray.and.arrow.down")
+                                        Text(filterIncomeType.joined(separator: ","))
                                     })
                                 }
                                 // MARK: Income Tag Menu
@@ -91,7 +92,8 @@ struct IncomeView: View {
                                             })
                                         }
                                     }, label: {
-                                        Label("Income Tag", systemImage: filterIncomeTag.isEmpty ? "tag.square" : "\(filterIncomeTag.count).circle")
+                                        Label("Income Tag", systemImage: "tag.square")
+                                        Text(filterIncomeTag.joined(separator: ","))
                                     })
                                 }
                                 // MARK: Income Year Menu
@@ -119,7 +121,8 @@ struct IncomeView: View {
                                             })
                                         }
                                     }, label: {
-                                        Label("Year", systemImage: filterYear.isEmpty ? "calendar.circle" : "\(filterYear.count).circle")
+                                        Label("Year", systemImage: "calendar.circle")
+                                        Text(filterYear.joined(separator: ","))
                                     })
                                 }
                                 // MARK: Income Financial Year Menu
@@ -148,7 +151,8 @@ struct IncomeView: View {
                                             })
                                         }
                                     }, label: {
-                                        Label("Financial Year", systemImage: filterFinancialYear.isEmpty ? "calendar.circle" : "\(filterFinancialYear.count).circle")
+                                        Label("Financial Year", systemImage: "calendar.circle")
+                                        Text(filterFinancialYear.joined(separator: ","))
                                     })
                                 }
                                 

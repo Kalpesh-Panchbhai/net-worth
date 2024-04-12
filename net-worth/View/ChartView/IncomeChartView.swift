@@ -163,7 +163,8 @@ struct IncomeChartView: View {
                                             })
                                         }
                                     }, label: {
-                                        Label("Income Type", systemImage: filterIncomeType.isEmpty ? "tray.and.arrow.down" : "\(filterIncomeType.count).circle")
+                                        Label("Income Type", systemImage: "tray.and.arrow.down")
+                                        Text(filterIncomeType.joined(separator: ","))
                                     })
                                 }
                                 
@@ -188,7 +189,8 @@ struct IncomeChartView: View {
                                             })
                                         }
                                     }, label: {
-                                        Label("Income Tag", systemImage: filterIncomeTag.isEmpty ? "tag.square" : "\(filterIncomeTag.count).circle")
+                                        Label("Income Tag", systemImage: "tag.square")
+                                        Text(filterIncomeTag.joined(separator: ","))
                                     })
                                 }
                                 
@@ -214,7 +216,8 @@ struct IncomeChartView: View {
                                             })
                                         }
                                     }, label: {
-                                        Label("Year", systemImage: filterYear.isEmpty ? "calendar.circle" : "\(filterYear.count).circle")
+                                        Label("Year", systemImage: "calendar.circle")
+                                        Text(filterYear.joined(separator: ","))
                                     })
                                 }
                                 
@@ -240,16 +243,17 @@ struct IncomeChartView: View {
                                             })
                                         }
                                     }, label: {
-                                        Label("Financial Year", systemImage: filterFinancialYear.isEmpty ? "calendar.circle" : "\(filterFinancialYear.count).circle")
+                                        Label("Financial Year", systemImage: "calendar.circle")
+                                        Text(filterFinancialYear.joined(separator: ","))
                                     })
                                 }
                                 
                             }, label: {
                                 Label("Filter by", systemImage: "line.3.horizontal.decrease.circle")
+                                Text(getData())
                             })
                             
                             Menu(content: {
-                                
                                 Button(action: {
                                     self.groupByType.toggle()
                                     if(groupByType) {
@@ -323,6 +327,15 @@ struct IncomeChartView: View {
                                 })
                             }, label: {
                                 Label("Group by", systemImage: "rectangle.3.group")
+                                if(groupByType) {
+                                    Text("Income Type")
+                                } else if(groupByTag) {
+                                    Text("Income Tag")
+                                } else if(groupByYear) {
+                                    Text("Year")
+                                } else if(groupByFinancialYear) {
+                                    Text("Financial Year")
+                                }
                             })
                             
                             Toggle("Show Total", isOn: $showTotal)
@@ -448,5 +461,34 @@ struct IncomeChartView: View {
                 }
             }
         }
+    }
+    
+    private func getData() -> String {
+        var returnString = ""
+        if(!filterIncomeType.isEmpty) {
+            returnString = "Income Type"
+        }
+        if(!filterIncomeTag.isEmpty) {
+            if(returnString.isEmpty) {
+                returnString = "Income Tag"
+            } else {
+                returnString = returnString + ",Income Tag"
+            }
+        }
+        if(!filterYear.isEmpty) {
+            if(returnString.isEmpty) {
+                returnString = "Year"
+            } else {
+                returnString = returnString + ",Year"
+            }
+        }
+        if(!filterFinancialYear.isEmpty) {
+            if(returnString.isEmpty) {
+                returnString = "Financial Year"
+            } else {
+                returnString = returnString + ",Financial Year"
+            }
+        }
+        return returnString
     }
 }
