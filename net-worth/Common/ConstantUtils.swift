@@ -100,5 +100,6 @@ class ConstantUtils {
     static var twoYearRange = "2Y"
     static var fiveYearRange = "5Y"
     static var allRange = "All"
-    
+ 
+    static var chartLastUpdated = "chartLastUpdated"
 }

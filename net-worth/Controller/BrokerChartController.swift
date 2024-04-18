@@ -31,7 +31,7 @@ class BrokerChartController {
     }
     
     public func loadChartDataForExistingBrokerAccount(accountInBroker: AccountInBrokerData) async {
-        if(accountInBroker.accountInBroker.lastUpdated > ApplicationData.shared.lastUpdatedChartTimestamp) {
+        if(accountInBroker.accountInBroker.lastUpdated > ApplicationData.shared.chartLastUpdated) {
             await loadChartDataForExistingBrokerAccountWithLatestCloudData(accountInBroker: accountInBroker)
         } else {
             await loadChartDataForExistingBrokerAccountWithExistingData(accountInBroker: accountInBroker)
@@ -43,7 +43,7 @@ class BrokerChartController {
             let symbol = accountInBroker.accountInBroker.symbol
             let transactionList = accountInBroker.accountTransaction
             let newTransactionList = transactionList.filter {
-                return $0.createdDate >= ApplicationData.shared.lastUpdatedChartTimestamp
+                return $0.createdDate >= ApplicationData.shared.chartLastUpdated
             }
             var chartData = ApplicationData.shared.chartDataList.first(where: {
                 return $0.key.elementsEqual(accountInBroker.accountInBroker.id!)

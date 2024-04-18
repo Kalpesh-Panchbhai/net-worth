@@ -174,7 +174,7 @@ struct SettingsView: View {
                     Button(action: {
                         isPresentingUpdateChartDataConfirm.toggle()
                     }, label: {
-                        let dateTime = UserDefaults.standard.string(forKey: "chartLastUpdated") ?? ""
+                        let dateTime = UserDefaults.standard.string(forKey: ConstantUtils.chartLastUpdated) ?? ""
                         Label("Date Time: " + dateTime, systemImage: "gear.badge.checkmark")
                             .foregroundColor(Color.theme.primaryText)
                             .listRowBackground(Color.theme.foreground)

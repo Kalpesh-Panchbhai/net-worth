@@ -15,7 +15,7 @@ struct ApplicationData: Codable {
     var chartDataList: [String: [ChartData]]
     
     var dataLoading = false
-    var lastUpdatedChartTimestamp: Date
+    var chartLastUpdated: Date
     
     var symbolDataList = [String: [ChartData]]()
     var totalAccount = Int()
@@ -23,7 +23,7 @@ struct ApplicationData: Codable {
     private init() {
         data = Data()
         chartDataList = [String: [ChartData]]()
-        lastUpdatedChartTimestamp = Date.now
+        chartLastUpdated = Date.now
     }
     
     public static func loadData() async {

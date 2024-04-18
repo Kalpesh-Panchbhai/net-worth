@@ -58,7 +58,7 @@ class CommonChartController: ObservableObject {
         } catch {
             print("Unable to Encode Note (\(error))")
         }
-        UserDefaults.standard.set(Date.now.format(), forKey: "chartLastUpdated")
+        UserDefaults.standard.set(Date.now.format(), forKey: ConstantUtils.chartLastUpdated)
     }
     
     public func loadChartData() async {

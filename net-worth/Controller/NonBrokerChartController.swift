@@ -18,7 +18,7 @@ class NonBrokerChartController {
     }
     
     public func loadChartDataForExistingNonBrokerAccount(accountData: AccountData) async {
-        if(accountData.account.lastUpdated > ApplicationData.shared.lastUpdatedChartTimestamp) {
+        if(accountData.account.lastUpdated > ApplicationData.shared.chartLastUpdated) {
             return await loadChartDataForExistingNonBrokerAccountWithLatestCloudData(accountData: accountData)
         } else {
             return await loadChartDataForExistingNonBrokerAccountWithExistingData(accountData: accountData)
@@ -28,7 +28,7 @@ class NonBrokerChartController {
     public func loadChartDataForExistingNonBrokerAccountWithLatestCloudData(accountData: AccountData) async {
         let transactionList = accountData.accountTransaction
         let newTransactionList = transactionList.filter {
-            return $0.createdDate >= ApplicationData.shared.lastUpdatedChartTimestamp
+            return $0.createdDate >= ApplicationData.shared.chartLastUpdated
         }
         var chartData = ApplicationData.shared.chartDataList.first(where: {
             return $0.key.elementsEqual(accountData.account.id!)
