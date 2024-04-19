@@ -42,6 +42,9 @@ class ChartController {
                     if(chartData != nil) {
                         chartDataListResponse.append(ChartData(date: startDate.removeTimeStamp(), value: chartData!.value))
                     }
+                    if(daysDifference == 0) {
+                        break;
+                    }
                     startDate = getNextStartDate(startDate: startDate, count: Double(daysDifference))
                     
                 }
