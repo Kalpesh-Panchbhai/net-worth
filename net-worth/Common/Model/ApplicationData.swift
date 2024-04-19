@@ -635,35 +635,27 @@ struct ApplicationData: Codable {
             }
         }
         
-        await withThrowingTaskGroup(of: Void.self) { group in
-            for (accountType, accountDataList) in accountDataListByAccountType {
-                group.addTask {
-                    if(accountType.elementsEqual(ConstantUtils.brokerAccountType) || accountType.elementsEqual("Inactive Account")) {
-                        if(accountType.elementsEqual("Inactive Account")) {
-                            let chartDataListResult = await self.generateChartdataForMixedAccounts(accountType: "Inactive Account", accountDataList: accountDataList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
-                            ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: "Inactive Account")
-                        } else {
-                            let chartDataListResult = await self.generateChartDataForMultipleBrokerAccounts(accountType: ConstantUtils.brokerAccountType, accountDataList: accountDataList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
-                            ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: ConstantUtils.brokerAccountType)
-                        }
-                    } else {
-                        let chartDataListResult = await self.generateChartDataForMultipleNonBrokerAccount(accountType: accountType, accountDataList: accountDataList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
-                        ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: accountType)
-                    }
+        for (accountType, accountDataList) in accountDataListByAccountType {
+            if(accountType.elementsEqual(ConstantUtils.brokerAccountType) || accountType.elementsEqual("Inactive Account")) {
+                if(accountType.elementsEqual("Inactive Account")) {
+                    let chartDataListResult = await self.generateChartdataForMixedAccounts(accountType: "Inactive Account", accountDataList: accountDataList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
+                    ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: "Inactive Account")
+                } else {
+                    let chartDataListResult = await self.generateChartDataForMultipleBrokerAccounts(accountType: ConstantUtils.brokerAccountType, accountDataList: accountDataList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
+                    ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: ConstantUtils.brokerAccountType)
                 }
+            } else {
+                let chartDataListResult = await self.generateChartDataForMultipleNonBrokerAccount(accountType: accountType, accountDataList: accountDataList, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
+                ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: accountType)
             }
         }
     }
     
     public static func generateChartDataForEachWatchList(isRefreshOperation: Bool = false, refreshChartStartDate: Date = Date()) async {
         let watchList = await WatchController().getAllWatchList()
-        await withThrowingTaskGroup(of: Void.self) { group in
-            for watch in watchList {
-                group.addTask {
-                    let chartDataListResult = self.generateChartDataForWatchAccount(id: watch.id!, accountIDList: watch.accountID, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
-                    ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: watch.id!)
-                }
-            }
+        for watch in watchList {
+            let chartDataListResult = self.generateChartDataForWatchAccount(id: watch.id!, accountIDList: watch.accountID, isRefreshOperation: isRefreshOperation, refreshChartStartDate: refreshChartStartDate)
+            ApplicationData.shared.chartDataList.updateValue(chartDataListResult, forKey: watch.id!)
         }
     }
     
