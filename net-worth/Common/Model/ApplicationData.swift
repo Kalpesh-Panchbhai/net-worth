@@ -51,6 +51,7 @@ struct ApplicationData: Codable {
         shared = ApplicationData()
         UserDefaults.standard.removeObject(forKey: "data")
         UserDefaults.standard.removeObject(forKey: "chartData")
+        UserDefaults.standard.removeObject(forKey: ConstantUtils.chartLastUpdated)
     }
     
     private static func fetchData() async {
