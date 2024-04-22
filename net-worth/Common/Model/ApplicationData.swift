@@ -461,9 +461,11 @@ struct ApplicationData: Codable {
                         for symbol in rawSymbolConvertedToMap {
                             let data = currencyData.last(where: {
                                 return $0.date.removeTimeStamp() <= symbol.date.removeTimeStamp()
-                            })!
+                            }) ?? nil
                             
-                            chartDataList.append(ChartData(date: symbol.date.removeTimeStamp(), value: symbol.value * data.value))
+                            if(data != nil) {
+                                chartDataList.append(ChartData(date: symbol.date.removeTimeStamp(), value: symbol.value * data!.value))
+                            }
                         }
                         
                         ApplicationData.shared.symbolDataList.updateValue(chartDataList, forKey: symbol)
