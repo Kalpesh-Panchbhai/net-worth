@@ -14,23 +14,23 @@ class IncomeTypeController {
     
     public func addIncomeType(type: IncomeType) async {
         let userId = ApplicationData.shared.userId
-        let requestData = TypeValueRequest(name: type.name, userId: userId, isDefault: type.isdefault)
+        let requestData = TypeValueRestModel(name: type.name, userId: userId, isDefault: type.isdefault)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(requestData)
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: TypeValueResponse.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: TypeValueRestModel.self)
     }
     
     public func updateIncomeType(type: IncomeType) async {
         let userId = ApplicationData.shared.userId
-        let requestData = TypeValueRequest(name: type.name, userId: userId, isDefault: type.isdefault)
+        let requestData = TypeValueRestModel(name: type.name, userId: userId, isDefault: type.isdefault)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(requestData)
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, pathParam: type.id, forClass: TypeValueResponse.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, pathParam: type.id, forClass: TypeValueRestModel.self)
     }
     
     public func getIncomeTypeList() async -> [IncomeType] {
         let userId = ApplicationData.shared.userId
-        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [TypeValueResponse].self)
+        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [TypeValueRestModel].self)
         return response.map {
             return IncomeType(id: $0.id, name: $0.name, isdefault: $0.isDefault)
         }.sorted(by: {
