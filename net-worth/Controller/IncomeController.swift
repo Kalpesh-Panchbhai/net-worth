@@ -14,37 +14,34 @@ class IncomeController {
     
     public func getIncomeList() async -> [Income] {
         let userId = ApplicationData.shared.userId
-//        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: IncomeMainResponse.self)
-//        return response.result.data.map {
-//            return Income(id: $0.id,
-//                          amount: $0.amount,
-//                          taxpaid: $0.taxPaid,
-//                          creditedOn: $0.creditedOn.convertFromGlideDateTimeFormat(),
-//                          currency: $0.currency,
-//                          type: $0.incomeType,
-//                          tag: $0.incomeTag)
-//        }.sorted(by: {
-//            return $0.creditedOn < $1.creditedOn
-//        })
-        return [Income]()
+        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [IncomeRestModel].self)
+        return response.map {
+            return Income(id: $0.id,
+                          amount: $0.amount,
+                          taxpaid: $0.taxPaid,
+                          creditedOn: $0.creditedOn.convertFromGlideDateTimeFormat(),
+                          currency: $0.currency,
+                          type: $0.incomeType,
+                          tag: $0.incomeTag)
+        }.sorted(by: {
+            return $0.creditedOn < $1.creditedOn
+        })
     }
     
     public func addIncome(income: Income) async {
         let userId = ApplicationData.shared.userId
-        let requestData = IncomeRequest(amount: income.amount, taxPaid: income.taxpaid, currency: income.currency, incomeType: income.type, incomeTag: income.tag, creditedOn: income.creditedOn.convertToGlideDateTimeFormat(), user: userId)
+        let requestData = IncomeRestModel(amount: income.amount, taxPaid: income.taxpaid, currency: income.currency, incomeType: income.type, incomeTag: income.tag, creditedOn: income.creditedOn.convertToGlideDateTimeFormat(), userId: userId)
         let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
         let data = try! encoder.encode(requestData)
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: IncomeMainResponse.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: IncomeRestModel.self)
     }
     
     public func updateIncome(income: Income) async {
         let userId = ApplicationData.shared.userId
-        let requestData = IncomeRequest(amount: income.amount, taxPaid: income.taxpaid, currency: income.currency, incomeType: income.type, incomeTag: income.tag, creditedOn: income.creditedOn.convertToGlideDateTimeFormat(), user: userId)
+        let requestData = IncomeRestModel(amount: income.amount, taxPaid: income.taxpaid, currency: income.currency, incomeType: income.type, incomeTag: income.tag, creditedOn: income.creditedOn.convertToGlideDateTimeFormat(), userId: userId)
         let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
         let data = try! encoder.encode(requestData)
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, pathParam: income.id, forClass: IncomeMainResponse.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, pathParam: income.id, forClass: IncomeRestModel.self)
     }
     
     public func deleteIncome(income: Income) async {
