@@ -66,8 +66,6 @@ struct ApplicationData: Codable {
                 shared.data = try decoder.decode(Data2.self, from: data)
                 
                 await loadIncomeData()
-                
-                var newDataAvailable = false
             } catch {
                 print("Unable to Decode Note (\(error))")
             }
