@@ -9,6 +9,6 @@ import Foundation
 
 struct TypeValueRequest: Codable {
     var name: String
-    var user: String
+    var userId: String
     var isDefault: Bool
 }

@@ -14,26 +14,24 @@ class IncomeTypeController {
     
     public func addIncomeType(type: IncomeType) async {
         let userId = ApplicationData.shared.userId
-        let requestData = TypeValueRequest(name: type.name, user: userId, isDefault: type.isdefault)
+        let requestData = TypeValueRequest(name: type.name, userId: userId, isDefault: type.isdefault)
         let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
         let data = try! encoder.encode(requestData)
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: TypeValueMainResponse.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: TypeValueResponse.self)
     }
     
     public func updateIncomeType(type: IncomeType) async {
         let userId = ApplicationData.shared.userId
-        let requestData = TypeValueRequest(name: type.name, user: userId, isDefault: type.isdefault)
+        let requestData = TypeValueRequest(name: type.name, userId: userId, isDefault: type.isdefault)
         let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
         let data = try! encoder.encode(requestData)
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, pathParam: type.id, forClass: TypeValueMainResponse.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, pathParam: type.id, forClass: TypeValueResponse.self)
     }
     
     public func getIncomeTypeList() async -> [IncomeType] {
         let userId = ApplicationData.shared.userId
-        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: TypeValueMainResponse.self)
-        return response.result.data.map {
+        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [TypeValueResponse].self)
+        return response.map {
             return IncomeType(id: $0.id, name: $0.name, isdefault: $0.isDefault)
         }.sorted(by: {
             return $0.name < $1.name

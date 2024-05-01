@@ -10,7 +10,7 @@ import Foundation
 struct TypeValueResponse: Codable {
     var id: String
     var name: String
-    var user: String
+    var userId: String
     var isDefault: Bool
 }
 

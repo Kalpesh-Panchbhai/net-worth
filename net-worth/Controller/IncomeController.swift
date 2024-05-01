@@ -14,18 +14,19 @@ class IncomeController {
     
     public func getIncomeList() async -> [Income] {
         let userId = ApplicationData.shared.userId
-        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: IncomeMainResponse.self)
-        return response.result.data.map {
-            return Income(id: $0.id,
-                          amount: $0.amount,
-                          taxpaid: $0.taxPaid,
-                          creditedOn: $0.creditedOn.convertFromGlideDateTimeFormat(),
-                          currency: $0.currency,
-                          type: $0.incomeType,
-                          tag: $0.incomeTag)
-        }.sorted(by: {
-            return $0.creditedOn < $1.creditedOn
-        })
+//        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: IncomeMainResponse.self)
+//        return response.result.data.map {
+//            return Income(id: $0.id,
+//                          amount: $0.amount,
+//                          taxpaid: $0.taxPaid,
+//                          creditedOn: $0.creditedOn.convertFromGlideDateTimeFormat(),
+//                          currency: $0.currency,
+//                          type: $0.incomeType,
+//                          tag: $0.incomeTag)
+//        }.sorted(by: {
+//            return $0.creditedOn < $1.creditedOn
+//        })
+        return [Income]()
     }
     
     public func addIncome(income: Income) async {

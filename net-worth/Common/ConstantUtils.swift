@@ -116,5 +116,5 @@ class ConstantUtils {
  
     static var chartLastUpdated = "chartLastUpdated"
     
-    static var baseRESTURL = "https://dexdevkalpesh.service-now.com/api/x_snc_net_worth_ba/networth/"
+    static var baseRESTURL = "https://lz2oz2v0ul.execute-api.ap-south-1.amazonaws.com/prod/"
 }

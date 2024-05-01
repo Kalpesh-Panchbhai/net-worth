@@ -16,12 +16,11 @@ class UserController {
     
     func addCurrentUser() async {
         let userId = getCurrentUserUID()
-        let requestData = UserRequest(userId: userId)
+        let requestData = UserRestModel(userId: userId)
         let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
         let data = try! encoder.encode(requestData)
-        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: UserMainResponse.self)
-        ApplicationData.shared.userId = response.result.data.id
+        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: UserRestModel.self)
+        ApplicationData.shared.userId = response.id
     }
     
     func getCurrentUserUID() -> String {
