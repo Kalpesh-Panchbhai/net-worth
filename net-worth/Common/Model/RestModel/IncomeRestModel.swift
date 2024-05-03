@@ -46,6 +46,9 @@ struct IncomeRestModel: Codable {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        if(!id.isEmpty) {
+            try container.encode(id, forKey: .id)
+        }
         try container.encode(amount, forKey: .amount)
         try container.encode(taxPaid, forKey: .taxPaid)
         try container.encode(currency, forKey: .currency)

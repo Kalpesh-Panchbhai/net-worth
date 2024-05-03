@@ -38,14 +38,14 @@ class IncomeController {
     
     public func updateIncome(income: Income) async {
         let userId = ApplicationData.shared.userId
-        let requestData = IncomeRestModel(amount: income.amount, taxPaid: income.taxpaid, currency: income.currency, incomeType: income.type, incomeTag: income.tag, creditedOn: income.creditedOn.convertToGlideDateTimeFormat(), userId: userId)
+        let requestData = IncomeRestModel(id: income.id, amount: income.amount, taxPaid: income.taxpaid, currency: income.currency, incomeType: income.type, incomeTag: income.tag, creditedOn: income.creditedOn.convertToGlideDateTimeFormat(), userId: userId)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(requestData)
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, pathParam: income.id, forClass: IncomeRestModel.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: IncomeRestModel.self)
     }
     
     public func deleteIncome(income: Income) async {
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: income.id, forClass: IncomeDeleteMainResponse.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: income.id, forClass: IncomeRestModel.self)
     }
     
     public func deleteIncomes() {

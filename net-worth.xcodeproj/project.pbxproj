@@ -32,7 +32,6 @@
 		7D59B44E2BE249B7006F3F00 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4242BE249B7006F3F00 /* User.swift */; };
 		7D59B44F2BE249B7006F3F00 /* Watch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4252BE249B7006F3F00 /* Watch.swift */; };
 		7D59B4502BE249B7006F3F00 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4272BE249B7006F3F00 /* EmptyResponse.swift */; };
-		7D59B4512BE249B7006F3F00 /* IncomeDeleteResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4282BE249B7006F3F00 /* IncomeDeleteResponse.swift */; };
 		7D59B4532BE249B7006F3F00 /* IncomeRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B42A2BE249B7006F3F00 /* IncomeRestModel.swift */; };
 		7D59B4552BE249B7006F3F00 /* TypeValueRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B42C2BE249B7006F3F00 /* TypeValueRestModel.swift */; };
 		7D59B4572BE249B7006F3F00 /* UserRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B42E2BE249B7006F3F00 /* UserRestModel.swift */; };
@@ -178,7 +177,6 @@
 		7D59B4242BE249B7006F3F00 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		7D59B4252BE249B7006F3F00 /* Watch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Watch.swift; sourceTree = "<group>"; };
 		7D59B4272BE249B7006F3F00 /* EmptyResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
-		7D59B4282BE249B7006F3F00 /* IncomeDeleteResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeDeleteResponse.swift; sourceTree = "<group>"; };
 		7D59B42A2BE249B7006F3F00 /* IncomeRestModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeRestModel.swift; sourceTree = "<group>"; };
 		7D59B42C2BE249B7006F3F00 /* TypeValueRestModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeValueRestModel.swift; sourceTree = "<group>"; };
 		7D59B42E2BE249B7006F3F00 /* UserRestModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserRestModel.swift; sourceTree = "<group>"; };
@@ -402,7 +400,6 @@
 			isa = PBXGroup;
 			children = (
 				7D59B4272BE249B7006F3F00 /* EmptyResponse.swift */,
-				7D59B4282BE249B7006F3F00 /* IncomeDeleteResponse.swift */,
 				7D59B42A2BE249B7006F3F00 /* IncomeRestModel.swift */,
 				7D59B42C2BE249B7006F3F00 /* TypeValueRestModel.swift */,
 				7D59B42E2BE249B7006F3F00 /* UserRestModel.swift */,
@@ -784,7 +781,6 @@
 				7D59B5092BE249D9006F3F00 /* GoogleSiginBtn.swift in Sources */,
 				7D59B47C2BE249C8006F3F00 /* CommonController.swift in Sources */,
 				7D59B4F22BE249D9006F3F00 /* UpdateBalanceAccountView.swift in Sources */,
-				7D59B4512BE249B7006F3F00 /* IncomeDeleteResponse.swift in Sources */,
 				7D59B4E52BE249D9006F3F00 /* AccountCardView.swift in Sources */,
 				7D59B4552BE249B7006F3F00 /* TypeValueRestModel.swift in Sources */,
 				7D59B4592BE249B7006F3F00 /* Balance.swift in Sources */,

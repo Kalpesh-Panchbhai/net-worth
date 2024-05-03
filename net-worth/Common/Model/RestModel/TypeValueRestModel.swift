@@ -34,6 +34,9 @@ struct TypeValueRestModel: Codable {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        if(!id.isEmpty) {
+            try container.encode(id, forKey: .id)
+        }
         try container.encode(name, forKey: .name)
         try container.encode(userId, forKey: .userId)
         try container.encode(isDefault, forKey: .isDefault)

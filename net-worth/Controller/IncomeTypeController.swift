@@ -22,10 +22,10 @@ class IncomeTypeController {
     
     public func updateIncomeType(type: IncomeType) async {
         let userId = ApplicationData.shared.userId
-        let requestData = TypeValueRestModel(name: type.name, userId: userId, isDefault: type.isdefault)
+        let requestData = TypeValueRestModel(id: type.id, name: type.name, userId: userId, isDefault: type.isdefault)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(requestData)
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, pathParam: type.id, forClass: TypeValueRestModel.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: TypeValueRestModel.self)
     }
     
     public func getIncomeTypeList() async -> [IncomeType] {

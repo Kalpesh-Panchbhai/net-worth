@@ -22,10 +22,10 @@ class IncomeTagController {
     
     public func updateIncomeTag(tag: IncomeTag) async {
         let userId = ApplicationData.shared.userId
-        let requestData = TypeValueRestModel(name: tag.name, userId: userId, isDefault: tag.isdefault)
+        let requestData = TypeValueRestModel(id: tag.id, name: tag.name, userId: userId, isDefault: tag.isdefault)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(requestData)
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, pathParam: tag.id, forClass: TypeValueRestModel.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: TypeValueRestModel.self)
     }
     
     public func getIncomeTagList() async -> [IncomeTag] {
