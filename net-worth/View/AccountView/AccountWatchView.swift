@@ -10,16 +10,17 @@ import SwiftUI
 struct AccountWatchView: View {
     
     @ObservedObject var watchViewModel: WatchViewModel
+    @ObservedObject var accountViewModel: AccountViewModel
     
     var body: some View {
         NavigationView {
             List {
                 ForEach(watchViewModel.watchListForAccount, id: \.self, content: { watch in
                     NavigationLink(destination: {
-                        WatchDetailView(watch: watch, watchViewModel: watchViewModel)
+                        WatchDetailView(watch: watch, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                             .toolbarRole(.editor)
                     }, label: {
-                        WatchViewRow(watch: watch)
+                        WatchViewRow(watch: watch, accountViewModel: accountViewModel)
                             .badge(
                                 Text("\(watch.accountID.count)")
                                     .foregroundColor(Color.theme.secondaryText)

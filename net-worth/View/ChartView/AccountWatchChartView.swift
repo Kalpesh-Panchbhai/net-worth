@@ -18,7 +18,7 @@ struct AccountWatchChartView: View {
     @State var range = ConstantUtils.oneMonthRange
     
     @StateObject var chartViewModel = ChartViewModel()
-    @StateObject var accountViewModel = AccountViewModel()
+    @StateObject var accountViewModel: AccountViewModel
     @StateObject var financeViewModel = FinanceViewModel()
     
     @Environment(\.scenePhase) var scenePhase

@@ -22,24 +22,11 @@ struct AccountDetailCardView: View {
                 Text(accountViewModel.account.currency)
                     .foregroundColor(Color.theme.secondaryText)
                     .font(.caption)
-                Text("\(accountViewModel.account.currentBalance.withCommas(decimalPlace: 2))")
+                Text("\(accountViewModel.account.balance.currentDayValue.withCommas(decimalPlace: 2))")
                     .foregroundColor(Color.theme.primaryText)
                     .font(.caption.bold())
                 Spacer()
-                if(accountViewModel.account.active) {
-                    if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != ConstantUtils.savingAccountType) {
-                        Image(systemName: ConstantUtils.notificationOnImageName)
-                            .foregroundColor(Color.theme.green.opacity(0.7))
-                            .font(.caption)
-                        Text("\(accountViewModel.account.paymentDate)")
-                            .foregroundColor(Color.theme.green)
-                            .font(.caption)
-                    } else if(accountViewModel.account.accountType != ConstantUtils.savingAccountType) {
-                        Image(systemName: ConstantUtils.notificationOffImageName)
-                            .foregroundColor(Color.theme.red.opacity(0.7))
-                            .font(.caption)
-                    }
-                } else {
+                if(!accountViewModel.account.active) {
                     Text("(Closed)")
                         .foregroundColor(Color.theme.red)
                         .font(.caption2.italic())

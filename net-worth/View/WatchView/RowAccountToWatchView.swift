@@ -43,12 +43,12 @@ struct RowAccountToWatchView: View {
                         .bold()
                         .onTapGesture {
                             isAdded.toggle()
-                            self.watch.accountID.append(account.id!)
+                            self.watch.accountID.append(account.id)
                             self.watch.accountID.sort(by: { item1, item2 in
                                 accountViewModel.accountList.filter { account1 in
-                                    account1.id!.elementsEqual(item1)
+                                    account1.id.elementsEqual(item1)
                                 }.first!.accountName <= accountViewModel.accountList.filter { account2 in
-                                    account2.id!.elementsEqual(item2)
+                                    account2.id.elementsEqual(item2)
                                 }.first!.accountName
                             })
                             watchController.addAccountToWatchList(watch: watch)

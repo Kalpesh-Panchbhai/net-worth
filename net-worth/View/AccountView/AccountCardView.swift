@@ -9,35 +9,20 @@ import SwiftUI
 
 struct AccountCardView: View {
     
-    var accountID: String
-    
-    @StateObject var accountViewModel = AccountViewModel()
+    var account: Account
     
     var body: some View {
         VStack(alignment: .leading) {
             Spacer()
             HStack {
-                Text(accountViewModel.account.accountName)
+                Text(account.accountName)
                     .foregroundColor(Color.theme.primaryText)
                     .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)
                 Spacer()
-                if(accountViewModel.account.accountType != ConstantUtils.brokerAccountType) {
-                    if(accountViewModel.account.active) {
-                        if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != ConstantUtils.savingAccountType) {
-                            Image(systemName: ConstantUtils.notificationOnImageName)
-                                .foregroundColor(Color.theme.green.opacity(0.7))
-                                .font(.caption)
-                            Text("\(accountViewModel.account.paymentDate)")
-                                .foregroundColor(Color.theme.green)
-                                .font(.caption)
-                        } else if(accountViewModel.account.accountType != ConstantUtils.savingAccountType) {
-                            Image(systemName: ConstantUtils.notificationOffImageName)
-                                .foregroundColor(Color.theme.red.opacity(0.7))
-                                .font(.caption)
-                        }
-                    } else {
-                        Text(accountViewModel.account.accountType)
+                if(account.accountType != ConstantUtils.brokerAccountType) {
+                    if(!account.active) {
+                        Text(account.accountType)
                             .foregroundColor(Color.theme.secondaryText)
                             .font(.caption)
                             .multilineTextAlignment(.leading)
@@ -47,26 +32,26 @@ struct AccountCardView: View {
             Spacer()
             Spacer()
             HStack(alignment: .center) {
-                if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
+                if(account.accountType == ConstantUtils.brokerAccountType) {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
-                    Text("\(accountViewModel.accountBrokerCurrentBalance.currentValue.withCommas(decimalPlace: 2))")
+                    Text("\(account.balance.currentDayValue.withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 } else {
-                    Text(accountViewModel.account.currency)
+                    Text(account.currency)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
-                    Text("\(accountViewModel.accountOneDayChange.currentValue.withCommas(decimalPlace: 2))")
+                    Text("\(account.balance.currentDayValue.withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 }
             }
             Spacer()
             HStack {
-                if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
-                    if(accountViewModel.accountBrokerCurrentBalance.oneDayChange > 0) {
+                if(account.accountType == ConstantUtils.brokerAccountType) {
+                    if(getOneDayChange() > 0) {
                         ZStack {
                             Circle()
                                 .fill(Color.theme.green.opacity(0.2))
@@ -75,13 +60,13 @@ struct AccountCardView: View {
                                 .foregroundColor(Color.theme.green)
                                 .font(.system(size: 11).bold())
                         }
-                        Text("+\(accountViewModel.accountBrokerCurrentBalance.oneDayChange.withCommas(decimalPlace: 2))")
+                        Text("+\(getOneDayChange().withCommas(decimalPlace: 2))")
                             .foregroundColor(Color.theme.green)
                             .font(.system(size: 11).bold())
-                        Text("(+\(getOneDayPercentageChangeForBroker()))")
+                        Text("(+\(getOneDayPercentage()))")
                             .foregroundColor(Color.theme.green)
                             .font(.system(size: 11).bold())
-                    } else if(accountViewModel.accountBrokerCurrentBalance.oneDayChange < 0) {
+                    } else if(getOneDayChange() < 0) {
                         ZStack {
                             Circle()
                                 .fill(Color.theme.red.opacity(0.2))
@@ -90,17 +75,17 @@ struct AccountCardView: View {
                                 .foregroundColor(Color.theme.red)
                                 .font(.system(size: 11).bold())
                         }
-                        Text("\(accountViewModel.accountBrokerCurrentBalance.oneDayChange.withCommas(decimalPlace: 2))")
+                        Text("\(getOneDayChange().withCommas(decimalPlace: 2))")
                             .foregroundColor(Color.theme.red)
                             .font(.system(size: 11).bold())
-                        Text("(\(getOneDayPercentageChangeForBroker()))")
+                        Text("(\(getOneDayPercentage()))")
                             .foregroundColor(Color.theme.red)
                             .font(.system(size: 11).bold())
                     } else {
                         Text("")
                     }
                 } else {
-                    if(accountViewModel.accountOneDayChange.oneDayChange > 0) {
+                    if(getOneDayChange() > 0) {
                         ZStack {
                             Circle()
                                 .fill(Color.theme.green.opacity(0.2))
@@ -109,13 +94,13 @@ struct AccountCardView: View {
                                 .foregroundColor(Color.theme.green)
                                 .font(.system(size: 11).bold())
                         }
-                        Text("+\(accountViewModel.accountOneDayChange.oneDayChange.withCommas(decimalPlace: 2))")
+                        Text("+\(getOneDayChange().withCommas(decimalPlace: 2))")
                             .foregroundColor(Color.theme.green)
                             .font(.system(size: 11).bold())
-                        Text("(+\(getOneDayPercentageChangeForNonBroker()))")
+                        Text("(+\(getOneDayPercentage()))")
                             .foregroundColor(Color.theme.green)
                             .font(.system(size: 11).bold())
-                    } else if(accountViewModel.accountOneDayChange.oneDayChange < 0) {
+                    } else if(getOneDayChange() < 0) {
                         ZStack {
                             Circle()
                                 .fill(Color.theme.red.opacity(0.2))
@@ -124,10 +109,10 @@ struct AccountCardView: View {
                                 .foregroundColor(Color.theme.red)
                                 .font(.system(size: 11).bold())
                         }
-                        Text("\(accountViewModel.accountOneDayChange.oneDayChange.withCommas(decimalPlace: 2))")
+                        Text("\(getOneDayChange().withCommas(decimalPlace: 2))")
                             .foregroundColor(Color.theme.red)
                             .font(.system(size: 11).bold())
-                        Text("(\(getOneDayPercentageChangeForNonBroker()))")
+                        Text("(\(getOneDayPercentage()))")
                             .foregroundColor(Color.theme.red)
                             .font(.system(size: 11).bold())
                     } else {
@@ -137,28 +122,29 @@ struct AccountCardView: View {
             }
             Spacer()
         }
-        .onAppear {
-            Task.init {
-                await accountViewModel.getAccount(id: accountID)
-                if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
-                    await accountViewModel.getAccountInBrokerList(brokerID: accountID)
-                    await accountViewModel.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountViewModel.accountsInBroker)
-                } else {
-                    await accountViewModel.getAccountLastOneDayChange(id: accountID)
-                }
-            }
-        }
+        //        .onAppear {
+        //            Task.init {
+        //                await accountViewModel.getAccount(id: accountID)
+        //                if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
+        //                    await accountViewModel.getAccountInBrokerList(brokerID: accountID)
+        //                    await accountViewModel.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountViewModel.accountsInBroker)
+        //                } else {
+        //                    await accountViewModel.getAccountLastOneDayChange(id: accountID)
+        //                }
+        //            }
+        //        }
         .frame(width: 150, height: 80)
         .padding(8)
         .background(Color.theme.foreground)
         .cornerRadius(10)
     }
     
-    private func getOneDayPercentageChangeForNonBroker() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: accountViewModel.accountOneDayChange.previousDayValue, currentBalance: accountViewModel.accountOneDayChange.currentValue)
+    private func getOneDayPercentage() -> String {
+        return CommonController.getGrowthPercentage(previousBalance: account.balance.previousDayValue, currentBalance: account.balance.currentDayValue)
     }
     
-    private func getOneDayPercentageChangeForBroker() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: accountViewModel.accountBrokerCurrentBalance.previousDayValue, currentBalance: accountViewModel.accountBrokerCurrentBalance.currentValue)
+    private func getOneDayChange() -> Double {
+        return account.balance.currentDayValue - account.balance.previousDayValue
     }
+    
 }

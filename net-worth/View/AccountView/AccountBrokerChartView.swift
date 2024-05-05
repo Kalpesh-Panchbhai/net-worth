@@ -16,7 +16,7 @@ struct AccountBrokerChartView: View {
     @State var range = ConstantUtils.oneMonthRange
     
     @StateObject var chartViewModel = ChartViewModel()
-    @StateObject var accountViewModel = AccountViewModel()
+    @StateObject var accountViewModel: AccountViewModel
     @StateObject var financeViewModel = FinanceViewModel()
     
     var body: some View {

@@ -33,41 +33,6 @@ struct UpdateBalanceAccountView: View {
                 .listRowBackground(Color.theme.foreground)
                 .foregroundColor(Color.theme.primaryText)
             }
-            .toolbar {
-                ToolbarItem {
-                    Button(action: {
-                        var updatedAccount = accountViewModel.account
-                        let newAmount = isPlus ? amount.toDouble() : amount.toDouble()! * -1
-                        updatedAccount.currentBalance = newAmount!
-                        Task.init {
-                            await accountTransactionController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Update")
-                        }
-                        dismiss()
-                    }, label: {
-                        Text("Update")
-                            .foregroundColor(Color.theme.primaryText)
-                            .bold()
-                    })
-                    .font(.system(size: 14).bold())
-                }
-                
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        var updatedAccount = accountViewModel.account
-                        let newAmount = isPlus ? amount.toDouble() : amount.toDouble()! * -1
-                        updatedAccount.currentBalance = newAmount!
-                        Task.init {
-                            await accountTransactionController.addTransaction(accountID: accountViewModel.account.id!, account: updatedAccount, timestamp: date, operation: "Add")
-                        }
-                        dismiss()
-                    }, label: {
-                        Text("Add")
-                            .foregroundColor(Color.theme.primaryText)
-                            .bold()
-                    })
-                    .font(.system(size: 14).bold())
-                }
-            }
             .navigationTitle(accountViewModel.account.accountName)
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.theme.background)

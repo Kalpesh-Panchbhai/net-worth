@@ -11,7 +11,7 @@ struct WatchViewRow: View {
     
     var watch: Watch
     
-    @StateObject var accountViewModel = AccountViewModel()
+    @StateObject var accountViewModel: AccountViewModel
     @ObservedObject var watchViewModel = WatchViewModel()
     
     var body: some View {

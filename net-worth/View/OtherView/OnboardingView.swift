@@ -10,7 +10,6 @@ import SwiftUI
 struct OnboardingView: View {
     
     var settingsController = SettingsController()
-    var notificationController = NotificationController()
     var currencyList = CurrencyList().currencyList
     let transition: AnyTransition = .asymmetric(
         insertion: .move(edge: .trailing),

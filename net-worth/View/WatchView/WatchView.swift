@@ -15,6 +15,7 @@ struct WatchView: View {
     @State var updateWatchViewOpen = false
     
     @StateObject var watchViewModel: WatchViewModel
+    @StateObject var accountViewModel: AccountViewModel
     
     var body: some View {
         NavigationView {
@@ -26,10 +27,10 @@ struct WatchView: View {
                     List {
                         ForEach(watchViewModel.watchList, id: \.self) { watch in
                             NavigationLink(destination: {
-                                WatchDetailView(watch: watch, watchViewModel: watchViewModel)
+                                WatchDetailView(watch: watch, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                                     .toolbarRole(.editor)
                             }, label: {
-                                WatchViewRow(watch: watch)
+                                WatchViewRow(watch: watch, accountViewModel: accountViewModel)
                                     .badge(
                                         Text("\(watch.accountID.count)")
                                             .foregroundColor(Color.theme.secondaryText)

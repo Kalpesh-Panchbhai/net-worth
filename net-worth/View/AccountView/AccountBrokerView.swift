@@ -27,7 +27,7 @@ struct AccountBrokerView: View {
                         NavigationLink(destination: {
                             AccountBrokerDetailView(brokerID: brokerID, accountID: accountViewModel.accountsInBroker[i].id!, accountViewModel: accountViewModel)
                         }, label: {
-                            AccountBrokerRowView(brokerID: brokerID, accountID: accountViewModel.accountsInBroker[i].id!)
+                            AccountBrokerRowView(brokerID: brokerID, accountID: accountViewModel.accountsInBroker[i].id!, accountViewModel: accountViewModel)
                                 .frame(width: 360, height: 40)
                                 .padding(8)
                                 .background(Color.theme.foreground)

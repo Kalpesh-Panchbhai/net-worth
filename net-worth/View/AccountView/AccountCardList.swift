@@ -56,7 +56,7 @@ struct AccountCardList: View {
                                                         .font(.system(size: 15))
                                                     Spacer()
                                                     NavigationLink(destination: {
-                                                        AccountListView(accountType: accountType, watchViewModel: watchViewModel)
+                                                        AccountListView(accountType: accountType, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                                                             .toolbarRole(.editor)
                                                     }, label: {
                                                         Text("See all")
@@ -68,15 +68,15 @@ struct AccountCardList: View {
                                                 ScrollView(.horizontal, showsIndicators: false) {
                                                     HStack {
                                                         ForEach(0..<((accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 5) ? 5 : accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count), id: \.self) { i in
-                                                            if((hideZeroBalanceAccount && isAccountBalanceIsZero(id: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id!)) || !hideZeroBalanceAccount) {
+                                                            if((hideZeroBalanceAccount && isAccountBalanceIsZero(id: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id)) || !hideZeroBalanceAccount) {
                                                                 NavigationLink(destination: {
-                                                                    AccountDetailView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id!, accountViewModel:  accountViewModel, watchViewModel: watchViewModel)
+                                                                    AccountDetailView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id, accountViewModel:  accountViewModel, watchViewModel: watchViewModel)
                                                                         .toolbarRole(.editor)
                                                                 }) {
-                                                                    AccountCardView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id!)
+                                                                    AccountCardView(account: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]))
                                                                         .contextMenu {
                                                                             
-                                                                            Label(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i].id!, systemImage: ConstantUtils.infoIconImageName)
+                                                                            Label(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i].id, systemImage: ConstantUtils.infoIconImageName)
                                                                             
                                                                             Button(role: .destructive, action: {
                                                                                 isPresentingAccountDeleteConfirm.toggle()
@@ -88,7 +88,7 @@ struct AccountCardList: View {
                                                                             if(accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].active) {
                                                                                 Button {
                                                                                     Task.init {
-                                                                                        await accountViewModel.getAccount(id: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].id!)
+                                                                                        await accountViewModel.getAccount(id: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].id)
                                                                                     }
                                                                                     isNewTransactionViewOpen.toggle()
                                                                                 } label: {
@@ -101,9 +101,9 @@ struct AccountCardList: View {
                                                                                     isPresented: $isPresentingAccountDeleteConfirm) {
                                                                     Button("Delete account " + deletedAccount.accountName + "?", role: .destructive) {
                                                                         Task.init {
-                                                                            await accountController.deleteAccount(accountId: deletedAccount.id!)
+                                                                            await accountController.deleteAccount(accountId: deletedAccount.id)
                                                                             await ApplicationData.loadData()
-                                                                            await accountViewModel.getAccountList()
+//                                                                            await accountViewModel.getAccountList()
                                                                             await watchViewModel.getAllWatchList()
                                                                             await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                                                                         }
@@ -125,7 +125,7 @@ struct AccountCardList: View {
                             }
                             .refreshable {
                                 Task.init {
-                                    await accountViewModel.getAccountList()
+//                                    await accountViewModel.getAccountList()
                                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                                 }
                             }
@@ -168,7 +168,7 @@ struct AccountCardList: View {
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             Task.init {
                 accountViewModel.accountList = [Account]()
-                await accountViewModel.getAccountList()
+//                await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
             }
         }, content: {
@@ -186,7 +186,7 @@ struct AccountCardList: View {
     
     private func isAccountActive(id: String) -> Bool {
         return ApplicationData.shared.data.accountDataList.filter {
-            $0.account.id!.elementsEqual(id) && $0.account.active
+            $0.account.id.elementsEqual(id) && $0.account.active
         }.count > 0
     }
     
@@ -201,7 +201,7 @@ struct AccountCardList: View {
         let accountList = accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)
         var isAllAccountsInAAccountTypeAreZero = true
         for account in accountList {
-            if(!isAccountBalanceIsZero(id: account.id!)) {
+            if(!isAccountBalanceIsZero(id: account.id)) {
                 isAllAccountsInAAccountTypeAreZero = false
                 break
             }

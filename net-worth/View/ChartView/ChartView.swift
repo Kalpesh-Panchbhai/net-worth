@@ -37,7 +37,7 @@ struct ChartView: View {
                 }
             }
             .sheet(isPresented: $showNetWorthChart, content: {
-                NetWorthChartView(accountList: getAccounts())
+                NetWorthChartView(accountList: getAccounts(), accountViewModel: accountViewModel)
             })
             .scrollIndicators(.hidden)
             .navigationTitle("Charts")
@@ -59,18 +59,18 @@ struct ChartView: View {
     var leftTopView: some View {
         Button(action: {
             if(showingAssetsData) {
-                chartDataList = getAccountList(accountList: getAccountsForWatchList(watch: watchListSelected)).filter {
-                    $0.currentBalance < 0
-                }.sorted(by: {
-                    $0.currentBalance < $1.currentBalance
-                })
+//                chartDataList = getAccountList(accountList: getAccountsForWatchList(watch: watchListSelected)).filter {
+//                    $0.currentBalance < 0
+//                }.sorted(by: {
+//                    $0.currentBalance < $1.currentBalance
+//                })
                 showingAssetsData.toggle()
             } else {
-                chartDataList = getAccountList(accountList: getAccountsForWatchList(watch: watchListSelected)).filter {
-                    $0.currentBalance >= 0
-                }.sorted(by: {
-                    $0.currentBalance > $1.currentBalance
-                })
+//                chartDataList = getAccountList(accountList: getAccountsForWatchList(watch: watchListSelected)).filter {
+//                    $0.currentBalance >= 0
+//                }.sorted(by: {
+//                    $0.currentBalance > $1.currentBalance
+//                })
                 showingAssetsData.toggle()
             }
         }, label: {
@@ -133,17 +133,17 @@ struct ChartView: View {
                         }
                         self.multipleWatchListSelection.insert(watch)
                         
-                        let accountList = getAccountList(accountList: getAccountsForWatchList(watch: watch))
-                        let totalAmount = accountList.map( {
-                            $0.currentBalance
-                        }).reduce(0, +)
-                        var account = Account()
-                        account.accountName = watch.accountName
-                        account.currentBalance = totalAmount
-                        self.chartDataList.append(account)
-                        self.chartDataList.sort(by: {
-                            $0.currentBalance > $1.currentBalance
-                        })
+//                        let accountList = getAccountList(accountList: getAccountsForWatchList(watch: watch))
+//                        let totalAmount = accountList.map( {
+//                            $0.currentBalance
+//                        }).reduce(0, +)
+//                        var account = Account()
+//                        account.accountName = watch.accountName
+//                        account.currentBalance = totalAmount
+//                        self.chartDataList.append(account)
+//                        self.chartDataList.sort(by: {
+//                            $0.currentBalance > $1.currentBalance
+//                        })
                     }
                     compareAssetsToLiabilities = false
                     watchListSelected = Watch()
@@ -173,13 +173,13 @@ struct ChartView: View {
             } else {
                 compareAssetsToLiabilities = false
                 multipleWatchListSelection = Set<Watch>()
-                var accountList = getAccountList(accountList: getAccountsForWatchList(watch: watchListSelected)).filter {
-                    $0.currentBalance >= 0
-                }
-                accountList.sort(by: {
-                    $0.currentBalance > $1.currentBalance
-                })
-                self.chartDataList = accountList
+//                var accountList = getAccountList(accountList: getAccountsForWatchList(watch: watchListSelected)).filter {
+//                    $0.currentBalance >= 0
+//                }
+//                accountList.sort(by: {
+//                    $0.currentBalance > $1.currentBalance
+//                })
+//                self.chartDataList = accountList
                 
                 showingAssetsData = true
             }
@@ -196,26 +196,26 @@ struct ChartView: View {
                         self.chartDataList = [Account]()
                         var assetAccount = Account()
                         assetAccount.accountName = "Assets"
-                        assetAccount.currentBalance = getAccountList(accountList: getAccounts()).filter {
-                            $0.currentBalance > 0
-                        }.map {
-                            $0.currentBalance
-                        }.reduce(0, +)
-                        
-                        self.chartDataList.append(assetAccount)
+//                        assetAccount.currentBalance = getAccountList(accountList: getAccounts()).filter {
+//                            $0.currentBalance > 0
+//                        }.map {
+//                            $0.currentBalance
+//                        }.reduce(0, +)
+//                        
+//                        self.chartDataList.append(assetAccount)
                         
                         var liabilitiesAccount = Account()
                         liabilitiesAccount.accountName = "Liabilities"
-                        liabilitiesAccount.currentBalance = getAccountList(accountList: getAccounts()).filter {
-                            $0.currentBalance < 0
-                        }.map {
-                            $0.currentBalance
-                        }.reduce(0, +)
-                        
-                        self.chartDataList.append(liabilitiesAccount)
-                        self.chartDataList.sort(by: {
-                            $0.currentBalance > $1.currentBalance
-                        })
+//                        liabilitiesAccount.currentBalance = getAccountList(accountList: getAccounts()).filter {
+//                            $0.currentBalance < 0
+//                        }.map {
+//                            $0.currentBalance
+//                        }.reduce(0, +)
+//                        
+//                        self.chartDataList.append(liabilitiesAccount)
+//                        self.chartDataList.sort(by: {
+//                            $0.currentBalance > $1.currentBalance
+//                        })
                     }
                 }
                 else {
@@ -228,7 +228,7 @@ struct ChartView: View {
     var chartView: some View {
         PieChartView(
             values: chartDataList.map {
-                $0.currentBalance
+                $0.balance.currentDayValue
             },
             names: chartDataList.map {
                 $0.accountName
@@ -251,7 +251,7 @@ struct ChartView: View {
     
     private func getAccountsForWatchList(watch: Watch) -> [Account] {
         return getAccounts().filter {
-            watch.accountID.contains($0.id!)
+            watch.accountID.contains($0.id)
         }
     }
     
@@ -260,16 +260,15 @@ struct ChartView: View {
         var returnAccountList = [Account]()
         for account in accountList {
             let currentBalance = chartDataList.filter {
-                return $0.key.elementsEqual(account.id!)
+                return $0.key.elementsEqual(account.id)
             }.first?.value.last!.value
-            returnAccountList.append(Account(accountName: account.accountName, currentBalance: currentBalance ?? 0.0))
         }
         return returnAccountList
     }
     
     private func calculateTotalAmountForAccountList(accountList: [Account]) -> Double {
         return accountList.map {
-            $0.currentBalance
+            $0.balance.currentDayValue
         }.reduce(0, +)
     }
 }

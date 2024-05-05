@@ -14,7 +14,6 @@ struct SettingsView: View {
     var currencyList = CurrencyList().currencyList
     
     var settingsController = SettingsController()
-    var notificationController = NotificationController()
     
     @State var filterCurrencyList = CurrencyList().currencyList
     @State var profilePhoto = UIImage()
@@ -63,15 +62,6 @@ struct SettingsView: View {
                     }).onChange(of: isAuthenticationRequired) { newValue in
                         settingsController.setAuthentication(newValue: newValue)
                     }
-                    .foregroundColor(Color.theme.primaryText)
-                    .listRowBackground(Color.theme.foreground)
-                    
-                    // MARK: Notification View Link
-                    NavigationLink(destination: {
-                        NotificationsView()
-                    }, label: {
-                        Label("Notifications", systemImage: "play.square")
-                    })
                     .foregroundColor(Color.theme.primaryText)
                     .listRowBackground(Color.theme.foreground)
                     

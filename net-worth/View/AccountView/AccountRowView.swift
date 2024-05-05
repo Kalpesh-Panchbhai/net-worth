@@ -12,7 +12,7 @@ struct AccountRowView: View {
     var accountID: String
     var fromWatchView: Bool = false
     
-    @StateObject var accountViewModel = AccountViewModel()
+    @StateObject var accountViewModel: AccountViewModel
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -108,19 +108,6 @@ struct AccountRowView: View {
                         Text("(+\(getOneDayPercentageChangeForNonBroker()))")
                             .foregroundColor(Color.theme.green)
                             .font(.caption.bold())
-                        Spacer()
-                        if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != ConstantUtils.savingAccountType && accountViewModel.account.active) {
-                            Image(systemName: ConstantUtils.notificationOnImageName)
-                                .foregroundColor(Color.theme.secondaryText)
-                                .font(.caption)
-                            Text("\(accountViewModel.account.paymentDate)")
-                                .foregroundColor(Color.theme.secondaryText)
-                                .font(.caption)
-                        } else if(accountViewModel.account.accountType != ConstantUtils.savingAccountType && accountViewModel.account.active) {
-                            Image(systemName: ConstantUtils.notificationOffImageName)
-                                .foregroundColor(Color.theme.secondaryText)
-                                .font(.caption)
-                        }
                     } else {
                         ZStack {
                             Circle()
@@ -136,19 +123,6 @@ struct AccountRowView: View {
                         Text("(\(getOneDayPercentageChangeForNonBroker()))")
                             .foregroundColor(Color.theme.red)
                             .font(.caption.bold())
-                        Spacer()
-                        if(accountViewModel.account.paymentReminder && accountViewModel.account.accountType != ConstantUtils.savingAccountType) {
-                            Image(systemName: ConstantUtils.notificationOnImageName)
-                                .foregroundColor(Color.theme.secondaryText)
-                                .font(.caption)
-                            Text("\(accountViewModel.account.paymentDate)")
-                                .foregroundColor(Color.theme.secondaryText)
-                                .font(.caption)
-                        } else if(accountViewModel.account.accountType != ConstantUtils.savingAccountType) {
-                            Image(systemName: ConstantUtils.notificationOffImageName)
-                                .foregroundColor(Color.theme.secondaryText)
-                                .font(.caption)
-                        }
                     }
                 }
             }

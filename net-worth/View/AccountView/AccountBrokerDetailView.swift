@@ -41,7 +41,7 @@ struct AccountBrokerDetailView: View {
             if(tabItem == 1) {
                 TransactionsView(accountViewModel: accountViewModel)
             } else {
-                AccountBrokerChartView(brokerID: brokerID, accountID: accountID, symbol: accountViewModel.accountBroker.symbol)
+                AccountBrokerChartView(brokerID: brokerID, accountID: accountID, symbol: accountViewModel.accountBroker.symbol, accountViewModel: accountViewModel)
             }
         }
         .confirmationDialog("Are you sure?",

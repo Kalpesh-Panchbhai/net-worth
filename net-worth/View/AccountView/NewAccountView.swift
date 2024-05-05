@@ -23,10 +23,7 @@ struct NewAccountView: View {
     @State var currencySelected: Currency = Currency()
     @State var filterCurrencyList = CurrencyList().currencyList
     @State var currencyChanged = false
-    @State var currentBalance: String = "0.0"
     @State var monthlyEmi: Double = 0.0
-    @State var paymentReminder = false
-    @State var paymentDate = 1
     @State var loanPaymentDate = 1
     @State var dates = Array(1...28)
     @State var accountOpenedDate = Date()
@@ -52,9 +49,6 @@ struct NewAccountView: View {
                     .foregroundColor(Color.theme.primaryText)
                     .onChange(of: accountType) { _ in
                         accountName=""
-                        currentBalance = "0.0"
-                        paymentDate = 1
-                        paymentReminder = false
                         currencySelected = SettingsController().getDefaultCurrency()
                         selectedWatchList = Watch()
                         isPlus = true
@@ -65,8 +59,6 @@ struct NewAccountView: View {
                     if(accountType == ConstantUtils.savingAccountType) {
                         nameField(labelName: "Account Name")
                             .foregroundColor(Color.theme.primaryText)
-                        currentBalanceField
-                            .foregroundColor(Color.theme.primaryText)
                         CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
                         watchListPicker
@@ -75,16 +67,8 @@ struct NewAccountView: View {
                     else if(accountType == ConstantUtils.creditCardAccountType) {
                         nameField(labelName: "Credit Card Name")
                             .foregroundColor(Color.theme.primaryText)
-                        currentBalanceField
-                            .foregroundColor(Color.theme.primaryText)
                         CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
-                        enablePaymentReminderField(labelName: "Enable Payment Reminder")
-                            .foregroundColor(Color.theme.primaryText)
-                        if(paymentReminder) {
-                            paymentDateField(labelName: "Select a payment date")
-                                .foregroundColor(Color.theme.primaryText)
-                        }
                         watchListPicker
                         accountOpenedDatePicker
                     }
@@ -97,8 +81,6 @@ struct NewAccountView: View {
                         
                         nameField(labelName: "Loan Name")
                             .foregroundColor(Color.theme.primaryText)
-                        currentBalanceField
-                            .foregroundColor(Color.theme.primaryText)
                         if(loanType.elementsEqual("Consumer")) {
                             monthlyEMIField
                                 .foregroundColor(Color.theme.primaryText)
@@ -107,12 +89,6 @@ struct NewAccountView: View {
                         }
                         CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
-                        enablePaymentReminderField(labelName: "Enable Loan Payment Reminder")
-                            .foregroundColor(Color.theme.primaryText)
-                        if(paymentReminder) {
-                            paymentDateField(labelName: "Select a payment date")
-                                .foregroundColor(Color.theme.primaryText)
-                        }
                         watchListPicker
                         accountOpenedDatePicker
                     } else if(accountType == ConstantUtils.brokerAccountType) {
@@ -124,16 +100,8 @@ struct NewAccountView: View {
                     } else if(accountType == ConstantUtils.otherAccountType) {
                         nameField(labelName: "Account Name")
                             .foregroundColor(Color.theme.primaryText)
-                        currentBalanceField
-                            .foregroundColor(Color.theme.primaryText)
                         CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
-                        enablePaymentReminderField(labelName: "Enable Payment Reminder")
-                            .foregroundColor(Color.theme.primaryText)
-                        if(paymentReminder) {
-                            paymentDateField(labelName: "Select a payment date")
-                                .foregroundColor(Color.theme.primaryText)
-                        }
                         watchListPicker
                         accountOpenedDatePicker
                     }
@@ -150,28 +118,22 @@ struct NewAccountView: View {
                             newAccount.loanType = loanType
                         }
                         newAccount.accountName = accountName
-                        newAccount.currentBalance = isPlus ? currentBalance.toDouble()! : currentBalance.toDouble()! * -1
                         newAccount.currency = currencySelected.code
-                        newAccount.paymentReminder = paymentReminder
-                        
-                        if(paymentReminder) {
-                            newAccount.paymentDate = paymentDate
-                        }
                         Task.init {
-                            let accountID = await accountController.addAccount(newAccount: newAccount, accountOpenedDate: accountOpenedDate)
-                            newAccount.id = accountID
-                            await accountViewModel.getAccountList()
-                            if(selectedWatchList.id != "") {
-                                selectedWatchList.accountID.append(accountID)
-                                selectedWatchList.accountID.sort(by: { item1, item2 in
-                                    accountViewModel.accountList.filter { account1 in
-                                        account1.id!.elementsEqual(item1)
-                                    }.first!.accountName <= accountViewModel.accountList.filter { account2 in
-                                        account2.id!.elementsEqual(item2)
-                                    }.first!.accountName
-                                })
-                                watchController.addAccountToWatchList(watch: selectedWatchList)
-                            }
+                            await accountController.addAccount(newAccount: newAccount)
+//                            newAccount.id = accountID
+//                            await accountViewModel.getAccountList()
+//                            if(selectedWatchList.id != "") {
+//                                selectedWatchList.accountID.append(accountID)
+//                                selectedWatchList.accountID.sort(by: { item1, item2 in
+//                                    accountViewModel.accountList.filter { account1 in
+//                                        account1.id!.elementsEqual(item1)
+//                                    }.first!.accountName <= accountViewModel.accountList.filter { account2 in
+//                                        account2.id!.elementsEqual(item2)
+//                                    }.first!.accountName
+//                                })
+//                                watchController.addAccountToWatchList(watch: selectedWatchList)
+//                            }
 //                            var watch = await watchController.getDefaultWatchList()
 //                            watch.accountID.append(accountID)
 //                            watch.accountID.sort(by: { item1, item2 in
@@ -256,7 +218,7 @@ struct NewAccountView: View {
                 return true
             }
         } else if accountType == ConstantUtils.loanAccountType {
-            if accountName.isEmpty || currentBalance.isEmpty || currencySelected.name.isEmpty  {
+            if accountName.isEmpty || currencySelected.name.isEmpty  {
                 return false
             } else {
                 return true
@@ -284,78 +246,12 @@ struct NewAccountView: View {
         }
     }
     
-    private var currentBalanceField: some View {
-        HStack {
-            Text("Current Balance")
-            Spacer()
-            ZStack {
-                RoundedRectangle(cornerRadius: 6)
-                    .frame(width: 25, height: 25)
-                    .foregroundColor(Color.theme.primaryText)
-                Button(action: {
-                    if isPlus {
-                        isPlus = false
-                    }else {
-                        isPlus = true
-                    }
-                }, label: {
-                    Image(systemName: isPlus ? ConstantUtils.plusImageName : "minus")
-                        .foregroundColor(isPlus ? Color.theme.green : Color.theme.red)
-                        .bold()
-                })
-                .font(.system(size: 14).bold())
-            }
-            Spacer()
-            TextField("Current Balance", text: $currentBalance)
-                .keyboardType(.decimalPad)
-                .onChange(of: currentBalance, perform: { _ in
-                    let filtered = currentBalance.filter {"0123456789.".contains($0)}
-                    
-                    if filtered.contains(".") {
-                        let splitted = filtered.split(separator: ".")
-                        if splitted.count >= 2 {
-                            let preDecimal = String(splitted[0])
-                            if String(splitted[1]).count == 3 {
-                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
-                                currentBalance = "\(preDecimal).\(afterDecimal)"
-                            }else {
-                                let afterDecimal = String(splitted[1])
-                                currentBalance = "\(preDecimal).\(afterDecimal)"
-                            }
-                        }else if splitted.count == 1 {
-                            let preDecimal = String(splitted[0])
-                            currentBalance = "\(preDecimal)."
-                        }else {
-                            currentBalance = "0."
-                        }
-                    } else if filtered.isEmpty && !currentBalance.isEmpty {
-                        currentBalance = ""
-                    } else if !filtered.isEmpty {
-                        currentBalance = filtered
-                    }
-                })
-                .multilineTextAlignment(.trailing)
-        }
-    }
-    
     private var monthlyEMIField: some View {
         HStack {
             Text("Monthly EMI")
             Spacer()
             TextField("Monthly EMI", value: $monthlyEmi, formatter: Double().formatter())
                 .keyboardType(.decimalPad)
-        }
-    }
-    
-    private func enablePaymentReminderField(labelName: String) -> Toggle<Text> {
-        return Toggle(labelName, isOn: $paymentReminder)
-    }
-    
-    private func paymentDateField(labelName: String) -> Picker<Text, Int, ForEach<[Int], Int, some View>> {
-        return Picker(labelName, selection: $paymentDate) {
-            ForEach(dates, id: \.self) {
-                Text("\($0.formatted(.number.grouping(.never)))").tag($0)
-            }
         }
     }
     

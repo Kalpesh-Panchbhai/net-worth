@@ -89,20 +89,6 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func sortAccountList(orderBy: String) {
-        if(orderBy.elementsEqual(ConstantUtils.accountKeyAccountName)) {
-            accountList
-                .sort(by: {
-                    $0.accountName < $1.accountName
-                })
-        } else if(orderBy.elementsEqual(ConstantUtils.accountKeyCurrentBalance)) {
-            accountList
-                .sort(by: {
-                    $0.currentBalance < $1.currentBalance
-                })
-        }
-    }
-    
     func filterAccountList(filter: String) {
         accountList = originalAccountList
             .filter { account in
@@ -119,15 +105,15 @@ class AccountViewModel: ObservableObject {
     
     func getAccountsForWatchList(accountID: [String]) async {
         watchList = [Account]()
-        let chartDataList = ApplicationData.shared.chartDataList
-        for i in 0..<accountID.count {
-            let currentBalance = chartDataList.first(where: {
-                return $0.key.elementsEqual(accountID[i])
-            })?.value.last?.value
-            var account = await accountController.getAccount(id: accountID[i])
-            account.currentBalance = currentBalance ?? 0.0
-            watchList.append(account)
-        }
+//        let chartDataList = ApplicationData.shared.chartDataList
+//        for i in 0..<accountID.count {
+//            let currentBalance = chartDataList.first(where: {
+//                return $0.key.elementsEqual(accountID[i])
+//            })?.value.last?.value
+//            var account = await accountController.getAccount(id: accountID[i])
+//            account.currentBalance = currentBalance ?? 0.0
+//            watchList.append(account)
+//        }
         DispatchQueue.main.async {
             self.accountList = self.watchList
         }
@@ -150,24 +136,24 @@ class AccountViewModel: ObservableObject {
     }
     
     func getAccountTransactionList(id: String) async {
-        let list = await accountTransactionController.getLastTwoAccountTransactionList(accountID: id)
-        DispatchQueue.main.async {
-            self.accountTransactionList = list
-        }
+//        let list = await accountTransactionController.getLastTwoAccountTransactionList(accountID: id)
+//        DispatchQueue.main.async {
+//            self.accountTransactionList = list
+//        }
     }
     
     func getLastTwoAccountTransactionList(id: String) async {
-        let list = await accountTransactionController.getLastTwoAccountTransactionList(accountID: id)
-        DispatchQueue.main.async {
-            self.accountLastTwoTransactionList = list
-        }
+//        let list = await accountTransactionController.getLastTwoAccountTransactionList(accountID: id)
+//        DispatchQueue.main.async {
+//            self.accountLastTwoTransactionList = list
+//        }
     }
     
     func getAccountLastOneDayChange(id: String) async {
-        let oneDayChange = await accountTransactionController.getAccountLastOneDayChange(accountID: id)
-        DispatchQueue.main.async {
-            self.accountOneDayChange = oneDayChange
-        }
+//        let oneDayChange = await accountTransactionController.getAccountLastOneDayChange(accountID: id)
+//        DispatchQueue.main.async {
+//            self.accountOneDayChange = oneDayChange
+//        }
     }
     
     func getBrokerAccount(brokerID: String, accountID: String) async {

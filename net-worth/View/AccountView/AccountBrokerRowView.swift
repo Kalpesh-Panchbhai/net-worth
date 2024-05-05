@@ -13,7 +13,7 @@ struct AccountBrokerRowView: View {
     var accountID: String
     
     @StateObject var financeViewModel = FinanceViewModel()
-    @StateObject var accountViewModel = AccountViewModel()
+    @StateObject var accountViewModel: AccountViewModel
     
     var body: some View {
         HStack {

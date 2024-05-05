@@ -80,13 +80,6 @@ class AccountInBrokerController {
             
             let accountTransaction = AccountTransaction(timestamp: accountInBroker.timestamp, balanceChange: accountInBroker.currentUnit, currentBalance: accountInBroker.currentUnit, createdDate: accountInBroker.lastUpdated)
             addTransactionInAccountInBroker(brokerID: brokerID, accountID: accountID, accountTransaction: accountTransaction)
-            
-            var updatedAccount = ApplicationData.shared.data.accountDataList.first(where: {
-                return $0.account.id!.elementsEqual(brokerID)
-            })!.account
-            updatedAccount.lastUpdated = accountInBroker.lastUpdated
-            
-            await AccountController().updateAccount(account: updatedAccount)
         } catch {
             print(error)
         }
@@ -102,12 +95,6 @@ class AccountInBrokerController {
                 .collection(ConstantUtils.accountBrokerCollectionName)
                 .document(id)
                 .setData(from: updatedAccountBroker, merge: true)
-            
-            var updatedAccount = ApplicationData.shared.data.accountDataList.first(where: {
-                return $0.account.id!.elementsEqual(brokerID)
-            })!.account
-            updatedAccount.lastUpdated = accountBroker.lastUpdated
-            await AccountController().updateAccount(account: updatedAccount)
             
         } catch {
             print(error)
@@ -132,7 +119,7 @@ class AccountInBrokerController {
     
     public func getAccountListInBroker(brokerID: String) -> [AccountInBroker] {
         let accountBrokerList = ApplicationData.shared.data.accountDataList.first(where: {
-            return $0.account.id!.elementsEqual(brokerID)
+            return $0.account.id.elementsEqual(brokerID)
         }).map {
             return $0.accountInBroker
         }.map {

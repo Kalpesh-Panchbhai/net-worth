@@ -19,7 +19,6 @@ struct AccountDetailView: View {
     @State var isNewTransactionViewOpen = false
     @State var isNewAccountInBrokerViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
-    @State var paymentDate = 0
     @State var isActive = true
     @State var tabItem = 1
     @State var showZeroAlert = false
@@ -74,12 +73,12 @@ struct AccountDetailView: View {
                     }
                 } else if(tabItem == 2) {
                     if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
-                        AccountBrokerChartView(brokerID: accountViewModel.account.id!, accountID: "", symbol: "")
+                        AccountBrokerChartView(brokerID: accountViewModel.account.id, accountID: "", symbol: "", accountViewModel: accountViewModel)
                     } else {
-                        AccountChartView(accountID: accountID)
+                        AccountChartView(accountID: accountID, accountViewModel: accountViewModel)
                     }
                 } else {
-                    AccountWatchView(watchViewModel: watchViewModel)
+                    AccountWatchView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
                 }
             }
             .alert(isPresented: $showZeroAlert) {
@@ -89,9 +88,9 @@ struct AccountDetailView: View {
                                 isPresented: $isPresentingAccountDeleteConfirm) {
                 Button("Delete account " + accountViewModel.account.accountName + "?", role: .destructive) {
                     Task.init {
-                        await accountController.deleteAccount(accountId: accountViewModel.account.id!)
+                        await accountController.deleteAccount(accountId: accountViewModel.account.id)
                         await ApplicationData.loadData()
-                        await accountViewModel.getAccountList()
+//                        await accountViewModel.getAccountList()
                         await watchViewModel.getAllWatchList()
                     }
                     self.presentationMode.wrappedValue.dismiss()
@@ -137,47 +136,45 @@ struct AccountDetailView: View {
                         Label("Delete", systemImage: ConstantUtils.deleteImageName)
                     })
                     
-                    Button(action: {
-                        self.isActive.toggle()
-                    }, label: {
-                        if(isActive) {
-                            Label("Make Inactive", systemImage: "xmark.shield")
-                        } else {
-                            Label("Make Active", systemImage: "checkmark.shield")
-                        }
-                    })
-                    .onChange(of: isActive, perform: { isActive in
-                        if(!isActive) {
-                            if(!accountViewModel.account.currentBalance.isZero) {
-                                self.showZeroAlert.toggle()
-                                self.isActive.toggle()
-                                self.failedToMarkInActive = true
-                            } else {
-                                self.failedToMarkInActive = false
-                                if(!initialLoadForActiveButton) {
-                                    accountViewModel.account.active = isActive
-                                    accountViewModel.account.paymentReminder = false
-                                    accountViewModel.account.paymentDate = 0
-                                    accountViewModel.account.lastUpdated = Date.now
-                                    Task.init {
-                                        await accountController.updateAccount(account: accountViewModel.account)
-                                        await accountViewModel.getAccountList()
-                                    }
-                                    NotificationController().removeNotification(id: accountViewModel.account.id!)
-                                    paymentDate = 0
-                                } else {
-                                    initialLoadForActiveButton = false
-                                }
-                            }
-                        } else if(!failedToMarkInActive){
-                            accountViewModel.account.active = isActive
-                            accountViewModel.account.lastUpdated = Date.now
-                            Task.init {
-                                await accountController.updateAccount(account: accountViewModel.account)
-                                await accountViewModel.getAccountList()
-                            }
-                        }
-                    })
+//                    Button(action: {
+//                        self.isActive.toggle()
+//                    }, label: {
+//                        if(isActive) {
+//                            Label("Make Inactive", systemImage: "xmark.shield")
+//                        } else {
+//                            Label("Make Active", systemImage: "checkmark.shield")
+//                        }
+//                    })
+//                    .onChange(of: isActive, perform: { isActive in
+//                        if(!isActive) {
+//                            if(!accountViewModel.account.currentBalance.isZero) {
+//                                self.showZeroAlert.toggle()
+//                                self.isActive.toggle()
+//                                self.failedToMarkInActive = true
+//                            } else {
+//                                self.failedToMarkInActive = false
+//                                if(!initialLoadForActiveButton) {
+//                                    accountViewModel.account.active = isActive
+//                                    accountViewModel.account.paymentReminder = false
+//                                    accountViewModel.account.paymentDate = 0
+//                                    accountViewModel.account.lastUpdated = Date.now
+//                                    Task.init {
+//                                        await accountController.updateAccount(account: accountViewModel.account)
+////                                        await accountViewModel.getAccountList()
+//                                    }
+//                                } else {
+//                                    initialLoadForActiveButton = false
+//                                }
+//                            }
+//                        } else if(!failedToMarkInActive){
+//                            accountViewModel.account.active = isActive
+//                            accountViewModel.account.lastUpdated = Date.now
+//                            Task.init {
+//                                await accountController.updateAccount(account: accountViewModel.account)
+////                                await accountViewModel.getAccountList()
+//                            }
+//                        }
+//                    })
                     
                     if(isActive) {
                         if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
@@ -193,63 +190,6 @@ struct AccountDetailView: View {
                                 Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
                             })
                         }
-                        
-                        if(accountViewModel.account.accountType != ConstantUtils.savingAccountType) {
-                            if(!accountViewModel.account.paymentReminder) {
-                                Picker(selection: $paymentDate, content: {
-                                    ForEach(dates, id: \.self) {
-                                        Text("\($0.formatted(.number.grouping(.never)))").tag($0)
-                                    }
-                                }, label: {
-                                    Label("Enable Notification", systemImage: "speaker.wave.1.fill")
-                                })
-                                .onChange(of: paymentDate) { _ in
-                                    accountViewModel.account.paymentReminder = true
-                                    accountViewModel.account.paymentDate = paymentDate
-                                    Task.init {
-                                        await accountController.updateAccount(account: accountViewModel.account)
-                                        await accountViewModel.getAccountList()
-                                    }
-                                    NotificationController().enableNotification(account: accountViewModel.account)
-                                }
-                                .pickerStyle(MenuPickerStyle())
-                            } else {
-                                Button(action: {
-                                    accountViewModel.account.paymentReminder = false
-                                    accountViewModel.account.paymentDate = 0
-                                    Task.init {
-                                        await accountController.updateAccount(account: accountViewModel.account)
-                                        await accountViewModel.getAccountList()
-                                    }
-                                    NotificationController().removeNotification(id: accountViewModel.account.id!)
-                                    paymentDate = 0
-                                }, label: {
-                                    Label("Disable Notification", systemImage: "speaker.slash.fill")
-                                })
-                                
-                                Picker(selection: $paymentDate, content: {
-                                    ForEach(dates, id: \.self) {
-                                        Text("\($0.formatted(.number.grouping(.never)))").tag($0)
-                                    }
-                                }, label: {
-                                    Label("Change Date", systemImage: "calendar.circle.fill")
-                                })
-                                .onChange(of: paymentDate) { _ in
-                                    if(!initialLoadForPaymentButton) {
-                                        accountViewModel.account.paymentReminder = true
-                                        accountViewModel.account.paymentDate = paymentDate
-                                        Task.init {
-                                            await accountController.updateAccount(account: accountViewModel.account)
-                                            await accountViewModel.getAccountList()
-                                        }
-                                        NotificationController().enableNotification(account: accountViewModel.account)
-                                    } else {
-                                        initialLoadForPaymentButton = false
-                                    }
-                                }
-                                .pickerStyle(MenuPickerStyle())
-                            }
-                        }
                     }
                     
                 }, label: {
@@ -263,10 +203,6 @@ struct AccountDetailView: View {
         .onAppear {
             Task.init {
                 await accountViewModel.getAccount(id: accountID)
-                paymentDate = accountViewModel.account.paymentDate
-                if(accountViewModel.account.paymentReminder) {
-                    initialLoadForPaymentButton = true
-                }
                 isActive = accountViewModel.account.active
                 if(!isActive) {
                     initialLoadForActiveButton = true
@@ -284,11 +220,11 @@ struct AccountDetailView: View {
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             Task.init {
                 await ApplicationData.loadData()
-                await accountViewModel.getAccount(id: accountViewModel.account.id!)
-                await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
+                await accountViewModel.getAccount(id: accountViewModel.account.id)
+                await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id)
                 await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
+                await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id)
             }
         }, content: {
             UpdateBalanceAccountView(accountViewModel: accountViewModel)

@@ -143,7 +143,7 @@ struct ApplicationData: Codable {
             }
         }
         let chartDataList = generateChartDataForOneBrokerAccount(accountData: accountData, isRefreshOperation: true, refreshChartStartDate: lastUpdatedDate)
-        ApplicationData.shared.chartDataList.updateValue(chartDataList, forKey: accountData.account.id!)
+        ApplicationData.shared.chartDataList.updateValue(chartDataList, forKey: accountData.account.id)
         return lastUpdatedDate
     }
     
@@ -362,7 +362,7 @@ struct ApplicationData: Codable {
     }
     
     public static func loadChartDataForNonBrokerAccount(accountData: AccountData) async -> Date {
-        if(isAccountAvailableInChartDataList(accountID: accountData.account.id!)) {
+        if(isAccountAvailableInChartDataList(accountID: accountData.account.id)) {
             return await loadChartDataForExistingNonBrokerAccount(accountData: accountData)
         } else {
             return await loadChartDataForNonExistingNonBrokerAccount(accountData: accountData)
@@ -379,7 +379,7 @@ struct ApplicationData: Codable {
             
             if(!newTransactionList.isEmpty) {
                 var chartData = ApplicationData.shared.chartDataList.first(where: {
-                    return $0.key.elementsEqual(accountData.account.id!)
+                    return $0.key.elementsEqual(accountData.account.id)
                 })!.value
                 chartData.removeAll(where: {
                     return $0.date.removeTimeStamp() >= newTransactionList.last!.timestamp
@@ -392,7 +392,7 @@ struct ApplicationData: Codable {
                     }
                     chartData.append(ChartData(date: newTransactionList[newTransactionList.count - 1 - i].timestamp.removeTimeStamp(), value: newTransactionList[newTransactionList.count - 1 - i].currentBalance))
                 }
-                ApplicationData.shared.chartDataList.updateValue(chartData, forKey: accountData.account.id!)
+                ApplicationData.shared.chartDataList.updateValue(chartData, forKey: accountData.account.id)
                 return newTransactionList.last!.timestamp.removeTimeStamp()
             }
         }
@@ -411,7 +411,7 @@ struct ApplicationData: Codable {
                 chartData.insert(ChartData(date: transactionList[i].timestamp.removeTimeStamp(), value: transactionList[i].currentBalance), at: 0)
             }
         }
-        ApplicationData.shared.chartDataList.updateValue(chartData, forKey: accountData.account.id!)
+        ApplicationData.shared.chartDataList.updateValue(chartData, forKey: accountData.account.id)
         return transactionList.last?.timestamp.removeTimeStamp() ?? Date().removeTimeStamp()
     }
     
@@ -508,7 +508,7 @@ struct ApplicationData: Codable {
         var dummy = [[ChartData]]()
         for accountData in accountDataList {
             let chartData = ApplicationData.shared.chartDataList.first(where: {
-                return $0.key.elementsEqual(accountData.account.id!)
+                return $0.key.elementsEqual(accountData.account.id)
             })!.value
             
             dummy.append(chartData)
@@ -554,7 +554,7 @@ struct ApplicationData: Codable {
         var dummy = [[ChartData]]()
         for accountInBroker in accountDataList {
             let chartData = ApplicationData.shared.chartDataList.first(where: {
-                return $0.key.elementsEqual(accountInBroker.account.id!)
+                return $0.key.elementsEqual(accountInBroker.account.id)
             })!.value
             
             dummy.append(chartData)
@@ -647,7 +647,7 @@ struct ApplicationData: Codable {
         var chartDataListResult = [ChartData]()
         if(isRefreshOperation) {
             chartDataListResult = ApplicationData.shared.chartDataList.first(where: {
-                return $0.key.elementsEqual(accountData.account.id!)
+                return $0.key.elementsEqual(accountData.account.id)
             })?.value ?? [ChartData]()
             chartDataListResult.removeAll(where: {
                 return $0.date >= refreshChartStartDate

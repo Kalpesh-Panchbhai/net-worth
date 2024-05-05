@@ -15,7 +15,7 @@ struct AccountChartView: View {
     @State var range = ConstantUtils.oneMonthRange
     
     @StateObject var chartViewModel = ChartViewModel()
-    @StateObject var accountViewModel = AccountViewModel()
+    @StateObject var accountViewModel: AccountViewModel
     
     var body: some View {
         VStack {

@@ -40,7 +40,7 @@ struct MainScreenView: View {
                         }
                         .badge(accountViewModel.accountList.count)
                     
-                    WatchView(watchViewModel: watchViewModel)
+                    WatchView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
                         .tabItem {
                             Label("Watch Lists", systemImage: ConstantUtils.notBookmarkImageName)
                         }
