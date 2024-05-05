@@ -19,11 +19,11 @@ struct AccountDetailView: View {
     @State var isNewTransactionViewOpen = false
     @State var isNewAccountInBrokerViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
-    @State var isActive = true
     @State var tabItem = 1
     @State var showZeroAlert = false
     @State var failedToMarkInActive = false
     
+    @State var account: Account
     @ObservedObject var accountViewModel: AccountViewModel
     @ObservedObject var watchViewModel: WatchViewModel
     
@@ -31,6 +31,9 @@ struct AccountDetailView: View {
     
     init(accountID: String, accountViewModel: AccountViewModel, watchViewModel: WatchViewModel) {
         self.accountID = accountID
+        self.account = accountViewModel.accountList.filter {
+            return $0.id.elementsEqual(accountID)
+        }.first ?? Account()
         self.accountViewModel = accountViewModel
         self.watchViewModel = watchViewModel
         
@@ -46,7 +49,7 @@ struct AccountDetailView: View {
                     AccountBrokerDetailCardView(accountViewModel: accountViewModel)
                         .cornerRadius(10)
                 } else {
-                    AccountDetailCardView(accountViewModel: accountViewModel)
+                    AccountDetailCardView(account: account)
                         .cornerRadius(10)
                 }
                 Picker(selection: $tabItem, content: {
@@ -69,7 +72,7 @@ struct AccountDetailView: View {
                     if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
                         AccountBrokerView(brokerID: accountID, accountViewModel: accountViewModel)
                     } else {
-                        TransactionsView(accountViewModel: accountViewModel)
+                        TransactionsView(account: account, accountTransactionList: accountViewModel.accountTransactionList)
                     }
                 } else if(tabItem == 2) {
                     if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
@@ -88,9 +91,9 @@ struct AccountDetailView: View {
                                 isPresented: $isPresentingAccountDeleteConfirm) {
                 Button("Delete account " + accountViewModel.account.accountName + "?", role: .destructive) {
                     Task.init {
-                        await accountController.deleteAccount(accountId: accountViewModel.account.id)
-                        await ApplicationData.loadData()
-//                        await accountViewModel.getAccountList()
+                        await accountController.deleteAccount(accountId: accountID)
+                        await accountViewModel.getAccountList()
+                        await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                         await watchViewModel.getAllWatchList()
                     }
                     self.presentationMode.wrappedValue.dismiss()
@@ -136,47 +139,7 @@ struct AccountDetailView: View {
                         Label("Delete", systemImage: ConstantUtils.deleteImageName)
                     })
                     
-//                    Button(action: {
-//                        self.isActive.toggle()
-//                    }, label: {
-//                        if(isActive) {
-//                            Label("Make Inactive", systemImage: "xmark.shield")
-//                        } else {
-//                            Label("Make Active", systemImage: "checkmark.shield")
-//                        }
-//                    })
-//                    .onChange(of: isActive, perform: { isActive in
-//                        if(!isActive) {
-//                            if(!accountViewModel.account.currentBalance.isZero) {
-//                                self.showZeroAlert.toggle()
-//                                self.isActive.toggle()
-//                                self.failedToMarkInActive = true
-//                            } else {
-//                                self.failedToMarkInActive = false
-//                                if(!initialLoadForActiveButton) {
-//                                    accountViewModel.account.active = isActive
-//                                    accountViewModel.account.paymentReminder = false
-//                                    accountViewModel.account.paymentDate = 0
-//                                    accountViewModel.account.lastUpdated = Date.now
-//                                    Task.init {
-//                                        await accountController.updateAccount(account: accountViewModel.account)
-////                                        await accountViewModel.getAccountList()
-//                                    }
-//                                } else {
-//                                    initialLoadForActiveButton = false
-//                                }
-//                            }
-//                        } else if(!failedToMarkInActive){
-//                            accountViewModel.account.active = isActive
-//                            accountViewModel.account.lastUpdated = Date.now
-//                            Task.init {
-//                                await accountController.updateAccount(account: accountViewModel.account)
-////                                await accountViewModel.getAccountList()
-//                            }
-//                        }
-//                    })
-                    
-                    if(isActive) {
+                    if(account.active) {
                         if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
                             Button(action: {
                                 self.isNewAccountInBrokerViewOpen.toggle()
@@ -190,6 +153,34 @@ struct AccountDetailView: View {
                                 Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
                             })
                         }
+                        
+                        Button(action: {
+                            Task.init {
+                                var updatedAccount = self.account
+                                updatedAccount.active = false
+                                await accountController.updateAccount(account: updatedAccount)
+                                await accountViewModel.getAccountList()
+                                self.account = accountViewModel.accountList.filter {
+                                    return $0.id.elementsEqual(accountID)
+                                }.first ?? Account()
+                            }
+                        }, label: {
+                            Label("Close account", systemImage: ConstantUtils.newTransactionImageName)
+                        })
+                    } else {
+                        Button(action: {
+                            Task.init {
+                                var updatedAccount = self.account
+                                updatedAccount.active = true
+                                await accountController.updateAccount(account: updatedAccount)
+                                await accountViewModel.getAccountList()
+                                self.account = accountViewModel.accountList.filter {
+                                    return $0.id.elementsEqual(accountID)
+                                }.first ?? Account()
+                            }
+                        }, label: {
+                            Label("Open account", systemImage: ConstantUtils.newTransactionImageName)
+                        })
                     }
                     
                 }, label: {
@@ -202,47 +193,22 @@ struct AccountDetailView: View {
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getAccount(id: accountID)
-                isActive = accountViewModel.account.active
-                if(!isActive) {
-                    initialLoadForActiveButton = true
-                }
-                if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
-                    await accountViewModel.getAccountInBrokerList(brokerID: accountID)
-                    await accountViewModel.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountViewModel.accountsInBroker)
-                } else {
-                    await accountViewModel.getAccountTransactionList(id: accountID)
-                    await accountViewModel.getLastTwoAccountTransactionList(id: accountID)
-                }
-                await watchViewModel.getWatchListByAccount(accountID: accountID)
+                await accountViewModel.getAccountTransactionList(id: accountID)
             }
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
-            Task.init {
-                await ApplicationData.loadData()
-                await accountViewModel.getAccount(id: accountViewModel.account.id)
-                await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id)
-                await accountViewModel.getAccountList()
-                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id)
-            }
+            
         }, content: {
-            UpdateBalanceAccountView(accountViewModel: accountViewModel)
+            UpdateBalanceAccountView(accountId: accountID, accountViewModel: accountViewModel)
                 .presentationDetents([.medium])
         })
         .sheet(isPresented: $isNewAccountInBrokerViewOpen, onDismiss: {
-            Task.init {
-                await accountViewModel.getAccountInBrokerList(brokerID: accountID)
-                await accountViewModel.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountViewModel.accountsInBroker)
-            }
+            
         }, content: {
             NewAccountInBrokerView(brokerAccountID: accountID)
         })
         .sheet(isPresented: $showAddWatchListView, onDismiss: {
-            Task.init {
-                await watchViewModel.getWatchListByAccount(accountID: accountID)
-                await watchViewModel.getAllWatchList()
-            }
+            
         }, content: {
             WatchToAccountView(accountID: accountID, watchViewModel: watchViewModel)
         })

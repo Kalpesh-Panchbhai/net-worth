@@ -9,6 +9,7 @@ import SwiftUI
 
 struct UpdateBalanceAccountView: View {
     
+    var accountId: String
     var accountTransactionController = AccountTransactionController()
     
     @State var amount: String = "0.0"
@@ -32,6 +33,45 @@ struct UpdateBalanceAccountView: View {
                 }
                 .listRowBackground(Color.theme.foreground)
                 .foregroundColor(Color.theme.primaryText)
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        var accountTransaction = AccountTransaction()
+                        accountTransaction.accountId = accountId
+                        accountTransaction.timestamp = date.convertToGlideDateTimeFormat()
+                        accountTransaction.amount = Double(amount) ?? 0.0
+                        accountTransaction.operation = "ADD"
+                        Task.init {
+                            await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
+                            await accountViewModel.getAccountList()
+                            await accountViewModel.getAccountTransactionList(id: accountId)
+                        }
+                        dismiss()
+                    }, label: {
+                        Text("Add")
+                    })
+                    .font(.system(size: 14).bold())
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        var accountTransaction = AccountTransaction()
+                        accountTransaction.accountId = accountId
+                        accountTransaction.timestamp = date.convertToGlideDateTimeFormat()
+                        accountTransaction.amount = Double(amount) ?? 0.0
+                        accountTransaction.operation = "UPDATE"
+                        Task.init {
+                            await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
+                            await accountViewModel.getAccountList()
+                            await accountViewModel.getAccountTransactionList(id: accountId)
+                        }
+                        dismiss()
+                    }, label: {
+                        Text("Update")
+                    })
+                    .font(.system(size: 14).bold())
+                }
             }
             .navigationTitle(accountViewModel.account.accountName)
             .navigationBarTitleDisplayMode(.inline)

@@ -39,7 +39,7 @@ struct AccountBrokerDetailView: View {
                 impact.impactOccurred()
             })
             if(tabItem == 1) {
-                TransactionsView(accountViewModel: accountViewModel)
+                TransactionsView(account: Account(), accountTransactionList: [AccountTransaction]())
             } else {
                 AccountBrokerChartView(brokerID: brokerID, accountID: accountID, symbol: accountViewModel.accountBroker.symbol, accountViewModel: accountViewModel)
             }

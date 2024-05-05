@@ -62,7 +62,6 @@ struct NewAccountView: View {
                         CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
                         watchListPicker
-                        accountOpenedDatePicker
                     }
                     else if(accountType == ConstantUtils.creditCardAccountType) {
                         nameField(labelName: "Credit Card Name")
@@ -70,7 +69,6 @@ struct NewAccountView: View {
                         CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
                         watchListPicker
-                        accountOpenedDatePicker
                     }
                     else if(accountType == ConstantUtils.loanAccountType) {
                         Picker(selection: $loanType, label: Text("Loan Type")) {
@@ -90,7 +88,6 @@ struct NewAccountView: View {
                         CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
                         watchListPicker
-                        accountOpenedDatePicker
                     } else if(accountType == ConstantUtils.brokerAccountType) {
                         nameField(labelName: "Broker Name")
                             .foregroundColor(Color.theme.primaryText)
@@ -103,7 +100,6 @@ struct NewAccountView: View {
                         CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
                         watchListPicker
-                        accountOpenedDatePicker
                     }
                 }
                 .listRowBackground(Color.theme.foreground)
@@ -150,6 +146,7 @@ struct NewAccountView: View {
 //                                    await accountTransactionController.addLoanAccountEMITransaction(account: newAccount, emiDate: loanPaymentDate, accountOpenedDate: accountOpenedDate, monthlyEmiAmount: monthlyEmi)
 //                                }
 //                            }
+                            await accountViewModel.getAccountList()
                         }
                         dismiss()
                     }, label: {
@@ -197,11 +194,6 @@ struct NewAccountView: View {
             }
         }
         .foregroundColor(Color.theme.primaryText)
-    }
-    
-    var accountOpenedDatePicker: some View {
-        DatePicker("Opened date", selection: $accountOpenedDate, in: ...Date(), displayedComponents: [.date])
-            .foregroundColor(Color.theme.primaryText)
     }
     
     private func allFieldsFilled () -> Bool {

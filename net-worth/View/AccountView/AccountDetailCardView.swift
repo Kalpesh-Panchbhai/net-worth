@@ -9,24 +9,20 @@ import SwiftUI
 
 struct AccountDetailCardView: View {
     
-    @ObservedObject var accountViewModel: AccountViewModel
-    
-    init(accountViewModel: AccountViewModel) {
-        self.accountViewModel = accountViewModel
-    }
+    var account: Account
     
     var body: some View {
         VStack(alignment: .leading) {
             Spacer()
             HStack {
-                Text(accountViewModel.account.currency)
+                Text(account.currency)
                     .foregroundColor(Color.theme.secondaryText)
                     .font(.caption)
-                Text("\(accountViewModel.account.balance.currentDayValue.withCommas(decimalPlace: 2))")
+                Text("\(account.balance.currentDayValue.withCommas(decimalPlace: 2))")
                     .foregroundColor(Color.theme.primaryText)
                     .font(.caption.bold())
                 Spacer()
-                if(!accountViewModel.account.active) {
+                if(!account.active) {
                     Text("(Closed)")
                         .foregroundColor(Color.theme.red)
                         .font(.caption2.italic())
@@ -76,10 +72,10 @@ struct AccountDetailCardView: View {
     }
     
     func getTotalChangeForNonSymbol() -> Double {
-        return accountViewModel.accountLastTwoTransactionList.count > 1 ? (accountViewModel.accountLastTwoTransactionList[0].balanceChange) : 0.0
+        return account.balance.currentDayValue - account.balance.previousDayValue
     }
     
     func getOneDayPercentageChangeForNonSymbol() -> String {
-        return accountViewModel.accountLastTwoTransactionList.count > 1 ? (CommonController.getGrowthPercentage(previousBalance: accountViewModel.accountLastTwoTransactionList[1].currentBalance, currentBalance: accountViewModel.accountLastTwoTransactionList[0].currentBalance)) : "0.0"
+        return CommonController.getGrowthPercentage(previousBalance: account.balance.previousDayValue, currentBalance: account.balance.currentDayValue)
     }
 }

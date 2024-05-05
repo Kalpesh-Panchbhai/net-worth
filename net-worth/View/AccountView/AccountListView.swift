@@ -43,26 +43,7 @@ struct AccountListView: View {
                             }, label: {
                                 AccountRowView(accountID: account.id, fromWatchView: accountType.elementsEqual("Inactive Account"), accountViewModel: accountViewModel)
                                     .contextMenu {
-                                        
                                         Label(account.id, systemImage: ConstantUtils.infoIconImageName)
-                                        
-                                        Button(role: .destructive, action: {
-                                            isPresentingAccountDeleteConfirm.toggle()
-                                            deletedAccount = account
-                                        }, label: {
-                                            Label("Delete", systemImage: ConstantUtils.deleteImageName)
-                                        })
-                                        
-                                        if(account.active) {
-                                            Button {
-                                                Task.init {
-                                                    await accountViewModel.getAccount(id: account.id)
-                                                }
-                                                isNewTransactionViewOpen.toggle()
-                                            } label: {
-                                                Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
-                                            }
-                                        }
                                     }
                             })
                         }
@@ -97,34 +78,9 @@ struct AccountListView: View {
                 .font(.system(size: 14).bold())
             })
         }
-        .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
-            Task.init {
-                await accountViewModel.getAccount(id: accountViewModel.account.id)
-                await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id)
-                await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id)
-                await accountViewModel.getAccountList()
-                await accountViewModel.getTotalBalance(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
-            }
-        }, content: {
-            UpdateBalanceAccountView(accountViewModel: accountViewModel)
-                .presentationDetents([.medium])
-        })
         .sheet(isPresented: $isChartViewOpen, content: {
             AccountWatchChartView(id: accountType, accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""), accountViewModel: accountViewModel)
         })
-        .confirmationDialog("Are you sure?",
-                            isPresented: $isPresentingAccountDeleteConfirm) {
-            Button("Delete account " + deletedAccount.accountName + "?", role: .destructive) {
-                Task.init {
-                    await accountController.deleteAccount(accountId: deletedAccount.id)
-                    await ApplicationData.loadData()
-                    await accountViewModel.getAccountList()
-                    await watchViewModel.getAllWatchList()
-                    await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                    self.presentationMode.wrappedValue.dismiss()
-                }
-            }
-        }
                             .searchable(text: $searchText)
                             .onAppear {
                                 Task.init {

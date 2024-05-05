@@ -7,24 +7,26 @@
 
 import Foundation
 
-struct AccountTransactionRestModel: Codable {
+struct AccountTransaction: Codable, Hashable {
     
     var id: String
     var accountId: String
     var timestamp: String
-    var currentBalance: Double
+    var amount: Double
     var paid: Bool
+    var operation: String
     
     private enum CodingKeys: String, CodingKey {
-        case id, accountId, timestamp, currentBalance, paid
+        case id, accountId, timestamp, amount, paid, operation
     }
     
-    init(id: String = "", accountId: String = "", timestamp: String = "", currentBalance: Double = 0.0, paid: Bool = true) {
+    init(id: String = "", accountId: String = "", timestamp: String = "", amount: Double = 0.0, paid: Bool = true, operation: String = "") {
         self.id = id
         self.accountId = accountId
         self.timestamp = timestamp
-        self.currentBalance = currentBalance
+        self.amount = amount
         self.paid = paid
+        self.operation = operation
     }
     
     init(from decoder: Decoder) throws {
@@ -32,8 +34,9 @@ struct AccountTransactionRestModel: Codable {
         id = try container.decode(String.self, forKey: .id)
         accountId = try container.decode(String.self, forKey: .accountId)
         timestamp = try container.decode(String.self, forKey: .timestamp)
-        currentBalance = try container.decode(Double.self, forKey: .currentBalance)
+        amount = try container.decode(Double.self, forKey: .amount)
         paid = try container.decode(Bool.self, forKey: .paid)
+        operation = try container.decode(String.self, forKey: .operation)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -43,7 +46,8 @@ struct AccountTransactionRestModel: Codable {
         }
         try container.encode(accountId, forKey: .accountId)
         try container.encode(timestamp, forKey: .timestamp)
-        try container.encode(currentBalance, forKey: .currentBalance)
+        try container.encode(amount, forKey: .amount)
         try container.encode(paid, forKey: .paid)
+        try container.encode(operation, forKey: .operation)
     }
 }

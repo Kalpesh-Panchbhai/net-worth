@@ -134,8 +134,6 @@ struct AccountRowView: View {
                 if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
                     await accountViewModel.getAccountInBrokerList(brokerID: accountID)
                     await accountViewModel.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountViewModel.accountsInBroker)
-                } else {
-                    await accountViewModel.getAccountLastOneDayChange(id: accountID)
                 }
             }
         }

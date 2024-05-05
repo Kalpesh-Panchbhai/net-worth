@@ -75,39 +75,8 @@ struct AccountCardList: View {
                                                                 }) {
                                                                     AccountCardView(account: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]))
                                                                         .contextMenu {
-                                                                            
                                                                             Label(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i].id, systemImage: ConstantUtils.infoIconImageName)
-                                                                            
-                                                                            Button(role: .destructive, action: {
-                                                                                isPresentingAccountDeleteConfirm.toggle()
-                                                                                deletedAccount = accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i];
-                                                                            }, label: {
-                                                                                Label("Delete", systemImage: ConstantUtils.deleteImageName)
-                                                                            })
-                                                                            
-                                                                            if(accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].active) {
-                                                                                Button {
-                                                                                    Task.init {
-                                                                                        await accountViewModel.getAccount(id: accountViewModel.sectionContent(key: accountType, searchKeyword: "")[i].id)
-                                                                                    }
-                                                                                    isNewTransactionViewOpen.toggle()
-                                                                                } label: {
-                                                                                    Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
-                                                                                }
-                                                                            }
                                                                         }
-                                                                }
-                                                                .confirmationDialog("Are you sure?",
-                                                                                    isPresented: $isPresentingAccountDeleteConfirm) {
-                                                                    Button("Delete account " + deletedAccount.accountName + "?", role: .destructive) {
-                                                                        Task.init {
-                                                                            await accountController.deleteAccount(accountId: deletedAccount.id)
-                                                                            await ApplicationData.loadData()
-//                                                                            await accountViewModel.getAccountList()
-                                                                            await watchViewModel.getAllWatchList()
-                                                                            await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                                                                        }
-                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -165,16 +134,6 @@ struct AccountCardList: View {
             .navigationTitle("Accounts")
             .navigationBarTitleDisplayMode(.inline)
         }
-        .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
-            Task.init {
-                accountViewModel.accountList = [Account]()
-//                await accountViewModel.getAccountList()
-                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-            }
-        }, content: {
-            UpdateBalanceAccountView(accountViewModel: accountViewModel)
-                .presentationDetents([.medium])
-        })
         .sheet(isPresented: $isNewAccountAccountViewOpen, onDismiss: {
             Task.init {
 //                await watchViewModel.getAllWatchList()

@@ -52,6 +52,7 @@ class AccountController {
     }
     
     public func getAccountList() async ->  [Account] {
+        print("Account All")
         let userId = ApplicationData.shared.userId
         let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [Account].self)
         return response.sorted(by: {
@@ -60,6 +61,12 @@ class AccountController {
     }
     
     public func calculateTotalBalance(accountList: [Account]) async -> Balance {
-        return Balance(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
+        var balance = Balance(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
+        accountList.forEach {
+            balance.currentValue = balance.currentValue + $0.balance.currentDayValue
+            balance.previousDayValue = balance.previousDayValue + $0.balance.previousDayValue
+            balance.oneDayChange = balance.currentValue - balance.previousDayValue
+        }
+        return balance
     }
 }

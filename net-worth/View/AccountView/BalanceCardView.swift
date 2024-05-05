@@ -72,8 +72,7 @@ struct BalanceCardView: View {
         .onAppear {
             Task.init {
                 if(!isWatchListCardView) {
-                    await accountViewModel.getAccountList()
-                    await accountViewModel.getTotalBalance(accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""))
+                    await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                 }
             }
         }

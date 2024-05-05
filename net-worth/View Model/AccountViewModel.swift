@@ -97,9 +97,11 @@ class AccountViewModel: ObservableObject {
     }
     
     func getAccount(id: String) async {
-        let list = await accountController.getAccount(id: id)
+        let account = accountList.first(where: {
+            return $0.id.elementsEqual(id)
+        }) ?? Account()
         DispatchQueue.main.async {
-            self.account = list
+            self.account = account
         }
     }
     
@@ -136,24 +138,10 @@ class AccountViewModel: ObservableObject {
     }
     
     func getAccountTransactionList(id: String) async {
-//        let list = await accountTransactionController.getLastTwoAccountTransactionList(accountID: id)
-//        DispatchQueue.main.async {
-//            self.accountTransactionList = list
-//        }
-    }
-    
-    func getLastTwoAccountTransactionList(id: String) async {
-//        let list = await accountTransactionController.getLastTwoAccountTransactionList(accountID: id)
-//        DispatchQueue.main.async {
-//            self.accountLastTwoTransactionList = list
-//        }
-    }
-    
-    func getAccountLastOneDayChange(id: String) async {
-//        let oneDayChange = await accountTransactionController.getAccountLastOneDayChange(accountID: id)
-//        DispatchQueue.main.async {
-//            self.accountOneDayChange = oneDayChange
-//        }
+        let list = await accountTransactionController.getTransactionList(accountId: id)
+        DispatchQueue.main.async {
+            self.accountTransactionList = list
+        }
     }
     
     func getBrokerAccount(brokerID: String, accountID: String) async {
