@@ -36,12 +36,12 @@ class UserController {
     func deleteUser() async {
         let db = Firestore.firestore()
         do {
-            await AccountController().deleteAccounts()
-            IncomeController().deleteIncomes()
-            await WatchController().deleteWatchLists()
-            IncomeTagController().deleteIncomeTags()
-            IncomeTypeController().deleteIncomeTypes()
-            try await db.collection(ConstantUtils.userCollectionName).document(getCurrentUserUID()).delete()
+//            await AccountController().deleteAccounts()
+//            IncomeController().deleteIncomes()
+//            await WatchController().deleteWatchLists()
+//            IncomeTagController().deleteIncomeTags()
+//            IncomeTypeController().deleteIncomeTypes()
+//            try await db.collection(ConstantUtils.userCollectionName).document(getCurrentUserUID()).delete()
         } catch {
             print(error)
         }

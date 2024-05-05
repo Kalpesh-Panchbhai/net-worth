@@ -112,7 +112,7 @@ struct TransactionsView: View {
                                             await accountController.updateAccount(account: account)
                                             await ApplicationData.loadData()
                                             await accountViewModel.getAccountList()
-                                            accountViewModel.getAccountTransactionList(id: account.id!)
+                                            await accountViewModel.getAccountTransactionList(id: account.id!)
                                             await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
                                             await accountViewModel.getAccount(id: account.id!)
                                         }
@@ -132,7 +132,7 @@ struct TransactionsView: View {
                                             await accountController.updateAccount(account: account)
                                             await ApplicationData.loadData()
                                             await accountViewModel.getAccountList()
-                                            accountViewModel.getAccountTransactionList(id: account.id!)
+                                            await accountViewModel.getAccountTransactionList(id: account.id!)
                                             await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
                                             await accountViewModel.getAccount(id: account.id!)
                                         }
@@ -153,7 +153,7 @@ struct TransactionsView: View {
                                             await accountController.updateAccount(account: account)
                                             await ApplicationData.loadData()
                                             await accountViewModel.getAccountList()
-                                            accountViewModel.getAccountTransactionList(id: account.id!)
+                                            await accountViewModel.getAccountTransactionList(id: account.id!)
                                             await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
                                             await accountViewModel.getAccount(id: account.id!)
                                         }
@@ -173,7 +173,7 @@ struct TransactionsView: View {
                                         Task.init {
                                             await accountTransactionController.updateAccountTransaction(accountID: account.id!, accountTransaction: accountTransaction)
                                             await accountController.updateAccount(account: account)
-                                            accountViewModel.getAccountTransactionList(id: account.id!)
+                                            await accountViewModel.getAccountTransactionList(id: account.id!)
                                             await accountViewModel.getLastTwoAccountTransactionList(id: account.id!)
                                             await accountViewModel.getAccount(id:account.id!)
                                         }

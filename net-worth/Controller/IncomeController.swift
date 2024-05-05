@@ -30,22 +30,22 @@ class IncomeController {
     
     public func addIncome(income: Income) async {
         let userId = ApplicationData.shared.userId
-        let requestData = IncomeRestModel(amount: income.amount, taxPaid: income.taxpaid, currency: income.currency, incomeType: income.type, incomeTag: income.tag, creditedOn: income.creditedOn.convertToGlideDateTimeFormat(), userId: userId)
+        let requestData = IncomeRestModel(userId: userId, amount: income.amount, taxPaid: income.taxpaid, creditedOn: income.creditedOn.convertToGlideDateTimeFormat(), currency: income.currency, incomeType: income.type, incomeTag: income.tag)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(requestData)
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: IncomeRestModel.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: RestResponse.self)
     }
     
     public func updateIncome(income: Income) async {
         let userId = ApplicationData.shared.userId
-        let requestData = IncomeRestModel(id: income.id, amount: income.amount, taxPaid: income.taxpaid, currency: income.currency, incomeType: income.type, incomeTag: income.tag, creditedOn: income.creditedOn.convertToGlideDateTimeFormat(), userId: userId)
+        let requestData = IncomeRestModel(id: income.id, userId: userId, amount: income.amount, taxPaid: income.taxpaid, creditedOn: income.creditedOn.convertToGlideDateTimeFormat(), currency: income.currency, incomeType: income.type, incomeTag: income.tag)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(requestData)
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: IncomeRestModel.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: RestResponse.self)
     }
     
     public func deleteIncome(income: Income) async {
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: income.id, forClass: IncomeRestModel.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: income.id, forClass: RestResponse.self)
     }
     
     public func deleteIncomes() {

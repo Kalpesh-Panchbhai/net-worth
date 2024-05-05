@@ -48,9 +48,7 @@
 		7D59B4762BE249C8006F3F00 /* AccountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4622BE249C8006F3F00 /* AccountController.swift */; };
 		7D59B4772BE249C8006F3F00 /* AccountInBrokerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4632BE249C8006F3F00 /* AccountInBrokerController.swift */; };
 		7D59B4782BE249C8006F3F00 /* AccountTransactionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4642BE249C8006F3F00 /* AccountTransactionController.swift */; };
-		7D59B4792BE249C8006F3F00 /* BrokerChartController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4652BE249C8006F3F00 /* BrokerChartController.swift */; };
 		7D59B47A2BE249C8006F3F00 /* ChartController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4662BE249C8006F3F00 /* ChartController.swift */; };
-		7D59B47B2BE249C8006F3F00 /* CommonChartController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4672BE249C8006F3F00 /* CommonChartController.swift */; };
 		7D59B47C2BE249C8006F3F00 /* CommonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4682BE249C8006F3F00 /* CommonController.swift */; };
 		7D59B47D2BE249C8006F3F00 /* FinanceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4692BE249C8006F3F00 /* FinanceController.swift */; };
 		7D59B47E2BE249C8006F3F00 /* ImportExportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B46A2BE249C8006F3F00 /* ImportExportController.swift */; };
@@ -58,7 +56,6 @@
 		7D59B4802BE249C8006F3F00 /* IncomeTagController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B46C2BE249C8006F3F00 /* IncomeTagController.swift */; };
 		7D59B4812BE249C8006F3F00 /* IncomeTypeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B46D2BE249C8006F3F00 /* IncomeTypeController.swift */; };
 		7D59B4822BE249C8006F3F00 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B46E2BE249C8006F3F00 /* NetworkMonitor.swift */; };
-		7D59B4832BE249C8006F3F00 /* NonBrokerChartController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B46F2BE249C8006F3F00 /* NonBrokerChartController.swift */; };
 		7D59B4842BE249C8006F3F00 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4702BE249C8006F3F00 /* NotificationController.swift */; };
 		7D59B4852BE249C8006F3F00 /* RestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4712BE249C8006F3F00 /* RestController.swift */; };
 		7D59B4862BE249C8006F3F00 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4722BE249C8006F3F00 /* SettingsController.swift */; };
@@ -147,6 +144,9 @@
 		7D59B5392BE24ABA006F3F00 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7D59B5382BE24ABA006F3F00 /* GoogleSignInSwift */; };
 		7D59B53B2BE24AEE006F3F00 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7D59B53A2BE24AEE006F3F00 /* FirebaseFirestoreSwift */; };
 		7D59B53D2BE24B1C006F3F00 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B53C2BE24B1C006F3F00 /* GoogleService-Info.plist */; };
+		7D6437402BE6171B00E580F0 /* AccountTransactionRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D64373F2BE6171B00E580F0 /* AccountTransactionRestModel.swift */; };
+		7D97202D2BE50F4800E5797D /* AccountRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D97202C2BE50F4800E5797D /* AccountRestModel.swift */; };
+		7DA46C252BE782BF00DF71C1 /* RestResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA46C242BE782BF00DF71C1 /* RestResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -193,9 +193,7 @@
 		7D59B4622BE249C8006F3F00 /* AccountController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountController.swift; sourceTree = "<group>"; };
 		7D59B4632BE249C8006F3F00 /* AccountInBrokerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountInBrokerController.swift; sourceTree = "<group>"; };
 		7D59B4642BE249C8006F3F00 /* AccountTransactionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountTransactionController.swift; sourceTree = "<group>"; };
-		7D59B4652BE249C8006F3F00 /* BrokerChartController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrokerChartController.swift; sourceTree = "<group>"; };
 		7D59B4662BE249C8006F3F00 /* ChartController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartController.swift; sourceTree = "<group>"; };
-		7D59B4672BE249C8006F3F00 /* CommonChartController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonChartController.swift; sourceTree = "<group>"; };
 		7D59B4682BE249C8006F3F00 /* CommonController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonController.swift; sourceTree = "<group>"; };
 		7D59B4692BE249C8006F3F00 /* FinanceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinanceController.swift; sourceTree = "<group>"; };
 		7D59B46A2BE249C8006F3F00 /* ImportExportController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportExportController.swift; sourceTree = "<group>"; };
@@ -203,7 +201,6 @@
 		7D59B46C2BE249C8006F3F00 /* IncomeTagController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeTagController.swift; sourceTree = "<group>"; };
 		7D59B46D2BE249C8006F3F00 /* IncomeTypeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeTypeController.swift; sourceTree = "<group>"; };
 		7D59B46E2BE249C8006F3F00 /* NetworkMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
-		7D59B46F2BE249C8006F3F00 /* NonBrokerChartController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NonBrokerChartController.swift; sourceTree = "<group>"; };
 		7D59B4702BE249C8006F3F00 /* NotificationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		7D59B4712BE249C8006F3F00 /* RestController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestController.swift; sourceTree = "<group>"; };
 		7D59B4722BE249C8006F3F00 /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
@@ -287,6 +284,9 @@
 		7D59B5252BE249E0006F3F00 /* WatchViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchViewModel.swift; sourceTree = "<group>"; };
 		7D59B5272BE249E0006F3F00 /* net_worth.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = net_worth.xcdatamodel; sourceTree = "<group>"; };
 		7D59B53C2BE24B1C006F3F00 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		7D64373F2BE6171B00E580F0 /* AccountTransactionRestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTransactionRestModel.swift; sourceTree = "<group>"; };
+		7D97202C2BE50F4800E5797D /* AccountRestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountRestModel.swift; sourceTree = "<group>"; };
+		7DA46C242BE782BF00DF71C1 /* RestResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -399,8 +399,11 @@
 		7D59B42F2BE249B7006F3F00 /* RestModel */ = {
 			isa = PBXGroup;
 			children = (
+				7D97202C2BE50F4800E5797D /* AccountRestModel.swift */,
+				7D64373F2BE6171B00E580F0 /* AccountTransactionRestModel.swift */,
 				7D59B4272BE249B7006F3F00 /* EmptyResponse.swift */,
 				7D59B42A2BE249B7006F3F00 /* IncomeRestModel.swift */,
+				7DA46C242BE782BF00DF71C1 /* RestResponse.swift */,
 				7D59B42C2BE249B7006F3F00 /* TypeValueRestModel.swift */,
 				7D59B42E2BE249B7006F3F00 /* UserRestModel.swift */,
 			);
@@ -442,9 +445,7 @@
 				7D59B4622BE249C8006F3F00 /* AccountController.swift */,
 				7D59B4632BE249C8006F3F00 /* AccountInBrokerController.swift */,
 				7D59B4642BE249C8006F3F00 /* AccountTransactionController.swift */,
-				7D59B4652BE249C8006F3F00 /* BrokerChartController.swift */,
 				7D59B4662BE249C8006F3F00 /* ChartController.swift */,
-				7D59B4672BE249C8006F3F00 /* CommonChartController.swift */,
 				7D59B4682BE249C8006F3F00 /* CommonController.swift */,
 				7D59B4692BE249C8006F3F00 /* FinanceController.swift */,
 				7D59B46A2BE249C8006F3F00 /* ImportExportController.swift */,
@@ -452,7 +453,6 @@
 				7D59B46C2BE249C8006F3F00 /* IncomeTagController.swift */,
 				7D59B46D2BE249C8006F3F00 /* IncomeTypeController.swift */,
 				7D59B46E2BE249C8006F3F00 /* NetworkMonitor.swift */,
-				7D59B46F2BE249C8006F3F00 /* NonBrokerChartController.swift */,
 				7D59B4702BE249C8006F3F00 /* NotificationController.swift */,
 				7D59B4712BE249C8006F3F00 /* RestController.swift */,
 				7D59B4722BE249C8006F3F00 /* SettingsController.swift */,
@@ -715,11 +715,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D59B4402BE249B7006F3F00 /* AccountBackupModel.swift in Sources */,
+				7D97202D2BE50F4800E5797D /* AccountRestModel.swift in Sources */,
 				7D59B4612BE249B7006F3F00 /* ConstantUtils.swift in Sources */,
 				7D59B4EF2BE249D9006F3F00 /* RowWatchToAccountView.swift in Sources */,
 				7D59B4812BE249C8006F3F00 /* IncomeTypeController.swift in Sources */,
 				7D59B4F62BE249D9006F3F00 /* SingleLineLollipopChartView.swift in Sources */,
-				7D59B4832BE249C8006F3F00 /* NonBrokerChartController.swift in Sources */,
+				7DA46C252BE782BF00DF71C1 /* RestResponse.swift in Sources */,
 				7D59B4762BE249C8006F3F00 /* AccountController.swift in Sources */,
 				7D59B5282BE249E0006F3F00 /* AccountViewModel.swift in Sources */,
 				7D59B5062BE249D9006F3F00 /* NewIncomeView.swift in Sources */,
@@ -806,8 +807,6 @@
 				7D59B52B2BE249E0006F3F00 /* FinanceViewModel.swift in Sources */,
 				7D59B5012BE249D9006F3F00 /* IncomeTagView.swift in Sources */,
 				7D59B4EE2BE249D9006F3F00 /* NewAccountView.swift in Sources */,
-				7D59B4792BE249C8006F3F00 /* BrokerChartController.swift in Sources */,
-				7D59B47B2BE249C8006F3F00 /* CommonChartController.swift in Sources */,
 				7D59B5112BE249D9006F3F00 /* MainScreenView.swift in Sources */,
 				7D59B4912BE249D0006F3F00 /* DateExtension.swift in Sources */,
 				7D59B4FA2BE249D9006F3F00 /* NetWorthChartView.swift in Sources */,
@@ -825,6 +824,7 @@
 				7D59B5052BE249D9006F3F00 /* NewIncomeTypeView.swift in Sources */,
 				7D59B5022BE249D9006F3F00 /* IncomeTypeView.swift in Sources */,
 				7D59B43F2BE249B7006F3F00 /* IncomeData.swift in Sources */,
+				7D6437402BE6171B00E580F0 /* AccountTransactionRestModel.swift in Sources */,
 				7D59B5032BE249D9006F3F00 /* IncomeView.swift in Sources */,
 				7D59B4772BE249C8006F3F00 /* AccountInBrokerController.swift in Sources */,
 				7D59B4472BE249B7006F3F00 /* WatchBackupModel.swift in Sources */,

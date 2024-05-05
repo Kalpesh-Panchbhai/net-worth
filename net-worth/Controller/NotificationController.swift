@@ -123,9 +123,9 @@ class NotificationController {
         }
     }
     
-    public func setNotification(newValue: Bool, accountType: String) {
+    public func setNotification(newValue: Bool, accountType: String) async {
         UserDefaults.standard.set(newValue, forKey: accountType)
-        let accountList = AccountController().getAccountList(accountType: accountType)
+        let accountList = await AccountController().getAccountList(accountType: accountType)
         if(newValue) {
             for account in accountList {
                 if(account.paymentReminder){

@@ -83,7 +83,7 @@ class ImportExportController {
     private func importWatch() async {
         for watch in data.watch {
             var newWatch = Watch()
-            let accountList = accountController.getAccountList()
+            let accountList = await accountController.getAccountList()
             newWatch.accountID = watch.accountID.map { accountID in
                 accountList.filter { account in
                     account.accountName.elementsEqual(accountID)
@@ -146,7 +146,7 @@ class ImportExportController {
     }
     
     private func exportAccount() async {
-        let accountList = accountController.getAccountList()
+        let accountList = await accountController.getAccountList()
         var accountDataList = [AccountBackupModel]()
         
         for account in accountList {
@@ -167,7 +167,7 @@ class ImportExportController {
                 
                 accountDataList.append(accountData)
             } else {
-                let accountTransactions = accountTransactionController.getAccountTransactionList(accountID: account.id!)
+                let accountTransactions = await accountTransactionController.getTransactionList(accountId: account.id!)
                 let accountTransactionsData = accountTransactions.map { accountTransaction in
                     return AccountTransactionBackupModel(timestamp: accountTransaction.timestamp, balanceChange: accountTransaction.balanceChange, currentBalance: accountTransaction.currentBalance, paid: accountTransaction.paid)
                     
@@ -183,7 +183,7 @@ class ImportExportController {
     
     private func exportWatch() async {
         let watchList = await watchController.getAllWatchList()
-        let accountList = accountController.getAccountList()
+        let accountList = await accountController.getAccountList()
         data.watch = watchList.map { watch in
             let accounts = watch.accountID.map { accountID in
                 accountList.filter { account in
@@ -287,7 +287,7 @@ class ImportExportController {
     }
     
     func deleteData() async {
-        await accountController.deleteAccounts()
+//        await accountController.deleteAccounts()
         incomeController.deleteIncomes()
         await watchController.deleteWatchLists()
         incomeTagController.deleteIncomeTags()

@@ -172,22 +172,22 @@ struct NewAccountView: View {
                                 })
                                 watchController.addAccountToWatchList(watch: selectedWatchList)
                             }
-                            var watch = await watchController.getDefaultWatchList()
-                            watch.accountID.append(accountID)
-                            watch.accountID.sort(by: { item1, item2 in
-                                accountViewModel.accountList.filter { account1 in
-                                    account1.id!.elementsEqual(item1)
-                                }.first!.accountName <= accountViewModel.accountList.filter { account2 in
-                                    account2.id!.elementsEqual(item2)
-                                }.first!.accountName
-                            })
-                            watchController.addAccountToWatchList(watch: watch)
-                            await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                            if(accountType.elementsEqual(ConstantUtils.loanAccountType) && loanType.elementsEqual("Consumer")) {
-                                Task.init {
-                                    await accountTransactionController.addLoanAccountEMITransaction(account: newAccount, emiDate: loanPaymentDate, accountOpenedDate: accountOpenedDate, monthlyEmiAmount: monthlyEmi)
-                                }
-                            }
+//                            var watch = await watchController.getDefaultWatchList()
+//                            watch.accountID.append(accountID)
+//                            watch.accountID.sort(by: { item1, item2 in
+//                                accountViewModel.accountList.filter { account1 in
+//                                    account1.id!.elementsEqual(item1)
+//                                }.first!.accountName <= accountViewModel.accountList.filter { account2 in
+//                                    account2.id!.elementsEqual(item2)
+//                                }.first!.accountName
+//                            })
+//                            watchController.addAccountToWatchList(watch: watch)
+//                            await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+//                            if(accountType.elementsEqual(ConstantUtils.loanAccountType) && loanType.elementsEqual("Consumer")) {
+//                                Task.init {
+//                                    await accountTransactionController.addLoanAccountEMITransaction(account: newAccount, emiDate: loanPaymentDate, accountOpenedDate: accountOpenedDate, monthlyEmiAmount: monthlyEmi)
+//                                }
+//                            }
                         }
                         dismiss()
                     }, label: {

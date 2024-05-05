@@ -10,30 +10,19 @@ import FirebaseFirestore
 
 class AccountTransactionController {
     
-    public func fetchLastestAccountTransactionList(accountID: String) async -> [AccountTransaction] {
-        var accountTransactionList = [AccountTransaction]()
-        do {
-            
-            let lastFetchedDateTime = ApplicationData.shared.data.accountDataListUpdatedDate
-            accountTransactionList = try await AccountController().getAccountCollection()
-                .document(accountID)
-                .collection(ConstantUtils.accountTransactionCollectionName)
-                .whereField(ConstantUtils.accountTransactionKeyCreatedDate, isGreaterThanOrEqualTo: lastFetchedDateTime)
-                .getDocuments()
-                .documents
-                .map { doc in
-                    return AccountTransaction(id: doc.documentID,
-                                              timestamp: (doc[ConstantUtils.accountTransactionKeytimestamp] as? Timestamp)?.dateValue() ?? Date(),
-                                              balanceChange: doc[ConstantUtils.accountTransactionKeyBalanceChange] as? Double ?? 0.0,
-                                              currentBalance: doc[ConstantUtils.accountTransactionKeyCurrentBalance] as? Double ?? 0.0,
-                                              paid: doc[ConstantUtils.accountTransactionKeyPaid] as? Bool ?? true,
-                                              createdDate: (doc[ConstantUtils.accountTransactionKeyCreatedDate] as? Timestamp)?.dateValue() ?? Date(),
-                                              deleted: doc[ConstantUtils.accountTransactionKeyDeleted] as? Bool ?? false)
-                }
-        } catch {
-            print(error)
-        }
-        return accountTransactionList
+    private var restController = RestController()
+    private var entityName = ConstantUtils.Entity.ACCOUNT_TRANSACTION.rawValue
+    
+    public func getTransactionList(accountId: String) async -> [AccountTransaction] {
+        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: accountId, forClass: [AccountTransactionRestModel].self)
+        return response.map {
+            return AccountTransaction(id: $0.id,
+                                      timestamp: $0.timestamp.convertFromGlideDateTimeFormat(),
+                                      currentBalance: $0.currentBalance,
+                                      paid: $0.paid)
+        }.sorted(by: {
+            return $0.timestamp > $1.timestamp
+        })
     }
     
     public func addTransaction(accountID: String, accountTransaction: AccountTransaction) async {
@@ -52,7 +41,7 @@ class AccountTransactionController {
     
     public func addTransaction(accountID: String, account: Account, timestamp: Date, operation: String) async {
         let currentDateTime = Date.now
-        let accountTransactionsList = getAccountTransactionList(accountID: accountID)
+        let accountTransactionsList = await getLastTwoAccountTransactionList(accountID: accountID)
         if(accountTransactionsList.count > 0) {
             if(accountTransactionsList.last!.timestamp > timestamp) {
                 await addOldestTransaction(accountID: accountID, account: account, accountTransactionsList: accountTransactionsList, timestamp: timestamp, currentDateTime: currentDateTime)
@@ -207,63 +196,8 @@ class AccountTransactionController {
         await AccountController().updateAccount(account: updatedAccount)
     }
     
-    public func getAccountTransactionList(accountID: String) -> [AccountTransaction] {
-        return ApplicationData.shared.data.accountDataList.first(where: {
-            $0.account.id!.elementsEqual(accountID)
-        }).map {
-            $0.accountTransaction
-        } ?? [AccountTransaction]()
-    }
-    
-    public func getAccountTransactionListWithRange(accountID: String, range: String) async -> [AccountTransaction] {
-        var date = Timestamp()
-        if(range.elementsEqual(ConstantUtils.oneMonthRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000))
-        } else if(range.elementsEqual(ConstantUtils.threeMonthRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-7776000))
-        } else if(range.elementsEqual(ConstantUtils.sixMonthRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-15552000))
-        } else if(range.elementsEqual(ConstantUtils.oneYearRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-31104000))
-        } else if(range.elementsEqual(ConstantUtils.twoYearRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-62208000))
-        } else if(range.elementsEqual(ConstantUtils.fiveYearRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-155520000))
-        } else if(range.elementsEqual("All")) {
-            return getAccountTransactionList(accountID: accountID)
-        }
-        let accountTransactionList = getAccountTransactionList(accountID: accountID)
-        
-        return accountTransactionList.filter {
-            $0.timestamp >= date.dateValue()
-        }
-    }
-    
-    public func getAccountTransactionListBelowRange(accountID: String, range: String) async -> [AccountTransaction] {
-        var date = Timestamp()
-        if(range.elementsEqual(ConstantUtils.oneMonthRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000))
-        } else if(range.elementsEqual(ConstantUtils.threeMonthRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-7776000))
-        } else if(range.elementsEqual(ConstantUtils.sixMonthRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-15552000))
-        } else if(range.elementsEqual(ConstantUtils.oneYearRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-31104000))
-        } else if(range.elementsEqual(ConstantUtils.twoYearRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-62208000))
-        } else if(range.elementsEqual(ConstantUtils.fiveYearRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-155520000))
-        } else {
-            return [AccountTransaction]()
-        }
-        let accountTransactionList = getAccountTransactionList(accountID: accountID)
-        return accountTransactionList.filter {
-            $0.timestamp < date.dateValue()
-        }
-    }
-    
     public func getLastTwoAccountTransactionList(accountID: String) async -> [AccountTransaction] {
-        var accountTransactionList = getAccountTransactionList(accountID: accountID)
+        var accountTransactionList = await getLastTwoAccountTransactionList(accountID: accountID)
         
         accountTransactionList = accountTransactionList.filter {
             $0.paid
@@ -274,7 +208,7 @@ class AccountTransactionController {
     }
     
     public func getAccountLastOneDayChange(accountID: String) async -> Balance {
-        let accountTransactionList = getAccountTransactionList(accountID: accountID)
+        let accountTransactionList = await getLastTwoAccountTransactionList(accountID: accountID)
         
         var date = Timestamp()
         date = Timestamp.init(date: Date.now.addingTimeInterval(-86400))

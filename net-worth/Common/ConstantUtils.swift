@@ -20,6 +20,8 @@ class ConstantUtils {
     
     enum Entity: String, CaseIterable {
         case USER = "user"
+        case ACCOUNT = "account"
+        case ACCOUNT_TRANSACTION = "account_transaction"
         case INCOME = "income"
         case INCOME_TAG = "income_tag"
         case INCOME_TYPE = "income_type"

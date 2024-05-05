@@ -13,6 +13,8 @@ class AccountController {
     
     var watchController = WatchController()
     var accountTransactionController = AccountTransactionController()
+    private var restController = RestController()
+    private var entityName = ConstantUtils.Entity.ACCOUNT.rawValue
     
     public func getAccountCollection() -> CollectionReference {
         return UserController()
@@ -20,88 +22,74 @@ class AccountController {
             .collection(ConstantUtils.accountCollectionName)
     }
     
-    public func fetchLastestAccountList() async -> [Account] {
-        var accountList = [Account]()
-        
-        let lastFetchedDateTime = ApplicationData.shared.data.accountDataListUpdatedDate
-        do {
-            accountList = try await getAccountCollection()
-                .whereField(ConstantUtils.accountKeyLastUpdated, isGreaterThanOrEqualTo: lastFetchedDateTime)
-                .getDocuments()
-                .documents
-                .map { doc in
-                    return Account(doc: doc)
-                }
-        } catch {
-            print(error)
-        }
-        return accountList
-    }
-    
     public func addAccount(newAccount: Account) async -> String {
-        do {
-            let accountID = try getAccountCollection()
-                .addDocument(from: newAccount).documentID
-            
-            await ApplicationData.loadData()
-            return accountID
-        } catch {
-            print(error)
-        }
-        return ""
+        let userId = ApplicationData.shared.userId
+        let requestData = AccountRestModel(accountType: newAccount.accountType, loanType: newAccount.loanType, accountName: newAccount.accountName, currentBalance: newAccount.currentBalance, paymentReminder: newAccount.paymentReminder, paymentDate: newAccount.paymentDate, currency: newAccount.currency, active: newAccount.active, userId: userId, accountOpenedDate: "")
+        let encoder = JSONEncoder()
+        let data = try! encoder.encode(requestData)
+        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: AccountRestModel.self)
+        return response.id
     }
     
     public func addAccount(newAccount: Account, accountOpenedDate: Date) async -> String {
-        do {
-            let accountID = try getAccountCollection()
-                .addDocument(from: newAccount).documentID
-            if(newAccount.accountType != ConstantUtils.brokerAccountType) {
-                let accountTransaction = AccountTransaction(timestamp: accountOpenedDate, balanceChange: newAccount.currentBalance, currentBalance: newAccount.currentBalance, createdDate: newAccount.lastUpdated)
-                await accountTransactionController.addTransaction(accountID: accountID, accountTransaction: accountTransaction)
-            }
-            
-            await ApplicationData.loadData()
-            return accountID
-        } catch {
-            print(error)
-        }
-        return ""
+        let userId = ApplicationData.shared.userId
+        let requestData = AccountRestModel(accountType: newAccount.accountType, loanType: newAccount.loanType, accountName: newAccount.accountName, currentBalance: newAccount.currentBalance, paymentReminder: newAccount.paymentReminder, paymentDate: newAccount.paymentDate, currency: newAccount.currency, active: newAccount.active, userId: userId, accountOpenedDate: accountOpenedDate.convertToGlideDateTimeFormat())
+        let encoder = JSONEncoder()
+        let data = try! encoder.encode(requestData)
+        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: AccountRestModel.self)
+        return response.id
     }
     
-    public func getAccount(id: String) -> Account {
-        let account = ApplicationData.shared.data.accountDataList.first(where: {
-            $0.account.id!.elementsEqual(id)
+    public func updateAccount(account: Account) async {
+        let userId = ApplicationData.shared.userId
+        let requestData = AccountRestModel(id: account.id!, accountType: account.accountType, loanType: account.loanType, accountName: account.accountName, currentBalance: account.currentBalance, paymentReminder: account.paymentReminder, paymentDate: account.paymentDate, currency: account.currency, active: account.active, userId: userId, accountOpenedDate: "")
+        let encoder = JSONEncoder()
+        let data = try! encoder.encode(requestData)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: AccountRestModel.self)
+    }
+    
+    public func deleteAccount(accountId: String) async {
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: accountId, forClass: [AccountRestModel].self)
+    }
+    
+    public func getAccount(id: String) async -> Account {
+        let accountList = await getAccountList()
+        let account = accountList.first(where: {
+            return $0.id!.elementsEqual(id)
         })
         
-        return account.map {
-            $0.account
-        } ?? Account()
+        return account ?? Account()
     }
     
-    public func getAccountList(accountType: String) -> [Account] {
-        let accountList = ApplicationData.shared.data.accountDataList.filter {
-            $0.account.accountType.elementsEqual(accountType)
-        }
-        
-        return accountList.map {
-            $0.account
-        }
-    }
-    
-    public func getAccountList() -> [Account] {
-        var accountList = [Account]()
-        accountList = ApplicationData.shared.data.accountDataList.map {
-            $0.account
-        }
-        return accountList.sorted(by: {
-            $0.accountName < $1.accountName
+    public func getAccountList() async ->  [Account] {
+        let userId = ApplicationData.shared.userId
+        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [AccountRestModel].self)
+        return response.map {
+            return Account(id: $0.id,
+                           accountType: $0.accountType,
+                           loanType: $0.loanType,
+                           accountName: $0.accountName,
+                           currentBalance: $0.currentBalance,
+                           paymentReminder: $0.paymentReminder,
+                           paymentDate: $0.paymentDate,
+                           currency: $0.currency,
+                           active: $0.active)
+        }.sorted(by: {
+            return $0.accountName < $1.accountName
         })
+    }
+    
+    public func getAccountList(accountType: String) async -> [Account] {
+        let accountList = await getAccountList()
+        return accountList.filter {
+            return $0.accountType.elementsEqual(accountType)
+        }
     }
     
     public func calculateTotalBalance(accountList: [Account]) async -> Balance {
         var accounts: [Account] = []
         if(accountList.isEmpty) {
-            accounts = getAccountList()
+            accounts = await getAccountList()
         } else {
             accounts = accountList
         }
@@ -151,70 +139,5 @@ class AccountController {
             print(error)
         }
         return Balance(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
-    }
-    
-    public func updateAccount(account: Account) async {
-        do {
-            let id = account.id!
-            var updatedAccount = account
-            updatedAccount.id = nil
-            try getAccountCollection()
-                .document(id)
-                .setData(from: updatedAccount, merge: true)
-            
-            if(updatedAccount.deleted) {
-                await updateWatchListIfAccountDeleted(accountID: account.id!)
-            }
-            
-            await ApplicationData.loadData()
-        } catch {
-            print(error)
-        }
-    }
-    
-    private func updateWatchListIfAccountDeleted(accountID: String) async {
-        let watchList = await watchController.getAllWatchList()
-        watchList.forEach { watch in
-            if(watch.accountID.contains(accountID)) {
-                watchController.deleteAccountFromWatchList(watchList: watch, accountID: accountID)
-            }
-        }
-    }
-    
-    public func deleteAccount(accountID: String, isBrokerAccount: Bool) async {
-        let watchList = await watchController.getAllWatchList()
-        watchList.forEach { watch in
-            if(watch.accountID.contains(accountID)) {
-                watchController.deleteAccountFromWatchList(watchList: watch, accountID: accountID)
-            }
-        }
-        if(isBrokerAccount) {
-            let accountInBrokerList = AccountInBrokerController().getAccountListInBroker(brokerID: accountID)
-            for account in accountInBrokerList {
-                CommonController.delete(collection: getAccountCollection().document(accountID).collection(ConstantUtils.accountBrokerCollectionName).document(account.id!).collection(ConstantUtils.accountTransactionCollectionName))
-                do {
-                    try await getAccountCollection().document(accountID).collection(ConstantUtils.accountBrokerCollectionName).document(account.id!).delete()
-                } catch {
-                    print(error)
-                }
-            }
-        } else {
-            CommonController.delete(collection: getAccountCollection().document(accountID).collection(ConstantUtils.accountTransactionCollectionName))
-        }
-        
-        do {
-            try await getAccountCollection().document(accountID).delete()
-        } catch {
-            print(error)
-        }
-        
-        await ApplicationData.loadData()
-    }
-    
-    public func deleteAccounts() async {
-        let accountList = getAccountList()
-        for account in accountList {
-            await deleteAccount(accountID: account.id!, isBrokerAccount: account.accountType == ConstantUtils.brokerAccountType)
-        }
     }
 }

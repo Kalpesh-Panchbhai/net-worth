@@ -30,19 +30,9 @@ class RestController {
         return ConstantUtils.baseRESTURL + entity + (pathParam != "" ? ("/" + pathParam) : "")
     }
     
-    private func getCredential() -> String {
-        let username = "admin"
-        let password = "x2Ts4KX$"
-        let loginString = String(format: "%@:%@", username, password)
-        let loginData = loginString.data(using: String.Encoding.utf8)!
-        let base64LoginString = loginData.base64EncodedString()
-        return base64LoginString
-    }
-    
     private func getURLRequest(url: URL, httpMethod: String, body: Data) -> URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = httpMethod
-        request.setValue("Basic \(getCredential())", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         if(!httpMethod.elementsEqual(ConstantUtils.HTTP_METHOD.GET.rawValue)) {
             request.httpBody = body

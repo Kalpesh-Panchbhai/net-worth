@@ -206,71 +206,71 @@ extension OnboardingView {
     
     private var notifications: some View {
         VStack {
-            Toggle(isOn: $mutualFundNotification, label: {
-                Text("Mutual Funds")
-            }).onChange(of: mutualFundNotification) { newValue in
-                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
-                notificationController.setNotification(newValue: newValue, accountType: "MUTUALFUND")
-            }
-            
-            Toggle(isOn: $equityNotification, label: {
-                Text("Equity")
-            }).onChange(of: equityNotification) { newValue in
-                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
-                notificationController.setNotification(newValue: newValue, accountType: "EQUITY")
-            }
-            
-            Toggle(isOn: $etfNotification, label: {
-                Text("ETF")
-            }).onChange(of: etfNotification) { newValue in
-                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
-                notificationController.setNotification(newValue: newValue, accountType: "ETF")
-            }
-            
-            Toggle(isOn: $cryptoCurrencyNotification, label: {
-                Text("Cryptocurrency")
-            }).onChange(of: cryptoCurrencyNotification) { newValue in
-                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
-                notificationController.setNotification(newValue: newValue, accountType: "CRYPTOCURRENCY")
-            }
-            
-            Toggle(isOn: $futureNotification, label: {
-                Text("Future")
-            })
-            .onChange(of: futureNotification) { newValue in
-                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
-                notificationController.setNotification(newValue: newValue, accountType: "FUTURE")
-            }
-            
-            Toggle(isOn: $optionNotification, label: {
-                Text("Option")
-            }).onChange(of: optionNotification) { newValue in
-                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
-                notificationController.setNotification(newValue: newValue, accountType: "OPTION")
-            }
-            
-            Toggle(isOn: $creditCardNotification, label: {
-                Text(ConstantUtils.creditCardAccountType)
-            }).onChange(of: creditCardNotification) { newValue in
-                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
-                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.creditCardAccountType)
-            }
-            
-            Toggle(isOn: $loanNotification, label: {
-                Text(ConstantUtils.loanAccountType)
-            })
-            .onChange(of: loanNotification) { newValue in
-                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
-                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.loanAccountType)
-            }
-            
-            Toggle(isOn: $otherNotification, label: {
-                Text(ConstantUtils.otherAccountType)
-            })
-            .onChange(of: otherNotification) { newValue in
-                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
-                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.otherAccountType)
-            }
+//            Toggle(isOn: $mutualFundNotification, label: {
+//                Text("Mutual Funds")
+//            }).onChange(of: mutualFundNotification) { newValue in
+//                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
+//                notificationController.setNotification(newValue: newValue, accountType: "MUTUALFUND")
+//            }
+//            
+//            Toggle(isOn: $equityNotification, label: {
+//                Text("Equity")
+//            }).onChange(of: equityNotification) { newValue in
+//                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
+//                notificationController.setNotification(newValue: newValue, accountType: "EQUITY")
+//            }
+//            
+//            Toggle(isOn: $etfNotification, label: {
+//                Text("ETF")
+//            }).onChange(of: etfNotification) { newValue in
+//                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
+//                notificationController.setNotification(newValue: newValue, accountType: "ETF")
+//            }
+//            
+//            Toggle(isOn: $cryptoCurrencyNotification, label: {
+//                Text("Cryptocurrency")
+//            }).onChange(of: cryptoCurrencyNotification) { newValue in
+//                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
+//                notificationController.setNotification(newValue: newValue, accountType: "CRYPTOCURRENCY")
+//            }
+//            
+//            Toggle(isOn: $futureNotification, label: {
+//                Text("Future")
+//            })
+//            .onChange(of: futureNotification) { newValue in
+//                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
+//                notificationController.setNotification(newValue: newValue, accountType: "FUTURE")
+//            }
+//            
+//            Toggle(isOn: $optionNotification, label: {
+//                Text("Option")
+//            }).onChange(of: optionNotification) { newValue in
+//                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
+//                notificationController.setNotification(newValue: newValue, accountType: "OPTION")
+//            }
+//            
+//            Toggle(isOn: $creditCardNotification, label: {
+//                Text(ConstantUtils.creditCardAccountType)
+//            }).onChange(of: creditCardNotification) { newValue in
+//                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
+//                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.creditCardAccountType)
+//            }
+//            
+//            Toggle(isOn: $loanNotification, label: {
+//                Text(ConstantUtils.loanAccountType)
+//            })
+//            .onChange(of: loanNotification) { newValue in
+//                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
+//                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.loanAccountType)
+//            }
+//            
+//            Toggle(isOn: $otherNotification, label: {
+//                Text(ConstantUtils.otherAccountType)
+//            })
+//            .onChange(of: otherNotification) { newValue in
+//                allNotification = (mutualFundNotification && equityNotification && etfNotification && cryptoCurrencyNotification && futureNotification && optionNotification && creditCardNotification && loanNotification && otherNotification)
+//                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.otherAccountType)
+//            }
         }
     }
     
@@ -293,15 +293,15 @@ extension OnboardingView {
                 creditCardNotification = newValue
                 loanNotification = newValue
                 otherNotification = newValue
-                notificationController.setNotification(newValue: newValue, accountType: "MUTUALFUND")
-                notificationController.setNotification(newValue: newValue, accountType: "EQUITY")
-                notificationController.setNotification(newValue: newValue, accountType: "ETF")
-                notificationController.setNotification(newValue: newValue, accountType: "CRYPTOCURRENCY")
-                notificationController.setNotification(newValue: newValue, accountType: "FUTURE")
-                notificationController.setNotification(newValue: newValue, accountType: "OPTION")
-                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.creditCardAccountType)
-                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.loanAccountType)
-                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.otherAccountType)
+//                notificationController.setNotification(newValue: newValue, accountType: "MUTUALFUND")
+//                notificationController.setNotification(newValue: newValue, accountType: "EQUITY")
+//                notificationController.setNotification(newValue: newValue, accountType: "ETF")
+//                notificationController.setNotification(newValue: newValue, accountType: "CRYPTOCURRENCY")
+//                notificationController.setNotification(newValue: newValue, accountType: "FUTURE")
+//                notificationController.setNotification(newValue: newValue, accountType: "OPTION")
+//                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.creditCardAccountType)
+//                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.loanAccountType)
+//                notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.otherAccountType)
             }
             
             notifications

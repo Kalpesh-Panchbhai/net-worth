@@ -89,10 +89,7 @@ struct AccountDetailView: View {
                                 isPresented: $isPresentingAccountDeleteConfirm) {
                 Button("Delete account " + accountViewModel.account.accountName + "?", role: .destructive) {
                     Task.init {
-                        var deletedAccount =  accountViewModel.account
-                        deletedAccount.lastUpdated = Date.now
-                        deletedAccount.deleted = true
-                        await accountController.updateAccount(account: deletedAccount)
+                        await accountController.deleteAccount(accountId: accountViewModel.account.id!)
                         await ApplicationData.loadData()
                         await accountViewModel.getAccountList()
                         await watchViewModel.getAllWatchList()
@@ -278,7 +275,7 @@ struct AccountDetailView: View {
                     await accountViewModel.getAccountInBrokerList(brokerID: accountID)
                     await accountViewModel.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountViewModel.accountsInBroker)
                 } else {
-                    accountViewModel.getAccountTransactionList(id: accountID)
+                    await accountViewModel.getAccountTransactionList(id: accountID)
                     await accountViewModel.getLastTwoAccountTransactionList(id: accountID)
                 }
                 await watchViewModel.getWatchListByAccount(accountID: accountID)
@@ -291,7 +288,7 @@ struct AccountDetailView: View {
                 await accountViewModel.getLastTwoAccountTransactionList(id: accountViewModel.account.id!)
                 await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
+                await accountViewModel.getAccountTransactionList(id: accountViewModel.account.id!)
             }
         }, content: {
             UpdateBalanceAccountView(accountViewModel: accountViewModel)

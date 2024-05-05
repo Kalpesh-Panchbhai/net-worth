@@ -37,77 +37,77 @@ struct NotificationsView: View {
     var body: some View {
         VStack {
             List {
-                Section("Mutual Fund Notifications") {
-                    Toggle("Show Notifications", isOn: $mutualFundNotification)
-                        .onChange(of: mutualFundNotification) { newValue in
-                            notificationController.setNotification(newValue: newValue, accountType: "MUTUALFUND")
-                        }
-                }
-                .listRowBackground(Color.theme.foreground)
-                
-                Section("Equity Notifications") {
-                    Toggle("Show Notifications", isOn: $equityNotification)
-                        .onChange(of: equityNotification) { newValue in
-                            notificationController.setNotification(newValue: newValue, accountType: "EQUITY")
-                        }
-                }
-                .listRowBackground(Color.theme.foreground)
-                
-                Section("ETF Notifications") {
-                    Toggle("Show Notifications", isOn: $etfNotification)
-                        .onChange(of: etfNotification) { newValue in
-                            notificationController.setNotification(newValue: newValue, accountType: "ETF")
-                        }
-                }
-                .listRowBackground(Color.theme.foreground)
-                
-                Section("Cryptocurrency Notifications") {
-                    Toggle("Show Notifications", isOn: $cryptoCurrencyNotification)
-                        .onChange(of: cryptoCurrencyNotification) { newValue in
-                            notificationController.setNotification(newValue: newValue, accountType: "CRYPTOCURRENCY")
-                        }
-                }
-                .listRowBackground(Color.theme.foreground)
-                
-                Section("Futures Notifications") {
-                    Toggle("Show Notifications", isOn: $futureNotification)
-                        .onChange(of: futureNotification) { newValue in
-                            notificationController.setNotification(newValue: newValue, accountType: "FUTURE")
-                        }
-                }
-                .listRowBackground(Color.theme.foreground)
-                
-                Section("Options Notifications") {
-                    Toggle("Show Notifications", isOn: $optionNotification)
-                        .onChange(of: optionNotification) { newValue in
-                            notificationController.setNotification(newValue: newValue, accountType: "OPTION")
-                        }
-                }
-                .listRowBackground(Color.theme.foreground)
-                
-                Section("Credit Card Notifications") {
-                    Toggle("Show Notifications", isOn: $creditCardNotification)
-                        .onChange(of: creditCardNotification) { newValue in
-                            notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.creditCardAccountType)
-                        }
-                }
-                .listRowBackground(Color.theme.foreground)
-                
-                Section("Loan Notifications") {
-                    Toggle("Show Notifications", isOn: $loanNotification)
-                        .onChange(of: loanNotification) { newValue in
-                            notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.loanAccountType)
-                        }
-                }
-                .listRowBackground(Color.theme.foreground)
-                
-                Section("Other Notifications") {
-                    Toggle("Show Notifications", isOn: $otherNotification)
-                        .onChange(of: otherNotification) { newValue in
-                            notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.otherAccountType)
-                        }
-                }
-                .listRowBackground(Color.theme.foreground)
+//                Section("Mutual Fund Notifications") {
+//                    Toggle("Show Notifications", isOn: $mutualFundNotification)
+//                        .onChange(of: mutualFundNotification) { newValue in
+//                            notificationController.setNotification(newValue: newValue, accountType: "MUTUALFUND")
+//                        }
+//                }
+//                .listRowBackground(Color.theme.foreground)
+//                
+//                Section("Equity Notifications") {
+//                    Toggle("Show Notifications", isOn: $equityNotification)
+//                        .onChange(of: equityNotification) { newValue in
+//                            notificationController.setNotification(newValue: newValue, accountType: "EQUITY")
+//                        }
+//                }
+//                .listRowBackground(Color.theme.foreground)
+//                
+//                Section("ETF Notifications") {
+//                    Toggle("Show Notifications", isOn: $etfNotification)
+//                        .onChange(of: etfNotification) { newValue in
+//                            notificationController.setNotification(newValue: newValue, accountType: "ETF")
+//                        }
+//                }
+//                .listRowBackground(Color.theme.foreground)
+//                
+//                Section("Cryptocurrency Notifications") {
+//                    Toggle("Show Notifications", isOn: $cryptoCurrencyNotification)
+//                        .onChange(of: cryptoCurrencyNotification) { newValue in
+//                            notificationController.setNotification(newValue: newValue, accountType: "CRYPTOCURRENCY")
+//                        }
+//                }
+//                .listRowBackground(Color.theme.foreground)
+//                
+//                Section("Futures Notifications") {
+//                    Toggle("Show Notifications", isOn: $futureNotification)
+//                        .onChange(of: futureNotification) { newValue in
+//                            notificationController.setNotification(newValue: newValue, accountType: "FUTURE")
+//                        }
+//                }
+//                .listRowBackground(Color.theme.foreground)
+//                
+//                Section("Options Notifications") {
+//                    Toggle("Show Notifications", isOn: $optionNotification)
+//                        .onChange(of: optionNotification) { newValue in
+//                            notificationController.setNotification(newValue: newValue, accountType: "OPTION")
+//                        }
+//                }
+//                .listRowBackground(Color.theme.foreground)
+//                
+//                Section("Credit Card Notifications") {
+//                    Toggle("Show Notifications", isOn: $creditCardNotification)
+//                        .onChange(of: creditCardNotification) { newValue in
+//                            notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.creditCardAccountType)
+//                        }
+//                }
+//                .listRowBackground(Color.theme.foreground)
+//                
+//                Section("Loan Notifications") {
+//                    Toggle("Show Notifications", isOn: $loanNotification)
+//                        .onChange(of: loanNotification) { newValue in
+//                            notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.loanAccountType)
+//                        }
+//                }
+//                .listRowBackground(Color.theme.foreground)
+//                
+//                Section("Other Notifications") {
+//                    Toggle("Show Notifications", isOn: $otherNotification)
+//                        .onChange(of: otherNotification) { newValue in
+//                            notificationController.setNotification(newValue: newValue, accountType: ConstantUtils.otherAccountType)
+//                        }
+//                }
+//                .listRowBackground(Color.theme.foreground)
             }
             
             .foregroundColor(Color.theme.primaryText)

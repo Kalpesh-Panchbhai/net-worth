@@ -101,9 +101,7 @@ struct AccountCardList: View {
                                                                                     isPresented: $isPresentingAccountDeleteConfirm) {
                                                                     Button("Delete account " + deletedAccount.accountName + "?", role: .destructive) {
                                                                         Task.init {
-                                                                            deletedAccount.lastUpdated = Date.now
-                                                                            deletedAccount.deleted = true
-                                                                            await accountController.updateAccount(account: deletedAccount)
+                                                                            await accountController.deleteAccount(accountId: deletedAccount.id!)
                                                                             await ApplicationData.loadData()
                                                                             await accountViewModel.getAccountList()
                                                                             await watchViewModel.getAllWatchList()
@@ -179,7 +177,7 @@ struct AccountCardList: View {
         })
         .sheet(isPresented: $isNewAccountAccountViewOpen, onDismiss: {
             Task.init {
-                await watchViewModel.getAllWatchList()
+//                await watchViewModel.getAllWatchList()
             }
         }, content: {
             NewAccountView(accountType: ConstantUtils.noneAccountType, accountViewModel: accountViewModel)

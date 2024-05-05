@@ -14,18 +14,18 @@ class IncomeTagController {
     
     public func addIncomeTag(tag: IncomeTag) async {
         let userId = ApplicationData.shared.userId
-        let requestData = TypeValueRestModel(name: tag.name, userId: userId, isDefault: tag.isdefault)
+        let requestData = TypeValueRestModel(userId: userId, name: tag.name, isDefault: tag.isdefault)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(requestData)
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: TypeValueRestModel.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: RestResponse.self)
     }
     
     public func updateIncomeTag(tag: IncomeTag) async {
         let userId = ApplicationData.shared.userId
-        let requestData = TypeValueRestModel(id: tag.id, name: tag.name, userId: userId, isDefault: tag.isdefault)
+        let requestData = TypeValueRestModel(id: tag.id, userId: userId, name: tag.name, isDefault: tag.isdefault)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(requestData)
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: TypeValueRestModel.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: RestResponse.self)
     }
     
     public func getIncomeTagList() async -> [IncomeTag] {

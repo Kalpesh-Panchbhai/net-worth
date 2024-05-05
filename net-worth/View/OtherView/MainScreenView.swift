@@ -16,7 +16,6 @@ struct MainScreenView: View {
     @StateObject var watchViewModel = WatchViewModel()
     @StateObject var incomeViewModel = IncomeViewModel()
     @StateObject var networkMonitor = NetworkMonitor()
-    @StateObject var commonChartController = CommonChartController()
     
     @Environment(\.scenePhase) var scenePhase
     
@@ -58,7 +57,7 @@ struct MainScreenView: View {
                             Label("Charts", systemImage: "chart.line.uptrend.xyaxis.circle")
                         }
                     
-                    SettingsView(isAuthenticationRequired: SettingsController().isAuthenticationRequired(), currenySelected: SettingsController().getDefaultCurrency(), incomeViewModel: incomeViewModel, commonChartController: commonChartController)
+                    SettingsView(isAuthenticationRequired: SettingsController().isAuthenticationRequired(), currenySelected: SettingsController().getDefaultCurrency(), incomeViewModel: incomeViewModel)
                         .tabItem {
                             Label("Settings", systemImage: "gearshape")
                         }
@@ -82,7 +81,7 @@ struct MainScreenView: View {
                 await ApplicationData.loadData()
                 await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                await watchViewModel.getAllWatchList()
+//                await watchViewModel.getAllWatchList()
                 await incomeViewModel.getIncomeList()
                 await incomeViewModel.getTotalBalance()
                 await incomeViewModel.getTotalTaxPaid()

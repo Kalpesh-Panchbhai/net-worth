@@ -30,7 +30,6 @@ struct SettingsView: View {
     @State var defaultIncomeTag = IncomeTag()
     
     @StateObject var incomeViewModel: IncomeViewModel
-    @StateObject var commonChartController: CommonChartController
     
     var body: some View {
         NavigationView(){
@@ -163,32 +162,6 @@ struct SettingsView: View {
                 Label("Version " + (appVersion ?? "") + " Build(" + (buildVersion ?? "Unknown Build Version)") + ")", systemImage: "gear.badge.checkmark")
                     .foregroundColor(Color.theme.primaryText)
                     .listRowBackground(Color.theme.foreground)
-                
-                // MARK: Chart last updated
-                
-                if inProgress {
-                    HStack {
-                        ProgressView("Waiting... \((Double(commonChartController.count) / Double(ApplicationData.shared.totalAccount) * 100).withCommas(decimalPlace: 2))%", value: Double(commonChartController.count), total: Double(ApplicationData.shared.totalAccount))
-                    }
-                } else {
-                    Button(action: {
-                        isPresentingUpdateChartDataConfirm.toggle()
-                    }, label: {
-                        let dateTime = UserDefaults.standard.object(forKey: ConstantUtils.chartLastUpdated) as? Date ?? Date()
-                        Label("Date Time: " + dateTime.formatted(), systemImage: "gear.badge.checkmark")
-                            .foregroundColor(Color.theme.primaryText)
-                            .listRowBackground(Color.theme.foreground)
-                    }).confirmationDialog("Are you sure?",
-                                          isPresented: $isPresentingUpdateChartDataConfirm) {
-                        Button("Do you want to update chart data?", role: .destructive) {
-                            inProgress = true
-                            Task.init {
-                                await ApplicationData.fetchChartData(fetchLatest: true)
-                                inProgress = false
-                            }
-                        }
-                    }
-                }
                 
             }
             .navigationTitle("Settings")
