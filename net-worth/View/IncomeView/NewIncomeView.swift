@@ -48,7 +48,7 @@ struct NewIncomeView: View {
                         Spacer()
                         TextField("Amount", text: $amount)
                             .keyboardType(.decimalPad)
-                            .onChange(of: amount, perform: { _ in
+                            .onChange(of: amount) {
                                 let filtered = amount.filter {"0123456789.".contains($0)}
                                 
                                 if filtered.contains(".") {
@@ -73,7 +73,7 @@ struct NewIncomeView: View {
                                 } else if !filtered.isEmpty {
                                     amount = filtered
                                 }
-                            })
+                            }
                             .multilineTextAlignment(.trailing)
                     }
                     .foregroundColor(Color.theme.primaryText)
@@ -83,7 +83,7 @@ struct NewIncomeView: View {
                         Spacer()
                         TextField("Tax Paid", text: $taxPaid)
                             .keyboardType(.decimalPad)
-                            .onChange(of: taxPaid, perform: { _ in
+                            .onChange(of: taxPaid) {
                                 let filtered = taxPaid.filter {"0123456789.".contains($0)}
                                 
                                 if filtered.contains(".") {
@@ -108,7 +108,7 @@ struct NewIncomeView: View {
                                 } else if !filtered.isEmpty {
                                     taxPaid = filtered
                                 }
-                            })
+                            }
                             .multilineTextAlignment(.trailing)
                     }
                     .foregroundColor(Color.theme.primaryText)
