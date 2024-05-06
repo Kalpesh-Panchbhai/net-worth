@@ -469,7 +469,6 @@ struct IncomeView: View {
         withAnimation {
             offsets.map {
                 deletedIncome = incomeViewModel.incomeList[$0]
-                deletedIncome.deleted = true
             }.forEach {
                 Task.init {
                     await incomeController.deleteIncome(income: deletedIncome)

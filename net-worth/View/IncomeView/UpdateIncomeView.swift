@@ -130,8 +130,9 @@ struct UpdateIncomeView: View {
                 ToolbarItem {
                     Button(action: {
                         Task.init {
-                            let updatedIncome = Income(id: income.id,amount: amount.toDouble() ?? 0.0, taxpaid: taxPaid.toDouble() ?? 0.0, creditedOn: date, currency: currencySelected.code, type: incomeTypeSelected.name, tag: incomeTagSelected.name, createdDate: Date.now)
+                            let updatedIncome = Income(id: income.id,amount: amount.toDouble() ?? 0.0, taxpaid: taxPaid.toDouble() ?? 0.0, creditedOn: date, currency: currencySelected.code, type: incomeTypeSelected.name, tag: incomeTagSelected.name)
                             await incomeController.updateIncome(income: updatedIncome)
+                            await incomeViewModel.getIncomeList()
                             
                             if(incomeViewModel.groupView) {
                                 await incomeViewModel.getTotalBalance(incomeType: incomeViewModel.selectedIncomeTypeList, incomeTag: incomeViewModel.selectedIncomeTagList, year: incomeViewModel.selectedYearList, financialYear: incomeViewModel.selectedFinancialYearList)
