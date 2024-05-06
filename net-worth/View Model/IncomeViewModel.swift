@@ -20,6 +20,7 @@ class IncomeViewModel: ObservableObject {
     var selectedFinancialYearList = [String]()
     
     @Published var incomeList = [IncomeCalculation]()
+    @Published var incomeListNew = [Income]()
     @Published var incomeListByGroup = [String: [IncomeCalculation]]()
     @Published var incomeListLoaded = false
     @Published var incomeTotalAmount = 0.0
@@ -32,13 +33,63 @@ class IncomeViewModel: ObservableObject {
     
     @Published var groupView = false
     
+    func getIncomeList() async {
+        DispatchQueue.main.async {
+            self.incomeListLoaded = false
+            self.groupView = false
+        }
+        let list = await incomeController.getIncomeList()
+        var cumAmount = 0.0
+        var cumTaxPaid = 0.0
+        let returnIncomeList = list.map { value1 in
+            var sumAmount = 0.0
+            var sumTaxPaid = 0.0
+            var totalMonth = 0.0
+            var totalDays = 0
+            var maxDays = 0
+            cumAmount = cumAmount + value1.amount
+            cumTaxPaid = cumTaxPaid + value1.taxpaid
+            incomeList.forEach { value2 in
+                if(value1.creditedOn >= value2.creditedOn) {
+                    sumAmount += value2.amount
+                    sumTaxPaid += value2.taxpaid
+                    
+                    let date = DateComponents(
+                        calendar: Calendar.current,
+                        year: value2.creditedOn.getDateComponents().year,
+                        month: value2.creditedOn.getDateComponents().month,
+                        day: 1)
+                    totalDays = value1.creditedOn.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
+                    maxDays = maxDays < totalDays ? totalDays : maxDays
+                }
+            }
+            totalMonth = Double(maxDays) / Double(30)
+            return IncomeCalculation(id: value1.id,
+                                     amount: value1.amount,
+                                     taxpaid: value1.taxpaid,
+                                     creditedOn: value1.creditedOn,
+                                     currency: value1.currency,
+                                     type: value1.type,
+                                     tag: value1.tag,
+                                     avgAmount: sumAmount / totalMonth,
+                                     avgTaxPaid: sumTaxPaid / totalMonth,
+                                     cumulativeAmount: cumAmount,
+                                     cumulativeTaxPaid: cumTaxPaid)
+        }
+        DispatchQueue.main.async {
+            self.incomeListNew = list
+            self.incomeList = returnIncomeList
+            self.incomeListLoaded = true
+        }
+    }
+    
     func getIncomeList(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async {
         DispatchQueue.main.async {
             self.incomeListLoaded = false
             self.groupView = false
         }
         
-        let list = await incomeController.getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
+        let list = await incomeController.getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear, incomeList: incomeListNew)
         DispatchQueue.main.async {
             self.incomeList = list
             self.incomeListLoaded = true
@@ -51,7 +102,7 @@ class IncomeViewModel: ObservableObject {
             self.groupView = true
         }
         
-        let list = await incomeController.getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
+        let list = await incomeController.getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear, incomeList: incomeListNew)
         if(!list.isEmpty) {
             let incomeListByGroup = incomeController.incomeListGroupBy(list: list, groupBy: groupBy)
             
@@ -68,14 +119,14 @@ class IncomeViewModel: ObservableObject {
     }
     
     func getTotalBalance(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async {
-        let amount = await incomeController.fetchTotal(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear, field: "Amount")
+        let amount = await incomeController.fetchTotal(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear, field: "Amount", income: incomeListNew)
         DispatchQueue.main.async {
             self.incomeTotalAmount = amount
         }
     }
     
     func getTotalTaxPaid(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async {
-        let amount = await incomeController.fetchTotal(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear, field: "Tax")
+        let amount = await incomeController.fetchTotal(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear, field: "Tax", income: incomeListNew)
         DispatchQueue.main.async {
             self.incomeTaxPaidAmount = amount
         }
@@ -96,14 +147,14 @@ class IncomeViewModel: ObservableObject {
     }
     
     func getIncomeYearList() async {
-        let incomeYearList = await incomeController.getIncomeYearList()
+        let incomeYearList = await incomeController.getIncomeYearList(income: incomeListNew)
         DispatchQueue.main.async {
             self.incomeYearList = incomeYearList
         }
     }
     
     func getIncomeFinancialYearList() async {
-        let incomeFinancialYearList = await incomeController.getIncomeFinancialYearList()
+        let incomeFinancialYearList = await incomeController.getIncomeFinancialYearList(income: incomeListNew)
         DispatchQueue.main.async {
             self.incomeFinancialYearList = incomeFinancialYearList
         }

@@ -48,10 +48,8 @@ class IncomeController {
         _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: income.id, forClass: RestResponse.self)
     }
     
-    public func getIncomeList(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async -> [IncomeCalculation] {
-        var incomeList = [Income]()
-        
-        incomeList = await getIncomeList()
+    public func getIncomeList(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String](), incomeList: [Income]) async -> [IncomeCalculation] {
+        var incomeList = incomeList
         
         if(!incomeType.isEmpty) {
             incomeList = incomeList.filter {
@@ -162,8 +160,8 @@ class IncomeController {
         return returnIncomeList.reversed()
     }
     
-    public func fetchTotal(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String](), field: String) async -> Double {
-        let incomeList = await getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear)
+    public func fetchTotal(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String](), field: String, income: [Income]) async -> Double {
+        let incomeList = await getIncomeList(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear, incomeList: income)
         
         var total = 0.0
         incomeList.forEach {
@@ -176,8 +174,8 @@ class IncomeController {
         return total
     }
     
-    public func getIncomeYearList() async -> [String] {
-        let incomeList = await getIncomeList(incomeType: [String](), incomeTag: [String](), year: [String](), financialYear: [String]())
+    public func getIncomeYearList(income: [Income]) async -> [String] {
+        let incomeList = await getIncomeList(incomeType: [String](), incomeTag: [String](), year: [String](), financialYear: [String](), incomeList: income)
         
         let grouped = Dictionary(grouping: incomeList) { (income) -> Int in
             let date = Calendar.current.dateComponents([.year], from: income.creditedOn)
@@ -194,8 +192,8 @@ class IncomeController {
         }
     }
     
-    public func getIncomeFinancialYearList() async -> [String] {
-        let incomeList = await getIncomeList(incomeType: [String](), incomeTag: [String](), year: [String](), financialYear: [String]())
+    public func getIncomeFinancialYearList(income: [Income]) async -> [String] {
+        let incomeList = await getIncomeList(incomeType: [String](), incomeTag: [String](), year: [String](), financialYear: [String](), incomeList: income)
         
         var returnResponse = [String]()
         if(incomeList.isEmpty) {

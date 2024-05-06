@@ -473,6 +473,7 @@ struct IncomeView: View {
             }.forEach {
                 Task.init {
                     await incomeController.deleteIncome(income: deletedIncome)
+                    await incomeViewModel.getIncomeList()
                     updateData()
                     await incomeViewModel.getIncomeYearList()
                     await incomeViewModel.getIncomeFinancialYearList()
