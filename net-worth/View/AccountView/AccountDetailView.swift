@@ -147,19 +147,21 @@ struct AccountDetailView: View {
                             })
                         }
                         
-                        Button(action: {
-                            Task.init {
-                                var updatedAccount = self.account
-                                updatedAccount.active = false
-                                await accountController.updateAccount(account: updatedAccount)
-                                await accountViewModel.getAccountList()
-                                account = accountViewModel.accountList.filter {
-                                    return $0.id.elementsEqual(accountID)
-                                }.first ?? Account()
-                            }
-                        }, label: {
-                            Label("Close account", systemImage: ConstantUtils.newTransactionImageName)
-                        })
+                        if(account.balance.currentDayValue.isZero) {
+                            Button(action: {
+                                Task.init {
+                                    var updatedAccount = self.account
+                                    updatedAccount.active = false
+                                    await accountController.updateAccount(account: updatedAccount)
+                                    await accountViewModel.getAccountList()
+                                    account = accountViewModel.accountList.filter {
+                                        return $0.id.elementsEqual(accountID)
+                                    }.first ?? Account()
+                                }
+                            }, label: {
+                                Label("Close account", systemImage: ConstantUtils.newTransactionImageName)
+                            })
+                        }
                     } else {
                         Button(action: {
                             Task.init {
