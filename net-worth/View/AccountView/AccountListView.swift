@@ -41,7 +41,7 @@ struct AccountListView: View {
                             NavigationLink(destination: {
                                 AccountDetailView(accountID: account.id, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                             }, label: {
-                                AccountRowView(accountID: account.id, fromWatchView: accountType.elementsEqual("Inactive Account"), accountViewModel: accountViewModel)
+                                AccountRowView(account: account, fromWatchView: accountType.elementsEqual("Inactive Account"))
                                     .contextMenu {
                                         Label(account.id, systemImage: ConstantUtils.infoIconImageName)
                                     }
@@ -81,12 +81,7 @@ struct AccountListView: View {
         .sheet(isPresented: $isChartViewOpen, content: {
             AccountWatchChartView(id: accountType, accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""), accountViewModel: accountViewModel)
         })
-                            .searchable(text: $searchText)
-                            .onAppear {
-                                Task.init {
-                                    await accountViewModel.getAccountList()
-                                }
-                            }
+        .searchable(text: $searchText)
     }
 }
 

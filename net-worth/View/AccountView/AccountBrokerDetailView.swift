@@ -9,23 +9,32 @@ import SwiftUI
 
 struct AccountBrokerDetailView: View {
     
-    var brokerID: String
-    
     var accountID: String
     
-    var accountInBrokerController = AccountInBrokerController()
+    var accountBrokerController = AccountInBrokerController()
+    @State var account: Account
     
     @State var tabItem = 1
     @State var isNewTransactionViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
     
-    @StateObject var accountViewModel: AccountViewModel
+    @ObservedObject var accountViewModel: AccountViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
+    init(accountID: String, accountViewModel: AccountViewModel) {
+        self.accountID = accountID
+        self.accountViewModel = accountViewModel
+        let accountBroker = accountViewModel.accountsInBroker.filter {
+            return $0.id.elementsEqual(accountID)
+        }.first ?? AccountInBroker()
+        
+        account = Account(accountName: accountBroker.name, currency: SettingsController().getDefaultCurrency().code, balance: BalanceAccount(currentDayValue: accountBroker.balance.currentDayValue, previousDayValue: accountBroker.balance.previousDayValue))
+    }
+    
     var body: some View {
         VStack {
-            AccountBrokerDetailCardView(accountViewModel: accountViewModel)
+            AccountDetailCardView(account: account)
                 .cornerRadius(10)
             Picker(selection: $tabItem, content: {
                 Text("Transactions (\(accountViewModel.accountTransactionList.count))").tag(1)
@@ -39,77 +48,65 @@ struct AccountBrokerDetailView: View {
                 impact.impactOccurred()
             })
             if(tabItem == 1) {
-                TransactionsView(account: Account(), accountTransactionList: [AccountTransaction]())
+                TransactionsView(account: account, accountTransactionList: accountViewModel.accountTransactionList)
             } else {
-                AccountBrokerChartView(brokerID: brokerID, accountID: accountID, symbol: accountViewModel.accountBroker.symbol, accountViewModel: accountViewModel)
+                AccountBrokerChartView(brokerID: "", accountID: accountID, symbol: accountViewModel.accountBroker.symbol, accountViewModel: accountViewModel)
             }
         }
         .confirmationDialog("Are you sure?",
                             isPresented: $isPresentingAccountDeleteConfirm) {
-            Button("Delete account " + accountViewModel.accountBroker.name + "?", role: .destructive) {
+            Button("Delete account " + account.accountName + "?", role: .destructive) {
                 Task.init {
-                    var deletedAccount = accountViewModel.accountBroker
-                    deletedAccount.deleted = true
-                    deletedAccount.lastUpdated = Date.now
-                    await accountInBrokerController.updateAccountInBroker(brokerID: brokerID, accountBroker: deletedAccount)
-                    await ApplicationData.loadData()
-                    await accountViewModel.getAccountInBrokerList(brokerID: brokerID)
-                    await accountViewModel.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountViewModel.accountsInBroker)
+                    await accountBrokerController.deleteAccountInBroker(accountId: accountID)
+                    self.presentationMode.wrappedValue.dismiss()
                 }
-                self.presentationMode.wrappedValue.dismiss()
             }
         }
-        .navigationTitle(accountViewModel.accountBroker.name)
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(
-            leading: Button(action: {
-                self.presentationMode.wrappedValue.dismiss()
-            }) {
-                Image(systemName: ConstantUtils.backbuttonImageName)
-                    .foregroundColor(Color.theme.primaryText)
-                    .bold()
-            }
-                .font(.system(size: 14).bold())
-        )
-        .toolbar {
-            ToolbarItem(content: {
-                Menu(content: {
-                    Button(role: .destructive, action: {
-                        isPresentingAccountDeleteConfirm.toggle()
-                    }, label: {
-                        Label("Delete", systemImage: ConstantUtils.deleteImageName)
-                    })
-                    
-                    Button(action: {
-                        self.isNewTransactionViewOpen.toggle()
-                    }, label: {
-                        Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
-                    })
-                }, label: {
-                    Image(systemName: ConstantUtils.menuImageName)
-                        .foregroundColor(Color.theme.primaryText)
-                        .bold()
-                })
-                .font(.system(size: 14).bold())
-            })
-        }
-        .onAppear {
-            Task.init {
-                await accountViewModel.getBrokerAccount(brokerID: brokerID, accountID: accountID)
-                await accountViewModel.getCurrentBalanceOfAnAccountInBroker(accountBroker: accountViewModel.accountBroker)
-                await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID)
-            }
-        }
-        .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
-            Task.init {
-                await accountViewModel.getBrokerAccount(brokerID: brokerID, accountID: accountID)
-                await accountViewModel.getCurrentBalanceOfAnAccountInBroker(accountBroker: accountViewModel.accountBroker)
-                await accountViewModel.getAccountTransactionsInBrokerAccountList(brokerID: brokerID, accountID: accountID)
-            }
-        }, content: {
-            UpdateBalanceAccountBrokerView(brokerID: brokerID, accountBroker: accountViewModel.accountBroker)
-                .presentationDetents([.medium])
-        })
+                            .navigationTitle(account.accountName)
+                            .navigationBarTitleDisplayMode(.inline)
+                            .navigationBarBackButtonHidden(true)
+                            .navigationBarItems(
+                                leading: Button(action: {
+                                    self.presentationMode.wrappedValue.dismiss()
+                                }) {
+                                    Image(systemName: ConstantUtils.backbuttonImageName)
+                                        .foregroundColor(Color.theme.primaryText)
+                                        .bold()
+                                }
+                                    .font(.system(size: 14).bold())
+                            )
+                            .toolbar {
+                                ToolbarItem(content: {
+                                    Menu(content: {
+                                        Button(role: .destructive, action: {
+                                            isPresentingAccountDeleteConfirm.toggle()
+                                        }, label: {
+                                            Label("Delete", systemImage: ConstantUtils.deleteImageName)
+                                        })
+                                        
+                                        Button(action: {
+                                            self.isNewTransactionViewOpen.toggle()
+                                        }, label: {
+                                            Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
+                                        })
+                                    }, label: {
+                                        Image(systemName: ConstantUtils.menuImageName)
+                                            .foregroundColor(Color.theme.primaryText)
+                                            .bold()
+                                    })
+                                    .font(.system(size: 14).bold())
+                                })
+                            }
+                            .onAppear {
+                                Task.init {
+                                    await accountViewModel.getAccountTransactionList(id: accountID)
+                                }
+                            }
+                            .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
+                                
+                            }, content: {
+                                UpdateBalanceAccountBrokerView(brokerID: accountID, accountBroker: accountViewModel.accountBroker, accountViewModel: accountViewModel)
+                                    .presentationDetents([.medium])
+                            })
     }
 }

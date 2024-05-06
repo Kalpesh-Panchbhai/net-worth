@@ -12,12 +12,14 @@ struct UpdateBalanceAccountBrokerView: View {
     var brokerID: String
     var accountBroker: AccountInBroker
     
-    var accountInBrokerController = AccountInBrokerController()
+    var accountTransactionController = AccountTransactionController()
     
     @State var unit: String = "0.0"
     @State var date = Date()
     @State var isPlus = true
     @State var scenePhaseBlur = 0
+    
+    @ObservedObject var accountViewModel: AccountViewModel
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.scenePhase) var scenePhase
@@ -37,13 +39,14 @@ struct UpdateBalanceAccountBrokerView: View {
             .toolbar {
                 ToolbarItem {
                     Button(action: {
+                        var accountTransaction = AccountTransaction()
+                        accountTransaction.accountId = brokerID
+                        accountTransaction.timestamp = date.convertToGlideDateTimeFormat()
+                        accountTransaction.amount = Double(unit) ?? 0.0
+                        accountTransaction.operation = "UPDATE"
                         Task.init {
-                            var updatedAccount = accountBroker
-                            let newAmount = isPlus ? unit.toDouble() : unit.toDouble()! * -1
-                            updatedAccount.currentUnit = newAmount!
-                            updatedAccount.lastUpdated = Date.now
-                            await accountInBrokerController.addBrokerAccountTransaction(brokerID: brokerID, accountBroker: updatedAccount, timeStamp: date)
-                            await ApplicationData.loadData()
+                            await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
+                            await accountViewModel.getAccountTransactionList(id: brokerID)
                         }
                         dismiss()
                     }, label: {
@@ -56,13 +59,14 @@ struct UpdateBalanceAccountBrokerView: View {
                 
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
+                        var accountTransaction = AccountTransaction()
+                        accountTransaction.accountId = brokerID
+                        accountTransaction.timestamp = date.convertToGlideDateTimeFormat()
+                        accountTransaction.amount = Double(unit) ?? 0.0
+                        accountTransaction.operation = "ADD"
                         Task.init {
-                            var updatedAccount = accountBroker
-                            let newAmount = isPlus ? unit.toDouble() : unit.toDouble()! * -1
-                            updatedAccount.currentUnit = updatedAccount.currentUnit + newAmount!
-                            updatedAccount.lastUpdated = Date.now
-                            await accountInBrokerController.addBrokerAccountTransaction(brokerID: brokerID,accountBroker: updatedAccount, timeStamp: date)
-                            await ApplicationData.loadData()
+                            await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
+                            await accountViewModel.getAccountTransactionList(id: brokerID)
                         }
                         dismiss()
                     }, label: {

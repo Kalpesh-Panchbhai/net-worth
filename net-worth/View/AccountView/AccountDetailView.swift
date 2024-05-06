@@ -10,19 +10,16 @@ import SwiftUI
 struct AccountDetailView: View {
     
     var dates = Array(1...28)
-    var accountID: String
     var accountController = AccountController()
     
-    @State var initialLoadForActiveButton = false
-    @State var initialLoadForPaymentButton = false
     @State var showAddWatchListView = false
     @State var isNewTransactionViewOpen = false
     @State var isNewAccountInBrokerViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
     @State var tabItem = 1
     @State var showZeroAlert = false
-    @State var failedToMarkInActive = false
     
+    @State var accountID: String
     @State var account: Account
     @ObservedObject var accountViewModel: AccountViewModel
     @ObservedObject var watchViewModel: WatchViewModel
@@ -45,21 +42,16 @@ struct AccountDetailView: View {
     var body: some View {
         VStack {
             VStack {
-                if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
-                    AccountBrokerDetailCardView(accountViewModel: accountViewModel)
-                        .cornerRadius(10)
-                } else {
-                    AccountDetailCardView(account: account)
-                        .cornerRadius(10)
-                }
+                AccountDetailCardView(account: account)
+                    .cornerRadius(10)
                 Picker(selection: $tabItem, content: {
-                    if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
+                    if(account.accountType == ConstantUtils.brokerAccountType) {
                         Text("Accounts (\(accountViewModel.accountsInBroker.count))").tag(1)
                     } else {
                         Text("Transactions (\(accountViewModel.accountTransactionList.count))").tag(1)
                     }
-                    Text("Chart").tag(2)
-                    Text("WatchLists (\(watchViewModel.watchListForAccount.count))").tag(3)
+//                    Text("Chart").tag(2)
+//                    Text("WatchLists (\(watchViewModel.watchListForAccount.count))").tag(3)
                 }, label: {
                     Text("Account Tab View")
                 })
@@ -69,27 +61,28 @@ struct AccountDetailView: View {
                     impact.impactOccurred()
                 })
                 if(tabItem == 1) {
-                    if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
+                    if(account.accountType == ConstantUtils.brokerAccountType) {
                         AccountBrokerView(brokerID: accountID, accountViewModel: accountViewModel)
                     } else {
                         TransactionsView(account: account, accountTransactionList: accountViewModel.accountTransactionList)
                     }
-                } else if(tabItem == 2) {
-                    if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
-                        AccountBrokerChartView(brokerID: accountViewModel.account.id, accountID: "", symbol: "", accountViewModel: accountViewModel)
-                    } else {
-                        AccountChartView(accountID: accountID, accountViewModel: accountViewModel)
-                    }
-                } else {
-                    AccountWatchView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
-                }
+                } 
+//                else if(tabItem == 2) {
+//                    if(account.accountType == ConstantUtils.brokerAccountType) {
+//                        AccountBrokerChartView(brokerID: accountViewModel.account.id, accountID: "", symbol: "", accountViewModel: accountViewModel)
+//                    } else {
+//                        AccountChartView(accountID: accountID, accountViewModel: accountViewModel)
+//                    }
+//                } else {
+//                    AccountWatchView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
+//                }
             }
             .alert(isPresented: $showZeroAlert) {
                 Alert(title: Text("Current Balance should be equal to zero to make it inactive!"))
             }
             .confirmationDialog("Are you sure?",
                                 isPresented: $isPresentingAccountDeleteConfirm) {
-                Button("Delete account " + accountViewModel.account.accountName + "?", role: .destructive) {
+                Button("Delete account " + account.accountName + "?", role: .destructive) {
                     Task.init {
                         await accountController.deleteAccount(accountId: accountID)
                         await accountViewModel.getAccountList()
@@ -100,7 +93,7 @@ struct AccountDetailView: View {
                 }
             }
         }
-        .navigationTitle(accountViewModel.account.accountName)
+        .navigationTitle(account.accountName)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(
@@ -140,7 +133,7 @@ struct AccountDetailView: View {
                     })
                     
                     if(account.active) {
-                        if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
+                        if(account.accountType == ConstantUtils.brokerAccountType) {
                             Button(action: {
                                 self.isNewAccountInBrokerViewOpen.toggle()
                             }, label: {
@@ -160,7 +153,7 @@ struct AccountDetailView: View {
                                 updatedAccount.active = false
                                 await accountController.updateAccount(account: updatedAccount)
                                 await accountViewModel.getAccountList()
-                                self.account = accountViewModel.accountList.filter {
+                                account = accountViewModel.accountList.filter {
                                     return $0.id.elementsEqual(accountID)
                                 }.first ?? Account()
                             }
@@ -193,11 +186,17 @@ struct AccountDetailView: View {
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getAccountTransactionList(id: accountID)
+                if(account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
+                    await accountViewModel.getAccountInBrokerList(brokerID: accountID)
+                } else {
+                    await accountViewModel.getAccountTransactionList(id: accountID)
+                }
             }
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
-            
+            self.account = accountViewModel.accountList.filter {
+                return $0.id.elementsEqual(accountID)
+            }.first ?? Account()
         }, content: {
             UpdateBalanceAccountView(accountId: accountID, accountViewModel: accountViewModel)
                 .presentationDetents([.medium])
@@ -205,7 +204,7 @@ struct AccountDetailView: View {
         .sheet(isPresented: $isNewAccountInBrokerViewOpen, onDismiss: {
             
         }, content: {
-            NewAccountInBrokerView(brokerAccountID: accountID)
+            NewAccountInBrokerView(brokerAccountID: accountID, accountViewModel: accountViewModel)
         })
         .sheet(isPresented: $showAddWatchListView, onDismiss: {
             

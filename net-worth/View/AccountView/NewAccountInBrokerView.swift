@@ -15,8 +15,8 @@ struct NewAccountInBrokerView: View {
     @State var scenePhaseBlur = 0
     
     @State var symbolSelected = SymbolDetailModel()
-    @State var currentUnit: String = "0.0"
-    @State var accountOpenedDate = Date()
+    
+    @ObservedObject var accountViewModel: AccountViewModel
     
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dismiss) var dismiss
@@ -26,9 +26,6 @@ struct NewAccountInBrokerView: View {
             Form {
                 Section("Account detail") {
                     SymbolPicker(symbolSelected: $symbolSelected)
-                    currentBalanceField
-                        .foregroundColor(Color.theme.primaryText)
-                    accountOpenedDatePicker
                 }
                 .listRowBackground(Color.theme.foreground)
                 .foregroundColor(Color.theme.primaryText)
@@ -36,13 +33,12 @@ struct NewAccountInBrokerView: View {
             .toolbar {
                 ToolbarItem {
                     Button(action: {
-                        let accountBroker = AccountInBroker(timestamp: accountOpenedDate, symbol: symbolSelected.symbol!, name: symbolSelected.longname!, currentUnit: Double(currentUnit)!)
                         Task.init {
-                            await accountInBrokerController.addAccountInBroker(brokerID: brokerAccountID, accountInBroker: accountBroker)
-                            await ApplicationData.loadData()
+                            let accountBroker = AccountInBroker(accountId: brokerAccountID, symbol: symbolSelected.symbol!, name: symbolSelected.longname!)
+                            await accountInBrokerController.addAccountInBroker(accountInBroker: accountBroker)
+                            await accountViewModel.getAccountInBrokerList(brokerID: brokerAccountID)
+                            dismiss()
                         }
-                        
-                        dismiss()
                     }, label: {
                         if(!allFieldsFilled()) {
                             Image(systemName: ConstantUtils.checkmarkImageName)
@@ -73,48 +69,7 @@ struct NewAccountInBrokerView: View {
         })
     }
     
-    private func allFieldsFilled () -> Bool {
+    private func allFieldsFilled() -> Bool {
         return !(symbolSelected.symbol ?? "").isEmpty
-    }
-    
-    var accountOpenedDatePicker: some View {
-        DatePicker("Opened date", selection: $accountOpenedDate, in: ...Date(), displayedComponents: [.date])
-            .foregroundColor(Color.theme.primaryText)
-    }
-    
-    private var currentBalanceField: some View {
-        HStack {
-            Text("Current Units")
-            Spacer()
-            TextField("Current Units", text: $currentUnit)
-                .keyboardType(.decimalPad)
-                .onChange(of: currentUnit, perform: { _ in
-                    let filtered = currentUnit.filter {"0123456789.".contains($0)}
-                    
-                    if filtered.contains(".") {
-                        let splitted = filtered.split(separator: ".")
-                        if splitted.count >= 2 {
-                            let preDecimal = String(splitted[0])
-                            if String(splitted[1]).count == 5 {
-                                let afterDecimal = String(splitted[1]).prefix(splitted[1].count - 1)
-                                currentUnit = "\(preDecimal).\(afterDecimal)"
-                            }else {
-                                let afterDecimal = String(splitted[1])
-                                currentUnit = "\(preDecimal).\(afterDecimal)"
-                            }
-                        } else if splitted.count == 1 {
-                            let preDecimal = String(splitted[0])
-                            currentUnit = "\(preDecimal)."
-                        } else {
-                            currentUnit = "0."
-                        }
-                    } else if filtered.isEmpty && !currentUnit.isEmpty {
-                        currentUnit = ""
-                    } else if !filtered.isEmpty {
-                        currentUnit = filtered
-                    }
-                })
-                .multilineTextAlignment(.trailing)
-        }
     }
 }

@@ -9,21 +9,17 @@ import SwiftUI
 
 struct AccountBrokerRowView: View {
     
-    var brokerID: String
-    var accountID: String
-    
-    @StateObject var financeViewModel = FinanceViewModel()
-    @StateObject var accountViewModel: AccountViewModel
+    var account: AccountInBroker
     
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(accountViewModel.accountBroker.name)
+                Text(account.name)
                     .font(.headline)
                     .foregroundColor(Color.theme.primaryText)
                     .padding(.horizontal)
                 HStack {
-                    Text("Qty. " + accountViewModel.accountBroker.currentUnit.withCommas(decimalPlace: 4))
+                    Text("Qty. " + account.balance.currentDayValue.withCommas(decimalPlace: 4))
                         .font(.system(size: 12))
                         .foregroundColor(Color.theme.secondaryText)
                         .padding(.leading)
@@ -35,14 +31,14 @@ struct AccountBrokerRowView: View {
                     Text(SettingsController().getDefaultCurrency().code)
                         .font(.system(size: 14))
                         .foregroundColor(Color.theme.secondaryText)
-                    Text(accountViewModel.accountBrokerCurrentBalance.currentValue.withCommas(decimalPlace: 2))
+                    Text(account.balance.currentDayValue.withCommas(decimalPlace: 2))
                         .font(.headline)
                         .foregroundColor(Color.theme.primaryText)
                 }
                 .padding(.horizontal)
-                if(accountViewModel.accountBrokerCurrentBalance.oneDayChange > 0) {
+                if(getOneDayChange() > 0) {
                     HStack {
-                        Text(accountViewModel.accountBrokerCurrentBalance.oneDayChange.withCommas(decimalPlace: 2))
+                        Text(getOneDayChange().withCommas(decimalPlace: 2))
                             .font(.system(size: 12))
                             .foregroundColor(Color.theme.green)
                         Text("(+" + getOneDayPercentageChangeForBroker() + ")")
@@ -50,9 +46,9 @@ struct AccountBrokerRowView: View {
                             .foregroundColor(Color.theme.green)
                     }
                     .padding(.horizontal)
-                } else if(accountViewModel.accountBrokerCurrentBalance.oneDayChange < 0) {
+                } else if(getOneDayChange() < 0) {
                     HStack {
-                        Text(accountViewModel.accountBrokerCurrentBalance.oneDayChange.withCommas(decimalPlace: 2))
+                        Text(getOneDayChange().withCommas(decimalPlace: 2))
                             .font(.system(size: 12))
                             .foregroundColor(Color.theme.red)
                         Text("(" + getOneDayPercentageChangeForBroker() + ")")
@@ -63,17 +59,12 @@ struct AccountBrokerRowView: View {
                 }
             }
         }
-        .onAppear(perform: {
-            Task.init {
-                await accountViewModel.getBrokerAccount(brokerID: brokerID, accountID: accountID)
-                let symbol = accountViewModel.accountBroker.symbol
-                await financeViewModel.getSymbolDetail(symbol: symbol)
-                await accountViewModel.getCurrentBalanceOfAnAccountInBroker(accountBroker: accountViewModel.accountBroker)
-            }
-        })
     }
     
+    private func getOneDayChange() -> Double {
+        return account.balance.currentDayValue - account.balance.previousDayValue
+    }
     private func getOneDayPercentageChangeForBroker() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: accountViewModel.accountBrokerCurrentBalance.previousDayValue, currentBalance: accountViewModel.accountBrokerCurrentBalance.currentValue)
+        return CommonController.getGrowthPercentage(previousBalance: account.balance.previousDayValue, currentBalance: account.balance.currentDayValue )
     }
 }

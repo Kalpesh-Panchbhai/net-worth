@@ -229,12 +229,6 @@ struct BackupView: View {
     }
     
     private func getTotalAccountsInBrokerInCloud() async {
-        let accountList = await accountController.getAccountList()
-        for account in accountList {
-            if(account.accountType == ConstantUtils.brokerAccountType) {
-                totalAccountsInBrokerInCloud += accountInBrokerController.getAccountListInBroker(brokerID: account.id).count
-            }
-        }
     }
     
     private var accountTransactionInCloud: some View {
@@ -246,17 +240,6 @@ struct BackupView: View {
     }
     
     private func getTotalAccountTransactionInCloud() async {
-        let accountlist = await accountController.getAccountList()
-        for account in accountlist {
-            if(account.accountType == ConstantUtils.brokerAccountType) {
-                let accountsInBroker = accountInBrokerController.getAccountListInBroker(brokerID: account.id)
-                for accountInBroker in accountsInBroker {
-                    totalAccountTransactionInCloud += accountInBrokerController.getAccountTransactionListInAccountInBroker(brokerID: account.id, accountID: accountInBroker.id!).count
-                }
-            } else {
-                totalAccountTransactionInCloud += await accountTransactionController.getTransactionList(accountId: account.id).count
-            }
-        }
     }
     
     private var incomeInCloud: some View {

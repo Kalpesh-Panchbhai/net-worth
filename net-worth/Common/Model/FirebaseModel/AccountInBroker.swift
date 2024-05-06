@@ -11,31 +11,45 @@ import FirebaseFirestoreSwift
 
 struct AccountInBroker: Codable, Hashable {
     
-    var id: String?
-    var timestamp: Date
+    var id: String
+    var accountId: String
     var symbol: String
     var name: String
     var currentUnit: Double
-    var lastUpdated: Date
-    var deleted: Bool
+    var balance: BalanceAccount
     
-    init(id: String? = nil, timestamp: Date = Date(), symbol: String = "", name: String = "", currentUnit: Double = 0.0, lastUpdated: Date = Date.now, deleted: Bool = false) {
+    private enum CodingKeys: String, CodingKey {
+        case id, accountId, symbol, name, currentUnit, balance
+    }
+    
+    init(id: String = "", accountId: String = "", symbol: String = "", name: String = "", currentUnit: Double = 0.0, balance: BalanceAccount = BalanceAccount()) {
         self.id = id
-        self.timestamp = timestamp
+        self.accountId = accountId
         self.symbol = symbol
         self.name = name
         self.currentUnit = currentUnit
-        self.lastUpdated = lastUpdated
-        self.deleted = deleted
+        self.balance = balance
     }
     
-    init(doc: QueryDocumentSnapshot) {
-        self.id = doc.documentID
-        self.timestamp = (doc[ConstantUtils.accountBrokerKeyTimeStamp] as? Timestamp)?.dateValue() ?? Date()
-        self.symbol = doc[ConstantUtils.accountBrokerKeySymbol] as? String ?? ""
-        self.name = doc[ConstantUtils.accountBrokerKeyName] as? String ?? ""
-        self.currentUnit = doc[ConstantUtils.accountBrokerKeyCurrentUnit] as? Double ?? 0.0
-        self.lastUpdated = (doc[ConstantUtils.accountBrokerKeyLastUpdated] as? Timestamp)?.dateValue() ?? Date()
-        self.deleted = doc[ConstantUtils.accountBrokerKeyDeleted] as? Bool ?? false
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        accountId = try container.decode(String.self, forKey: .accountId)
+        symbol = try container.decode(String.self, forKey: .symbol)
+        name = try container.decode(String.self, forKey: .name)
+        currentUnit = try container.decode(Double.self, forKey: .currentUnit)
+        balance = try container.decode(BalanceAccount.self, forKey: .balance)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        if(!id.isEmpty) {
+            try container.encode(id, forKey: .id)
+        }
+        try container.encode(accountId, forKey: .accountId)
+        try container.encode(symbol, forKey: .symbol)
+        try container.encode(name, forKey: .name)
+        try container.encode(balance, forKey: .balance)
+        try container.encode(currentUnit, forKey: .currentUnit)
     }
 }

@@ -144,38 +144,19 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func getBrokerAccount(brokerID: String, accountID: String) async {
-        let accountBroker = accountInBrokerController.getAccountInBroker(brokerID: brokerID, accountID: accountID)
+    func getBrokerAccount(accountId: String) async {
+        let accountBroker = accountsInBroker.filter {
+            return $0.id.elementsEqual(accountId)
+        }.first ?? AccountInBroker()
         DispatchQueue.main.async {
             self.accountBroker = accountBroker
         }
     }
     
     func getAccountInBrokerList(brokerID: String) async {
-        let accountList = accountInBrokerController.getAccountListInBroker(brokerID: brokerID)
+        let accountList = await accountInBrokerController.getAccountListInBroker(brokerID: brokerID)
         DispatchQueue.main.async {
             self.accountsInBroker = accountList
-        }
-    }
-    
-    func getAccountTransactionsInBrokerAccountList(brokerID: String, accountID: String) async {
-        let list = accountInBrokerController.getAccountTransactionListInAccountInBroker(brokerID: brokerID, accountID: accountID)
-        DispatchQueue.main.async {
-            self.accountTransactionList = list
-        }
-    }
-    
-    func getCurrentBalanceOfAnAccountInBroker(accountBroker: AccountInBroker) async {
-        let accountBrokerCurrentBalance = await accountInBrokerController.getCurrentBalanceOfAnAccountInBroker(accountBroker: accountBroker)
-        DispatchQueue.main.async {
-            self.accountBrokerCurrentBalance = accountBrokerCurrentBalance
-        }
-    }
-    
-    func getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: [AccountInBroker]) async {
-        let accountBrokerCurrentBalance = await accountInBrokerController.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountBrokerList)
-        DispatchQueue.main.async {
-            self.accountBrokerCurrentBalance = accountBrokerCurrentBalance
         }
     }
     

@@ -94,7 +94,7 @@ struct AccountCardList: View {
                             }
                             .refreshable {
                                 Task.init {
-//                                    await accountViewModel.getAccountList()
+                                    await accountViewModel.getAccountList()
                                     await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
                                 }
                             }
