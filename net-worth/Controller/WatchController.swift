@@ -18,26 +18,11 @@ class WatchController {
         _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: RestResponse.self)
     }
     
-    public func addDefaultWatchList() async {
-        let count = await getAllWatchList().count
-        if(count == 0) {
-            var watchList = Watch()
-            watchList.name = "All"
-            watchList.userId = ApplicationData.shared.userId
-            await addWatchList(watch: watchList)
-        }
-    }
-    
     public func getAllWatchList() async -> [Watch] {
         print("Watch All")
         let userId = ApplicationData.shared.userId
         let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [Watch].self)
         return response
-    }
-    
-    public func getDefaultWatchList() async -> Watch {
-        var watch = Watch()
-        return watch
     }
     
     public func updateWatchList(watch: Watch) async {
@@ -46,23 +31,8 @@ class WatchController {
         _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: RestResponse.self)
     }
     
-    public func deleteWatchLists() async {
-        let watchList = await getAllWatchList()
-        for watch in watchList {
-            await deleteWatchList(watch: watch)
-        }
-    }
-    
     public func deleteWatchList(watch: Watch) async {
         _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: watch.id, forClass: RestResponse.self)
-    }
-    
-    public func deleteAccountFromWatchList(watchList: Watch, accountID: String) {
-        var watchList = watchList
-        watchList.accountList = watchList.accountList.filter { id in
-            id != accountID
-        }
-//        updateWatchList(watchList: watchList)
     }
     
     public func addAccountToWatch(watch: Watch, accountId: String) async {

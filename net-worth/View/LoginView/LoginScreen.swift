@@ -62,7 +62,6 @@ struct LoginScreen: View {
                             UserDefaults.standard.set(true, forKey: "signIn")
                             Task.init {
                                 await UserController().addCurrentUser()
-                                await WatchController().addDefaultWatchList()
                             }
                         }
                     }

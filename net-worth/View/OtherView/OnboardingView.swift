@@ -80,7 +80,7 @@ struct OnboardingView: View {
 extension OnboardingView {
     
     private var bottomView: some View {
-        Text(onboardingState == 4 ? "FINISHED" : "NEXT")
+        Text(onboardingState == 3 ? "FINISHED" : "NEXT")
             .font(.headline)
             .foregroundColor(.purple)
             .frame(height: 55)
@@ -206,7 +206,7 @@ extension OnboardingView {
             break
         }
         
-        if onboardingState == 4 {
+        if onboardingState == 3 {
             signIn()
         } else {
             withAnimation(.spring()) {

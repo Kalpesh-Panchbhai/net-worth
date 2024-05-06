@@ -28,14 +28,6 @@ class AccountInBrokerController {
         })
     }
     
-    public func getAccountTransactionListInAccountInBrokerWithRange(brokerID: String, accountID: String, range: String) -> [AccountTransaction] {
-        return [AccountTransaction]()
-    }
-    
-    public func getAccountTransactionListInAccountInBrokerBelowRange(brokerID: String, accountID: String, range: String) -> [AccountTransaction] {
-        return [AccountTransaction]()
-    }
-    
     public func deleteAccountInBroker(accountId: String) async {
         _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: accountId, forClass: RestResponse.self)
     }

@@ -10,8 +10,6 @@ import SwiftUI
 
 class AccountController {
     
-    var watchController = WatchController()
-    var accountTransactionController = AccountTransactionController()
     private var restController = RestController()
     private var entityName = ConstantUtils.Entity.ACCOUNT.rawValue
     
@@ -35,17 +33,7 @@ class AccountController {
         _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: accountId, forClass: RestResponse.self)
     }
     
-    public func getAccount(id: String) async -> Account {
-        let accountList = await getAccountList()
-        let account = accountList.first(where: {
-            return $0.id.elementsEqual(id)
-        })
-        
-        return account ?? Account()
-    }
-    
     public func getAccountList() async ->  [Account] {
-        print("Account All")
         let userId = ApplicationData.shared.userId
         let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [Account].self)
         return response.sorted(by: {
