@@ -14,7 +14,7 @@ struct IncomeTagView: View {
     
     @State var addNewIncomeTagOpenView = false
     
-    @StateObject var incomeViewModel = IncomeViewModel()
+    @StateObject var incomeViewModel: IncomeViewModel
     
     @Environment(\.presentationMode) var presentationMode
     

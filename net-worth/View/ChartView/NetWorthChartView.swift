@@ -18,7 +18,7 @@ struct NetWorthChartView: View {
     @StateObject var chartViewModel = ChartViewModel()
     @StateObject var accountViewModel: AccountViewModel
     @StateObject var financeViewModel = FinanceViewModel()
-    @StateObject var incomeViewModel = IncomeViewModel()
+    @StateObject var incomeViewModel: IncomeViewModel
     
     @Environment(\.scenePhase) var scenePhase
     

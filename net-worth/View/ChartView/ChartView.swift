@@ -18,6 +18,7 @@ struct ChartView: View {
     
     @ObservedObject var watchViewModel: WatchViewModel
     @ObservedObject var accountViewModel: AccountViewModel
+    @ObservedObject var incomeViewModel: IncomeViewModel
     
     var body: some View {
         NavigationView {
@@ -37,7 +38,7 @@ struct ChartView: View {
                 }
             }
             .sheet(isPresented: $showNetWorthChart, content: {
-                NetWorthChartView(accountList: getAccounts(), accountViewModel: accountViewModel)
+                NetWorthChartView(accountList: getAccounts(), accountViewModel: accountViewModel, incomeViewModel: incomeViewModel)
             })
             .scrollIndicators(.hidden)
             .navigationTitle("Charts")

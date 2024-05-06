@@ -52,7 +52,7 @@ struct MainScreenView: View {
                         }
                         .badge(getTotalIncomeCount())
                     
-                    ChartView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
+                    ChartView(watchViewModel: watchViewModel, accountViewModel: accountViewModel, incomeViewModel: incomeViewModel)
                         .tabItem {
                             Label("Charts", systemImage: "chart.line.uptrend.xyaxis.circle")
                         }

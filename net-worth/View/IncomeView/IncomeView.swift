@@ -29,7 +29,7 @@ struct IncomeView: View {
     @State var showCumulative = false
     @State var showAverage = false
     
-    @StateObject var incomeViewModel: IncomeViewModel
+    @ObservedObject var incomeViewModel: IncomeViewModel
     
     var body: some View {
         NavigationView {
@@ -376,7 +376,7 @@ struct IncomeView: View {
                         }
                         // MARK: Chart Sheet View
                         .sheet(isPresented: $isChartViewOpen) {
-                            IncomeChartView()
+                            IncomeChartView(incomeViewModel: incomeViewModel)
                         }
                         .toolbar {
                             // MARK: Chart ToolbarItem
