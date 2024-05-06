@@ -31,8 +31,8 @@ class WatchViewModel: ObservableObject {
         var watchListWithAccount2 = [Watch: [Account]]()
         for list in watchList {
             var accountList = [Account]()
-            for i in 0..<list.accountID.count {
-                let account = await accountController.getAccount(id: list.accountID[i])
+            for i in 0..<list.accountList.count {
+                let account = await accountController.getAccount(id: list.accountList[i])
                 accountList.append(account)
             }
             watchListWithAccount2.updateValue(accountList, forKey: list)
@@ -51,7 +51,9 @@ class WatchViewModel: ObservableObject {
     }
     
     func getWatchListByAccount(accountID: String) async {
-        let list = await watchController.getWatchListByAccount(accountID: accountID)
+        let list = watchList.filter {
+            return $0.accountList.contains(accountID)
+        }
         DispatchQueue.main.async {
             self.watchListForAccount = list
         }

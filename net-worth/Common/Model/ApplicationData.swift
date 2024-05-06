@@ -45,7 +45,6 @@ struct ApplicationData: Codable {
                 return "Inactive Account"
             }
         }.count
-        totalAccount += await WatchController().getAllWatchList().count
         shared.totalAccount = totalAccount
     }
     

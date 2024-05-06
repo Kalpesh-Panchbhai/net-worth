@@ -22,13 +22,13 @@ struct AccountWatchView: View {
                     }, label: {
                         WatchViewRow(watch: watch, accountViewModel: accountViewModel)
                             .badge(
-                                Text("\(watch.accountID.count)")
+                                Text("\(watch.accountList.count)")
                                     .foregroundColor(Color.theme.secondaryText)
                                     .font(.caption.italic())
                             )
                     })
                     .contextMenu {
-                        Label(watch.id!, systemImage: ConstantUtils.infoIconImageName)
+                        Label(watch.id, systemImage: ConstantUtils.infoIconImageName)
                     }
                 })
                 .listRowBackground(Color.theme.foreground)

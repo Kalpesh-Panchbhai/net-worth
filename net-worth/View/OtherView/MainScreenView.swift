@@ -81,7 +81,7 @@ struct MainScreenView: View {
                 await ApplicationData.loadData()
                 await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-//                await watchViewModel.getAllWatchList()
+                await watchViewModel.getAllWatchList()
                 await incomeViewModel.getIncomeList()
                 await incomeViewModel.getTotalBalance()
                 await incomeViewModel.getTotalTaxPaid()

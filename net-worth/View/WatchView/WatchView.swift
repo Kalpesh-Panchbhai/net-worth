@@ -32,32 +32,33 @@ struct WatchView: View {
                             }, label: {
                                 WatchViewRow(watch: watch, accountViewModel: accountViewModel)
                                     .badge(
-                                        Text("\(watch.accountID.count)")
+                                        Text("\(watch.accountList.count)")
                                             .foregroundColor(Color.theme.secondaryText)
                                             .font(.caption.italic())
                                     )
                             })
                             .contextMenu {
-                                Label(watch.id!, systemImage: ConstantUtils.infoIconImageName)
+                                Label(watch.id, systemImage: ConstantUtils.infoIconImageName)
                             }
                             // MARK: Update
                             .swipeActions(edge: .leading, content: {
-                                if(watch.accountName != "All") {
+                                if(!watch.name.elementsEqual("All")) {
                                     Button("Update") {
-                                        Task.init {
-                                            await watchViewModel.getWatchList(id: watch.id!)
-                                        }
                                         self.updateWatchViewOpen.toggle()
                                     }
                                     .tint(Color.theme.green)
                                 }
                             })
+                            .sheet(isPresented: $updateWatchViewOpen) {
+                                UpdateWatchView(watch: watch, watchViewModel: watchViewModel)
+                                    .presentationDetents([.medium])
+                            }
                             // MARK: Delete
                             .swipeActions(edge: .trailing, content: {
-                                if(watch.accountName != "All") {
+                                if(!watch.name.elementsEqual("All")) {
                                     Button("Delete") {
-                                        watchController.deleteWatchList(watchList: watch)
                                         Task.init {
+                                            await watchController.deleteWatchList(watch: watch)
                                             await watchViewModel.getAllWatchList()
                                         }
                                     }
@@ -94,10 +95,6 @@ struct WatchView: View {
                     .presentationDetents([.medium])
             }
             // MARK: Update Watch Sheet View
-            .sheet(isPresented: $updateWatchViewOpen) {
-                UpdateWatchView(watchViewModel: watchViewModel)
-                    .presentationDetents([.medium])
-            }
             .background(Color.theme.background)
             .scrollContentBackground(.hidden)
             .navigationTitle("Watch Lists")

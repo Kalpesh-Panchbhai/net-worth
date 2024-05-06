@@ -10,15 +10,15 @@ import SwiftUI
 struct WatchViewRow: View {
     
     var watch: Watch
+    @State var balance = BalanceAccount()
     
     @StateObject var accountViewModel: AccountViewModel
-    @ObservedObject var watchViewModel = WatchViewModel()
     
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
                 Spacer()
-                Text(watch.accountName)
+                Text(watch.name)
                     .foregroundColor(Color.theme.primaryText)
                     .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)
@@ -27,13 +27,13 @@ struct WatchViewRow: View {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
-                    Text("\(accountViewModel.totalBalance.currentValue.withCommas(decimalPlace: 2))")
+                    Text("\(balance.currentDayValue.withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 }
                 Spacer()
                 HStack {
-                    if(accountViewModel.totalBalance.oneDayChange > 0) {
+                    if(getOneDayChange() > 0) {
                         ZStack {
                             Circle()
                                 .fill(Color.theme.green.opacity(0.2))
@@ -43,13 +43,13 @@ struct WatchViewRow: View {
                                 .font(.system(size: 14)
                                     .bold())
                         }
-                        Text("+" + accountViewModel.totalBalance.oneDayChange.withCommas(decimalPlace: 2))
+                        Text("+" + getOneDayChange().withCommas(decimalPlace: 2))
                             .foregroundColor(Color.theme.green)
                             .font(.caption.bold())
                         Text("(+\(getOneDayPercentageChange()))")
                             .foregroundColor(Color.theme.green)
                             .font(.caption.bold())
-                    } else if(accountViewModel.totalBalance.oneDayChange < 0) {
+                    } else if(getOneDayChange() < 0) {
                         ZStack {
                             Circle()
                                 .fill(Color.theme.red.opacity(0.2))
@@ -59,7 +59,7 @@ struct WatchViewRow: View {
                                 .font(.system(size: 14)
                                     .bold())
                         }
-                        Text(accountViewModel.totalBalance.oneDayChange.withCommas(decimalPlace: 2))
+                        Text(getOneDayChange().withCommas(decimalPlace: 2))
                             .foregroundColor(Color.theme.red)
                             .font(.caption.bold())
                         Text("(\(getOneDayPercentageChange()))")
@@ -74,20 +74,27 @@ struct WatchViewRow: View {
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getAccountList()
-                await watchViewModel.getWatchList(id: watch.id!)
-                await accountViewModel.getAccountsForWatchList(accountID: watchViewModel.watch.accountID)
-                if(!watchViewModel.watch.accountID.isEmpty) {
-                    await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                } else {
-                    accountViewModel.totalBalance = Balance(currentValue: 0.0)
+                balance = BalanceAccount(currentDayValue: 0.0, previousDayValue: 0.0)
+                let accountList = watch.accountList.map { id in
+                    return accountViewModel.accountList.filter {
+                        return $0.id.elementsEqual(id)
+                    }.first!
                 }
+                for account in accountList {
+                    self.balance.currentDayValue += account.balance.currentDayValue
+                    self.balance.previousDayValue += account.balance.previousDayValue
+                }
+                
             }
         }
         .background(Color.theme.foreground)
     }
     
+    private func getOneDayChange() -> Double {
+        return balance.currentDayValue - balance.previousDayValue
+    }
+    
     func getOneDayPercentageChange() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: accountViewModel.totalBalance.currentValue - accountViewModel.totalBalance.oneDayChange, currentBalance: accountViewModel.totalBalance.currentValue)
+        return CommonController.getGrowthPercentage(previousBalance: balance.previousDayValue, currentBalance: balance.currentDayValue)
     }
 }

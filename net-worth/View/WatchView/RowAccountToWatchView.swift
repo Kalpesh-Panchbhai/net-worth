@@ -32,10 +32,10 @@ struct RowAccountToWatchView: View {
                         .bold()
                         .onTapGesture {
                             isAdded.toggle()
-                            self.watch.accountID = self.watch.accountID.filter { item in
+                            self.watch.accountList = self.watch.accountList.filter { item in
                                 item != account.id
                             }
-                            watchController.addAccountToWatchList(watch: watch)
+//                            watchController.addAccountToWatchList(watch: watch)
                         }
                 } else {
                     Image(systemName: ConstantUtils.notBookmarkImageName)
@@ -43,15 +43,15 @@ struct RowAccountToWatchView: View {
                         .bold()
                         .onTapGesture {
                             isAdded.toggle()
-                            self.watch.accountID.append(account.id)
-                            self.watch.accountID.sort(by: { item1, item2 in
+                            self.watch.accountList.append(account.id)
+                            self.watch.accountList.sort(by: { item1, item2 in
                                 accountViewModel.accountList.filter { account1 in
                                     account1.id.elementsEqual(item1)
                                 }.first!.accountName <= accountViewModel.accountList.filter { account2 in
                                     account2.id.elementsEqual(item2)
                                 }.first!.accountName
                             })
-                            watchController.addAccountToWatchList(watch: watch)
+//                            watchController.addAccountToWatchList(watch: watch)
                         }
                 }
             }

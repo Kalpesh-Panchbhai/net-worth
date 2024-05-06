@@ -41,9 +41,11 @@ struct NewWatchView: View {
                         isFieldEmpty.toggle()
                     } else {
                         var watch = Watch()
-                        watch.accountName = watchListName
-                        watchController.addWatchList(watchList: watch)
+                        watch.name = watchListName
+                        watch.userId = ApplicationData.shared.userId
+                        watch.accountList = [String]()
                         Task.init {
+                            await watchController.addWatchList(watch: watch)
                             await watchViewModel.getAllWatchList()
                         }
                         dismiss()

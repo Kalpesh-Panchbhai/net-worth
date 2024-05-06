@@ -26,6 +26,7 @@ class ConstantUtils {
         case INCOME = "income"
         case INCOME_TAG = "income_tag"
         case INCOME_TYPE = "income_type"
+        case WATCH = "watch"
     }
     
     enum HTTP_METHOD: String, CaseIterable {

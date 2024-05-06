@@ -80,13 +80,13 @@ class ImportExportController {
         for watch in data.watch {
             var newWatch = Watch()
             let accountList = await accountController.getAccountList()
-            newWatch.accountID = watch.accountID.map { accountID in
+            newWatch.accountList = watch.accountID.map { accountID in
                 accountList.filter { account in
                     account.accountName.elementsEqual(accountID)
                 }.first?.id ?? ""
             }
-            newWatch.accountName = watch.accountName
-            watchController.addWatchList(watchList: newWatch)
+            newWatch.name = watch.accountName
+            await watchController.addWatchList(watch: newWatch)
         }
     }
     
@@ -181,12 +181,12 @@ class ImportExportController {
         let watchList = await watchController.getAllWatchList()
         let accountList = await accountController.getAccountList()
         data.watch = watchList.map { watch in
-            let accounts = watch.accountID.map { accountID in
+            let accounts = watch.accountList.map { accountID in
                 accountList.filter { account in
                     account.id.elementsEqual(accountID)
                 }.first!.accountName
             }
-            return WatchBackupModel(accountName: watch.accountName, accountID: accounts)
+            return WatchBackupModel(accountName: watch.name, accountID: accounts)
         }
     }
     

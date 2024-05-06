@@ -81,8 +81,8 @@ struct ChartView: View {
             }
         })
         .font(.system(size: 14))
-        .disabled(watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty)
-        .foregroundColor((watchListSelected.accountName.elementsEqual("Select") || watchListSelected.accountName.isEmpty) ? Color.gray : Color.theme.primaryText)
+        .disabled(watchListSelected.name.elementsEqual("Select") || watchListSelected.name.isEmpty)
+        .foregroundColor((watchListSelected.name.elementsEqual("Select") || watchListSelected.name.isEmpty) ? Color.gray : Color.theme.primaryText)
         .bold()
     }
     
@@ -97,8 +97,8 @@ struct ChartView: View {
             Text("Reset")
         })
         .font(.system(size: 14))
-        .disabled((watchListSelected.accountName.isEmpty && chartDataList.isEmpty && !compareAssetsToLiabilities && multipleWatchListSelection.isEmpty))
-        .foregroundColor(((watchListSelected.accountName.isEmpty && chartDataList.isEmpty && !compareAssetsToLiabilities && multipleWatchListSelection.isEmpty) ? Color.gray : Color.theme.primaryText))
+        .disabled((watchListSelected.name.isEmpty && chartDataList.isEmpty && !compareAssetsToLiabilities && multipleWatchListSelection.isEmpty))
+        .foregroundColor(((watchListSelected.name.isEmpty && chartDataList.isEmpty && !compareAssetsToLiabilities && multipleWatchListSelection.isEmpty) ? Color.gray : Color.theme.primaryText))
         .bold()
     }
     
@@ -119,12 +119,12 @@ struct ChartView: View {
     
     var selectMultipleWatchListForCompare: some View {
         List {
-            ForEach(watchViewModel.watchList.filter({ !$0.accountName.elementsEqual("All")}), id: \.self, content: { watch in
-                MultipleSelectionRow(title: watch.accountName, isSelected: self.multipleWatchListSelection.contains(watch)) {
+            ForEach(watchViewModel.watchList.filter({ !$0.name.elementsEqual("All")}), id: \.self, content: { watch in
+                MultipleSelectionRow(title: watch.name, isSelected: self.multipleWatchListSelection.contains(watch)) {
                     if self.multipleWatchListSelection.contains(watch) {
                         self.multipleWatchListSelection.remove(watch)
                         self.chartDataList.removeAll(where: {
-                            $0.accountName.elementsEqual(watch.accountName)
+                            $0.accountName.elementsEqual(watch.name)
                         })
                     }
                     else {
@@ -161,14 +161,14 @@ struct ChartView: View {
         Picker(selection: $watchListSelected, content: {
             Text("Select").tag(Watch())
             ForEach(watchViewModel.watchList, id: \.self, content: {
-                Text($0.accountName).tag($0)
+                Text($0.name).tag($0)
             })
         }, label: {
             Text("Watch List")
         })
         .listRowBackground(Color.theme.foreground)
         .onChange(of: watchListSelected, perform: { _ in
-            if(watchListSelected.accountName.elementsEqual("Select")) {
+            if(watchListSelected.name.elementsEqual("Select")) {
                 compareAssetsToLiabilities = true
             } else {
                 compareAssetsToLiabilities = false
@@ -251,7 +251,7 @@ struct ChartView: View {
     
     private func getAccountsForWatchList(watch: Watch) -> [Account] {
         return getAccounts().filter {
-            watch.accountID.contains($0.id)
+            watch.accountList.contains($0.id)
         }
     }
     

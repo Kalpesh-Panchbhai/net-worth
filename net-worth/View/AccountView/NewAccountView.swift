@@ -26,12 +26,9 @@ struct NewAccountView: View {
     @State var monthlyEmi: Double = 0.0
     @State var loanPaymentDate = 1
     @State var dates = Array(1...28)
-    @State var accountOpenedDate = Date()
     @State var isPlus = true
     @State var searchTerm: String = ""
-    @State var selectedWatchList = Watch()
     
-    @StateObject var watchViewModel = WatchViewModel()
     @ObservedObject var accountViewModel : AccountViewModel
     
     @Environment(\.dismiss) var dismiss
@@ -50,25 +47,21 @@ struct NewAccountView: View {
                     .onChange(of: accountType) { _ in
                         accountName=""
                         currencySelected = SettingsController().getDefaultCurrency()
-                        selectedWatchList = Watch()
                         isPlus = true
                         loanPaymentDate = 1
                         monthlyEmi = 0.0
-                        accountOpenedDate = Date()
                     }
                     if(accountType == ConstantUtils.savingAccountType) {
                         nameField(labelName: "Account Name")
                             .foregroundColor(Color.theme.primaryText)
                         CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
-                        watchListPicker
                     }
                     else if(accountType == ConstantUtils.creditCardAccountType) {
                         nameField(labelName: "Credit Card Name")
                             .foregroundColor(Color.theme.primaryText)
                         CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
-                        watchListPicker
                     }
                     else if(accountType == ConstantUtils.loanAccountType) {
                         Picker(selection: $loanType, label: Text("Loan Type")) {
@@ -87,19 +80,16 @@ struct NewAccountView: View {
                         }
                         CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
-                        watchListPicker
                     } else if(accountType == ConstantUtils.brokerAccountType) {
                         nameField(labelName: "Broker Name")
                             .foregroundColor(Color.theme.primaryText)
                         CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
-                        watchListPicker
                     } else if(accountType == ConstantUtils.otherAccountType) {
                         nameField(labelName: "Account Name")
                             .foregroundColor(Color.theme.primaryText)
                         CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
-                        watchListPicker
                     }
                 }
                 .listRowBackground(Color.theme.foreground)
@@ -117,35 +107,6 @@ struct NewAccountView: View {
                         newAccount.currency = currencySelected.code
                         Task.init {
                             await accountController.addAccount(newAccount: newAccount)
-//                            newAccount.id = accountID
-//                            await accountViewModel.getAccountList()
-//                            if(selectedWatchList.id != "") {
-//                                selectedWatchList.accountID.append(accountID)
-//                                selectedWatchList.accountID.sort(by: { item1, item2 in
-//                                    accountViewModel.accountList.filter { account1 in
-//                                        account1.id!.elementsEqual(item1)
-//                                    }.first!.accountName <= accountViewModel.accountList.filter { account2 in
-//                                        account2.id!.elementsEqual(item2)
-//                                    }.first!.accountName
-//                                })
-//                                watchController.addAccountToWatchList(watch: selectedWatchList)
-//                            }
-//                            var watch = await watchController.getDefaultWatchList()
-//                            watch.accountID.append(accountID)
-//                            watch.accountID.sort(by: { item1, item2 in
-//                                accountViewModel.accountList.filter { account1 in
-//                                    account1.id!.elementsEqual(item1)
-//                                }.first!.accountName <= accountViewModel.accountList.filter { account2 in
-//                                    account2.id!.elementsEqual(item2)
-//                                }.first!.accountName
-//                            })
-//                            watchController.addAccountToWatchList(watch: watch)
-//                            await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-//                            if(accountType.elementsEqual(ConstantUtils.loanAccountType) && loanType.elementsEqual("Consumer")) {
-//                                Task.init {
-//                                    await accountTransactionController.addLoanAccountEMITransaction(account: newAccount, emiDate: loanPaymentDate, accountOpenedDate: accountOpenedDate, monthlyEmiAmount: monthlyEmi)
-//                                }
-//                            }
                             await accountViewModel.getAccountList()
                         }
                         dismiss()
@@ -177,23 +138,6 @@ struct NewAccountView: View {
                 scenePhaseBlur = 5
             }
         })
-        .onAppear {
-            Task.init {
-                await watchViewModel.getAllWatchList()
-            }
-        }
-    }
-    
-    var watchListPicker: some View {
-        Picker(selection: $selectedWatchList, label: Text("Watch List")) {
-            Text("Select").tag(Watch())
-            ForEach(watchViewModel.watchList, id: \.self) { data in
-                if(data.accountName != "All") {
-                    Text(data.accountName).tag(data)
-                }
-            }
-        }
-        .foregroundColor(Color.theme.primaryText)
     }
     
     private func allFieldsFilled () -> Bool {

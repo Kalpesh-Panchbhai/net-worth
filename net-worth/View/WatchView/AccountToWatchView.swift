@@ -32,7 +32,7 @@ struct AccountToWatchView: View {
                                         .font(.system(size: 15))
                                 }
                                 ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
-                                    RowAccountToWatchView(account: account, watch: $watch, isAdded: watch.accountID.contains(account.id), accountViewModel: accountViewModel)
+                                    RowAccountToWatchView(account: account, watch: $watch, isAdded: watch.accountList.contains(account.id), accountViewModel: accountViewModel)
                                         .padding(.bottom, 10)
                                 }
                                 Divider()

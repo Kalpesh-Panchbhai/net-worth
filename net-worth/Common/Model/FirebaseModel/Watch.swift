@@ -4,25 +4,41 @@
 //
 //  Created by Kalpesh Panchbhai on 14/02/23.
 //
-
-import FirebaseFirestore
-import FirebaseFirestoreSwift
+import Foundation
 
 struct Watch: Codable, Hashable {
     
-    @DocumentID var id: String?
-    var accountName: String
-    var accountID: [String]
+    var id: String
+    var userId: String
+    var name: String
+    var accountList: [String]
     
-    init(id: String = "", accountID: [String] = [], accountName: String = "") {
-        self.id = ""
-        self.accountID = accountID
-        self.accountName = accountName
+    private enum CodingKeys: String, CodingKey {
+        case id, userId, name, accountList
     }
     
-    init(doc: QueryDocumentSnapshot) {
-        id = doc.documentID
-        accountName = doc[ConstantUtils.watchKeyWatchName] as? String ?? ""
-        accountID = doc[ConstantUtils.watchKeyAccountID] as? [String] ?? [String]()
+    init(id: String = "", userId: String = "", name: String = "", accountList: [String] = []) {
+        self.id = ""
+        self.userId = userId
+        self.name = name
+        self.accountList = accountList
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        userId = try container.decode(String.self, forKey: .userId)
+        name = try container.decode(String.self, forKey: .name)
+        accountList = try container.decode([String].self, forKey: .accountList)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        if(!id.isEmpty) {
+            try container.encode(id, forKey: .id)
+        }
+        try container.encode(userId, forKey: .userId)
+        try container.encode(name, forKey: .name)
+        try container.encode(accountList, forKey: .accountList)
     }
 }

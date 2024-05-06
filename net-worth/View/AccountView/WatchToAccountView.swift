@@ -24,7 +24,7 @@ struct WatchToAccountView: View {
                 ScrollView(.vertical) {
                     LazyVStack {
                         ForEach(watchViewModel.watchList, id: \.self) { watchList in
-                            RowWatchToAccountView(accountID: accountID, watch: watchList, isAdded: watchList.accountID.contains(accountID))
+                            RowWatchToAccountView(accountID: accountID, watch: watchList, isAdded: watchList.accountList.contains(accountID), watchViewModel: watchViewModel)
                                 .padding(.top, 10)
                         }
                     }
@@ -40,10 +40,5 @@ struct WatchToAccountView: View {
                 scenePhaseBlur = 5
             }
         })
-        .onAppear {
-            Task.init {
-                await watchViewModel.getAllWatchList()
-            }
-        }
     }
 }

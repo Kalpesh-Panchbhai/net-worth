@@ -10,6 +10,7 @@ import SwiftUI
 struct UpdateWatchView: View {
     
     var watchController = WatchController()
+    @State var watch: Watch
     
     @State var scenePhaseBlur = 0
     @State var isFieldEmpty = false
@@ -23,7 +24,7 @@ struct UpdateWatchView: View {
         VStack {
             Form {
                 Section("Update Watch List") {
-                    TextField("Updated Watch List name", text: $watchViewModel.watch.accountName)
+                    TextField("Updated Watch List name", text: $watch.name)
                 }
                 .listRowBackground(Color.theme.foreground)
                 .foregroundColor(Color.theme.primaryText)
@@ -36,11 +37,11 @@ struct UpdateWatchView: View {
                 .bold()
                 .cornerRadius(10)
                 .onTapGesture {
-                    if(watchViewModel.watch.accountName.isEmpty) {
+                    if(watch.name.isEmpty) {
                         isFieldEmpty.toggle()
                     } else {
-                        watchController.updateWatchList(watchList: watchViewModel.watch)
                         Task.init {
+                            await watchController.updateWatchList(watch: watch)
                             await watchViewModel.getAllWatchList()
                         }
                         dismiss()

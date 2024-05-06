@@ -16,12 +16,6 @@ class AccountController {
     private var restController = RestController()
     private var entityName = ConstantUtils.Entity.ACCOUNT.rawValue
     
-    public func getAccountCollection() -> CollectionReference {
-        return UserController()
-            .getCurrentUserDocument()
-            .collection(ConstantUtils.accountCollectionName)
-    }
-    
     public func addAccount(newAccount: Account) async {
         let userId = ApplicationData.shared.userId
         let requestData = Account(userId: userId, accountName: newAccount.accountName, accountType: newAccount.accountType, loanType: newAccount.loanType, currency: newAccount.currency, active: newAccount.active)

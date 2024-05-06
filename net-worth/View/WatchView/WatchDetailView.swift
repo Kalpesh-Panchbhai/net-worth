@@ -167,7 +167,7 @@ struct WatchDetailView: View {
 //                })
 //            }
         }
-        .navigationTitle(watch.accountName)
+        .navigationTitle(watch.name)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(
@@ -401,7 +401,7 @@ struct WatchDetailView: View {
             AccountToWatchView(watch: watchViewModel.watch, accountViewModel: accountViewModel)
         }
         .sheet(isPresented: $isChartViewOpen, content: {
-            AccountWatchChartView(id: watch.id!, accountList: accountViewModel.accountList, accountViewModel: accountViewModel)
+            AccountWatchChartView(id: watch.id, accountList: accountViewModel.accountList, accountViewModel: accountViewModel)
         })
         .onAppear {
             Task.init {

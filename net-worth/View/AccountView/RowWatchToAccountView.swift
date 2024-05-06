@@ -15,24 +15,29 @@ struct RowWatchToAccountView: View {
     @State var watch: Watch
     @State var isAdded: Bool
     
+    @ObservedObject var watchViewModel: WatchViewModel
+    
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(watch.accountName)
+                Text(watch.name)
             }
             .padding()
             Spacer()
             VStack {
                 if(isAdded) {
                     Image(systemName: ConstantUtils.bookmarkImageName)
-                        .foregroundColor(watch.accountName.elementsEqual("All") ? .gray : Color.theme.primaryText)
+                        .foregroundColor(watch.name.elementsEqual("All") ? .gray : Color.theme.primaryText)
                         .bold()
                         .onTapGesture {
                             isAdded.toggle()
-                            self.watch.accountID = self.watch.accountID.filter { item in
+                            self.watch.accountList = self.watch.accountList.filter { item in
                                 item != accountID
                             }
-                            watchController.addAccountToWatchList(watch: watch)
+                            Task.init {
+                                await watchController.updateWatchList(watch: watch)
+                                await watchViewModel.getAllWatchList()
+                            }
                         }
                 } else {
                     Image(systemName: ConstantUtils.notBookmarkImageName)
@@ -40,12 +45,15 @@ struct RowWatchToAccountView: View {
                         .bold()
                         .onTapGesture {
                             isAdded.toggle()
-                            self.watch.accountID.append(accountID)
-                            watchController.addAccountToWatchList(watch: watch)
+                            self.watch.accountList.append(accountID)
+                            Task.init {
+                                await watchController.updateWatchList(watch: watch)
+                                await watchViewModel.getAllWatchList()
+                            }
                         }
                 }
             }
-            .disabled(watch.accountName.elementsEqual("All"))
+            .disabled(watch.name.elementsEqual("All"))
             .padding()
         }
         .frame(width: 350, height: 50)

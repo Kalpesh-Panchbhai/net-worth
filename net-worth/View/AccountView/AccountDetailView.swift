@@ -50,8 +50,8 @@ struct AccountDetailView: View {
                     } else {
                         Text("Transactions (\(accountViewModel.accountTransactionList.count))").tag(1)
                     }
-//                    Text("Chart").tag(2)
-//                    Text("WatchLists (\(watchViewModel.watchListForAccount.count))").tag(3)
+                    Text("Chart").tag(2)
+                    Text("WatchLists (\(watchViewModel.watchListForAccount.count))").tag(3)
                 }, label: {
                     Text("Account Tab View")
                 })
@@ -67,15 +67,15 @@ struct AccountDetailView: View {
                         TransactionsView(account: account, accountTransactionList: accountViewModel.accountTransactionList)
                     }
                 } 
-//                else if(tabItem == 2) {
-//                    if(account.accountType == ConstantUtils.brokerAccountType) {
-//                        AccountBrokerChartView(brokerID: accountViewModel.account.id, accountID: "", symbol: "", accountViewModel: accountViewModel)
-//                    } else {
-//                        AccountChartView(accountID: accountID, accountViewModel: accountViewModel)
-//                    }
-//                } else {
-//                    AccountWatchView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
-//                }
+                else if(tabItem == 2) {
+                    if(account.accountType == ConstantUtils.brokerAccountType) {
+                        AccountBrokerChartView(brokerID: accountViewModel.account.id, accountID: "", symbol: "", accountViewModel: accountViewModel)
+                    } else {
+                        AccountChartView(accountID: accountID, accountViewModel: accountViewModel)
+                    }
+                } else {
+                    AccountWatchView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
+                }
             }
             .alert(isPresented: $showZeroAlert) {
                 Alert(title: Text("Current Balance should be equal to zero to make it inactive!"))
@@ -191,6 +191,7 @@ struct AccountDetailView: View {
                 } else {
                     await accountViewModel.getAccountTransactionList(id: accountID)
                 }
+                await watchViewModel.getWatchListByAccount(accountID: accountID)
             }
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
@@ -207,7 +208,9 @@ struct AccountDetailView: View {
             NewAccountInBrokerView(brokerAccountID: accountID, accountViewModel: accountViewModel)
         })
         .sheet(isPresented: $showAddWatchListView, onDismiss: {
-            
+            Task.init {
+                await watchViewModel.getWatchListByAccount(accountID: accountID)
+            }
         }, content: {
             WatchToAccountView(accountID: accountID, watchViewModel: watchViewModel)
         })
