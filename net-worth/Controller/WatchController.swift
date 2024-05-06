@@ -19,7 +19,6 @@ class WatchController {
     }
     
     public func getAllWatchList() async -> [Watch] {
-        print("Watch All")
         let userId = ApplicationData.shared.userId
         let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [Watch].self)
         return response

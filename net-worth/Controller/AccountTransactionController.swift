@@ -24,26 +24,4 @@ class AccountTransactionController {
             return $0.timestamp > $1.timestamp
         })
     }
-    
-    public func addTransaction(accountID: String, account: Account, timestamp: Date, operation: String) async {
-        let currentDateTime = Date.now
-    }
-    
-    public func addLoanAccountEMITransaction(account: Account, emiDate: Int, accountOpenedDate: Date, monthlyEmiAmount: Double) async {
-    }
-    
-    public func updateAccountTransaction(accountID: String, accountTransaction: AccountTransaction) async {
-//        do {
-//            let accountTransactionID = accountTransaction.id
-//            var updatedAccountTransaction = accountTransaction
-//            try AccountController().getAccountCollection()
-//                .document(accountID)
-//                .collection(ConstantUtils.accountTransactionCollectionName)
-//                .document(accountTransactionID)
-//                .setData(from: updatedAccountTransaction, merge: true)
-//        } catch {
-//            print(error)
-//        }
-    }
-    
 }
