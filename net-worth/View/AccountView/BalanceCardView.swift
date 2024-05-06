@@ -23,15 +23,29 @@ struct BalanceCardView: View {
         self.isWatchListCardView = isWatchListCardView
         self.watchList = watchList
         self.accountViewModel = accountViewModel
-        let accountList = accountViewModel.sectionContent(key: accountType, searchKeyword: "")
-        var currentDayValue = 0.0
-        var previousDayValue = 0.0
-        
-        for account in accountList {
-            currentDayValue += account.balance.currentDayValue
-            previousDayValue += account.balance.previousDayValue
+        if(isWatchListCardView) {
+            let accountList = accountViewModel.accountList.filter {
+                return watchList.accountList.contains($0.id)
+            }
+            var currentDayValue = 0.0
+            var previousDayValue = 0.0
+            
+            for account in accountList {
+                currentDayValue += account.balance.currentDayValue
+                previousDayValue += account.balance.previousDayValue
+            }
+            balanceAccount = BalanceAccount(currentDayValue: currentDayValue, previousDayValue: previousDayValue)
+        } else {
+            let accountList = accountViewModel.sectionContent(key: accountType, searchKeyword: "")
+            var currentDayValue = 0.0
+            var previousDayValue = 0.0
+            
+            for account in accountList {
+                currentDayValue += account.balance.currentDayValue
+                previousDayValue += account.balance.previousDayValue
+            }
+            balanceAccount = BalanceAccount(currentDayValue: currentDayValue, previousDayValue: previousDayValue)
         }
-        balanceAccount = BalanceAccount(currentDayValue: currentDayValue, previousDayValue: previousDayValue)
     }
     
     var body: some View {

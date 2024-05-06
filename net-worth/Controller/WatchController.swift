@@ -30,6 +30,7 @@ class WatchController {
         if(count == 0) {
             var watchList = Watch()
             watchList.name = "All"
+            watchList.userId = ApplicationData.shared.userId
             await addWatchList(watch: watchList)
         }
     }
