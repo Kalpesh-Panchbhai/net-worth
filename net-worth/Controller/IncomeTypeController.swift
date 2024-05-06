@@ -4,8 +4,7 @@
 //
 //  Created by Kalpesh Panchbhai on 05/06/23.
 //
-
-import FirebaseFirestore
+import Foundation
 
 class IncomeTypeController {
     
@@ -37,9 +36,4 @@ class IncomeTypeController {
             return $0.name < $1.name
         })
     }
-    
-    public func deleteIncomeTypes() {
-        CommonController.delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeTypeCollectionName))
-    }
-    
 }

@@ -4,8 +4,7 @@
 //
 //  Created by Kalpesh Panchbhai on 14/11/22.
 //
-
-import FirebaseFirestore
+import Foundation
 
 class IncomeController {
     
@@ -46,11 +45,6 @@ class IncomeController {
     
     public func deleteIncome(income: Income) async {
         _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: income.id, forClass: RestResponse.self)
-    }
-    
-    public func deleteIncomes() {
-        CommonController
-            .delete(collection: UserController().getCurrentUserDocument().collection(ConstantUtils.incomeCollectionName))
     }
     
     public func getIncomeList(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async -> [IncomeCalculation] {

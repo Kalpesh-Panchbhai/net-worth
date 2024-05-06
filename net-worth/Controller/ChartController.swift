@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import FirebaseFirestore
 
 class ChartController {
     
@@ -17,7 +16,6 @@ class ChartController {
         var chartDataListResponse = [ChartData]()
         var startDate = Date().removeTimeStamp()
         var lastDate = Date().removeTimeStamp()
-        lastDate = CommonController.getStartDateForRange(range: range)
         
         let count = chartDataList.filter {
             return $0.date >= lastDate

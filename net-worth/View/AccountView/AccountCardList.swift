@@ -135,11 +135,8 @@ struct AccountCardList: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .sheet(isPresented: $isNewAccountAccountViewOpen, onDismiss: {
-            Task.init {
-//                await watchViewModel.getAllWatchList()
-            }
         }, content: {
-            NewAccountView(accountType: ConstantUtils.noneAccountType, accountViewModel: accountViewModel)
+            NewAccountView(accountType: ConstantUtils.noneAccountType, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
         })
     }
     

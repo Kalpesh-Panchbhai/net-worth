@@ -7,7 +7,6 @@
 
 import Foundation
 import Firebase
-import FirebaseFirestore
 
 class UserController {
     
@@ -28,23 +27,9 @@ class UserController {
         return userUID
     }
     
-    func getCurrentUserDocument() -> DocumentReference {
-        let db = Firestore.firestore()
-        return db.collection(ConstantUtils.userCollectionName).document(getCurrentUserUID())
-    }
-    
     func deleteUser() async {
-        let db = Firestore.firestore()
-        do {
-//            await AccountController().deleteAccounts()
-//            IncomeController().deleteIncomes()
-//            await WatchController().deleteWatchLists()
-//            IncomeTagController().deleteIncomeTags()
-//            IncomeTypeController().deleteIncomeTypes()
-//            try await db.collection(ConstantUtils.userCollectionName).document(getCurrentUserUID()).delete()
-        } catch {
-            print(error)
-        }
+        let userId = ApplicationData.shared.userId
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: userId, forClass: RestResponse.self)
     }
     
 }

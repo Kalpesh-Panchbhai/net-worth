@@ -67,13 +67,13 @@ class ImportExportController {
     }
     
     private func importAccount() async {
-//        for account in data.account {
-//            let newAccount = Account(accountType: account.accountType, loanType: account.loanType, accountName: account.accountName, currentBalance: account.currentBalance, paymentReminder: account.paymentReminder, paymentDate: account.paymentDate, currency: account.currency, active: account.active)
-//            let accountTransaction = account.accountTransaction.sorted(by: {
-//                $0.timestamp < $1.timestamp
-//            })
-//            await accountController.addAccount(newAccount: newAccount)
-//        }
+        //        for account in data.account {
+        //            let newAccount = Account(accountType: account.accountType, loanType: account.loanType, accountName: account.accountName, currentBalance: account.currentBalance, paymentReminder: account.paymentReminder, paymentDate: account.paymentDate, currency: account.currency, active: account.active)
+        //            let accountTransaction = account.accountTransaction.sorted(by: {
+        //                $0.timestamp < $1.timestamp
+        //            })
+        //            await accountController.addAccount(newAccount: newAccount)
+        //        }
     }
     
     private func importWatch() async {
@@ -142,39 +142,39 @@ class ImportExportController {
     }
     
     private func exportAccount() async {
-//        let accountList = await accountController.getAccountList()
-//        var accountDataList = [AccountBackupModel]()
-//        
-//        for account in accountList {
-//            if(account.accountType == ConstantUtils.brokerAccountType) {
-//                let accountsInBroker = accountInBrokerController.getAccountListInBroker(brokerID: account.id)
-//                var accountsInBrokerDataList = [AccountInBrokerBackupModel]()
-//                for accountInBroker in accountsInBroker {
-//                    let accountTransactions = accountInBrokerController.getAccountTransactionListInAccountInBroker(brokerID: account.id, accountID: accountInBroker.id!)
-//                    let accountTransactionsData = accountTransactions.map { accountTransaction in
-//                        return AccountTransactionBackupModel(timestamp: accountTransaction.timestamp, balanceChange: accountTransaction.balanceChange, currentBalance: accountTransaction.currentBalance, paid: accountTransaction.paid)
-//                        
-//                    }
-//                    let accountInBrokerData = AccountInBrokerBackupModel(timestamp: accountInBroker.timestamp, symbol: accountInBroker.symbol, name: accountInBroker.name, currentUnit: accountInBroker.currentUnit, accountTransaction: accountTransactionsData)
-//                    accountsInBrokerDataList.append(accountInBrokerData)
-//                }
-//                
-//                let accountData = AccountBackupModel(accountType: account.accountType, loanType: account.loanType, accountName: account.accountName, currentBalance: account.currentBalance, paymentReminder: account.paymentReminder, paymentDate: account.paymentDate, currency: account.currency, active: account.active, accountInBroker: accountsInBrokerDataList, accountTransaction: [AccountTransactionBackupModel]())
-//                
-//                accountDataList.append(accountData)
-//            } else {
-//                let accountTransactions = await accountTransactionController.getTransactionList(accountId: account.id!)
-//                let accountTransactionsData = accountTransactions.map { accountTransaction in
-//                    return AccountTransactionBackupModel(timestamp: accountTransaction.timestamp, balanceChange: accountTransaction.balanceChange, currentBalance: accountTransaction.currentBalance, paid: accountTransaction.paid)
-//                    
-//                }
-//                
-//                let accountData = AccountBackupModel(accountType: account.accountType, loanType: account.loanType, accountName: account.accountName, currentBalance: account.currentBalance, paymentReminder: account.paymentReminder, paymentDate: account.paymentDate, currency: account.currency, active: account.active, accountInBroker: [AccountInBrokerBackupModel](), accountTransaction: accountTransactionsData)
-//                
-//                accountDataList.append(accountData)
-//            }
-//        }
-//        data.account = accountDataList
+        //        let accountList = await accountController.getAccountList()
+        //        var accountDataList = [AccountBackupModel]()
+        //
+        //        for account in accountList {
+        //            if(account.accountType == ConstantUtils.brokerAccountType) {
+        //                let accountsInBroker = accountInBrokerController.getAccountListInBroker(brokerID: account.id)
+        //                var accountsInBrokerDataList = [AccountInBrokerBackupModel]()
+        //                for accountInBroker in accountsInBroker {
+        //                    let accountTransactions = accountInBrokerController.getAccountTransactionListInAccountInBroker(brokerID: account.id, accountID: accountInBroker.id!)
+        //                    let accountTransactionsData = accountTransactions.map { accountTransaction in
+        //                        return AccountTransactionBackupModel(timestamp: accountTransaction.timestamp, balanceChange: accountTransaction.balanceChange, currentBalance: accountTransaction.currentBalance, paid: accountTransaction.paid)
+        //
+        //                    }
+        //                    let accountInBrokerData = AccountInBrokerBackupModel(timestamp: accountInBroker.timestamp, symbol: accountInBroker.symbol, name: accountInBroker.name, currentUnit: accountInBroker.currentUnit, accountTransaction: accountTransactionsData)
+        //                    accountsInBrokerDataList.append(accountInBrokerData)
+        //                }
+        //
+        //                let accountData = AccountBackupModel(accountType: account.accountType, loanType: account.loanType, accountName: account.accountName, currentBalance: account.currentBalance, paymentReminder: account.paymentReminder, paymentDate: account.paymentDate, currency: account.currency, active: account.active, accountInBroker: accountsInBrokerDataList, accountTransaction: [AccountTransactionBackupModel]())
+        //
+        //                accountDataList.append(accountData)
+        //            } else {
+        //                let accountTransactions = await accountTransactionController.getTransactionList(accountId: account.id!)
+        //                let accountTransactionsData = accountTransactions.map { accountTransaction in
+        //                    return AccountTransactionBackupModel(timestamp: accountTransaction.timestamp, balanceChange: accountTransaction.balanceChange, currentBalance: accountTransaction.currentBalance, paid: accountTransaction.paid)
+        //
+        //                }
+        //
+        //                let accountData = AccountBackupModel(accountType: account.accountType, loanType: account.loanType, accountName: account.accountName, currentBalance: account.currentBalance, paymentReminder: account.paymentReminder, paymentDate: account.paymentDate, currency: account.currency, active: account.active, accountInBroker: [AccountInBrokerBackupModel](), accountTransaction: accountTransactionsData)
+        //
+        //                accountDataList.append(accountData)
+        //            }
+        //        }
+        //        data.account = accountDataList
     }
     
     private func exportWatch() async {
@@ -283,9 +283,6 @@ class ImportExportController {
     }
     
     func deleteData() async {
-//        await accountController.deleteAccounts()
-        incomeController.deleteIncomes()
-        await watchController.deleteWatchLists()
-        incomeTagController.deleteIncomeTags()
-        incomeTypeController.deleteIncomeTypes()    }
+        
+    }
 }

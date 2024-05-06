@@ -6,18 +6,11 @@
 //
 
 import Foundation
-import FirebaseFirestore
 
 class WatchController {
     
     private var restController = RestController()
     private var entityName = ConstantUtils.Entity.WATCH.rawValue
-    
-    private func getWatchCollection() -> CollectionReference {
-        return UserController()
-            .getCurrentUserDocument()
-            .collection(ConstantUtils.watchCollectionName)
-    }
     
     public func addWatchList(watch: Watch) async {
         let encoder = JSONEncoder()
@@ -44,19 +37,6 @@ class WatchController {
     
     public func getDefaultWatchList() async -> Watch {
         var watch = Watch()
-        return watch
-    }
-    
-    public func getWatchList(id: String) async -> Watch {
-        var watch = Watch()
-        do {
-            watch = try await getWatchCollection()
-                .document(id)
-                .getDocument()
-                .data(as: Watch.self)
-        } catch {
-            print(error)
-        }
         return watch
     }
     

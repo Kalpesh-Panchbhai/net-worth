@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import FirebaseFirestoreSwift
 
 class Income: Codable, Hashable, Equatable {
     

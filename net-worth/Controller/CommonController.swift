@@ -7,7 +7,6 @@
 
 import Foundation
 import Charts
-import FirebaseFirestore
 
 class CommonController {
     
@@ -40,19 +39,6 @@ class CommonController {
         }
     }
     
-    public static func delete(collection: CollectionReference, batchSize: Int = 100) {
-        collection.limit(to: batchSize).getDocuments { (docset, error) in
-            let docset = docset
-            
-            let batch = collection.firestore.batch()
-            docset?.documents.forEach { batch.deleteDocument($0.reference) }
-            
-            batch.commit {_ in
-                self.delete(collection: collection, batchSize: batchSize)
-            }
-        }
-    }
-    
     public static func getGrowthPercentage(previousBalance: Double, currentBalance: Double) -> String {
         
         var percentage = previousBalance.distance(to: currentBalance) / previousBalance * 100
@@ -77,41 +63,4 @@ class CommonController {
         return Double(cagr).withCommas(decimalPlace: 2) + "%"
     }
     
-    public static func getIntervalForDateRange(date: Date, range: String) -> Date {
-        var date = date
-        if(range.elementsEqual(ConstantUtils.oneMonthRange)) {
-            date = Timestamp.init(date: date.addingTimeInterval(86400)).dateValue()
-        } else if(range.elementsEqual(ConstantUtils.threeMonthRange)) {
-            date = Timestamp.init(date: date.addingTimeInterval(86400 * 2)).dateValue()
-        } else if(range.elementsEqual(ConstantUtils.sixMonthRange)) {
-            date = Timestamp.init(date: date.addingTimeInterval(86400 * 3)).dateValue()
-        } else if(range.elementsEqual(ConstantUtils.oneYearRange)) {
-            date = Timestamp.init(date: date.addingTimeInterval(86400 * 4)).dateValue()
-        } else if(range.elementsEqual(ConstantUtils.twoYearRange)) {
-            date = Timestamp.init(date: date.addingTimeInterval(86400 * 5)).dateValue()
-        } else if(range.elementsEqual(ConstantUtils.fiveYearRange)) {
-            date = Timestamp.init(date: date.addingTimeInterval(86400 * 6)).dateValue()
-        } else if(range.elementsEqual("All")) {
-            date = Timestamp.init(date: date.addingTimeInterval(86400 * 7)).dateValue()
-        }
-        return date.removeTimeStamp()
-    }
-    
-    public static func getStartDateForRange(range: String) -> Date {
-        var date = Timestamp().dateValue().removeTimeStamp()
-        if(range.elementsEqual(ConstantUtils.oneMonthRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-2592000)).dateValue()
-        } else if(range.elementsEqual(ConstantUtils.threeMonthRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-7776000)).dateValue()
-        } else if(range.elementsEqual(ConstantUtils.sixMonthRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-15552000)).dateValue()
-        } else if(range.elementsEqual(ConstantUtils.oneYearRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-31104000)).dateValue()
-        } else if(range.elementsEqual(ConstantUtils.twoYearRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-62208000)).dateValue()
-        } else if(range.elementsEqual(ConstantUtils.fiveYearRange)) {
-            date = Timestamp.init(date: Date.now.addingTimeInterval(-155520000)).dateValue()
-        }
-        return date.removeTimeStamp()
-    }
 }

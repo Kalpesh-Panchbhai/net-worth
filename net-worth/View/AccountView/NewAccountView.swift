@@ -30,6 +30,7 @@ struct NewAccountView: View {
     @State var searchTerm: String = ""
     
     @ObservedObject var accountViewModel : AccountViewModel
+    @ObservedObject var watchViewModel : WatchViewModel
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.scenePhase) var scenePhase
@@ -108,6 +109,7 @@ struct NewAccountView: View {
                         Task.init {
                             await accountController.addAccount(newAccount: newAccount)
                             await accountViewModel.getAccountList()
+                            await watchViewModel.getAllWatchList()
                         }
                         dismiss()
                     }, label: {
