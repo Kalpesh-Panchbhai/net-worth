@@ -82,31 +82,19 @@ struct WatchDetailView: View {
                 .font(.system(size: 14).bold())
         )
         .toolbar {
-            //            if(watch.accountName != "All" && accountViewModel.originalAccountList.count > 0) {
-            //                ToolbarItem(content: {
-            //                    Button(action: {
-            //                        self.addAccountViewOpen.toggle()
-            //                    }, label: {
-            //                        Image(systemName: ConstantUtils.plusImageName)
-            //                            .foregroundColor(Color.theme.primaryText)
-            //                            .bold()
-            //                    })
-            //                    .font(.system(size: 14).bold())
-            //                })
-            //            }
             //
-            //            if(accountViewModel.originalAccountList.count > 0) {
-            //                ToolbarItem(content: {
-            //                    Button(action: {
-            //                        self.isChartViewOpen.toggle()
-            //                    }, label: {
-            //                        Image(systemName: ConstantUtils.chartImageName)
-            //                            .foregroundColor(Color.theme.primaryText)
-            //                            .bold()
-            //                    })
-            //                    .font(.system(size: 14).bold())
-            //                })
-            //            }
+                        if(accountViewModel.originalAccountList.count > 0) {
+                            ToolbarItem(content: {
+                                Button(action: {
+                                    self.isChartViewOpen.toggle()
+                                }, label: {
+                                    Image(systemName: ConstantUtils.chartImageName)
+                                        .foregroundColor(Color.theme.primaryText)
+                                        .bold()
+                                })
+                                .font(.system(size: 14).bold())
+                            })
+                        }
             //
             //            if(watchViewModel.watch.accountID.count > 1) {
             //                ToolbarItem(content: {
@@ -256,6 +244,9 @@ struct WatchDetailView: View {
             //                })
             //            }
         }
+        .sheet(isPresented: $isChartViewOpen, content: {
+            AccountWatchChartView(id: watch.id)
+        })
     }
     
     func not(_ value: Binding<Bool>) -> Binding<Bool> {

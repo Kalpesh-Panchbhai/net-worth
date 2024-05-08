@@ -38,7 +38,7 @@ struct ChartView: View {
                 }
             }
             .sheet(isPresented: $showNetWorthChart, content: {
-                NetWorthChartView(accountList: getAccounts(), accountViewModel: accountViewModel, incomeViewModel: incomeViewModel)
+                NetWorthChartView(accountList: getAccounts(), watchViewModel: watchViewModel, incomeViewModel: incomeViewModel)
             })
             .scrollIndicators(.hidden)
             .navigationTitle("Charts")

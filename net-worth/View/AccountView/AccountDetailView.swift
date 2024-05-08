@@ -69,7 +69,7 @@ struct AccountDetailView: View {
                 } 
                 else if(tabItem == 2) {
                     if(account.accountType == ConstantUtils.brokerAccountType) {
-                        AccountBrokerChartView(brokerID: accountViewModel.account.id, accountID: "", symbol: "", accountViewModel: accountViewModel)
+                        AccountBrokerChartView(brokerID: accountID, accountID: "", symbol: "", accountViewModel: accountViewModel)
                     } else {
                         AccountChartView(accountID: accountID, accountViewModel: accountViewModel)
                     }

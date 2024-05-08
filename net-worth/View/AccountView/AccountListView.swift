@@ -79,7 +79,7 @@ struct AccountListView: View {
             })
         }
         .sheet(isPresented: $isChartViewOpen, content: {
-            AccountWatchChartView(id: accountType, accountList: accountViewModel.sectionContent(key: accountType, searchKeyword: ""), accountViewModel: accountViewModel)
+            AccountWatchChartView(id: accountType)
         })
         .searchable(text: $searchText)
     }

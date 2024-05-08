@@ -9,13 +9,22 @@ import Foundation
 
 class ChartController {
     
+    private var restController = RestController()
+    private var entityName = ConstantUtils.Entity.CHART.rawValue
+    
     public func getChartData(id: String, range: String) async -> [ChartData] {
-        let chartDataList = ApplicationData.shared.chartDataList.first(where: {
-            return $0.key.elementsEqual(id)
-        })?.value ?? [ChartData]()
+        let chartRestListResponse =  await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: id, forClass: [ChartRest].self)
         var chartDataListResponse = [ChartData]()
+        
+        var chartDataList = chartRestListResponse.map {
+            return ChartData(date: $0.date.convertStringToDateForChartData(), value: $0.value)
+        }
+        chartDataList.sort(by: {
+            return $0.date < $1.date
+        })
         var startDate = Date().removeTimeStamp()
         var lastDate = Date().removeTimeStamp()
+        lastDate = CommonController.getStartDateForRange(range: range)
         
         let count = chartDataList.filter {
             return $0.date >= lastDate

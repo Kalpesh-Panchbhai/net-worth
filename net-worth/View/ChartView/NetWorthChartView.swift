@@ -16,7 +16,7 @@ struct NetWorthChartView: View {
     @State var range = ConstantUtils.oneMonthRange
     
     @StateObject var chartViewModel = ChartViewModel()
-    @StateObject var accountViewModel: AccountViewModel
+    @StateObject var watchViewModel: WatchViewModel
     @StateObject var financeViewModel = FinanceViewModel()
     @StateObject var incomeViewModel: IncomeViewModel
     
@@ -43,6 +43,7 @@ struct NetWorthChartView: View {
                         .onChange(of: range) { value in
                             Task.init {
                                 await incomeViewModel.getIncomeList()
+                                await chartViewModel.getChartData(id: getDefaultWatchListId(), range: range)
                                 await chartViewModel.getChartDataForNetworth(incomeViewModel: incomeViewModel)
                             }
                             let impact = UIImpactFeedbackGenerator(style: .light)
@@ -66,11 +67,18 @@ struct NetWorthChartView: View {
             .onAppear {
                 Task.init {
                     await incomeViewModel.getIncomeList()
+                    await chartViewModel.getChartData(id: getDefaultWatchListId(), range: range)
                     await chartViewModel.getChartDataForNetworth(incomeViewModel: incomeViewModel)
                 }
             }
             .navigationTitle("Net Worth Chart")
             .navigationBarTitleDisplayMode(.inline)
         }
+    }
+    
+    private func getDefaultWatchListId() -> String {
+        return watchViewModel.watchList.first(where: {
+            return $0.name.elementsEqual("All")
+        })!.id
     }
 }

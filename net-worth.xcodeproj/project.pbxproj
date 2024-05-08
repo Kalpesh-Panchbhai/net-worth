@@ -141,6 +141,7 @@
 		7D97202D2BE50F4800E5797D /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D97202C2BE50F4800E5797D /* Account.swift */; };
 		7DA46C252BE782BF00DF71C1 /* RestResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA46C242BE782BF00DF71C1 /* RestResponse.swift */; };
 		7DA46C272BE7946D00DF71C1 /* BalanceAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA46C262BE7946D00DF71C1 /* BalanceAccount.swift */; };
+		7DD742A32BEBC241005B51AF /* ChartRest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD742A22BEBC241005B51AF /* ChartRest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -277,6 +278,7 @@
 		7D97202C2BE50F4800E5797D /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		7DA46C242BE782BF00DF71C1 /* RestResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestResponse.swift; sourceTree = "<group>"; };
 		7DA46C262BE7946D00DF71C1 /* BalanceAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceAccount.swift; sourceTree = "<group>"; };
+		7DD742A22BEBC241005B51AF /* ChartRest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartRest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -393,6 +395,7 @@
 				7DA46C242BE782BF00DF71C1 /* RestResponse.swift */,
 				7D59B42C2BE249B7006F3F00 /* TypeValueRestModel.swift */,
 				7D59B42E2BE249B7006F3F00 /* UserRestModel.swift */,
+				7DD742A22BEBC241005B51AF /* ChartRest.swift */,
 			);
 			path = RestModel;
 			sourceTree = "<group>";
@@ -736,6 +739,7 @@
 				7D59B5172BE249D9006F3F00 /* AccountToWatchView.swift in Sources */,
 				7D59B45E2BE249B7006F3F00 /* IncomeCalculation.swift in Sources */,
 				7D59B4862BE249C8006F3F00 /* SettingsController.swift in Sources */,
+				7DD742A32BEBC241005B51AF /* ChartRest.swift in Sources */,
 				7D59B4782BE249C8006F3F00 /* AccountTransactionController.swift in Sources */,
 				7D59B43C2BE249B7006F3F00 /* AccountData.swift in Sources */,
 				7D59B4462BE249B7006F3F00 /* IncomeTypeBackupModel.swift in Sources */,

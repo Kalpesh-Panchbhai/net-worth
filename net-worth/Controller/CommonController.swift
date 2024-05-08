@@ -63,4 +63,22 @@ class CommonController {
         return Double(cagr).withCommas(decimalPlace: 2) + "%"
     }
     
+    public static func getStartDateForRange(range: String) -> Date {
+        var date = Date().removeTimeStamp()
+        if(range.elementsEqual(ConstantUtils.oneMonthRange)) {
+            date = Date.now.addingTimeInterval(-2592000)
+        } else if(range.elementsEqual(ConstantUtils.threeMonthRange)) {
+            date = Date.now.addingTimeInterval(-7776000)
+        } else if(range.elementsEqual(ConstantUtils.sixMonthRange)) {
+            date = Date.now.addingTimeInterval(-15552000)
+        } else if(range.elementsEqual(ConstantUtils.oneYearRange)) {
+            date = Date.now.addingTimeInterval(-31104000)
+        } else if(range.elementsEqual(ConstantUtils.twoYearRange)) {
+            date = Date.now.addingTimeInterval(-62208000)
+        } else if(range.elementsEqual(ConstantUtils.fiveYearRange)) {
+            date = Date.now.addingTimeInterval(-155520000)
+        }
+        return date.removeTimeStamp()
+    }
+    
 }
