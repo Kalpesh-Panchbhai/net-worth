@@ -78,7 +78,7 @@ class IncomeViewModel: ObservableObject {
         }
         DispatchQueue.main.async {
             self.incomeListNew = list
-            self.incomeList = returnIncomeList
+            self.incomeList = returnIncomeList.reversed()
             self.incomeListLoaded = true
         }
     }
