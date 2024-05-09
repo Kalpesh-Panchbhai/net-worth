@@ -12,6 +12,7 @@ class IncomeController {
     private var entityName = ConstantUtils.Entity.INCOME.rawValue
     
     public func getIncomeList() async -> [Income] {
+        print("Updating Income List")
         let userId = ApplicationData.shared.userId
         let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [IncomeRestModel].self)
         return response.map {

@@ -89,7 +89,6 @@ struct IncomeDetailView: View {
                 }
             } else {
                 Task.init {
-                    await incomeViewModel.getIncomeList()
                     self.income = incomeViewModel.incomeList.filter { data in
                         data.id.elementsEqual(income.id)
                     }.first!

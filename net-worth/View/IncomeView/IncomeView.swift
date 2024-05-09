@@ -372,7 +372,7 @@ struct IncomeView: View {
                         .scrollIndicators(ScrollIndicatorVisibility.hidden)
                         // MARK: List View Refreshable
                         .refreshable {
-                            updateData()
+                            updateData(refreshData: true)
                         }
                         // MARK: Chart Sheet View
                         .sheet(isPresented: $isChartViewOpen) {
@@ -472,23 +472,21 @@ struct IncomeView: View {
             }.forEach {
                 Task.init {
                     await incomeController.deleteIncome(income: deletedIncome)
-                    await incomeViewModel.getIncomeList()
-                    updateData()
-                    await incomeViewModel.getIncomeYearList()
-                    await incomeViewModel.getIncomeFinancialYearList()
+                    updateData(refreshData: true)
                 }
             }
         }
     }
     
-    private func updateData() {
+    private func updateData(refreshData: Bool = false) {
         Task.init {
+            if(refreshData) {
+                await incomeViewModel.getIncomeList()
+            }
+            await incomeViewModel.getIncomeYearList()
+            await incomeViewModel.getIncomeFinancialYearList()
             await incomeViewModel.getTotalBalance(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-        }
-        Task.init {
             await incomeViewModel.getTotalTaxPaid(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-        }
-        Task.init {
             if(groupByTag || groupByType || groupByYear || groupByFinancialYear) {
                 if(groupByTag) {
                     await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Tag")
