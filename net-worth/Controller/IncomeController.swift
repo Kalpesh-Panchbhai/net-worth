@@ -18,7 +18,7 @@ class IncomeController {
             return Income(id: $0.id,
                           amount: $0.amount,
                           taxpaid: $0.taxPaid,
-                          creditedOn: $0.creditedOn.convertFromGlideDateTimeFormat(),
+                          creditedOn: $0.creditedOn.UTCToLocalDate(),
                           currency: $0.currency,
                           type: $0.incomeType,
                           tag: $0.incomeTag)
@@ -29,7 +29,7 @@ class IncomeController {
     
     public func addIncome(income: Income) async {
         let userId = ApplicationData.shared.userId
-        let requestData = IncomeRestModel(userId: userId, amount: income.amount, taxPaid: income.taxpaid, creditedOn: income.creditedOn.convertToGlideDateTimeFormat(), currency: income.currency, incomeType: income.type, incomeTag: income.tag)
+        let requestData = IncomeRestModel(userId: userId, amount: income.amount, taxPaid: income.taxpaid, creditedOn: income.creditedOn.localToUTCString(), currency: income.currency, incomeType: income.type, incomeTag: income.tag)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(requestData)
         _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: RestResponse.self)
@@ -37,7 +37,7 @@ class IncomeController {
     
     public func updateIncome(income: Income) async {
         let userId = ApplicationData.shared.userId
-        let requestData = IncomeRestModel(id: income.id, userId: userId, amount: income.amount, taxPaid: income.taxpaid, creditedOn: income.creditedOn.convertToGlideDateTimeFormat(), currency: income.currency, incomeType: income.type, incomeTag: income.tag)
+        let requestData = IncomeRestModel(id: income.id, userId: userId, amount: income.amount, taxPaid: income.taxpaid, creditedOn: income.creditedOn.localToUTCString(), currency: income.currency, incomeType: income.type, incomeTag: income.tag)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(requestData)
         _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: RestResponse.self)

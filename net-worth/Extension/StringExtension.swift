@@ -32,15 +32,43 @@ extension String {
         return dateFormatter.date(from: self)!
     }
     
-    func convertFromGlideDateTimeFormat() -> Date {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
-        return dateFormatter.date(from: self)!
-    }
-    
     func convertStringToDateForChartData() -> Date {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         return dateFormatter.date(from: self)!
     }
+    
+    func UTCToLocalString() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+        
+        let dt = dateFormatter.date(from: self)
+        dateFormatter.timeZone = TimeZone.current
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        
+        return dateFormatter.string(from: dt ?? Date())
+    }
+    
+    func UTCToLocalDate() -> Date {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+        
+        return dateFormatter.date(from: self)!
+    }
+    
+    func localToUTCString() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        dateFormatter.calendar = NSCalendar.current
+        dateFormatter.timeZone = TimeZone.current
+        
+        let dt = dateFormatter.date(from: self)
+        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        
+        return dateFormatter.string(from: dt ?? Date())
+    }
+    
 }

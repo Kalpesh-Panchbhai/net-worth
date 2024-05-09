@@ -21,12 +21,12 @@ struct TransactionsView: View {
                     ForEach(0..<accountTransactionList.count, id: \.self) { i in
                         HStack{
                             VStack(alignment: .leading) {
-                                Text(accountTransactionList[i].timestamp.convertFromGlideDateTimeFormat().getDateAndFormat())
+                                Text(accountTransactionList[i].timestamp.UTCToLocalDate().getDateAndFormat())
                                     .font(.headline)
                                     .foregroundColor(Color.theme.primaryText)
                                     .padding(.horizontal)
                                 HStack {
-                                    Text(accountTransactionList[i].timestamp.convertFromGlideDateTimeFormat().getTimeAndFormat())
+                                    Text(accountTransactionList[i].timestamp.UTCToLocalDate().getTimeAndFormat())
                                         .font(.system(size: 12))
                                         .foregroundColor(Color.theme.secondaryText)
                                         .padding(.leading)

@@ -39,7 +39,7 @@ struct UpdateBalanceAccountView: View {
                     Button(action: {
                         var accountTransaction = AccountTransaction()
                         accountTransaction.accountId = accountId
-                        accountTransaction.timestamp = date.convertToGlideDateTimeFormat()
+                        accountTransaction.timestamp = date.localToUTCString()
                         accountTransaction.amount = Double(amount) ?? 0.0
                         accountTransaction.operation = "ADD"
                         Task.init {
@@ -58,7 +58,7 @@ struct UpdateBalanceAccountView: View {
                     Button(action: {
                         var accountTransaction = AccountTransaction()
                         accountTransaction.accountId = accountId
-                        accountTransaction.timestamp = date.convertToGlideDateTimeFormat()
+                        accountTransaction.timestamp = date.localToUTCString()
                         accountTransaction.amount = Double(amount) ?? 0.0
                         accountTransaction.operation = "UPDATE"
                         Task.init {

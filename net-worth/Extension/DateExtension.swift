@@ -30,12 +30,6 @@ extension Date {
         return dateFormatter.string(from: self)
     }
     
-    func convertToGlideDateTimeFormat() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
-        return formatter.string(from: self)
-    }
-    
     func getDateAndFormat() -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -67,5 +61,19 @@ extension Date {
     
     func endOfMonth() -> Date {
         return Calendar.current.date(byAdding: DateComponents(month: 1, day: -1), to: self.startOfMonth())!
+    }
+    
+    func localToUTCString() -> String {
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(abbreviation: "UTC")
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        return formatter.string(from: self)
+    }
+    
+    func localToLocalString() -> String {
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone.current
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        return formatter.string(from: self)
     }
 }
