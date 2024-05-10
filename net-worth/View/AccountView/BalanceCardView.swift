@@ -36,7 +36,12 @@ struct BalanceCardView: View {
             }
             balanceAccount = BalanceAccount(currentDayValue: currentDayValue, previousDayValue: previousDayValue)
         } else {
-            let accountList = accountViewModel.sectionContent(key: accountType, searchKeyword: "")
+            var accountList = [Account]()
+            if(accountType.elementsEqual("Net Worth")) {
+                accountList = accountViewModel.accountList
+            } else {
+                accountList = accountViewModel.sectionContent(key: accountType, searchKeyword: "")
+            }
             var currentDayValue = 0.0
             var previousDayValue = 0.0
             

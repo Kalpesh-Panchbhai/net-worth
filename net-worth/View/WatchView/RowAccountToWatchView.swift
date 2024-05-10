@@ -35,7 +35,9 @@ struct RowAccountToWatchView: View {
                             self.watch.accountList = self.watch.accountList.filter { item in
                                 item != account.id
                             }
-//                            watchController.addAccountToWatchList(watch: watch)
+                            Task.init {
+                                await watchController.updateWatchList(watch: watch)
+                            }
                         }
                 } else {
                     Image(systemName: ConstantUtils.notBookmarkImageName)
@@ -51,7 +53,9 @@ struct RowAccountToWatchView: View {
                                     account2.id.elementsEqual(item2)
                                 }.first!.accountName
                             })
-//                            watchController.addAccountToWatchList(watch: watch)
+                            Task.init {
+                                await watchController.updateWatchList(watch: watch)
+                            }
                         }
                 }
             }

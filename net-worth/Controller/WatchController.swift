@@ -33,8 +33,4 @@ class WatchController {
     public func deleteWatchList(watch: Watch) async {
         _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: watch.id, forClass: RestResponse.self)
     }
-    
-    public func addAccountToWatch(watch: Watch, accountId: String) async {
-        await updateWatchList(watch: watch)
-    }
 }

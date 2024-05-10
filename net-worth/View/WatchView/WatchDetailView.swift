@@ -82,170 +82,36 @@ struct WatchDetailView: View {
                 .font(.system(size: 14).bold())
         )
         .toolbar {
-            //
-                        if(accountViewModel.originalAccountList.count > 0) {
-                            ToolbarItem(content: {
-                                Button(action: {
-                                    self.isChartViewOpen.toggle()
-                                }, label: {
-                                    Image(systemName: ConstantUtils.chartImageName)
-                                        .foregroundColor(Color.theme.primaryText)
-                                        .bold()
-                                })
-                                .font(.system(size: 14).bold())
-                            })
-                        }
-            //
-            //            if(watchViewModel.watch.accountID.count > 1) {
-            //                ToolbarItem(content: {
-            //
-            //                    Menu(content: {
-            //                        Menu(content: {
-            //                            Button(action: {
-            //                                if(isAscendingEnabled) {
-            //                                    watchViewModel.watch.accountID = accountViewModel
-            //                                        .accountList
-            //                                        .sorted(by: {
-            //                                            $0.accountName < $1.accountName
-            //                                        }).map({
-            //                                            $0.id!
-            //                                        })
-            //                                    self.isAscendingByAlphabetEnabled = true
-            //                                    self.isAscendingByAmountEnabled = false
-            //                                } else {
-            //                                    watchViewModel.watch.accountID = accountViewModel
-            //                                        .accountList
-            //                                        .sorted(by: {
-            //                                            $0.accountName > $1.accountName
-            //                                        }).map({
-            //                                            $0.id!
-            //                                        })
-            //                                    self.isAscendingByAlphabetEnabled = true
-            //                                    self.isAscendingByAmountEnabled = false
-            //                                }
-            //                            }, label: {
-            //                                if(isAscendingByAlphabetEnabled) {
-            //                                    Label("Name", systemImage: "checkmark")
-            //                                } else {
-            //                                    Text("Name")
-            //                                }
-            //                            })
-            //
-            //                            Button(action: {
-            //                                if(isAscendingEnabled) {
-            //                                    watchViewModel.watch.accountID = accountViewModel
-            //                                        .accountList
-            //                                        .sorted(by: {
-            //                                            $0.currentBalance < $1.currentBalance
-            //                                        }).map({
-            //                                            $0.id!
-            //                                        })
-            //                                    self.isAscendingByAmountEnabled = true
-            //                                    self.isAscendingByAlphabetEnabled = false
-            //                                } else {
-            //                                    watchViewModel.watch.accountID = accountViewModel
-            //                                        .accountList
-            //                                        .sorted(by: {
-            //                                            $0.currentBalance > $1.currentBalance
-            //                                        }).map({
-            //                                            $0.id!
-            //                                        })
-            //                                    self.isAscendingByAmountEnabled = true
-            //                                    self.isAscendingByAlphabetEnabled = false
-            //                                }
-            //                            }, label: {
-            //                                if(isAscendingByAmountEnabled) {
-            //                                    Label("Amount", systemImage: "checkmark")
-            //                                } else {
-            //                                    Text("Amount")
-            //                                }
-            //                            })
-            //
-            //                            Divider()
-            //
-            //                            Button(action: {
-            //                                isAscendingEnabled = true
-            //                                if(isAscendingByAlphabetEnabled) {
-            //                                    watchViewModel.watch.accountID = accountViewModel
-            //                                        .accountList
-            //                                        .sorted(by: {
-            //                                            $0.accountName < $1.accountName
-            //                                        }).map({
-            //                                            $0.id!
-            //                                        })
-            //                                } else {
-            //                                    watchViewModel.watch.accountID = accountViewModel
-            //                                        .accountList
-            //                                        .sorted(by: {
-            //                                            $0.currentBalance < $1.currentBalance
-            //                                        }).map({
-            //                                            $0.id!
-            //                                        })
-            //                                }
-            //                            }, label: {
-            //                                if(isAscendingEnabled) {
-            //                                    Label("Ascending", systemImage: "checkmark")
-            //                                } else {
-            //                                    Text("Ascending")
-            //                                }
-            //                            })
-            //
-            //                            Button(action: {
-            //                                isAscendingEnabled = false
-            //                                if(isAscendingByAlphabetEnabled) {
-            //                                    watchViewModel.watch.accountID = accountViewModel
-            //                                        .accountList
-            //                                        .sorted(by: {
-            //                                            $0.accountName > $1.accountName
-            //                                        }).map({
-            //                                            $0.id!
-            //                                        })
-            //                                } else {
-            //                                    watchViewModel.watch.accountID = accountViewModel
-            //                                        .accountList
-            //                                        .sorted(by: {
-            //                                            $0.currentBalance > $1.currentBalance
-            //                                        }).map({
-            //                                            $0.id!
-            //                                        })
-            //                                }
-            //                            }, label: {
-            //                                if(!isAscendingEnabled) {
-            //                                    Label("Descending", systemImage: "checkmark")
-            //                                } else {
-            //                                    Text("Descending")
-            //                                }
-            //                            })
-            //
-            //                        }, label: {
-            //                            Label("Sort Account By", systemImage: "arrow.up.arrow.down")
-            //                            if(isAscendingByAlphabetEnabled) {
-            //                                Text("Name")
-            //                            } else {
-            //                                Text("Amount")
-            //                            }
-            //                        })
-            //
-            //                        Divider()
-            //
-            //                        Toggle(isOn: $hideInactiveAccount, label: {
-            //                            Text("Hide Inactive Accounts")
-            //                        })
-            //
-            //                        Toggle(isOn: $hideZeroBalanceAccount, label: {
-            //                            Text("Hide Zero Balance Accounts")
-            //                        })
-            //                    }, label: {
-            //                        Image(systemName: ConstantUtils.menuImageName)
-            //                            .foregroundColor(Color.theme.primaryText)
-            //                            .bold()
-            //                    })
-            //                    .font(.system(size: 14).bold())
-            //                })
-            //            }
+            if(accountViewModel.originalAccountList.count > 0) {
+                ToolbarItem(content: {
+                    Button(action: {
+                        self.isChartViewOpen.toggle()
+                    }, label: {
+                        Image(systemName: ConstantUtils.chartImageName)
+                            .foregroundColor(Color.theme.primaryText)
+                            .bold()
+                    })
+                    .font(.system(size: 14).bold())
+                })
+            }
+            if(!watch.name.elementsEqual("All")) {
+                ToolbarItem(content: {
+                    Button(action: {
+                        self.addAccountViewOpen.toggle()
+                    }, label: {
+                        Image(systemName: ConstantUtils.plusImageName)
+                            .foregroundColor(Color.theme.primaryText)
+                            .bold()
+                    })
+                    .font(.system(size: 14).bold())
+                })
+            }
         }
         .sheet(isPresented: $isChartViewOpen, content: {
             AccountWatchChartView(id: watch.id)
+        })
+        .sheet(isPresented: $addAccountViewOpen, content: {
+            AccountToWatchView(watch: watch, accountViewModel: accountViewModel)
         })
     }
     

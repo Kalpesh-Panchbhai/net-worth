@@ -52,10 +52,5 @@ struct AccountToWatchView: View {
             }
         })
         .searchable(text: $searchText)
-        .onAppear {
-            Task.init {
-                await accountViewModel.getAccountList()
-            }
-        }
     }
 }
