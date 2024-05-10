@@ -9,9 +9,9 @@ import SwiftUI
 
 struct WatchDetailView: View {
     
-    var watch: Watch
     var watchController = WatchController()
     
+    @State var watch: Watch
     @State var isNewTransactionViewOpen = false
     @State var isChartViewOpen = false
     @State var addAccountViewOpen = false
@@ -110,9 +110,33 @@ struct WatchDetailView: View {
         .sheet(isPresented: $isChartViewOpen, content: {
             AccountWatchChartView(id: watch.id)
         })
-        .sheet(isPresented: $addAccountViewOpen, content: {
-            AccountToWatchView(watch: watch, accountViewModel: accountViewModel)
+        .sheet(isPresented: $addAccountViewOpen, onDismiss: {
+            self.watch = self.watchViewModel.watchList.first(where: {
+                return $0.id.elementsEqual(watch.id)
+            })!
+            var watchSorted = self.watch
+            watchSorted.accountList.sort(by: { item1, item2 in
+                accountViewModel.accountList.filter { account1 in
+                    account1.id.elementsEqual(item1)
+                }.first!.accountName <= accountViewModel.accountList.filter { account2 in
+                    account2.id.elementsEqual(item2)
+                }.first!.accountName
+            })
+            self.watch = watchSorted
+        }, content: {
+            AccountToWatchView(watch: watch, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
         })
+        .onAppear {
+            var watchSorted = self.watch
+            watchSorted.accountList.sort(by: { item1, item2 in
+                accountViewModel.accountList.filter { account1 in
+                    account1.id.elementsEqual(item1)
+                }.first!.accountName <= accountViewModel.accountList.filter { account2 in
+                    account2.id.elementsEqual(item2)
+                }.first!.accountName
+            })
+            self.watch = watchSorted
+        }
     }
     
     func not(_ value: Binding<Bool>) -> Binding<Bool> {

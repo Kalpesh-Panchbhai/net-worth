@@ -15,7 +15,7 @@ struct RowAccountToWatchView: View {
     @Binding var watch: Watch
     @State var isAdded: Bool
     
-    @ObservedObject var accountViewModel: AccountViewModel
+    @ObservedObject var watchViewModel: WatchViewModel
     
     var body: some View {
         HStack {
@@ -37,6 +37,7 @@ struct RowAccountToWatchView: View {
                             }
                             Task.init {
                                 await watchController.updateWatchList(watch: watch)
+                                await watchViewModel.getAllWatchList()
                             }
                         }
                 } else {
@@ -46,15 +47,9 @@ struct RowAccountToWatchView: View {
                         .onTapGesture {
                             isAdded.toggle()
                             self.watch.accountList.append(account.id)
-                            self.watch.accountList.sort(by: { item1, item2 in
-                                accountViewModel.accountList.filter { account1 in
-                                    account1.id.elementsEqual(item1)
-                                }.first!.accountName <= accountViewModel.accountList.filter { account2 in
-                                    account2.id.elementsEqual(item2)
-                                }.first!.accountName
-                            })
                             Task.init {
                                 await watchController.updateWatchList(watch: watch)
+                                await watchViewModel.getAllWatchList()
                             }
                         }
                 }
