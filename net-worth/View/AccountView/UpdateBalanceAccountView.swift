@@ -40,7 +40,7 @@ struct UpdateBalanceAccountView: View {
                         var accountTransaction = AccountTransaction()
                         accountTransaction.accountId = accountId
                         accountTransaction.timestamp = date.localToUTCString()
-                        accountTransaction.amount = Double(amount) ?? 0.0
+                        accountTransaction.amount = (Double(amount) ?? 0.0) * (isPlus ? 1.0 : -1.0)
                         accountTransaction.operation = "ADD"
                         Task.init {
                             await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
@@ -59,7 +59,7 @@ struct UpdateBalanceAccountView: View {
                         var accountTransaction = AccountTransaction()
                         accountTransaction.accountId = accountId
                         accountTransaction.timestamp = date.localToUTCString()
-                        accountTransaction.amount = Double(amount) ?? 0.0
+                        accountTransaction.amount = (Double(amount) ?? 0.0) * (isPlus ? 1.0 : -1.0)
                         accountTransaction.operation = "UPDATE"
                         Task.init {
                             await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
