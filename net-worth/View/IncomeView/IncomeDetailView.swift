@@ -97,11 +97,5 @@ struct IncomeDetailView: View {
         }, content: {
             UpdateIncomeView(income: income, incomeViewModel: incomeViewModel)
         })
-        .onAppear {
-            Task.init {
-                await incomeViewModel.getIncomeTypeList()
-                await incomeViewModel.getIncomeTagList()
-            }
-        }
     }
 }

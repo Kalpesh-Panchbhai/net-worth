@@ -363,12 +363,6 @@ struct IncomeChartView: View {
         })
         .onAppear {
             Task.init {
-                await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
-                await incomeViewModel.getIncomeTagList()
-                await incomeViewModel.getIncomeTypeList()
-                await incomeViewModel.getIncomeYearList()
-                await incomeViewModel.getIncomeFinancialYearList()
-                
                 updateChartData()
             }
         }
@@ -401,7 +395,7 @@ struct IncomeChartView: View {
                 } else if(groupByFinancialYear) {
                     await incomeViewModel.getIncomeListByGroup(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear, groupBy: "Financial Year")
                 }
-                for income in incomeViewModel.incomeListByGroup {
+                for income in incomeViewModel.incomeListByGroup.reversed() {
                     if(showTotal) {
                         incomeListByGroup.updateValue(income.value.map {
                             $0.cumulativeAmount + $0.cumulativeTaxPaid

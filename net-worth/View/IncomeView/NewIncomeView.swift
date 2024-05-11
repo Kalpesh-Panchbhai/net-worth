@@ -179,8 +179,6 @@ struct NewIncomeView: View {
             }
             .onAppear {
                 Task.init {
-                    await incomeViewModel.getIncomeTypeList()
-                    await incomeViewModel.getIncomeTagList()
                     incomeTypeSelected = incomeViewModel.incomeTypeList.filter { item in
                         item.isdefault
                     }.first ?? IncomeType()

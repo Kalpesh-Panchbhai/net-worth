@@ -91,11 +91,6 @@ struct IncomeTypeView: View {
             NewIncomeTypeView(incomeViewModel: incomeViewModel)
                 .presentationDetents([.medium])
         })
-        .onAppear {
-            Task.init {
-                await incomeViewModel.getIncomeTypeList()
-            }
-        }
         .navigationTitle("Income Type")
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(

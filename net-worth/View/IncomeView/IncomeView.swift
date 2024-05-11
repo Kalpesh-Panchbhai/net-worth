@@ -374,29 +374,24 @@ struct IncomeView: View {
                         .refreshable {
                             updateData(refreshData: true)
                         }
-                        // MARK: Chart Sheet View
-                        .sheet(isPresented: $isChartViewOpen) {
-                            IncomeChartView(incomeViewModel: incomeViewModel)
-                        }
-                        .toolbar {
-                            // MARK: Chart ToolbarItem
-                            ToolbarItem(placement: .navigationBarLeading) {
-                                Button(action: {
-                                    self.isChartViewOpen.toggle()
-                                }, label: {
-                                    Image(systemName: ConstantUtils.chartImageName)
-                                        .foregroundColor(Color.theme.primaryText)
-                                        .bold()
-                                })
-                                .font(.system(size: 14).bold())
-                            }
-                        }
                         .background(Color.theme.background)
                         .scrollContentBackground(.hidden)
                     }
                 }
             }
             .toolbar {
+                // MARK: Chart ToolbarItem
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        self.isChartViewOpen.toggle()
+                    }, label: {
+                        Image(systemName: ConstantUtils.chartImageName)
+                            .foregroundColor(Color.theme.primaryText)
+                            .bold()
+                    })
+                    .font(.system(size: 14).bold())
+                }
+                
                 // MARK: New Income ToolbarItem
                 ToolbarItem {
                     Button(action: {
@@ -409,13 +404,14 @@ struct IncomeView: View {
                     .font(.system(size: 14).bold())
                 }
             }
+            // MARK: Chart Sheet View
+            .sheet(isPresented: $isChartViewOpen) {
+                IncomeChartView(incomeViewModel: incomeViewModel)
+            }
             // MARK: New Income Sheet View
             .sheet(isPresented: $isNewIncomeViewOpen, onDismiss: {
                 Task.init {
                     updateData()
-                    
-                    await incomeViewModel.getIncomeTagList()
-                    await incomeViewModel.getIncomeTypeList()
                     await incomeViewModel.getIncomeYearList()
                     await incomeViewModel.getIncomeFinancialYearList()
                 }

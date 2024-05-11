@@ -91,11 +91,6 @@ struct IncomeTagView: View {
             NewIncomeTagView(incomeViewModel: incomeViewModel)
                 .presentationDetents([.medium])
         })
-        .onAppear {
-            Task.init {
-                await incomeViewModel.getIncomeTagList()
-            }
-        }
         .navigationTitle("Income Tag")
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(
