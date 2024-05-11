@@ -39,7 +39,7 @@ struct UpdateBalanceAccountBrokerView: View {
             .toolbar {
                 ToolbarItem {
                     Button(action: {
-                        var accountTransaction = AccountTransaction()
+                        var accountTransaction = AccountTransaction(isAccountTransaction: false)
                         accountTransaction.accountId = brokerID
                         accountTransaction.timestamp = date.localToUTCString()
                         accountTransaction.amount = (Double(unit) ?? 0.0) * (isPlus ? 1.0 : -1.0)
@@ -59,7 +59,7 @@ struct UpdateBalanceAccountBrokerView: View {
                 
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        var accountTransaction = AccountTransaction()
+                        var accountTransaction = AccountTransaction(isAccountTransaction: false)
                         accountTransaction.accountId = brokerID
                         accountTransaction.timestamp = date.localToUTCString()
                         accountTransaction.amount = (Double(unit) ?? 0.0) * (isPlus ? 1.0 : -1.0)

@@ -15,18 +15,20 @@ struct AccountTransaction: Codable, Hashable {
     var amount: Double
     var paid: Bool
     var operation: String
+    var isAccountTransaction: Bool
     
     private enum CodingKeys: String, CodingKey {
-        case id, accountId, timestamp, amount, paid, operation
+        case id, accountId, timestamp, amount, paid, operation, isAccountTransaction
     }
     
-    init(id: String = "", accountId: String = "", timestamp: String = "", amount: Double = 0.0, paid: Bool = true, operation: String = "") {
+    init(id: String = "", accountId: String = "", timestamp: String = "", amount: Double = 0.0, paid: Bool = true, operation: String = "", isAccountTransaction: Bool) {
         self.id = id
         self.accountId = accountId
         self.timestamp = timestamp
         self.amount = amount
         self.paid = paid
         self.operation = operation
+        self.isAccountTransaction = isAccountTransaction
     }
     
     init(from decoder: Decoder) throws {
@@ -37,6 +39,7 @@ struct AccountTransaction: Codable, Hashable {
         amount = try container.decode(Double.self, forKey: .amount)
         paid = try container.decode(Bool.self, forKey: .paid)
         operation = try container.decode(String.self, forKey: .operation)
+        isAccountTransaction = try container.decode(Bool.self, forKey: .isAccountTransaction)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -49,5 +52,6 @@ struct AccountTransaction: Codable, Hashable {
         try container.encode(amount, forKey: .amount)
         try container.encode(paid, forKey: .paid)
         try container.encode(operation, forKey: .operation)
+        try container.encode(isAccountTransaction, forKey: .isAccountTransaction)
     }
 }

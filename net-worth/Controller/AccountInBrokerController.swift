@@ -21,7 +21,6 @@ class AccountInBrokerController {
     }
     
     public func getAccountListInBroker(brokerID: String) async -> [AccountInBroker] {
-        print("Broker all by ID")
         let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: brokerID, forClass: [AccountInBroker].self)
         return response.sorted(by: {
             return $0.name < $1.name
