@@ -13,7 +13,6 @@ struct WatchDetailView: View {
     
     @State var watch: Watch
     @State var isNewTransactionViewOpen = false
-    @State var isChartViewOpen = false
     @State var addAccountViewOpen = false
     @State var isAscendingByAlphabetEnabled = true
     @State var isAscendingByAmountEnabled = false
@@ -82,18 +81,6 @@ struct WatchDetailView: View {
                 .font(.system(size: 14).bold())
         )
         .toolbar {
-            if(accountViewModel.originalAccountList.count > 0) {
-                ToolbarItem(content: {
-                    Button(action: {
-                        self.isChartViewOpen.toggle()
-                    }, label: {
-                        Image(systemName: ConstantUtils.chartImageName)
-                            .foregroundColor(Color.theme.primaryText)
-                            .bold()
-                    })
-                    .font(.system(size: 14).bold())
-                })
-            }
             if(!watch.name.elementsEqual("All")) {
                 ToolbarItem(content: {
                     Button(action: {
@@ -107,9 +94,6 @@ struct WatchDetailView: View {
                 })
             }
         }
-        .sheet(isPresented: $isChartViewOpen, content: {
-            AccountWatchChartView(id: watch.id)
-        })
         .sheet(isPresented: $addAccountViewOpen, onDismiss: {
             self.watch = self.watchViewModel.watchList.first(where: {
                 return $0.id.elementsEqual(watch.id)
