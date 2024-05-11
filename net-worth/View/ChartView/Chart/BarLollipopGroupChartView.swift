@@ -17,7 +17,7 @@ struct BarLollipopGroupChartView: View {
     
     var body: some View {
         Chart {
-            ForEach(chartDataList.sorted(by: >), id: \.key) { key, value in
+            ForEach(chartDataList.sorted(by: <), id: \.key) { key, value in
                 BarMark(
                     x: .value("Date", key),
                     y: .value("Value", value),
