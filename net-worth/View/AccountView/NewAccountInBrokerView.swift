@@ -60,13 +60,13 @@ struct NewAccountInBrokerView: View {
             .scrollContentBackground(.hidden)
         }
         .blur(radius: CGFloat(scenePhaseBlur))
-        .onChange(of: scenePhase, perform: { value in
+        .onChange(of: scenePhase) { value in
             if(value == .active) {
                 scenePhaseBlur = 0
             } else {
                 scenePhaseBlur = 5
             }
-        })
+        }
     }
     
     private func allFieldsFilled() -> Bool {

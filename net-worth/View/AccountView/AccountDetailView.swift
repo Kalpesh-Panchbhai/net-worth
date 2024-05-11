@@ -55,10 +55,10 @@ struct AccountDetailView: View {
                     Text("Account Tab View")
                 })
                 .pickerStyle(SegmentedPickerStyle())
-                .onChange(of: tabItem, perform: { _ in
+                .onChange(of: tabItem) {
                     let impact = UIImpactFeedbackGenerator(style: .light)
                     impact.impactOccurred()
-                })
+                }
                 if(account.accountType == ConstantUtils.brokerAccountType) {
                     if(tabItem == 1) {
                         AccountBrokerView(brokerID: accountID, accountViewModel: accountViewModel)

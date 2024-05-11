@@ -46,7 +46,7 @@ struct AccountBrokerChartView: View {
                     }, label: {
                         
                     })
-                    .onChange(of: range) { value in
+                    .onChange(of: range) {
                         Task.init {
                             if(accountID.isEmpty) {
                                 await chartViewModel.getChartData(id: brokerID, range: range)

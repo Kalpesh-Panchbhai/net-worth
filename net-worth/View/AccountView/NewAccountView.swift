@@ -45,7 +45,7 @@ struct NewAccountView: View {
                         }
                     }
                     .foregroundColor(Color.theme.primaryText)
-                    .onChange(of: accountType) { _ in
+                    .onChange(of: accountType) {
                         accountName=""
                         currencySelected = SettingsController().getDefaultCurrency()
                         isPlus = true
@@ -133,13 +133,13 @@ struct NewAccountView: View {
             .scrollContentBackground(.hidden)
         }
         .blur(radius: CGFloat(scenePhaseBlur))
-        .onChange(of: scenePhase, perform: { value in
-            if(value == .active) {
+        .onChange(of: scenePhase) {
+            if($0 == .active) {
                 scenePhaseBlur = 0
             } else {
                 scenePhaseBlur = 5
             }
-        })
+        }
     }
     
     private func allFieldsFilled () -> Bool {

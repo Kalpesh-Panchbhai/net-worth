@@ -44,7 +44,7 @@ struct AccountChartView: View {
                     }, label: {
                         
                     })
-                    .onChange(of: range) { value in
+                    .onChange(of: range) {
                         Task.init {
                             await chartViewModel.getChartData(id: accountID, range: range)
                         }
