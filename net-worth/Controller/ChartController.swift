@@ -13,7 +13,9 @@ class ChartController {
     private var entityName = ConstantUtils.Entity.CHART.rawValue
     
     public func getChartData(id: String, range: String) async -> [ChartData] {
-        let chartRestListResponse =  await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: id, forClass: [ChartRest].self)
+        // TODO: Disabled Chart due to performance issue
+//        let chartRestListResponse =  await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: id, forClass: [ChartRest].self)
+        let chartRestListResponse = [ChartRest]()
         var chartDataListResponse = [ChartData]()
         
         var chartDataList = chartRestListResponse.map {
