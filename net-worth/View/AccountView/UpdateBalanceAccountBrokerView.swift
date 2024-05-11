@@ -37,11 +37,12 @@ struct UpdateBalanceAccountBrokerView: View {
                 ToolbarItem {
                     Button(action: {
                         var accountTransaction = AccountTransaction(isAccountTransaction: false)
-                        accountTransaction.accountId = brokerID
+                        accountTransaction.accountId = accountBroker.id
                         accountTransaction.amount = (Double(unit) ?? 0.0) * (isPlus ? 1.0 : -1.0)
                         accountTransaction.operation = "UPDATE"
                         Task.init {
                             await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
+                            await accountViewModel.getAccountInBrokerList(brokerID: brokerID)
                         }
                         dismiss()
                     }, label: {
@@ -55,11 +56,12 @@ struct UpdateBalanceAccountBrokerView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
                         var accountTransaction = AccountTransaction(isAccountTransaction: false)
-                        accountTransaction.accountId = brokerID
+                        accountTransaction.accountId = accountBroker.id
                         accountTransaction.amount = (Double(unit) ?? 0.0) * (isPlus ? 1.0 : -1.0)
                         accountTransaction.operation = "ADD"
                         Task.init {
                             await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
+                            await accountViewModel.getAccountInBrokerList(brokerID: brokerID)
                         }
                         dismiss()
                     }, label: {

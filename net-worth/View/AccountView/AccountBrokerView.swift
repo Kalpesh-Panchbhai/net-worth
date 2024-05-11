@@ -14,9 +14,12 @@ struct AccountBrokerView: View {
     var accountInBrokerController = AccountInBrokerController()
     
     @State var isPresentingAccountDeleteConfirm = false
-    @State var deletedAccount = AccountInBroker()
+    @State var isNewTransactionViewOpen = false
+    @State var selectedAccount = AccountInBroker()
     
     @ObservedObject var accountViewModel: AccountViewModel
+    
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         VStack {
@@ -31,10 +34,37 @@ struct AccountBrokerView: View {
                             .cornerRadius(10)
                             .contextMenu {
                                 Label(accountViewModel.accountsInBroker[i].id, systemImage: ConstantUtils.infoIconImageName)
+                                
+                                Button(action: {
+                                    self.isNewTransactionViewOpen.toggle()
+                                    self.selectedAccount = accountViewModel.accountsInBroker[i]
+                                }, label: {
+                                    Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
+                                })
+                                
+                                Button(role: .destructive, action: {
+                                    self.isPresentingAccountDeleteConfirm.toggle()
+                                    self.selectedAccount = accountViewModel.accountsInBroker[i]
+                                }, label: {
+                                    Label("Delete", systemImage: ConstantUtils.deleteImageName)
+                                })
                             }
                     }
                 }
+                .confirmationDialog("Are you sure?",
+                                    isPresented: $isPresentingAccountDeleteConfirm) {
+                    Button("Delete account " + selectedAccount.name + "?", role: .destructive) {
+                        Task.init {
+                            await accountInBrokerController.deleteAccountInBroker(accountId: selectedAccount.id)
+                            await accountViewModel.getAccountInBrokerList(brokerID: brokerID)
+                        }
+                    }
+                }
             }
+            .sheet(isPresented: $isNewTransactionViewOpen, content: {
+                UpdateBalanceAccountBrokerView(brokerID: brokerID, accountBroker: selectedAccount, accountViewModel: accountViewModel)
+                    .presentationDetents([.medium])
+            })
             .padding(8)
             .background(Color.theme.background)
         }
