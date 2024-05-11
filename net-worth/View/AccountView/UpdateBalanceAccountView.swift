@@ -13,7 +13,6 @@ struct UpdateBalanceAccountView: View {
     var accountTransactionController = AccountTransactionController()
     
     @State var amount: String = "0.0"
-    @State var date = Date()
     @State var isPlus = true
     @State var scenePhaseBlur = 0
     
@@ -28,8 +27,6 @@ struct UpdateBalanceAccountView: View {
                 Section("Transaction detail") {
                     currentBalanceField
                         .foregroundColor(Color.theme.primaryText)
-                    DatePicker("Transaction date", selection: $date, in: ...Date(), displayedComponents: [.date, .hourAndMinute])
-                        .foregroundColor(Color.theme.primaryText)
                 }
                 .listRowBackground(Color.theme.foreground)
                 .foregroundColor(Color.theme.primaryText)
@@ -39,13 +36,11 @@ struct UpdateBalanceAccountView: View {
                     Button(action: {
                         var accountTransaction = AccountTransaction(isAccountTransaction: true)
                         accountTransaction.accountId = accountId
-                        accountTransaction.timestamp = date.localToUTCString()
                         accountTransaction.amount = (Double(amount) ?? 0.0) * (isPlus ? 1.0 : -1.0)
                         accountTransaction.operation = "ADD"
                         Task.init {
                             await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
                             await accountViewModel.getAccountList()
-                            await accountViewModel.getAccountTransactionList(id: accountId)
                         }
                         dismiss()
                     }, label: {
@@ -58,13 +53,11 @@ struct UpdateBalanceAccountView: View {
                     Button(action: {
                         var accountTransaction = AccountTransaction(isAccountTransaction: true)
                         accountTransaction.accountId = accountId
-                        accountTransaction.timestamp = date.localToUTCString()
                         accountTransaction.amount = (Double(amount) ?? 0.0) * (isPlus ? 1.0 : -1.0)
                         accountTransaction.operation = "UPDATE"
                         Task.init {
                             await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
                             await accountViewModel.getAccountList()
-                            await accountViewModel.getAccountTransactionList(id: accountId)
                         }
                         dismiss()
                     }, label: {

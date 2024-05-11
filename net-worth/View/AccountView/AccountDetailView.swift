@@ -47,11 +47,10 @@ struct AccountDetailView: View {
                 Picker(selection: $tabItem, content: {
                     if(account.accountType == ConstantUtils.brokerAccountType) {
                         Text("Accounts (\(accountViewModel.accountsInBroker.count))").tag(1)
+                        Text("WatchLists (\(watchViewModel.watchListForAccount.count))").tag(2)
                     } else {
-                        Text("Transactions (\(accountViewModel.accountTransactionList.count))").tag(1)
+                        Text("WatchLists (\(watchViewModel.watchListForAccount.count))").tag(1)
                     }
-                    Text("Chart").tag(2)
-                    Text("WatchLists (\(watchViewModel.watchListForAccount.count))").tag(3)
                 }, label: {
                     Text("Account Tab View")
                 })
@@ -60,18 +59,11 @@ struct AccountDetailView: View {
                     let impact = UIImpactFeedbackGenerator(style: .light)
                     impact.impactOccurred()
                 })
-                if(tabItem == 1) {
-                    if(account.accountType == ConstantUtils.brokerAccountType) {
+                if(account.accountType == ConstantUtils.brokerAccountType) {
+                    if(tabItem == 1) {
                         AccountBrokerView(brokerID: accountID, accountViewModel: accountViewModel)
                     } else {
-                        TransactionsView(account: account, accountTransactionList: accountViewModel.accountTransactionList)
-                    }
-                } 
-                else if(tabItem == 2) {
-                    if(account.accountType == ConstantUtils.brokerAccountType) {
-                        AccountBrokerChartView(brokerID: accountID, accountID: "", symbol: "", accountViewModel: accountViewModel)
-                    } else {
-                        AccountChartView(accountID: accountID, accountViewModel: accountViewModel)
+                        AccountWatchView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
                     }
                 } else {
                     AccountWatchView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
@@ -190,8 +182,6 @@ struct AccountDetailView: View {
             Task.init {
                 if(account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
                     await accountViewModel.getAccountInBrokerList(brokerID: accountID)
-                } else {
-                    await accountViewModel.getAccountTransactionList(id: accountID)
                 }
                 await watchViewModel.getWatchListByAccount(accountID: accountID)
             }

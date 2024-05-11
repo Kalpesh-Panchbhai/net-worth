@@ -12,14 +12,11 @@ class AccountViewModel: ObservableObject {
     var watchList = [Account]()
     var originalAccountList = [Account]()
     var accountController = AccountController()
-    var accountTransactionController = AccountTransactionController()
     var accountInBrokerController = AccountInBrokerController()
     
     @Published var accountList = [Account]()
     @Published var accountListLoaded = false
     @Published var account = Account()
-    @Published var accountTransactionList = [AccountTransaction]()
-    @Published var accountLastTwoTransactionList = [AccountTransaction]()
     @Published var accountOneDayChange = Balance()
     @Published var totalBalance = Balance(currentValue: 0.0)
     @Published var grouping: Grouping = .accountType
@@ -104,22 +101,6 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func getAccountsForWatchList(accountID: [String]) async {
-        watchList = [Account]()
-//        let chartDataList = ApplicationData.shared.chartDataList
-//        for i in 0..<accountID.count {
-//            let currentBalance = chartDataList.first(where: {
-//                return $0.key.elementsEqual(accountID[i])
-//            })?.value.last?.value
-//            var account = await accountController.getAccount(id: accountID[i])
-//            account.currentBalance = currentBalance ?? 0.0
-//            watchList.append(account)
-//        }
-        DispatchQueue.main.async {
-            self.accountList = self.watchList
-        }
-    }
-    
     func getAccountList() async {
         let list = await accountController.getAccountList()
         DispatchQueue.main.async {
@@ -133,13 +114,6 @@ class AccountViewModel: ObservableObject {
         let balance = await accountController.calculateTotalBalance(accountList: accountList)
         DispatchQueue.main.async {
             self.totalBalance = balance
-        }
-    }
-    
-    func getAccountTransactionList(id: String) async {
-        let list = await accountTransactionController.getTransactionList(accountId: id)
-        DispatchQueue.main.async {
-            self.accountTransactionList = list
         }
     }
     

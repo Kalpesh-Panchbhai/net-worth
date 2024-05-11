@@ -17,11 +17,4 @@ class AccountTransactionController {
         let data = try! encoder.encode(accountTransaction)
         _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: RestResponse.self)
     }
-    
-    public func getTransactionList(accountId: String) async -> [AccountTransaction] {
-        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: accountId, forClass: [AccountTransaction].self)
-        return response.sorted(by: {
-            return $0.timestamp > $1.timestamp
-        })
-    }
 }
