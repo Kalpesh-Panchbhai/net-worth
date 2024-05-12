@@ -50,7 +50,7 @@ struct AccountWatchChartView: View {
                             }, label: {
                                 
                             })
-                            .onChange(of: range) { value in
+                            .onChange(of: range) {
                                 Task.init {
                                     await chartViewModel.getChartData(id: id, range: range)
                                 }
@@ -63,13 +63,13 @@ struct AccountWatchChartView: View {
                         .background(Color.theme.background)
                     }
                     .blur(radius: CGFloat(scenePhaseBlur))
-                    .onChange(of: scenePhase, perform: { value in
+                    .onChange(of: scenePhase) { value in
                         if(value == .active) {
                             scenePhaseBlur = 0
                         } else {
                             scenePhaseBlur = 5
                         }
-                    })
+                    }
                     .onAppear {
                         Task.init {
                             await chartViewModel.getChartData(id: id, range: range)

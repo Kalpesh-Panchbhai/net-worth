@@ -105,7 +105,7 @@ struct UpdateBalanceAccountView: View {
             Spacer()
             TextField("Amount", text: $amount)
                 .keyboardType(.decimalPad)
-                .onChange(of: amount, perform: { _ in
+                .onChange(of: amount) {
                     let filtered = amount.filter {"0123456789.".contains($0)}
                     
                     if filtered.contains(".") {
@@ -130,7 +130,7 @@ struct UpdateBalanceAccountView: View {
                     } else if !filtered.isEmpty {
                         amount = filtered
                     }
-                })
+                }
                 .multilineTextAlignment(.trailing)
         }
     }

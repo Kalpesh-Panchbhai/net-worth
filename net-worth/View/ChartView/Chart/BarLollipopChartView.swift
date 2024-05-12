@@ -108,10 +108,10 @@ struct BarLollipopChartView: View {
                         let startPositionX1 = proxy.position(forX: dateInterval.start) ?? 0
                         let startPositionY1 = proxy.position(forY: selectedElement.value) ?? 0
                         
-                        let lineX = startPositionX1 + geo[proxy.plotAreaFrame].origin.x
-                        let lineY = startPositionY1 + geo[proxy.plotAreaFrame].origin.y
+                        let lineX = startPositionX1 + geo[proxy.plotFrame!].origin.x
+                        let lineY = startPositionY1 + geo[proxy.plotFrame!].origin.y
                         
-                        let lineHeight = geo[proxy.plotAreaFrame].maxY
+                        let lineHeight = geo[proxy.plotFrame!].maxY
                         let boxWidth: CGFloat = 100
                         let boxOffset = max(0, min(geo.size.width - boxWidth, lineX - boxWidth / 2))
                         
@@ -154,7 +154,7 @@ struct BarLollipopChartView: View {
     }
     
     private func findElement(location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy) -> ChartData? {
-        let relativeXPosition = location.x - geometry[proxy.plotAreaFrame].origin.x
+        let relativeXPosition = location.x - geometry[proxy.plotFrame!].origin.x
         if let date = proxy.value(atX: relativeXPosition) as Date? {
             
             var minDistance: TimeInterval = .infinity
