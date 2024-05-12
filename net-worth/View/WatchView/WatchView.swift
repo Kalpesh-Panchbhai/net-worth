@@ -13,6 +13,8 @@ struct WatchView: View {
     
     @State var newWatchListViewOpen = false
     @State var updateWatchViewOpen = false
+    @State var isPresentingWatchDeleteConfirm = false
+    @State var selectedWatch = Watch()
     
     @StateObject var watchViewModel: WatchViewModel
     @StateObject var accountViewModel: AccountViewModel
@@ -41,23 +43,22 @@ struct WatchView: View {
                             .swipeActions(edge: .leading, content: {
                                 if(!watch.name.elementsEqual("All")) {
                                     Button("Update") {
-                                        self.updateWatchViewOpen.toggle()
+                                        self.updateWatchViewOpen = true
+                                        self.selectedWatch = watch
                                     }
                                     .tint(Color.theme.green)
                                 }
                             })
                             .sheet(isPresented: $updateWatchViewOpen) {
-                                UpdateWatchView(watch: watch, watchViewModel: watchViewModel)
+                                UpdateWatchView(watch: selectedWatch, watchViewModel: watchViewModel)
                                     .presentationDetents([.medium])
                             }
                             // MARK: Delete
                             .swipeActions(edge: .trailing, content: {
                                 if(!watch.name.elementsEqual("All")) {
                                     Button("Delete") {
-                                        Task.init {
-                                            await watchController.deleteWatchList(watch: watch)
-                                            await watchViewModel.getAllWatchList()
-                                        }
+                                        self.isPresentingWatchDeleteConfirm = true
+                                        self.selectedWatch = watch
                                     }
                                     .tint(Color.theme.red)
                                 }
@@ -69,6 +70,15 @@ struct WatchView: View {
                     .refreshable {
                         Task.init {
                             await watchViewModel.getAllWatchList()
+                        }
+                    }
+                    .confirmationDialog("Are you sure?",
+                                        isPresented: $isPresentingWatchDeleteConfirm) {
+                        Button("Delete account " + selectedWatch.name + "?", role: .destructive) {
+                            Task.init {
+                                await watchController.deleteWatchList(watch: selectedWatch)
+                                await watchViewModel.getAllWatchList()
+                            }
                         }
                     }
                 }
