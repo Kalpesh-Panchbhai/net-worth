@@ -43,8 +43,8 @@ struct WatchView: View {
                             .swipeActions(edge: .leading, content: {
                                 if(!watch.name.elementsEqual("All")) {
                                     Button("Update") {
-                                        self.updateWatchViewOpen = true
                                         self.selectedWatch = watch
+                                        self.updateWatchViewOpen = true
                                     }
                                     .tint(Color.theme.green)
                                 }
