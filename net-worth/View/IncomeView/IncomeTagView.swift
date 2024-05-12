@@ -50,8 +50,6 @@ struct IncomeTagView: View {
                             }
                         }
                         .contextMenu {
-                            Label(item.id, systemImage: ConstantUtils.infoIconImageName)
-                            
                             if(!item.isdefault) {
                                 Button(action: {
                                     Task.init {

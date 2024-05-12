@@ -341,9 +341,6 @@ struct IncomeView: View {
                                             }, label: {
                                                 IncomeRowView(income: income, groupBy: groupByTag ? "Tag" : (groupByType ? "Type" : ""), showCumulative: showCumulative, showAverage: showAverage)
                                             })
-                                            .contextMenu {
-                                                Label(income.id, systemImage: ConstantUtils.infoIconImageName)
-                                            }
                                         }
                                         .onDelete(perform: deleteIncome)
                                         .listRowBackground(Color.theme.foreground)
@@ -358,9 +355,6 @@ struct IncomeView: View {
                                     }, label: {
                                         IncomeRowView(income: income, showCumulative: showCumulative, showAverage: showAverage)
                                     })
-                                    .contextMenu {
-                                        Label(income.id, systemImage: ConstantUtils.infoIconImageName)
-                                    }
                                 }
                                 .onDelete(perform: deleteIncome)
                                 .listRowBackground(Color.theme.foreground)

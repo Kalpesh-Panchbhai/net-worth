@@ -41,9 +41,6 @@ struct AccountListView: View {
                                 AccountDetailView(accountID: account.id, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
                             }, label: {
                                 AccountRowView(account: account, fromWatchView: accountType.elementsEqual("Inactive Account"))
-                                    .contextMenu {
-                                        Label(account.id, systemImage: ConstantUtils.infoIconImageName)
-                                    }
                             })
                         }
                         .padding(10)

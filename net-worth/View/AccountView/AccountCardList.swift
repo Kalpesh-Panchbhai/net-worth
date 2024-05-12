@@ -74,9 +74,6 @@ struct AccountCardList: View {
                                                                         .toolbarRole(.editor)
                                                                 }) {
                                                                     AccountCardView(account: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]))
-                                                                        .contextMenu {
-                                                                            Label(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i].id, systemImage: ConstantUtils.infoIconImageName)
-                                                                        }
                                                                 }
                                                             }
                                                         }

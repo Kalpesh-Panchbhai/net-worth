@@ -37,9 +37,6 @@ struct WatchView: View {
                                             .font(.caption.italic())
                                     )
                             })
-                            .contextMenu {
-                                Label(watch.id, systemImage: ConstantUtils.infoIconImageName)
-                            }
                             // MARK: Update
                             .swipeActions(edge: .leading, content: {
                                 if(!watch.name.elementsEqual("All")) {

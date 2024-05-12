@@ -33,8 +33,6 @@ struct AccountBrokerView: View {
                             .background(Color.theme.foreground)
                             .cornerRadius(10)
                             .contextMenu {
-                                Label(accountViewModel.accountsInBroker[i].id, systemImage: ConstantUtils.infoIconImageName)
-                                
                                 Button(action: {
                                     self.isNewTransactionViewOpen.toggle()
                                     self.selectedAccount = accountViewModel.accountsInBroker[i]

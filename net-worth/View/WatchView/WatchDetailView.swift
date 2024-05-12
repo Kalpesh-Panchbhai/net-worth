@@ -54,9 +54,6 @@ struct WatchDetailView: View {
                                             .toolbarRole(.editor)
                                     }, label: {
                                         AccountRowView(account: getAccountForWatchListAccount(accountId: accountID), fromWatchView: true)
-                                            .contextMenu {
-                                                Label(accountID, systemImage: ConstantUtils.infoIconImageName)
-                                            }
                                     })
                                 }
                                 .padding(10)
