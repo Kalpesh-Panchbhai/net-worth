@@ -23,6 +23,7 @@ struct AccountCardList: View {
     
     @StateObject var accountViewModel: AccountViewModel
     @ObservedObject var watchViewModel: WatchViewModel
+    @ObservedObject var incomeViewModel: IncomeViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -40,6 +41,9 @@ struct AccountCardList: View {
                             VStack {
                                 BalanceCardView(accountType: "Net Worth", isWatchListCardView: false, watchList: Watch(), accountViewModel: accountViewModel)
                                     .frame(width: 360, height: 70)
+                                    .cornerRadius(10)
+                                NetworthCardView(accountViewModel: accountViewModel, incomeViewModel: incomeViewModel)
+                                    .frame(width: 360, height: 30)
                                     .cornerRadius(10)
                             }
                             Divider()

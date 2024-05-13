@@ -34,7 +34,7 @@ struct MainScreenView: View {
             // MARK: Tab View
             ZStack {
                 TabView {
-                    AccountCardList(accountViewModel: accountViewModel, watchViewModel: watchViewModel)
+                    AccountCardList(accountViewModel: accountViewModel, watchViewModel: watchViewModel, incomeViewModel: incomeViewModel)
                         .tabItem {
                             Label("Accounts", systemImage: "star.circle")
                         }
@@ -79,12 +79,12 @@ struct MainScreenView: View {
             networkUnavailable = !networkMonitor.isConnected
             Task.init {
                 await ApplicationData.loadData()
-                await accountViewModel.getAccountList()
-                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                await watchViewModel.getAllWatchList()
                 await incomeViewModel.getIncomeList()
                 await incomeViewModel.getTotalBalance()
                 await incomeViewModel.getTotalTaxPaid()
+                await accountViewModel.getAccountList()
+                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+                await watchViewModel.getAllWatchList()
                 await incomeViewModel.getIncomeTypeList()
                 await incomeViewModel.getIncomeTagList()
                 await incomeViewModel.getIncomeYearList()
