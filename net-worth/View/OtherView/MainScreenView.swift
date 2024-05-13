@@ -34,30 +34,30 @@ struct MainScreenView: View {
             // MARK: Tab View
             ZStack {
                 TabView {
-                    AccountCardList(accountViewModel: accountViewModel, watchViewModel: watchViewModel, incomeViewModel: incomeViewModel)
+                    AccountCardList()
                         .tabItem {
                             Label("Accounts", systemImage: "star.circle")
                         }
                         .badge(accountViewModel.accountList.count)
                     
-                    WatchView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
+                    WatchView()
                         .tabItem {
                             Label("Watch Lists", systemImage: ConstantUtils.notBookmarkImageName)
                         }
                         .badge(watchViewModel.watchList.count)
                     
-                    IncomeView(incomeViewModel: incomeViewModel)
+                    IncomeView()
                         .tabItem {
                             Label("Incomes", systemImage: "indianrupeesign.circle")
                         }
                         .badge(getTotalIncomeCount())
                     
-                    ChartView(watchViewModel: watchViewModel, accountViewModel: accountViewModel, incomeViewModel: incomeViewModel)
+                    ChartView()
                         .tabItem {
                             Label("Charts", systemImage: "chart.line.uptrend.xyaxis.circle")
                         }
                     
-                    SettingsView(isAuthenticationRequired: SettingsController().isAuthenticationRequired(), currenySelected: SettingsController().getDefaultCurrency(), incomeViewModel: incomeViewModel)
+                    SettingsView(isAuthenticationRequired: SettingsController().isAuthenticationRequired(), currenySelected: SettingsController().getDefaultCurrency())
                         .tabItem {
                             Label("Settings", systemImage: "gearshape")
                         }
@@ -91,5 +91,8 @@ struct MainScreenView: View {
                 await incomeViewModel.getIncomeFinancialYearList()
             }
         }
+        .environmentObject(accountViewModel)
+        .environmentObject(watchViewModel)
+        .environmentObject(incomeViewModel)
     }
 }

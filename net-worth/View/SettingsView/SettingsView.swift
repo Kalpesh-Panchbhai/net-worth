@@ -28,7 +28,7 @@ struct SettingsView: View {
     @State var defaultIncomeType = IncomeType()
     @State var defaultIncomeTag = IncomeTag()
     
-    @StateObject var incomeViewModel: IncomeViewModel
+    @EnvironmentObject var incomeViewModel: IncomeViewModel
     
     var body: some View {
         NavigationView(){
@@ -72,7 +72,7 @@ struct SettingsView: View {
                     
                     // MARK: Income Type View
                     NavigationLink(destination: {
-                        IncomeTypeView(incomeViewModel: incomeViewModel)
+                        IncomeTypeView()
                     }, label: {
                         Label(title: {
                             HStack {
@@ -89,7 +89,7 @@ struct SettingsView: View {
                     
                     // MARK: Income Tag View
                     NavigationLink(destination: {
-                        IncomeTagView(incomeViewModel: incomeViewModel)
+                        IncomeTagView()
                     }, label: {
                         Label(title: {
                             HStack {

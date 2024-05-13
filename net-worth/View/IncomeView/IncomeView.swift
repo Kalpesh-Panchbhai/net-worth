@@ -29,7 +29,7 @@ struct IncomeView: View {
     @State var showCumulative = false
     @State var showAverage = false
     
-    @ObservedObject var incomeViewModel: IncomeViewModel
+    @EnvironmentObject var incomeViewModel: IncomeViewModel
     
     var body: some View {
         NavigationView {
@@ -336,7 +336,7 @@ struct IncomeView: View {
                                     Section(key) {
                                         ForEach(value, id: \.self) { income in
                                             NavigationLink(destination: {
-                                                IncomeDetailView(income: income, incomeViewModel: incomeViewModel)
+                                                IncomeDetailView(income: income)
                                                     .toolbarRole(.editor)
                                             }, label: {
                                                 IncomeRowView(income: income, groupBy: groupByTag ? "Tag" : (groupByType ? "Type" : ""), showCumulative: showCumulative, showAverage: showAverage)
@@ -350,7 +350,7 @@ struct IncomeView: View {
                             } else {
                                 ForEach(incomeViewModel.incomeList, id: \.self) { income in
                                     NavigationLink(destination: {
-                                        IncomeDetailView(income: income, incomeViewModel: incomeViewModel)
+                                        IncomeDetailView(income: income)
                                             .toolbarRole(.editor)
                                     }, label: {
                                         IncomeRowView(income: income, showCumulative: showCumulative, showAverage: showAverage)
@@ -400,7 +400,7 @@ struct IncomeView: View {
             }
             // MARK: Chart Sheet View
             .sheet(isPresented: $isChartViewOpen) {
-                IncomeChartView(incomeViewModel: incomeViewModel)
+                IncomeChartView()
             }
             // MARK: New Income Sheet View
             .sheet(isPresented: $isNewIncomeViewOpen, onDismiss: {
@@ -410,7 +410,7 @@ struct IncomeView: View {
                     await incomeViewModel.getIncomeFinancialYearList()
                 }
             }, content: {
-                NewIncomeView(incomeViewModel: incomeViewModel)
+                NewIncomeView()
                     .presentationDetents([.large])
             })
             .navigationTitle("Incomes")

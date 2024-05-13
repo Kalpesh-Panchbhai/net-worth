@@ -12,7 +12,7 @@ struct WatchViewRow: View {
     var watch: Watch
     @State var balance = BalanceAccount()
     
-    @StateObject var accountViewModel: AccountViewModel
+    @EnvironmentObject var accountViewModel: AccountViewModel
     
     var body: some View {
         HStack {

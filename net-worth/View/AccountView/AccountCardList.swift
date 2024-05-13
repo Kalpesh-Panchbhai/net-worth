@@ -21,9 +21,9 @@ struct AccountCardList: View {
     @State var hideInactiveAccount = true
     @State var hideZeroBalanceAccount = true
     
-    @StateObject var accountViewModel: AccountViewModel
-    @ObservedObject var watchViewModel: WatchViewModel
-    @ObservedObject var incomeViewModel: IncomeViewModel
+    @EnvironmentObject var accountViewModel: AccountViewModel
+    @EnvironmentObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var incomeViewModel: IncomeViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -39,10 +39,10 @@ struct AccountCardList: View {
                         Color.theme.background.ignoresSafeArea()
                         VStack {
                             VStack {
-                                BalanceCardView(accountType: "Net Worth", isWatchListCardView: false, watchList: Watch(), accountViewModel: accountViewModel)
+                                BalanceCardView(accountType: "Net Worth", isWatchListCardView: false, watchList: Watch())
                                     .frame(width: 360, height: 70)
                                     .cornerRadius(10)
-                                NetworthCardView(accountViewModel: accountViewModel, incomeViewModel: incomeViewModel)
+                                NetworthCardView()
                                     .frame(width: 360, height: 30)
                                     .cornerRadius(10)
                             }
@@ -60,7 +60,7 @@ struct AccountCardList: View {
                                                         .font(.system(size: 15))
                                                     Spacer()
                                                     NavigationLink(destination: {
-                                                        AccountListView(accountType: accountType, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
+                                                        AccountListView(accountType: accountType)
                                                             .toolbarRole(.editor)
                                                     }, label: {
                                                         Text("See all")
@@ -74,7 +74,7 @@ struct AccountCardList: View {
                                                         ForEach(0..<((accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 5) ? 5 : accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count), id: \.self) { i in
                                                             if((hideZeroBalanceAccount && isAccountBalanceIsZero(id: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id)) || !hideZeroBalanceAccount) {
                                                                 NavigationLink(destination: {
-                                                                    AccountDetailView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id, accountViewModel:  accountViewModel, watchViewModel: watchViewModel)
+                                                                    AccountDetailView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id)
                                                                         .toolbarRole(.editor)
                                                                 }) {
                                                                     AccountCardView(account: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]))
@@ -137,7 +137,7 @@ struct AccountCardList: View {
         }
         .sheet(isPresented: $isNewAccountAccountViewOpen, onDismiss: {
         }, content: {
-            NewAccountView(accountType: ConstantUtils.noneAccountType, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
+            NewAccountView(accountType: ConstantUtils.noneAccountType)
         })
     }
     

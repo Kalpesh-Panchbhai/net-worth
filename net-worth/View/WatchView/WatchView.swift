@@ -16,8 +16,8 @@ struct WatchView: View {
     @State var isPresentingWatchDeleteConfirm = false
     @State var selectedWatch = Watch()
     
-    @StateObject var watchViewModel: WatchViewModel
-    @StateObject var accountViewModel: AccountViewModel
+    @EnvironmentObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var accountViewModel: AccountViewModel
     
     var body: some View {
         NavigationView {
@@ -29,10 +29,10 @@ struct WatchView: View {
                     List {
                         ForEach(watchViewModel.watchList, id: \.self) { watch in
                             NavigationLink(destination: {
-                                WatchDetailView(watch: watch, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
+                                WatchDetailView(watch: watch)
                                     .toolbarRole(.editor)
                             }, label: {
-                                WatchViewRow(watch: watch, accountViewModel: accountViewModel)
+                                WatchViewRow(watch: watch)
                                     .badge(
                                         Text("\(watch.accountList.count)")
                                             .foregroundColor(Color.theme.secondaryText)
@@ -50,7 +50,7 @@ struct WatchView: View {
                                 }
                             })
                             .sheet(isPresented: $updateWatchViewOpen) {
-                                UpdateWatchView(watch: selectedWatch, watchViewModel: watchViewModel)
+                                UpdateWatchView(watch: selectedWatch)
                                     .presentationDetents([.medium])
                             }
                             // MARK: Delete
@@ -98,7 +98,7 @@ struct WatchView: View {
             }
             // MARK: New Watch Sheet View
             .sheet(isPresented: $newWatchListViewOpen) {
-                NewWatchView(watchViewModel: watchViewModel)
+                NewWatchView()
                     .presentationDetents([.medium])
             }
             // MARK: Update Watch Sheet View

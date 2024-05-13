@@ -16,7 +16,7 @@ struct NewIncomeTagView: View {
     @State var tagName = ""
     @State var isDefault = false
     
-    @StateObject var incomeViewModel : IncomeViewModel
+    @EnvironmentObject var incomeViewModel : IncomeViewModel
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.scenePhase) var scenePhase

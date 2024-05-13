@@ -15,7 +15,7 @@ struct RowAccountToWatchView: View {
     @Binding var watch: Watch
     @State var isAdded: Bool
     
-    @ObservedObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var watchViewModel: WatchViewModel
     
     var body: some View {
         HStack {

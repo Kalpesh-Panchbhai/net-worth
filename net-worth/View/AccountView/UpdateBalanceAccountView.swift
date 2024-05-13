@@ -16,7 +16,7 @@ struct UpdateBalanceAccountView: View {
     @State var isPlus = true
     @State var scenePhaseBlur = 0
     
-    @ObservedObject var accountViewModel: AccountViewModel
+    @EnvironmentObject var accountViewModel: AccountViewModel
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.scenePhase) var scenePhase

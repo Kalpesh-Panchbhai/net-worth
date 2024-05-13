@@ -20,19 +20,14 @@ struct AccountDetailView: View {
     @State var showZeroAlert = false
     
     @State var accountID: String
-    @State var account: Account
-    @ObservedObject var accountViewModel: AccountViewModel
-    @ObservedObject var watchViewModel: WatchViewModel
+    @State var account = Account()
+    @EnvironmentObject var accountViewModel: AccountViewModel
+    @EnvironmentObject var watchViewModel: WatchViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
-    init(accountID: String, accountViewModel: AccountViewModel, watchViewModel: WatchViewModel) {
+    init(accountID: String) {
         self.accountID = accountID
-        self.account = accountViewModel.accountList.filter {
-            return $0.id.elementsEqual(accountID)
-        }.first ?? Account()
-        self.accountViewModel = accountViewModel
-        self.watchViewModel = watchViewModel
         
         UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.theme.primaryText)
         UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor(Color.theme.background)], for: .selected)
@@ -61,12 +56,12 @@ struct AccountDetailView: View {
                 }
                 if(account.accountType == ConstantUtils.brokerAccountType) {
                     if(tabItem == 1) {
-                        AccountBrokerView(brokerID: accountID, accountViewModel: accountViewModel)
+                        AccountBrokerView(brokerID: accountID)
                     } else {
-                        AccountWatchView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
+                        AccountWatchView()
                     }
                 } else {
-                    AccountWatchView(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
+                    AccountWatchView()
                 }
             }
             .alert(isPresented: $showZeroAlert) {
@@ -180,6 +175,9 @@ struct AccountDetailView: View {
         }
         .onAppear {
             Task.init {
+                self.account = accountViewModel.accountList.filter {
+                    return $0.id.elementsEqual(accountID)
+                }.first ?? Account()
                 if(account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
                     await accountViewModel.getAccountInBrokerList(brokerID: accountID)
                 }
@@ -191,20 +189,20 @@ struct AccountDetailView: View {
                 return $0.id.elementsEqual(accountID)
             }.first ?? Account()
         }, content: {
-            UpdateBalanceAccountView(accountId: accountID, accountViewModel: accountViewModel)
+            UpdateBalanceAccountView(accountId: accountID)
                 .presentationDetents([.medium])
         })
         .sheet(isPresented: $isNewAccountInBrokerViewOpen, onDismiss: {
             
         }, content: {
-            NewAccountInBrokerView(brokerAccountID: accountID, accountViewModel: accountViewModel)
+            NewAccountInBrokerView(brokerAccountID: accountID)
         })
         .sheet(isPresented: $showAddWatchListView, onDismiss: {
             Task.init {
                 await watchViewModel.getWatchListByAccount(accountID: accountID)
             }
         }, content: {
-            WatchToAccountView(accountID: accountID, watchViewModel: watchViewModel)
+            WatchToAccountView(accountID: accountID)
         })
         .background(Color.theme.background)
     }

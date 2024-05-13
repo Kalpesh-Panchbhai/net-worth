@@ -13,7 +13,7 @@ struct IncomeDetailView: View {
     
     @State var modifyViewOpen = false
     
-    @ObservedObject var incomeViewModel: IncomeViewModel
+    @EnvironmentObject var incomeViewModel: IncomeViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -95,7 +95,7 @@ struct IncomeDetailView: View {
                 }
             }
         }, content: {
-            UpdateIncomeView(income: income, incomeViewModel: incomeViewModel)
+            UpdateIncomeView(income: income)
         })
     }
 }
