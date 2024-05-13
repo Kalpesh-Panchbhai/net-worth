@@ -46,7 +46,6 @@
 		7D59B4762BE249C8006F3F00 /* AccountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4622BE249C8006F3F00 /* AccountController.swift */; };
 		7D59B4772BE249C8006F3F00 /* AccountInBrokerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4632BE249C8006F3F00 /* AccountInBrokerController.swift */; };
 		7D59B4782BE249C8006F3F00 /* AccountTransactionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4642BE249C8006F3F00 /* AccountTransactionController.swift */; };
-		7D59B47A2BE249C8006F3F00 /* ChartController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4662BE249C8006F3F00 /* ChartController.swift */; };
 		7D59B47C2BE249C8006F3F00 /* CommonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4682BE249C8006F3F00 /* CommonController.swift */; };
 		7D59B47D2BE249C8006F3F00 /* FinanceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4692BE249C8006F3F00 /* FinanceController.swift */; };
 		7D59B47E2BE249C8006F3F00 /* ImportExportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B46A2BE249C8006F3F00 /* ImportExportController.swift */; };
@@ -64,12 +63,10 @@
 		7D59B4932BE249D0006F3F00 /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B48C2BE249D0006F3F00 /* DoubleExtension.swift */; };
 		7D59B4942BE249D0006F3F00 /* NavigationViewGestureExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B48D2BE249D0006F3F00 /* NavigationViewGestureExtension.swift */; };
 		7D59B4952BE249D0006F3F00 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B48E2BE249D0006F3F00 /* StringExtension.swift */; };
-		7D59B4DF2BE249D9006F3F00 /* AccountBrokerChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4962BE249D9006F3F00 /* AccountBrokerChartView.swift */; };
 		7D59B4E22BE249D9006F3F00 /* AccountBrokerRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4992BE249D9006F3F00 /* AccountBrokerRowView.swift */; };
 		7D59B4E32BE249D9006F3F00 /* AccountBrokerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B49A2BE249D9006F3F00 /* AccountBrokerView.swift */; };
 		7D59B4E42BE249D9006F3F00 /* AccountCardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B49B2BE249D9006F3F00 /* AccountCardList.swift */; };
 		7D59B4E52BE249D9006F3F00 /* AccountCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B49C2BE249D9006F3F00 /* AccountCardView.swift */; };
-		7D59B4E62BE249D9006F3F00 /* AccountChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B49D2BE249D9006F3F00 /* AccountChartView.swift */; };
 		7D59B4E72BE249D9006F3F00 /* AccountDetailCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B49E2BE249D9006F3F00 /* AccountDetailCardView.swift */; };
 		7D59B4E82BE249D9006F3F00 /* AccountDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B49F2BE249D9006F3F00 /* AccountDetailView.swift */; };
 		7D59B4E92BE249D9006F3F00 /* AccountListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4A02BE249D9006F3F00 /* AccountListView.swift */; };
@@ -85,10 +82,8 @@
 		7D59B4F42BE249D9006F3F00 /* BarLollipopChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4AC2BE249D9006F3F00 /* BarLollipopChartView.swift */; };
 		7D59B4F52BE249D9006F3F00 /* BarLollipopGroupChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4AD2BE249D9006F3F00 /* BarLollipopGroupChartView.swift */; };
 		7D59B4F62BE249D9006F3F00 /* SingleLineLollipopChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4AE2BE249D9006F3F00 /* SingleLineLollipopChartView.swift */; };
-		7D59B4F72BE249D9006F3F00 /* AccountWatchChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4B02BE249D9006F3F00 /* AccountWatchChartView.swift */; };
 		7D59B4F82BE249D9006F3F00 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4B12BE249D9006F3F00 /* ChartView.swift */; };
 		7D59B4F92BE249D9006F3F00 /* IncomeChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4B22BE249D9006F3F00 /* IncomeChartView.swift */; };
-		7D59B4FA2BE249D9006F3F00 /* NetWorthChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4B32BE249D9006F3F00 /* NetWorthChartView.swift */; };
 		7D59B4FB2BE249D9006F3F00 /* PieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4B42BE249D9006F3F00 /* PieChartView.swift */; };
 		7D59B4FC2BE249D9006F3F00 /* PieSliceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4B52BE249D9006F3F00 /* PieSliceView.swift */; };
 		7D59B4FD2BE249D9006F3F00 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4B72BE249D9006F3F00 /* EmptyView.swift */; };
@@ -124,7 +119,6 @@
 		7D59B51C2BE249D9006F3F00 /* WatchRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4DB2BE249D9006F3F00 /* WatchRowView.swift */; };
 		7D59B51D2BE249D9006F3F00 /* WatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4DC2BE249D9006F3F00 /* WatchView.swift */; };
 		7D59B5282BE249E0006F3F00 /* AccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B51E2BE249E0006F3F00 /* AccountViewModel.swift */; };
-		7D59B5292BE249E0006F3F00 /* ChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B51F2BE249E0006F3F00 /* ChartViewModel.swift */; };
 		7D59B52A2BE249E0006F3F00 /* FileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B5202BE249E0006F3F00 /* FileViewModel.swift */; };
 		7D59B52B2BE249E0006F3F00 /* FinanceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B5212BE249E0006F3F00 /* FinanceViewModel.swift */; };
 		7D59B52C2BE249E0006F3F00 /* ImportExportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B5222BE249E0006F3F00 /* ImportExportViewModel.swift */; };
@@ -185,7 +179,6 @@
 		7D59B4622BE249C8006F3F00 /* AccountController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountController.swift; sourceTree = "<group>"; };
 		7D59B4632BE249C8006F3F00 /* AccountInBrokerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountInBrokerController.swift; sourceTree = "<group>"; };
 		7D59B4642BE249C8006F3F00 /* AccountTransactionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountTransactionController.swift; sourceTree = "<group>"; };
-		7D59B4662BE249C8006F3F00 /* ChartController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartController.swift; sourceTree = "<group>"; };
 		7D59B4682BE249C8006F3F00 /* CommonController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonController.swift; sourceTree = "<group>"; };
 		7D59B4692BE249C8006F3F00 /* FinanceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinanceController.swift; sourceTree = "<group>"; };
 		7D59B46A2BE249C8006F3F00 /* ImportExportController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportExportController.swift; sourceTree = "<group>"; };
@@ -203,12 +196,10 @@
 		7D59B48C2BE249D0006F3F00 /* DoubleExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
 		7D59B48D2BE249D0006F3F00 /* NavigationViewGestureExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationViewGestureExtension.swift; sourceTree = "<group>"; };
 		7D59B48E2BE249D0006F3F00 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
-		7D59B4962BE249D9006F3F00 /* AccountBrokerChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountBrokerChartView.swift; sourceTree = "<group>"; };
 		7D59B4992BE249D9006F3F00 /* AccountBrokerRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountBrokerRowView.swift; sourceTree = "<group>"; };
 		7D59B49A2BE249D9006F3F00 /* AccountBrokerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountBrokerView.swift; sourceTree = "<group>"; };
 		7D59B49B2BE249D9006F3F00 /* AccountCardList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountCardList.swift; sourceTree = "<group>"; };
 		7D59B49C2BE249D9006F3F00 /* AccountCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountCardView.swift; sourceTree = "<group>"; };
-		7D59B49D2BE249D9006F3F00 /* AccountChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountChartView.swift; sourceTree = "<group>"; };
 		7D59B49E2BE249D9006F3F00 /* AccountDetailCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountDetailCardView.swift; sourceTree = "<group>"; };
 		7D59B49F2BE249D9006F3F00 /* AccountDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountDetailView.swift; sourceTree = "<group>"; };
 		7D59B4A02BE249D9006F3F00 /* AccountListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountListView.swift; sourceTree = "<group>"; };
@@ -224,10 +215,8 @@
 		7D59B4AC2BE249D9006F3F00 /* BarLollipopChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BarLollipopChartView.swift; sourceTree = "<group>"; };
 		7D59B4AD2BE249D9006F3F00 /* BarLollipopGroupChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BarLollipopGroupChartView.swift; sourceTree = "<group>"; };
 		7D59B4AE2BE249D9006F3F00 /* SingleLineLollipopChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleLineLollipopChartView.swift; sourceTree = "<group>"; };
-		7D59B4B02BE249D9006F3F00 /* AccountWatchChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountWatchChartView.swift; sourceTree = "<group>"; };
 		7D59B4B12BE249D9006F3F00 /* ChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		7D59B4B22BE249D9006F3F00 /* IncomeChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeChartView.swift; sourceTree = "<group>"; };
-		7D59B4B32BE249D9006F3F00 /* NetWorthChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetWorthChartView.swift; sourceTree = "<group>"; };
 		7D59B4B42BE249D9006F3F00 /* PieChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PieChartView.swift; sourceTree = "<group>"; };
 		7D59B4B52BE249D9006F3F00 /* PieSliceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PieSliceView.swift; sourceTree = "<group>"; };
 		7D59B4B72BE249D9006F3F00 /* EmptyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
@@ -263,7 +252,6 @@
 		7D59B4DB2BE249D9006F3F00 /* WatchRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchRowView.swift; sourceTree = "<group>"; };
 		7D59B4DC2BE249D9006F3F00 /* WatchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchView.swift; sourceTree = "<group>"; };
 		7D59B51E2BE249E0006F3F00 /* AccountViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewModel.swift; sourceTree = "<group>"; };
-		7D59B51F2BE249E0006F3F00 /* ChartViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartViewModel.swift; sourceTree = "<group>"; };
 		7D59B5202BE249E0006F3F00 /* FileViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileViewModel.swift; sourceTree = "<group>"; };
 		7D59B5212BE249E0006F3F00 /* FinanceViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinanceViewModel.swift; sourceTree = "<group>"; };
 		7D59B5222BE249E0006F3F00 /* ImportExportViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportExportViewModel.swift; sourceTree = "<group>"; };
@@ -434,7 +422,6 @@
 				7D59B4622BE249C8006F3F00 /* AccountController.swift */,
 				7D59B4632BE249C8006F3F00 /* AccountInBrokerController.swift */,
 				7D59B4642BE249C8006F3F00 /* AccountTransactionController.swift */,
-				7D59B4662BE249C8006F3F00 /* ChartController.swift */,
 				7D59B4682BE249C8006F3F00 /* CommonController.swift */,
 				7D59B4692BE249C8006F3F00 /* FinanceController.swift */,
 				7D59B46A2BE249C8006F3F00 /* ImportExportController.swift */,
@@ -466,12 +453,10 @@
 		7D59B4AB2BE249D9006F3F00 /* AccountView */ = {
 			isa = PBXGroup;
 			children = (
-				7D59B4962BE249D9006F3F00 /* AccountBrokerChartView.swift */,
 				7D59B4992BE249D9006F3F00 /* AccountBrokerRowView.swift */,
 				7D59B49A2BE249D9006F3F00 /* AccountBrokerView.swift */,
 				7D59B49B2BE249D9006F3F00 /* AccountCardList.swift */,
 				7D59B49C2BE249D9006F3F00 /* AccountCardView.swift */,
-				7D59B49D2BE249D9006F3F00 /* AccountChartView.swift */,
 				7D59B49E2BE249D9006F3F00 /* AccountDetailCardView.swift */,
 				7D59B49F2BE249D9006F3F00 /* AccountDetailView.swift */,
 				7D59B4A02BE249D9006F3F00 /* AccountListView.swift */,
@@ -503,10 +488,8 @@
 			isa = PBXGroup;
 			children = (
 				7D59B4AF2BE249D9006F3F00 /* Chart */,
-				7D59B4B02BE249D9006F3F00 /* AccountWatchChartView.swift */,
 				7D59B4B12BE249D9006F3F00 /* ChartView.swift */,
 				7D59B4B22BE249D9006F3F00 /* IncomeChartView.swift */,
-				7D59B4B32BE249D9006F3F00 /* NetWorthChartView.swift */,
 				7D59B4B42BE249D9006F3F00 /* PieChartView.swift */,
 				7D59B4B52BE249D9006F3F00 /* PieSliceView.swift */,
 			);
@@ -606,7 +589,6 @@
 			isa = PBXGroup;
 			children = (
 				7D59B51E2BE249E0006F3F00 /* AccountViewModel.swift */,
-				7D59B51F2BE249E0006F3F00 /* ChartViewModel.swift */,
 				7D59B5202BE249E0006F3F00 /* FileViewModel.swift */,
 				7D59B5212BE249E0006F3F00 /* FinanceViewModel.swift */,
 				7D59B5222BE249E0006F3F00 /* ImportExportViewModel.swift */,
@@ -717,11 +699,9 @@
 				7D59B4F32BE249D9006F3F00 /* WatchToAccountView.swift in Sources */,
 				7D59B4FC2BE249D9006F3F00 /* PieSliceView.swift in Sources */,
 				7D59B51B2BE249D9006F3F00 /* WatchDetailView.swift in Sources */,
-				7D59B4DF2BE249D9006F3F00 /* AccountBrokerChartView.swift in Sources */,
 				7D59B5192BE249D9006F3F00 /* RowAccountToWatchView.swift in Sources */,
 				7D59B4F92BE249D9006F3F00 /* IncomeChartView.swift in Sources */,
 				7D59B50E2BE249D9006F3F00 /* CurrencyPicker.swift in Sources */,
-				7D59B5292BE249E0006F3F00 /* ChartViewModel.swift in Sources */,
 				7D59B50A2BE249D9006F3F00 /* LoginHeader.swift in Sources */,
 				7D59B4822BE249C8006F3F00 /* NetworkMonitor.swift in Sources */,
 				7D59B5002BE249D9006F3F00 /* IncomeRowView.swift in Sources */,
@@ -741,10 +721,8 @@
 				7D59B43C2BE249B7006F3F00 /* AccountData.swift in Sources */,
 				7D59B4462BE249B7006F3F00 /* IncomeTypeBackupModel.swift in Sources */,
 				7D59B4E92BE249D9006F3F00 /* AccountListView.swift in Sources */,
-				7D59B47A2BE249C8006F3F00 /* ChartController.swift in Sources */,
 				7D59B5102BE249D9006F3F00 /* DefaultCurrencyPicker.swift in Sources */,
 				7D59B52C2BE249E0006F3F00 /* ImportExportViewModel.swift in Sources */,
-				7D59B4E62BE249D9006F3F00 /* AccountChartView.swift in Sources */,
 				7D59B44C2BE249B7006F3F00 /* IncomeTag.swift in Sources */,
 				7D59B4FB2BE249D9006F3F00 /* PieChartView.swift in Sources */,
 				7D59B51A2BE249D9006F3F00 /* UpdateWatchView.swift in Sources */,
@@ -788,8 +766,6 @@
 				7D59B4EE2BE249D9006F3F00 /* NewAccountView.swift in Sources */,
 				7D59B5112BE249D9006F3F00 /* MainScreenView.swift in Sources */,
 				7D59B4912BE249D0006F3F00 /* DateExtension.swift in Sources */,
-				7D59B4FA2BE249D9006F3F00 /* NetWorthChartView.swift in Sources */,
-				7D59B4F72BE249D9006F3F00 /* AccountWatchChartView.swift in Sources */,
 				7D59B52A2BE249E0006F3F00 /* FileViewModel.swift in Sources */,
 				7D59B4F82BE249D9006F3F00 /* ChartView.swift in Sources */,
 				7D59B4492BE249B7006F3F00 /* AccountInBroker.swift in Sources */,
