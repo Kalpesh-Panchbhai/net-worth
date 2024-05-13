@@ -57,7 +57,7 @@ struct MainScreenView: View {
                             Label("Charts", systemImage: "chart.line.uptrend.xyaxis.circle")
                         }
                     
-                    SettingsView(isAuthenticationRequired: SettingsController().isAuthenticationRequired(), currenySelected: SettingsController().getDefaultCurrency())
+                    SettingsView()
                         .tabItem {
                             Label("Settings", systemImage: "gearshape")
                         }

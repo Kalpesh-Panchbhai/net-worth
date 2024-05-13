@@ -16,7 +16,7 @@ struct OnboardingView: View {
         removal: .move(edge: .leading))
     
     @State var onboardingState: Int = 0
-    @State var currenySelected: Currency = Currency()
+    @State var currencySelected: Currency = Currency()
     @State var filterCurrencyList = CurrencyList().currencyList
     @State var isAuthenticationRequired: Bool = false
     @State var alertTitle: String = ""
@@ -137,7 +137,7 @@ extension OnboardingView {
                         .font(.largeTitle)
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
-                    DefaultCurrencyPicker(currenySelected: $currenySelected)
+                    DefaultCurrencyPicker(currencySelected: $currencySelected)
                         .foregroundColor(.white)
                     Spacer()
                     Spacer()
@@ -198,7 +198,7 @@ extension OnboardingView {
         
         switch onboardingState {
         case 1:
-            guard !currenySelected.code.isEmpty else {
+            guard !currencySelected.code.isEmpty else {
                 showAlert(title: "Please select a default currency")
                 return
             }

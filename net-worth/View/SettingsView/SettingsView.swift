@@ -17,14 +17,14 @@ struct SettingsView: View {
     
     @State var filterCurrencyList = CurrencyList().currencyList
     @State var profilePhoto = UIImage()
-    @State var isAuthenticationRequired: Bool
+    @State var isAuthenticationRequired = false
     @State var logout =  false
     @State var isPresentingDataAndAccountDeletionConfirmation = false
     @State var isPresentingLogoutConfirm = false
     @State var isPresentingUpdateChartDataConfirm = false
     @State var inProgress = false
     
-    @State var currenySelected: Currency
+    @State var currencySelected = Currency()
     @State var defaultIncomeType = IncomeType()
     @State var defaultIncomeTag = IncomeTag()
     
@@ -66,7 +66,7 @@ struct SettingsView: View {
                     .listRowBackground(Color.theme.foreground)
                     
                     // MARK: Default Currency Picker
-                    DefaultCurrencyPicker(currenySelected: $currenySelected)
+                    DefaultCurrencyPicker(currencySelected: $currencySelected)
                         .foregroundColor(Color.theme.primaryText)
                         .listRowBackground(Color.theme.foreground)
                     
@@ -162,6 +162,8 @@ struct SettingsView: View {
             .foregroundColor(Color.theme.primaryText)
         }
         .onAppear {
+            currencySelected = SettingsController().getDefaultCurrency()
+            isAuthenticationRequired = SettingsController().isAuthenticationRequired()
             Task.init {
                 profilePhoto = await fetchProfilePhoto()
                 self.defaultIncomeType = incomeViewModel.incomeTypeList.filter({
