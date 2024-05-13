@@ -16,9 +16,9 @@ struct ChartView: View {
     @State var multipleWatchListSelection = Set<Watch>()
     @State var showNetWorthChart = false
     
-    @ObservedObject var watchViewModel: WatchViewModel
-    @ObservedObject var accountViewModel: AccountViewModel
-    @ObservedObject var incomeViewModel: IncomeViewModel
+    @EnvironmentObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var accountViewModel: AccountViewModel
+    @EnvironmentObject var incomeViewModel: IncomeViewModel
     
     var body: some View {
         NavigationView {

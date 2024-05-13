@@ -16,7 +16,7 @@ struct NewAccountInBrokerView: View {
     
     @State var symbolSelected = SymbolDetailModel()
     
-    @ObservedObject var accountViewModel: AccountViewModel
+    @EnvironmentObject var accountViewModel: AccountViewModel
     
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dismiss) var dismiss

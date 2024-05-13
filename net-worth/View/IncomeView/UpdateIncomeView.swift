@@ -20,7 +20,7 @@ struct UpdateIncomeView: View {
     @State var currencySelected: Currency = Currency()
     @State var date = Date().getEarliestDate()
     
-    @ObservedObject var incomeViewModel: IncomeViewModel
+    @EnvironmentObject var incomeViewModel: IncomeViewModel
     
     @Environment(\.dismiss) var dismiss
     

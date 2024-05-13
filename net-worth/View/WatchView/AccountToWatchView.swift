@@ -13,8 +13,8 @@ struct AccountToWatchView: View {
     @State var watch: Watch
     @State var searchText = ""
     
-    @ObservedObject var accountViewModel: AccountViewModel
-    @ObservedObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var accountViewModel: AccountViewModel
+    @EnvironmentObject var watchViewModel: WatchViewModel
     
     @Environment(\.scenePhase) var scenePhase
     
@@ -33,7 +33,7 @@ struct AccountToWatchView: View {
                                         .font(.system(size: 15))
                                 }
                                 ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
-                                    RowAccountToWatchView(account: account, watch: $watch, isAdded: watch.accountList.contains(account.id), watchViewModel: watchViewModel)
+                                    RowAccountToWatchView(account: account, watch: $watch, isAdded: watch.accountList.contains(account.id))
                                         .padding(.bottom, 10)
                                 }
                                 Divider()

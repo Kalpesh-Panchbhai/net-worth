@@ -17,7 +17,7 @@ struct AccountBrokerView: View {
     @State var isNewTransactionViewOpen = false
     @State var selectedAccount = AccountInBroker()
     
-    @ObservedObject var accountViewModel: AccountViewModel
+    @EnvironmentObject var accountViewModel: AccountViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -60,7 +60,7 @@ struct AccountBrokerView: View {
                 }
             }
             .sheet(isPresented: $isNewTransactionViewOpen, content: {
-                UpdateBalanceAccountBrokerView(brokerID: brokerID, accountBroker: selectedAccount, accountViewModel: accountViewModel)
+                UpdateBalanceAccountBrokerView(brokerID: brokerID, accountBroker: selectedAccount)
                     .presentationDetents([.medium])
             })
             .padding(8)

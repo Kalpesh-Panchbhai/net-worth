@@ -20,15 +20,13 @@ struct WatchDetailView: View {
     @State var hideZeroBalanceAccount = true
     @State var isAscendingEnabled = true
     
-    @ObservedObject var accountViewModel: AccountViewModel
-    @ObservedObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var accountViewModel: AccountViewModel
+    @EnvironmentObject var watchViewModel: WatchViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
-    init(watch: Watch, accountViewModel: AccountViewModel, watchViewModel: WatchViewModel) {
+    init(watch: Watch) {
         self.watch = watch
-        self.accountViewModel = accountViewModel
-        self.watchViewModel = watchViewModel
     }
     
     var body: some View {
@@ -39,7 +37,7 @@ struct WatchDetailView: View {
                     if(watch.accountList.count > 0) {
                         // MARK: Balance Card
                         VStack {
-                            BalanceCardView(accountType: watch.name, isWatchListCardView: true, watchList: watch, accountViewModel: accountViewModel)
+                            BalanceCardView(accountType: watch.name, isWatchListCardView: true, watchList: watch)
                                 .frame(width: 360, height: 70)
                                 .cornerRadius(10)
                         }
@@ -50,7 +48,7 @@ struct WatchDetailView: View {
                                 ForEach(watch.accountList, id: \.self) { accountID in
                                     NavigationLink(destination: {
                                         // MARK: Account Detail View
-                                        AccountDetailView(accountID: accountID, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
+                                        AccountDetailView(accountID: accountID)
                                             .toolbarRole(.editor)
                                     }, label: {
                                         AccountRowView(account: getAccountForWatchListAccount(accountId: accountID), fromWatchView: true)
@@ -105,7 +103,7 @@ struct WatchDetailView: View {
             })
             self.watch = watchSorted
         }, content: {
-            AccountToWatchView(watch: watch, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
+            AccountToWatchView(watch: watch)
         })
         .onAppear {
             var watchSorted = self.watch

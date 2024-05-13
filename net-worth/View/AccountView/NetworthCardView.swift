@@ -13,8 +13,8 @@ struct NetworthCardView: View {
     @State var percent: Double = 0.0
     @State var percentChange: Double = 0.0
     
-    @ObservedObject var accountViewModel: AccountViewModel
-    @ObservedObject var incomeViewModel: IncomeViewModel
+    @EnvironmentObject var accountViewModel: AccountViewModel
+    @EnvironmentObject var incomeViewModel: IncomeViewModel
     
     var body: some View {
         ZStack {

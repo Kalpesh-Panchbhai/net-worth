@@ -17,8 +17,8 @@ struct AccountListView: View {
     @State var isPresentingAccountDeleteConfirm = false
     @State var deletedAccount = Account()
     
-    @StateObject var accountViewModel: AccountViewModel
-    @ObservedObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var accountViewModel: AccountViewModel
+    @EnvironmentObject var watchViewModel: WatchViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -28,7 +28,7 @@ struct AccountListView: View {
             VStack {
                 if(!accountType.elementsEqual("Inactive Account") && !accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).isEmpty) {
                     VStack {
-                        BalanceCardView(accountType: accountType, isWatchListCardView: false, watchList: Watch(), accountViewModel: accountViewModel)
+                        BalanceCardView(accountType: accountType, isWatchListCardView: false, watchList: Watch())
                             .frame(width: 360, height: 70)
                             .cornerRadius(10)
                     }
@@ -38,7 +38,7 @@ struct AccountListView: View {
                     LazyVStack {
                         ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
                             NavigationLink(destination: {
-                                AccountDetailView(accountID: account.id, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
+                                AccountDetailView(accountID: account.id)
                             }, label: {
                                 AccountRowView(account: account, fromWatchView: accountType.elementsEqual("Inactive Account"))
                             })

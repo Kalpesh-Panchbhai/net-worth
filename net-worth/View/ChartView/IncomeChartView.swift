@@ -36,7 +36,7 @@ struct IncomeChartView: View {
     
     @State var showTotal = false
     
-    @ObservedObject var incomeViewModel: IncomeViewModel
+    @EnvironmentObject var incomeViewModel: IncomeViewModel
     
     @Environment(\.scenePhase) var scenePhase
     

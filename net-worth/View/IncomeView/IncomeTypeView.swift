@@ -14,7 +14,7 @@ struct IncomeTypeView: View {
     
     @State var addNewIncomeTypeOpenView = false
     
-    @StateObject var incomeViewModel: IncomeViewModel
+    @EnvironmentObject var incomeViewModel: IncomeViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -86,7 +86,7 @@ struct IncomeTypeView: View {
         }
         // MARK: Add New Income Type Sheet View
         .sheet(isPresented: $addNewIncomeTypeOpenView, content: {
-            NewIncomeTypeView(incomeViewModel: incomeViewModel)
+            NewIncomeTypeView()
                 .presentationDetents([.medium])
         })
         .navigationTitle("Income Type")

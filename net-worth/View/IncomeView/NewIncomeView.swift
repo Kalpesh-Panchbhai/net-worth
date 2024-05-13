@@ -26,7 +26,7 @@ struct NewIncomeView: View {
     @State var filterCurrencyList = CurrencyList().currencyList
     @State var searchTerm: String = ""
     
-    @ObservedObject var incomeViewModel : IncomeViewModel
+    @EnvironmentObject var incomeViewModel : IncomeViewModel
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.scenePhase) var scenePhase
@@ -196,7 +196,7 @@ struct NewIncomeView: View {
                     item.isdefault
                 }.first ?? IncomeType()
             }, content: {
-                NewIncomeTypeView(incomeViewModel: incomeViewModel)
+                NewIncomeTypeView()
                     .presentationDetents([.medium])
             })
             .sheet(isPresented: $addIncomeTagViewOpen, onDismiss: {
@@ -204,7 +204,7 @@ struct NewIncomeView: View {
                     item.isdefault
                 }.first ?? IncomeTag()
             }, content: {
-                NewIncomeTagView(incomeViewModel: incomeViewModel)
+                NewIncomeTagView()
                     .presentationDetents([.medium])
             })
             .navigationTitle("New Income")

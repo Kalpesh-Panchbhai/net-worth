@@ -15,7 +15,7 @@ struct NewWatchView: View {
     @State var watchListName = ""
     @State var isFieldEmpty = false
     
-    @ObservedObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var watchViewModel: WatchViewModel
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.scenePhase) var scenePhase

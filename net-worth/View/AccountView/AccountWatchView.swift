@@ -9,18 +9,18 @@ import SwiftUI
 
 struct AccountWatchView: View {
     
-    @ObservedObject var watchViewModel: WatchViewModel
-    @ObservedObject var accountViewModel: AccountViewModel
+    @EnvironmentObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var accountViewModel: AccountViewModel
     
     var body: some View {
         NavigationView {
             List {
                 ForEach(watchViewModel.watchListForAccount, id: \.self, content: { watch in
                     NavigationLink(destination: {
-                        WatchDetailView(watch: watch, accountViewModel: accountViewModel, watchViewModel: watchViewModel)
+                        WatchDetailView(watch: watch)
                             .toolbarRole(.editor)
                     }, label: {
-                        WatchViewRow(watch: watch, accountViewModel: accountViewModel)
+                        WatchViewRow(watch: watch)
                             .badge(
                                 Text("\(watch.accountList.count)")
                                     .foregroundColor(Color.theme.secondaryText)

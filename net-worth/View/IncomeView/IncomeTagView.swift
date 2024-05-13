@@ -14,7 +14,7 @@ struct IncomeTagView: View {
     
     @State var addNewIncomeTagOpenView = false
     
-    @StateObject var incomeViewModel: IncomeViewModel
+    @EnvironmentObject var incomeViewModel: IncomeViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -86,7 +86,7 @@ struct IncomeTagView: View {
         }
         // MARK: Add New Income Tag Sheet View
         .sheet(isPresented: $addNewIncomeTagOpenView, content: {
-            NewIncomeTagView(incomeViewModel: incomeViewModel)
+            NewIncomeTagView()
                 .presentationDetents([.medium])
         })
         .navigationTitle("Income Tag")

@@ -12,14 +12,14 @@ struct DefaultCurrencyPicker: View {
     var settingsController = SettingsController()
     
     @State var filterCurrencyList = CurrencyList().currencyList
-    @Binding var currenySelected: Currency
+    @Binding var currencySelected: Currency
     
     var body: some View {
         NavigationLink(destination: {
             List {
                 ForEach(filterCurrencyList, id: \.self) { (data) in
-                    CurrencySelectionRow(currency: data, isSelected: self.currenySelected.name.elementsEqual(data.name), action: {
-                        self.currenySelected = data
+                    CurrencySelectionRow(currency: data, isSelected: self.currencySelected.name.elementsEqual(data.name), action: {
+                        self.currencySelected = data
                         settingsController.setDefaultCurrency(newValue: data)
                     })
                 }
@@ -36,7 +36,7 @@ struct DefaultCurrencyPicker: View {
                 HStack {
                     Text("Default Currency")
                     Spacer()
-                    Text(currenySelected.name)
+                    Text(currencySelected.name)
                 }
             }, icon: {
                 Image(systemName: "indianrupeesign.square")
