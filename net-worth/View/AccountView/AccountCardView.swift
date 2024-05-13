@@ -122,17 +122,6 @@ struct AccountCardView: View {
             }
             Spacer()
         }
-        //        .onAppear {
-        //            Task.init {
-        //                await accountViewModel.getAccount(id: accountID)
-        //                if(accountViewModel.account.accountType == ConstantUtils.brokerAccountType) {
-        //                    await accountViewModel.getAccountInBrokerList(brokerID: accountID)
-        //                    await accountViewModel.getCurrentBalanceOfAllAccountsInABroker(accountBrokerList: accountViewModel.accountsInBroker)
-        //                } else {
-        //                    await accountViewModel.getAccountLastOneDayChange(id: accountID)
-        //                }
-        //            }
-        //        }
         .frame(width: 150, height: 80)
         .padding(8)
         .background(Color.theme.foreground)
