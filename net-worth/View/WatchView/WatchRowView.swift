@@ -78,7 +78,7 @@ struct WatchViewRow: View {
                 let accountList = watch.accountList.map { id in
                     return accountViewModel.accountList.filter {
                         return $0.id.elementsEqual(id)
-                    }.first!
+                    }.first ?? Account(balance: BalanceAccount())
                 }
                 for account in accountList {
                     self.balance.currentDayValue += account.balance.currentDayValue
