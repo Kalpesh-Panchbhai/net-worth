@@ -40,7 +40,7 @@ struct AccountListView: View {
                             NavigationLink(destination: {
                                 AccountDetailView(accountID: account.id)
                             }, label: {
-                                AccountRowView(account: account, fromWatchView: accountType.elementsEqual("Inactive Account"))
+                                AccountRowView(account: account, fromWatchView: accountType.elementsEqual("Inactive Account"), isInActiveAccount: accountType.elementsEqual("Inactive Account"))
                             })
                         }
                         .padding(10)

@@ -10,8 +10,8 @@ import SwiftUI
 struct AccountRowView: View {
     
     var account: Account
-    
     var fromWatchView: Bool = false
+    var isInActiveAccount: Bool = false
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -21,10 +21,12 @@ struct AccountRowView: View {
                     .foregroundColor(Color.theme.primaryText)
                     .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)
-                Text(!account.active ? "(Closed)" : "")
-                    .foregroundColor(Color.theme.secondaryText)
-                    .font(.caption2.italic())
-                    .multilineTextAlignment(.leading)
+                if(!isInActiveAccount) {
+                    Text(!account.active ? "(Closed)" : "")
+                        .foregroundColor(Color.theme.red)
+                        .font(.caption2.italic())
+                        .multilineTextAlignment(.leading)
+                }
                 if(fromWatchView) {
                     Spacer()
                     Text(account.accountType)

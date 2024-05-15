@@ -19,7 +19,6 @@ struct AccountCardList: View {
     @State var isPresentingAccountDeleteConfirm = false
     @State var deletedAccount = Account()
     @State var hideInactiveAccount = true
-    @State var hideZeroBalanceAccount = true
     
     @EnvironmentObject var accountViewModel: AccountViewModel
     @EnvironmentObject var watchViewModel: WatchViewModel
@@ -51,7 +50,7 @@ struct AccountCardList: View {
                             ScrollView(.vertical, showsIndicators: false) {
                                 VStack {
                                     ForEach(accountViewModel.sectionHeaders, id: \.self) { accountType in
-                                        if(((accountType.elementsEqual("Inactive Account") && !hideInactiveAccount) || (!accountType.elementsEqual("Inactive Account"))) && ((hideZeroBalanceAccount && isAllAccountsInAAccountTypeAreZero(accountType: accountType, searchText: searchText)) || !hideZeroBalanceAccount)) {
+                                        if((accountType.elementsEqual("Inactive Account") && !hideInactiveAccount) || !accountType.elementsEqual("Inactive Account")) {
                                             if(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 0) {
                                                 HStack {
                                                     Text(accountType)
@@ -72,13 +71,11 @@ struct AccountCardList: View {
                                                 ScrollView(.horizontal, showsIndicators: false) {
                                                     HStack {
                                                         ForEach(0..<((accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 5) ? 5 : accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count), id: \.self) { i in
-                                                            if((hideZeroBalanceAccount && isAccountBalanceIsZero(id: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id)) || !hideZeroBalanceAccount) {
-                                                                NavigationLink(destination: {
-                                                                    AccountDetailView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id)
-                                                                        .toolbarRole(.editor)
-                                                                }) {
-                                                                    AccountCardView(account: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]))
-                                                                }
+                                                            NavigationLink(destination: {
+                                                                AccountDetailView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id)
+                                                                    .toolbarRole(.editor)
+                                                            }) {
+                                                                AccountCardView(account: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]))
                                                             }
                                                         }
                                                         .padding(5)
@@ -120,10 +117,6 @@ struct AccountCardList: View {
                         Toggle(isOn: $hideInactiveAccount, label: {
                             Text("Hide Inactive Accounts")
                         })
-                        
-                        Toggle(isOn: $hideZeroBalanceAccount, label: {
-                            Text("Hide Zero Balance Accounts")
-                        })
                     }, label: {
                         Image(systemName: ConstantUtils.menuImageName)
                             .foregroundColor(Color.theme.primaryText)
@@ -145,24 +138,5 @@ struct AccountCardList: View {
         return ApplicationData.shared.data.accountDataList.filter {
             $0.account.id.elementsEqual(id) && $0.account.active
         }.count > 0
-    }
-    
-    private func isAccountBalanceIsZero(id: String) -> Bool {
-        let accountList = ApplicationData.shared.chartDataList
-        return accountList.first(where: {
-            return $0.key.elementsEqual(id)
-        })?.value.last?.value != 0
-    }
-    
-    private func isAllAccountsInAAccountTypeAreZero(accountType: String, searchText: String) -> Bool {
-        let accountList = accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)
-        var isAllAccountsInAAccountTypeAreZero = true
-        for account in accountList {
-            if(!isAccountBalanceIsZero(id: account.id)) {
-                isAllAccountsInAAccountTypeAreZero = false
-                break
-            }
-        }
-        return isAllAccountsInAAccountTypeAreZero
     }
 }

@@ -46,13 +46,15 @@ struct WatchDetailView: View {
                         ScrollView(.vertical, showsIndicators: false) {
                             LazyVStack {
                                 ForEach(watch.accountList, id: \.self) { accountID in
-                                    NavigationLink(destination: {
-                                        // MARK: Account Detail View
-                                        AccountDetailView(accountID: accountID)
-                                            .toolbarRole(.editor)
-                                    }, label: {
-                                        AccountRowView(account: getAccountForWatchListAccount(accountId: accountID), fromWatchView: true)
-                                    })
+                                    if((isActiveAccount(accountId: accountID) && hideInactiveAccount) || !hideInactiveAccount) {
+                                        NavigationLink(destination: {
+                                            // MARK: Account Detail View
+                                            AccountDetailView(accountID: accountID)
+                                                .toolbarRole(.editor)
+                                        }, label: {
+                                            AccountRowView(account: getAccountForWatchListAccount(accountId: accountID), fromWatchView: true)
+                                        })
+                                    }
                                 }
                                 .padding(10)
                             }
@@ -88,6 +90,15 @@ struct WatchDetailView: View {
                     .font(.system(size: 14).bold())
                 })
             }
+            
+            ToolbarItem(content: {
+                Menu(content: {
+                    Toggle("Hide Inactive Accounts", isOn: $hideInactiveAccount)
+                }, label: {
+                    Image(systemName: ConstantUtils.menuImageName)
+                })
+                .font(.system(size: 14).bold())
+            })
         }
         .sheet(isPresented: $addAccountViewOpen, onDismiss: {
             self.watch = self.watchViewModel.watchList.first(where: {
@@ -118,16 +129,13 @@ struct WatchDetailView: View {
         }
     }
     
-    func not(_ value: Binding<Bool>) -> Binding<Bool> {
-        Binding<Bool>(
-            get: { !value.wrappedValue },
-            set: { value.wrappedValue = !$0 }
-        )
-    }
-    
     private func getAccountForWatchListAccount(accountId: String) -> Account {
         return accountViewModel.accountList.first {
             return $0.id.elementsEqual(accountId)
         }!
+    }
+    
+    private func isActiveAccount(accountId: String) -> Bool {
+        return getAccountForWatchListAccount(accountId: accountId).active
     }
 }
