@@ -55,7 +55,6 @@ struct AccountBrokerView: View {
                         Task.init {
                             await accountInBrokerController.deleteAccountInBroker(accountId: selectedAccount.id)
                             await accountViewModel.getAccountInBrokerList(brokerID: brokerID)
-                            accountViewModel.hideZeroUnitAccounts()
                         }
                     }
                 }
