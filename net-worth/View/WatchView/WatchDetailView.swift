@@ -9,16 +9,8 @@ import SwiftUI
 
 struct WatchDetailView: View {
     
-    var watchController = WatchController()
-    
     @State var watch: Watch
-    @State var isNewTransactionViewOpen = false
     @State var addAccountViewOpen = false
-    @State var isAscendingByAlphabetEnabled = true
-    @State var isAscendingByAmountEnabled = false
-    @State var hideInactiveAccount = true
-    @State var hideZeroBalanceAccount = true
-    @State var isAscendingEnabled = true
     
     @EnvironmentObject var accountViewModel: AccountViewModel
     @EnvironmentObject var watchViewModel: WatchViewModel
@@ -46,15 +38,13 @@ struct WatchDetailView: View {
                         ScrollView(.vertical, showsIndicators: false) {
                             LazyVStack {
                                 ForEach(watch.accountList, id: \.self) { accountID in
-                                    if((isActiveAccount(accountId: accountID) && hideInactiveAccount) || !hideInactiveAccount) {
-                                        NavigationLink(destination: {
-                                            // MARK: Account Detail View
-                                            AccountDetailView(accountID: accountID)
-                                                .toolbarRole(.editor)
-                                        }, label: {
-                                            AccountRowView(account: getAccountForWatchListAccount(accountId: accountID), fromWatchView: true)
-                                        })
-                                    }
+                                    NavigationLink(destination: {
+                                        // MARK: Account Detail View
+                                        AccountDetailView(accountID: accountID)
+                                            .toolbarRole(.editor)
+                                    }, label: {
+                                        AccountRowView(account: getAccountForWatchListAccount(accountId: accountID), fromWatchView: true)
+                                    })
                                 }
                                 .padding(10)
                             }
@@ -90,15 +80,6 @@ struct WatchDetailView: View {
                     .font(.system(size: 14).bold())
                 })
             }
-            
-            ToolbarItem(content: {
-                Menu(content: {
-                    Toggle("Hide Inactive Accounts", isOn: $hideInactiveAccount)
-                }, label: {
-                    Image(systemName: ConstantUtils.menuImageName)
-                })
-                .font(.system(size: 14).bold())
-            })
         }
         .sheet(isPresented: $addAccountViewOpen, onDismiss: {
             self.watch = self.watchViewModel.watchList.first(where: {
