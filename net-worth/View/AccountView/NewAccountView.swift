@@ -18,16 +18,12 @@ struct NewAccountView: View {
     @State var scenePhaseBlur = 0
     @State var accountType: String
     @State var loanType: String = "Consumer"
-    @State var symbolType: String = ConstantUtils.noneAccountType
     @State var accountName: String = ""
     @State var currencySelected: Currency = Currency()
-    @State var filterCurrencyList = CurrencyList().currencyList
-    @State var currencyChanged = false
     @State var monthlyEmi: Double = 0.0
     @State var loanPaymentDate = 1
     @State var dates = Array(1...28)
     @State var isPlus = true
-    @State var searchTerm: String = ""
     
     @EnvironmentObject var accountViewModel : AccountViewModel
     @EnvironmentObject var watchViewModel : WatchViewModel

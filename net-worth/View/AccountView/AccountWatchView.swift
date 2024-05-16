@@ -10,7 +10,6 @@ import SwiftUI
 struct AccountWatchView: View {
     
     @EnvironmentObject var watchViewModel: WatchViewModel
-    @EnvironmentObject var accountViewModel: AccountViewModel
     
     var body: some View {
         NavigationView {

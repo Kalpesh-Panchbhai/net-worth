@@ -9,7 +9,6 @@ import SwiftUI
 
 struct AccountDetailView: View {
     
-    var dates = Array(1...28)
     var accountController = AccountController()
     
     @State var showAddWatchListView = false
@@ -17,7 +16,6 @@ struct AccountDetailView: View {
     @State var isNewAccountInBrokerViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
     @State var tabItem = 1
-    @State var showZeroAlert = false
     
     @State var accountID: String
     @State var account = Account()
@@ -63,9 +61,6 @@ struct AccountDetailView: View {
                 } else {
                     AccountWatchView()
                 }
-            }
-            .alert(isPresented: $showZeroAlert) {
-                Alert(title: Text("Current Balance should be equal to zero to make it inactive!"))
             }
             .confirmationDialog("Are you sure?",
                                 isPresented: $isPresentingAccountDeleteConfirm) {

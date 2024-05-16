@@ -12,19 +12,9 @@ struct AccountCardList: View {
     var accountController = AccountController()
     
     @State var isNewAccountAccountViewOpen = false
-    @State var isNewTransactionViewOpen = false
-    @State var accountTypeSelected = ConstantUtils.noneAccountType
-    @State var selectedAccount = Account()
     @State var searchText = ""
-    @State var isPresentingAccountDeleteConfirm = false
-    @State var deletedAccount = Account()
-    @State var hideInactiveAccount = true
     
     @EnvironmentObject var accountViewModel: AccountViewModel
-    @EnvironmentObject var watchViewModel: WatchViewModel
-    @EnvironmentObject var incomeViewModel: IncomeViewModel
-    
-    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         NavigationView {
@@ -50,41 +40,39 @@ struct AccountCardList: View {
                             ScrollView(.vertical, showsIndicators: false) {
                                 VStack {
                                     ForEach(accountViewModel.sectionHeaders, id: \.self) { accountType in
-                                        if((accountType.elementsEqual("Inactive Account") && !hideInactiveAccount) || !accountType.elementsEqual("Inactive Account")) {
-                                            if(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 0) {
+                                        if(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 0) {
+                                            HStack {
+                                                Text(accountType)
+                                                    .foregroundColor(Color.theme.primaryText)
+                                                    .bold()
+                                                    .font(.system(size: 15))
+                                                Spacer()
+                                                NavigationLink(destination: {
+                                                    AccountListView(accountType: accountType)
+                                                        .toolbarRole(.editor)
+                                                }, label: {
+                                                    Text("See all")
+                                                        .foregroundColor(Color.theme.secondaryText)
+                                                        .font(.system(size: 12))
+                                                })
+                                            }
+                                            .padding(.horizontal, 8)
+                                            ScrollView(.horizontal, showsIndicators: false) {
                                                 HStack {
-                                                    Text(accountType)
-                                                        .foregroundColor(Color.theme.primaryText)
-                                                        .bold()
-                                                        .font(.system(size: 15))
-                                                    Spacer()
-                                                    NavigationLink(destination: {
-                                                        AccountListView(accountType: accountType)
-                                                            .toolbarRole(.editor)
-                                                    }, label: {
-                                                        Text("See all")
-                                                            .foregroundColor(Color.theme.secondaryText)
-                                                            .font(.system(size: 12))
-                                                    })
-                                                }
-                                                .padding(.horizontal, 8)
-                                                ScrollView(.horizontal, showsIndicators: false) {
-                                                    HStack {
-                                                        ForEach(0..<((accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 5) ? 5 : accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count), id: \.self) { i in
-                                                            NavigationLink(destination: {
-                                                                AccountDetailView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id)
-                                                                    .toolbarRole(.editor)
-                                                            }) {
-                                                                AccountCardView(account: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]))
-                                                            }
+                                                    ForEach(0..<((accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 5) ? 5 : accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count), id: \.self) { i in
+                                                        NavigationLink(destination: {
+                                                            AccountDetailView(accountID: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]).id)
+                                                                .toolbarRole(.editor)
+                                                        }) {
+                                                            AccountCardView(account: (accountViewModel.sectionContent(key: accountType, searchKeyword: searchText)[i]))
                                                         }
-                                                        .padding(5)
                                                     }
                                                     .padding(5)
                                                 }
-                                                Divider()
-                                                    .background(Color.theme.secondaryText)
+                                                .padding(5)
                                             }
+                                            Divider()
+                                                .background(Color.theme.secondaryText)
                                         }
                                     }
                                 }
@@ -107,18 +95,6 @@ struct AccountCardList: View {
                         isNewAccountAccountViewOpen.toggle()
                     }, label: {
                         Image(systemName: ConstantUtils.plusImageName)
-                            .foregroundColor(Color.theme.primaryText)
-                            .bold()
-                    })
-                    .font(.system(size: 14).bold())
-                })
-                ToolbarItem(placement: .navigationBarLeading, content: {
-                    Menu(content: {
-                        Toggle(isOn: $hideInactiveAccount, label: {
-                            Text("Hide Inactive Accounts")
-                        })
-                    }, label: {
-                        Image(systemName: ConstantUtils.menuImageName)
                             .foregroundColor(Color.theme.primaryText)
                             .bold()
                     })
