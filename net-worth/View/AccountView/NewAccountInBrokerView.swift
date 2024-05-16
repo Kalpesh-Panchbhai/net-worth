@@ -37,6 +37,7 @@ struct NewAccountInBrokerView: View {
                             let accountBroker = AccountInBroker(accountId: brokerAccountID, symbol: symbolSelected.symbol!, name: symbolSelected.longname!)
                             await accountInBrokerController.addAccountInBroker(accountInBroker: accountBroker)
                             await accountViewModel.getAccountInBrokerList(brokerID: brokerAccountID)
+                            accountViewModel.hideZeroUnitAccounts()
                             dismiss()
                         }
                     }, label: {

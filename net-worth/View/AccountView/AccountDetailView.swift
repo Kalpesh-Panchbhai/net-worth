@@ -17,10 +17,10 @@ struct AccountDetailView: View {
     @State var isNewAccountInBrokerViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
     @State var tabItem = 1
-    @State var showZeroAlert = false
     
     @State var accountID: String
     @State var account = Account()
+    @State var hideZeroUnitAccounts = true
     @EnvironmentObject var accountViewModel: AccountViewModel
     @EnvironmentObject var watchViewModel: WatchViewModel
     
@@ -63,9 +63,6 @@ struct AccountDetailView: View {
                 } else {
                     AccountWatchView()
                 }
-            }
-            .alert(isPresented: $showZeroAlert) {
-                Alert(title: Text("Current Balance should be equal to zero to make it inactive!"))
             }
             .confirmationDialog("Are you sure?",
                                 isPresented: $isPresentingAccountDeleteConfirm) {
@@ -126,6 +123,14 @@ struct AccountDetailView: View {
                             }, label: {
                                 Label("New Account", systemImage: ConstantUtils.newTransactionImageName)
                             })
+                            
+                            Toggle(isOn: $hideZeroUnitAccounts, label: {
+                                Label("Hide Zero unit accounts", systemImage: ConstantUtils.newTransactionImageName)
+                            })
+                            .onChange(of: hideZeroUnitAccounts) {
+                                accountViewModel.hideZeroUnitAccountsFlag = hideZeroUnitAccounts
+                                accountViewModel.hideZeroUnitAccounts()
+                            }
                         } else {
                             Button(action: {
                                 self.isNewTransactionViewOpen.toggle()
@@ -180,6 +185,8 @@ struct AccountDetailView: View {
                 }.first ?? Account()
                 if(account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
                     await accountViewModel.getAccountInBrokerList(brokerID: accountID)
+                    accountViewModel.hideZeroUnitAccountsFlag = hideZeroUnitAccounts
+                    accountViewModel.hideZeroUnitAccounts()
                 }
                 await watchViewModel.getWatchListByAccount(accountID: accountID)
             }

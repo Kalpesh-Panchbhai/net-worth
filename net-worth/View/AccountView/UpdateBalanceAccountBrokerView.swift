@@ -43,6 +43,7 @@ struct UpdateBalanceAccountBrokerView: View {
                         Task.init {
                             await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
                             await accountViewModel.getAccountInBrokerList(brokerID: brokerID)
+                            accountViewModel.hideZeroUnitAccounts()
                         }
                         dismiss()
                     }, label: {
@@ -62,6 +63,7 @@ struct UpdateBalanceAccountBrokerView: View {
                         Task.init {
                             await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
                             await accountViewModel.getAccountInBrokerList(brokerID: brokerID)
+                            accountViewModel.hideZeroUnitAccounts()
                         }
                         dismiss()
                     }, label: {

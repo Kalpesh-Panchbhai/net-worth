@@ -11,8 +11,10 @@ class AccountViewModel: ObservableObject {
     
     var watchList = [Account]()
     var originalAccountList = [Account]()
+    var originalAccountsInBroker = [AccountInBroker]()
     var accountController = AccountController()
     var accountInBrokerController = AccountInBrokerController()
+    var hideZeroUnitAccountsFlag = true
     
     @Published var accountList = [Account]()
     @Published var accountListLoaded = false
@@ -117,19 +119,17 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func getBrokerAccount(accountId: String) async {
-        let accountBroker = accountsInBroker.filter {
-            return $0.id.elementsEqual(accountId)
-        }.first ?? AccountInBroker()
-        DispatchQueue.main.async {
-            self.accountBroker = accountBroker
-        }
-    }
-    
     func getAccountInBrokerList(brokerID: String) async {
         let accountList = await accountInBrokerController.getAccountListInBroker(brokerID: brokerID)
         DispatchQueue.main.async {
             self.accountsInBroker = accountList
+            self.originalAccountsInBroker = accountList
+        }
+    }
+    
+    func hideZeroUnitAccounts() {
+        self.accountsInBroker = originalAccountsInBroker.filter {
+            return (!$0.currentUnit.isZero && hideZeroUnitAccountsFlag) || (!hideZeroUnitAccountsFlag)
         }
     }
     
