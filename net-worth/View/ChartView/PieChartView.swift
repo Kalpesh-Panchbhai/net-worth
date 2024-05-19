@@ -34,7 +34,7 @@ public struct PieChartView: View {
         return tempSlices
     }
     
-    public init(values:[Double], names: [String], formatter: @escaping (Double) -> String, colors: [Color] = [Color.blue, Color.green, Color.orange], backgroundColor: Color = Color(red: 21 / 255, green: 24 / 255, blue: 30 / 255, opacity: 1.0), widthFraction: CGFloat = 0.5, innerRadiusFraction: CGFloat = 0.00){
+    public init(values: [Double], names: [String], formatter: @escaping (Double) -> String, colors: [Color] = [Color.blue, Color.green, Color.orange], backgroundColor: Color = Color(red: 21 / 255, green: 24 / 255, blue: 30 / 255, opacity: 1.0), widthFraction: CGFloat = 0.5, innerRadiusFraction: CGFloat = 0.00){
         self.values = values
         self.names = names
         self.formatter = formatter
@@ -89,16 +89,18 @@ public struct PieChartView: View {
                     .frame(height: 200)
                     Divider()
                 }
-                VStack {
-                    Text(getAccountName())
-                        .font(.system(size: 14))
-                        .foregroundColor(Color.theme.primaryText)
-                    Text(SettingsController().getDefaultCurrency().code + " " + getAccountAmount())
-                        .font(.system(size: 14))
-                        .foregroundColor(Color.theme.primaryText)
+                if(!values.isEmpty) {
+                    VStack {
+                        Text(getAccountName())
+                            .font(.system(size: 14))
+                            .foregroundColor(Color.theme.primaryText)
+                        Text(SettingsController().getDefaultCurrency().code + " " + getAccountAmount())
+                            .font(.system(size: 14))
+                            .foregroundColor(Color.theme.primaryText)
+                    }
+                    Divider()
+                    PieChartRows(colors: self.colors, names: self.names, values: self.values.map { self.formatter($0) }, percents: self.values.map { String(format: "%.2f%%", $0 * 100 / self.values.reduce(0, +)) })
                 }
-                Divider()
-                PieChartRows(colors: self.colors, names: self.names, values: self.values.map { self.formatter($0) }, percents: self.values.map { String(format: "%.2f%%", $0 * 100 / self.values.reduce(0, +)) })
             }
             .background(self.backgroundColor)
             .foregroundColor(Color.white)

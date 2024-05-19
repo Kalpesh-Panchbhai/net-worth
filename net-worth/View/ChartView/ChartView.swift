@@ -121,9 +121,10 @@ struct ChartView: View {
                         self.multipleWatchListSelection.insert(watch)
                         
                         let accountList = getAccountsForWatchList(watch: watch)
-                        let totalAmount = accountList.map( {
+                        var totalAmount = accountList.map( {
                             $0.balance.currentDayValue
                         }).reduce(0, +)
+                        totalAmount = totalAmount < 0 ? totalAmount * -1.0 : totalAmount * 1.0
                         var account = Account()
                         account.accountName = watch.name
                         account.balance.currentDayValue = totalAmount
@@ -196,7 +197,7 @@ struct ChartView: View {
                             return $0.balance.currentDayValue < 0
                         }.map {
                             $0.balance.currentDayValue
-                        }.reduce(0, +)
+                        }.reduce(0, +) * -1.0
                         self.chartDataList.append(liabilitiesAccount)
                         self.chartDataList.sort(by: {
                             $0.balance.currentDayValue > $1.balance.currentDayValue
