@@ -12,15 +12,28 @@ struct EmptyView: View {
     let name: String
     
     var body: some View {
-        ZStack {
-            Color.theme.background.ignoresSafeArea()
-            HStack {
-                Text("Click on")
-                Image(systemName: ConstantUtils.plusImageName)
-                Text("Icon to add new " + name + ".")
+        if(name.elementsEqual("Chart")) {
+            ZStack {
+                Color.theme.background.ignoresSafeArea()
+                HStack {
+                    Text("Click on")
+                    Image(systemName: ConstantUtils.menuImageName)
+                    Text("icon to see chart data.")
+                }
+                .foregroundColor(Color.theme.primaryText)
+                .bold()
             }
-            .foregroundColor(Color.theme.primaryText)
-            .bold()
+        } else {
+            ZStack {
+                Color.theme.background.ignoresSafeArea()
+                HStack {
+                    Text("Click on")
+                    Image(systemName: ConstantUtils.plusImageName)
+                    Text("icon to add new " + name + ".")
+                }
+                .foregroundColor(Color.theme.primaryText)
+                .bold()
+            }
         }
     }
 }

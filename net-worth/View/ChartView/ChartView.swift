@@ -15,6 +15,7 @@ struct ChartView: View {
     @State var compareAssetsToLiabilities = false
     @State var multipleWatchListSelection = Set<Watch>()
     @State var showNetWorthChart = false
+    @State var isChartDataEnabled = false
     
     @EnvironmentObject var watchViewModel: WatchViewModel
     @EnvironmentObject var accountViewModel: AccountViewModel
@@ -23,8 +24,40 @@ struct ChartView: View {
     var body: some View {
         NavigationView {
             VStack {
-                topView
-                bottomView
+                if(isChartDataEnabled) {
+                    topView
+                    chartView
+                        .padding(.top, 20)
+                } else {
+                    EmptyView(name: "Chart")
+                }
+            }
+            .padding(.horizontal, 20)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu(content: {
+                        Menu(content: {
+                            watchListPicker
+                        }, label: {
+                            Text("Watch List")
+                            Text(watchListSelected.name)
+                        })
+                        
+                        Menu(content: {
+                            selectMultipleWatchListForCompare
+                        }, label: {
+                            Text("Compare Multiple WatchLists")
+                            Text(multipleWatchListSelection.map {
+                                return $0.name
+                            }.joined(separator: ","))
+                        })
+                        
+                        compareAssetsAndLiabilitiesToggle
+                    }, label: {
+                        Image(systemName: ConstantUtils.menuImageName)
+                    })
+                    .font(.system(size: 14).bold())
+                }
             }
             .scrollIndicators(.hidden)
             .navigationTitle("Charts")
@@ -80,6 +113,7 @@ struct ChartView: View {
             chartDataList = [Account]()
             compareAssetsToLiabilities = false
             multipleWatchListSelection = Set<Watch>()
+            self.isChartDataEnabled = false
         }, label: {
             Text("Reset")
         })
@@ -89,60 +123,44 @@ struct ChartView: View {
         .bold()
     }
     
-    var bottomView: some View {
-        List {
-            watchListPicker
-            compareAssetsAndLiabilitiesToggle
-            NavigationLink(destination: {
-                selectMultipleWatchListForCompare
-            }, label: {
-                Text("Compare Multiple WatchLists")
-            })
-            .listRowBackground(Color.theme.foreground)
-            chartView
-        }
-        .foregroundColor(Color.theme.primaryText)
-    }
-    
     var selectMultipleWatchListForCompare: some View {
-        List {
-            ForEach(watchViewModel.watchList.filter({ !$0.name.elementsEqual("All")}), id: \.self, content: { watch in
-                MultipleSelectionRow(title: watch.name, isSelected: self.multipleWatchListSelection.contains(watch)) {
-                    if self.multipleWatchListSelection.contains(watch) {
-                        self.multipleWatchListSelection.remove(watch)
-                        self.chartDataList.removeAll(where: {
-                            $0.accountName.elementsEqual(watch.name)
-                        })
-                    }
-                    else {
-                        if(self.multipleWatchListSelection.isEmpty) {
-                            self.chartDataList = [Account]()
-                        }
-                        self.multipleWatchListSelection.insert(watch)
-                        
-                        let accountList = getAccountsForWatchList(watch: watch)
-                        var totalAmount = accountList.map( {
-                            $0.balance.currentDayValue
-                        }).reduce(0, +)
-                        totalAmount = totalAmount < 0 ? totalAmount * -1.0 : totalAmount * 1.0
-                        var account = Account()
-                        account.accountName = watch.name
-                        account.balance.currentDayValue = totalAmount
-                        self.chartDataList.append(account)
-                        self.chartDataList.sort(by: {
-                            $0.balance.currentDayValue > $1.balance.currentDayValue
-                        })
-                    }
-                    compareAssetsToLiabilities = false
-                    watchListSelected = Watch()
+        ForEach(watchViewModel.watchList.filter({ !$0.name.elementsEqual("All")}), id: \.self, content: { watch in
+            MultipleSelectionRow(title: watch.name, isSelected: self.multipleWatchListSelection.contains(watch)) {
+                if self.multipleWatchListSelection.contains(watch) {
+                    self.multipleWatchListSelection.remove(watch)
+                    self.chartDataList.removeAll(where: {
+                        $0.accountName.elementsEqual(watch.name)
+                    })
                 }
-                .listRowBackground(Color.theme.foreground)
-            })
-        }
-        .navigationTitle("Select Watch Lists")
-        .foregroundColor(Color.theme.primaryText)
-        .background(Color.theme.background)
-        .scrollContentBackground(.hidden)
+                else {
+                    if(self.multipleWatchListSelection.isEmpty) {
+                        self.chartDataList = [Account]()
+                    }
+                    self.multipleWatchListSelection.insert(watch)
+                    
+                    let accountList = getAccountsForWatchList(watch: watch)
+                    var totalAmount = accountList.map( {
+                        $0.balance.currentDayValue
+                    }).reduce(0, +)
+                    totalAmount = totalAmount < 0 ? totalAmount * -1.0 : totalAmount * 1.0
+                    var account = Account()
+                    account.accountName = watch.name
+                    account.balance.currentDayValue = totalAmount
+                    self.chartDataList.append(account)
+                    self.chartDataList.sort(by: {
+                        $0.balance.currentDayValue > $1.balance.currentDayValue
+                    })
+                }
+                if(multipleWatchListSelection.isEmpty) {
+                    isChartDataEnabled = false
+                } else {
+                    isChartDataEnabled = true
+                }
+                compareAssetsToLiabilities = false
+                watchListSelected = Watch()
+            }
+            .listRowBackground(Color.theme.foreground)
+        })
     }
     
     var watchListPicker: some View {
@@ -158,7 +176,9 @@ struct ChartView: View {
         .onChange(of: watchListSelected, perform: { _ in
             if(watchListSelected.name.elementsEqual("Select")) {
                 compareAssetsToLiabilities = true
+                isChartDataEnabled = false
             } else {
+                isChartDataEnabled = true
                 compareAssetsToLiabilities = false
                 multipleWatchListSelection = Set<Watch>()
                 var accountList = getAccountsForWatchList(watch: watchListSelected).filter {
@@ -178,6 +198,7 @@ struct ChartView: View {
         Toggle("Compare Assets and Liabilities", isOn: $compareAssetsToLiabilities)
             .onChange(of: compareAssetsToLiabilities) { value in
                 if(value) {
+                    isChartDataEnabled = true
                     watchListSelected = Watch()
                     multipleWatchListSelection = Set<Watch>()
                     Task.init {
@@ -205,6 +226,7 @@ struct ChartView: View {
                     }
                 }
                 else {
+                    isChartDataEnabled = false
                     self.chartDataList = [Account]()
                 }
             }
