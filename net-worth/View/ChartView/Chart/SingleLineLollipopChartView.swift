@@ -137,6 +137,7 @@ struct SingleLineLollipopChartView: View {
                             .padding(.vertical, -4)
                         }
                         .offset(x: boxOffset)
+                        .shadow(radius: 5)
                     }
                 }
             }

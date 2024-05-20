@@ -42,8 +42,8 @@ struct IncomeChartView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                VStack(alignment: .leading) {
+            HStack(alignment: .top) {
+                VStack(alignment: .center) {
                     List {
                         let totalIncomeAmount = incomeViewModel.incomeList.reduce(0.0) { partialResult, item in
                             item.amount + partialResult
@@ -99,21 +99,26 @@ struct IncomeChartView: View {
                             }
                         }
                         .listRowBackground(Color.theme.foreground)
-                        
+                    }
+                    HStack {
                         if(groupByType || groupByTag || groupByYear || groupByFinancialYear) {
                             BarLollipopGroupChartView(chartDataList: incomeListByGroup)
-                                .listRowBackground(Color.theme.foreground)
                         } else {
                             if(cumulativeView || averageView) {
                                 SingleLineLollipopChartView(chartDataList: incomeChartDataList, isColorChart: false)
-                                    .listRowBackground(Color.theme.foreground)
                             } else {
                                 BarLollipopChartView(chartDataList: incomeChartDataList, average: incomeAvg, isAverageChart: true)
-                                    .listRowBackground(Color.theme.foreground)
                             }
                         }
                     }
+                    .frame(width: 300)
+                    .padding(15)
+                    .background(Color.theme.foreground)
+                    .cornerRadius(10)
+                    .shadow(radius: 5)
+                    Spacer()
                 }
+                Spacer()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .padding()
