@@ -26,13 +26,13 @@ struct ChartView: View {
             VStack {
                 if(isChartDataEnabled) {
                     topView
-                    chartView
-                        .padding(.top, 20)
+                    List {
+                        chartView
+                    }
                 } else {
                     EmptyView(name: "Chart")
                 }
             }
-            .padding(.horizontal, 20)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu(content: {
