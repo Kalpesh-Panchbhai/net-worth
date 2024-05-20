@@ -31,7 +31,7 @@ struct AccountBrokerRowView: View {
                     Text(SettingsController().getDefaultCurrency().code)
                         .font(.system(size: 14))
                         .foregroundColor(Color.theme.secondaryText)
-                    Text(account.balance.currentDayValue.withCommas(decimalPlace: 2))
+                    Text(account.balance.currentDayValue.value.withCommas(decimalPlace: 2))
                         .font(.headline)
                         .foregroundColor(Color.theme.primaryText)
                 }
@@ -62,9 +62,9 @@ struct AccountBrokerRowView: View {
     }
     
     private func getOneDayChange() -> Double {
-        return account.balance.currentDayValue - account.balance.previousDayValue
+        return account.balance.currentDayValue.value - account.balance.previousDayValue.value
     }
     private func getOneDayPercentageChangeForBroker() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: account.balance.previousDayValue, currentBalance: account.balance.currentDayValue )
+        return CommonController.getGrowthPercentage(previousBalance: account.balance.previousDayValue.value, currentBalance: account.balance.currentDayValue.value)
     }
 }

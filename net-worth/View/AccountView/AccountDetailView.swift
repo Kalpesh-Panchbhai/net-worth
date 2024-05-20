@@ -129,7 +129,7 @@ struct AccountDetailView: View {
                             })
                         }
                         
-                        if(account.balance.currentDayValue.isZero) {
+                        if(account.balance.currentDayValue.value.isZero) {
                             Button(action: {
                                 Task.init {
                                     var updatedAccount = self.account

@@ -27,7 +27,7 @@ struct WatchViewRow: View {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
-                    Text("\(balance.currentDayValue.withCommas(decimalPlace: 2))")
+                    Text("\(balance.currentDayValue.value.withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 }
@@ -74,15 +74,15 @@ struct WatchViewRow: View {
         }
         .onAppear {
             Task.init {
-                balance = BalanceAccount(currentDayValue: 0.0, previousDayValue: 0.0)
+                balance = BalanceAccount(currentDayValue: BalanceAccountDetail(value: 0.0), previousDayValue: BalanceAccountDetail(value: 0.0))
                 let accountList = watch.accountList.map { id in
                     return accountViewModel.accountList.filter {
                         return $0.id.elementsEqual(id)
                     }.first ?? Account(balance: BalanceAccount())
                 }
                 for account in accountList {
-                    self.balance.currentDayValue += account.balance.currentDayValue
-                    self.balance.previousDayValue += account.balance.previousDayValue
+                    self.balance.currentDayValue.value += account.balance.currentDayValue.value
+                    self.balance.previousDayValue.value += account.balance.previousDayValue.value
                 }
                 
             }
@@ -91,10 +91,10 @@ struct WatchViewRow: View {
     }
     
     private func getOneDayChange() -> Double {
-        return balance.currentDayValue - balance.previousDayValue
+        return balance.currentDayValue.value - balance.previousDayValue.value
     }
     
     func getOneDayPercentageChange() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: balance.previousDayValue, currentBalance: balance.currentDayValue)
+        return CommonController.getGrowthPercentage(previousBalance: balance.previousDayValue.value, currentBalance: balance.currentDayValue.value)
     }
 }

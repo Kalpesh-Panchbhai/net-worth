@@ -32,7 +32,7 @@ struct BalanceCardView: View {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
-                    Text("\(balanceAccount.currentDayValue.withCommas(decimalPlace: 2))")
+                    Text("\(balanceAccount.currentDayValue.value.withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
                 }
@@ -86,10 +86,10 @@ struct BalanceCardView: View {
                 var previousDayValue = 0.0
                 
                 for account in accountList {
-                    currentDayValue += account.balance.currentDayValue
-                    previousDayValue += account.balance.previousDayValue
+                    currentDayValue += account.balance.currentDayValue.value
+                    previousDayValue += account.balance.previousDayValue.value
                 }
-                balanceAccount = BalanceAccount(currentDayValue: currentDayValue, previousDayValue: previousDayValue)
+                balanceAccount = BalanceAccount(currentDayValue: BalanceAccountDetail(value: currentDayValue), previousDayValue: BalanceAccountDetail(value: previousDayValue))
             } else {
                 var accountList = [Account]()
                 if(accountType.elementsEqual("Net Worth")) {
@@ -101,18 +101,18 @@ struct BalanceCardView: View {
                 var previousDayValue = 0.0
                 
                 for account in accountList {
-                    currentDayValue += account.balance.currentDayValue
-                    previousDayValue += account.balance.previousDayValue
+                    currentDayValue += account.balance.currentDayValue.value
+                    previousDayValue += account.balance.previousDayValue.value
                 }
-                balanceAccount = BalanceAccount(currentDayValue: currentDayValue, previousDayValue: previousDayValue)
+                balanceAccount = BalanceAccount(currentDayValue: BalanceAccountDetail(value: currentDayValue), previousDayValue: BalanceAccountDetail(value: previousDayValue))
             }
         }
     }
     
     private func getOneDayChange() -> Double {
-        return balanceAccount.currentDayValue - balanceAccount.previousDayValue
+        return balanceAccount.currentDayValue.value - balanceAccount.previousDayValue.value
     }
     func getOneDayPercentageChange() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: balanceAccount.previousDayValue, currentBalance: balanceAccount.currentDayValue)
+        return CommonController.getGrowthPercentage(previousBalance: balanceAccount.previousDayValue.value, currentBalance: balanceAccount.currentDayValue.value)
     }
 }

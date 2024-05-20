@@ -18,7 +18,7 @@ struct AccountDetailCardView: View {
                 Text(account.currency)
                     .foregroundColor(Color.theme.secondaryText)
                     .font(.caption)
-                Text("\(account.balance.currentDayValue.withCommas(decimalPlace: 2))")
+                Text("\(account.balance.currentDayValue.value.withCommas(decimalPlace: 2))")
                     .foregroundColor(Color.theme.primaryText)
                     .font(.caption.bold())
                 Spacer()
@@ -72,10 +72,10 @@ struct AccountDetailCardView: View {
     }
     
     func getTotalChangeForNonSymbol() -> Double {
-        return account.balance.currentDayValue - account.balance.previousDayValue
+        return account.balance.currentDayValue.value - account.balance.previousDayValue.value
     }
     
     func getOneDayPercentageChangeForNonSymbol() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: account.balance.previousDayValue, currentBalance: account.balance.currentDayValue)
+        return CommonController.getGrowthPercentage(previousBalance: account.balance.previousDayValue.value, currentBalance: account.balance.currentDayValue.value)
     }
 }

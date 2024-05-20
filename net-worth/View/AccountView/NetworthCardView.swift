@@ -65,13 +65,13 @@ struct NetworthCardView: View {
             var previousDayValue = 0.0
             
             for account in accountList {
-                currentDayValue += account.balance.currentDayValue
-                previousDayValue += account.balance.previousDayValue
+                currentDayValue += account.balance.currentDayValue.value
+                previousDayValue += account.balance.previousDayValue.value
             }
-            balanceAccount = BalanceAccount(currentDayValue: currentDayValue, previousDayValue: previousDayValue)
+            balanceAccount = BalanceAccount(currentDayValue: BalanceAccountDetail(value: currentDayValue), previousDayValue: BalanceAccountDetail(value: previousDayValue))
             let totalIncome = incomeViewModel.incomeTotalAmount
-            percent = balanceAccount.currentDayValue / totalIncome * 100
-            percentChange = (balanceAccount.currentDayValue - balanceAccount.previousDayValue) / totalIncome * 100
+            percent = balanceAccount.currentDayValue.value / totalIncome * 100
+            percentChange = (balanceAccount.currentDayValue.value - balanceAccount.previousDayValue.value) / totalIncome * 100
         }
     }
 }

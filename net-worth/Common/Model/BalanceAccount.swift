@@ -9,8 +9,8 @@ import Foundation
 
 struct BalanceAccount : Codable, Hashable {
     
-    var currentDayValue: Double = 0.0
+    var currentDayValue: BalanceAccountDetail = BalanceAccountDetail()
     
-    var previousDayValue: Double = 0.0
+    var previousDayValue: BalanceAccountDetail = BalanceAccountDetail()
     
 }
