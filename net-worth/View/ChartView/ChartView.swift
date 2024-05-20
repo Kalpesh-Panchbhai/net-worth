@@ -14,6 +14,7 @@ struct ChartView: View {
     @State var chartDataList = [Account]()
     @State var compareAssetsToLiabilities = false
     @State var multipleWatchListSelection = Set<Watch>()
+    @State var filterSelected = ""
     @State var showNetWorthChart = false
     @State var isChartDataEnabled = false
     
@@ -108,12 +109,13 @@ struct ChartView: View {
     
     var rightTopView: some View {
         Button(action: {
-            watchListSelected = Watch(name: "Select")
-            showingAssetsData = true
-            chartDataList = [Account]()
+            watchListSelected = Watch()
             compareAssetsToLiabilities = false
             multipleWatchListSelection = Set<Watch>()
+            chartDataList = [Account]()
+            showingAssetsData = true
             self.isChartDataEnabled = false
+            filterSelected = ""
         }, label: {
             Text("Reset")
         })
@@ -125,7 +127,6 @@ struct ChartView: View {
     
     var watchListPicker: some View {
         Picker(selection: $watchListSelected, content: {
-            Text("Select").tag(Watch())
             ForEach(watchViewModel.watchList, id: \.self, content: {
                 Text($0.name).tag($0)
             })
@@ -134,10 +135,19 @@ struct ChartView: View {
         })
         .listRowBackground(Color.theme.foreground)
         .onChange(of: watchListSelected, perform: { _ in
-            if(watchListSelected.name.elementsEqual("Select")) {
-                compareAssetsToLiabilities = true
-                isChartDataEnabled = false
+            if(watchListSelected.name.isEmpty) {
+                if(!filterSelected.elementsEqual("COMPARE")) {
+                    compareAssetsToLiabilities = false
+                }
+                
+                if(!filterSelected.elementsEqual("COMPARE_MULTIPLE")) {
+                    multipleWatchListSelection = Set<Watch>()
+                }
+                if(filterSelected.isEmpty) {
+                    isChartDataEnabled = false
+                }
             } else {
+                filterSelected = "WATCH"
                 isChartDataEnabled = true
                 compareAssetsToLiabilities = false
                 multipleWatchListSelection = Set<Watch>()
@@ -164,6 +174,7 @@ struct ChartView: View {
                     })
                 }
                 else {
+                    filterSelected = "COMPARE_MULTIPLE"
                     if(self.multipleWatchListSelection.isEmpty) {
                         self.chartDataList = [Account]()
                     }
@@ -187,8 +198,14 @@ struct ChartView: View {
                 } else {
                     isChartDataEnabled = true
                 }
-                compareAssetsToLiabilities = false
-                watchListSelected = Watch()
+                
+                if(!filterSelected.elementsEqual("COMPARE")) {
+                    compareAssetsToLiabilities = false
+                }
+                
+                if(!filterSelected.elementsEqual("WATCH")) {
+                    watchListSelected = Watch()
+                }
             }
             .listRowBackground(Color.theme.foreground)
         })
@@ -198,36 +215,42 @@ struct ChartView: View {
         Toggle("Compare Assets and Liabilities", isOn: $compareAssetsToLiabilities)
             .onChange(of: compareAssetsToLiabilities) { value in
                 if(value) {
+                    filterSelected = "COMPARE"
+                    
                     isChartDataEnabled = true
-                    watchListSelected = Watch()
-                    multipleWatchListSelection = Set<Watch>()
-                    Task.init {
-                        self.chartDataList = [Account]()
-                        var assetAccount = Account()
-                        assetAccount.accountName = "Assets"
-                        assetAccount.balance.currentDayValue.value = getAccounts().filter {
-                            return $0.balance.currentDayValue.value > 0
-                        }.map {
-                            $0.balance.currentDayValue.value
-                        }.reduce(0, +)
-                        self.chartDataList.append(assetAccount)
-                        
-                        var liabilitiesAccount = Account()
-                        liabilitiesAccount.accountName = "Liabilities"
-                        liabilitiesAccount.balance.currentDayValue.value = getAccounts().filter {
-                            return $0.balance.currentDayValue.value < 0
-                        }.map {
-                            $0.balance.currentDayValue.value
-                        }.reduce(0, +) * -1.0
-                        self.chartDataList.append(liabilitiesAccount)
-                        self.chartDataList.sort(by: {
-                            $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
-                        })
-                    }
+                    self.chartDataList = [Account]()
+                    var assetAccount = Account()
+                    assetAccount.accountName = "Assets"
+                    assetAccount.balance.currentDayValue.value = getAccounts().filter {
+                        return $0.balance.currentDayValue.value > 0
+                    }.map {
+                        $0.balance.currentDayValue.value
+                    }.reduce(0, +)
+                    self.chartDataList.append(assetAccount)
+                    
+                    var liabilitiesAccount = Account()
+                    liabilitiesAccount.accountName = "Liabilities"
+                    liabilitiesAccount.balance.currentDayValue.value = getAccounts().filter {
+                        return $0.balance.currentDayValue.value < 0
+                    }.map {
+                        $0.balance.currentDayValue.value
+                    }.reduce(0, +) * -1.0
+                    self.chartDataList.append(liabilitiesAccount)
+                    self.chartDataList.sort(by: {
+                        $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
+                    })
                 }
-                else {
+                else if(filterSelected.isEmpty){
                     isChartDataEnabled = false
                     self.chartDataList = [Account]()
+                }
+                
+                if(!filterSelected.elementsEqual("WATCH")) {
+                    watchListSelected = Watch()
+                }
+                
+                if(!filterSelected.elementsEqual("COMPARE_MULTIPLE")) {
+                    multipleWatchListSelection = Set<Watch>()
                 }
             }
             .listRowBackground(Color.theme.foreground)
