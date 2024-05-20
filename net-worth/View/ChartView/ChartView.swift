@@ -108,7 +108,7 @@ struct ChartView: View {
     
     var rightTopView: some View {
         Button(action: {
-            watchListSelected = Watch()
+            watchListSelected = Watch(name: "Select")
             showingAssetsData = true
             chartDataList = [Account]()
             compareAssetsToLiabilities = false
@@ -121,6 +121,37 @@ struct ChartView: View {
         .disabled((watchListSelected.name.isEmpty && chartDataList.isEmpty && !compareAssetsToLiabilities && multipleWatchListSelection.isEmpty))
         .foregroundColor(((watchListSelected.name.isEmpty && chartDataList.isEmpty && !compareAssetsToLiabilities && multipleWatchListSelection.isEmpty) ? Color.gray : Color.theme.primaryText))
         .bold()
+    }
+    
+    var watchListPicker: some View {
+        Picker(selection: $watchListSelected, content: {
+            Text("Select").tag(Watch())
+            ForEach(watchViewModel.watchList, id: \.self, content: {
+                Text($0.name).tag($0)
+            })
+        }, label: {
+            Text("Watch List")
+        })
+        .listRowBackground(Color.theme.foreground)
+        .onChange(of: watchListSelected, perform: { _ in
+            if(watchListSelected.name.elementsEqual("Select")) {
+                compareAssetsToLiabilities = true
+                isChartDataEnabled = false
+            } else {
+                isChartDataEnabled = true
+                compareAssetsToLiabilities = false
+                multipleWatchListSelection = Set<Watch>()
+                var accountList = getAccountsForWatchList(watch: watchListSelected).filter {
+                    return $0.balance.currentDayValue.value >= 0
+                }
+                accountList.sort(by: {
+                    $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
+                })
+                self.chartDataList = accountList
+                
+                showingAssetsData = true
+            }
+        })
     }
     
     var selectMultipleWatchListForCompare: some View {
@@ -160,37 +191,6 @@ struct ChartView: View {
                 watchListSelected = Watch()
             }
             .listRowBackground(Color.theme.foreground)
-        })
-    }
-    
-    var watchListPicker: some View {
-        Picker(selection: $watchListSelected, content: {
-            Text("Select").tag(Watch())
-            ForEach(watchViewModel.watchList, id: \.self, content: {
-                Text($0.name).tag($0)
-            })
-        }, label: {
-            Text("Watch List")
-        })
-        .listRowBackground(Color.theme.foreground)
-        .onChange(of: watchListSelected, perform: { _ in
-            if(watchListSelected.name.elementsEqual("Select")) {
-                compareAssetsToLiabilities = true
-                isChartDataEnabled = false
-            } else {
-                isChartDataEnabled = true
-                compareAssetsToLiabilities = false
-                multipleWatchListSelection = Set<Watch>()
-                var accountList = getAccountsForWatchList(watch: watchListSelected).filter {
-                    return $0.balance.currentDayValue.value >= 0
-                }
-                accountList.sort(by: {
-                    $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
-                })
-                self.chartDataList = accountList
-                
-                showingAssetsData = true
-            }
         })
     }
     
