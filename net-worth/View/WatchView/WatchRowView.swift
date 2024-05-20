@@ -82,7 +82,11 @@ struct WatchViewRow: View {
                 }
                 for account in accountList {
                     self.balance.currentDayValue.value += account.balance.currentDayValue.value
-                    self.balance.previousDayValue.value += account.balance.previousDayValue.value
+                    if(areOneDayTransactions(account: account)) {
+                        self.balance.previousDayValue.value += account.balance.previousDayValue.value
+                    } else {
+                        self.balance.previousDayValue.value += account.balance.currentDayValue.value
+                    }
                 }
                 
             }
@@ -94,7 +98,11 @@ struct WatchViewRow: View {
         return balance.currentDayValue.value - balance.previousDayValue.value
     }
     
-    func getOneDayPercentageChange() -> String {
+    private func getOneDayPercentageChange() -> String {
         return CommonController.getGrowthPercentage(previousBalance: balance.previousDayValue.value, currentBalance: balance.currentDayValue.value)
+    }
+    
+    private func areOneDayTransactions(account: Account) -> Bool {
+        return account.accountName != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }

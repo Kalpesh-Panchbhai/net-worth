@@ -31,7 +31,7 @@ struct AccountRowView: View {
                     Spacer()
                     Text(account.accountType)
                         .foregroundColor(Color.theme.secondaryText)
-                        .font(.caption)
+                        .font(.caption.italic())
                         .multilineTextAlignment(.leading)
                 }
             }
@@ -92,16 +92,14 @@ struct AccountRowView: View {
                         Spacer()
                     }
                 } else {
-                    if(getOneDayChange() >= 0) {
-                        if(getOneDayChange() > 0) {
-                            ZStack {
-                                Circle()
-                                    .fill(Color.theme.green.opacity(0.2))
-                                    .frame(width: 17, height: 17)
-                                Image(systemName: ConstantUtils.arrowUpImageName)
-                                    .foregroundColor(Color.theme.green)
-                                    .font(.caption.bold())
-                            }
+                    if(getOneDayChange() > 0) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.theme.green.opacity(0.2))
+                                .frame(width: 17, height: 17)
+                            Image(systemName: ConstantUtils.arrowUpImageName)
+                                .foregroundColor(Color.theme.green)
+                                .font(.caption.bold())
                         }
                         Text("+\(getOneDayChange().withCommas(decimalPlace: 2))")
                             .foregroundColor(Color.theme.green)
@@ -110,7 +108,7 @@ struct AccountRowView: View {
                             .foregroundColor(Color.theme.green)
                             .font(.caption.bold())
                         Spacer()
-                    } else {
+                    } else if(getOneDayChange() < 0){
                         ZStack {
                             Circle()
                                 .fill(Color.theme.red.opacity(0.2))
@@ -126,6 +124,9 @@ struct AccountRowView: View {
                             .foregroundColor(Color.theme.red)
                             .font(.caption.bold())
                         Spacer()
+                    } else {
+                        Text("")
+                        Spacer()
                     }
                 }
             }
@@ -137,10 +138,14 @@ struct AccountRowView: View {
     }
     
     private func getOneDayChange() -> Double {
-        return account.balance.currentDayValue.value - account.balance.previousDayValue.value
+        return areOneDayTransactions() ? account.balance.currentDayValue.value - account.balance.previousDayValue.value : 0.0
     }
     
     private func getOneDayPercentageChange() -> String {
         return CommonController.getGrowthPercentage(previousBalance: account.balance.previousDayValue.value, currentBalance: account.balance.currentDayValue.value)
+    }
+    
+    private func areOneDayTransactions() -> Bool {
+        return account.accountName != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }

@@ -41,7 +41,7 @@ struct AccountBrokerRowView: View {
                         Text(getOneDayChange().withCommas(decimalPlace: 2))
                             .font(.system(size: 12))
                             .foregroundColor(Color.theme.green)
-                        Text("(+" + getOneDayPercentageChangeForBroker() + ")")
+                        Text("(+" + getOneDayPercentageChange() + ")")
                             .font(.system(size: 12))
                             .foregroundColor(Color.theme.green)
                     }
@@ -51,20 +51,27 @@ struct AccountBrokerRowView: View {
                         Text(getOneDayChange().withCommas(decimalPlace: 2))
                             .font(.system(size: 12))
                             .foregroundColor(Color.theme.red)
-                        Text("(" + getOneDayPercentageChangeForBroker() + ")")
+                        Text("(" + getOneDayPercentageChange() + ")")
                             .font(.system(size: 12))
                             .foregroundColor(Color.theme.red)
                     }
                     .padding(.horizontal)
+                } else {
+                    Text("")
                 }
             }
         }
     }
     
     private func getOneDayChange() -> Double {
-        return account.balance.currentDayValue.value - account.balance.previousDayValue.value
+        return areOneDayTransactions() ? account.balance.currentDayValue.value - account.balance.previousDayValue.value : 0.0
     }
-    private func getOneDayPercentageChangeForBroker() -> String {
+    
+    private func getOneDayPercentageChange() -> String {
         return CommonController.getGrowthPercentage(previousBalance: account.balance.previousDayValue.value, currentBalance: account.balance.currentDayValue.value)
+    }
+    
+    private func areOneDayTransactions() -> Bool {
+        return account.name != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }

@@ -133,7 +133,11 @@ struct AccountCardView: View {
     }
     
     private func getOneDayChange() -> Double {
-        return account.balance.currentDayValue.value - account.balance.previousDayValue.value
+        return areOneDayTransactions() ? account.balance.currentDayValue.value - account.balance.previousDayValue.value : 0.0
+    }
+    
+    private func areOneDayTransactions() -> Bool {
+        return account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
     
 }

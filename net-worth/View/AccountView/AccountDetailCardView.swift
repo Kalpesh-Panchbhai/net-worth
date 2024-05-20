@@ -31,7 +31,7 @@ struct AccountDetailCardView: View {
             }
             Spacer()
             HStack {
-                if(getTotalChangeForNonSymbol() > 0) {
+                if(getOneDayChange() > 0) {
                     ZStack {
                         Circle()
                             .fill(Color.theme.green.opacity(0.2))
@@ -40,13 +40,13 @@ struct AccountDetailCardView: View {
                             .foregroundColor(Color.theme.green)
                             .font(.caption.bold())
                     }
-                    Text("+\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
+                    Text("+\(getOneDayChange().withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.green)
                         .font(.caption.bold())
-                    Text("(+\(getOneDayPercentageChangeForNonSymbol()))")
+                    Text("(+\(getOneDayPercentageChange()))")
                         .foregroundColor(Color.theme.green)
                         .font(.caption.bold())
-                } else if(getTotalChangeForNonSymbol() < 0) {
+                } else if(getOneDayChange() < 0) {
                     ZStack {
                         Circle()
                             .fill(Color.theme.red.opacity(0.2))
@@ -55,10 +55,10 @@ struct AccountDetailCardView: View {
                             .foregroundColor(Color.theme.red)
                             .font(.caption.bold())
                     }
-                    Text("\(getTotalChangeForNonSymbol().withCommas(decimalPlace: 2))")
+                    Text("\(getOneDayChange().withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.red)
                         .font(.caption.bold())
-                    Text("(\(getOneDayPercentageChangeForNonSymbol()))")
+                    Text("(\(getOneDayPercentageChange()))")
                         .foregroundColor(Color.theme.red)
                         .font(.caption.bold())
                 }
@@ -71,11 +71,15 @@ struct AccountDetailCardView: View {
         .background(Color.theme.foreground)
     }
     
-    func getTotalChangeForNonSymbol() -> Double {
-        return account.balance.currentDayValue.value - account.balance.previousDayValue.value
+    private func getOneDayChange() -> Double {
+        return areOneDayTransactions() ? account.balance.currentDayValue.value - account.balance.previousDayValue.value : 0.0
     }
     
-    func getOneDayPercentageChangeForNonSymbol() -> String {
+    private func getOneDayPercentageChange() -> String {
         return CommonController.getGrowthPercentage(previousBalance: account.balance.previousDayValue.value, currentBalance: account.balance.currentDayValue.value)
+    }
+    
+    private func areOneDayTransactions() -> Bool {
+        return account.accountName != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }

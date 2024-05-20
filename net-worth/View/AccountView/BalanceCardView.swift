@@ -87,7 +87,11 @@ struct BalanceCardView: View {
                 
                 for account in accountList {
                     currentDayValue += account.balance.currentDayValue.value
-                    previousDayValue += account.balance.previousDayValue.value
+                    if(areOneDayTransactions(account: account)) {
+                        previousDayValue += account.balance.previousDayValue.value
+                    } else {
+                        previousDayValue += account.balance.currentDayValue.value
+                    }
                 }
                 balanceAccount = BalanceAccount(currentDayValue: BalanceAccountDetail(value: currentDayValue), previousDayValue: BalanceAccountDetail(value: previousDayValue))
             } else {
@@ -102,7 +106,11 @@ struct BalanceCardView: View {
                 
                 for account in accountList {
                     currentDayValue += account.balance.currentDayValue.value
-                    previousDayValue += account.balance.previousDayValue.value
+                    if(areOneDayTransactions(account: account)) {
+                        previousDayValue += account.balance.previousDayValue.value
+                    } else {
+                        previousDayValue += account.balance.currentDayValue.value
+                    }
                 }
                 balanceAccount = BalanceAccount(currentDayValue: BalanceAccountDetail(value: currentDayValue), previousDayValue: BalanceAccountDetail(value: previousDayValue))
             }
@@ -112,7 +120,12 @@ struct BalanceCardView: View {
     private func getOneDayChange() -> Double {
         return balanceAccount.currentDayValue.value - balanceAccount.previousDayValue.value
     }
-    func getOneDayPercentageChange() -> String {
+    
+    private func getOneDayPercentageChange() -> String {
         return CommonController.getGrowthPercentage(previousBalance: balanceAccount.previousDayValue.value, currentBalance: balanceAccount.currentDayValue.value)
+    }
+    
+    private func areOneDayTransactions(account: Account) -> Bool {
+        return account.accountName != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }
