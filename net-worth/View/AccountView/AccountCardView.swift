@@ -30,7 +30,6 @@ struct AccountCardView: View {
                 }
             }
             Spacer()
-            Spacer()
             HStack(alignment: .center) {
                 if(account.accountType == ConstantUtils.brokerAccountType) {
                     Text(SettingsController().getDefaultCurrency().code)
@@ -121,8 +120,13 @@ struct AccountCardView: View {
                 }
             }
             Spacer()
+            HStack {
+                Text(account.balance.currentDayValue.dateTime.UTCToLocalDate().format())
+                    .foregroundColor(Color.theme.secondaryText)
+                    .font(.system(size: 10).italic())
+            }
         }
-        .frame(width: 150, height: 80)
+        .frame(width: 150, height: 100)
         .padding(8)
         .background(Color.theme.foreground)
         .cornerRadius(10)
