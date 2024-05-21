@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		7D59B4012BE246FF006F3F00 /* net_worthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4002BE246FF006F3F00 /* net_worthApp.swift */; };
-		7D59B4032BE246FF006F3F00 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4022BE246FF006F3F00 /* ContentView.swift */; };
 		7D59B4052BE24701006F3F00 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B4042BE24701006F3F00 /* Assets.xcassets */; };
 		7D59B4082BE24701006F3F00 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B4072BE24701006F3F00 /* Preview Assets.xcassets */; };
 		7D59B43C2BE249B7006F3F00 /* AccountData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4102BE249B7006F3F00 /* AccountData.swift */; };
@@ -141,7 +140,6 @@
 /* Begin PBXFileReference section */
 		7D59B3FD2BE246FF006F3F00 /* net-worth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "net-worth.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D59B4002BE246FF006F3F00 /* net_worthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = net_worthApp.swift; sourceTree = "<group>"; };
-		7D59B4022BE246FF006F3F00 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7D59B4042BE24701006F3F00 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7D59B4072BE24701006F3F00 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		7D59B40E2BE24774006F3F00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -305,7 +303,6 @@
 			children = (
 				7D59B53C2BE24B1C006F3F00 /* GoogleService-Info.plist */,
 				7D59B40E2BE24774006F3F00 /* Info.plist */,
-				7D59B4022BE246FF006F3F00 /* ContentView.swift */,
 				7D59B4002BE246FF006F3F00 /* net_worthApp.swift */,
 				7D59B4042BE24701006F3F00 /* Assets.xcassets */,
 				7D59B5242BE249E0006F3F00 /* net_worth.xcdatamodeld */,
@@ -696,7 +693,6 @@
 				7D59B4FE2BE249D9006F3F00 /* LoadingView.swift in Sources */,
 				7D59B50B2BE249D9006F3F00 /* LoginScreen.swift in Sources */,
 				7D59B4E22BE249D9006F3F00 /* AccountBrokerRowView.swift in Sources */,
-				7D59B4032BE246FF006F3F00 /* ContentView.swift in Sources */,
 				7D59B45F2BE249B7006F3F00 /* SymbolDetailModel.swift in Sources */,
 				7D59B4EC2BE249D9006F3F00 /* BalanceCardView.swift in Sources */,
 				7D59B43E2BE249B7006F3F00 /* Data.swift in Sources */,
