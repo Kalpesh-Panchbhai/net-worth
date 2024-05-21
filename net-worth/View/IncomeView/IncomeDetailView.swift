@@ -59,10 +59,16 @@ struct IncomeDetailView: View {
                 Button(action: {
                     self.modifyViewOpen = true
                 }, label: {
-                    Image(systemName: ConstantUtils.newTransactionImageName)
-                        .foregroundColor(Color.theme.primaryText)
+                    ZStack {
+                        Circle()
+                            .frame(width: 25, height: 25)
+                            .foregroundColor(ColorTheme().green)
+                        Image(systemName: ConstantUtils.newTransactionImageName)
+                            .foregroundColor(Color.theme.background)
+                            .font(.system(size: 12))
+                    }
                 })
-                .font(.system(size: 14).bold())
+                .font(.system(size: 14))
             })
         }
         .background(Color.theme.background)

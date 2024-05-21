@@ -77,11 +77,16 @@ struct IncomeTypeView: View {
                 Button(action: {
                     self.addNewIncomeTypeOpenView.toggle()
                 }, label: {
-                    Image(systemName: ConstantUtils.plusImageName)
-                        .foregroundColor(Color.theme.primaryText)
-                        .bold()
+                    ZStack {
+                        Circle()
+                            .frame(width: 25, height: 25)
+                            .foregroundColor(ColorTheme().green)
+                        Image(systemName: ConstantUtils.plusImageName)
+                            .foregroundColor(Color.theme.background)
+                            .font(.system(size: 12))
+                    }
                 })
-                .font(.system(size: 14).bold())
+                .font(.system(size: 14))
             }
         }
         // MARK: Add New Income Type Sheet View

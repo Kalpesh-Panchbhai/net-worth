@@ -351,11 +351,16 @@ struct IncomeChartView: View {
                                     updateChartData()
                                 })
                         }, label: {
-                            Image(systemName: ConstantUtils.menuImageName)
-                                .foregroundColor(Color.theme.primaryText)
-                                .font(.system(size: 14).bold())
+                            ZStack {
+                                Circle()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundColor(ColorTheme().green)
+                                Image(systemName: ConstantUtils.menuImageName)
+                                    .foregroundColor(Color.theme.background)
+                                    .font(.system(size: 12))
+                            }
                         })
-                        .font(.system(size: 14).bold())
+                        .font(.system(size: 14))
                     }
                 }
             }
