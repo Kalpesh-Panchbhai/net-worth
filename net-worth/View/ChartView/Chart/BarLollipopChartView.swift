@@ -151,7 +151,7 @@ struct BarLollipopChartView: View {
                 }
             }
         }
-        .frame(height: 400)
+        .frame(maxHeight: .infinity)
     }
     
     private func findElement(location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy) -> ChartData? {
