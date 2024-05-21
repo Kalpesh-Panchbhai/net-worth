@@ -27,9 +27,14 @@ struct ChartView: View {
             VStack {
                 if(isChartDataEnabled) {
                     topView
-                    List {
+                    HStack {
                         chartView
                     }
+                    .frame(maxWidth: .infinity)
+                    .padding(15)
+                    .background(Color.theme.foreground)
+                    .cornerRadius(10)
+                    .shadow(radius: 5)
                 } else {
                     EmptyView(name: "Chart")
                 }
@@ -83,14 +88,14 @@ struct ChartView: View {
                 chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
                     return $0.balance.currentDayValue.value < 0
                 }.sorted(by: {
-                    $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
+                    $0.balance.currentDayValue.value < $1.balance.currentDayValue.value
                 })
                 showingAssetsData.toggle()
             } else {
                 chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
-                    return $0.balance.currentDayValue.value >= 0
+                    return $0.balance.currentDayValue.value > 0
                 }.sorted(by: {
-                    $0.balance.currentDayValue.value < $1.balance.currentDayValue.value
+                    $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
                 })
                 showingAssetsData.toggle()
             }
@@ -152,7 +157,7 @@ struct ChartView: View {
                 compareAssetsToLiabilities = false
                 multipleWatchListSelection = Set<Watch>()
                 var accountList = getAccountsForWatchList(watch: watchListSelected).filter {
-                    return $0.balance.currentDayValue.value >= 0
+                    return $0.balance.currentDayValue.value > 0
                 }
                 accountList.sort(by: {
                     $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
@@ -268,8 +273,7 @@ struct ChartView: View {
             colors: chartDataList.map { _ in
                     .random
             }, backgroundColor: Color.theme.foreground)
-        .frame(minHeight: 550)
-        .listRowBackground(Color.theme.foreground)
+        .frame(maxHeight: .infinity)
     }
     
     private func getAccounts() -> [Account] {
