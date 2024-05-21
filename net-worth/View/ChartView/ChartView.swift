@@ -30,11 +30,10 @@ struct ChartView: View {
                     HStack {
                         chartView
                     }
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: 328)
                     .padding(15)
                     .background(Color.theme.foreground)
                     .cornerRadius(10)
-                    .shadow(radius: 5)
                 } else {
                     EmptyView(name: "Chart")
                 }
