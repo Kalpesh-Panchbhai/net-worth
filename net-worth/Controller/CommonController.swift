@@ -39,7 +39,7 @@ class CommonController {
         }
     }
     
-    public static func getGrowthPercentage(previousBalance: Double, currentBalance: Double) -> String {
+    public static func getGrowthPercentageInDouble(previousBalance: Double, currentBalance: Double) -> Double {
         
         var percentage = previousBalance.distance(to: currentBalance) / previousBalance * 100
         
@@ -50,7 +50,11 @@ class CommonController {
         } else if(percentage.isZero && percentage.sign == .minus) {
             percentage = percentage * -1.0
         }
-        return percentage.withCommas(decimalPlace: 2) + "%"
+        return percentage
+    }
+    
+    public static func getGrowthPercentage(previousBalance: Double, currentBalance: Double) -> String {
+        return getGrowthPercentageInDouble(previousBalance: previousBalance, currentBalance: currentBalance).withCommas(decimalPlace: 2) + "%"
     }
     
     public static func CalculateCAGR(firstBalance: Double, lastBalance: Double, days: Double) -> String {
