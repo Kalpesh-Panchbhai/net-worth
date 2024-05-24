@@ -252,7 +252,8 @@ struct ChartView: View {
                         $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
                     })
                 }
-                else if(filterSelected.isEmpty){
+                else if(filterSelected.isEmpty || (filterSelected.elementsEqual("COMPARE") && !value)) {
+                    filterSelected = ""
                     isChartDataEnabled = false
                     self.chartDataList = [Account]()
                 }
