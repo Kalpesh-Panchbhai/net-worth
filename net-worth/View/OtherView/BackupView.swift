@@ -10,13 +10,6 @@ import SwiftUI
 struct BackupView: View {
     
     var importExportController = ImportExportController()
-    var accountController = AccountController()
-    var accountInBrokerController = AccountInBrokerController()
-    var accountTransactionController = AccountTransactionController()
-    var incomeController = IncomeController()
-    var incomeTypeController = IncomeTypeController()
-    var incomeTagController = IncomeTagController()
-    var watchController = WatchController()
     
     @State var totalAccountInCloud = 0
     @State var totalAccountsInBrokerInCloud = 0
@@ -27,6 +20,9 @@ struct BackupView: View {
     @State var totalIncomeTagInCloud = 0
     
     @StateObject var importExportViewModel = ImportExportViewModel()
+    @EnvironmentObject var accountViewModel: AccountViewModel
+    @EnvironmentObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var incomeViewModel: IncomeViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -52,7 +48,6 @@ struct BackupView: View {
                         Divider()
                         account
                         accountsInBroker
-                        accountTransactions
                         income
                         watchList
                         incomeTag
@@ -69,7 +64,6 @@ struct BackupView: View {
                         Divider()
                         accountInCloud
                         accountsInBrokerInCloud
-                        accountTransactionInCloud
                         incomeInCloud
                         watchListInCloud
                         incomeTagInCloud
@@ -89,7 +83,6 @@ struct BackupView: View {
                 
                 await getTotalAccountInCloud()
                 await getTotalAccountsInBrokerInCloud()
-                await getTotalAccountTransactionInCloud()
                 await getTotalIncomeInCloud()
                 await getTotalWatchListInCloud()
                 await getTotalIncomeTagInCloud()
@@ -153,29 +146,6 @@ struct BackupView: View {
         return totalAccountsInBroker
     }
     
-    private var accountTransactions: some View {
-        HStack {
-            Text("Accounts Transactions")
-            Spacer()
-            Text("\(getTotalTransaction())")
-        }
-    }
-    
-    private func getTotalTransaction() -> Int {
-        var totalTransactions = 0
-        importExportViewModel.backupData.account.forEach {
-            if($0.accountType == ConstantUtils.brokerAccountType) {
-                for account in $0.accountInBroker {
-                    totalTransactions += account.accountTransaction.count
-                }
-            } else {
-                totalTransactions += $0.accountTransaction.count
-            }
-        }
-        
-        return totalTransactions
-    }
-    
     private var income: some View {
         HStack {
             Text("Incomes")
@@ -217,7 +187,7 @@ struct BackupView: View {
     }
     
     private func getTotalAccountInCloud() async {
-        totalAccountInCloud = await accountController.getAccountList().count
+        totalAccountInCloud = accountViewModel.accountList.count
     }
     
     private var accountsInBrokerInCloud: some View {
@@ -229,17 +199,15 @@ struct BackupView: View {
     }
     
     private func getTotalAccountsInBrokerInCloud() async {
-    }
-    
-    private var accountTransactionInCloud: some View {
-        HStack {
-            Text("Accounts Transactions")
-            Spacer()
-            Text("\(totalAccountTransactionInCloud)")
+        let accountList = accountViewModel.accountList.filter {
+            return $0.accountType.elementsEqual("Broker")
         }
-    }
-    
-    private func getTotalAccountTransactionInCloud() async {
+        for account in accountList {
+            Task.init {
+                await accountViewModel.getAccountInBrokerList(brokerID: account.id)
+                totalAccountsInBrokerInCloud += accountViewModel.accountsInBroker.count
+            }
+        }
     }
     
     private var incomeInCloud: some View {
@@ -251,7 +219,7 @@ struct BackupView: View {
     }
     
     private func getTotalIncomeInCloud() async {
-        totalIncomeInCloud = ApplicationData.shared.data.incomeDataList.count
+        totalIncomeInCloud = incomeViewModel.incomeList.count
     }
     
     private var watchListInCloud: some View {
@@ -263,7 +231,7 @@ struct BackupView: View {
     }
     
     private func getTotalWatchListInCloud() async {
-        totalWatchListInCloud = await watchController.getAllWatchList().count
+        totalWatchListInCloud = watchViewModel.watchList.count
     }
     
     private var incomeTypeInCloud: some View {
@@ -275,7 +243,7 @@ struct BackupView: View {
     }
     
     private func getTotalIncomeTypeInCloud() async {
-        totalIncomeTypeInCloud = await incomeTypeController.getIncomeTypeList().count
+        totalIncomeTypeInCloud = incomeViewModel.incomeTypeList.count
     }
     
     private var incomeTagInCloud: some View {
@@ -287,6 +255,6 @@ struct BackupView: View {
     }
     
     private func getTotalIncomeTagInCloud() async {
-        totalIncomeTagInCloud = await incomeTagController.getIncomeTagList().count
+        totalIncomeTagInCloud = incomeViewModel.incomeTagList.count
     }
 }

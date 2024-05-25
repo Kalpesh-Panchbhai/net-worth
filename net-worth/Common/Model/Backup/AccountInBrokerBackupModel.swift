@@ -9,10 +9,10 @@ import Foundation
 
 struct AccountInBrokerBackupModel: Codable {
     
-    var timestamp: Date
+    var id: String
+    var accountId: String
     var symbol: String
     var name: String
     var currentUnit: Double
-    
-    var accountTransaction: [AccountTransactionBackupModel]
+    var balance: BalanceAccount
 }

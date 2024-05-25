@@ -9,17 +9,15 @@ import Foundation
 
 struct AccountBackupModel: Codable {
     
+    var id: String
+    var userId: String
+    var accountName: String
     var accountType: String
     var loanType: String
-    var accountName: String
-    var currentBalance: Double
-    var paymentReminder: Bool
-    var paymentDate: Int
     var currency: String
     var active: Bool
+    var balance: BalanceAccount
     
     var accountInBroker: [AccountInBrokerBackupModel]
-    
-    var accountTransaction: [AccountTransactionBackupModel]
     
 }
