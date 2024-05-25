@@ -93,7 +93,7 @@ struct BackupView: View {
             ToolbarItem(content: {
                 Button(action: {
                     Task.init {
-                        await importExportController.exportLocal()
+                        await importExportController.exportLocal(accountViewModel: accountViewModel, watchViewModel: watchViewModel, incomeViewModel: incomeViewModel)
                         await importExportViewModel.getLocalBackup()
                         await importExportViewModel.readLocalBackup()
                     }

@@ -13,8 +13,6 @@ class ImportExportController {
     var incomeTypeController = IncomeTypeController()
     var incomeTagController = IncomeTagController()
     var accountController = AccountController()
-    var accountInBrokerController = AccountInBrokerController()
-    var accountTransactionController = AccountTransactionController()
     var watchController = WatchController()
     
     var data = BackupModel()
@@ -90,15 +88,15 @@ class ImportExportController {
         }
     }
     
-    public func exportLocal() async {
+    public func exportLocal(accountViewModel: AccountViewModel, watchViewModel: WatchViewModel, incomeViewModel: IncomeViewModel) async {
         
         deleteBackups()
         
-        await exportIncomeTag()
-        await exportIncomeType()
-        await exportIncome()
-        await exportAccount()
-        await exportWatch()
+        await exportIncomeTag(incomeViewModel: incomeViewModel)
+        await exportIncomeType(incomeViewModel: incomeViewModel)
+        await exportIncome(incomeViewModel: incomeViewModel)
+        await exportAccount(accountViewModel: accountViewModel)
+        await exportWatch(watchViewModel: watchViewModel, accountViewModel: accountViewModel)
         
         do {
             let encodedData = try JSONEncoder().encode(data)
@@ -120,34 +118,35 @@ class ImportExportController {
         }
     }
     
-    private func exportIncomeTag() async {
-        let incomeTagList = await incomeTagController.getIncomeTagList()
+    private func exportIncomeTag(incomeViewModel: IncomeViewModel) async {
+        let incomeTagList = incomeViewModel.incomeTagList
         data.incomeTag = incomeTagList.map { item in
             return IncomeTagBackupModel(name: item.name, isdefault: item.isdefault)
         }
     }
     
-    private func exportIncomeType() async {
-        let incomeTypeList = await incomeTypeController.getIncomeTypeList()
+    private func exportIncomeType(incomeViewModel: IncomeViewModel) async {
+        let incomeTypeList = incomeViewModel.incomeTypeList
         data.incomeType = incomeTypeList.map { item in
             return IncomeTypeBackupModel(name: item.name, isdefault: item.isdefault)
         }
     }
     
-    private func exportIncome() async {
-        let incomeList = await incomeController.getIncomeList()
+    private func exportIncome(incomeViewModel: IncomeViewModel) async {
+        let incomeList = incomeViewModel.incomeList
         data.income = incomeList.map { item in
             return IncomeBackupModel(amount: item.amount, taxpaid: item.taxpaid, creditedOn: item.creditedOn, currency: item.currency, type: item.type, tag: item.tag)
         }
     }
     
-    private func exportAccount() async {
-        let accountList = await accountController.getAccountList()
+    private func exportAccount(accountViewModel: AccountViewModel) async {
+        let accountList = accountViewModel.accountList
         var accountDataList = [AccountBackupModel]()
         
         for account in accountList {
             if(account.accountType == ConstantUtils.brokerAccountType) {
-                let accountsInBroker = await accountInBrokerController.getAccountListInBroker(brokerID: account.id)
+                await accountViewModel.getAccountInBrokerList(brokerID: account.id)
+                let accountsInBroker = accountViewModel.accountsInBroker
                 var accountsInBrokerDataList = [AccountInBrokerBackupModel]()
                 for accountInBroker in accountsInBroker {
                     let accountInBrokerData = AccountInBrokerBackupModel(symbol: accountInBroker.symbol, name: accountInBroker.name, currentUnit: accountInBroker.currentUnit)
@@ -166,9 +165,9 @@ class ImportExportController {
         data.account = accountDataList
     }
     
-    private func exportWatch() async {
-        let watchList = await watchController.getAllWatchList()
-        let accountList = await accountController.getAccountList()
+    private func exportWatch(watchViewModel: WatchViewModel, accountViewModel: AccountViewModel) async {
+        let watchList = watchViewModel.watchList
+        let accountList = accountViewModel.accountList
         data.watch = watchList.map { watch in
             let accounts = watch.accountList.map { accountID in
                 accountList.filter { account in
