@@ -9,8 +9,6 @@ import Foundation
 
 struct AccountBackupModel: Codable {
     
-    var id: String
-    var userId: String
     var accountName: String
     var accountType: String
     var loanType: String
