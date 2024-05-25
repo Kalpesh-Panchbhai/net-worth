@@ -10,6 +10,7 @@ import SwiftUI
 struct ChartView: View {
     
     @State var watchListSelected = Watch()
+    @State var brokerSelected = Account()
     @State var showingAssetsData = true
     @State var chartDataList = [Account]()
     @State var compareAssetsToLiabilities = false
@@ -46,6 +47,13 @@ struct ChartView: View {
                         }, label: {
                             Text("Watch List")
                             Text(watchListSelected.name)
+                        })
+                        
+                        Menu(content: {
+                            brokerListPicker
+                        }, label: {
+                            Text("Broker List")
+                            Text(brokerSelected.accountName)
                         })
                         
                         Menu(content: {
@@ -122,6 +130,7 @@ struct ChartView: View {
     var rightTopView: some View {
         Button(action: {
             watchListSelected = Watch()
+            brokerSelected = Account()
             compareAssetsToLiabilities = false
             multipleWatchListSelection = Set<Watch>()
             chartDataList = [Account]()
@@ -161,6 +170,7 @@ struct ChartView: View {
             } else {
                 filterSelected = "WATCH"
                 isChartDataEnabled = true
+                brokerSelected = Account()
                 compareAssetsToLiabilities = false
                 multipleWatchListSelection = Set<Watch>()
                 var accountList = getAccountsForWatchList(watch: watchListSelected).filter {
@@ -172,6 +182,47 @@ struct ChartView: View {
                 self.chartDataList = accountList
                 
                 showingAssetsData = true
+            }
+        })
+    }
+    
+    var brokerListPicker: some View {
+        Picker(selection: $brokerSelected, content: {
+            ForEach(getBrokerList(), id: \.self, content: {
+                Text($0.accountName).tag($0)
+            })
+        }, label: {
+            Text("Broker List")
+        })
+        .listRowBackground(Color.theme.foreground)
+        .onChange(of: brokerSelected, perform: { _ in
+            if(brokerSelected.accountName.isEmpty) {
+                if(!filterSelected.elementsEqual("COMPARE")) {
+                    compareAssetsToLiabilities = false
+                }
+                
+                if(!filterSelected.elementsEqual("COMPARE_MULTIPLE")) {
+                    multipleWatchListSelection = Set<Watch>()
+                }
+                if(filterSelected.isEmpty) {
+                    isChartDataEnabled = false
+                }
+            } else {
+                filterSelected = "BROKER"
+                isChartDataEnabled = true
+                watchListSelected = Watch()
+                compareAssetsToLiabilities = false
+                multipleWatchListSelection = Set<Watch>()
+                Task.init {
+                    await accountViewModel.getAccountInBrokerList(brokerID: brokerSelected.id)
+                    var accountList = accountViewModel.accountsInBroker
+                    accountList.sort(by: {
+                        $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
+                    })
+                    self.chartDataList = accountList.map {
+                        return Account(accountName: $0.name, balance: $0.balance)
+                    }
+                }
             }
         })
     }
@@ -211,12 +262,16 @@ struct ChartView: View {
                     isChartDataEnabled = true
                 }
                 
-                if(!filterSelected.elementsEqual("COMPARE")) {
-                    compareAssetsToLiabilities = false
-                }
-                
                 if(!filterSelected.elementsEqual("WATCH")) {
                     watchListSelected = Watch()
+                }
+                
+                if(!filterSelected.elementsEqual("BROKER")) {
+                    brokerSelected = Account()
+                }
+                
+                if(!filterSelected.elementsEqual("COMPARE")) {
+                    compareAssetsToLiabilities = false
                 }
             }
             .listRowBackground(Color.theme.foreground)
@@ -262,6 +317,10 @@ struct ChartView: View {
                     watchListSelected = Watch()
                 }
                 
+                if(!filterSelected.elementsEqual("BROKER")) {
+                    brokerSelected = Account()
+                }
+                
                 if(!filterSelected.elementsEqual("COMPARE_MULTIPLE")) {
                     multipleWatchListSelection = Set<Watch>()
                 }
@@ -296,6 +355,14 @@ struct ChartView: View {
         return getAccounts().filter {
             watch.accountList.contains($0.id)
         }
+    }
+    
+    private func getBrokerList() -> [Account] {
+        return getAccounts().filter {
+            return $0.accountType.elementsEqual("Broker")
+        }.sorted(by: {
+            return $0.accountName < $1.accountName
+        })
     }
 }
 

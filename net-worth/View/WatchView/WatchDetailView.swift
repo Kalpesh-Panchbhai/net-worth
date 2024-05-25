@@ -156,7 +156,7 @@ struct WatchDetailView: View {
                         })
                         
                     }, label: {
-                        Text("Sort Watchlist By")
+                        Text("Sort Account By")
                         Text(sortType + "," + sortOrder)
                     })
                     if(isZeroAmountAccountPresent) {
@@ -195,7 +195,7 @@ struct WatchDetailView: View {
             AccountToWatchView(watch: watch)
         })
         .onAppear {
-            var accountList = accountViewModel.accountList.filter {
+            let accountList = accountViewModel.accountList.filter {
                 return watch.accountList.contains($0.id)
             }
             let count = accountList.filter {

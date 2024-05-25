@@ -117,15 +117,6 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func getBrokerAccount(accountId: String) async {
-        let accountBroker = accountsInBroker.filter {
-            return $0.id.elementsEqual(accountId)
-        }.first ?? AccountInBroker()
-        DispatchQueue.main.async {
-            self.accountBroker = accountBroker
-        }
-    }
-    
     func getAccountInBrokerList(brokerID: String) async {
         let accountList = await accountInBrokerController.getAccountListInBroker(brokerID: brokerID)
         DispatchQueue.main.async {
