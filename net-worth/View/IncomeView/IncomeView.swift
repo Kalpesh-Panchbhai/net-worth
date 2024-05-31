@@ -382,9 +382,9 @@ struct IncomeView: View {
                         ZStack {
                             Circle()
                                 .frame(width: 25, height: 25)
-                                .foregroundColor(ColorTheme().green)
+                                .foregroundColor(ColorTheme().foreground)
                             Image(systemName: ConstantUtils.chartImageName)
-                                .foregroundColor(Color.theme.background)
+                                .foregroundColor(Color.theme.primaryText)
                                 .font(.system(size: 12))
                         }
                     })

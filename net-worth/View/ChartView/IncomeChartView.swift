@@ -101,7 +101,6 @@ struct IncomeChartView: View {
                     .padding(15)
                     .background(Color.theme.foreground)
                     .cornerRadius(10)
-                    .shadow(radius: 5)
                     HStack {
                         if(groupByType || groupByTag || groupByYear || groupByFinancialYear) {
                             BarLollipopGroupChartView(chartDataList: incomeListByGroup)
@@ -117,7 +116,6 @@ struct IncomeChartView: View {
                     .padding(15)
                     .background(Color.theme.foreground)
                     .cornerRadius(10)
-                    .shadow(radius: 5)
                     Spacer()
                 }
                 Spacer()
