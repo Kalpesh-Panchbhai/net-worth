@@ -37,7 +37,7 @@ struct NetworthCardView: View {
                                 .font(.system(size: 10)
                                     .bold())
                         }
-                        Text("(+\(percentChange.withCommas(decimalPlace: 2))%)")
+                        Text("+\(percentChange.withCommas(decimalPlace: 2))%")
                             .foregroundColor(Color.theme.green)
                             .font(.system(size: 12))
                             .bold()
@@ -51,7 +51,7 @@ struct NetworthCardView: View {
                                 .font(.system(size: 10)
                                     .bold())
                         }
-                        Text("(\(percentChange.withCommas(decimalPlace: 2))%)")
+                        Text("\(percentChange.withCommas(decimalPlace: 2))%")
                             .foregroundColor(Color.theme.red)
                             .font(.system(size: 12))
                             .bold()

@@ -126,7 +126,7 @@ struct AccountCardView: View {
                     .font(.system(size: 10).italic())
             }
         }
-        .frame(width: 150, height: 100)
+        .frame(height: 100)
         .padding(8)
         .background(Color.theme.foreground)
         .cornerRadius(10)
