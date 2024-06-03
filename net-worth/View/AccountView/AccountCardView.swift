@@ -119,14 +119,8 @@ struct AccountCardView: View {
                     }
                 }
             }
-            Spacer()
-            HStack {
-                Text(account.balance.currentDayValue.dateTime.UTCToLocalDate().format())
-                    .foregroundColor(Color.theme.secondaryText)
-                    .font(.system(size: 10).italic())
-            }
         }
-        .frame(height: 100)
+        .frame(height: 80)
         .padding(8)
         .background(Color.theme.foreground)
         .cornerRadius(10)

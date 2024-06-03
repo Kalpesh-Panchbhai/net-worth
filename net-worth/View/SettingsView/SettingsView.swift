@@ -29,6 +29,7 @@ struct SettingsView: View {
     @State var defaultIncomeTag = IncomeTag()
     
     @EnvironmentObject var incomeViewModel: IncomeViewModel
+    @EnvironmentObject var accountViewModel: AccountViewModel
     
     var body: some View {
         NavigationView(){
@@ -153,6 +154,10 @@ struct SettingsView: View {
                     .foregroundColor(Color.theme.primaryText)
                     .listRowBackground(Color.theme.foreground)
                 
+                Label(getLastUpdatedTime(), systemImage: "clock.arrow.circlepath")
+                    .foregroundColor(Color.theme.primaryText)
+                    .listRowBackground(Color.theme.foreground)
+                
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
@@ -204,5 +209,11 @@ struct SettingsView: View {
     private func deleteAccountAndData() async {
         await UserController().deleteUser()
         logoutUser()
+    }
+    
+    private func getLastUpdatedTime() -> String {
+        return accountViewModel.accountList.filter {
+            return $0.accountType.elementsEqual(ConstantUtils.brokerAccountType)
+        }.first?.balance.currentDayValue.dateTime.UTCToLocalDate().format() ?? ""
     }
 }

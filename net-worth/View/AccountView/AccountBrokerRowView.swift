@@ -24,12 +24,6 @@ struct AccountBrokerRowView: View {
                         .foregroundColor(Color.theme.secondaryText)
                         .padding(.leading)
                 }
-                HStack {
-                    Text(account.balance.currentDayValue.dateTime.UTCToLocalDate().format())
-                        .foregroundColor(Color.theme.secondaryText)
-                        .font(.system(size: 10).italic())
-                        .padding(.leading)
-                }
             }
             Spacer()
             VStack(alignment: .trailing) {
