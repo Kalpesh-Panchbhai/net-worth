@@ -16,6 +16,8 @@ struct AccountDetailView: View {
     @State var isNewAccountInBrokerViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
     @State var tabItem = 1
+    @State var sortOrder = "Asc"
+    @State var sortType = "Name"
     
     @State var accountID: String
     @State var account = Account()
@@ -54,7 +56,7 @@ struct AccountDetailView: View {
                 }
                 if(account.accountType == ConstantUtils.brokerAccountType) {
                     if(tabItem == 1) {
-                        AccountBrokerView(brokerID: accountID)
+                        AccountBrokerView(brokerID: accountID, sortOrder: $sortOrder, sortType: $sortType)
                     } else {
                         AccountWatchView()
                     }
@@ -121,6 +123,75 @@ struct AccountDetailView: View {
                             }, label: {
                                 Label("New Account", systemImage: ConstantUtils.newTransactionImageName)
                             })
+                            if(accountViewModel.accountsInBroker.count > 1) {
+                                Menu(content: {
+                                    Button(action: {
+                                        sortType = "Name"
+                                    }, label: {
+                                        if(sortType.elementsEqual("Name")) {
+                                            Label("Name", systemImage: "checkmark")
+                                        } else {
+                                            Text("Name")
+                                        }
+                                    })
+                                    
+                                    Button(action: {
+                                        sortType = "Amount"
+                                    }, label: {
+                                        if(sortType.elementsEqual("Amount")){
+                                            Label("Amount", systemImage: "checkmark")
+                                        } else {
+                                            Text("Amount")
+                                        }
+                                    })
+                                    
+                                    Button(action: {
+                                        sortType = "Price Change"
+                                    }, label: {
+                                        if(sortType.elementsEqual("Price Change")){
+                                            Label("Price Change", systemImage: "checkmark")
+                                        } else {
+                                            Text("Price Change")
+                                        }
+                                    })
+                                    
+                                    Button(action: {
+                                        sortType = "Percentage Change"
+                                    }, label: {
+                                        if(sortType.elementsEqual("Percentage Change")){
+                                            Label("Percentage Change", systemImage: "checkmark")
+                                        } else {
+                                            Text("Percentage Change")
+                                        }
+                                    })
+                                    
+                                    Divider()
+                                    
+                                    Button(action: {
+                                        sortOrder = "Asc"
+                                    }, label: {
+                                        if(sortOrder.elementsEqual("Asc")){
+                                            Label("Ascending", systemImage: "checkmark")
+                                        } else {
+                                            Text("Ascending")
+                                        }
+                                    })
+                                    
+                                    Button(action: {
+                                        sortOrder = "Desc"
+                                    }, label: {
+                                        if(sortOrder.elementsEqual("Desc")){
+                                            Label("Descending", systemImage: "checkmark")
+                                        } else {
+                                            Text("Descending")
+                                        }
+                                    })
+                                    
+                                }, label: {
+                                    Text("Sort Account By")
+                                    Text(sortType + "," + sortOrder)
+                                })
+                            }
                         } else {
                             Button(action: {
                                 self.isNewTransactionViewOpen.toggle()
