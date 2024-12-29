@@ -55,6 +55,9 @@ struct IncomeRowView: View {
                     Text(income.cumulativeAmount.withCommas(decimalPlace: 2))
                         .font(.system(size: 10))
                         .bold()
+                    Text("(\(incomeCumulativePercent(income: income).withCommas(decimalPlace: 2))%)")
+                        .font(.system(size: 8))
+                        .italic()
                 }
                 HStack {
                     Text("Cumulative Tax Paid: ")
@@ -65,6 +68,9 @@ struct IncomeRowView: View {
                     Text(income.cumulativeTaxPaid.withCommas(decimalPlace: 2))
                         .font(.system(size: 10))
                         .bold()
+                    Text("(\(taxPaidCumulativePercent(income: income).withCommas(decimalPlace: 2))%)")
+                        .font(.system(size: 8))
+                        .italic()
                 }
                 HStack {
                     Text("Cumulative Total: ")
@@ -75,6 +81,9 @@ struct IncomeRowView: View {
                     Text(addIncomeAndTaxPaidCumulative(income: income).withCommas(decimalPlace: 2))
                         .font(.system(size: 10))
                         .bold()
+                    Text("(100%)")
+                        .font(.system(size: 8))
+                        .italic()
                 }
             } else if(showAverage) {
                 HStack {
@@ -86,6 +95,9 @@ struct IncomeRowView: View {
                     Text(income.avgAmount.withCommas(decimalPlace: 2))
                         .font(.system(size: 10))
                         .bold()
+                    Text("(\(incomeAveragePercent(income: income).withCommas(decimalPlace: 2))%)")
+                        .font(.system(size: 8))
+                        .italic()
                 }
                 HStack {
                     Text("Average Tax Paid: ")
@@ -96,6 +108,9 @@ struct IncomeRowView: View {
                     Text(income.avgTaxPaid.withCommas(decimalPlace: 2))
                         .font(.system(size: 10))
                         .bold()
+                    Text("(\(taxPaidAveragePercent(income: income).withCommas(decimalPlace: 2))%)")
+                        .font(.system(size: 8))
+                        .italic()
                 }
                 HStack {
                     Text("Average Total: ")
@@ -106,6 +121,9 @@ struct IncomeRowView: View {
                     Text(addIncomeAndTaxPaidAverage(income: income).withCommas(decimalPlace: 2))
                         .font(.system(size: 10))
                         .bold()
+                    Text("(100%)")
+                        .font(.system(size: 8))
+                        .italic()
                 }
             } else {
                 HStack {
@@ -117,6 +135,9 @@ struct IncomeRowView: View {
                     Text(income.amount.withCommas(decimalPlace: 2))
                         .font(.system(size: 10))
                         .bold()
+                    Text("(\(incomePercent(income: income).withCommas(decimalPlace: 2))%)")
+                        .font(.system(size: 8))
+                        .italic()
                 }
                 HStack {
                     Text("Tax Paid: ")
@@ -127,6 +148,9 @@ struct IncomeRowView: View {
                     Text(income.taxpaid.withCommas(decimalPlace: 2))
                         .font(.system(size: 10))
                         .bold()
+                    Text("(\(taxPaidPercent(income: income).withCommas(decimalPlace: 2))%)")
+                            .font(.system(size: 8))
+                            .italic()
                 }
                 HStack {
                     Text("Total: ")
@@ -137,6 +161,9 @@ struct IncomeRowView: View {
                     Text(addIncomeAndTaxPaid(income: income).withCommas(decimalPlace: 2))
                         .font(.system(size: 10))
                         .bold()
+                        Text("(100%)")
+                            .font(.system(size: 8))
+                            .italic()
                 }
             }
         }
@@ -147,11 +174,35 @@ struct IncomeRowView: View {
         return income.amount + income.taxpaid
     }
     
+    private func incomePercent(income: Income) -> Double {
+        return income.amount / addIncomeAndTaxPaid(income: income) * 100
+    }
+    
+    private func taxPaidPercent(income: Income) -> Double {
+        return income.taxpaid / addIncomeAndTaxPaid(income: income) * 100
+    }
+    
     private func addIncomeAndTaxPaidCumulative(income: IncomeCalculation) -> Double {
         return income.cumulativeAmount + income.cumulativeTaxPaid
     }
     
+    private func incomeCumulativePercent(income: IncomeCalculation) -> Double {
+        return income.cumulativeAmount / addIncomeAndTaxPaidCumulative(income: income) * 100
+    }
+    
+    private func taxPaidCumulativePercent(income: IncomeCalculation) -> Double {
+        return income.cumulativeTaxPaid / addIncomeAndTaxPaidCumulative(income: income) * 100
+    }
+    
     private func addIncomeAndTaxPaidAverage(income: IncomeCalculation) -> Double {
         return income.avgAmount + income.avgTaxPaid
+    }
+    
+    private func incomeAveragePercent(income: IncomeCalculation) -> Double {
+        return income.avgAmount / addIncomeAndTaxPaidAverage(income: income) * 100
+    }
+    
+    private func taxPaidAveragePercent(income: IncomeCalculation) -> Double {
+        return income.avgTaxPaid / addIncomeAndTaxPaidAverage(income: income) * 100
     }
 }

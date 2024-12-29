@@ -438,6 +438,9 @@ struct IncomeView: View {
                 Text(incomeViewModel.incomeTotalAmount.withCommas(decimalPlace: 2))
                     .foregroundColor(Color.theme.primaryText)
                     .bold()
+                Text("(\(incomePercent(incomeViewModel: incomeViewModel).withCommas(decimalPlace: 2))%)")
+                        .font(.system(size: 10))
+                        .italic()
             }
             HStack {
                 Text("Total Tax Paid:")
@@ -447,15 +450,21 @@ struct IncomeView: View {
                 Text(incomeViewModel.incomeTaxPaidAmount.withCommas(decimalPlace: 2))
                     .foregroundColor(Color.theme.primaryText)
                     .bold()
+                Text("(\(taxPaidPercent(incomeViewModel: incomeViewModel).withCommas(decimalPlace: 2))%)")
+                        .font(.system(size: 9))
+                        .italic()
             }
             HStack {
                 Text("Total:")
                 Spacer()
                 Text(SettingsController().getDefaultCurrency().code)
                     .foregroundColor(Color.theme.primaryText)
-                Text("\((incomeViewModel.incomeTotalAmount + incomeViewModel.incomeTaxPaidAmount).withCommas(decimalPlace: 2))")
+                Text("\(addIncomeAndTaxPaid(incomeViewModel: incomeViewModel).withCommas(decimalPlace: 2))")
                     .foregroundColor(Color.theme.primaryText)
                     .bold()
+                Text("(100%)")
+                    .font(.system(size: 8))
+                    .italic()
             }
         }
         .padding(15)
@@ -513,5 +522,17 @@ struct IncomeView: View {
     
     private func isFilterDataAvailable() -> Bool {
         return incomeViewModel.incomeTypeList.count > 0 || incomeViewModel.incomeTagList.count > 0 || incomeViewModel.incomeYearList.count > 0 || incomeViewModel.incomeFinancialYearList.count > 0
+    }
+    
+    private func addIncomeAndTaxPaid(incomeViewModel: IncomeViewModel) -> Double {
+        return incomeViewModel.incomeTotalAmount + incomeViewModel.incomeTaxPaidAmount
+    }
+    
+    private func incomePercent(incomeViewModel: IncomeViewModel) -> Double {
+        return incomeViewModel.incomeTotalAmount / addIncomeAndTaxPaid(incomeViewModel: incomeViewModel) * 100
+    }
+    
+    private func taxPaidPercent(incomeViewModel: IncomeViewModel) -> Double {
+        return incomeViewModel.incomeTaxPaidAmount / addIncomeAndTaxPaid(incomeViewModel: incomeViewModel) * 100
     }
 }
