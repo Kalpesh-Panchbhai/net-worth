@@ -66,7 +66,7 @@ struct UpdateBalanceAccountView: View {
                     .font(.system(size: 14).bold())
                 }
             }
-            .navigationTitle(accountViewModel.account.accountName)
+            .navigationTitle(accountViewModel.account.name)
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.theme.background)
             .scrollContentBackground(.hidden)

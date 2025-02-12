@@ -32,110 +32,111 @@ struct NewAccountView: View {
     @Environment(\.scenePhase) var scenePhase
     
     var body: some View {
-        NavigationView {
-            Form {
-                Section("Account detail") {
-                    Picker(selection: $accountType, label: Text("Account Type")) {
-                        ForEach(ConstantUtils.AccountType.allCases, id: \.rawValue) { accountType in
-                            Text(accountType.rawValue).tag(accountType.rawValue)
-                        }
-                    }
-                    .foregroundColor(Color.theme.primaryText)
-                    .onChange(of: accountType) {
-                        accountName=""
-                        currencySelected = SettingsController().getDefaultCurrency()
-                        isPlus = true
-                        loanPaymentDate = 1
-                        monthlyEmi = 0.0
-                    }
-                    if(accountType == ConstantUtils.savingAccountType) {
-                        nameField(labelName: "Account Name")
-                            .foregroundColor(Color.theme.primaryText)
-                        CurrencyPicker(currenySelected: $currencySelected)
-                            .foregroundColor(Color.theme.primaryText)
-                    }
-                    else if(accountType == ConstantUtils.creditCardAccountType) {
-                        nameField(labelName: "Credit Card Name")
-                            .foregroundColor(Color.theme.primaryText)
-                        CurrencyPicker(currenySelected: $currencySelected)
-                            .foregroundColor(Color.theme.primaryText)
-                    }
-                    else if(accountType == ConstantUtils.loanAccountType) {
-                        Picker(selection: $loanType, label: Text("Loan Type")) {
-                            Text("Consumer").tag("Consumer")
-                            Text("Non Consumer").tag("Non Consumer")
-                        }
-                        .foregroundColor(Color.theme.primaryText)
-                        
-                        nameField(labelName: "Loan Name")
-                            .foregroundColor(Color.theme.primaryText)
-                        if(loanType.elementsEqual("Consumer")) {
-                            monthlyEMIField
-                                .foregroundColor(Color.theme.primaryText)
-                            loanPaymentDateField(labelName: "Loan payment date")
-                                .foregroundColor(Color.theme.primaryText)
-                        }
-                        CurrencyPicker(currenySelected: $currencySelected)
-                            .foregroundColor(Color.theme.primaryText)
-                    } else if(accountType == ConstantUtils.brokerAccountType) {
-                        nameField(labelName: "Broker Name")
-                            .foregroundColor(Color.theme.primaryText)
-                        CurrencyPicker(currenySelected: $currencySelected)
-                            .foregroundColor(Color.theme.primaryText)
-                    } else if(accountType == ConstantUtils.otherAccountType) {
-                        nameField(labelName: "Account Name")
-                            .foregroundColor(Color.theme.primaryText)
-                        CurrencyPicker(currenySelected: $currencySelected)
-                            .foregroundColor(Color.theme.primaryText)
-                    }
-                }
-                .listRowBackground(Color.theme.foreground)
-                .foregroundColor(Color.theme.primaryText)
-            }
-            .toolbar {
-                ToolbarItem {
-                    Button(action: {
-                        var newAccount = Account()
-                        newAccount.accountType = accountType
-                        if(accountType.elementsEqual(ConstantUtils.loanAccountType)) {
-                            newAccount.loanType = loanType
-                        }
-                        newAccount.accountName = accountName
-                        newAccount.currency = currencySelected.code
-                        Task.init {
-                            await accountController.addAccount(newAccount: newAccount)
-                            await accountViewModel.getAccountList()
-                            await watchViewModel.getAllWatchList()
-                        }
-                        dismiss()
-                    }, label: {
-                        if(!allFieldsFilled()) {
-                            Image(systemName: ConstantUtils.checkmarkImageName)
-                                .foregroundColor(Color.theme.primaryText.opacity(0.3))
-                                .bold()
-                        } else {
-                            Image(systemName: ConstantUtils.checkmarkImageName)
-                                .foregroundColor(Color.theme.primaryText)
-                                .bold()
-                        }
-                    })
-                    .font(.system(size: 14).bold())
-                    .disabled(!allFieldsFilled())
-                }
-            }
-            .navigationTitle("New Account")
-            .navigationBarTitleDisplayMode(.inline)
-            .background(Color.theme.background)
-            .scrollContentBackground(.hidden)
-        }
-        .blur(radius: CGFloat(scenePhaseBlur))
-        .onChange(of: scenePhase) {
-            if($0 == .active) {
-                scenePhaseBlur = 0
-            } else {
-                scenePhaseBlur = 5
-            }
-        }
+        Text("")
+//        NavigationView {
+//            Form {
+//                Section("Account detail") {
+//                    Picker(selection: $accountType, label: Text("Account Type")) {
+//                        ForEach(ConstantUtils.AccountType.allCases, id: \.rawValue) { accountType in
+//                            Text(accountType.rawValue).tag(accountType.rawValue)
+//                        }
+//                    }
+//                    .foregroundColor(Color.theme.primaryText)
+//                    .onChange(of: accountType) {
+//                        accountName=""
+//                        currencySelected = SettingsController().getDefaultCurrency()
+//                        isPlus = true
+//                        loanPaymentDate = 1
+//                        monthlyEmi = 0.0
+//                    }
+//                    if(accountType == ConstantUtils.savingAccountType) {
+//                        nameField(labelName: "Account Name")
+//                            .foregroundColor(Color.theme.primaryText)
+//                        CurrencyPicker(currenySelected: $currencySelected)
+//                            .foregroundColor(Color.theme.primaryText)
+//                    }
+//                    else if(accountType == ConstantUtils.creditCardAccountType) {
+//                        nameField(labelName: "Credit Card Name")
+//                            .foregroundColor(Color.theme.primaryText)
+//                        CurrencyPicker(currenySelected: $currencySelected)
+//                            .foregroundColor(Color.theme.primaryText)
+//                    }
+//                    else if(accountType == ConstantUtils.loanAccountType) {
+//                        Picker(selection: $loanType, label: Text("Loan Type")) {
+//                            Text("Consumer").tag("Consumer")
+//                            Text("Non Consumer").tag("Non Consumer")
+//                        }
+//                        .foregroundColor(Color.theme.primaryText)
+//                        
+//                        nameField(labelName: "Loan Name")
+//                            .foregroundColor(Color.theme.primaryText)
+//                        if(loanType.elementsEqual("Consumer")) {
+//                            monthlyEMIField
+//                                .foregroundColor(Color.theme.primaryText)
+//                            loanPaymentDateField(labelName: "Loan payment date")
+//                                .foregroundColor(Color.theme.primaryText)
+//                        }
+//                        CurrencyPicker(currenySelected: $currencySelected)
+//                            .foregroundColor(Color.theme.primaryText)
+//                    } else if(accountType == ConstantUtils.brokerAccountType) {
+//                        nameField(labelName: "Broker Name")
+//                            .foregroundColor(Color.theme.primaryText)
+//                        CurrencyPicker(currenySelected: $currencySelected)
+//                            .foregroundColor(Color.theme.primaryText)
+//                    } else if(accountType == ConstantUtils.otherAccountType) {
+//                        nameField(labelName: "Account Name")
+//                            .foregroundColor(Color.theme.primaryText)
+//                        CurrencyPicker(currenySelected: $currencySelected)
+//                            .foregroundColor(Color.theme.primaryText)
+//                    }
+//                }
+//                .listRowBackground(Color.theme.foreground)
+//                .foregroundColor(Color.theme.primaryText)
+//            }
+//            .toolbar {
+//                ToolbarItem {
+//                    Button(action: {
+//                        var newAccount = Account()
+//                        newAccount.accountType = accountType
+//                        if(accountType.elementsEqual(ConstantUtils.loanAccountType)) {
+//                            newAccount.loanType = loanType
+//                        }
+//                        newAccount.accountName = accountName
+//                        newAccount.currency = currencySelected.code
+//                        Task.init {
+//                            await accountController.addAccount(newAccount: newAccount)
+//                            await accountViewModel.getAccountList()
+//                            await watchViewModel.getAllWatchList()
+//                        }
+//                        dismiss()
+//                    }, label: {
+//                        if(!allFieldsFilled()) {
+//                            Image(systemName: ConstantUtils.checkmarkImageName)
+//                                .foregroundColor(Color.theme.primaryText.opacity(0.3))
+//                                .bold()
+//                        } else {
+//                            Image(systemName: ConstantUtils.checkmarkImageName)
+//                                .foregroundColor(Color.theme.primaryText)
+//                                .bold()
+//                        }
+//                    })
+//                    .font(.system(size: 14).bold())
+//                    .disabled(!allFieldsFilled())
+//                }
+//            }
+//            .navigationTitle("New Account")
+//            .navigationBarTitleDisplayMode(.inline)
+//            .background(Color.theme.background)
+//            .scrollContentBackground(.hidden)
+//        }
+//        .blur(radius: CGFloat(scenePhaseBlur))
+//        .onChange(of: scenePhase) {
+//            if($0 == .active) {
+//                scenePhaseBlur = 0
+//            } else {
+//                scenePhaseBlur = 5
+//            }
+//        }
     }
     
     private func allFieldsFilled () -> Bool {

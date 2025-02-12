@@ -154,9 +154,9 @@ struct SettingsView: View {
                     .foregroundColor(Color.theme.primaryText)
                     .listRowBackground(Color.theme.foreground)
                 
-                Label(getLastUpdatedTime(), systemImage: "clock.arrow.circlepath")
-                    .foregroundColor(Color.theme.primaryText)
-                    .listRowBackground(Color.theme.foreground)
+//                Label(getLastUpdatedTime(), systemImage: "clock.arrow.circlepath")
+//                    .foregroundColor(Color.theme.primaryText)
+//                    .listRowBackground(Color.theme.foreground)
                 
             }
             .navigationTitle("Settings")
@@ -211,9 +211,9 @@ struct SettingsView: View {
         logoutUser()
     }
     
-    private func getLastUpdatedTime() -> String {
-        return accountViewModel.accountList.filter {
-            return $0.accountType.elementsEqual(ConstantUtils.brokerAccountType)
-        }.first?.balance.currentDayValue.dateTime.UTCToLocalDate().format() ?? ""
-    }
+//    private func getLastUpdatedTime() -> String {
+//        return accountViewModel.accountList.filter {
+//            return $0.type.elementsEqual(ConstantUtils.brokerAccountType)
+//        }.first?.balance.currentDayValue.dateTime.UTCToLocalDate().format() ?? ""
+//    }
 }

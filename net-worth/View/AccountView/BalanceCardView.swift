@@ -26,56 +26,56 @@ struct BalanceCardView: View {
     
     var body: some View {
         ZStack {
-            Color.theme.foreground
-            VStack(alignment: .center) {
-                HStack {
-                    Text(SettingsController().getDefaultCurrency().code)
-                        .foregroundColor(Color.theme.primaryText)
-                        .bold()
-                    Text("\(balanceAccount.currentDayValue.value.withCommas(decimalPlace: 2))")
-                        .foregroundColor(Color.theme.primaryText)
-                        .bold()
-                }
-                HStack {
-                    if(getOneDayChange() > 0) {
-                        ZStack {
-                            Circle()
-                                .fill(Color.theme.green.opacity(0.2))
-                                .frame(width: 20, height: 20)
-                            Image(systemName: ConstantUtils.arrowUpImageName)
-                                .foregroundColor(Color.theme.green)
-                                .font(.system(size: 14)
-                                    .bold())
-                        }
-                        Text("+\(getOneDayChange().withCommas(decimalPlace: 2))")
-                            .foregroundColor(Color.theme.green)
-                            .font(.system(size: 14))
-                            .bold()
-                        Text("(+\(getOneDayPercentageChange()))")
-                            .foregroundColor(Color.theme.green)
-                            .font(.system(size: 14))
-                            .bold()
-                    } else if(getOneDayChange() < 0) {
-                        ZStack {
-                            Circle()
-                                .fill(Color.theme.red.opacity(0.2))
-                                .frame(width: 20, height: 20)
-                            Image(systemName: ConstantUtils.arrowDownImageName)
-                                .foregroundColor(Color.theme.red)
-                                .font(.system(size: 14)
-                                    .bold())
-                        }
-                        Text("\(getOneDayChange().withCommas(decimalPlace: 2))")
-                            .foregroundColor(Color.theme.red)
-                            .font(.system(size: 14))
-                            .bold()
-                        Text("(\(getOneDayPercentageChange()))")
-                            .foregroundColor(Color.theme.red)
-                            .font(.system(size: 14))
-                            .bold()
-                    }
-                }
-            }
+//            Color.theme.foreground
+//            VStack(alignment: .center) {
+//                HStack {
+//                    Text(SettingsController().getDefaultCurrency().code)
+//                        .foregroundColor(Color.theme.primaryText)
+//                        .bold()
+//                    Text("\(balanceAccount.currentDayValue.value.withCommas(decimalPlace: 2))")
+//                        .foregroundColor(Color.theme.primaryText)
+//                        .bold()
+//                }
+//                HStack {
+//                    if(getOneDayChange() > 0) {
+//                        ZStack {
+//                            Circle()
+//                                .fill(Color.theme.green.opacity(0.2))
+//                                .frame(width: 20, height: 20)
+//                            Image(systemName: ConstantUtils.arrowUpImageName)
+//                                .foregroundColor(Color.theme.green)
+//                                .font(.system(size: 14)
+//                                    .bold())
+//                        }
+//                        Text("+\(getOneDayChange().withCommas(decimalPlace: 2))")
+//                            .foregroundColor(Color.theme.green)
+//                            .font(.system(size: 14))
+//                            .bold()
+//                        Text("(+\(getOneDayPercentageChange()))")
+//                            .foregroundColor(Color.theme.green)
+//                            .font(.system(size: 14))
+//                            .bold()
+//                    } else if(getOneDayChange() < 0) {
+//                        ZStack {
+//                            Circle()
+//                                .fill(Color.theme.red.opacity(0.2))
+//                                .frame(width: 20, height: 20)
+//                            Image(systemName: ConstantUtils.arrowDownImageName)
+//                                .foregroundColor(Color.theme.red)
+//                                .font(.system(size: 14)
+//                                    .bold())
+//                        }
+//                        Text("\(getOneDayChange().withCommas(decimalPlace: 2))")
+//                            .foregroundColor(Color.theme.red)
+//                            .font(.system(size: 14))
+//                            .bold()
+//                        Text("(\(getOneDayPercentageChange()))")
+//                            .foregroundColor(Color.theme.red)
+//                            .font(.system(size: 14))
+//                            .bold()
+//                    }
+//                }
+//            }
         }
         .onAppear {
             if(isWatchListCardView) {
@@ -104,28 +104,28 @@ struct BalanceCardView: View {
                 var currentDayValue = 0.0
                 var previousDayValue = 0.0
                 
-                for account in accountList {
-                    currentDayValue += account.balance.currentDayValue.value
-                    if(areOneDayTransactions(account: account)) {
-                        previousDayValue += account.balance.previousDayValue.value
-                    } else {
-                        previousDayValue += account.balance.currentDayValue.value
-                    }
-                }
+//                for account in accountList {
+//                    currentDayValue += account.balance.currentDayValue.value
+//                    if(areOneDayTransactions(account: account)) {
+//                        previousDayValue += account.balance.previousDayValue.value
+//                    } else {
+//                        previousDayValue += account.balance.currentDayValue.value
+//                    }
+//                }
                 balanceAccount = BalanceAccount(currentDayValue: BalanceAccountDetail(value: currentDayValue), previousDayValue: BalanceAccountDetail(value: previousDayValue))
             }
         }
     }
     
-    private func getOneDayChange() -> Double {
-        return balanceAccount.currentDayValue.value - balanceAccount.previousDayValue.value
-    }
-    
-    private func getOneDayPercentageChange() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: balanceAccount.previousDayValue.value, currentBalance: balanceAccount.currentDayValue.value)
-    }
-    
-    private func areOneDayTransactions(account: Account) -> Bool {
-        return account.accountName != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
-    }
+//    private func getOneDayChange() -> Double {
+//        return balanceAccount.currentDayValue.value - balanceAccount.previousDayValue.value
+//    }
+//    
+//    private func getOneDayPercentageChange() -> String {
+//        return CommonController.getGrowthPercentage(previousBalance: balanceAccount.previousDayValue.value, currentBalance: balanceAccount.currentDayValue.value)
+//    }
+//    
+//    private func areOneDayTransactions(account: Account) -> Bool {
+//        return account.name != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+//    }
 }

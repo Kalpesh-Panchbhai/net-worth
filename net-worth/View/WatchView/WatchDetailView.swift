@@ -267,15 +267,15 @@ struct WatchDetailView: View {
 //        return accountList.map { $0.id }
     }
     
-    private func getOneDayChange(account: Account) -> Double {
-        return areOneDayTransactions(account: account) ? account.balance.currentDayValue.value - account.balance.previousDayValue.value : 0.0
-    }
-    
-    private func getOneDayPercentageChange(account: Account) -> Double {
-        return areOneDayTransactions(account: account) ? CommonController.getGrowthPercentageInDouble(previousBalance: account.balance.previousDayValue.value, currentBalance: account.balance.currentDayValue.value) : 0.0
-    }
-    
-    private func areOneDayTransactions(account: Account) -> Bool {
-        return account.accountName != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
-    }
+//    private func getOneDayChange(account: Account) -> Double {
+//        return areOneDayTransactions(account: account) ? account.balance.currentDayValue.value - account.balance.previousDayValue.value : 0.0
+//    }
+//    
+//    private func getOneDayPercentageChange(account: Account) -> Double {
+//        return areOneDayTransactions(account: account) ? CommonController.getGrowthPercentageInDouble(previousBalance: account.balance.previousDayValue.value, currentBalance: account.balance.currentDayValue.value) : 0.0
+//    }
+//    
+//    private func areOneDayTransactions(account: Account) -> Bool {
+//        return account.accountName != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+//    }
 }
