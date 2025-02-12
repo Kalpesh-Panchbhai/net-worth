@@ -387,7 +387,7 @@ struct IncomeChartView: View {
                 await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                 
                 for income in incomeViewModel.incomeList.reversed() {
-                    incomeChartDataList.append(ChartData(date: income.creditedDate.removeTimeStamp(), value: getValue(income: income)))
+                    incomeChartDataList.append(ChartData(date: income.creditedOn.removeTimeStamp(), value: getValue(income: income)))
                 }
                 
                 if(showTotal) {

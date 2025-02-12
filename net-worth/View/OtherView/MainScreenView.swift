@@ -34,17 +34,17 @@ struct MainScreenView: View {
             // MARK: Tab View
             ZStack {
                 TabView {
-//                    AccountCardList()
-//                        .tabItem {
-//                            Label("Accounts", systemImage: "star.circle")
-//                        }
-//                        .badge(accountViewModel.accountList.count)
-//                    
-//                    WatchView()
-//                        .tabItem {
-//                            Label("Watch Lists", systemImage: ConstantUtils.notBookmarkImageName)
-//                        }
-//                        .badge(watchViewModel.watchList.count)
+                    AccountCardList()
+                        .tabItem {
+                            Label("Accounts", systemImage: "star.circle")
+                        }
+                        .badge(accountViewModel.accountList.count)
+                    
+                    WatchView()
+                        .tabItem {
+                            Label("Watch Lists", systemImage: ConstantUtils.notBookmarkImageName)
+                        }
+                        .badge(watchViewModel.watchList.count)
                     
                     IncomeView()
                         .tabItem {
@@ -52,15 +52,15 @@ struct MainScreenView: View {
                         }
                         .badge(getTotalIncomeCount())
                     
-//                    ChartView()
-//                        .tabItem {
-//                            Label("Charts", systemImage: "chart.line.uptrend.xyaxis.circle")
-//                        }
-//                    
-//                    SettingsView()
-//                        .tabItem {
-//                            Label("Settings", systemImage: "gearshape")
-//                        }
+                    ChartView()
+                        .tabItem {
+                            Label("Charts", systemImage: "chart.line.uptrend.xyaxis.circle")
+                        }
+                    
+                    SettingsView()
+                        .tabItem {
+                            Label("Settings", systemImage: "gearshape")
+                        }
                 }
                 .alert("Network is unavailable. You can continue to use it, it will sync automatically once the network is available.", isPresented: $networkUnavailable) {
                     Button("OK", role: .cancel) { }
@@ -82,9 +82,9 @@ struct MainScreenView: View {
                 await incomeViewModel.getIncomeList()
                 await incomeViewModel.getTotalBalance()
                 await incomeViewModel.getTotalTaxPaid()
-//                await accountViewModel.getAccountList()
-//                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-//                await watchViewModel.getAllWatchList()
+                await accountViewModel.getAccountList()
+                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+                await watchViewModel.getAllWatchList()
                 await incomeViewModel.getIncomeTypeList()
                 await incomeViewModel.getIncomeTagList()
                 await incomeViewModel.getIncomeYearList()
