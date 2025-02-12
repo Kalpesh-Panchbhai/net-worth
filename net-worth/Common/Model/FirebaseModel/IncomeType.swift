@@ -9,11 +9,11 @@ import Foundation
 
 struct IncomeType: Codable, Hashable {
     
-    var id: Int
+    var id: String
     var name: String
     var isdefault: Bool
     
-    init(id: Int = 0, name: String = "", isdefault: Bool = false) {
+    init(id: String = "", name: String = "", isdefault: Bool = false) {
         self.id = id
         self.name = name
         self.isdefault = isdefault

@@ -39,12 +39,12 @@ class WatchViewModel: ObservableObject {
         }
     }
     
-    func getWatchListByAccount(accountID: Int) async {
-//        let list = watchList.filter {
-//            return $0.accountList.contains(accountID)
-//        }
-//        DispatchQueue.main.async {
-//            self.watchListForAccount = list
-//        }
+    func getWatchListByAccount(accountID: String) async {
+        let list = watchList.filter {
+            return $0.accountList.contains(accountID)
+        }
+        DispatchQueue.main.async {
+            self.watchListForAccount = list
+        }
     }
 }

@@ -14,7 +14,7 @@ class IncomeCalculation: Income {
     var cumulativeAmount: Double
     var cumulativeTaxPaid: Double
     
-    init(id: Int = 0, amount: Double, taxpaid: Double, creditedOn: Date, currency: String, type: String, tag: String, avgAmount: Double, avgTaxPaid: Double, cumulativeAmount: Double, cumulativeTaxPaid: Double) {
+    init(id: String = "", amount: Double, taxpaid: Double, creditedOn: Date, currency: String, type: String, tag: String, avgAmount: Double, avgTaxPaid: Double, cumulativeAmount: Double, cumulativeTaxPaid: Double) {
         self.avgAmount = avgAmount
         self.avgTaxPaid = avgTaxPaid
         self.cumulativeAmount = cumulativeAmount

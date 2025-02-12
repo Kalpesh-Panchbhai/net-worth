@@ -9,8 +9,8 @@ import Foundation
 
 struct Account: Codable, Hashable {
     
-    var id: Int
-    var userId: Int
+    var id: String
+    var userId: String
     var accountName: String
     var accountType: String
     var loanType: String
@@ -22,7 +22,7 @@ struct Account: Codable, Hashable {
         case id, userId, accountName, accountType, loanType, currency, active, balance
     }
     
-    init(id: Int = 0, userId: Int = 0, accountName: String = "", accountType: String = "", loanType: String = "", currency: String = "", active: Bool = true, balance: BalanceAccount = BalanceAccount()) {
+    init(id: String = "", userId: String = "", accountName: String = "", accountType: String = "", loanType: String = "", currency: String = "", active: Bool = true, balance: BalanceAccount = BalanceAccount()) {
         self.id = id
         self.userId = userId
         self.accountName = accountName
@@ -35,8 +35,8 @@ struct Account: Codable, Hashable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(Int.self, forKey: .id)
-        userId = try container.decode(Int.self, forKey: .userId)
+        id = try container.decode(String.self, forKey: .id)
+        userId = try container.decode(String.self, forKey: .userId)
         accountName = try container.decode(String.self, forKey: .accountName)
         accountType = try container.decode(String.self, forKey: .accountType)
         loanType = try container.decode(String.self, forKey: .loanType)
@@ -47,7 +47,7 @@ struct Account: Codable, Hashable {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        if(id != 0) {
+        if(!id.isEmpty) {
             try container.encode(id, forKey: .id)
         }
         try container.encode(userId, forKey: .userId)

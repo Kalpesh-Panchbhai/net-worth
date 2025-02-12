@@ -9,7 +9,7 @@ import Foundation
 
 struct AccountTransaction: Codable, Hashable {
     
-    var accountId: Int
+    var accountId: String
     var amount: Double
     var operation: String
     var isAccountTransaction: Bool
@@ -18,7 +18,7 @@ struct AccountTransaction: Codable, Hashable {
         case accountId, amount, operation, isAccountTransaction
     }
     
-    init(accountId: Int = 0, amount: Double = 0.0, operation: String = "", isAccountTransaction: Bool) {
+    init(accountId: String = "", amount: Double = 0.0, operation: String = "", isAccountTransaction: Bool) {
         self.accountId = accountId
         self.amount = amount
         self.operation = operation
@@ -27,7 +27,7 @@ struct AccountTransaction: Codable, Hashable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        accountId = try container.decode(Int.self, forKey: .accountId)
+        accountId = try container.decode(String.self, forKey: .accountId)
         amount = try container.decode(Double.self, forKey: .amount)
         operation = try container.decode(String.self, forKey: .operation)
         isAccountTransaction = try container.decode(Bool.self, forKey: .isAccountTransaction)

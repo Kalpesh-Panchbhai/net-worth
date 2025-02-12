@@ -100,18 +100,18 @@ struct ChartView: View {
     var leftTopView: some View {
         Button(action: {
             if(showingAssetsData) {
-//                chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
-//                    return $0.balance.currentDayValue.value < 0
-//                }.sorted(by: {
-//                    $0.balance.currentDayValue.value < $1.balance.currentDayValue.value
-//                })
+                chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
+                    return $0.balance.currentDayValue.value < 0
+                }.sorted(by: {
+                    $0.balance.currentDayValue.value < $1.balance.currentDayValue.value
+                })
                 showingAssetsData.toggle()
             } else {
-//                chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
-//                    return $0.balance.currentDayValue.value > 0
-//                }.sorted(by: {
-//                    $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
-//                })
+                chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
+                    return $0.balance.currentDayValue.value > 0
+                }.sorted(by: {
+                    $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
+                })
                 showingAssetsData.toggle()
             }
         }, label: {
@@ -173,13 +173,13 @@ struct ChartView: View {
                 brokerSelected = Account()
                 compareAssetsToLiabilities = false
                 multipleWatchListSelection = Set<Watch>()
-//                var accountList = getAccountsForWatchList(watch: watchListSelected).filter {
-//                    return $0.balance.currentDayValue.value > 0
-//                }
-//                accountList.sort(by: {
-//                    $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
-//                })
-//                self.chartDataList = accountList
+                var accountList = getAccountsForWatchList(watch: watchListSelected).filter {
+                    return $0.balance.currentDayValue.value > 0
+                }
+                accountList.sort(by: {
+                    $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
+                })
+                self.chartDataList = accountList
                 
                 showingAssetsData = true
             }
@@ -243,14 +243,14 @@ struct ChartView: View {
                     }
                     self.multipleWatchListSelection.insert(watch)
                     
-//                    let accountList = getAccountsForWatchList(watch: watch)
-//                    var totalAmount = accountList.map( {
-//                        $0.balance.currentDayValue.value
-//                    }).reduce(0, +)
-//                    totalAmount = totalAmount < 0 ? totalAmount * -1.0 : totalAmount * 1.0
+                    let accountList = getAccountsForWatchList(watch: watch)
+                    var totalAmount = accountList.map( {
+                        $0.balance.currentDayValue.value
+                    }).reduce(0, +)
+                    totalAmount = totalAmount < 0 ? totalAmount * -1.0 : totalAmount * 1.0
                     var account = Account()
                     account.accountName = watch.name
-//                    account.balance.currentDayValue.value = totalAmount
+                    account.balance.currentDayValue.value = totalAmount
                     self.chartDataList.append(account)
                     self.chartDataList.sort(by: {
                         $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
@@ -349,6 +349,12 @@ struct ChartView: View {
     
     private func getWatchLists() -> [Watch] {
         return watchViewModel.watchList
+    }
+    
+    private func getAccountsForWatchList(watch: Watch) -> [Account] {
+        return getAccounts().filter {
+            watch.accountList.contains($0.id)
+        }
     }
     
     private func getBrokerList() -> [Account] {

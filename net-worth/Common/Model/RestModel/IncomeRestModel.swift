@@ -8,8 +8,8 @@
 import Foundation
 
 struct IncomeRestModel: Codable {
-    var id: Int
-    var userId: Int
+    var id: String
+    var userId: String
     var amount: Double
     var taxPaid: Double
     var creditedOn: String
@@ -21,7 +21,7 @@ struct IncomeRestModel: Codable {
         case id, userId, amount, creditedOn, taxPaid, currency, incomeType, incomeTag
     }
     
-    init(id: Int = 0, userId: Int = 0, amount: Double = 0.0, taxPaid: Double = 0.0, creditedOn: String = "", currency: String = "", incomeType: String = "", incomeTag: String = "") {
+    init(id: String = "", userId: String = "", amount: Double = 0.0, taxPaid: Double = 0.0, creditedOn: String = "", currency: String = "", incomeType: String = "", incomeTag: String = "") {
         self.id = id
         self.userId = userId
         self.amount = amount
@@ -34,8 +34,8 @@ struct IncomeRestModel: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(Int.self, forKey: .id)
-        userId = try container.decode(Int.self, forKey: .userId)
+        id = try container.decode(String.self, forKey: .id)
+        userId = try container.decode(String.self, forKey: .userId)
         amount = try container.decode(Double.self, forKey: .amount)
         taxPaid = try container.decode(Double.self, forKey: .taxPaid)
         creditedOn = try container.decode(String.self, forKey: .creditedOn)
@@ -46,7 +46,7 @@ struct IncomeRestModel: Codable {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        if(id != 0) {
+        if(!id.isEmpty) {
             try container.encode(id, forKey: .id)
         }
         try container.encode(userId, forKey: .userId)

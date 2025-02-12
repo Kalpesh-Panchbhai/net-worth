@@ -87,7 +87,7 @@ struct IncomeDetailView: View {
             if(incomeViewModel.groupView) {
                 incomeViewModel.incomeListByGroup.forEach {
                     let filterIncome = $0.value.filter { data in
-                        data.id == income.id
+                        data.id.elementsEqual(income.id)
                     }.first ?? IncomeCalculation(amount: 0.0, taxpaid: 0.0, creditedOn: Date(), currency: "", type: "", tag: "", avgAmount: 0.0, avgTaxPaid: 0.0, cumulativeAmount: 0.0, cumulativeTaxPaid: 0.0)
                     if(!filterIncome.currency.isEmpty) {
                         self.income = filterIncome
@@ -96,7 +96,7 @@ struct IncomeDetailView: View {
             } else {
                 Task.init {
                     self.income = incomeViewModel.incomeList.filter { data in
-                        data.id == income.id
+                        data.id.elementsEqual(income.id)
                     }.first!
                 }
             }
