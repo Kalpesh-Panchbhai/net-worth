@@ -22,7 +22,6 @@
 		7D59B44B2BE249B7006F3F00 /* Income.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4212BE249B7006F3F00 /* Income.swift */; };
 		7D59B44C2BE249B7006F3F00 /* IncomeTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4222BE249B7006F3F00 /* IncomeTag.swift */; };
 		7D59B44D2BE249B7006F3F00 /* IncomeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4232BE249B7006F3F00 /* IncomeType.swift */; };
-		7D59B44E2BE249B7006F3F00 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4242BE249B7006F3F00 /* User.swift */; };
 		7D59B44F2BE249B7006F3F00 /* Watch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4252BE249B7006F3F00 /* Watch.swift */; };
 		7D59B4502BE249B7006F3F00 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4272BE249B7006F3F00 /* EmptyResponse.swift */; };
 		7D59B4532BE249B7006F3F00 /* IncomeRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B42A2BE249B7006F3F00 /* IncomeRestModel.swift */; };
@@ -151,7 +150,6 @@
 		7D59B4212BE249B7006F3F00 /* Income.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Income.swift; sourceTree = "<group>"; };
 		7D59B4222BE249B7006F3F00 /* IncomeTag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeTag.swift; sourceTree = "<group>"; };
 		7D59B4232BE249B7006F3F00 /* IncomeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeType.swift; sourceTree = "<group>"; };
-		7D59B4242BE249B7006F3F00 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		7D59B4252BE249B7006F3F00 /* Watch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Watch.swift; sourceTree = "<group>"; };
 		7D59B4272BE249B7006F3F00 /* EmptyResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
 		7D59B42A2BE249B7006F3F00 /* IncomeRestModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeRestModel.swift; sourceTree = "<group>"; };
@@ -345,7 +343,6 @@
 				7D59B4212BE249B7006F3F00 /* Income.swift */,
 				7D59B4222BE249B7006F3F00 /* IncomeTag.swift */,
 				7D59B4232BE249B7006F3F00 /* IncomeType.swift */,
-				7D59B4242BE249B7006F3F00 /* User.swift */,
 				7D59B4252BE249B7006F3F00 /* Watch.swift */,
 			);
 			path = FirebaseModel;
@@ -775,7 +772,6 @@
 				7D59B4922BE249D0006F3F00 /* DictionaryExtension.swift in Sources */,
 				7D59B52D2BE249E0006F3F00 /* IncomeViewModel.swift in Sources */,
 				7D59B4882BE249C8006F3F00 /* WatchController.swift in Sources */,
-				7D59B44E2BE249B7006F3F00 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
