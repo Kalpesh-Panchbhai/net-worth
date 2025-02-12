@@ -10,4 +10,6 @@ import Foundation
 class RestResponse: Codable {
     
     var result: String
+    
+    var id: Int
 }
