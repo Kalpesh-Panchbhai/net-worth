@@ -43,7 +43,7 @@ struct NewWatchView: View {
                         var watch = Watch()
                         watch.name = watchListName
                         watch.userId = ApplicationData.shared.userId
-                        watch.accountList = [String]()
+//                        watch.accountList = [Int]()
                         Task.init {
                             await watchController.addWatchList(watch: watch)
                             await watchViewModel.getAllWatchList()

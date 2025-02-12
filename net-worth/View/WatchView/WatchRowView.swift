@@ -74,20 +74,20 @@ struct WatchViewRow: View {
         }
         .onAppear {
             Task.init {
-                balance = BalanceAccount(currentDayValue: BalanceAccountDetail(value: 0.0), previousDayValue: BalanceAccountDetail(value: 0.0))
-                let accountList = watch.accountList.map { id in
-                    return accountViewModel.accountList.filter {
-                        return $0.id.elementsEqual(id)
-                    }.first ?? Account(balance: BalanceAccount())
-                }
-                for account in accountList {
-                    self.balance.currentDayValue.value += account.balance.currentDayValue.value
-                    if(areOneDayTransactions(account: account)) {
-                        self.balance.previousDayValue.value += account.balance.previousDayValue.value
-                    } else {
-                        self.balance.previousDayValue.value += account.balance.currentDayValue.value
-                    }
-                }
+//                balance = BalanceAccount(currentDayValue: BalanceAccountDetail(value: 0.0), previousDayValue: BalanceAccountDetail(value: 0.0))
+//                let accountList = watch.accountList.map { id in
+//                    return accountViewModel.accountList.filter {
+//                        return $0.id.elementsEqual(id)
+//                    }.first ?? Account(balance: BalanceAccount())
+//                }
+//                for account in accountList {
+//                    self.balance.currentDayValue.value += account.balance.currentDayValue.value
+//                    if(areOneDayTransactions(account: account)) {
+//                        self.balance.previousDayValue.value += account.balance.previousDayValue.value
+//                    } else {
+//                        self.balance.previousDayValue.value += account.balance.currentDayValue.value
+//                    }
+//                }
                 
             }
         }

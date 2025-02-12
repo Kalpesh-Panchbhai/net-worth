@@ -8,37 +8,33 @@ import Foundation
 
 struct Watch: Codable, Hashable {
     
-    var id: String
-    var userId: String
+    var id: Int
+    var userId: Int
     var name: String
-    var accountList: [String]
     
     private enum CodingKeys: String, CodingKey {
-        case id, userId, name, accountList
+        case id, userId, name
     }
     
-    init(id: String = "", userId: String = "", name: String = "", accountList: [String] = []) {
-        self.id = ""
+    init(id: Int = 0, userId: Int = 0, name: String = "") {
+        self.id = id
         self.userId = userId
         self.name = name
-        self.accountList = accountList
     }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
-        userId = try container.decode(String.self, forKey: .userId)
+        id = try container.decode(Int.self, forKey: .id)
+        userId = try container.decode(Int.self, forKey: .userId)
         name = try container.decode(String.self, forKey: .name)
-        accountList = try container.decode([String].self, forKey: .accountList)
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        if(!id.isEmpty) {
+        if(id != 0) {
             try container.encode(id, forKey: .id)
         }
         try container.encode(userId, forKey: .userId)
         try container.encode(name, forKey: .name)
-        try container.encode(accountList, forKey: .accountList)
     }
 }

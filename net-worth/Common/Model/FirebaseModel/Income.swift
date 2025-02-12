@@ -17,7 +17,7 @@ class Income: Codable, Hashable, Equatable {
         return false
     }
     
-    var id: String
+    var id: Int
     var amount: Double
     var taxpaid: Double
     var creditedOn: Date
@@ -25,7 +25,7 @@ class Income: Codable, Hashable, Equatable {
     var type: String
     var tag: String
     
-    init(id: String = "", amount: Double = 0.0, taxpaid: Double = 0.0, creditedOn: Date = Date.now, currency: String = "", type: String = "", tag: String = "") {
+    init(id: Int = 0, amount: Double = 0.0, taxpaid: Double = 0.0, creditedOn: Date = Date.now, currency: String = "", type: String = "", tag: String = "") {
         self.id = id
         self.amount = amount
         self.taxpaid = taxpaid

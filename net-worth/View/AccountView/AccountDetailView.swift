@@ -19,14 +19,14 @@ struct AccountDetailView: View {
     @State var sortOrder = "Asc"
     @State var sortType = "Name"
     
-    @State var accountID: String
+    @State var accountID: Int
     @State var account = Account()
     @EnvironmentObject var accountViewModel: AccountViewModel
     @EnvironmentObject var watchViewModel: WatchViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
-    init(accountID: String) {
+    init(accountID: Int) {
         self.accountID = accountID
         
         UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.theme.primaryText)
@@ -208,7 +208,7 @@ struct AccountDetailView: View {
                                     await accountController.updateAccount(account: updatedAccount)
                                     await accountViewModel.getAccountList()
                                     account = accountViewModel.accountList.filter {
-                                        return $0.id.elementsEqual(accountID)
+                                        return $0.id == accountID
                                     }.first ?? Account()
                                 }
                             }, label: {
@@ -223,7 +223,7 @@ struct AccountDetailView: View {
                                 await accountController.updateAccount(account: updatedAccount)
                                 await accountViewModel.getAccountList()
                                 self.account = accountViewModel.accountList.filter {
-                                    return $0.id.elementsEqual(accountID)
+                                    return $0.id == accountID
                                 }.first ?? Account()
                             }
                         }, label: {
@@ -247,7 +247,7 @@ struct AccountDetailView: View {
         .onAppear {
             Task.init {
                 self.account = accountViewModel.accountList.filter {
-                    return $0.id.elementsEqual(accountID)
+                    return $0.id == accountID
                 }.first ?? Account()
                 if(account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
                     await accountViewModel.getAccountInBrokerList(brokerID: accountID)
@@ -257,7 +257,7 @@ struct AccountDetailView: View {
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             self.account = accountViewModel.accountList.filter {
-                return $0.id.elementsEqual(accountID)
+                return $0.id == accountID
             }.first ?? Account()
         }, content: {
             UpdateBalanceAccountView(accountId: accountID)

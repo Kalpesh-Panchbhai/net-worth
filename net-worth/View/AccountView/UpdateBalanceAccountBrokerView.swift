@@ -9,7 +9,7 @@ import SwiftUI
 
 struct UpdateBalanceAccountBrokerView: View {
     
-    var brokerID: String
+    var brokerID: Int
     var accountBroker: AccountInBroker
     
     var accountTransactionController = AccountTransactionController()

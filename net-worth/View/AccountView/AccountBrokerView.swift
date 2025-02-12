@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AccountBrokerView: View {
     
-    var brokerID: String
+    var brokerID: Int
     @Binding var sortOrder: String
     @Binding var sortType: String
     

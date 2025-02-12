@@ -11,12 +11,12 @@ struct ApplicationData: Codable {
     
     static var shared = ApplicationData()
     
-    var userId: String
+    var userId: Int
         
     var dataLoading = false
     
     private init() {
-        userId = ""
+        userId = 0
     }
     
     public static func loadData() async {
