@@ -9,7 +9,7 @@ import SwiftUI
 
 struct UpdateBalanceAccountView: View {
     
-    var accountId: Int
+    var accountId: String
     var accountTransactionController = AccountTransactionController()
     
     @State var amount: String = "0.0"
@@ -66,7 +66,7 @@ struct UpdateBalanceAccountView: View {
                     .font(.system(size: 14).bold())
                 }
             }
-            .navigationTitle(accountViewModel.account.name)
+            .navigationTitle(accountViewModel.account.accountName)
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.theme.background)
             .scrollContentBackground(.hidden)

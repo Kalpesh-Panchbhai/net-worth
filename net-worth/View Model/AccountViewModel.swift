@@ -38,7 +38,7 @@ class AccountViewModel: ObservableObject {
         case .accountType:
             return Dictionary(grouping: accountList) {
                 if($0.active) {
-                    return $0.type
+                    return $0.accountType
                 } else {
                     return "Inactive Account"
                 }
@@ -53,7 +53,7 @@ class AccountViewModel: ObservableObject {
         case .accountType:
             let array = Array(Set(accountList.map {
                 if($0.active) {
-                    return $0.type
+                    return $0.accountType
                 } else {
                     return "Inactive Account"
                 }
@@ -80,7 +80,7 @@ class AccountViewModel: ObservableObject {
             return data
         } else {
             return data.filter { value in
-                value.name.lowercased().contains(searchKeyword.lowercased()) || value.type.lowercased().contains(searchKeyword.lowercased())
+                value.accountName.lowercased().contains(searchKeyword.lowercased()) || value.accountType.lowercased().contains(searchKeyword.lowercased())
             }
         }
     }
@@ -88,13 +88,13 @@ class AccountViewModel: ObservableObject {
     func filterAccountList(filter: String) {
         accountList = originalAccountList
             .filter { account in
-                account.type.lowercased().elementsEqual(filter.lowercased())
+                account.accountType.lowercased().elementsEqual(filter.lowercased())
             }
     }
     
-    func getAccount(id: Int) async {
+    func getAccount(id: String) async {
         let account = accountList.first(where: {
-            return $0.id == id
+            return $0.id.elementsEqual(id)
         }) ?? Account()
         DispatchQueue.main.async {
             self.account = account
@@ -117,7 +117,7 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func getAccountInBrokerList(brokerID: Int) async {
+    func getAccountInBrokerList(brokerID: String) async {
         let accountList = await accountInBrokerController.getAccountListInBroker(brokerID: brokerID)
         DispatchQueue.main.async {
             self.accountsInBroker = accountList

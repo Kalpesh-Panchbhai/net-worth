@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NewAccountInBrokerView: View {
     
-    var brokerAccountID: Int
+    var brokerAccountID: String
     var accountInBrokerController = AccountInBrokerController()
     
     @State var scenePhaseBlur = 0

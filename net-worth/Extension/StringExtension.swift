@@ -40,11 +40,12 @@ extension String {
     
     func UTCToLocalString() -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
         
         let dt = dateFormatter.date(from: self)
         dateFormatter.timeZone = TimeZone.current
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
         
         return dateFormatter.string(from: dt ?? Date())
     }

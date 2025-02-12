@@ -58,10 +58,10 @@ class ImportExportController {
     }
     
     private func importIncome() async {
-//        for income in data.income {
-//            let income = Income(amount: income.amount, taxpaid: income.taxpaid, creditedOn: income.creditedOn, currency: income.currency, type: income.type, tag: income.tag)
-//            await incomeController.addIncome(income: income)
-//        }
+        for income in data.income {
+            let income = Income(amount: income.amount, taxpaid: income.taxpaid, creditedOn: income.creditedOn, currency: income.currency, type: income.type, tag: income.tag)
+            await incomeController.addIncome(income: income)
+        }
     }
     
     private func importAccount() async {
@@ -75,17 +75,17 @@ class ImportExportController {
     }
     
     private func importWatch() async {
-//        for watch in data.watch {
-//            var newWatch = Watch()
-//            let accountList = await accountController.getAccountList()
-//            newWatch.accountList = watch.accountID.map { accountID in
-//                accountList.filter { account in
-//                    account.accountName.elementsEqual(accountID)
-//                }.first?.id ?? ""
-//            }
-//            newWatch.name = watch.accountName
-//            await watchController.addWatchList(watch: newWatch)
-//        }
+        for watch in data.watch {
+            var newWatch = Watch()
+            let accountList = await accountController.getAccountList()
+            newWatch.accountList = watch.accountID.map { accountID in
+                accountList.filter { account in
+                    account.accountName.elementsEqual(accountID)
+                }.first?.id ?? ""
+            }
+            newWatch.name = watch.accountName
+            await watchController.addWatchList(watch: newWatch)
+        }
     }
     
     public func exportLocal(accountViewModel: AccountViewModel, watchViewModel: WatchViewModel, incomeViewModel: IncomeViewModel) async {
@@ -133,49 +133,49 @@ class ImportExportController {
     }
     
     private func exportIncome(incomeViewModel: IncomeViewModel) async {
-//        let incomeList = incomeViewModel.incomeList
-//        data.income = incomeList.map { item in
-//            return IncomeBackupModel(amount: item.amount, taxpaid: item.taxpaid, creditedOn: item.creditedOn, currency: item.currency, type: item.type, tag: item.tag)
-//        }
+        let incomeList = incomeViewModel.incomeList
+        data.income = incomeList.map { item in
+            return IncomeBackupModel(amount: item.amount, taxpaid: item.taxpaid, creditedOn: item.creditedOn, currency: item.currency, type: item.type, tag: item.tag)
+        }
     }
     
     private func exportAccount(accountViewModel: AccountViewModel) async {
-//        let accountList = accountViewModel.accountList
-//        var accountDataList = [AccountBackupModel]()
-//        
-//        for account in accountList {
-//            if(account.accountType == ConstantUtils.brokerAccountType) {
-//                await accountViewModel.getAccountInBrokerList(brokerID: account.id)
-//                let accountsInBroker = accountViewModel.accountsInBroker
-//                var accountsInBrokerDataList = [AccountInBrokerBackupModel]()
-//                for accountInBroker in accountsInBroker {
-//                    let accountInBrokerData = AccountInBrokerBackupModel(symbol: accountInBroker.symbol, name: accountInBroker.name, currentUnit: accountInBroker.currentUnit)
-//                    accountsInBrokerDataList.append(accountInBrokerData)
-//                }
-//                
-//                let accountData = AccountBackupModel(accountName: account.accountName, accountType: account.accountType, loanType: account.loanType, currency: account.currency, active: account.active, balance: BalanceAccount(), accountInBroker: accountsInBrokerDataList)
-//                
-//                accountDataList.append(accountData)
-//            } else {
-//                let accountData = AccountBackupModel(accountName: account.accountName, accountType: account.accountType, loanType: account.loanType, currency: account.currency, active: account.active, balance: account.balance, accountInBroker: [AccountInBrokerBackupModel]())
-//                
-//                accountDataList.append(accountData)
-//            }
-//        }
-//        data.account = accountDataList
+        let accountList = accountViewModel.accountList
+        var accountDataList = [AccountBackupModel]()
+        
+        for account in accountList {
+            if(account.accountType == ConstantUtils.brokerAccountType) {
+                await accountViewModel.getAccountInBrokerList(brokerID: account.id)
+                let accountsInBroker = accountViewModel.accountsInBroker
+                var accountsInBrokerDataList = [AccountInBrokerBackupModel]()
+                for accountInBroker in accountsInBroker {
+                    let accountInBrokerData = AccountInBrokerBackupModel(symbol: accountInBroker.symbol, name: accountInBroker.name, currentUnit: accountInBroker.currentUnit)
+                    accountsInBrokerDataList.append(accountInBrokerData)
+                }
+                
+                let accountData = AccountBackupModel(accountName: account.accountName, accountType: account.accountType, loanType: account.loanType, currency: account.currency, active: account.active, balance: BalanceAccount(), accountInBroker: accountsInBrokerDataList)
+                
+                accountDataList.append(accountData)
+            } else {
+                let accountData = AccountBackupModel(accountName: account.accountName, accountType: account.accountType, loanType: account.loanType, currency: account.currency, active: account.active, balance: account.balance, accountInBroker: [AccountInBrokerBackupModel]())
+                
+                accountDataList.append(accountData)
+            }
+        }
+        data.account = accountDataList
     }
     
     private func exportWatch(watchViewModel: WatchViewModel, accountViewModel: AccountViewModel) async {
-//        let watchList = watchViewModel.watchList
-//        let accountList = accountViewModel.accountList
-//        data.watch = watchList.map { watch in
-//            let accounts = watch.accountList.map { accountID in
-//                accountList.filter { account in
-//                    account.id.elementsEqual(accountID)
-//                }.first!.accountName
-//            }
-//            return WatchBackupModel(accountName: watch.name, accountID: accounts)
-//        }
+        let watchList = watchViewModel.watchList
+        let accountList = accountViewModel.accountList
+        data.watch = watchList.map { watch in
+            let accounts = watch.accountList.map { accountID in
+                accountList.filter { account in
+                    account.id.elementsEqual(accountID)
+                }.first!.accountName
+            }
+            return WatchBackupModel(accountName: watch.name, accountID: accounts)
+        }
     }
     
     private func getCurrentDateTimeStamp() -> String {

@@ -20,7 +20,7 @@ struct RowAccountToWatchView: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(account.name)
+                Text(account.accountName)
                     .foregroundColor(Color.theme.primaryText)
             }
             .padding()
@@ -32,9 +32,9 @@ struct RowAccountToWatchView: View {
                         .bold()
                         .onTapGesture {
                             isAdded.toggle()
-//                            self.watch.accountList = self.watch.accountList.filter { item in
-//                                item != account.id
-//                            }
+                            self.watch.accountList = self.watch.accountList.filter { item in
+                                item != account.id
+                            }
                             Task.init {
                                 await watchController.updateWatchList(watch: watch)
                                 await watchViewModel.getAllWatchList()
@@ -46,7 +46,7 @@ struct RowAccountToWatchView: View {
                         .bold()
                         .onTapGesture {
                             isAdded.toggle()
-//                            self.watch.accountList.append(account.id)
+                            self.watch.accountList.append(account.id)
                             Task.init {
                                 await watchController.updateWatchList(watch: watch)
                                 await watchViewModel.getAllWatchList()

@@ -9,7 +9,7 @@ import Foundation
 
 class RestController {
     
-    public func executeAPI<T>(entity: String, httpMethod: String, body: Data = Data(), pathParam: Int = 0, forClass: T.Type) async -> T where T : Codable {
+    public func executeAPI<T>(entity: String, httpMethod: String, body: Data = Data(), pathParam: String = "", forClass: T.Type) async -> T where T : Codable {
         let url = URL(string: getURL(entity: entity, pathParam: pathParam))
         
         let request = getURLRequest(url: url!, httpMethod: httpMethod, body: body)
@@ -26,8 +26,8 @@ class RestController {
         return try! T(from: EmptyResponse() as! Decoder)
     }
     
-    private func getURL(entity: String, pathParam: Int) -> String {
-        return ConstantUtils.baseRESTURL + entity + (pathParam != 0 ? ("/" + String(pathParam)) : "")
+    private func getURL(entity: String, pathParam: String) -> String {
+        return ConstantUtils.baseRESTURL + entity + (pathParam != "" ? ("/" + pathParam) : "")
     }
     
     private func getURLRequest(url: URL, httpMethod: String, body: Data) -> URLRequest {

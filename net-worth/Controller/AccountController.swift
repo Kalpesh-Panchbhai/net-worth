@@ -15,7 +15,7 @@ class AccountController {
     
     public func addAccount(newAccount: Account) async {
         let userId = ApplicationData.shared.userId
-        let requestData = Account(userId: userId, name: newAccount.name, type: newAccount.type, currency: newAccount.currency, active: newAccount.active)
+        let requestData = Account(userId: userId, accountName: newAccount.accountName, accountType: newAccount.accountType, loanType: newAccount.loanType, currency: newAccount.currency, active: newAccount.active)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(requestData)
         _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: RestResponse.self)
@@ -23,13 +23,13 @@ class AccountController {
     
     public func updateAccount(account: Account) async {
         let userId = ApplicationData.shared.userId
-        let requestData = Account(id: account.id, userId: userId, name: account.name,  type: account.type, currency: account.currency, active: account.active)
+        let requestData = Account(id: account.id, userId: userId, accountName: account.accountName, accountType: account.accountType, loanType: account.loanType, currency: account.currency, active: account.active)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(requestData)
         _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: RestResponse.self)
     }
     
-    public func deleteAccount(accountId: Int) async {
+    public func deleteAccount(accountId: String) async {
         _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: accountId, forClass: RestResponse.self)
     }
     
@@ -37,17 +37,17 @@ class AccountController {
         let userId = ApplicationData.shared.userId
         let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [Account].self)
         return response.sorted(by: {
-            return $0.name < $1.name
+            return $0.accountName < $1.accountName
         })
     }
     
     public func calculateTotalBalance(accountList: [Account]) async -> Balance {
         var balance = Balance(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
-//        accountList.forEach {
-////            balance.currentValue = balance.currentValue + $0.balance.currentDayValue.value
-////            balance.previousDayValue = balance.previousDayValue + $0.balance.previousDayValue.value
-////            balance.oneDayChange = balance.currentValue - balance.previousDayValue
-//        }
+        accountList.forEach {
+            balance.currentValue = balance.currentValue + $0.balance.currentDayValue.value
+            balance.previousDayValue = balance.previousDayValue + $0.balance.previousDayValue.value
+            balance.oneDayChange = balance.currentValue - balance.previousDayValue
+        }
         return balance
     }
 }

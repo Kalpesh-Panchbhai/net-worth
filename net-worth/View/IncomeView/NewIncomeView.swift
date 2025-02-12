@@ -137,7 +137,7 @@ struct NewIncomeView: View {
                 ToolbarItem {
                     Button(action: {
                         Task.init {
-                            let newIncome = Income(amount: amount.toDouble() ?? 0.0, taxpaid: taxPaid.toDouble() ?? 0.0, creditedDate: date, currency: currencySelected.code, type: incomeTypeSelected.id, tag: incomeTagSelected.id)
+                            let newIncome = Income(amount: amount.toDouble() ?? 0.0, taxpaid: taxPaid.toDouble() ?? 0.0, creditedOn: date, currency: currencySelected.code, type: incomeTypeSelected.name, tag: incomeTagSelected.name)
                             await incomeController.addIncome(income: newIncome)
                             await incomeViewModel.getIncomeList()
                         }

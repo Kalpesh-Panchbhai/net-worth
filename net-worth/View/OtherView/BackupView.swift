@@ -200,7 +200,7 @@ struct BackupView: View {
     
     private func getTotalAccountsInBrokerInCloud() async {
         let accountList = accountViewModel.accountList.filter {
-            return $0.type.elementsEqual("Broker")
+            return $0.accountType.elementsEqual("Broker")
         }
         for account in accountList {
             Task.init {

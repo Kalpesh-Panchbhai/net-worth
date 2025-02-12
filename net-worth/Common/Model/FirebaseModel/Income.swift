@@ -17,19 +17,19 @@ class Income: Codable, Hashable, Equatable {
         return false
     }
     
-    var id: Int
+    var id: String
     var amount: Double
     var taxpaid: Double
-    var creditedDate: Date
+    var creditedOn: Date
     var currency: String
-    var type: Int
-    var tag: Int
+    var type: String
+    var tag: String
     
-    init(id: Int = 0, amount: Double = 0.0, taxpaid: Double = 0.0, creditedDate: Date = Date.now, currency: String = "", type: Int = 0, tag: Int = 0) {
+    init(id: String = "", amount: Double = 0.0, taxpaid: Double = 0.0, creditedOn: Date = Date.now, currency: String = "", type: String = "", tag: String = "") {
         self.id = id
         self.amount = amount
         self.taxpaid = taxpaid
-        self.creditedDate = creditedDate
+        self.creditedOn = creditedOn
         self.currency = currency
         self.type = type
         self.tag = tag
