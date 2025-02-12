@@ -18,18 +18,18 @@ class IncomeController {
             return Income(id: $0.id,
                           amount: $0.amount,
                           taxpaid: $0.taxPaid,
-                          creditedOn: $0.creditedOn.UTCToLocalDate(),
+                          creditedDate: $0.creditedDate.UTCToLocalDate(),
                           currency: $0.currency,
                           type: $0.incomeType,
                           tag: $0.incomeTag)
         }.sorted(by: {
-            return $0.creditedOn < $1.creditedOn
+            return $0.creditedDate < $1.creditedDate
         })
     }
     
     public func addIncome(income: Income) async {
         let userId = ApplicationData.shared.userId
-        let requestData = IncomeRestModel(userId: userId, amount: income.amount, taxPaid: income.taxpaid, creditedOn: income.creditedOn.localToUTCString(), currency: income.currency, incomeType: income.type, incomeTag: income.tag)
+        let requestData = IncomeRestModel(userId: userId, amount: income.amount, taxPaid: income.taxpaid, creditedDate: income.creditedDate.localToUTCString(), currency: income.currency, incomeType: income.type, incomeTag: income.tag)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(requestData)
         _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: RestResponse.self)
@@ -37,7 +37,7 @@ class IncomeController {
     
     public func updateIncome(income: Income) async {
         let userId = ApplicationData.shared.userId
-        let requestData = IncomeRestModel(id: income.id, userId: userId, amount: income.amount, taxPaid: income.taxpaid, creditedOn: income.creditedOn.localToUTCString(), currency: income.currency, incomeType: income.type, incomeTag: income.tag)
+        let requestData = IncomeRestModel(id: income.id, userId: userId, amount: income.amount, taxPaid: income.taxpaid, creditedDate: income.creditedDate.localToUTCString(), currency: income.currency, incomeType: income.type, incomeTag: income.tag)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(requestData)
         _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: RestResponse.self)
@@ -50,17 +50,17 @@ class IncomeController {
     public func getIncomeList(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String](), incomeList: [Income]) async -> [IncomeCalculation] {
         var incomeList = incomeList
         
-        if(!incomeType.isEmpty) {
-            incomeList = incomeList.filter {
-                incomeType.contains($0.type)
-            }
-        }
-        
-        if(!incomeTag.isEmpty) {
-            incomeList = incomeList.filter {
-                incomeTag.contains($0.tag)
-            }
-        }
+//        if(!incomeType.isEmpty) {
+//            incomeList = incomeList.filter {
+//                incomeType.contains($0.type)
+//            }
+//        }
+//        
+//        if(!incomeTag.isEmpty) {
+//            incomeList = incomeList.filter {
+//                incomeTag.contains($0.tag)
+//            }
+//        }
         
         if(!year.isEmpty) {
             var filterIncomeList = [Income]()
@@ -84,10 +84,10 @@ class IncomeController {
                     minute: 59,
                     second: 59)
                 filterIncomeList.append(contentsOf: incomeList.filter {
-                    $0.creditedOn <= Calendar.current.date(from: endDate)! && $0.creditedOn >= Calendar.current.date(from: startDate)!
+                    $0.creditedDate <= Calendar.current.date(from: endDate)! && $0.creditedDate >= Calendar.current.date(from: startDate)!
                 })
             }
-            incomeList = filterIncomeList.sorted(by: {$0.creditedOn < $1.creditedOn})
+            incomeList = filterIncomeList.sorted(by: {$0.creditedDate < $1.creditedDate})
         }
         
         if(!financialYear.isEmpty) {
@@ -113,10 +113,10 @@ class IncomeController {
                     minute: 59,
                     second: 59)
                 filterIncomeList.append(contentsOf: incomeList.filter {
-                    $0.creditedOn <= Calendar.current.date(from: endDate)! && $0.creditedOn >= Calendar.current.date(from: startDate)!
+                    $0.creditedDate <= Calendar.current.date(from: endDate)! && $0.creditedDate >= Calendar.current.date(from: startDate)!
                 })
             }
-            incomeList = filterIncomeList.sorted(by: {$0.creditedOn < $1.creditedOn})
+            incomeList = filterIncomeList.sorted(by: {$0.creditedDate < $1.creditedDate})
         }
         
         var cumAmount = 0.0
@@ -130,16 +130,16 @@ class IncomeController {
             cumAmount = cumAmount + value1.amount
             cumTaxPaid = cumTaxPaid + value1.taxpaid
             incomeList.forEach { value2 in
-                if(value1.creditedOn >= value2.creditedOn) {
+                if(value1.creditedDate >= value2.creditedDate) {
                     sumAmount += value2.amount
                     sumTaxPaid += value2.taxpaid
                     
                     let date = DateComponents(
                         calendar: Calendar.current,
-                        year: value2.creditedOn.getDateComponents().year,
-                        month: value2.creditedOn.getDateComponents().month,
+                        year: value2.creditedDate.getDateComponents().year,
+                        month: value2.creditedDate.getDateComponents().month,
                         day: 1)
-                    totalDays = value1.creditedOn.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
+                    totalDays = value1.creditedDate.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
                     maxDays = maxDays < totalDays ? totalDays : maxDays
                 }
             }
@@ -147,7 +147,7 @@ class IncomeController {
             return IncomeCalculation(id: value1.id,
                                      amount: value1.amount,
                                      taxpaid: value1.taxpaid,
-                                     creditedOn: value1.creditedOn,
+                                     creditedOn: value1.creditedDate,
                                      currency: value1.currency,
                                      type: value1.type,
                                      tag: value1.tag,
@@ -177,7 +177,7 @@ class IncomeController {
         let incomeList = await getIncomeList(incomeType: [String](), incomeTag: [String](), year: [String](), financialYear: [String](), incomeList: income)
         
         let grouped = Dictionary(grouping: incomeList) { (income) -> Int in
-            let date = Calendar.current.dateComponents([.year], from: income.creditedOn)
+            let date = Calendar.current.dateComponents([.year], from: income.creditedDate)
             
             return date.year ?? 0
             
@@ -199,8 +199,8 @@ class IncomeController {
             return returnResponse
         }
         
-        let firstYear = Calendar.current.dateComponents([.year], from: incomeList.last!.creditedOn).year!
-        let lastYear = Calendar.current.dateComponents([.year], from: incomeList.first!.creditedOn).year!
+        let firstYear = Calendar.current.dateComponents([.year], from: incomeList.last!.creditedDate).year!
+        let lastYear = Calendar.current.dateComponents([.year], from: incomeList.first!.creditedDate).year!
         
         var dateComponent = DateComponents()
         dateComponent.year = firstYear
@@ -215,7 +215,7 @@ class IncomeController {
         let lastDayOfFinancialYear = Calendar.current.date(from: dateComponent)!
         
         let firstFinancialYearAvailable = incomeList.filter {
-            firstDayOfYear <= $0.creditedOn && $0.creditedOn <= lastDayOfFinancialYear
+            firstDayOfYear <= $0.creditedDate && $0.creditedDate <= lastDayOfFinancialYear
         }.count > 0
         
         if(firstFinancialYearAvailable) {
@@ -238,7 +238,7 @@ class IncomeController {
             let lastDayOfFinancialYear = Calendar.current.date(from: dateComponent)!
             
             financialYearAvailable = incomeList.filter {
-                firstDayOfFinancialYear <= $0.creditedOn && $0.creditedOn <= lastDayOfFinancialYear
+                firstDayOfFinancialYear <= $0.creditedDate && $0.creditedDate <= lastDayOfFinancialYear
             }.count > 0
             
             if(financialYearAvailable) {
@@ -253,18 +253,18 @@ class IncomeController {
     public func incomeListGroupBy(list: [IncomeCalculation], groupBy: String) -> [String: [IncomeCalculation]] {
         var groupByIncomeList = [String: [IncomeCalculation]]()
         var returnGroupByIncomeList = [String: [IncomeCalculation]]()
-        if(groupBy.elementsEqual("Type")) {
-            groupByIncomeList = Dictionary(grouping: list, by: {$0.type})
-        } else if(groupBy.elementsEqual("Tag")) {
-            groupByIncomeList = Dictionary(grouping: list, by: {$0.tag})
-        } else if(groupBy.elementsEqual("Year")) {
-            groupByIncomeList = Dictionary(grouping: list) { (income) -> String in
-                let date = Calendar.current.dateComponents([.year], from: income.creditedOn)
-                return String(date.year ?? 0)
-            }
-        } else if(groupBy.elementsEqual("Financial Year")) {
-            return incomeListGroupByFinancialYear(list: list)
-        }
+//        if(groupBy.elementsEqual("Type")) {
+//            groupByIncomeList = Dictionary(grouping: list, by: {$0.type})
+//        } else if(groupBy.elementsEqual("Tag")) {
+//            groupByIncomeList = Dictionary(grouping: list, by: {$0.tag})
+//        } else if(groupBy.elementsEqual("Year")) {
+//            groupByIncomeList = Dictionary(grouping: list) { (income) -> String in
+//                let date = Calendar.current.dateComponents([.year], from: income.creditedOn)
+//                return String(date.year ?? 0)
+//            }
+//        } else if(groupBy.elementsEqual("Financial Year")) {
+//            return incomeListGroupByFinancialYear(list: list)
+//        }
         
         for (key, value) in groupByIncomeList {
             var cumAmount = 0.0
@@ -278,16 +278,16 @@ class IncomeController {
                 cumAmount = cumAmount + value1.amount
                 cumTaxPaid = cumTaxPaid + value1.taxpaid
                 value.reversed().forEach { value2 in
-                    if(value1.creditedOn >= value2.creditedOn) {
+                    if(value1.creditedDate >= value2.creditedDate) {
                         sumAmount += value2.amount
                         sumTaxPaid += value2.taxpaid
                         
                         let date = DateComponents(
                             calendar: Calendar.current,
-                            year: value2.creditedOn.getDateComponents().year,
-                            month: value2.creditedOn.getDateComponents().month,
+                            year: value2.creditedDate.getDateComponents().year,
+                            month: value2.creditedDate.getDateComponents().month,
                             day: 1)
-                        totalDays = value1.creditedOn.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
+                        totalDays = value1.creditedDate.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
                         maxDays = maxDays < totalDays ? totalDays : maxDays
                     }
                 }
@@ -295,7 +295,7 @@ class IncomeController {
                 return IncomeCalculation(id: value1.id,
                                          amount: value1.amount,
                                          taxpaid: value1.taxpaid,
-                                         creditedOn: value1.creditedOn,
+                                         creditedOn: value1.creditedDate,
                                          currency: value1.currency,
                                          type: value1.type,
                                          tag: value1.tag,
@@ -314,8 +314,8 @@ class IncomeController {
     private func incomeListGroupByFinancialYear(list: [IncomeCalculation]) -> [String: [IncomeCalculation]] {
         var financialYearList = [String]()
         
-        let firstYear = Calendar.current.dateComponents([.year], from: list.last!.creditedOn).year!
-        let lastYear = Calendar.current.dateComponents([.year], from: list.first!.creditedOn).year!
+        let firstYear = Calendar.current.dateComponents([.year], from: list.last!.creditedDate).year!
+        let lastYear = Calendar.current.dateComponents([.year], from: list.first!.creditedDate).year!
         
         var dateComponent = DateComponents()
         dateComponent.year = firstYear
@@ -330,7 +330,7 @@ class IncomeController {
         let lastDayOfFinancialYear = Calendar.current.date(from: dateComponent)!
         
         let firstFinancialYearAvailable = list.filter {
-            firstDayOfYear <= $0.creditedOn && $0.creditedOn <= lastDayOfFinancialYear
+            firstDayOfYear <= $0.creditedDate && $0.creditedDate <= lastDayOfFinancialYear
         }.count > 0
         
         if(firstFinancialYearAvailable) {
@@ -353,7 +353,7 @@ class IncomeController {
             let lastDayOfFinancialYear = Calendar.current.date(from: dateComponent)!
             
             financialYearAvailable = list.filter {
-                firstDayOfFinancialYear <= $0.creditedOn && $0.creditedOn <= lastDayOfFinancialYear
+                firstDayOfFinancialYear <= $0.creditedDate && $0.creditedDate <= lastDayOfFinancialYear
             }.count > 0
             
             if(financialYearAvailable) {
@@ -387,7 +387,7 @@ class IncomeController {
                     second: 59)
                 
                 let filterList = list.filter {
-                    $0.creditedOn <= Calendar.current.date(from: endDate)! && $0.creditedOn >= Calendar.current.date(from: startDate)!
+                    $0.creditedDate <= Calendar.current.date(from: endDate)! && $0.creditedDate >= Calendar.current.date(from: startDate)!
                 }
                 
                 var cumAmount = 0.0
@@ -401,16 +401,16 @@ class IncomeController {
                     cumAmount = cumAmount + value1.amount
                     cumTaxPaid = cumTaxPaid + value1.taxpaid
                     filterList.reversed().forEach { value2 in
-                        if(value1.creditedOn >= value2.creditedOn) {
+                        if(value1.creditedDate >= value2.creditedDate) {
                             sumAmount += value2.amount
                             sumTaxPaid += value2.taxpaid
                             
                             let date = DateComponents(
                                 calendar: Calendar.current,
-                                year: value2.creditedOn.getDateComponents().year,
-                                month: value2.creditedOn.getDateComponents().month,
+                                year: value2.creditedDate.getDateComponents().year,
+                                month: value2.creditedDate.getDateComponents().month,
                                 day: 1)
-                            totalDays = value1.creditedOn.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
+                            totalDays = value1.creditedDate.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
                             maxDays = maxDays < totalDays ? totalDays : maxDays
                         }
                     }
@@ -418,7 +418,7 @@ class IncomeController {
                     return IncomeCalculation(id: value1.id,
                                              amount: value1.amount,
                                              taxpaid: value1.taxpaid,
-                                             creditedOn: value1.creditedOn,
+                                             creditedOn: value1.creditedDate,
                                              currency: value1.currency,
                                              type: value1.type,
                                              tag: value1.tag,

@@ -23,9 +23,9 @@ struct IncomeRowView: View {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(Color.theme.green.opacity(0.5))
                             .frame(width: 60, height: 15)
-                        Text(income.type)
-                            .font(.system(size: 10))
-                            .bold()
+//                        Text(income.type)
+//                            .font(.system(size: 10))
+//                            .bold()
                     }
                 }
                 if(!groupBy.elementsEqual("Tag")) {
@@ -33,15 +33,15 @@ struct IncomeRowView: View {
                         RoundedRectangle(cornerRadius: 8)
                             .fill(Color.blue.opacity(0.5))
                             .frame(height: 15)
-                        HStack{
-                            Text("    " + income.tag + "    ")
-                                .font(.system(size: 10))
-                                .bold()
-                        }
+//                        HStack{
+//                            Text("    " + income.tag + "    ")
+//                                .font(.system(size: 10))
+//                                .bold()
+//                        }
                     }.fixedSize()
                 }
                 Spacer()
-                Text(income.creditedOn.getDateAndFormat())
+                Text(income.creditedDate.getDateAndFormat())
                     .font(.system(size: 10))
                     .bold()
             }

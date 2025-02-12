@@ -14,12 +14,12 @@ class IncomeCalculation: Income {
     var cumulativeAmount: Double
     var cumulativeTaxPaid: Double
     
-    init(id: Int = 0, amount: Double, taxpaid: Double, creditedOn: Date, currency: String, type: String, tag: String, avgAmount: Double, avgTaxPaid: Double, cumulativeAmount: Double, cumulativeTaxPaid: Double) {
+    init(id: Int = 0, amount: Double, taxpaid: Double, creditedOn: Date, currency: String, type: Int, tag: Int, avgAmount: Double, avgTaxPaid: Double, cumulativeAmount: Double, cumulativeTaxPaid: Double) {
         self.avgAmount = avgAmount
         self.avgTaxPaid = avgTaxPaid
         self.cumulativeAmount = cumulativeAmount
         self.cumulativeTaxPaid = cumulativeTaxPaid
-        super.init(id: id, amount: amount, taxpaid: taxpaid, creditedOn: creditedOn, currency: currency, type: type, tag: tag)
+        super.init(id: id, amount: amount, taxpaid: taxpaid, creditedDate: creditedOn, currency: currency, type: type, tag: tag)
     }
     
     required init(from decoder: Decoder) throws {

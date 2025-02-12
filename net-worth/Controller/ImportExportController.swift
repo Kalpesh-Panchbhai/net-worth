@@ -58,10 +58,10 @@ class ImportExportController {
     }
     
     private func importIncome() async {
-        for income in data.income {
-            let income = Income(amount: income.amount, taxpaid: income.taxpaid, creditedOn: income.creditedOn, currency: income.currency, type: income.type, tag: income.tag)
-            await incomeController.addIncome(income: income)
-        }
+//        for income in data.income {
+//            let income = Income(amount: income.amount, taxpaid: income.taxpaid, creditedOn: income.creditedOn, currency: income.currency, type: income.type, tag: income.tag)
+//            await incomeController.addIncome(income: income)
+//        }
     }
     
     private func importAccount() async {
@@ -133,10 +133,10 @@ class ImportExportController {
     }
     
     private func exportIncome(incomeViewModel: IncomeViewModel) async {
-        let incomeList = incomeViewModel.incomeList
-        data.income = incomeList.map { item in
-            return IncomeBackupModel(amount: item.amount, taxpaid: item.taxpaid, creditedOn: item.creditedOn, currency: item.currency, type: item.type, tag: item.tag)
-        }
+//        let incomeList = incomeViewModel.incomeList
+//        data.income = incomeList.map { item in
+//            return IncomeBackupModel(amount: item.amount, taxpaid: item.taxpaid, creditedOn: item.creditedOn, currency: item.currency, type: item.type, tag: item.tag)
+//        }
     }
     
     private func exportAccount(accountViewModel: AccountViewModel) async {

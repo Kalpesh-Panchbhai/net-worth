@@ -50,16 +50,16 @@ class IncomeViewModel: ObservableObject {
             cumAmount = cumAmount + value1.amount
             cumTaxPaid = cumTaxPaid + value1.taxpaid
             incomeList.forEach { value2 in
-                if(value1.creditedOn >= value2.creditedOn) {
+                if(value1.creditedDate >= value2.creditedDate) {
                     sumAmount += value2.amount
                     sumTaxPaid += value2.taxpaid
                     
                     let date = DateComponents(
                         calendar: Calendar.current,
-                        year: value2.creditedOn.getDateComponents().year,
-                        month: value2.creditedOn.getDateComponents().month,
+                        year: value2.creditedDate.getDateComponents().year,
+                        month: value2.creditedDate.getDateComponents().month,
                         day: 1)
-                    totalDays = value1.creditedOn.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
+                    totalDays = value1.creditedDate.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
                     maxDays = maxDays < totalDays ? totalDays : maxDays
                 }
             }
@@ -67,7 +67,7 @@ class IncomeViewModel: ObservableObject {
             return IncomeCalculation(id: value1.id,
                                      amount: value1.amount,
                                      taxpaid: value1.taxpaid,
-                                     creditedOn: value1.creditedOn,
+                                     creditedOn: value1.creditedDate,
                                      currency: value1.currency,
                                      type: value1.type,
                                      tag: value1.tag,

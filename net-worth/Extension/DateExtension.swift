@@ -66,7 +66,7 @@ extension Date {
     func localToUTCString() -> String {
         let formatter = DateFormatter()
         formatter.timeZone = TimeZone(abbreviation: "UTC")
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         return formatter.string(from: self)
     }
     
