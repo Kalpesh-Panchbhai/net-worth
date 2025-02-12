@@ -140,8 +140,7 @@ struct AccountCardList: View {
     }
     
     private func isAccountAmountZero(account: Account) -> Bool {
-//        return account.balance.currentDayValue.value.isZero
-        return false
+        return account.balance.currentDayValue.value.isZero
     }
     
     private func showAccount(account: Account) -> Bool {

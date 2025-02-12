@@ -20,7 +20,7 @@ struct RowAccountToWatchView: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(account.name)
+                Text(account.accountName)
                     .foregroundColor(Color.theme.primaryText)
             }
             .padding()
