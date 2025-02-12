@@ -10,6 +10,10 @@
 		7D59B4012BE246FF006F3F00 /* net_worthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4002BE246FF006F3F00 /* net_worthApp.swift */; };
 		7D59B4052BE24701006F3F00 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B4042BE24701006F3F00 /* Assets.xcassets */; };
 		7D59B4082BE24701006F3F00 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B4072BE24701006F3F00 /* Preview Assets.xcassets */; };
+		7D59B43C2BE249B7006F3F00 /* AccountData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4102BE249B7006F3F00 /* AccountData.swift */; };
+		7D59B43D2BE249B7006F3F00 /* AccountInBrokerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4112BE249B7006F3F00 /* AccountInBrokerData.swift */; };
+		7D59B43E2BE249B7006F3F00 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4122BE249B7006F3F00 /* Data.swift */; };
+		7D59B43F2BE249B7006F3F00 /* IncomeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4132BE249B7006F3F00 /* IncomeData.swift */; };
 		7D59B4402BE249B7006F3F00 /* AccountBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4152BE249B7006F3F00 /* AccountBackupModel.swift */; };
 		7D59B4412BE249B7006F3F00 /* AccountInBrokerBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4162BE249B7006F3F00 /* AccountInBrokerBackupModel.swift */; };
 		7D59B4422BE249B7006F3F00 /* AccountTransactionBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4172BE249B7006F3F00 /* AccountTransactionBackupModel.swift */; };
@@ -139,6 +143,10 @@
 		7D59B4042BE24701006F3F00 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7D59B4072BE24701006F3F00 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		7D59B40E2BE24774006F3F00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		7D59B4102BE249B7006F3F00 /* AccountData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountData.swift; sourceTree = "<group>"; };
+		7D59B4112BE249B7006F3F00 /* AccountInBrokerData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountInBrokerData.swift; sourceTree = "<group>"; };
+		7D59B4122BE249B7006F3F00 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		7D59B4132BE249B7006F3F00 /* IncomeData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeData.swift; sourceTree = "<group>"; };
 		7D59B4152BE249B7006F3F00 /* AccountBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountBackupModel.swift; sourceTree = "<group>"; };
 		7D59B4162BE249B7006F3F00 /* AccountInBrokerBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountInBrokerBackupModel.swift; sourceTree = "<group>"; };
 		7D59B4172BE249B7006F3F00 /* AccountTransactionBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountTransactionBackupModel.swift; sourceTree = "<group>"; };
@@ -323,6 +331,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		7D59B4142BE249B7006F3F00 /* ApplicationDataModel */ = {
+			isa = PBXGroup;
+			children = (
+				7D59B4102BE249B7006F3F00 /* AccountData.swift */,
+				7D59B4112BE249B7006F3F00 /* AccountInBrokerData.swift */,
+				7D59B4122BE249B7006F3F00 /* Data.swift */,
+				7D59B4132BE249B7006F3F00 /* IncomeData.swift */,
+			);
+			path = ApplicationDataModel;
+			sourceTree = "<group>";
+		};
 		7D59B41D2BE249B7006F3F00 /* Backup */ = {
 			isa = PBXGroup;
 			children = (
@@ -379,6 +398,7 @@
 				7D59B4352BE249B7006F3F00 /* GroupChartData.swift */,
 				7D59B4362BE249B7006F3F00 /* IncomeCalculation.swift */,
 				7D59B4372BE249B7006F3F00 /* SymbolDetailModel.swift */,
+				7D59B4142BE249B7006F3F00 /* ApplicationDataModel */,
 				7D59B41D2BE249B7006F3F00 /* Backup */,
 				7D59B4262BE249B7006F3F00 /* FirebaseModel */,
 				7D59B42F2BE249B7006F3F00 /* RestModel */,
@@ -675,6 +695,7 @@
 				7D59B4E22BE249D9006F3F00 /* AccountBrokerRowView.swift in Sources */,
 				7D59B45F2BE249B7006F3F00 /* SymbolDetailModel.swift in Sources */,
 				7D59B4EC2BE249D9006F3F00 /* BalanceCardView.swift in Sources */,
+				7D59B43E2BE249B7006F3F00 /* Data.swift in Sources */,
 				7D59B4F32BE249D9006F3F00 /* WatchToAccountView.swift in Sources */,
 				7D59B4FC2BE249D9006F3F00 /* PieSliceView.swift in Sources */,
 				7D59B51B2BE249D9006F3F00 /* WatchDetailView.swift in Sources */,
@@ -697,6 +718,7 @@
 				7D59B4862BE249C8006F3F00 /* SettingsController.swift in Sources */,
 				7DD742A32BEBC241005B51AF /* ChartRest.swift in Sources */,
 				7D59B4782BE249C8006F3F00 /* AccountTransactionController.swift in Sources */,
+				7D59B43C2BE249B7006F3F00 /* AccountData.swift in Sources */,
 				7D59B4462BE249B7006F3F00 /* IncomeTypeBackupModel.swift in Sources */,
 				7D59B4E92BE249D9006F3F00 /* AccountListView.swift in Sources */,
 				7D59B5102BE249D9006F3F00 /* DefaultCurrencyPicker.swift in Sources */,
@@ -756,6 +778,7 @@
 				7D59B4802BE249C8006F3F00 /* IncomeTagController.swift in Sources */,
 				7D59B5052BE249D9006F3F00 /* NewIncomeTypeView.swift in Sources */,
 				7D59B5022BE249D9006F3F00 /* IncomeTypeView.swift in Sources */,
+				7D59B43F2BE249B7006F3F00 /* IncomeData.swift in Sources */,
 				7D6437402BE6171B00E580F0 /* AccountTransaction.swift in Sources */,
 				7D59B5032BE249D9006F3F00 /* IncomeView.swift in Sources */,
 				7D59B4772BE249C8006F3F00 /* AccountInBrokerController.swift in Sources */,
@@ -769,6 +792,7 @@
 				7D59B4582BE249B7006F3F00 /* ApplicationData.swift in Sources */,
 				7D59B4902BE249D0006F3F00 /* Color.swift in Sources */,
 				7D59B47E2BE249C8006F3F00 /* ImportExportController.swift in Sources */,
+				7D59B43D2BE249B7006F3F00 /* AccountInBrokerData.swift in Sources */,
 				7D59B45C2BE249B7006F3F00 /* FinanceModel.swift in Sources */,
 				7D59B45A2BE249B7006F3F00 /* ChartData.swift in Sources */,
 				7D59B51D2BE249D9006F3F00 /* WatchView.swift in Sources */,
