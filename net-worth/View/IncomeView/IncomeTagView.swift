@@ -38,7 +38,7 @@ struct IncomeTagView: View {
                         HStack {
                             Text(item.name)
                             Spacer()
-                            if(item.isdefault) {
+                            if(item.isDefault) {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 10)
                                         .fill(Color.theme.green.opacity(0.5))
@@ -50,11 +50,11 @@ struct IncomeTagView: View {
                             }
                         }
                         .contextMenu {
-                            if(!item.isdefault) {
+                            if(!item.isDefault) {
                                 Button(action: {
                                     Task.init {
                                         var updatedIncomeTag = item
-                                        updatedIncomeTag.isdefault = true
+                                        updatedIncomeTag.isDefault = true
                                         await incomeTagController.updateIncomeTag(tag: updatedIncomeTag)
                                         await incomeViewModel.getIncomeTagList()
                                     }

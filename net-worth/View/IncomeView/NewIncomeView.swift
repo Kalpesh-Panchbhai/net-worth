@@ -16,8 +16,8 @@ struct NewIncomeView: View {
     @State var scenePhaseBlur = 0
     @State var amount: String = "0.0"
     @State var taxPaid: String = "0.0"
-    @State var incomeTypeSelected: IncomeType = IncomeType()
-    @State var incomeTagSelected: IncomeTag = IncomeTag()
+    @State var incomeTypeSelected: TypeValueRestModel = TypeValueRestModel()
+    @State var incomeTagSelected: TypeValueRestModel = TypeValueRestModel()
     @State var date = Date()
     @State var addIncomeTagViewOpen = false
     @State var addIncomeTypeViewOpen = false
@@ -36,7 +36,7 @@ struct NewIncomeView: View {
             Form {
                 Section("Income detail") {
                     Picker(selection: $incomeTypeSelected, label: Text("Type")) {
-                        Text("Select").tag(IncomeType())
+                        Text("Select").tag(TypeValueRestModel())
                         ForEach(incomeViewModel.incomeTypeList, id: \.self) {
                             Text($0.name).tag($0)
                         }
@@ -122,7 +122,7 @@ struct NewIncomeView: View {
                         .foregroundColor(Color.theme.primaryText)
                     
                     Picker(selection: $incomeTagSelected, label: Text("Tag")) {
-                        Text("Select").tag(IncomeTag())
+                        Text("Select").tag(TypeValueRestModel())
                         ForEach(incomeViewModel.incomeTagList, id: \.self) {
                             Text($0.name).tag($0)
                         }
@@ -180,11 +180,11 @@ struct NewIncomeView: View {
             .onAppear {
                 Task.init {
                     incomeTypeSelected = incomeViewModel.incomeTypeList.filter { item in
-                        item.isdefault
-                    }.first ?? IncomeType()
+                        item.isDefault
+                    }.first ?? TypeValueRestModel()
                     incomeTagSelected = incomeViewModel.incomeTagList.filter { item in
-                        item.isdefault
-                    }.first ?? IncomeTag()
+                        item.isDefault
+                    }.first ?? TypeValueRestModel()
                     
                     if(currencySelected.code.isEmpty) {
                         currencySelected = SettingsController().getDefaultCurrency()
@@ -193,16 +193,16 @@ struct NewIncomeView: View {
             }
             .sheet(isPresented: $addIncomeTypeViewOpen, onDismiss: {
                 incomeTypeSelected = incomeViewModel.incomeTypeList.filter { item in
-                    item.isdefault
-                }.first ?? IncomeType()
+                    item.isDefault
+                }.first ?? TypeValueRestModel()
             }, content: {
                 NewIncomeTypeView()
                     .presentationDetents([.medium])
             })
             .sheet(isPresented: $addIncomeTagViewOpen, onDismiss: {
                 incomeTagSelected = incomeViewModel.incomeTagList.filter { item in
-                    item.isdefault
-                }.first ?? IncomeTag()
+                    item.isDefault
+                }.first ?? TypeValueRestModel()
             }, content: {
                 NewIncomeTagView()
                     .presentationDetents([.medium])

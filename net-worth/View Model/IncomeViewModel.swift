@@ -26,8 +26,8 @@ class IncomeViewModel: ObservableObject {
     @Published var incomeTotalAmount = 0.0
     @Published var incomeTaxPaidAmount = 0.0
     
-    @Published var incomeTagList = [IncomeTag]()
-    @Published var incomeTypeList = [IncomeType]()
+    @Published var incomeTagList = [TypeValueRestModel]()
+    @Published var incomeTypeList = [TypeValueRestModel]()
     @Published var incomeYearList = [String]()
     @Published var incomeFinancialYearList = [String]()
     

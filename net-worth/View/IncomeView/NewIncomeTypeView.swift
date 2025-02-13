@@ -35,7 +35,7 @@ struct NewIncomeTypeView: View {
                 ToolbarItem {
                     Button(action: {
                         Task.init {
-                            await incomeTypeController.addIncomeType(type: IncomeType(name: typeName, isdefault: isDefault))
+                            await incomeTypeController.addIncomeType(type: TypeValueRestModel(userId: ApplicationData.shared.userId, name: typeName, isDefault: isDefault))
                             await incomeViewModel.getIncomeTypeList()
                         }
                         dismiss()

@@ -44,17 +44,17 @@ class ImportExportController {
     }
     
     private func importIncomeTag() async {
-        for tag in data.incomeTag {
-            let incomeTag = IncomeTag(name: tag.name, isdefault: tag.isdefault)
-            await incomeTagController.addIncomeTag(tag: incomeTag)
-        }
+//        for tag in data.incomeTag {
+//            let incomeTag = IncomeTag(name: tag.name, isdefault: tag.isdefault)
+//            await incomeTagController.addIncomeTag(tag: incomeTag)
+//        }
     }
     
     private func importIncomeType() async {
-        for type in data.incomeType {
-            let incomeType = IncomeType(name: type.name, isdefault: type.isdefault)
-            await incomeTypeController.addIncomeType(type: incomeType)
-        }
+//        for type in data.incomeType {
+//            let incomeType = IncomeType(name: type.name, isdefault: type.isdefault)
+//            await incomeTypeController.addIncomeType(type: incomeType)
+//        }
     }
     
     private func importIncome() async {
@@ -119,17 +119,17 @@ class ImportExportController {
     }
     
     private func exportIncomeTag(incomeViewModel: IncomeViewModel) async {
-        let incomeTagList = incomeViewModel.incomeTagList
-        data.incomeTag = incomeTagList.map { item in
-            return IncomeTagBackupModel(name: item.name, isdefault: item.isdefault)
-        }
+//        let incomeTagList = incomeViewModel.incomeTagList
+//        data.incomeTag = incomeTagList.map { item in
+//            return IncomeTagBackupModel(name: item.name, isdefault: item.isdefault)
+//        }
     }
     
     private func exportIncomeType(incomeViewModel: IncomeViewModel) async {
-        let incomeTypeList = incomeViewModel.incomeTypeList
-        data.incomeType = incomeTypeList.map { item in
-            return IncomeTypeBackupModel(name: item.name, isdefault: item.isdefault)
-        }
+//        let incomeTypeList = incomeViewModel.incomeTypeList
+//        data.incomeType = incomeTypeList.map { item in
+//            return IncomeTypeBackupModel(name: item.name, isdefault: item.isdefault)
+//        }
     }
     
     private func exportIncome(incomeViewModel: IncomeViewModel) async {

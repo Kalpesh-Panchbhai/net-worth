@@ -15,8 +15,8 @@ struct UpdateIncomeView: View {
     
     @State var amount: String = "0.0"
     @State var taxPaid: String = "0.0"
-    @State var incomeTypeSelected: IncomeType = IncomeType()
-    @State var incomeTagSelected: IncomeTag = IncomeTag()
+    @State var incomeTypeSelected: TypeValueRestModel = TypeValueRestModel()
+    @State var incomeTagSelected: TypeValueRestModel = TypeValueRestModel()
     @State var currencySelected: Currency = Currency()
     @State var date = Date().getEarliestDate()
     
@@ -29,7 +29,7 @@ struct UpdateIncomeView: View {
             Form {
                 Section("Income detail") {
                     Picker(selection: $incomeTypeSelected, label: Text("Type")) {
-                        Text("Select").tag(IncomeType())
+                        Text("Select").tag(TypeValueRestModel())
                         ForEach(incomeViewModel.incomeTypeList, id: \.self) {
                             Text($0.name).tag($0)
                         }
@@ -115,7 +115,7 @@ struct UpdateIncomeView: View {
                         .foregroundColor(Color.theme.primaryText)
                     
                     Picker(selection: $incomeTagSelected, label: Text("Tag")) {
-                        Text("Select").tag(IncomeTag())
+                        Text("Select").tag(TypeValueRestModel())
                         ForEach(incomeViewModel.incomeTagList, id: \.self) {
                             Text($0.name).tag($0)
                         }
@@ -165,13 +165,13 @@ struct UpdateIncomeView: View {
                     if(incomeTypeSelected.name.isEmpty) {
                         incomeTypeSelected = incomeViewModel.incomeTypeList.filter { item in
                             item.name.elementsEqual(income.type)
-                        }.first ?? IncomeType()
+                        }.first ?? TypeValueRestModel()
                     }
                     
                     if(incomeTagSelected.name.isEmpty) {
                         incomeTagSelected = incomeViewModel.incomeTagList.filter { item in
                             item.name.elementsEqual(income.tag)
-                        }.first ?? IncomeTag()
+                        }.first ?? TypeValueRestModel()
                     }
                     
                     if(amount.elementsEqual("0.0")) {

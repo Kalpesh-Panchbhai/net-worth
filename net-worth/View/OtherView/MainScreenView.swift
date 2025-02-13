@@ -85,8 +85,8 @@ struct MainScreenView: View {
 //                await accountViewModel.getAccountList()
 //                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
 //                await watchViewModel.getAllWatchList()
-//                await incomeViewModel.getIncomeTypeList()
-//                await incomeViewModel.getIncomeTagList()
+                await incomeViewModel.getIncomeTypeList()
+                await incomeViewModel.getIncomeTagList()
 //                await incomeViewModel.getIncomeYearList()
 //                await incomeViewModel.getIncomeFinancialYearList()
             }
