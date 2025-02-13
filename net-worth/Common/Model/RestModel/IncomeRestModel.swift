@@ -14,8 +14,8 @@ struct IncomeRestModel: Codable {
     var taxPaid: Double
     var creditedDate: String
     var currency: String
-    var incomeType: String
-    var incomeTag: String
+    var incomeType: TypeValueRestModel
+    var incomeTag: TypeValueRestModel
     
     var avgAmount: Double = 0.0
     var avgTaxPaid: Double = 0.0
@@ -26,7 +26,7 @@ struct IncomeRestModel: Codable {
         case id, userId, amount, creditedDate, taxPaid, currency, incomeType, incomeTag, avgAmount, avgTaxPaid, cumulativeAmount, cumulativeTaxPaid
     }
     
-    init(id: String = "", userId: String = "", amount: Double = 0.0, taxPaid: Double = 0.0, creditedDate: String = "", currency: String = "", incomeType: String = "", incomeTag: String = "", avgAmount: Double = 0.0, avgTaxPaid: Double = 0.0, cumulativeAmount: Double = 0.0, cumulativeTaxPaid: Double = 0.0) {
+    init(id: String = "", userId: String = "", amount: Double = 0.0, taxPaid: Double = 0.0, creditedDate: String = "", currency: String = "", incomeType: TypeValueRestModel = TypeValueRestModel(), incomeTag: TypeValueRestModel = TypeValueRestModel(), avgAmount: Double = 0.0, avgTaxPaid: Double = 0.0, cumulativeAmount: Double = 0.0, cumulativeTaxPaid: Double = 0.0) {
         self.id = id
         self.userId = userId
         self.amount = amount
@@ -49,8 +49,8 @@ struct IncomeRestModel: Codable {
         taxPaid = try container.decode(Double.self, forKey: .taxPaid)
         creditedDate = try container.decode(String.self, forKey: .creditedDate)
         currency = try container.decode(String.self, forKey: .currency)
-        incomeType = try container.decode(String.self, forKey: .incomeType)
-        incomeTag = try container.decode(String.self, forKey: .incomeTag)
+        incomeType = try container.decode(TypeValueRestModel.self, forKey: .incomeType)
+        incomeTag = try container.decode(TypeValueRestModel.self, forKey: .incomeTag)
         avgAmount = try container.decode(Double.self, forKey: .avgAmount)
         avgTaxPaid = try container.decode(Double.self, forKey: .avgTaxPaid)
         cumulativeAmount = try container.decode(Double.self, forKey: .cumulativeAmount)

@@ -23,7 +23,7 @@ struct IncomeRowView: View {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(Color.theme.green.opacity(0.5))
                             .frame(width: 60, height: 15)
-                        Text(income.incomeType)
+                        Text(income.incomeType.name)
                             .font(.system(size: 10))
                             .bold()
                     }
@@ -34,7 +34,7 @@ struct IncomeRowView: View {
                             .fill(Color.blue.opacity(0.5))
                             .frame(height: 15)
                         HStack{
-                            Text("    " + income.incomeTag + "    ")
+                            Text("    " + income.incomeTag.name + "    ")
                                 .font(.system(size: 10))
                                 .bold()
                         }

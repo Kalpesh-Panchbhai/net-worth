@@ -164,13 +164,13 @@ struct UpdateIncomeView: View {
                 Task.init {
                     if(incomeTypeSelected.name.isEmpty) {
                         incomeTypeSelected = incomeViewModel.incomeTypeList.filter { item in
-                            item.name.elementsEqual(income.incomeType)
+                            item.name.elementsEqual(income.incomeType.name)
                         }.first ?? TypeValueRestModel()
                     }
                     
                     if(incomeTagSelected.name.isEmpty) {
                         incomeTagSelected = incomeViewModel.incomeTagList.filter { item in
-                            item.name.elementsEqual(income.incomeTag)
+                            item.name.elementsEqual(income.incomeTag.name)
                         }.first ?? TypeValueRestModel()
                     }
                     

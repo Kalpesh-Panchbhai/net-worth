@@ -23,13 +23,13 @@ struct IncomeDetailView: View {
                 HStack {
                     Text("Income Tag")
                     Spacer()
-                    Text(income.incomeTag)
+                    Text(income.incomeTag.name)
                 }
                 
                 HStack {
                     Text("Income Type")
                     Spacer()
-                    Text(income.incomeType)
+                    Text(income.incomeType.name)
                 }
                 
                 HStack {
