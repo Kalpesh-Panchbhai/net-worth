@@ -12,21 +12,21 @@ struct IncomeRestModel: Codable {
     var userId: String
     var amount: Double
     var taxPaid: Double
-    var creditedOn: String
+    var creditedDate: String
     var currency: String
     var incomeType: String
     var incomeTag: String
     
     private enum CodingKeys: String, CodingKey {
-        case id, userId, amount, creditedOn, taxPaid, currency, incomeType, incomeTag
+        case id, userId, amount, creditedDate, taxPaid, currency, incomeType, incomeTag
     }
     
-    init(id: String = "", userId: String = "", amount: Double = 0.0, taxPaid: Double = 0.0, creditedOn: String = "", currency: String = "", incomeType: String = "", incomeTag: String = "") {
+    init(id: String = "", userId: String = "", amount: Double = 0.0, taxPaid: Double = 0.0, creditedDate: String = "", currency: String = "", incomeType: String = "", incomeTag: String = "") {
         self.id = id
         self.userId = userId
         self.amount = amount
         self.taxPaid = taxPaid
-        self.creditedOn = creditedOn
+        self.creditedDate = creditedDate
         self.currency = currency
         self.incomeType = incomeType
         self.incomeTag = incomeTag
@@ -38,7 +38,7 @@ struct IncomeRestModel: Codable {
         userId = try container.decode(String.self, forKey: .userId)
         amount = try container.decode(Double.self, forKey: .amount)
         taxPaid = try container.decode(Double.self, forKey: .taxPaid)
-        creditedOn = try container.decode(String.self, forKey: .creditedOn)
+        creditedDate = try container.decode(String.self, forKey: .creditedDate)
         currency = try container.decode(String.self, forKey: .currency)
         incomeType = try container.decode(String.self, forKey: .incomeType)
         incomeTag = try container.decode(String.self, forKey: .incomeTag)
@@ -52,7 +52,7 @@ struct IncomeRestModel: Codable {
         try container.encode(userId, forKey: .userId)
         try container.encode(amount, forKey: .amount)
         try container.encode(taxPaid, forKey: .taxPaid)
-        try container.encode(creditedOn, forKey: .creditedOn)
+        try container.encode(creditedDate, forKey: .creditedDate)
         try container.encode(currency, forKey: .currency)
         try container.encode(incomeType, forKey: .incomeType)
         try container.encode(incomeTag, forKey: .incomeTag)

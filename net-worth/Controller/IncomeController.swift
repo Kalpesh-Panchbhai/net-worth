@@ -18,7 +18,7 @@ class IncomeController {
             return Income(id: $0.id,
                           amount: $0.amount,
                           taxpaid: $0.taxPaid,
-                          creditedOn: $0.creditedOn.UTCToLocalDate(),
+                          creditedOn: $0.creditedDate.UTCToLocalDate(),
                           currency: $0.currency,
                           type: $0.incomeType,
                           tag: $0.incomeTag)
