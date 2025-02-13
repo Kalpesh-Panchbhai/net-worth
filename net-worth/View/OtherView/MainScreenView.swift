@@ -34,28 +34,28 @@ struct MainScreenView: View {
             // MARK: Tab View
             ZStack {
                 TabView {
-                    AccountCardList()
-                        .tabItem {
-                            Label("Accounts", systemImage: "star.circle")
-                        }
-                        .badge(accountViewModel.accountList.count)
-                    
-                    WatchView()
-                        .tabItem {
-                            Label("Watch Lists", systemImage: ConstantUtils.notBookmarkImageName)
-                        }
-                        .badge(watchViewModel.watchList.count)
-                    
-                    IncomeView()
-                        .tabItem {
-                            Label("Incomes", systemImage: "indianrupeesign.circle")
-                        }
-                        .badge(getTotalIncomeCount())
-                    
-                    ChartView()
-                        .tabItem {
-                            Label("Charts", systemImage: "chart.line.uptrend.xyaxis.circle")
-                        }
+//                    AccountCardList()
+//                        .tabItem {
+//                            Label("Accounts", systemImage: "star.circle")
+//                        }
+//                        .badge(accountViewModel.accountList.count)
+//                    
+//                    WatchView()
+//                        .tabItem {
+//                            Label("Watch Lists", systemImage: ConstantUtils.notBookmarkImageName)
+//                        }
+//                        .badge(watchViewModel.watchList.count)
+//                    
+//                    IncomeView()
+//                        .tabItem {
+//                            Label("Incomes", systemImage: "indianrupeesign.circle")
+//                        }
+//                        .badge(getTotalIncomeCount())
+//                    
+//                    ChartView()
+//                        .tabItem {
+//                            Label("Charts", systemImage: "chart.line.uptrend.xyaxis.circle")
+//                        }
                     
                     SettingsView()
                         .tabItem {
@@ -79,16 +79,16 @@ struct MainScreenView: View {
             networkUnavailable = !networkMonitor.isConnected
             Task.init {
                 await ApplicationData.loadData()
-                await incomeViewModel.getIncomeList()
-                await incomeViewModel.getTotalBalance()
-                await incomeViewModel.getTotalTaxPaid()
-                await accountViewModel.getAccountList()
-                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-                await watchViewModel.getAllWatchList()
-                await incomeViewModel.getIncomeTypeList()
-                await incomeViewModel.getIncomeTagList()
-                await incomeViewModel.getIncomeYearList()
-                await incomeViewModel.getIncomeFinancialYearList()
+//                await incomeViewModel.getIncomeList()
+//                await incomeViewModel.getTotalBalance()
+//                await incomeViewModel.getTotalTaxPaid()
+//                await accountViewModel.getAccountList()
+//                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+//                await watchViewModel.getAllWatchList()
+//                await incomeViewModel.getIncomeTypeList()
+//                await incomeViewModel.getIncomeTagList()
+//                await incomeViewModel.getIncomeYearList()
+//                await incomeViewModel.getIncomeFinancialYearList()
             }
         }
         .environmentObject(accountViewModel)
