@@ -8,8 +8,8 @@
 import Foundation
 
 struct IncomeRestModel: Codable {
-    var id: String
-    var userId: String
+    var id: Int
+    var userId: Int
     var amount: Double
     var taxPaid: Double
     var creditedDate: String
@@ -26,7 +26,7 @@ struct IncomeRestModel: Codable {
         case id, userId, amount, creditedDate, taxPaid, currency, incomeType, incomeTag, avgAmount, avgTaxPaid, cumulativeAmount, cumulativeTaxPaid
     }
     
-    init(id: String = "", userId: String = "", amount: Double = 0.0, taxPaid: Double = 0.0, creditedDate: String = "", currency: String = "", incomeType: TypeValueRestModel = TypeValueRestModel(), incomeTag: TypeValueRestModel = TypeValueRestModel(), avgAmount: Double = 0.0, avgTaxPaid: Double = 0.0, cumulativeAmount: Double = 0.0, cumulativeTaxPaid: Double = 0.0) {
+    init(id: Int = 0, userId: Int = 0, amount: Double = 0.0, taxPaid: Double = 0.0, creditedDate: String = "", currency: String = "", incomeType: TypeValueRestModel = TypeValueRestModel(), incomeTag: TypeValueRestModel = TypeValueRestModel(), avgAmount: Double = 0.0, avgTaxPaid: Double = 0.0, cumulativeAmount: Double = 0.0, cumulativeTaxPaid: Double = 0.0) {
         self.id = id
         self.userId = userId
         self.amount = amount
@@ -43,8 +43,8 @@ struct IncomeRestModel: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
-        userId = try container.decode(String.self, forKey: .userId)
+        id = try container.decode(Int.self, forKey: .id)
+        userId = try container.decode(Int.self, forKey: .userId)
         amount = try container.decode(Double.self, forKey: .amount)
         taxPaid = try container.decode(Double.self, forKey: .taxPaid)
         creditedDate = try container.decode(String.self, forKey: .creditedDate)
@@ -59,7 +59,7 @@ struct IncomeRestModel: Codable {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        if(!id.isEmpty) {
+        if(id != 0) {
             try container.encode(id, forKey: .id)
         }
         try container.encode(userId, forKey: .userId)
