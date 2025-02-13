@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct IncomeRestModel: Codable {
+struct IncomeRestModel: Codable, Hashable {
     var id: Int
     var userId: Int
     var amount: Double
