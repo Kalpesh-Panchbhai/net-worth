@@ -11,7 +11,7 @@ struct ApplicationData: Codable {
     
     static var shared = ApplicationData()
     
-    var userId: String
+    var userId: Int
     
     var data: Data2
     var chartDataList: [String: [ChartData]]
@@ -23,7 +23,7 @@ struct ApplicationData: Codable {
     var totalAccount = Int()
     
     private init() {
-        userId = ""
+        userId = 0
         data = Data2()
         chartDataList = [String: [ChartData]]()
         chartLastUpdated = Date.now

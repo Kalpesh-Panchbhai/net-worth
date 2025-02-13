@@ -19,7 +19,7 @@ class UserController {
         let encoder = JSONEncoder()
         let data = try! encoder.encode(requestData)
         let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: RestResponse.self)
-//        ApplicationData.shared.userId = response.id
+        ApplicationData.shared.userId = response.id
     }
     
     func getCurrentUserUID() -> String {

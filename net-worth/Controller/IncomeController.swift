@@ -28,23 +28,23 @@ class IncomeController {
     }
     
     public func addIncome(income: Income) async {
-        let userId = ApplicationData.shared.userId
-        let requestData = IncomeRestModel(userId: userId, amount: income.amount, taxPaid: income.taxpaid, creditedOn: income.creditedOn.localToUTCString(), currency: income.currency, incomeType: income.type, incomeTag: income.tag)
-        let encoder = JSONEncoder()
-        let data = try! encoder.encode(requestData)
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: RestResponse.self)
+//        let userId = ApplicationData.shared.userId
+//        let requestData = IncomeRestModel(userId: userId, amount: income.amount, taxPaid: income.taxpaid, creditedOn: income.creditedOn.localToUTCString(), currency: income.currency, incomeType: income.type, incomeTag: income.tag)
+//        let encoder = JSONEncoder()
+//        let data = try! encoder.encode(requestData)
+//        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: RestResponse.self)
     }
     
     public func updateIncome(income: Income) async {
-        let userId = ApplicationData.shared.userId
-        let requestData = IncomeRestModel(id: income.id, userId: userId, amount: income.amount, taxPaid: income.taxpaid, creditedOn: income.creditedOn.localToUTCString(), currency: income.currency, incomeType: income.type, incomeTag: income.tag)
-        let encoder = JSONEncoder()
-        let data = try! encoder.encode(requestData)
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: RestResponse.self)
+//        let userId = ApplicationData.shared.userId
+//        let requestData = IncomeRestModel(id: income.id, userId: userId, amount: income.amount, taxPaid: income.taxpaid, creditedOn: income.creditedOn.localToUTCString(), currency: income.currency, incomeType: income.type, incomeTag: income.tag)
+//        let encoder = JSONEncoder()
+//        let data = try! encoder.encode(requestData)
+//        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: RestResponse.self)
     }
     
     public func deleteIncome(income: Income) async {
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: income.id, forClass: RestResponse.self)
+//        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: income.id, forClass: RestResponse.self)
     }
     
     public func getIncomeList(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String](), incomeList: [Income]) async -> [IncomeCalculation] {

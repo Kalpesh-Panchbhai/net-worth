@@ -21,14 +21,15 @@ class AccountInBrokerController {
     }
     
     public func getAccountListInBroker(brokerID: String) async -> [AccountInBroker] {
-        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: brokerID, forClass: [AccountInBroker].self)
-        return response.sorted(by: {
-            return $0.name < $1.name
-        })
+//        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: brokerID, forClass: [AccountInBroker].self)
+//        return response.sorted(by: {
+//            return $0.name < $1.name
+//        })
+        return [AccountInBroker]()
     }
     
     public func deleteAccountInBroker(accountId: String) async {
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: accountId, forClass: RestResponse.self)
+//        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: accountId, forClass: RestResponse.self)
     }
     
 }
