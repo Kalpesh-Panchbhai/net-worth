@@ -73,7 +73,7 @@ extension Date {
     func localToLocalString() -> String {
         let formatter = DateFormatter()
         formatter.timeZone = TimeZone.current
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        formatter.dateFormat = "yyyy-MM-dd"
         return formatter.string(from: self)
     }
 }
