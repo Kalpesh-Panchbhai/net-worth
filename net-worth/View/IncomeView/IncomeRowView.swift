@@ -9,7 +9,7 @@ import SwiftUI
 
 struct IncomeRowView: View {
     
-    var income: IncomeCalculation
+    var income: IncomeRestModel
     var groupBy: String = ""
     
     var showCumulative: Bool
@@ -23,7 +23,7 @@ struct IncomeRowView: View {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(Color.theme.green.opacity(0.5))
                             .frame(width: 60, height: 15)
-                        Text(income.type)
+                        Text(income.incomeType)
                             .font(.system(size: 10))
                             .bold()
                     }
@@ -34,16 +34,16 @@ struct IncomeRowView: View {
                             .fill(Color.blue.opacity(0.5))
                             .frame(height: 15)
                         HStack{
-                            Text("    " + income.tag + "    ")
+                            Text("    " + income.incomeTag + "    ")
                                 .font(.system(size: 10))
                                 .bold()
                         }
                     }.fixedSize()
                 }
                 Spacer()
-                Text(income.creditedOn.getDateAndFormat())
-                    .font(.system(size: 10))
-                    .bold()
+//                Text(income.creditedDate.getDateAndFormat())
+//                    .font(.system(size: 10))
+//                    .bold()
             }
             if(showCumulative) {
                 HStack {
@@ -145,7 +145,7 @@ struct IncomeRowView: View {
                     Spacer()
                     Text("\(income.currency)")
                         .font(.system(size: 10))
-                    Text(income.taxpaid.withCommas(decimalPlace: 2))
+                    Text(income.taxPaid.withCommas(decimalPlace: 2))
                         .font(.system(size: 10))
                         .bold()
                     Text("(\(taxPaidPercent(income: income).withCommas(decimalPlace: 2))%)")
@@ -170,39 +170,39 @@ struct IncomeRowView: View {
         .background(Color.theme.foreground)
     }
     
-    private func addIncomeAndTaxPaid(income: Income) -> Double {
-        return income.amount + income.taxpaid
+    private func addIncomeAndTaxPaid(income: IncomeRestModel) -> Double {
+        return income.amount + income.taxPaid
     }
     
-    private func incomePercent(income: Income) -> Double {
+    private func incomePercent(income: IncomeRestModel) -> Double {
         return income.amount / addIncomeAndTaxPaid(income: income) * 100
     }
     
-    private func taxPaidPercent(income: Income) -> Double {
-        return income.taxpaid / addIncomeAndTaxPaid(income: income) * 100
+    private func taxPaidPercent(income: IncomeRestModel) -> Double {
+        return income.taxPaid / addIncomeAndTaxPaid(income: income) * 100
     }
     
-    private func addIncomeAndTaxPaidCumulative(income: IncomeCalculation) -> Double {
+    private func addIncomeAndTaxPaidCumulative(income: IncomeRestModel) -> Double {
         return income.cumulativeAmount + income.cumulativeTaxPaid
     }
     
-    private func incomeCumulativePercent(income: IncomeCalculation) -> Double {
+    private func incomeCumulativePercent(income: IncomeRestModel) -> Double {
         return income.cumulativeAmount / addIncomeAndTaxPaidCumulative(income: income) * 100
     }
     
-    private func taxPaidCumulativePercent(income: IncomeCalculation) -> Double {
+    private func taxPaidCumulativePercent(income: IncomeRestModel) -> Double {
         return income.cumulativeTaxPaid / addIncomeAndTaxPaidCumulative(income: income) * 100
     }
     
-    private func addIncomeAndTaxPaidAverage(income: IncomeCalculation) -> Double {
+    private func addIncomeAndTaxPaidAverage(income: IncomeRestModel) -> Double {
         return income.avgAmount + income.avgTaxPaid
     }
     
-    private func incomeAveragePercent(income: IncomeCalculation) -> Double {
+    private func incomeAveragePercent(income: IncomeRestModel) -> Double {
         return income.avgAmount / addIncomeAndTaxPaidAverage(income: income) * 100
     }
     
-    private func taxPaidAveragePercent(income: IncomeCalculation) -> Double {
+    private func taxPaidAveragePercent(income: IncomeRestModel) -> Double {
         return income.avgTaxPaid / addIncomeAndTaxPaidAverage(income: income) * 100
     }
 }

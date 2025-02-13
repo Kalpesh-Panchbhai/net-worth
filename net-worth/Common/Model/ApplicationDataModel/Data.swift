@@ -11,7 +11,7 @@ struct Data2: Codable {
     
     var userData: User
     
-    var incomeDataList: [Income]
+    var incomeDataList: [IncomeRestModel]
     var incomeDataListUpdatedDate: Date
     
     var accountDataList: [AccountData]
@@ -20,7 +20,7 @@ struct Data2: Codable {
     public init() {
         userData = User()
         
-        incomeDataList = [Income]()
+        incomeDataList = [IncomeRestModel]()
         incomeDataListUpdatedDate = Date().getEarliestDate()
         
         accountDataList = [AccountData]()

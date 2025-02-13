@@ -9,7 +9,7 @@ import SwiftUI
 
 struct IncomeDetailView: View {
     
-    @State var income: IncomeCalculation
+    @State var income: IncomeRestModel
     
     @State var modifyViewOpen = false
     
@@ -23,13 +23,13 @@ struct IncomeDetailView: View {
                 HStack {
                     Text("Income Tag")
                     Spacer()
-                    Text(income.tag)
+                    Text(income.incomeTag)
                 }
                 
                 HStack {
                     Text("Income Type")
                     Spacer()
-                    Text(income.type)
+                    Text(income.incomeType)
                 }
                 
                 HStack {
@@ -41,14 +41,14 @@ struct IncomeDetailView: View {
                 HStack {
                     Text("Tax Paid")
                     Spacer()
-                    Text(income.currency + " \(income.taxpaid.withCommas(decimalPlace: 2))")
+                    Text(income.currency + " \(income.taxPaid.withCommas(decimalPlace: 2))")
                 }
                 
-                HStack {
-                    Text("Credited On")
-                    Spacer()
-                    Text(income.creditedOn.getDateAndFormat())
-                }
+//                HStack {
+//                    Text("Credited On")
+//                    Spacer()
+//                    Text(income.creditedDate.getDateAndFormat())
+//                }
                 
             }
             .listRowBackground(Color.theme.foreground)
@@ -83,25 +83,25 @@ struct IncomeDetailView: View {
             })
             .font(.system(size: 14).bold())
         )
-        .sheet(isPresented: $modifyViewOpen, onDismiss: {
-            if(incomeViewModel.groupView) {
-                incomeViewModel.incomeListByGroup.forEach {
-                    let filterIncome = $0.value.filter { data in
-                        data.id.elementsEqual(income.id)
-                    }.first ?? IncomeCalculation(amount: 0.0, taxpaid: 0.0, creditedOn: Date(), currency: "", type: "", tag: "", avgAmount: 0.0, avgTaxPaid: 0.0, cumulativeAmount: 0.0, cumulativeTaxPaid: 0.0)
-                    if(!filterIncome.currency.isEmpty) {
-                        self.income = filterIncome
-                    }
-                }
-            } else {
-                Task.init {
-                    self.income = incomeViewModel.incomeList.filter { data in
-                        data.id.elementsEqual(income.id)
-                    }.first!
-                }
-            }
-        }, content: {
-            UpdateIncomeView(income: income)
-        })
+//        .sheet(isPresented: $modifyViewOpen, onDismiss: {
+//            if(incomeViewModel.groupView) {
+//                incomeViewModel.incomeListByGroup.forEach {
+//                    let filterIncome = $0.value.filter { data in
+//                        data.id.elementsEqual(income.id)
+//                    }.first ?? IncomeRestModel(amount: 0.0, taxpaid: 0.0, creditedDate: "", currency: "", type: "", tag: "", avgAmount: 0.0, avgTaxPaid: 0.0, cumulativeAmount: 0.0, cumulativeTaxPaid: 0.0)
+//                    if(!filterIncome.currency.isEmpty) {
+//                        self.income = filterIncome
+//                    }
+//                }
+//            } else {
+//                Task.init {
+//                    self.income = incomeViewModel.incomeList.filter { data in
+//                        data.id.elementsEqual(income.id)
+//                    }.first!
+//                }
+//            }
+//        }, content: {
+//            UpdateIncomeView(income: income)
+//        })
     }
 }

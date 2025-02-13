@@ -136,11 +136,11 @@ struct NewIncomeView: View {
                 // MARK: ToolbarItem for Checkmark
                 ToolbarItem {
                     Button(action: {
-                        Task.init {
-                            let newIncome = Income(amount: amount.toDouble() ?? 0.0, taxpaid: taxPaid.toDouble() ?? 0.0, creditedOn: date, currency: currencySelected.code, type: incomeTypeSelected.name, tag: incomeTagSelected.name)
-                            await incomeController.addIncome(income: newIncome)
-                            await incomeViewModel.getIncomeList()
-                        }
+//                        Task.init {
+//                            let newIncome = IncomeRestModel(amount: amount.toDouble() ?? 0.0, taxpaid: taxPaid.toDouble() ?? 0.0, creditedOn: date, currency: currencySelected.code, type: incomeTypeSelected.name, tag: incomeTagSelected.name)
+//                            await incomeController.addIncome(income: newIncome)
+//                            await incomeViewModel.getIncomeList()
+//                        }
                         dismiss()
                     }, label: {
                         if(!allFieldsFilled()) {

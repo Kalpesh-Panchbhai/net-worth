@@ -23,7 +23,6 @@
 		7D59B4462BE249B7006F3F00 /* IncomeTypeBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B41B2BE249B7006F3F00 /* IncomeTypeBackupModel.swift */; };
 		7D59B4472BE249B7006F3F00 /* WatchBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B41C2BE249B7006F3F00 /* WatchBackupModel.swift */; };
 		7D59B4492BE249B7006F3F00 /* AccountInBroker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B41F2BE249B7006F3F00 /* AccountInBroker.swift */; };
-		7D59B44B2BE249B7006F3F00 /* Income.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4212BE249B7006F3F00 /* Income.swift */; };
 		7D59B44E2BE249B7006F3F00 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4242BE249B7006F3F00 /* User.swift */; };
 		7D59B44F2BE249B7006F3F00 /* Watch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4252BE249B7006F3F00 /* Watch.swift */; };
 		7D59B4502BE249B7006F3F00 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4272BE249B7006F3F00 /* EmptyResponse.swift */; };
@@ -36,7 +35,6 @@
 		7D59B45B2BE249B7006F3F00 /* FinanceDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4332BE249B7006F3F00 /* FinanceDetailModel.swift */; };
 		7D59B45C2BE249B7006F3F00 /* FinanceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4342BE249B7006F3F00 /* FinanceModel.swift */; };
 		7D59B45D2BE249B7006F3F00 /* GroupChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4352BE249B7006F3F00 /* GroupChartData.swift */; };
-		7D59B45E2BE249B7006F3F00 /* IncomeCalculation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4362BE249B7006F3F00 /* IncomeCalculation.swift */; };
 		7D59B45F2BE249B7006F3F00 /* SymbolDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4372BE249B7006F3F00 /* SymbolDetailModel.swift */; };
 		7D59B4602BE249B7006F3F00 /* CommonUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4392BE249B7006F3F00 /* CommonUtils.swift */; };
 		7D59B4612BE249B7006F3F00 /* ConstantUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B43A2BE249B7006F3F00 /* ConstantUtils.swift */; };
@@ -154,7 +152,6 @@
 		7D59B41B2BE249B7006F3F00 /* IncomeTypeBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeTypeBackupModel.swift; sourceTree = "<group>"; };
 		7D59B41C2BE249B7006F3F00 /* WatchBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchBackupModel.swift; sourceTree = "<group>"; };
 		7D59B41F2BE249B7006F3F00 /* AccountInBroker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountInBroker.swift; sourceTree = "<group>"; };
-		7D59B4212BE249B7006F3F00 /* Income.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Income.swift; sourceTree = "<group>"; };
 		7D59B4242BE249B7006F3F00 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		7D59B4252BE249B7006F3F00 /* Watch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Watch.swift; sourceTree = "<group>"; };
 		7D59B4272BE249B7006F3F00 /* EmptyResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
@@ -167,7 +164,6 @@
 		7D59B4332BE249B7006F3F00 /* FinanceDetailModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinanceDetailModel.swift; sourceTree = "<group>"; };
 		7D59B4342BE249B7006F3F00 /* FinanceModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinanceModel.swift; sourceTree = "<group>"; };
 		7D59B4352BE249B7006F3F00 /* GroupChartData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupChartData.swift; sourceTree = "<group>"; };
-		7D59B4362BE249B7006F3F00 /* IncomeCalculation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeCalculation.swift; sourceTree = "<group>"; };
 		7D59B4372BE249B7006F3F00 /* SymbolDetailModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SymbolDetailModel.swift; sourceTree = "<group>"; };
 		7D59B4392BE249B7006F3F00 /* CommonUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonUtils.swift; sourceTree = "<group>"; };
 		7D59B43A2BE249B7006F3F00 /* ConstantUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstantUtils.swift; sourceTree = "<group>"; };
@@ -357,7 +353,6 @@
 			isa = PBXGroup;
 			children = (
 				7D59B41F2BE249B7006F3F00 /* AccountInBroker.swift */,
-				7D59B4212BE249B7006F3F00 /* Income.swift */,
 				7D59B4242BE249B7006F3F00 /* User.swift */,
 				7D59B4252BE249B7006F3F00 /* Watch.swift */,
 			);
@@ -390,7 +385,6 @@
 				7D59B4332BE249B7006F3F00 /* FinanceDetailModel.swift */,
 				7D59B4342BE249B7006F3F00 /* FinanceModel.swift */,
 				7D59B4352BE249B7006F3F00 /* GroupChartData.swift */,
-				7D59B4362BE249B7006F3F00 /* IncomeCalculation.swift */,
 				7D59B4372BE249B7006F3F00 /* SymbolDetailModel.swift */,
 				7D59B4142BE249B7006F3F00 /* ApplicationDataModel */,
 				7D59B41D2BE249B7006F3F00 /* Backup */,
@@ -705,10 +699,8 @@
 				7DA46C272BE7946D00DF71C1 /* BalanceAccount.swift in Sources */,
 				7D59B5042BE249D9006F3F00 /* NewIncomeTagView.swift in Sources */,
 				7D59B4EA2BE249D9006F3F00 /* AccountRowView.swift in Sources */,
-				7D59B44B2BE249B7006F3F00 /* Income.swift in Sources */,
 				7D59B4E72BE249D9006F3F00 /* AccountDetailCardView.swift in Sources */,
 				7D59B5172BE249D9006F3F00 /* AccountToWatchView.swift in Sources */,
-				7D59B45E2BE249B7006F3F00 /* IncomeCalculation.swift in Sources */,
 				7D59B4862BE249C8006F3F00 /* SettingsController.swift in Sources */,
 				7DD742A32BEBC241005B51AF /* ChartRest.swift in Sources */,
 				7D59B4782BE249C8006F3F00 /* AccountTransactionController.swift in Sources */,

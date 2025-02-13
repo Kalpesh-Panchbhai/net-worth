@@ -9,5 +9,5 @@ import Foundation
 
 struct IncomeData: Codable {
     
-    var income: Income
+    var income: IncomeRestModel
 }

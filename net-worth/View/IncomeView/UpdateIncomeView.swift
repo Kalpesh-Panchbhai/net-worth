@@ -9,7 +9,7 @@ import SwiftUI
 
 struct UpdateIncomeView: View {
     
-    var income: IncomeCalculation
+    var income: IncomeRestModel
     var incomeController = IncomeController()
     var currencyList = CurrencyList().currencyList
     
@@ -130,9 +130,9 @@ struct UpdateIncomeView: View {
                 ToolbarItem {
                     Button(action: {
                         Task.init {
-                            let updatedIncome = Income(id: income.id,amount: amount.toDouble() ?? 0.0, taxpaid: taxPaid.toDouble() ?? 0.0, creditedOn: date, currency: currencySelected.code, type: incomeTypeSelected.name, tag: incomeTagSelected.name)
-                            await incomeController.updateIncome(income: updatedIncome)
-                            await incomeViewModel.getIncomeList()
+//                            let updatedIncome = IncomeRestModel(id: income.id,amount: amount.toDouble() ?? 0.0, taxPaid: taxPaid.toDouble() ?? 0.0, creditedDate: date, currency: currencySelected.code, type: incomeTypeSelected.name, tag: incomeTagSelected.name)
+//                            await incomeController.updateIncome(income: updatedIncome)
+//                            await incomeViewModel.getIncomeList()
                             
                             if(incomeViewModel.groupView) {
                                 await incomeViewModel.getTotalBalance(incomeType: incomeViewModel.selectedIncomeTypeList, incomeTag: incomeViewModel.selectedIncomeTagList, year: incomeViewModel.selectedYearList, financialYear: incomeViewModel.selectedFinancialYearList)
@@ -164,13 +164,13 @@ struct UpdateIncomeView: View {
                 Task.init {
                     if(incomeTypeSelected.name.isEmpty) {
                         incomeTypeSelected = incomeViewModel.incomeTypeList.filter { item in
-                            item.name.elementsEqual(income.type)
+                            item.name.elementsEqual(income.incomeType)
                         }.first ?? TypeValueRestModel()
                     }
                     
                     if(incomeTagSelected.name.isEmpty) {
                         incomeTagSelected = incomeViewModel.incomeTagList.filter { item in
-                            item.name.elementsEqual(income.tag)
+                            item.name.elementsEqual(income.incomeTag)
                         }.first ?? TypeValueRestModel()
                     }
                     
@@ -179,7 +179,7 @@ struct UpdateIncomeView: View {
                     }
                     
                     if(taxPaid.elementsEqual("0.0")) {
-                        taxPaid = income.taxpaid.withCommas(decimalPlace: 2)
+                        taxPaid = income.taxPaid.withCommas(decimalPlace: 2)
                     }
                     
                     if(currencySelected.name.isEmpty) {
@@ -189,7 +189,7 @@ struct UpdateIncomeView: View {
                     }
                     
                     if(Calendar.current.isDate(date, equalTo: Date().getEarliestDate(), toGranularity: .day)) {
-                        date = income.creditedOn
+//                        date = income.creditedDate
                     }
                 }
             }
