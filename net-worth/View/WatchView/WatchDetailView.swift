@@ -15,9 +15,11 @@ struct WatchDetailView: View {
     @State var sortType = "Name"
     @State var hideZeroAmountAccount = true
     @State var isZeroAmountAccountPresent = false
+    @State var accountListToShown = [Int]()
     
     @EnvironmentObject var accountViewModel: AccountViewModel
     @EnvironmentObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var watchAccountViewModel: WatchAccountViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -41,7 +43,7 @@ struct WatchDetailView: View {
                         Divider()
                         ScrollView(.vertical, showsIndicators: false) {
                             LazyVStack {
-                                ForEach(getWatchListData(), id: \.self) { accountID in
+                                ForEach(accountListToShown, id: \.self) { accountID in
                                     NavigationLink(destination: {
                                         // MARK: Account Detail View
                                         AccountDetailView(accountID: accountID)
@@ -179,30 +181,25 @@ struct WatchDetailView: View {
             })
         }
         .sheet(isPresented: $addAccountViewOpen, onDismiss: {
-//            self.watch = self.watchViewModel.watchList.first(where: {
-//                return $0.id.elementsEqual(watch.id)
-//            })!
-//            var watchSorted = self.watch
-//            watchSorted.accountList.sort(by: { item1, item2 in
-//                accountViewModel.accountList.filter { account1 in
-//                    account1.id == item1
-//                }.first!.name <= accountViewModel.accountList.filter { account2 in
-//                    account2.id == item2
-//                }.first!.name
-//            })
-//            self.watch = watchSorted
+            getWatchListData()
         }, content: {
             AccountToWatchView(watch: watch)
         })
         .onAppear {
-//            let accountList = accountViewModel.accountList.filter {
-//                return watch.accountList.contains($0.id)
-//            }
-//            let count = accountList.filter {
-//                return $0.value.currentBalance.isZero
-//            }.count
-//            
-//            isZeroAmountAccountPresent = count > 0
+            Task.init {
+                await watchAccountViewModel.getAllAccountsByWatchID(watchID: watch.id)
+                let accountListInAWatch = watchAccountViewModel.allAccountsByWatchID.map { $0.accountId }
+                let accountList = accountViewModel.accountList.filter { account in
+                    return accountListInAWatch.contains(account.id)
+                }
+                let count = accountList.filter {
+                    return $0.value.currentValue.isZero
+                }.count
+                
+                getWatchListData()
+                
+//                isZeroAmountAccountPresent = count > 0
+            }
         }
     }
     
@@ -213,10 +210,10 @@ struct WatchDetailView: View {
         }!
     }
     
-    private func getWatchListData() -> [Int] {
-        var accountList = accountViewModel.accountList.filter { _ in
-            return true
-//            return watch.accountList.contains($0.id)
+    private func getWatchListData() {
+        let accountListInAWatch = watchAccountViewModel.allAccountsByWatchID.map { $0.accountId }
+        var accountList = accountViewModel.accountList.filter { account in
+            return accountListInAWatch.contains(account.id)
         }
         
         if(sortType.elementsEqual("Name")) {
@@ -265,20 +262,14 @@ struct WatchDetailView: View {
                 return !$0.value.currentValue.isZero
             }
         }
-        return [Int]()
-//        return accountList.map { $0.id }
+        accountListToShown = accountList.map { $0.id }
     }
     
     private func getOneDayChange(account: AccountRestModel) -> Double {
-        return areOneDayTransactions(account: account) ? account.value.currentValue - account.value.previousValue : 0.0
+        return account.value.currentValue - account.value.previousValue
     }
     
     private func getOneDayPercentageChange(account: AccountRestModel) -> Double {
-        return areOneDayTransactions(account: account) ? CommonController.getGrowthPercentageInDouble(previousBalance: account.value.previousValue, currentBalance: account.value.currentValue) : 0.0
-    }
-    
-    private func areOneDayTransactions(account: AccountRestModel) -> Bool {
-        return true
-//        return account.name != "" && account.value.currentBalance.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+        return CommonController.getGrowthPercentageInDouble(previousBalance: account.value.previousValue, currentBalance: account.value.currentValue)
     }
 }

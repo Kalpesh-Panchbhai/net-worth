@@ -20,7 +20,7 @@ class WatchController {
     
     public func getAllWatchList() async -> [WatchRestModel] {
         let userId = ApplicationData.shared.userId
-        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [WatchRestModel].self)
+        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: [userId], forClass: [WatchRestModel].self)
         return response
     }
     
@@ -31,6 +31,6 @@ class WatchController {
     }
     
     public func deleteWatchList(watch: WatchRestModel) async {
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: watch.id, forClass: RestResponse.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: [watch.id], forClass: RestResponse.self)
     }
 }

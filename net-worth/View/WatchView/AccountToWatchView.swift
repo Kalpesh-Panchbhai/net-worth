@@ -14,7 +14,7 @@ struct AccountToWatchView: View {
     @State var searchText = ""
     
     @EnvironmentObject var accountViewModel: AccountViewModel
-    @EnvironmentObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var watchAccountViewModel: WatchAccountViewModel
     
     @Environment(\.scenePhase) var scenePhase
     
@@ -25,19 +25,19 @@ struct AccountToWatchView: View {
                 ScrollView(.vertical) {
                     LazyVStack {
                         ForEach(accountViewModel.sectionHeaders, id: \.self) { accountType in
-//                            if(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 0) {
-//                                HStack {
-//                                    Text(accountType.uppercased())
-//                                        .bold()
-//                                        .foregroundColor(Color.theme.primaryText)
-//                                        .font(.system(size: 15))
-//                                }
-//                                ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
-//                                    RowAccountToWatchView(account: account, watch: $watch, isAdded: watch.accountList.contains(account.id))
-//                                        .padding(.bottom, 10)
-//                                }
-//                                Divider()
-//                            }
+                            if(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).count > 0) {
+                                HStack {
+                                    Text(accountType.uppercased())
+                                        .bold()
+                                        .foregroundColor(Color.theme.primaryText)
+                                        .font(.system(size: 15))
+                                }
+                                ForEach(accountViewModel.sectionContent(key: accountType, searchKeyword: searchText), id: \.self) { account in
+                                    RowAccountToWatchView(account: account, watch: $watch, isAdded: watchAccountViewModel.allAccountsByWatchID.map { $0.accountId }.contains(account.id))
+                                        .padding(.bottom, 10)
+                                }
+                                Divider()
+                            }
                         }
                     }
                 }

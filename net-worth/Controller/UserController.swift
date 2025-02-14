@@ -29,7 +29,7 @@ class UserController {
     
     func deleteUser() async {
         let userId = ApplicationData.shared.userId
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: userId, forClass: RestResponse.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: [userId], forClass: RestResponse.self)
     }
     
 }

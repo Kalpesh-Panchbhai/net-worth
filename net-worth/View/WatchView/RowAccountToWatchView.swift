@@ -10,12 +10,12 @@ import SwiftUI
 struct RowAccountToWatchView: View {
     
     var account: AccountRestModel
-    var watchController = WatchController()
+    var watchAccountController = WatchAccountController()
     
     @Binding var watch: WatchRestModel
     @State var isAdded: Bool
     
-    @EnvironmentObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var watchAccountViewModel: WatchAccountViewModel
     
     var body: some View {
         HStack {
@@ -44,14 +44,13 @@ struct RowAccountToWatchView: View {
                     Image(systemName: ConstantUtils.notBookmarkImageName)
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
-//                        .onTapGesture {
-//                            isAdded.toggle()
-//                            self.watch.accountList.append(account.id)
-//                            Task.init {
-//                                await watchController.updateWatchList(watch: watch)
-//                                await watchViewModel.getAllWatchList()
-//                            }
-//                        }
+                        .onTapGesture {
+                            isAdded.toggle()
+                            Task.init {
+                                await watchAccountController.addWatchList(watch: WatchAccountRestModel(accountId: account.id, watchId: watch.id))
+                                await watchAccountViewModel.getAllAccountsByWatchID(watchID: watch.id)
+                            }
+                        }
                 }
             }
             .padding()

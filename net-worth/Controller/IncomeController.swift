@@ -13,7 +13,7 @@ class IncomeController {
     
     public func getIncomeList() async -> [IncomeRestModel] {
         let userId = ApplicationData.shared.userId
-        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [IncomeRestModel].self)
+        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: [userId], forClass: [IncomeRestModel].self)
         return response.sorted(by: {
             return $0.creditedDate < $1.creditedDate
         })
@@ -32,7 +32,7 @@ class IncomeController {
     }
     
     public func deleteIncome(income: IncomeRestModel) async {
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: income.id, forClass: RestResponse.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: [income.id], forClass: RestResponse.self)
     }
     
     public func getIncomeList(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String](), incomeList: [IncomeRestModel]) async -> [IncomeRestModel] {

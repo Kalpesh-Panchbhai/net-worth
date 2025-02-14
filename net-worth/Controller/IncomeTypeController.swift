@@ -25,7 +25,7 @@ class IncomeTypeController {
     
     public func getIncomeTypeList() async -> [TypeValueRestModel] {
         let userId = ApplicationData.shared.userId
-        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [TypeValueRestModel].self)
+        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: [userId], forClass: [TypeValueRestModel].self)
         return response.sorted(by: {
             return $0.name < $1.name
         })
