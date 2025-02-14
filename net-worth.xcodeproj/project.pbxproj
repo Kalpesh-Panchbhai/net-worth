@@ -126,7 +126,7 @@
 		7D97202D2BE50F4800E5797D /* AccountRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D97202C2BE50F4800E5797D /* AccountRestModel.swift */; };
 		7DA46C252BE782BF00DF71C1 /* RestResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA46C242BE782BF00DF71C1 /* RestResponse.swift */; };
 		7DA46C272BE7946D00DF71C1 /* AccountValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA46C262BE7946D00DF71C1 /* AccountValue.swift */; };
-		7DD742A32BEBC241005B51AF /* ChartRest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD742A22BEBC241005B51AF /* ChartRest.swift */; };
+		7DD742A32BEBC241005B51AF /* ChartRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD742A22BEBC241005B51AF /* ChartRestModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -248,7 +248,7 @@
 		7D97202C2BE50F4800E5797D /* AccountRestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountRestModel.swift; sourceTree = "<group>"; };
 		7DA46C242BE782BF00DF71C1 /* RestResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestResponse.swift; sourceTree = "<group>"; };
 		7DA46C262BE7946D00DF71C1 /* AccountValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountValue.swift; sourceTree = "<group>"; };
-		7DD742A22BEBC241005B51AF /* ChartRest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartRest.swift; sourceTree = "<group>"; };
+		7DD742A22BEBC241005B51AF /* ChartRestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartRestModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -336,7 +336,7 @@
 				7D59B41F2BE249B7006F3F00 /* AccountInBrokerRestModel.swift */,
 				7D97202C2BE50F4800E5797D /* AccountRestModel.swift */,
 				7D64373F2BE6171B00E580F0 /* AccountTransactionRestModel.swift */,
-				7DD742A22BEBC241005B51AF /* ChartRest.swift */,
+				7DD742A22BEBC241005B51AF /* ChartRestModel.swift */,
 				7D59B4272BE249B7006F3F00 /* EmptyResponse.swift */,
 				7D59B42A2BE249B7006F3F00 /* IncomeRestModel.swift */,
 				7DA46C242BE782BF00DF71C1 /* RestResponse.swift */,
@@ -674,7 +674,7 @@
 				7D59B4E72BE249D9006F3F00 /* AccountDetailCardView.swift in Sources */,
 				7D59B5172BE249D9006F3F00 /* AccountToWatchView.swift in Sources */,
 				7D59B4862BE249C8006F3F00 /* SettingsController.swift in Sources */,
-				7DD742A32BEBC241005B51AF /* ChartRest.swift in Sources */,
+				7DD742A32BEBC241005B51AF /* ChartRestModel.swift in Sources */,
 				7D59B4782BE249C8006F3F00 /* AccountTransactionController.swift in Sources */,
 				7D59B4462BE249B7006F3F00 /* IncomeTypeBackupModel.swift in Sources */,
 				7D59B4E92BE249D9006F3F00 /* AccountListView.swift in Sources */,

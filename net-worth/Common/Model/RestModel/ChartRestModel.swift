@@ -7,10 +7,11 @@
 
 import Foundation
 
-struct ChartRest: Codable {
+struct ChartRestModel: Codable {
     
     var id: String
     var accountId: String
+    var accountBrokerId: String
     var date: String
     var value: Double
 }
