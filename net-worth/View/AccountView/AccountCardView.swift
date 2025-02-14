@@ -20,9 +20,9 @@ struct AccountCardView: View {
                     .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)
                 Spacer()
-                if(account.accountType != ConstantUtils.brokerAccountType) {
+                if(account.type != ConstantUtils.brokerAccountType) {
                     if(!account.active) {
-                        Text(account.accountType)
+                        Text(account.type)
                             .foregroundColor(Color.theme.secondaryText)
                             .font(.caption)
                             .multilineTextAlignment(.leading)
@@ -31,7 +31,7 @@ struct AccountCardView: View {
             }
             Spacer()
             HStack(alignment: .center) {
-                if(account.accountType == ConstantUtils.brokerAccountType) {
+                if(account.type == ConstantUtils.brokerAccountType) {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
@@ -49,7 +49,7 @@ struct AccountCardView: View {
             }
             Spacer()
             HStack {
-                if(account.accountType == ConstantUtils.brokerAccountType) {
+                if(account.type == ConstantUtils.brokerAccountType) {
                     if(getOneDayChange() > 0) {
                         ZStack {
                             Circle()

@@ -144,7 +144,7 @@ class ImportExportController {
         var accountDataList = [AccountBackupModel]()
         
         for account in accountList {
-            if(account.accountType == ConstantUtils.brokerAccountType) {
+            if(account.type == ConstantUtils.brokerAccountType) {
                 await accountViewModel.getAccountInBrokerList(brokerID: account.id)
                 let accountsInBroker = accountViewModel.accountsInBroker
                 var accountsInBrokerDataList = [AccountInBrokerBackupModel]()
@@ -153,11 +153,11 @@ class ImportExportController {
                     accountsInBrokerDataList.append(accountInBrokerData)
                 }
                 
-                let accountData = AccountBackupModel(accountName: account.name, accountType: account.accountType, loanType: account.loanType, currency: account.currency, active: account.active, balance: AccountValue(), accountInBroker: accountsInBrokerDataList)
+                let accountData = AccountBackupModel(accountName: account.name, accountType: account.type, loanType: account.loanType, currency: account.currency, active: account.active, balance: AccountValue(), accountInBroker: accountsInBrokerDataList)
                 
                 accountDataList.append(accountData)
             } else {
-                let accountData = AccountBackupModel(accountName: account.name, accountType: account.accountType, loanType: account.loanType, currency: account.currency, active: account.active, balance: account.value, accountInBroker: [AccountInBrokerBackupModel]())
+                let accountData = AccountBackupModel(accountName: account.name, accountType: account.type, loanType: account.loanType, currency: account.currency, active: account.active, balance: account.value, accountInBroker: [AccountInBrokerBackupModel]())
                 
                 accountDataList.append(accountData)
             }

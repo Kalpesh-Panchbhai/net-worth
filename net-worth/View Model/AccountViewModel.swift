@@ -38,7 +38,7 @@ class AccountViewModel: ObservableObject {
         case .accountType:
             return Dictionary(grouping: accountList) {
                 if($0.active) {
-                    return $0.accountType
+                    return $0.type
                 } else {
                     return "Inactive Account"
                 }
@@ -53,7 +53,7 @@ class AccountViewModel: ObservableObject {
         case .accountType:
             let array = Array(Set(accountList.map {
                 if($0.active) {
-                    return $0.accountType
+                    return $0.type
                 } else {
                     return "Inactive Account"
                 }
@@ -80,7 +80,7 @@ class AccountViewModel: ObservableObject {
             return data
         } else {
             return data.filter { value in
-                value.name.lowercased().contains(searchKeyword.lowercased()) || value.accountType.lowercased().contains(searchKeyword.lowercased())
+                value.name.lowercased().contains(searchKeyword.lowercased()) || value.type.lowercased().contains(searchKeyword.lowercased())
             }
         }
     }
@@ -88,7 +88,7 @@ class AccountViewModel: ObservableObject {
     func filterAccountList(filter: String) {
         accountList = originalAccountList
             .filter { account in
-                account.accountType.lowercased().elementsEqual(filter.lowercased())
+                account.type.lowercased().elementsEqual(filter.lowercased())
             }
     }
     

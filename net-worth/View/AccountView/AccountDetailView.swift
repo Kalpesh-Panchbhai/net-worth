@@ -40,7 +40,7 @@ struct AccountDetailView: View {
                 AccountDetailCardView(account: account)
                     .cornerRadius(10)
                 Picker(selection: $tabItem, content: {
-                    if(account.accountType == ConstantUtils.brokerAccountType) {
+                    if(account.type == ConstantUtils.brokerAccountType) {
                         Text("Accounts (\(accountViewModel.accountsInBroker.count))").tag(1)
                         Text("WatchLists (\(watchViewModel.watchListForAccount.count))").tag(2)
                     } else {
@@ -54,7 +54,7 @@ struct AccountDetailView: View {
                     let impact = UIImpactFeedbackGenerator(style: .light)
                     impact.impactOccurred()
                 }
-                if(account.accountType == ConstantUtils.brokerAccountType) {
+                if(account.type == ConstantUtils.brokerAccountType) {
                     if(tabItem == 1) {
                         AccountBrokerView(brokerID: accountID, sortOrder: $sortOrder, sortType: $sortType)
                     } else {
@@ -117,7 +117,7 @@ struct AccountDetailView: View {
                     })
                     
                     if(account.active) {
-                        if(account.accountType == ConstantUtils.brokerAccountType) {
+                        if(account.type == ConstantUtils.brokerAccountType) {
                             Button(action: {
                                 self.isNewAccountInBrokerViewOpen.toggle()
                             }, label: {
@@ -249,7 +249,7 @@ struct AccountDetailView: View {
                 self.account = accountViewModel.accountList.filter {
                     return $0.id.elementsEqual(accountID)
                 }.first ?? AccountRestModel()
-                if(account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
+                if(account.type.elementsEqual(ConstantUtils.brokerAccountType)) {
                     await accountViewModel.getAccountInBrokerList(brokerID: accountID)
                 }
                 await watchViewModel.getWatchListByAccount(accountID: accountID)

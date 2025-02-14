@@ -12,7 +12,7 @@ struct AccountRestModel: Codable, Hashable {
     var id: String
     var userId: String
     var name: String
-    var accountType: String
+    var type: String
     var loanType: String
     var currency: String
     var active: Bool
@@ -26,7 +26,7 @@ struct AccountRestModel: Codable, Hashable {
         self.id = id
         self.userId = userId
         self.name = name
-        self.accountType = accountType
+        self.type = accountType
         self.loanType = loanType
         self.currency = currency
         self.active = active
@@ -38,7 +38,7 @@ struct AccountRestModel: Codable, Hashable {
         id = try container.decode(String.self, forKey: .id)
         userId = try container.decode(String.self, forKey: .userId)
         name = try container.decode(String.self, forKey: .name)
-        accountType = try container.decode(String.self, forKey: .accountType)
+        type = try container.decode(String.self, forKey: .accountType)
         loanType = try container.decode(String.self, forKey: .loanType)
         currency = try container.decode(String.self, forKey: .currency)
         active = try container.decode(Bool.self, forKey: .active)
@@ -52,7 +52,7 @@ struct AccountRestModel: Codable, Hashable {
         }
         try container.encode(userId, forKey: .userId)
         try container.encode(name, forKey: .name)
-        try container.encode(accountType, forKey: .accountType)
+        try container.encode(type, forKey: .accountType)
         try container.encode(loanType, forKey: .loanType)
         try container.encode(currency, forKey: .currency)
         try container.encode(active, forKey: .active)

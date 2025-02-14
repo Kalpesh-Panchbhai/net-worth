@@ -213,7 +213,7 @@ struct SettingsView: View {
     
     private func getLastUpdatedTime() -> String {
         return accountViewModel.accountList.filter {
-            return $0.accountType.elementsEqual(ConstantUtils.brokerAccountType)
+            return $0.type.elementsEqual(ConstantUtils.brokerAccountType)
         }.first?.value.currentDayValue.dateTime.UTCToLocalDate().format() ?? ""
     }
 }

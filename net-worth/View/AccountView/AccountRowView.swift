@@ -29,7 +29,7 @@ struct AccountRowView: View {
                 }
                 if(fromWatchView) {
                     Spacer()
-                    Text(account.accountType)
+                    Text(account.type)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption.italic())
                         .multilineTextAlignment(.leading)
@@ -37,7 +37,7 @@ struct AccountRowView: View {
             }
             Spacer()
             HStack {
-                if(account.accountType == ConstantUtils.brokerAccountType) {
+                if(account.type == ConstantUtils.brokerAccountType) {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
@@ -55,7 +55,7 @@ struct AccountRowView: View {
             }
             Spacer()
             HStack {
-                if(account.accountType == ConstantUtils.brokerAccountType) {
+                if(account.type == ConstantUtils.brokerAccountType) {
                     if(getOneDayChange() >= 0) {
                         if(getOneDayChange() > 0) {
                             ZStack {

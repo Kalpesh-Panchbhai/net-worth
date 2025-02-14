@@ -359,7 +359,7 @@ struct ChartView: View {
     
     private func getBrokerList() -> [AccountRestModel] {
         return getAccounts().filter {
-            return $0.accountType.elementsEqual("Broker")
+            return $0.type.elementsEqual("Broker")
         }.sorted(by: {
             return $0.name < $1.name
         })

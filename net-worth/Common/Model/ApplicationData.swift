@@ -40,7 +40,7 @@ struct ApplicationData: Codable {
         var totalAccount = shared.data.accountDataList.count
         totalAccount += Dictionary(grouping: shared.data.accountDataList) {
             if($0.account.active) {
-                return $0.account.accountType
+                return $0.account.type
             } else {
                 return "Inactive Account"
             }
