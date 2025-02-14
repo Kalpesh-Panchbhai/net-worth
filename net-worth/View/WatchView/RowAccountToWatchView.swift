@@ -11,6 +11,7 @@ struct RowAccountToWatchView: View {
     
     var account: AccountRestModel
     var watchAccountController = WatchAccountController()
+    var rowId: Int
     
     @Binding var watch: WatchRestModel
     @State var isAdded: Bool
@@ -30,16 +31,12 @@ struct RowAccountToWatchView: View {
                     Image(systemName: ConstantUtils.bookmarkImageName)
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
-//                        .onTapGesture {
-//                            isAdded.toggle()
-//                            self.watch.accountList = self.watch.accountList.filter { item in
-//                                item != account.id
-//                            }
-//                            Task.init {
-//                                await watchController.updateWatchList(watch: watch)
-//                                await watchViewModel.getAllWatchList()
-//                            }
-//                        }
+                        .onTapGesture {
+                            isAdded.toggle()
+                            Task.init {
+                                await watchAccountController.deleteWatchAccount(id: rowId)
+                            }
+                        }
                 } else {
                     Image(systemName: ConstantUtils.notBookmarkImageName)
                         .foregroundColor(Color.theme.primaryText)
@@ -47,8 +44,7 @@ struct RowAccountToWatchView: View {
                         .onTapGesture {
                             isAdded.toggle()
                             Task.init {
-                                await watchAccountController.addWatchList(watch: WatchAccountRestModel(accountId: account.id, watchId: watch.id))
-                                await watchAccountViewModel.getAllAccountsByWatchID(watchID: watch.id)
+                                await watchAccountController.addWatchAccount(watch: WatchAccountRestModel(accountId: account.id, watchId: watch.id))
                             }
                         }
                 }

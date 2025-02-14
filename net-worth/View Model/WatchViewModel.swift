@@ -15,7 +15,6 @@ class WatchViewModel: ObservableObject {
     @Published var watchList = [WatchRestModel]()
     @Published var watchListLoad = false
     @Published var watchListForAccount = [WatchRestModel]()
-    @Published var watchListWithAccount = [WatchRestModel: [AccountRestModel]]()
     @Published var watch = WatchRestModel()
     
     func getAllWatchList() async {
@@ -37,14 +36,5 @@ class WatchViewModel: ObservableObject {
             self.watchList = returnAllList
             self.watchListLoad = true
         }
-    }
-    
-    func getWatchListByAccount(accountID: Int) async {
-//        let list = watchList.filter {
-//            return $0.accountList.contains(accountID)
-//        }
-//        DispatchQueue.main.async {
-//            self.watchListForAccount = list
-//        }
     }
 }

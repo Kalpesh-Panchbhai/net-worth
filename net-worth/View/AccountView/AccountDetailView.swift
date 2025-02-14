@@ -23,6 +23,7 @@ struct AccountDetailView: View {
     @State var account = AccountRestModel()
     @EnvironmentObject var accountViewModel: AccountViewModel
     @EnvironmentObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var watchAccountViewModel: WatchAccountViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -42,9 +43,9 @@ struct AccountDetailView: View {
                 Picker(selection: $tabItem, content: {
                     if(account.type == ConstantUtils.brokerAccountType) {
                         Text("Accounts (\(accountViewModel.accountsInBroker.count))").tag(1)
-                        Text("WatchLists (\(watchViewModel.watchListForAccount.count))").tag(2)
+                        Text("WatchLists (\(watchAccountViewModel.allWatchListByAccountID.count))").tag(2)
                     } else {
-                        Text("WatchLists (\(watchViewModel.watchListForAccount.count))").tag(1)
+                        Text("WatchLists (\(watchAccountViewModel.allWatchListByAccountID.count))").tag(1)
                     }
                 }, label: {
                     Text("Account Tab View")
@@ -252,7 +253,7 @@ struct AccountDetailView: View {
                 if(account.type.elementsEqual(ConstantUtils.brokerAccountType)) {
                     await accountViewModel.getAccountInBrokerList(brokerID: accountID)
                 }
-                await watchViewModel.getWatchListByAccount(accountID: accountID)
+                await watchAccountViewModel.getAllWatchListByAccountID(accountID: accountID)
             }
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
@@ -270,7 +271,8 @@ struct AccountDetailView: View {
         })
         .sheet(isPresented: $showAddWatchListView, onDismiss: {
             Task.init {
-                await watchViewModel.getWatchListByAccount(accountID: accountID)
+                await watchAccountViewModel.getAllWatchListByAccountID(accountID: accountID)
+                await watchViewModel.getAllWatchList()
             }
         }, content: {
             WatchToAccountView(accountID: accountID)

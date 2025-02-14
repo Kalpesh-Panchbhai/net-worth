@@ -165,6 +165,9 @@ struct WatchDetailView: View {
                         Toggle(isOn: $hideZeroAmountAccount, label: {
                             Text("Hide zero amount accounts")
                         })
+                        .onChange(of: hideZeroAmountAccount) {
+                            getWatchListData()
+                        }
                     }
                     
                 }, label: {
@@ -181,32 +184,25 @@ struct WatchDetailView: View {
             })
         }
         .sheet(isPresented: $addAccountViewOpen, onDismiss: {
-            getWatchListData()
+            Task.init {
+                await watchViewModel.getAllWatchList()
+                await watchAccountViewModel.getAllAccountsByWatchID(watchID: watch.id)
+                getWatchListData()
+            }
         }, content: {
             AccountToWatchView(watch: watch)
         })
         .onAppear {
             Task.init {
                 await watchAccountViewModel.getAllAccountsByWatchID(watchID: watch.id)
-                let accountListInAWatch = watchAccountViewModel.allAccountsByWatchID.map { $0.accountId }
-                let accountList = accountViewModel.accountList.filter { account in
-                    return accountListInAWatch.contains(account.id)
-                }
-                let count = accountList.filter {
-                    return $0.value.currentValue.isZero
-                }.count
-                
                 getWatchListData()
-                
-//                isZeroAmountAccountPresent = count > 0
             }
         }
     }
     
     private func getAccountForWatchListAccount(accountId: Int) -> AccountRestModel {
-        return accountViewModel.accountList.first { _ in
-            return true
-//            return $0.id == accountId
+        return accountViewModel.accountList.first {
+            return $0.id == accountId
         }!
     }
     
@@ -215,6 +211,11 @@ struct WatchDetailView: View {
         var accountList = accountViewModel.accountList.filter { account in
             return accountListInAWatch.contains(account.id)
         }
+        let count = accountList.filter {
+            return $0.value.currentValue.isZero
+        }.count
+        
+        isZeroAmountAccountPresent = count > 0
         
         if(sortType.elementsEqual("Name")) {
             if(sortOrder.elementsEqual("Asc")) {

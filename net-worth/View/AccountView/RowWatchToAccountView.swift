@@ -9,8 +9,9 @@ import SwiftUI
 
 struct RowWatchToAccountView: View {
     
-    var accountID: String
-    var watchController = WatchController()
+    var accountID: Int
+    var rowId: Int
+    var watchAccountController = WatchAccountController()
     
     @State var watch: WatchRestModel
     @State var isAdded: Bool
@@ -29,28 +30,22 @@ struct RowWatchToAccountView: View {
                     Image(systemName: ConstantUtils.bookmarkImageName)
                         .foregroundColor(watch.name.elementsEqual("All") ? .gray : Color.theme.primaryText)
                         .bold()
-//                        .onTapGesture {
-//                            isAdded.toggle()
-//                            self.watch.accountList = self.watch.accountList.filter { item in
-//                                item != accountID
-//                            }
-//                            Task.init {
-//                                await watchController.updateWatchList(watch: watch)
-//                                await watchViewModel.getAllWatchList()
-//                            }
-//                        }
+                        .onTapGesture {
+                            isAdded.toggle()
+                            Task.init {
+                                await watchAccountController.deleteWatchAccount(id: rowId)
+                            }
+                        }
                 } else {
                     Image(systemName: ConstantUtils.notBookmarkImageName)
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
-//                        .onTapGesture {
-//                            isAdded.toggle()
-//                            self.watch.accountList.append(accountID)
-//                            Task.init {
-//                                await watchController.updateWatchList(watch: watch)
-//                                await watchViewModel.getAllWatchList()
-//                            }
-//                        }
+                        .onTapGesture {
+                            isAdded.toggle()
+                            Task.init {
+                                await watchAccountController.addWatchAccount(watch: WatchAccountRestModel(accountId: accountID, watchId: watch.id))
+                            }
+                        }
                 }
             }
             .disabled(watch.name.elementsEqual("All"))
