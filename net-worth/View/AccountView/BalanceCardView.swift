@@ -16,7 +16,6 @@ struct BalanceCardView: View {
     @State var balanceAccount: AccountValue
     
     @EnvironmentObject var accountViewModel: AccountViewModel
-    @EnvironmentObject var watchAccountViewModel: WatchAccountViewModel
     
     init(accountType: String, isWatchListCardView: Bool, watchList: WatchRestModel) {
         self.accountType = accountType
@@ -80,18 +79,7 @@ struct BalanceCardView: View {
         }
         .onAppear {
             if(isWatchListCardView) {
-                let accountListInAWatch = watchAccountViewModel.allAccountsByWatchID.map { $0.accountId }
-                let accountList = accountViewModel.accountList.filter { account in
-                    return accountListInAWatch.contains(account.id)
-                }
-                var currentDayValue = 0.0
-                var previousDayValue = 0.0
-                
-                for account in accountList {
-                    currentDayValue += account.value.currentValue
-                    previousDayValue += account.value.previousValue
-                }
-                balanceAccount = AccountValue(currentValue: currentDayValue, previousValue: previousDayValue)
+                balanceAccount = AccountValue(currentValue: watchList.value.currentValue, previousValue: watchList.value.previousValue)
             } else {
                 var accountList = [AccountRestModel]()
                 if(accountType.elementsEqual("Net Worth")) {
