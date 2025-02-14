@@ -12,7 +12,7 @@ class AccountTransactionController {
     private var restController = RestController()
     private var entityName = ConstantUtils.Entity.ACCOUNT_TRANSACTION.rawValue
     
-    public func addTransaction(accountTransaction: AccountTransaction) async {
+    public func addTransaction(accountTransaction: AccountTransactionRestModel) async {
         let encoder = JSONEncoder()
         let data = try! encoder.encode(accountTransaction)
         _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: RestResponse.self)

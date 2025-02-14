@@ -13,5 +13,5 @@ struct AccountData: Codable {
     
     var accountInBroker: [AccountInBrokerData]
     
-    var accountTransaction: [AccountTransaction]
+    var accountTransaction: [AccountTransactionRestModel]
 }

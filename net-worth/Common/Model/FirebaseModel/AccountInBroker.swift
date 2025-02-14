@@ -14,19 +14,19 @@ struct AccountInBroker: Codable, Hashable {
     var symbol: String
     var name: String
     var currentUnit: Double
-    var balance: AccountValue
+    var value: AccountValue
     
     private enum CodingKeys: String, CodingKey {
-        case id, accountId, symbol, name, currentUnit, balance
+        case id, accountId, symbol, name, currentUnit, value
     }
     
-    init(id: Int = 0, accountId: Int = 0, symbol: String = "", name: String = "", currentUnit: Double = 0.0, balance: AccountValue = AccountValue()) {
+    init(id: Int = 0, accountId: Int = 0, symbol: String = "", name: String = "", currentUnit: Double = 0.0, value: AccountValue = AccountValue()) {
         self.id = id
         self.accountId = accountId
         self.symbol = symbol
         self.name = name
         self.currentUnit = currentUnit
-        self.balance = balance
+        self.value = value
     }
     
     init(from decoder: Decoder) throws {
@@ -36,7 +36,7 @@ struct AccountInBroker: Codable, Hashable {
         symbol = try container.decode(String.self, forKey: .symbol)
         name = try container.decode(String.self, forKey: .name)
         currentUnit = try container.decode(Double.self, forKey: .currentUnit)
-        balance = try container.decode(AccountValue.self, forKey: .balance)
+        value = try container.decode(AccountValue.self, forKey: .value)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -47,7 +47,7 @@ struct AccountInBroker: Codable, Hashable {
         try container.encode(accountId, forKey: .accountId)
         try container.encode(symbol, forKey: .symbol)
         try container.encode(name, forKey: .name)
-        try container.encode(balance, forKey: .balance)
+        try container.encode(value, forKey: .value)
         try container.encode(currentUnit, forKey: .currentUnit)
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AccountTransaction: Codable, Hashable {
+struct AccountTransactionRestModel: Codable, Hashable {
     
     var id: Int
     var accountId: Int

@@ -217,10 +217,10 @@ struct ChartView: View {
                     await accountViewModel.getAccountInBrokerList(brokerID: brokerSelected.id)
                     var accountList = accountViewModel.accountsInBroker
                     accountList.sort(by: {
-                        $0.balance.currentBalance > $1.balance.currentBalance
+                        $0.value.currentBalance > $1.value.currentBalance
                     })
                     self.chartDataList = accountList.map {
-                        return AccountRestModel(name: $0.name, balance: $0.balance)
+                        return AccountRestModel(name: $0.name, balance: $0.value)
                     }
                 }
             }
