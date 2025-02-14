@@ -27,7 +27,7 @@ struct WatchViewRow: View {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
-                    Text("\(balance.currentBalance.value.withCommas(decimalPlace: 2))")
+                    Text("\(balance.currentBalance.withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 }
@@ -74,18 +74,18 @@ struct WatchViewRow: View {
         }
         .onAppear {
             Task.init {
-                balance = AccountValue(currentBalance: BalanceAccountDetail(value: 0.0), previousBalance: BalanceAccountDetail(value: 0.0))
+                balance = AccountValue(currentBalance: 0.0, previousBalance: 0.0)
                 let accountList = watch.accountList.map { id in
                     return accountViewModel.accountList.filter {
                         return $0.id.elementsEqual(id)
                     }.first ?? AccountRestModel(balance: AccountValue())
                 }
                 for account in accountList {
-                    self.balance.currentBalance.value += account.value.currentBalance.value
+                    self.balance.currentBalance += account.value.currentBalance
                     if(areOneDayTransactions(account: account)) {
-                        self.balance.previousBalance.value += account.value.previousBalance.value
+                        self.balance.previousBalance += account.value.previousBalance
                     } else {
-                        self.balance.previousBalance.value += account.value.currentBalance.value
+                        self.balance.previousBalance += account.value.currentBalance
                     }
                 }
                 
@@ -95,14 +95,15 @@ struct WatchViewRow: View {
     }
     
     private func getOneDayChange() -> Double {
-        return balance.currentBalance.value - balance.previousBalance.value
+        return balance.currentBalance - balance.previousBalance
     }
     
     private func getOneDayPercentageChange() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: balance.previousBalance.value, currentBalance: balance.currentBalance.value)
+        return CommonController.getGrowthPercentage(previousBalance: balance.previousBalance, currentBalance: balance.currentBalance)
     }
     
     private func areOneDayTransactions(account: AccountRestModel) -> Bool {
-        return account.name != "" && account.value.currentBalance.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+        return true
+//        return account.name != "" && account.value.currentBalance.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }

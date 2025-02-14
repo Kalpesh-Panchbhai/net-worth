@@ -41,14 +41,14 @@ struct AccountRowView: View {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
-                    Text("\(account.value.currentBalance.value.withCommas(decimalPlace: 2))")
+                    Text("\(account.value.currentBalance.withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 } else {
                     Text(account.currency)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
-                    Text("\(account.value.currentBalance.value.withCommas(decimalPlace: 2))")
+                    Text("\(account.value.currentBalance.withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 }
@@ -138,14 +138,15 @@ struct AccountRowView: View {
     }
     
     private func getOneDayChange() -> Double {
-        return areOneDayTransactions() ? account.value.currentBalance.value - account.value.previousBalance.value : 0.0
+        return areOneDayTransactions() ? account.value.currentBalance - account.value.previousBalance : 0.0
     }
     
     private func getOneDayPercentageChange() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: account.value.previousBalance.value, currentBalance: account.value.currentBalance.value)
+        return CommonController.getGrowthPercentage(previousBalance: account.value.previousBalance, currentBalance: account.value.currentBalance)
     }
     
     private func areOneDayTransactions() -> Bool {
-        return account.name != "" && account.value.currentBalance.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+        return true
+//        return account.name != "" && account.value.currentBalance.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }

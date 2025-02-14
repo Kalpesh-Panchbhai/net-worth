@@ -85,11 +85,11 @@ struct AccountBrokerView: View {
         } else if(sortType.elementsEqual("Amount")) {
             if(sortOrder.elementsEqual("Asc")) {
                 accountsInBrokerList.sort(by: {
-                    return $0.balance.currentBalance.value <= $1.balance.currentBalance.value
+                    return $0.balance.currentBalance <= $1.balance.currentBalance
                 })
             } else {
                 accountsInBrokerList.sort(by: {
-                    return $0.balance.currentBalance.value >= $1.balance.currentBalance.value
+                    return $0.balance.currentBalance >= $1.balance.currentBalance
                 })
             }
         } else if(sortType.elementsEqual("Price Change")) {
@@ -117,14 +117,15 @@ struct AccountBrokerView: View {
     }
     
     private func getOneDayChange(account: AccountInBroker) -> Double {
-        return areOneDayTransactions(account: account) ? account.balance.currentBalance.value - account.balance.previousBalance.value : 0.0
+        return areOneDayTransactions(account: account) ? account.balance.currentBalance - account.balance.previousBalance : 0.0
     }
     
     private func getOneDayPercentageChange(account: AccountInBroker) -> Double {
-        return areOneDayTransactions(account: account) ? CommonController.getGrowthPercentageInDouble(previousBalance: account.balance.previousBalance.value, currentBalance: account.balance.currentBalance.value) : 0.0
+        return areOneDayTransactions(account: account) ? CommonController.getGrowthPercentageInDouble(previousBalance: account.balance.previousBalance, currentBalance: account.balance.currentBalance) : 0.0
     }
     
     private func areOneDayTransactions(account: AccountInBroker) -> Bool {
-        return account.name != "" && account.balance.currentBalance.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+        return true
+//        return account.name != "" && account.balance.currentBalance.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }
