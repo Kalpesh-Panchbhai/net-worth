@@ -45,7 +45,8 @@ struct AccountDetailView: View {
                         Text("Accounts (\(accountViewModel.accountsInBroker.count))").tag(1)
                         Text("WatchLists (\(watchAccountViewModel.allWatchListByAccountID.count))").tag(2)
                     } else {
-                        Text("WatchLists (\(watchAccountViewModel.allWatchListByAccountID.count))").tag(1)
+                        Text("Transactions (\(accountViewModel.accountTransactionList.count))").tag(1)
+                        Text("WatchLists (\(watchAccountViewModel.allWatchListByAccountID.count))").tag(2)
                     }
                 }, label: {
                     Text("Account Tab View")
@@ -62,7 +63,11 @@ struct AccountDetailView: View {
                         AccountWatchView()
                     }
                 } else {
-                    AccountWatchView()
+                    if(tabItem == 1) {
+                        AccountTransactionView(id: accountID, type: "account")
+                    } else {
+                        AccountWatchView()
+                    }
                 }
             }
             .confirmationDialog("Are you sure?",
@@ -254,12 +259,16 @@ struct AccountDetailView: View {
                     await accountViewModel.getAccountInBrokerList(brokerID: accountID)
                 }
                 await watchAccountViewModel.getAllWatchListByAccountID(accountID: accountID)
+                await accountViewModel.getAccountTransactionList(accountID: accountID, type: "account")
             }
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             self.account = accountViewModel.accountList.filter {
                 return $0.id == accountID
             }.first ?? AccountRestModel()
+            Task.init {
+                await accountViewModel.getAccountTransactionList(accountID: accountID, type: "account")
+            }
         }, content: {
             UpdateBalanceAccountView(accountId: accountID)
                 .presentationDetents([.medium])

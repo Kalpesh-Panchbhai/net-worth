@@ -12,6 +12,7 @@ class AccountViewModel: ObservableObject {
     var watchList = [AccountRestModel]()
     var originalAccountList = [AccountRestModel]()
     var accountController = AccountController()
+    var accountTransactionController = AccountTransactionController()
     var accountInBrokerController = AccountInBrokerController()
     
     @Published var accountList = [AccountRestModel]()
@@ -22,6 +23,8 @@ class AccountViewModel: ObservableObject {
     
     @Published var accountsInBroker = [AccountInBrokerRestModel]()
     @Published var accountBroker = AccountInBrokerRestModel()
+    
+    @Published var accountTransactionList = [AccountTransactionRestModel]()
     
     enum Grouping: String, CaseIterable, Identifiable {
         case accountType = "Account Type"
@@ -122,4 +125,10 @@ class AccountViewModel: ObservableObject {
         }
     }
     
+    func getAccountTransactionList(accountID: Int, type: String) async {
+        let list = await accountTransactionController.getAccountTransactionList(accountID: accountID, type: type)
+        DispatchQueue.main.async {
+            self.accountTransactionList = list
+        }
+    }
 }

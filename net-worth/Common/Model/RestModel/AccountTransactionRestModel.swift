@@ -36,7 +36,7 @@ struct AccountTransactionRestModel: Codable, Hashable {
         accountBrokerId = try container.decode(Int.self, forKey: .accountBrokerId)
         transactionDate = try container.decode(String.self, forKey: .transactionDate)
         value = try container.decode(Double.self, forKey: .value)
-        operation = try container.decode(String.self, forKey: .operation)
+        operation = ""
     }
     
     func encode(to encoder: Encoder) throws {

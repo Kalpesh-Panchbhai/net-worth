@@ -64,15 +64,10 @@ struct AccountBrokerRowView: View {
     }
     
     private func getOneDayChange() -> Double {
-        return areOneDayTransactions() ? account.value.currentValue - account.value.previousValue : 0.0
+        return account.value.currentValue - account.value.previousValue
     }
     
     private func getOneDayPercentageChange() -> String {
         return CommonController.getGrowthPercentage(previousBalance: account.value.previousValue, currentBalance: account.value.currentValue)
-    }
-    
-    private func areOneDayTransactions() -> Bool {
-        return true
-//        return account.name != "" && account.balance.currentBalance.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }

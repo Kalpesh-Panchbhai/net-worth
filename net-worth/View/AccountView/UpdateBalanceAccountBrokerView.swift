@@ -45,7 +45,7 @@ struct UpdateBalanceAccountBrokerView: View {
                         accountTransaction.value = (Double(unit) ?? 0.0) * (isPlus ? 1.0 : -1.0)
                         accountTransaction.operation = "update"
                         Task.init {
-                            await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
+                            await accountTransactionController.addAccountTransaction(accountTransaction: accountTransaction)
                             await accountViewModel.getAccountInBrokerList(brokerID: brokerID)
                         }
                         dismiss()
@@ -65,7 +65,7 @@ struct UpdateBalanceAccountBrokerView: View {
                         accountTransaction.value = (Double(unit) ?? 0.0) * (isPlus ? 1.0 : -1.0)
                         accountTransaction.operation = "add"
                         Task.init {
-                            await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
+                            await accountTransactionController.addAccountTransaction(accountTransaction: accountTransaction)
                             await accountViewModel.getAccountInBrokerList(brokerID: brokerID)
                         }
                         dismiss()

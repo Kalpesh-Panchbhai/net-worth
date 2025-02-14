@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D55C7F92D5FAB54004286C2 /* AccountTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D55C7F82D5FAB54004286C2 /* AccountTransactionView.swift */; };
 		7D59B4012BE246FF006F3F00 /* net_worthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4002BE246FF006F3F00 /* net_worthApp.swift */; };
 		7D59B4052BE24701006F3F00 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B4042BE24701006F3F00 /* Assets.xcassets */; };
 		7D59B4082BE24701006F3F00 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B4072BE24701006F3F00 /* Preview Assets.xcassets */; };
@@ -130,6 +131,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7D55C7F82D5FAB54004286C2 /* AccountTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTransactionView.swift; sourceTree = "<group>"; };
 		7D59B3FD2BE246FF006F3F00 /* net-worth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "net-worth.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D59B4002BE246FF006F3F00 /* net_worthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = net_worthApp.swift; sourceTree = "<group>"; };
 		7D59B4042BE24701006F3F00 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -420,15 +422,16 @@
 				7D59B49F2BE249D9006F3F00 /* AccountDetailView.swift */,
 				7D59B4A02BE249D9006F3F00 /* AccountListView.swift */,
 				7D59B4A12BE249D9006F3F00 /* AccountRowView.swift */,
+				7D55C7F82D5FAB54004286C2 /* AccountTransactionView.swift */,
 				7D59B4A22BE249D9006F3F00 /* AccountWatchView.swift */,
 				7D59B4A32BE249D9006F3F00 /* BalanceCardView.swift */,
+				7D670AAB2BF1EBB50043D63F /* NetworthCardView.swift */,
 				7D59B4A42BE249D9006F3F00 /* NewAccountInBrokerView.swift */,
 				7D59B4A52BE249D9006F3F00 /* NewAccountView.swift */,
 				7D59B4A62BE249D9006F3F00 /* RowWatchToAccountView.swift */,
 				7D59B4A82BE249D9006F3F00 /* UpdateBalanceAccountBrokerView.swift */,
 				7D59B4A92BE249D9006F3F00 /* UpdateBalanceAccountView.swift */,
 				7D59B4AA2BE249D9006F3F00 /* WatchToAccountView.swift */,
-				7D670AAB2BF1EBB50043D63F /* NetworthCardView.swift */,
 			);
 			path = AccountView;
 			sourceTree = "<group>";
@@ -749,6 +752,7 @@
 				7D59B45C2BE249B7006F3F00 /* FinanceModel.swift in Sources */,
 				7D59B45A2BE249B7006F3F00 /* ChartData.swift in Sources */,
 				7D59B51D2BE249D9006F3F00 /* WatchView.swift in Sources */,
+				7D55C7F92D5FAB54004286C2 /* AccountTransactionView.swift in Sources */,
 				7D59B4922BE249D0006F3F00 /* DictionaryExtension.swift in Sources */,
 				7D59B52D2BE249E0006F3F00 /* IncomeViewModel.swift in Sources */,
 				7D59B4882BE249C8006F3F00 /* WatchController.swift in Sources */,
