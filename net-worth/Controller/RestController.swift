@@ -27,7 +27,7 @@ class RestController {
     }
     
     private func getURL(entity: String, pathParam: [Any]) -> String {
-        var baseURL = ConstantUtils.baseRESTURL + entity
+        let baseURL = ConstantUtils.baseRESTURL + entity
         var pathParams = ""
         for param in pathParam {
             if ((param as? String) != nil) {

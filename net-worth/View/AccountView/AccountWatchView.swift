@@ -38,7 +38,7 @@ struct AccountWatchView: View {
     
     private func getWatchListData() -> [WatchRestModel] {
         let WatchListForAccount = watchAccountViewModel.allWatchListByAccountID.map {$0.watchId}
-        var watchList = watchViewModel.watchList.filter {
+        let watchList = watchViewModel.watchList.filter {
             return WatchListForAccount.contains($0.id)
         }
         return watchList

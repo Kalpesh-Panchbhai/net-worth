@@ -30,26 +30,30 @@ struct AccountBrokerView: View {
                 LazyVStack {
                     Spacer()
                     ForEach(0..<getAccountsInBrokerList().count, id: \.self) { i in
-                        AccountBrokerRowView(account: getAccountsInBrokerList()[i])
-                            .frame(width: 360, height: 40)
-                            .padding(8)
-                            .background(Color.theme.foreground)
-                            .cornerRadius(10)
-                            .contextMenu {
-                                Button(action: {
-                                    self.isNewTransactionViewOpen.toggle()
-                                    self.selectedAccount = getAccountsInBrokerList()[i]
-                                }, label: {
-                                    Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
-                                })
-                                
-                                Button(role: .destructive, action: {
-                                    self.isPresentingAccountDeleteConfirm.toggle()
-                                    self.selectedAccount = getAccountsInBrokerList()[i]
-                                }, label: {
-                                    Label("Delete", systemImage: ConstantUtils.deleteImageName)
-                                })
-                            }
+                        NavigationLink(destination: {
+                            AccountBrokerDetailView(AccountInbroker: getAccountsInBrokerList()[i])
+                        }, label: {
+                            AccountBrokerRowView(account: getAccountsInBrokerList()[i])
+                                .frame(width: 360, height: 40)
+                                .padding(8)
+                                .background(Color.theme.foreground)
+                                .cornerRadius(10)
+                                .contextMenu {
+                                    Button(action: {
+                                        self.isNewTransactionViewOpen.toggle()
+                                        self.selectedAccount = getAccountsInBrokerList()[i]
+                                    }, label: {
+                                        Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
+                                    })
+                                    
+                                    Button(role: .destructive, action: {
+                                        self.isPresentingAccountDeleteConfirm.toggle()
+                                        self.selectedAccount = getAccountsInBrokerList()[i]
+                                    }, label: {
+                                        Label("Delete", systemImage: ConstantUtils.deleteImageName)
+                                    })
+                                }
+                        })
                     }
                 }
                 .confirmationDialog("Are you sure?",
@@ -118,15 +122,10 @@ struct AccountBrokerView: View {
     }
     
     private func getOneDayChange(account: AccountInBrokerRestModel) -> Double {
-        return areOneDayTransactions(account: account) ? account.value.currentValue - account.value.previousValue : 0.0
+        return account.value.currentValue - account.value.previousValue
     }
     
     private func getOneDayPercentageChange(account: AccountInBrokerRestModel) -> Double {
-        return areOneDayTransactions(account: account) ? CommonController.getGrowthPercentageInDouble(previousBalance: account.value.previousValue, currentBalance: account.value.currentValue) : 0.0
-    }
-    
-    private func areOneDayTransactions(account: AccountInBrokerRestModel) -> Bool {
-        return true
-//        return account.name != "" && account.balance.currentBalance.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+        return CommonController.getGrowthPercentageInDouble(previousBalance: account.value.previousValue, currentBalance: account.value.currentValue)
     }
 }

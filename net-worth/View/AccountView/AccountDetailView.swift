@@ -43,10 +43,12 @@ struct AccountDetailView: View {
                 Picker(selection: $tabItem, content: {
                     if(account.type == ConstantUtils.brokerAccountType) {
                         Text("Accounts (\(accountViewModel.accountsInBroker.count))").tag(1)
-                        Text("WatchLists (\(watchAccountViewModel.allWatchListByAccountID.count))").tag(2)
+                        Text("Chart").tag(2)
+                        Text("WatchLists (\(watchAccountViewModel.allWatchListByAccountID.count))").tag(3)
                     } else {
                         Text("Transactions (\(accountViewModel.accountTransactionList.count))").tag(1)
-                        Text("WatchLists (\(watchAccountViewModel.allWatchListByAccountID.count))").tag(2)
+                        Text("Chart").tag(2)
+                        Text("WatchLists (\(watchAccountViewModel.allWatchListByAccountID.count))").tag(3)
                     }
                 }, label: {
                     Text("Account Tab View")
@@ -59,12 +61,16 @@ struct AccountDetailView: View {
                 if(account.type == ConstantUtils.brokerAccountType) {
                     if(tabItem == 1) {
                         AccountBrokerView(brokerID: accountID, sortOrder: $sortOrder, sortType: $sortType)
+                    } else if(tabItem == 2) {
+                        SingleLineLollipopChartView(chartDataList: [ChartData]())
                     } else {
                         AccountWatchView()
                     }
                 } else {
                     if(tabItem == 1) {
                         AccountTransactionView(id: accountID, type: "account")
+                    } else if(tabItem == 2) {
+                        SingleLineLollipopChartView(chartDataList: [ChartData]())
                     } else {
                         AccountWatchView()
                     }
@@ -257,9 +263,10 @@ struct AccountDetailView: View {
                 }.first ?? AccountRestModel()
                 if(account.type.elementsEqual(ConstantUtils.brokerAccountType)) {
                     await accountViewModel.getAccountInBrokerList(brokerID: accountID)
+                } else {
+                    await accountViewModel.getAccountTransactionList(accountID: accountID, type: "account")
                 }
                 await watchAccountViewModel.getAllWatchListByAccountID(accountID: accountID)
-                await accountViewModel.getAccountTransactionList(accountID: accountID, type: "account")
             }
         }
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
