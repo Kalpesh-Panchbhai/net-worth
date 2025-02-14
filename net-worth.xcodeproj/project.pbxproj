@@ -19,7 +19,6 @@
 		7D59B4462BE249B7006F3F00 /* IncomeTypeBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B41B2BE249B7006F3F00 /* IncomeTypeBackupModel.swift */; };
 		7D59B4472BE249B7006F3F00 /* WatchBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B41C2BE249B7006F3F00 /* WatchBackupModel.swift */; };
 		7D59B4492BE249B7006F3F00 /* AccountInBrokerRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B41F2BE249B7006F3F00 /* AccountInBrokerRestModel.swift */; };
-		7D59B44E2BE249B7006F3F00 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4242BE249B7006F3F00 /* User.swift */; };
 		7D59B44F2BE249B7006F3F00 /* WatchRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4252BE249B7006F3F00 /* WatchRestModel.swift */; };
 		7D59B4502BE249B7006F3F00 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4272BE249B7006F3F00 /* EmptyResponse.swift */; };
 		7D59B4532BE249B7006F3F00 /* IncomeRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B42A2BE249B7006F3F00 /* IncomeRestModel.swift */; };
@@ -147,7 +146,6 @@
 		7D59B41B2BE249B7006F3F00 /* IncomeTypeBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeTypeBackupModel.swift; sourceTree = "<group>"; };
 		7D59B41C2BE249B7006F3F00 /* WatchBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchBackupModel.swift; sourceTree = "<group>"; };
 		7D59B41F2BE249B7006F3F00 /* AccountInBrokerRestModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountInBrokerRestModel.swift; sourceTree = "<group>"; };
-		7D59B4242BE249B7006F3F00 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		7D59B4252BE249B7006F3F00 /* WatchRestModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchRestModel.swift; sourceTree = "<group>"; };
 		7D59B4272BE249B7006F3F00 /* EmptyResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
 		7D59B42A2BE249B7006F3F00 /* IncomeRestModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeRestModel.swift; sourceTree = "<group>"; };
@@ -336,14 +334,6 @@
 			path = Backup;
 			sourceTree = "<group>";
 		};
-		7D59B4262BE249B7006F3F00 /* FirebaseModel */ = {
-			isa = PBXGroup;
-			children = (
-				7D59B4242BE249B7006F3F00 /* User.swift */,
-			);
-			path = FirebaseModel;
-			sourceTree = "<group>";
-		};
 		7D59B42F2BE249B7006F3F00 /* RestModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -375,7 +365,6 @@
 				7D59B4352BE249B7006F3F00 /* GroupChartData.swift */,
 				7D59B4372BE249B7006F3F00 /* SymbolDetailModel.swift */,
 				7D59B41D2BE249B7006F3F00 /* Backup */,
-				7D59B4262BE249B7006F3F00 /* FirebaseModel */,
 				7D59B42F2BE249B7006F3F00 /* RestModel */,
 			);
 			path = Model;
@@ -771,7 +760,6 @@
 				7D59B4922BE249D0006F3F00 /* DictionaryExtension.swift in Sources */,
 				7D59B52D2BE249E0006F3F00 /* IncomeViewModel.swift in Sources */,
 				7D59B4882BE249C8006F3F00 /* WatchController.swift in Sources */,
-				7D59B44E2BE249B7006F3F00 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
