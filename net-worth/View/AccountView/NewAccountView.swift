@@ -17,10 +17,8 @@ struct NewAccountView: View {
     
     @State var scenePhaseBlur = 0
     @State var accountType: String
-    @State var loanType: String = "Consumer"
     @State var name: String = ""
     @State var currencySelected: Currency = Currency()
-    @State var monthlyEmi: Double = 0.0
     @State var dates = Array(1...28)
     @State var isPlus = true
     
@@ -44,39 +42,26 @@ struct NewAccountView: View {
                         name=""
                         currencySelected = SettingsController().getDefaultCurrency()
                         isPlus = true
-                        monthlyEmi = 0.0
                     }
                     if(accountType == ConstantUtils.savingAccountType) {
                         nameField(labelName: "Account Name")
-                            .foregroundColor(Color.theme.primaryText)
-                        CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
                     }
                     else if(accountType == ConstantUtils.creditCardAccountType) {
                         nameField(labelName: "Credit Card Name")
                             .foregroundColor(Color.theme.primaryText)
-                        CurrencyPicker(currenySelected: $currencySelected)
-                            .foregroundColor(Color.theme.primaryText)
                     }
                     else if(accountType == ConstantUtils.loanAccountType) {
-                        Picker(selection: $loanType, label: Text("Loan Type")) {
-                            Text("Consumer").tag("Consumer")
-                            Text("Non Consumer").tag("Non Consumer")
-                        }
-                        .foregroundColor(Color.theme.primaryText)
-                        
                         nameField(labelName: "Loan Name")
-                            .foregroundColor(Color.theme.primaryText)
-                        CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
                     } else if(accountType == ConstantUtils.brokerAccountType) {
                         nameField(labelName: "Broker Name")
                             .foregroundColor(Color.theme.primaryText)
-                        CurrencyPicker(currenySelected: $currencySelected)
-                            .foregroundColor(Color.theme.primaryText)
                     } else if(accountType == ConstantUtils.otherAccountType) {
                         nameField(labelName: "Account Name")
                             .foregroundColor(Color.theme.primaryText)
+                    }
+                    if(accountType != ConstantUtils.noneAccountType) {
                         CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
                     }
@@ -170,14 +155,4 @@ struct NewAccountView: View {
             TextField(labelName, text: $name)
         }
     }
-    
-    private var monthlyEMIField: some View {
-        HStack {
-            Text("Monthly EMI")
-            Spacer()
-            TextField("Monthly EMI", value: $monthlyEmi, formatter: Double().formatter())
-                .keyboardType(.decimalPad)
-        }
-    }
-    
 }
