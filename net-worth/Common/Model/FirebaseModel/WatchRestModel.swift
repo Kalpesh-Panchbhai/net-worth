@@ -11,15 +11,19 @@ struct WatchRestModel: Codable, Hashable {
     var id: Int
     var userId: Int
     var name: String
+    var totalAccount: Int
+    var value: AccountValue
     
     private enum CodingKeys: String, CodingKey {
-        case id, userId, name
+        case id, userId, name, totalAccount, value
     }
     
-    init(id: Int = 0, userId: Int = 0, name: String = "") {
+    init(id: Int = 0, userId: Int = 0, name: String = "", totalAccount: Int = 0, value: AccountValue = AccountValue()) {
         self.id = id
         self.userId = userId
         self.name = name
+        self.totalAccount = totalAccount
+        self.value = value
     }
     
     init(from decoder: Decoder) throws {
@@ -27,6 +31,8 @@ struct WatchRestModel: Codable, Hashable {
         id = try container.decode(Int.self, forKey: .id)
         userId = try container.decode(Int.self, forKey: .userId)
         name = try container.decode(String.self, forKey: .name)
+        totalAccount = try container.decode(Int.self, forKey: .totalAccount)
+        value = try container.decode(AccountValue.self, forKey: .value)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -36,5 +42,7 @@ struct WatchRestModel: Codable, Hashable {
         }
         try container.encode(userId, forKey: .userId)
         try container.encode(name, forKey: .name)
+        try container.encode(totalAccount, forKey: .totalAccount)
+        try container.encode(value, forKey: .value)
     }
 }
