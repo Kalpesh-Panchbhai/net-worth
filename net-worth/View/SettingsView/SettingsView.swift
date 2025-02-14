@@ -203,7 +203,6 @@ struct SettingsView: View {
             defaults.removeObject(forKey: key)
         }
         settingsController.setAuthentication(newValue: false)
-        ApplicationData.clear()
     }
     
     private func deleteAccountAndData() async {
