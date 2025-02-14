@@ -31,29 +31,29 @@ struct WatchDetailView: View {
                 Color.theme.background.ignoresSafeArea()
                 VStack {
 //                    if(watch.accountList.count > 0) {
-//                        // MARK: Balance Card
-//                        VStack {
-//                            BalanceCardView(accountType: watch.name, isWatchListCardView: true, watchList: watch)
-//                                .frame(width: 360, height: 70)
-//                                .cornerRadius(10)
-//                        }
-//                        .padding(.top, 5)
-//                        Divider()
-//                        ScrollView(.vertical, showsIndicators: false) {
-//                            LazyVStack {
-//                                ForEach(getWatchListData(), id: \.self) { accountID in
-//                                    NavigationLink(destination: {
-//                                        // MARK: Account Detail View
-//                                        AccountDetailView(accountID: accountID)
-//                                            .toolbarRole(.editor)
-//                                    }, label: {
-//                                        AccountRowView(account: getAccountForWatchListAccount(accountId: accountID), fromWatchView: true)
-//                                    })
-//                                }
-//                                .padding(10)
-//                            }
-//                        }
-//                        .padding(10)
+                        // MARK: Balance Card
+                        VStack {
+                            BalanceCardView(accountType: watch.name, isWatchListCardView: true, watchList: watch)
+                                .frame(width: 360, height: 70)
+                                .cornerRadius(10)
+                        }
+                        .padding(.top, 5)
+                        Divider()
+                        ScrollView(.vertical, showsIndicators: false) {
+                            LazyVStack {
+                                ForEach(getWatchListData(), id: \.self) { accountID in
+                                    NavigationLink(destination: {
+                                        // MARK: Account Detail View
+                                        AccountDetailView(accountID: accountID)
+                                            .toolbarRole(.editor)
+                                    }, label: {
+                                        AccountRowView(account: getAccountForWatchListAccount(accountId: accountID), fromWatchView: true)
+                                    })
+                                }
+                                .padding(10)
+                            }
+                        }
+                        .padding(10)
 //                    }
                 }
             }
@@ -206,14 +206,14 @@ struct WatchDetailView: View {
         }
     }
     
-    private func getAccountForWatchListAccount(accountId: String) -> AccountRestModel {
+    private func getAccountForWatchListAccount(accountId: Int) -> AccountRestModel {
         return accountViewModel.accountList.first { _ in
             return true
 //            return $0.id == accountId
         }!
     }
     
-    private func getWatchListData() -> [String] {
+    private func getWatchListData() -> [Int] {
         var accountList = accountViewModel.accountList.filter { _ in
             return true
 //            return watch.accountList.contains($0.id)
@@ -265,7 +265,7 @@ struct WatchDetailView: View {
                 return !$0.value.currentValue.isZero
             }
         }
-        return [String]()
+        return [Int]()
 //        return accountList.map { $0.id }
     }
     
