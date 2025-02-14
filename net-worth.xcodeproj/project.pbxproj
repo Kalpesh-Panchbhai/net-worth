@@ -390,8 +390,8 @@
 				7D59B4712BE249C8006F3F00 /* RestController.swift */,
 				7D59B4722BE249C8006F3F00 /* SettingsController.swift */,
 				7D59B4732BE249C8006F3F00 /* UserController.swift */,
-				7D59B4742BE249C8006F3F00 /* WatchController.swift */,
 				7D6A4D472D5F570700C433A8 /* WatchAccountController.swift */,
+				7D59B4742BE249C8006F3F00 /* WatchController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
