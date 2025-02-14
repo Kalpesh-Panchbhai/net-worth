@@ -97,6 +97,7 @@ struct WatchDetailView: View {
                     Menu(content: {
                         Button(action: {
                             sortType = "Name"
+                            getWatchListData()
                         }, label: {
                             if(sortType.elementsEqual("Name")) {
                                 Label("Name", systemImage: "checkmark")
@@ -107,6 +108,7 @@ struct WatchDetailView: View {
                         
                         Button(action: {
                             sortType = "Amount"
+                            getWatchListData()
                         }, label: {
                             if(sortType.elementsEqual("Amount")){
                                 Label("Amount", systemImage: "checkmark")
@@ -117,6 +119,7 @@ struct WatchDetailView: View {
                         
                         Button(action: {
                             sortType = "Price Change"
+                            getWatchListData()
                         }, label: {
                             if(sortType.elementsEqual("Price Change")){
                                 Label("Price Change", systemImage: "checkmark")
@@ -127,6 +130,7 @@ struct WatchDetailView: View {
                         
                         Button(action: {
                             sortType = "Percentage Change"
+                            getWatchListData()
                         }, label: {
                             if(sortType.elementsEqual("Percentage Change")){
                                 Label("Percentage Change", systemImage: "checkmark")
@@ -139,6 +143,7 @@ struct WatchDetailView: View {
                         
                         Button(action: {
                             sortOrder = "Asc"
+                            getWatchListData()
                         }, label: {
                             if(sortOrder.elementsEqual("Asc")){
                                 Label("Ascending", systemImage: "checkmark")
@@ -149,6 +154,7 @@ struct WatchDetailView: View {
                         
                         Button(action: {
                             sortOrder = "Desc"
+                            getWatchListData()
                         }, label: {
                             if(sortOrder.elementsEqual("Desc")){
                                 Label("Descending", systemImage: "checkmark")

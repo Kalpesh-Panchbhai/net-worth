@@ -66,21 +66,12 @@ struct NetworthCardView: View {
             
             for account in accountList {
                 currentDayValue += account.value.currentValue
-                if(areOneDayTransactions(account: account)) {
-                    previousDayValue += account.value.previousValue
-                } else {
-                    previousDayValue += account.value.currentValue
-                }
+                previousDayValue += account.value.previousValue
             }
             balanceAccount = AccountValue(currentValue: currentDayValue, previousValue: previousDayValue)
             let totalIncome = incomeViewModel.incomeTotalAmount
             percent = balanceAccount.currentValue / totalIncome * 100
             percentChange = (balanceAccount.currentValue - balanceAccount.previousValue) / totalIncome * 100
         }
-    }
-    
-    private func areOneDayTransactions(account: AccountRestModel) -> Bool {
-        return true
-//        return account.name != "" && account.value.currentBalance.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }
