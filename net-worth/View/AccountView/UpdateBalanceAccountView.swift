@@ -36,7 +36,7 @@ struct UpdateBalanceAccountView: View {
                     Button(action: {
                         var accountTransaction = AccountTransaction(isAccountTransaction: true)
                         accountTransaction.accountId = accountId
-                        accountTransaction.amount = (Double(amount) ?? 0.0) * (isPlus ? 1.0 : -1.0)
+                        accountTransaction.value = (Double(amount) ?? 0.0) * (isPlus ? 1.0 : -1.0)
                         accountTransaction.operation = "ADD"
                         Task.init {
                             await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
@@ -53,7 +53,7 @@ struct UpdateBalanceAccountView: View {
                     Button(action: {
                         var accountTransaction = AccountTransaction(isAccountTransaction: true)
                         accountTransaction.accountId = accountId
-                        accountTransaction.amount = (Double(amount) ?? 0.0) * (isPlus ? 1.0 : -1.0)
+                        accountTransaction.value = (Double(amount) ?? 0.0) * (isPlus ? 1.0 : -1.0)
                         accountTransaction.operation = "UPDATE"
                         Task.init {
                             await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
