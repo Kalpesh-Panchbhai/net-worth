@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AccountBrokerView: View {
     
-    var brokerID: String
+    var brokerID: Int
     @Binding var sortOrder: String
     @Binding var sortType: String
     
@@ -70,6 +70,7 @@ struct AccountBrokerView: View {
             .background(Color.theme.background)
         }
     }
+    
     private func getAccountsInBrokerList() -> [AccountInBroker] {
         var accountsInBrokerList = accountViewModel.accountsInBroker
         if(sortType.elementsEqual("Name")) {

@@ -30,31 +30,31 @@ struct WatchDetailView: View {
             ZStack {
                 Color.theme.background.ignoresSafeArea()
                 VStack {
-                    if(watch.accountList.count > 0) {
-                        // MARK: Balance Card
-                        VStack {
-                            BalanceCardView(accountType: watch.name, isWatchListCardView: true, watchList: watch)
-                                .frame(width: 360, height: 70)
-                                .cornerRadius(10)
-                        }
-                        .padding(.top, 5)
-                        Divider()
-                        ScrollView(.vertical, showsIndicators: false) {
-                            LazyVStack {
-                                ForEach(getWatchListData(), id: \.self) { accountID in
-                                    NavigationLink(destination: {
-                                        // MARK: Account Detail View
-                                        AccountDetailView(accountID: accountID)
-                                            .toolbarRole(.editor)
-                                    }, label: {
-                                        AccountRowView(account: getAccountForWatchListAccount(accountId: accountID), fromWatchView: true)
-                                    })
-                                }
-                                .padding(10)
-                            }
-                        }
-                        .padding(10)
-                    }
+//                    if(watch.accountList.count > 0) {
+//                        // MARK: Balance Card
+//                        VStack {
+//                            BalanceCardView(accountType: watch.name, isWatchListCardView: true, watchList: watch)
+//                                .frame(width: 360, height: 70)
+//                                .cornerRadius(10)
+//                        }
+//                        .padding(.top, 5)
+//                        Divider()
+//                        ScrollView(.vertical, showsIndicators: false) {
+//                            LazyVStack {
+//                                ForEach(getWatchListData(), id: \.self) { accountID in
+//                                    NavigationLink(destination: {
+//                                        // MARK: Account Detail View
+//                                        AccountDetailView(accountID: accountID)
+//                                            .toolbarRole(.editor)
+//                                    }, label: {
+//                                        AccountRowView(account: getAccountForWatchListAccount(accountId: accountID), fromWatchView: true)
+//                                    })
+//                                }
+//                                .padding(10)
+//                            }
+//                        }
+//                        .padding(10)
+//                    }
                 }
             }
         }
@@ -179,42 +179,44 @@ struct WatchDetailView: View {
             })
         }
         .sheet(isPresented: $addAccountViewOpen, onDismiss: {
-            self.watch = self.watchViewModel.watchList.first(where: {
-                return $0.id.elementsEqual(watch.id)
-            })!
-            var watchSorted = self.watch
-            watchSorted.accountList.sort(by: { item1, item2 in
-                accountViewModel.accountList.filter { account1 in
-                    account1.id.elementsEqual(item1)
-                }.first!.name <= accountViewModel.accountList.filter { account2 in
-                    account2.id.elementsEqual(item2)
-                }.first!.name
-            })
-            self.watch = watchSorted
+//            self.watch = self.watchViewModel.watchList.first(where: {
+//                return $0.id.elementsEqual(watch.id)
+//            })!
+//            var watchSorted = self.watch
+//            watchSorted.accountList.sort(by: { item1, item2 in
+//                accountViewModel.accountList.filter { account1 in
+//                    account1.id == item1
+//                }.first!.name <= accountViewModel.accountList.filter { account2 in
+//                    account2.id == item2
+//                }.first!.name
+//            })
+//            self.watch = watchSorted
         }, content: {
             AccountToWatchView(watch: watch)
         })
         .onAppear {
-            let accountList = accountViewModel.accountList.filter {
-                return watch.accountList.contains($0.id)
-            }
-            let count = accountList.filter {
-                return $0.value.currentBalance.isZero
-            }.count
-            
-            isZeroAmountAccountPresent = count > 0
+//            let accountList = accountViewModel.accountList.filter {
+//                return watch.accountList.contains($0.id)
+//            }
+//            let count = accountList.filter {
+//                return $0.value.currentBalance.isZero
+//            }.count
+//            
+//            isZeroAmountAccountPresent = count > 0
         }
     }
     
     private func getAccountForWatchListAccount(accountId: String) -> AccountRestModel {
-        return accountViewModel.accountList.first {
-            return $0.id.elementsEqual(accountId)
+        return accountViewModel.accountList.first { _ in
+            return true
+//            return $0.id == accountId
         }!
     }
     
     private func getWatchListData() -> [String] {
-        var accountList = accountViewModel.accountList.filter {
-            return watch.accountList.contains($0.id)
+        var accountList = accountViewModel.accountList.filter { _ in
+            return true
+//            return watch.accountList.contains($0.id)
         }
         
         if(sortType.elementsEqual("Name")) {
@@ -263,7 +265,8 @@ struct WatchDetailView: View {
                 return !$0.value.currentBalance.isZero
             }
         }
-        return accountList.map { $0.id }
+        return [String]()
+//        return accountList.map { $0.id }
     }
     
     private func getOneDayChange(account: AccountRestModel) -> Double {

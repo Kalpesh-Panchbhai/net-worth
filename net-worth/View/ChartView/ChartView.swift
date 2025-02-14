@@ -352,9 +352,10 @@ struct ChartView: View {
     }
     
     private func getAccountsForWatchList(watch: Watch) -> [AccountRestModel] {
-        return getAccounts().filter {
-            watch.accountList.contains($0.id)
-        }
+        return [AccountRestModel]()
+//        return getAccounts().filter {
+//            watch.accountList.contains($0.id)
+//        }
     }
     
     private func getBrokerList() -> [AccountRestModel] {

@@ -74,21 +74,20 @@ struct WatchViewRow: View {
         }
         .onAppear {
             Task.init {
-                balance = AccountValue(currentBalance: 0.0, previousBalance: 0.0)
-                let accountList = watch.accountList.map { id in
-                    return accountViewModel.accountList.filter {
-                        return $0.id.elementsEqual(id)
-                    }.first ?? AccountRestModel(balance: AccountValue())
-                }
-                for account in accountList {
-                    self.balance.currentBalance += account.value.currentBalance
-                    if(areOneDayTransactions(account: account)) {
-                        self.balance.previousBalance += account.value.previousBalance
-                    } else {
-                        self.balance.previousBalance += account.value.currentBalance
-                    }
-                }
-                
+//                balance = AccountValue(currentBalance: 0.0, previousBalance: 0.0)
+//                let accountList = watch.accountList.map { id in
+//                    return accountViewModel.accountList.filter {
+//                        return $0.id == id
+//                    }.first ?? AccountRestModel(balance: AccountValue())
+//                }
+//                for account in accountList {
+//                    self.balance.currentBalance += account.value.currentBalance
+//                    if(areOneDayTransactions(account: account)) {
+//                        self.balance.previousBalance += account.value.previousBalance
+//                    } else {
+//                        self.balance.previousBalance += account.value.currentBalance
+//                    }
+//                }
             }
         }
         .background(Color.theme.foreground)

@@ -30,28 +30,28 @@ struct RowAccountToWatchView: View {
                     Image(systemName: ConstantUtils.bookmarkImageName)
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
-                        .onTapGesture {
-                            isAdded.toggle()
-                            self.watch.accountList = self.watch.accountList.filter { item in
-                                item != account.id
-                            }
-                            Task.init {
-                                await watchController.updateWatchList(watch: watch)
-                                await watchViewModel.getAllWatchList()
-                            }
-                        }
+//                        .onTapGesture {
+//                            isAdded.toggle()
+//                            self.watch.accountList = self.watch.accountList.filter { item in
+//                                item != account.id
+//                            }
+//                            Task.init {
+//                                await watchController.updateWatchList(watch: watch)
+//                                await watchViewModel.getAllWatchList()
+//                            }
+//                        }
                 } else {
                     Image(systemName: ConstantUtils.notBookmarkImageName)
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
-                        .onTapGesture {
-                            isAdded.toggle()
-                            self.watch.accountList.append(account.id)
-                            Task.init {
-                                await watchController.updateWatchList(watch: watch)
-                                await watchViewModel.getAllWatchList()
-                            }
-                        }
+//                        .onTapGesture {
+//                            isAdded.toggle()
+//                            self.watch.accountList.append(account.id)
+//                            Task.init {
+//                                await watchController.updateWatchList(watch: watch)
+//                                await watchViewModel.getAllWatchList()
+//                            }
+//                        }
                 }
             }
             .padding()

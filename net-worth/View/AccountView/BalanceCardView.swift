@@ -79,21 +79,21 @@ struct BalanceCardView: View {
         }
         .onAppear {
             if(isWatchListCardView) {
-                let accountList = accountViewModel.accountList.filter {
-                    return watchList.accountList.contains($0.id)
-                }
-                var currentDayValue = 0.0
-                var previousDayValue = 0.0
-                
-                for account in accountList {
-                    currentDayValue += account.value.currentBalance
-                    if(areOneDayTransactions(account: account)) {
-                        previousDayValue += account.value.previousBalance
-                    } else {
-                        previousDayValue += account.value.currentBalance
-                    }
-                }
-                balanceAccount = AccountValue(currentBalance: currentDayValue, previousBalance: previousDayValue)
+//                let accountList = accountViewModel.accountList.filter {
+//                    return watchList.accountList.contains($0.id)
+//                }
+//                var currentDayValue = 0.0
+//                var previousDayValue = 0.0
+//                
+//                for account in accountList {
+//                    currentDayValue += account.value.currentBalance
+//                    if(areOneDayTransactions(account: account)) {
+//                        previousDayValue += account.value.previousBalance
+//                    } else {
+//                        previousDayValue += account.value.currentBalance
+//                    }
+//                }
+//                balanceAccount = AccountValue(currentBalance: currentDayValue, previousBalance: previousDayValue)
             } else {
                 var accountList = [AccountRestModel]()
                 if(accountType.elementsEqual("Net Worth")) {

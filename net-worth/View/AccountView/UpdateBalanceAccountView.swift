@@ -9,7 +9,7 @@ import SwiftUI
 
 struct UpdateBalanceAccountView: View {
     
-    var accountId: String
+    var accountId: Int
     var accountTransactionController = AccountTransactionController()
     
     @State var amount: String = "0.0"

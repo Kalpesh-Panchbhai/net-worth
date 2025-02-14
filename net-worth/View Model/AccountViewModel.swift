@@ -93,12 +93,12 @@ class AccountViewModel: ObservableObject {
     }
     
     func getAccount(id: String) async {
-        let account = accountList.first(where: {
-            return $0.id.elementsEqual(id)
-        }) ?? AccountRestModel()
-        DispatchQueue.main.async {
-            self.account = account
-        }
+//        let account = accountList.first(where: {
+//            return $0.id.elementsEqual(id)
+//        }) ?? AccountRestModel()
+//        DispatchQueue.main.async {
+//            self.account = account
+//        }
     }
     
     func getAccountList() async {
@@ -117,7 +117,7 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func getAccountInBrokerList(brokerID: String) async {
+    func getAccountInBrokerList(brokerID: Int) async {
         let accountList = await accountInBrokerController.getAccountListInBroker(brokerID: brokerID)
         DispatchQueue.main.async {
             self.accountsInBroker = accountList
