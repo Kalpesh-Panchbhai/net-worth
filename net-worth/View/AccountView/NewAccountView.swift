@@ -18,7 +18,7 @@ struct NewAccountView: View {
     @State var scenePhaseBlur = 0
     @State var accountType: String
     @State var loanType: String = "Consumer"
-    @State var accountName: String = ""
+    @State var name: String = ""
     @State var currencySelected: Currency = Currency()
     @State var monthlyEmi: Double = 0.0
     @State var loanPaymentDate = 1
@@ -42,7 +42,7 @@ struct NewAccountView: View {
                     }
                     .foregroundColor(Color.theme.primaryText)
                     .onChange(of: accountType) {
-                        accountName=""
+                        name=""
                         currencySelected = SettingsController().getDefaultCurrency()
                         isPlus = true
                         loanPaymentDate = 1
@@ -100,7 +100,7 @@ struct NewAccountView: View {
                         if(accountType.elementsEqual(ConstantUtils.loanAccountType)) {
                             newAccount.loanType = loanType
                         }
-                        newAccount.accountName = accountName
+                        newAccount.name = name
                         newAccount.currency = currencySelected.code
                         Task.init {
                             await accountController.addAccount(newAccount: newAccount)
@@ -140,31 +140,31 @@ struct NewAccountView: View {
     
     private func allFieldsFilled () -> Bool {
         if accountType == ConstantUtils.savingAccountType {
-            if accountName.isEmpty || currencySelected.name.isEmpty {
+            if name.isEmpty || currencySelected.name.isEmpty {
                 return false
             } else {
                 return true
             }
         } else if accountType == ConstantUtils.creditCardAccountType {
-            if accountName.isEmpty || currencySelected.name.isEmpty  {
+            if name.isEmpty || currencySelected.name.isEmpty  {
                 return false
             } else {
                 return true
             }
         } else if accountType == ConstantUtils.loanAccountType {
-            if accountName.isEmpty || currencySelected.name.isEmpty  {
+            if name.isEmpty || currencySelected.name.isEmpty  {
                 return false
             } else {
                 return true
             }
         } else if accountType == ConstantUtils.brokerAccountType {
-            if accountName.isEmpty || currencySelected.name.isEmpty  {
+            if name.isEmpty || currencySelected.name.isEmpty  {
                 return false
             } else {
                 return true
             }
         } else if accountType == ConstantUtils.otherAccountType {
-            if accountName.isEmpty || currencySelected.name.isEmpty  {
+            if name.isEmpty || currencySelected.name.isEmpty  {
                 return false
             } else {
                 return true
@@ -176,7 +176,7 @@ struct NewAccountView: View {
     
     private func nameField(labelName: String) -> HStack<(TextField<Text>)> {
         return HStack {
-            TextField(labelName, text: $accountName)
+            TextField(labelName, text: $name)
         }
     }
     

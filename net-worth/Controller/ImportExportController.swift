@@ -80,7 +80,7 @@ class ImportExportController {
             let accountList = await accountController.getAccountList()
             newWatch.accountList = watch.accountID.map { accountID in
                 accountList.filter { account in
-                    account.accountName.elementsEqual(accountID)
+                    account.name.elementsEqual(accountID)
                 }.first?.id ?? ""
             }
             newWatch.name = watch.accountName
@@ -153,11 +153,11 @@ class ImportExportController {
                     accountsInBrokerDataList.append(accountInBrokerData)
                 }
                 
-                let accountData = AccountBackupModel(accountName: account.accountName, accountType: account.accountType, loanType: account.loanType, currency: account.currency, active: account.active, balance: AccountValue(), accountInBroker: accountsInBrokerDataList)
+                let accountData = AccountBackupModel(accountName: account.name, accountType: account.accountType, loanType: account.loanType, currency: account.currency, active: account.active, balance: AccountValue(), accountInBroker: accountsInBrokerDataList)
                 
                 accountDataList.append(accountData)
             } else {
-                let accountData = AccountBackupModel(accountName: account.accountName, accountType: account.accountType, loanType: account.loanType, currency: account.currency, active: account.active, balance: account.value, accountInBroker: [AccountInBrokerBackupModel]())
+                let accountData = AccountBackupModel(accountName: account.name, accountType: account.accountType, loanType: account.loanType, currency: account.currency, active: account.active, balance: account.value, accountInBroker: [AccountInBrokerBackupModel]())
                 
                 accountDataList.append(accountData)
             }
@@ -172,7 +172,7 @@ class ImportExportController {
             let accounts = watch.accountList.map { accountID in
                 accountList.filter { account in
                     account.id.elementsEqual(accountID)
-                }.first!.accountName
+                }.first!.name
             }
             return WatchBackupModel(accountName: watch.name, accountID: accounts)
         }

@@ -37,7 +37,7 @@ class AccountController {
         let userId = ApplicationData.shared.userId
         let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [AccountRestModel].self)
         return response.sorted(by: {
-            return $0.accountName < $1.accountName
+            return $0.name < $1.name
         })
     }
     

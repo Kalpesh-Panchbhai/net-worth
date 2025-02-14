@@ -15,7 +15,7 @@ struct AccountCardView: View {
         VStack(alignment: .leading) {
             Spacer()
             HStack {
-                Text(account.accountName)
+                Text(account.name)
                     .foregroundColor(Color.theme.primaryText)
                     .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)

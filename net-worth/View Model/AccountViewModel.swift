@@ -80,7 +80,7 @@ class AccountViewModel: ObservableObject {
             return data
         } else {
             return data.filter { value in
-                value.accountName.lowercased().contains(searchKeyword.lowercased()) || value.accountType.lowercased().contains(searchKeyword.lowercased())
+                value.name.lowercased().contains(searchKeyword.lowercased()) || value.accountType.lowercased().contains(searchKeyword.lowercased())
             }
         }
     }

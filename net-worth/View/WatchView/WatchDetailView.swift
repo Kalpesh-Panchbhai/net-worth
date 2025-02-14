@@ -186,9 +186,9 @@ struct WatchDetailView: View {
             watchSorted.accountList.sort(by: { item1, item2 in
                 accountViewModel.accountList.filter { account1 in
                     account1.id.elementsEqual(item1)
-                }.first!.accountName <= accountViewModel.accountList.filter { account2 in
+                }.first!.name <= accountViewModel.accountList.filter { account2 in
                     account2.id.elementsEqual(item2)
-                }.first!.accountName
+                }.first!.name
             })
             self.watch = watchSorted
         }, content: {
@@ -220,11 +220,11 @@ struct WatchDetailView: View {
         if(sortType.elementsEqual("Name")) {
             if(sortOrder.elementsEqual("Asc")) {
                 accountList.sort(by: {
-                    return $0.accountName <= $1.accountName
+                    return $0.name <= $1.name
                 })
             } else {
                 accountList.sort(by: {
-                    return $0.accountName >= $1.accountName
+                    return $0.name >= $1.name
                 })
             }
         } else if(sortType.elementsEqual("Amount")) {
@@ -275,6 +275,6 @@ struct WatchDetailView: View {
     }
     
     private func areOneDayTransactions(account: AccountRestModel) -> Bool {
-        return account.accountName != "" && account.value.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+        return account.name != "" && account.value.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }

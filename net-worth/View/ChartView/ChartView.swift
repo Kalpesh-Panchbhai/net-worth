@@ -53,7 +53,7 @@ struct ChartView: View {
                             brokerListPicker
                         }, label: {
                             Text("Broker List")
-                            Text(brokerSelected.accountName)
+                            Text(brokerSelected.name)
                         })
                         
                         Menu(content: {
@@ -189,14 +189,14 @@ struct ChartView: View {
     var brokerListPicker: some View {
         Picker(selection: $brokerSelected, content: {
             ForEach(getBrokerList(), id: \.self, content: {
-                Text($0.accountName).tag($0)
+                Text($0.name).tag($0)
             })
         }, label: {
             Text("Broker List")
         })
         .listRowBackground(Color.theme.foreground)
         .onChange(of: brokerSelected, perform: { _ in
-            if(brokerSelected.accountName.isEmpty) {
+            if(brokerSelected.name.isEmpty) {
                 if(!filterSelected.elementsEqual("COMPARE")) {
                     compareAssetsToLiabilities = false
                 }
@@ -220,7 +220,7 @@ struct ChartView: View {
                         $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
                     })
                     self.chartDataList = accountList.map {
-                        return AccountRestModel(accountName: $0.name, balance: $0.balance)
+                        return AccountRestModel(name: $0.name, balance: $0.balance)
                     }
                 }
             }
@@ -233,7 +233,7 @@ struct ChartView: View {
                 if self.multipleWatchListSelection.contains(watch) {
                     self.multipleWatchListSelection.remove(watch)
                     self.chartDataList.removeAll(where: {
-                        $0.accountName.elementsEqual(watch.name)
+                        $0.name.elementsEqual(watch.name)
                     })
                 }
                 else {
@@ -249,7 +249,7 @@ struct ChartView: View {
                     }).reduce(0, +)
                     totalAmount = totalAmount < 0 ? totalAmount * -1.0 : totalAmount * 1.0
                     var account = AccountRestModel()
-                    account.accountName = watch.name
+                    account.name = watch.name
                     account.value.currentDayValue.value = totalAmount
                     self.chartDataList.append(account)
                     self.chartDataList.sort(by: {
@@ -287,7 +287,7 @@ struct ChartView: View {
                     isChartDataEnabled = true
                     self.chartDataList = [AccountRestModel]()
                     var assetAccount = AccountRestModel()
-                    assetAccount.accountName = "Assets"
+                    assetAccount.name = "Assets"
                     assetAccount.value.currentDayValue.value = getAccounts().filter {
                         return $0.value.currentDayValue.value > 0
                     }.map {
@@ -296,7 +296,7 @@ struct ChartView: View {
                     self.chartDataList.append(assetAccount)
                     
                     var liabilitiesAccount = AccountRestModel()
-                    liabilitiesAccount.accountName = "Liabilities"
+                    liabilitiesAccount.name = "Liabilities"
                     liabilitiesAccount.value.currentDayValue.value = getAccounts().filter {
                         return $0.value.currentDayValue.value < 0
                     }.map {
@@ -334,7 +334,7 @@ struct ChartView: View {
                 $0.value.currentDayValue.value
             },
             names: chartDataList.map {
-                $0.accountName
+                $0.name
             },
             formatter: {value in String(format: "%.2f", value)},
             colors: chartDataList.map { _ in
@@ -361,7 +361,7 @@ struct ChartView: View {
         return getAccounts().filter {
             return $0.accountType.elementsEqual("Broker")
         }.sorted(by: {
-            return $0.accountName < $1.accountName
+            return $0.name < $1.name
         })
     }
 }

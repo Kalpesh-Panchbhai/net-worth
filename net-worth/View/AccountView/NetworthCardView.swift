@@ -80,6 +80,6 @@ struct NetworthCardView: View {
     }
     
     private func areOneDayTransactions(account: AccountRestModel) -> Bool {
-        return account.accountName != "" && account.value.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+        return account.name != "" && account.value.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }

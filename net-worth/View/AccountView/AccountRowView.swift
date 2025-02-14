@@ -17,7 +17,7 @@ struct AccountRowView: View {
         VStack(alignment: .leading) {
             Spacer()
             HStack {
-                Text(account.accountName)
+                Text(account.name)
                     .foregroundColor(Color.theme.primaryText)
                     .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)
@@ -146,6 +146,6 @@ struct AccountRowView: View {
     }
     
     private func areOneDayTransactions() -> Bool {
-        return account.accountName != "" && account.value.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+        return account.name != "" && account.value.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }

@@ -66,7 +66,7 @@ struct AccountDetailView: View {
             }
             .confirmationDialog("Are you sure?",
                                 isPresented: $isPresentingAccountDeleteConfirm) {
-                Button("Delete account " + account.accountName + "?", role: .destructive) {
+                Button("Delete account " + account.name + "?", role: .destructive) {
                     Task.init {
                         await accountController.deleteAccount(accountId: accountID)
                         await accountViewModel.getAccountList()
@@ -77,7 +77,7 @@ struct AccountDetailView: View {
                 }
             }
         }
-        .navigationTitle(account.accountName)
+        .navigationTitle(account.name)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(
