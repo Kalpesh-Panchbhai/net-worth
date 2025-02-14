@@ -339,7 +339,6 @@
 		7D59B4262BE249B7006F3F00 /* FirebaseModel */ = {
 			isa = PBXGroup;
 			children = (
-				7D59B41F2BE249B7006F3F00 /* AccountInBrokerRestModel.swift */,
 				7D59B4242BE249B7006F3F00 /* User.swift */,
 			);
 			path = FirebaseModel;
@@ -348,8 +347,7 @@
 		7D59B42F2BE249B7006F3F00 /* RestModel */ = {
 			isa = PBXGroup;
 			children = (
-				7D6A4D452D5F56A000C433A8 /* WatchAccountRestModel.swift */,
-				7D59B4252BE249B7006F3F00 /* WatchRestModel.swift */,
+				7D59B41F2BE249B7006F3F00 /* AccountInBrokerRestModel.swift */,
 				7D97202C2BE50F4800E5797D /* AccountRestModel.swift */,
 				7D64373F2BE6171B00E580F0 /* AccountTransactionRestModel.swift */,
 				7DD742A22BEBC241005B51AF /* ChartRest.swift */,
@@ -358,6 +356,8 @@
 				7DA46C242BE782BF00DF71C1 /* RestResponse.swift */,
 				7D59B42C2BE249B7006F3F00 /* TypeValueRestModel.swift */,
 				7D59B42E2BE249B7006F3F00 /* UserRestModel.swift */,
+				7D6A4D452D5F56A000C433A8 /* WatchAccountRestModel.swift */,
+				7D59B4252BE249B7006F3F00 /* WatchRestModel.swift */,
 			);
 			path = RestModel;
 			sourceTree = "<group>";
