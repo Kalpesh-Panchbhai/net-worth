@@ -86,11 +86,11 @@ struct AccountBrokerView: View {
         } else if(sortType.elementsEqual("Amount")) {
             if(sortOrder.elementsEqual("Asc")) {
                 accountsInBrokerList.sort(by: {
-                    return $0.value.currentBalance <= $1.value.currentBalance
+                    return $0.value.currentValue <= $1.value.currentValue
                 })
             } else {
                 accountsInBrokerList.sort(by: {
-                    return $0.value.currentBalance >= $1.value.currentBalance
+                    return $0.value.currentValue >= $1.value.currentValue
                 })
             }
         } else if(sortType.elementsEqual("Price Change")) {
@@ -118,11 +118,11 @@ struct AccountBrokerView: View {
     }
     
     private func getOneDayChange(account: AccountInBroker) -> Double {
-        return areOneDayTransactions(account: account) ? account.value.currentBalance - account.value.previousBalance : 0.0
+        return areOneDayTransactions(account: account) ? account.value.currentValue - account.value.previousValue : 0.0
     }
     
     private func getOneDayPercentageChange(account: AccountInBroker) -> Double {
-        return areOneDayTransactions(account: account) ? CommonController.getGrowthPercentageInDouble(previousBalance: account.value.previousBalance, currentBalance: account.value.currentBalance) : 0.0
+        return areOneDayTransactions(account: account) ? CommonController.getGrowthPercentageInDouble(previousBalance: account.value.previousValue, currentBalance: account.value.currentValue) : 0.0
     }
     
     private func areOneDayTransactions(account: AccountInBroker) -> Bool {

@@ -27,7 +27,7 @@ struct WatchViewRow: View {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
-                    Text("\(balance.currentBalance.withCommas(decimalPlace: 2))")
+                    Text("\(balance.currentValue.withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 }
@@ -94,11 +94,11 @@ struct WatchViewRow: View {
     }
     
     private func getOneDayChange() -> Double {
-        return balance.currentBalance - balance.previousBalance
+        return balance.currentValue - balance.previousValue
     }
     
     private func getOneDayPercentageChange() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: balance.previousBalance, currentBalance: balance.currentBalance)
+        return CommonController.getGrowthPercentage(previousBalance: balance.previousValue, currentBalance: balance.currentValue)
     }
     
     private func areOneDayTransactions(account: AccountRestModel) -> Bool {

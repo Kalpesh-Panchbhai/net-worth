@@ -32,7 +32,7 @@ struct BalanceCardView: View {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
-                    Text("\(balanceAccount.currentBalance.withCommas(decimalPlace: 2))")
+                    Text("\(balanceAccount.currentValue.withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
                 }
@@ -105,24 +105,24 @@ struct BalanceCardView: View {
                 var previousDayValue = 0.0
                 
                 for account in accountList {
-                    currentDayValue += account.value.currentBalance
+                    currentDayValue += account.value.currentValue
                     if(areOneDayTransactions(account: account)) {
-                        previousDayValue += account.value.previousBalance
+                        previousDayValue += account.value.previousValue
                     } else {
-                        previousDayValue += account.value.currentBalance
+                        previousDayValue += account.value.currentValue
                     }
                 }
-                balanceAccount = AccountValue(currentBalance: currentDayValue, previousBalance: previousDayValue)
+                balanceAccount = AccountValue(currentValue: currentDayValue, previousValue: previousDayValue)
             }
         }
     }
     
     private func getOneDayChange() -> Double {
-        return balanceAccount.currentBalance - balanceAccount.previousBalance
+        return balanceAccount.currentValue - balanceAccount.previousValue
     }
     
     private func getOneDayPercentageChange() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: balanceAccount.previousBalance, currentBalance: balanceAccount.currentBalance)
+        return CommonController.getGrowthPercentage(previousBalance: balanceAccount.previousValue, currentBalance: balanceAccount.currentValue)
     }
     
     private func areOneDayTransactions(account: AccountRestModel) -> Bool {

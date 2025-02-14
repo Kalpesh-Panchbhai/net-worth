@@ -47,7 +47,7 @@ struct AccountInBroker: Codable, Hashable {
         try container.encode(accountId, forKey: .accountId)
         try container.encode(symbol, forKey: .symbol)
         try container.encode(name, forKey: .name)
-        try container.encode(value, forKey: .value)
         try container.encode(currentUnit, forKey: .currentUnit)
+        try container.encode(value, forKey: .value)
     }
 }

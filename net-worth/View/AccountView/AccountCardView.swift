@@ -35,14 +35,14 @@ struct AccountCardView: View {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
-                    Text("\(account.value.currentBalance.withCommas(decimalPlace: 2))")
+                    Text("\(account.value.currentValue.withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 } else {
                     Text(account.currency)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
-                    Text("\(account.value.currentBalance.withCommas(decimalPlace: 2))")
+                    Text("\(account.value.currentValue.withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 }
@@ -127,11 +127,11 @@ struct AccountCardView: View {
     }
     
     private func getOneDayPercentage() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: account.value.previousBalance, currentBalance: account.value.currentBalance)
+        return CommonController.getGrowthPercentage(previousBalance: account.value.previousValue, currentBalance: account.value.currentValue)
     }
     
     private func getOneDayChange() -> Double {
-        return areOneDayTransactions() ? account.value.currentBalance - account.value.previousBalance : 0.0
+        return areOneDayTransactions() ? account.value.currentValue - account.value.previousValue : 0.0
     }
     
     private func areOneDayTransactions() -> Bool {

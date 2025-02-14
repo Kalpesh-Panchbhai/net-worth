@@ -232,11 +232,11 @@ struct WatchDetailView: View {
         } else if(sortType.elementsEqual("Amount")) {
             if(sortOrder.elementsEqual("Asc")) {
                 accountList.sort(by: {
-                    return $0.value.currentBalance <= $1.value.currentBalance
+                    return $0.value.currentValue <= $1.value.currentValue
                 })
             } else {
                 accountList.sort(by: {
-                    return $0.value.currentBalance >= $1.value.currentBalance
+                    return $0.value.currentValue >= $1.value.currentValue
                 })
             }
         } else if(sortType.elementsEqual("Price Change")) {
@@ -262,7 +262,7 @@ struct WatchDetailView: View {
         }
         if(hideZeroAmountAccount) {
             accountList = accountList.filter {
-                return !$0.value.currentBalance.isZero
+                return !$0.value.currentValue.isZero
             }
         }
         return [String]()
@@ -270,11 +270,11 @@ struct WatchDetailView: View {
     }
     
     private func getOneDayChange(account: AccountRestModel) -> Double {
-        return areOneDayTransactions(account: account) ? account.value.currentBalance - account.value.previousBalance : 0.0
+        return areOneDayTransactions(account: account) ? account.value.currentValue - account.value.previousValue : 0.0
     }
     
     private func getOneDayPercentageChange(account: AccountRestModel) -> Double {
-        return areOneDayTransactions(account: account) ? CommonController.getGrowthPercentageInDouble(previousBalance: account.value.previousBalance, currentBalance: account.value.currentBalance) : 0.0
+        return areOneDayTransactions(account: account) ? CommonController.getGrowthPercentageInDouble(previousBalance: account.value.previousValue, currentBalance: account.value.currentValue) : 0.0
     }
     
     private func areOneDayTransactions(account: AccountRestModel) -> Bool {
