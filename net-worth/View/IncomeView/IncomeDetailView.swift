@@ -44,11 +44,11 @@ struct IncomeDetailView: View {
                     Text(income.currency + " \(income.taxPaid.withCommas(decimalPlace: 2))")
                 }
                 
-//                HStack {
-//                    Text("Credited On")
-//                    Spacer()
-//                    Text(income.creditedDate.getDateAndFormat())
-//                }
+                HStack {
+                    Text("Credited Date")
+                    Spacer()
+                    Text(income.creditedDate.toFullDateFormat().getDateAndFormat())
+                }
                 
             }
             .listRowBackground(Color.theme.foreground)
@@ -83,25 +83,25 @@ struct IncomeDetailView: View {
             })
             .font(.system(size: 14).bold())
         )
-//        .sheet(isPresented: $modifyViewOpen, onDismiss: {
-//            if(incomeViewModel.groupView) {
-//                incomeViewModel.incomeListByGroup.forEach {
-//                    let filterIncome = $0.value.filter { data in
-//                        data.id.elementsEqual(income.id)
-//                    }.first ?? IncomeRestModel(amount: 0.0, taxpaid: 0.0, creditedDate: "", currency: "", type: "", tag: "", avgAmount: 0.0, avgTaxPaid: 0.0, cumulativeAmount: 0.0, cumulativeTaxPaid: 0.0)
-//                    if(!filterIncome.currency.isEmpty) {
-//                        self.income = filterIncome
-//                    }
-//                }
-//            } else {
-//                Task.init {
-//                    self.income = incomeViewModel.incomeList.filter { data in
-//                        data.id.elementsEqual(income.id)
-//                    }.first!
-//                }
-//            }
-//        }, content: {
-//            UpdateIncomeView(income: income)
-//        })
+        .sheet(isPresented: $modifyViewOpen, onDismiss: {
+            if(incomeViewModel.groupView) {
+                incomeViewModel.incomeListByGroup.forEach {
+                    let filterIncome = $0.value.filter { data in
+                        data.id == income.id
+                    }.first ?? IncomeRestModel()
+                    if(!filterIncome.currency.isEmpty) {
+                        self.income = filterIncome
+                    }
+                }
+            } else {
+                Task.init {
+                    self.income = incomeViewModel.incomeList.filter { data in
+                        data.id == income.id
+                    }.first!
+                }
+            }
+        }, content: {
+            UpdateIncomeView(income: income)
+        })
     }
 }

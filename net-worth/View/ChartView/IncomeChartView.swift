@@ -386,9 +386,9 @@ struct IncomeChartView: View {
             if(!(groupByType || groupByTag || groupByYear || groupByFinancialYear)) {
                 await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                 
-//                for income in incomeViewModel.incomeList.reversed() {
-//                    incomeChartDataList.append(ChartData(date: income.creditedDate.removeTimeStamp(), value: getValue(income: income)))
-//                }
+                for income in incomeViewModel.incomeList.reversed() {
+                    incomeChartDataList.append(ChartData(date: income.creditedDate.toFullDateFormat().removeTimeStamp(), value: getValue(income: income)))
+                }
                 
                 if(showTotal) {
                     incomeAvg = (incomeViewModel.incomeList.first?.avgAmount ?? 0.0) + (incomeViewModel.incomeList.first?.avgTaxPaid ?? 0.0)

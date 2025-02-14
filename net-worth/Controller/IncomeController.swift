@@ -26,15 +26,13 @@ class IncomeController {
     }
     
     public func updateIncome(income: IncomeRestModel) async {
-//        let userId = ApplicationData.shared.userId
-//        let requestData = IncomeRestModel(id: income.id, userId: userId, amount: income.amount, taxPaid: income.taxpaid, creditedOn: income.creditedOn.localToUTCString(), currency: income.currency, incomeType: income.type, incomeTag: income.tag)
-//        let encoder = JSONEncoder()
-//        let data = try! encoder.encode(requestData)
-//        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: RestResponse.self)
+        let encoder = JSONEncoder()
+        let data = try! encoder.encode(income)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: RestResponse.self)
     }
     
     public func deleteIncome(income: IncomeRestModel) async {
-//        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: income.id, forClass: RestResponse.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: income.id, forClass: RestResponse.self)
     }
     
     public func getIncomeList(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String](), incomeList: [IncomeRestModel]) async -> [IncomeRestModel] {

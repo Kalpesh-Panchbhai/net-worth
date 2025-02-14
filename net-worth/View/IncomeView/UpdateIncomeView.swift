@@ -130,9 +130,9 @@ struct UpdateIncomeView: View {
                 ToolbarItem {
                     Button(action: {
                         Task.init {
-//                            let updatedIncome = IncomeRestModel(id: income.id,amount: amount.toDouble() ?? 0.0, taxPaid: taxPaid.toDouble() ?? 0.0, creditedDate: date, currency: currencySelected.code, type: incomeTypeSelected.name, tag: incomeTagSelected.name)
-//                            await incomeController.updateIncome(income: updatedIncome)
-//                            await incomeViewModel.getIncomeList()
+                            let updatedIncome = IncomeRestModel(id: income.id, userId: ApplicationData.shared.userId, amount: amount.toDouble() ?? 0.0, taxPaid: taxPaid.toDouble() ?? 0.0, creditedDate: date.localToLocalString(), currency: currencySelected.code, incomeType: incomeTypeSelected, incomeTag: incomeTagSelected)
+                            await incomeController.updateIncome(income: updatedIncome)
+                            await incomeViewModel.getIncomeList()
                             
                             if(incomeViewModel.groupView) {
                                 await incomeViewModel.getTotalBalance(incomeType: incomeViewModel.selectedIncomeTypeList, incomeTag: incomeViewModel.selectedIncomeTagList, year: incomeViewModel.selectedYearList, financialYear: incomeViewModel.selectedFinancialYearList)
@@ -189,7 +189,7 @@ struct UpdateIncomeView: View {
                     }
                     
                     if(Calendar.current.isDate(date, equalTo: Date().getEarliestDate(), toGranularity: .day)) {
-//                        date = income.creditedDate
+                        date = income.creditedDate.toFullDateFormat()
                     }
                 }
             }
