@@ -17,7 +17,7 @@ struct AccountBrokerView: View {
     
     @State var isPresentingAccountDeleteConfirm = false
     @State var isNewTransactionViewOpen = false
-    @State var selectedAccount = AccountInBroker()
+    @State var selectedAccount = AccountInBrokerRestModel()
 
     
     @EnvironmentObject var accountViewModel: AccountViewModel
@@ -71,7 +71,7 @@ struct AccountBrokerView: View {
         }
     }
     
-    private func getAccountsInBrokerList() -> [AccountInBroker] {
+    private func getAccountsInBrokerList() -> [AccountInBrokerRestModel] {
         var accountsInBrokerList = accountViewModel.accountsInBroker
         if(sortType.elementsEqual("Name")) {
             if(sortOrder.elementsEqual("Asc")) {
@@ -117,15 +117,15 @@ struct AccountBrokerView: View {
         return accountsInBrokerList
     }
     
-    private func getOneDayChange(account: AccountInBroker) -> Double {
+    private func getOneDayChange(account: AccountInBrokerRestModel) -> Double {
         return areOneDayTransactions(account: account) ? account.value.currentValue - account.value.previousValue : 0.0
     }
     
-    private func getOneDayPercentageChange(account: AccountInBroker) -> Double {
+    private func getOneDayPercentageChange(account: AccountInBrokerRestModel) -> Double {
         return areOneDayTransactions(account: account) ? CommonController.getGrowthPercentageInDouble(previousBalance: account.value.previousValue, currentBalance: account.value.currentValue) : 0.0
     }
     
-    private func areOneDayTransactions(account: AccountInBroker) -> Bool {
+    private func areOneDayTransactions(account: AccountInBrokerRestModel) -> Bool {
         return true
 //        return account.name != "" && account.balance.currentBalance.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }

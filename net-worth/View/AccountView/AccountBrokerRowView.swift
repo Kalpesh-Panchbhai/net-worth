@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AccountBrokerRowView: View {
     
-    var account: AccountInBroker
+    var account: AccountInBrokerRestModel
     
     var body: some View {
         HStack {

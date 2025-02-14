@@ -21,8 +21,8 @@ class AccountViewModel: ObservableObject {
     @Published var totalBalance = Balance(currentValue: 0.0)
     @Published var grouping: Grouping = .accountType
     
-    @Published var accountsInBroker = [AccountInBroker]()
-    @Published var accountBroker = AccountInBroker()
+    @Published var accountsInBroker = [AccountInBrokerRestModel]()
+    @Published var accountBroker = AccountInBrokerRestModel()
     @Published var accountBrokerCurrentBalance = Balance(currentValue: 0.0, previousDayValue: 0.0)
     
     enum Grouping: String, CaseIterable, Identifiable {
