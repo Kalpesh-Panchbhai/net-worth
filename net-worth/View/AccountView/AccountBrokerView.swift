@@ -85,11 +85,11 @@ struct AccountBrokerView: View {
         } else if(sortType.elementsEqual("Amount")) {
             if(sortOrder.elementsEqual("Asc")) {
                 accountsInBrokerList.sort(by: {
-                    return $0.balance.currentDayValue.value <= $1.balance.currentDayValue.value
+                    return $0.balance.currentBalance.value <= $1.balance.currentBalance.value
                 })
             } else {
                 accountsInBrokerList.sort(by: {
-                    return $0.balance.currentDayValue.value >= $1.balance.currentDayValue.value
+                    return $0.balance.currentBalance.value >= $1.balance.currentBalance.value
                 })
             }
         } else if(sortType.elementsEqual("Price Change")) {
@@ -117,14 +117,14 @@ struct AccountBrokerView: View {
     }
     
     private func getOneDayChange(account: AccountInBroker) -> Double {
-        return areOneDayTransactions(account: account) ? account.balance.currentDayValue.value - account.balance.previousDayValue.value : 0.0
+        return areOneDayTransactions(account: account) ? account.balance.currentBalance.value - account.balance.previousBalance.value : 0.0
     }
     
     private func getOneDayPercentageChange(account: AccountInBroker) -> Double {
-        return areOneDayTransactions(account: account) ? CommonController.getGrowthPercentageInDouble(previousBalance: account.balance.previousDayValue.value, currentBalance: account.balance.currentDayValue.value) : 0.0
+        return areOneDayTransactions(account: account) ? CommonController.getGrowthPercentageInDouble(previousBalance: account.balance.previousBalance.value, currentBalance: account.balance.currentBalance.value) : 0.0
     }
     
     private func areOneDayTransactions(account: AccountInBroker) -> Bool {
-        return account.name != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+        return account.name != "" && account.balance.currentBalance.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }

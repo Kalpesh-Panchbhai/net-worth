@@ -199,7 +199,7 @@ struct WatchDetailView: View {
                 return watch.accountList.contains($0.id)
             }
             let count = accountList.filter {
-                return $0.value.currentDayValue.value.isZero
+                return $0.value.currentBalance.value.isZero
             }.count
             
             isZeroAmountAccountPresent = count > 0
@@ -230,11 +230,11 @@ struct WatchDetailView: View {
         } else if(sortType.elementsEqual("Amount")) {
             if(sortOrder.elementsEqual("Asc")) {
                 accountList.sort(by: {
-                    return $0.value.currentDayValue.value <= $1.value.currentDayValue.value
+                    return $0.value.currentBalance.value <= $1.value.currentBalance.value
                 })
             } else {
                 accountList.sort(by: {
-                    return $0.value.currentDayValue.value >= $1.value.currentDayValue.value
+                    return $0.value.currentBalance.value >= $1.value.currentBalance.value
                 })
             }
         } else if(sortType.elementsEqual("Price Change")) {
@@ -260,21 +260,21 @@ struct WatchDetailView: View {
         }
         if(hideZeroAmountAccount) {
             accountList = accountList.filter {
-                return !$0.value.currentDayValue.value.isZero
+                return !$0.value.currentBalance.value.isZero
             }
         }
         return accountList.map { $0.id }
     }
     
     private func getOneDayChange(account: AccountRestModel) -> Double {
-        return areOneDayTransactions(account: account) ? account.value.currentDayValue.value - account.value.previousDayValue.value : 0.0
+        return areOneDayTransactions(account: account) ? account.value.currentBalance.value - account.value.previousBalance.value : 0.0
     }
     
     private func getOneDayPercentageChange(account: AccountRestModel) -> Double {
-        return areOneDayTransactions(account: account) ? CommonController.getGrowthPercentageInDouble(previousBalance: account.value.previousDayValue.value, currentBalance: account.value.currentDayValue.value) : 0.0
+        return areOneDayTransactions(account: account) ? CommonController.getGrowthPercentageInDouble(previousBalance: account.value.previousBalance.value, currentBalance: account.value.currentBalance.value) : 0.0
     }
     
     private func areOneDayTransactions(account: AccountRestModel) -> Bool {
-        return account.name != "" && account.value.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+        return account.name != "" && account.value.currentBalance.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }

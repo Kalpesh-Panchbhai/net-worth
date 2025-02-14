@@ -214,6 +214,6 @@ struct SettingsView: View {
     private func getLastUpdatedTime() -> String {
         return accountViewModel.accountList.filter {
             return $0.type.elementsEqual(ConstantUtils.brokerAccountType)
-        }.first?.value.currentDayValue.dateTime.UTCToLocalDate().format() ?? ""
+        }.first?.value.currentBalance.dateTime.UTCToLocalDate().format() ?? ""
     }
 }
