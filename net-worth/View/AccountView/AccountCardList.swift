@@ -29,7 +29,7 @@ struct AccountCardList: View {
                         Color.theme.background.ignoresSafeArea()
                         VStack {
                             VStack {
-                                BalanceCardView(accountType: "Net Worth", isWatchListCardView: false, watchList: Watch())
+                                BalanceCardView(accountType: "Net Worth", isWatchListCardView: false, watchList: WatchRestModel())
                                     .frame(width: 360, height: 70)
                                     .cornerRadius(10)
                                 NetworthCardView()

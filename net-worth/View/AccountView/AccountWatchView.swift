@@ -20,11 +20,11 @@ struct AccountWatchView: View {
                             .toolbarRole(.editor)
                     }, label: {
                         WatchViewRow(watch: watch)
-                            .badge(
-                                Text("\(watch.accountList.count)")
-                                    .foregroundColor(Color.theme.secondaryText)
-                                    .font(.caption.italic())
-                            )
+//                            .badge(
+//                                Text("\(watch.accountList.count)")
+//                                    .foregroundColor(Color.theme.secondaryText)
+//                                    .font(.caption.italic())
+//                            )
                     })
                 })
                 .listRowBackground(Color.theme.foreground)

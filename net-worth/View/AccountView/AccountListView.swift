@@ -28,7 +28,7 @@ struct AccountListView: View {
             VStack {
                 if(!accountType.elementsEqual("Inactive Account") && !accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).isEmpty) {
                     VStack {
-                        BalanceCardView(accountType: accountType, isWatchListCardView: false, watchList: Watch())
+                        BalanceCardView(accountType: accountType, isWatchListCardView: false, watchList: WatchRestModel())
                             .frame(width: 360, height: 70)
                             .cornerRadius(10)
                     }

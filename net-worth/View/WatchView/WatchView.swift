@@ -14,7 +14,7 @@ struct WatchView: View {
     @State var newWatchListViewOpen = false
     @State var updateWatchViewOpen = false
     @State var isPresentingWatchDeleteConfirm = false
-    @State var selectedWatch = Watch()
+    @State var selectedWatch = WatchRestModel()
     
     @EnvironmentObject var watchViewModel: WatchViewModel
     @EnvironmentObject var accountViewModel: AccountViewModel
@@ -33,11 +33,11 @@ struct WatchView: View {
                                     .toolbarRole(.editor)
                             }, label: {
                                 WatchViewRow(watch: watch)
-                                    .badge(
-                                        Text("\(watch.accountList.count)")
-                                            .foregroundColor(Color.theme.secondaryText)
-                                            .font(.caption.italic())
-                                    )
+//                                    .badge(
+//                                        Text("\(watch.accountList.count)")
+//                                            .foregroundColor(Color.theme.secondaryText)
+//                                            .font(.caption.italic())
+//                                    )
                             })
                             // MARK: Update
                             .swipeActions(edge: .leading, content: {

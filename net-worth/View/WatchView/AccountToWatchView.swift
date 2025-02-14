@@ -10,7 +10,7 @@ import SwiftUI
 struct AccountToWatchView: View {
     
     @State var scenePhaseBlur = 0
-    @State var watch: Watch
+    @State var watch: WatchRestModel
     @State var searchText = ""
     
     @EnvironmentObject var accountViewModel: AccountViewModel

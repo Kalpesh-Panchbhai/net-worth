@@ -39,12 +39,12 @@ struct MainScreenView: View {
                             Label("Accounts", systemImage: "star.circle")
                         }
                         .badge(accountViewModel.accountList.count)
-//                    
-//                    WatchView()
-//                        .tabItem {
-//                            Label("Watch Lists", systemImage: ConstantUtils.notBookmarkImageName)
-//                        }
-//                        .badge(watchViewModel.watchList.count)
+                    
+                    WatchView()
+                        .tabItem {
+                            Label("Watch Lists", systemImage: ConstantUtils.notBookmarkImageName)
+                        }
+                        .badge(watchViewModel.watchList.count)
                     
                     IncomeView()
                         .tabItem {
@@ -84,7 +84,7 @@ struct MainScreenView: View {
                 await incomeViewModel.getTotalTaxPaid()
                 await accountViewModel.getAccountList()
                 await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
-//                await watchViewModel.getAllWatchList()
+                await watchViewModel.getAllWatchList()
                 await incomeViewModel.getIncomeTypeList()
                 await incomeViewModel.getIncomeTagList()
                 await incomeViewModel.getIncomeYearList()

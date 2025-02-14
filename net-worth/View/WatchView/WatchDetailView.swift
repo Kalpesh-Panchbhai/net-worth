@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WatchDetailView: View {
     
-    @State var watch: Watch
+    @State var watch: WatchRestModel
     @State var addAccountViewOpen = false
     @State var sortOrder = "Asc"
     @State var sortType = "Name"
@@ -21,7 +21,7 @@ struct WatchDetailView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
-    init(watch: Watch) {
+    init(watch: WatchRestModel) {
         self.watch = watch
     }
     

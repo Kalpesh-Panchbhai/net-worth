@@ -9,12 +9,12 @@ import SwiftUI
 
 struct ChartView: View {
     
-    @State var watchListSelected = Watch()
+    @State var watchListSelected = WatchRestModel()
     @State var brokerSelected = AccountRestModel()
     @State var showingAssetsData = true
     @State var chartDataList = [AccountRestModel]()
     @State var compareAssetsToLiabilities = false
-    @State var multipleWatchListSelection = Set<Watch>()
+    @State var multipleWatchListSelection = Set<WatchRestModel>()
     @State var filterSelected = ""
     @State var showNetWorthChart = false
     @State var isChartDataEnabled = false
@@ -129,10 +129,10 @@ struct ChartView: View {
     
     var rightTopView: some View {
         Button(action: {
-            watchListSelected = Watch()
+            watchListSelected = WatchRestModel()
             brokerSelected = AccountRestModel()
             compareAssetsToLiabilities = false
-            multipleWatchListSelection = Set<Watch>()
+            multipleWatchListSelection = Set<WatchRestModel>()
             chartDataList = [AccountRestModel]()
             showingAssetsData = true
             self.isChartDataEnabled = false
@@ -162,7 +162,7 @@ struct ChartView: View {
                 }
                 
                 if(!filterSelected.elementsEqual("COMPARE_MULTIPLE")) {
-                    multipleWatchListSelection = Set<Watch>()
+                    multipleWatchListSelection = Set<WatchRestModel>()
                 }
                 if(filterSelected.isEmpty) {
                     isChartDataEnabled = false
@@ -172,7 +172,7 @@ struct ChartView: View {
                 isChartDataEnabled = true
                 brokerSelected = AccountRestModel()
                 compareAssetsToLiabilities = false
-                multipleWatchListSelection = Set<Watch>()
+                multipleWatchListSelection = Set<WatchRestModel>()
                 var accountList = getAccountsForWatchList(watch: watchListSelected).filter {
                     return $0.value.currentValue > 0
                 }
@@ -202,7 +202,7 @@ struct ChartView: View {
                 }
                 
                 if(!filterSelected.elementsEqual("COMPARE_MULTIPLE")) {
-                    multipleWatchListSelection = Set<Watch>()
+                    multipleWatchListSelection = Set<WatchRestModel>()
                 }
                 if(filterSelected.isEmpty) {
                     isChartDataEnabled = false
@@ -210,9 +210,9 @@ struct ChartView: View {
             } else {
                 filterSelected = "BROKER"
                 isChartDataEnabled = true
-                watchListSelected = Watch()
+                watchListSelected = WatchRestModel()
                 compareAssetsToLiabilities = false
-                multipleWatchListSelection = Set<Watch>()
+                multipleWatchListSelection = Set<WatchRestModel>()
                 Task.init {
                     await accountViewModel.getAccountInBrokerList(brokerID: brokerSelected.id)
                     var accountList = accountViewModel.accountsInBroker
@@ -263,7 +263,7 @@ struct ChartView: View {
                 }
                 
                 if(!filterSelected.elementsEqual("WATCH")) {
-                    watchListSelected = Watch()
+                    watchListSelected = WatchRestModel()
                 }
                 
                 if(!filterSelected.elementsEqual("BROKER")) {
@@ -314,7 +314,7 @@ struct ChartView: View {
                 }
                 
                 if(!filterSelected.elementsEqual("WATCH")) {
-                    watchListSelected = Watch()
+                    watchListSelected = WatchRestModel()
                 }
                 
                 if(!filterSelected.elementsEqual("BROKER")) {
@@ -322,7 +322,7 @@ struct ChartView: View {
                 }
                 
                 if(!filterSelected.elementsEqual("COMPARE_MULTIPLE")) {
-                    multipleWatchListSelection = Set<Watch>()
+                    multipleWatchListSelection = Set<WatchRestModel>()
                 }
             }
             .listRowBackground(Color.theme.foreground)
@@ -347,11 +347,11 @@ struct ChartView: View {
         return accountViewModel.accountList
     }
     
-    private func getWatchLists() -> [Watch] {
+    private func getWatchLists() -> [WatchRestModel] {
         return watchViewModel.watchList
     }
     
-    private func getAccountsForWatchList(watch: Watch) -> [AccountRestModel] {
+    private func getAccountsForWatchList(watch: WatchRestModel) -> [AccountRestModel] {
         return [AccountRestModel]()
 //        return getAccounts().filter {
 //            watch.accountList.contains($0.id)

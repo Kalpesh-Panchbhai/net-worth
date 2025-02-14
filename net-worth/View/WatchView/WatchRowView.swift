@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WatchViewRow: View {
     
-    var watch: Watch
+    var watch: WatchRestModel
     @State var balance = AccountValue()
     
     @EnvironmentObject var accountViewModel: AccountViewModel

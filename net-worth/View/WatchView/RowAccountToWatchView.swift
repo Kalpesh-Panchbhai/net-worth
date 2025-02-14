@@ -12,7 +12,7 @@ struct RowAccountToWatchView: View {
     var account: AccountRestModel
     var watchController = WatchController()
     
-    @Binding var watch: Watch
+    @Binding var watch: WatchRestModel
     @State var isAdded: Bool
     
     @EnvironmentObject var watchViewModel: WatchViewModel

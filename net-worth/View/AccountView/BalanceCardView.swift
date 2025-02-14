@@ -12,12 +12,12 @@ struct BalanceCardView: View {
     var accountType: String
     var isWatchListCardView: Bool
     
-    @State var watchList: Watch
+    @State var watchList: WatchRestModel
     @State var balanceAccount: AccountValue
     
     @EnvironmentObject var accountViewModel: AccountViewModel
     
-    init(accountType: String, isWatchListCardView: Bool, watchList: Watch) {
+    init(accountType: String, isWatchListCardView: Bool, watchList: WatchRestModel) {
         self.accountType = accountType
         self.isWatchListCardView = isWatchListCardView
         self.watchList = watchList
