@@ -37,12 +37,11 @@ class AccountController {
         })
     }
     
-    public func calculateTotalBalance(accountList: [AccountRestModel]) async -> Balance {
-        var balance = Balance(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
+    public func calculateTotalBalance(accountList: [AccountRestModel]) async -> AccountValue {
+        var balance = AccountValue(currentValue: 0.0, previousValue: 0.0)
         accountList.forEach {
             balance.currentValue = balance.currentValue + $0.value.currentValue
-            balance.previousDayValue = balance.previousDayValue + $0.value.previousValue
-            balance.oneDayChange = balance.currentValue - balance.previousDayValue
+            balance.previousValue = balance.previousValue + $0.value.previousValue
         }
         return balance
     }
