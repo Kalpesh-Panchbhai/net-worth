@@ -15,7 +15,7 @@ class WatchViewModel: ObservableObject {
     @Published var watchList = [Watch]()
     @Published var watchListLoad = false
     @Published var watchListForAccount = [Watch]()
-    @Published var watchListWithAccount = [Watch: [Account]]()
+    @Published var watchListWithAccount = [Watch: [AccountRestModel]]()
     @Published var watch = Watch()
     
     func getAllWatchList() async {

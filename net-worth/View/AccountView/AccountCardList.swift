@@ -139,11 +139,11 @@ struct AccountCardList: View {
         })
     }
     
-    private func isAccountAmountZero(account: Account) -> Bool {
-        return account.balance.currentDayValue.value.isZero
+    private func isAccountAmountZero(account: AccountRestModel) -> Bool {
+        return account.value.currentDayValue.value.isZero
     }
     
-    private func showAccount(account: Account) -> Bool {
+    private func showAccount(account: AccountRestModel) -> Bool {
         return ((hideZeroAmountAccount && !isAccountAmountZero(account: account)) || !hideZeroAmountAccount)
     }
     

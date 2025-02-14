@@ -20,7 +20,7 @@ struct AccountDetailView: View {
     @State var sortType = "Name"
     
     @State var accountID: String
-    @State var account = Account()
+    @State var account = AccountRestModel()
     @EnvironmentObject var accountViewModel: AccountViewModel
     @EnvironmentObject var watchViewModel: WatchViewModel
     
@@ -200,7 +200,7 @@ struct AccountDetailView: View {
                             })
                         }
                         
-                        if(account.balance.currentDayValue.value.isZero) {
+                        if(account.value.currentDayValue.value.isZero) {
                             Button(action: {
                                 Task.init {
                                     var updatedAccount = self.account
@@ -209,7 +209,7 @@ struct AccountDetailView: View {
                                     await accountViewModel.getAccountList()
                                     account = accountViewModel.accountList.filter {
                                         return $0.id.elementsEqual(accountID)
-                                    }.first ?? Account()
+                                    }.first ?? AccountRestModel()
                                 }
                             }, label: {
                                 Label("Close account", systemImage: ConstantUtils.newTransactionImageName)
@@ -224,7 +224,7 @@ struct AccountDetailView: View {
                                 await accountViewModel.getAccountList()
                                 self.account = accountViewModel.accountList.filter {
                                     return $0.id.elementsEqual(accountID)
-                                }.first ?? Account()
+                                }.first ?? AccountRestModel()
                             }
                         }, label: {
                             Label("Open account", systemImage: ConstantUtils.newTransactionImageName)
@@ -248,7 +248,7 @@ struct AccountDetailView: View {
             Task.init {
                 self.account = accountViewModel.accountList.filter {
                     return $0.id.elementsEqual(accountID)
-                }.first ?? Account()
+                }.first ?? AccountRestModel()
                 if(account.accountType.elementsEqual(ConstantUtils.brokerAccountType)) {
                     await accountViewModel.getAccountInBrokerList(brokerID: accountID)
                 }
@@ -258,7 +258,7 @@ struct AccountDetailView: View {
         .sheet(isPresented: $isNewTransactionViewOpen, onDismiss: {
             self.account = accountViewModel.accountList.filter {
                 return $0.id.elementsEqual(accountID)
-            }.first ?? Account()
+            }.first ?? AccountRestModel()
         }, content: {
             UpdateBalanceAccountView(accountId: accountID)
                 .presentationDetents([.medium])

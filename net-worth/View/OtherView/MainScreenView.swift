@@ -34,11 +34,11 @@ struct MainScreenView: View {
             // MARK: Tab View
             ZStack {
                 TabView {
-//                    AccountCardList()
-//                        .tabItem {
-//                            Label("Accounts", systemImage: "star.circle")
-//                        }
-//                        .badge(accountViewModel.accountList.count)
+                    AccountCardList()
+                        .tabItem {
+                            Label("Accounts", systemImage: "star.circle")
+                        }
+                        .badge(accountViewModel.accountList.count)
 //                    
 //                    WatchView()
 //                        .tabItem {
@@ -82,8 +82,8 @@ struct MainScreenView: View {
                 await incomeViewModel.getIncomeList()
                 await incomeViewModel.getTotalBalance()
                 await incomeViewModel.getTotalTaxPaid()
-//                await accountViewModel.getAccountList()
-//                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
+                await accountViewModel.getAccountList()
+                await accountViewModel.getTotalBalance(accountList: accountViewModel.accountList)
 //                await watchViewModel.getAllWatchList()
                 await incomeViewModel.getIncomeTypeList()
                 await incomeViewModel.getIncomeTagList()

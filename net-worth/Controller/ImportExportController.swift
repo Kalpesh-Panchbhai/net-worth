@@ -153,11 +153,11 @@ class ImportExportController {
                     accountsInBrokerDataList.append(accountInBrokerData)
                 }
                 
-                let accountData = AccountBackupModel(accountName: account.accountName, accountType: account.accountType, loanType: account.loanType, currency: account.currency, active: account.active, balance: BalanceAccount(), accountInBroker: accountsInBrokerDataList)
+                let accountData = AccountBackupModel(accountName: account.accountName, accountType: account.accountType, loanType: account.loanType, currency: account.currency, active: account.active, balance: AccountValue(), accountInBroker: accountsInBrokerDataList)
                 
                 accountDataList.append(accountData)
             } else {
-                let accountData = AccountBackupModel(accountName: account.accountName, accountType: account.accountType, loanType: account.loanType, currency: account.currency, active: account.active, balance: account.balance, accountInBroker: [AccountInBrokerBackupModel]())
+                let accountData = AccountBackupModel(accountName: account.accountName, accountType: account.accountType, loanType: account.loanType, currency: account.currency, active: account.active, balance: account.value, accountInBroker: [AccountInBrokerBackupModel]())
                 
                 accountDataList.append(accountData)
             }

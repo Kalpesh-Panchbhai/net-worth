@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AccountCardView: View {
     
-    var account: Account
+    var account: AccountRestModel
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -35,14 +35,14 @@ struct AccountCardView: View {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
-                    Text("\(account.balance.currentDayValue.value.withCommas(decimalPlace: 2))")
+                    Text("\(account.value.currentDayValue.value.withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 } else {
                     Text(account.currency)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
-                    Text("\(account.balance.currentDayValue.value.withCommas(decimalPlace: 2))")
+                    Text("\(account.value.currentDayValue.value.withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 }
@@ -127,15 +127,15 @@ struct AccountCardView: View {
     }
     
     private func getOneDayPercentage() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: account.balance.previousDayValue.value, currentBalance: account.balance.currentDayValue.value)
+        return CommonController.getGrowthPercentage(previousBalance: account.value.previousDayValue.value, currentBalance: account.value.currentDayValue.value)
     }
     
     private func getOneDayChange() -> Double {
-        return areOneDayTransactions() ? account.balance.currentDayValue.value - account.balance.previousDayValue.value : 0.0
+        return areOneDayTransactions() ? account.value.currentDayValue.value - account.value.previousDayValue.value : 0.0
     }
     
     private func areOneDayTransactions() -> Bool {
-        return account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+        return account.value.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
     
 }

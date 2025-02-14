@@ -14,13 +14,13 @@ struct AccountInBroker: Codable, Hashable {
     var symbol: String
     var name: String
     var currentUnit: Double
-    var balance: BalanceAccount
+    var balance: AccountValue
     
     private enum CodingKeys: String, CodingKey {
         case id, accountId, symbol, name, currentUnit, balance
     }
     
-    init(id: String = "", accountId: String = "", symbol: String = "", name: String = "", currentUnit: Double = 0.0, balance: BalanceAccount = BalanceAccount()) {
+    init(id: String = "", accountId: String = "", symbol: String = "", name: String = "", currentUnit: Double = 0.0, balance: AccountValue = AccountValue()) {
         self.id = id
         self.accountId = accountId
         self.symbol = symbol
@@ -36,7 +36,7 @@ struct AccountInBroker: Codable, Hashable {
         symbol = try container.decode(String.self, forKey: .symbol)
         name = try container.decode(String.self, forKey: .name)
         currentUnit = try container.decode(Double.self, forKey: .currentUnit)
-        balance = try container.decode(BalanceAccount.self, forKey: .balance)
+        balance = try container.decode(AccountValue.self, forKey: .balance)
     }
     
     func encode(to encoder: Encoder) throws {

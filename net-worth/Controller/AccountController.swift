@@ -13,7 +13,7 @@ class AccountController {
     private var restController = RestController()
     private var entityName = ConstantUtils.Entity.ACCOUNT.rawValue
     
-    public func addAccount(newAccount: Account) async {
+    public func addAccount(newAccount: AccountRestModel) async {
 //        let userId = ApplicationData.shared.userId
 //        let requestData = Account(userId: userId, accountName: newAccount.accountName, accountType: newAccount.accountType, loanType: newAccount.loanType, currency: newAccount.currency, active: newAccount.active)
 //        let encoder = JSONEncoder()
@@ -21,7 +21,7 @@ class AccountController {
 //        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: RestResponse.self)
     }
     
-    public func updateAccount(account: Account) async {
+    public func updateAccount(account: AccountRestModel) async {
 //        let userId = ApplicationData.shared.userId
 //        let requestData = Account(id: account.id, userId: userId, accountName: account.accountName, accountType: account.accountType, loanType: account.loanType, currency: account.currency, active: account.active)
 //        let encoder = JSONEncoder()
@@ -33,19 +33,19 @@ class AccountController {
 //        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: accountId, forClass: RestResponse.self)
     }
     
-    public func getAccountList() async ->  [Account] {
+    public func getAccountList() async ->  [AccountRestModel] {
         let userId = ApplicationData.shared.userId
-        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [Account].self)
+        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [AccountRestModel].self)
         return response.sorted(by: {
             return $0.accountName < $1.accountName
         })
     }
     
-    public func calculateTotalBalance(accountList: [Account]) async -> Balance {
+    public func calculateTotalBalance(accountList: [AccountRestModel]) async -> Balance {
         var balance = Balance(currentValue: 0.0, previousDayValue: 0.0, oneDayChange: 0.0)
         accountList.forEach {
-            balance.currentValue = balance.currentValue + $0.balance.currentDayValue.value
-            balance.previousDayValue = balance.previousDayValue + $0.balance.previousDayValue.value
+            balance.currentValue = balance.currentValue + $0.value.currentDayValue.value
+            balance.previousDayValue = balance.previousDayValue + $0.value.previousDayValue.value
             balance.oneDayChange = balance.currentValue - balance.previousDayValue
         }
         return balance

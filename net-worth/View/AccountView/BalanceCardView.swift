@@ -13,7 +13,7 @@ struct BalanceCardView: View {
     var isWatchListCardView: Bool
     
     @State var watchList: Watch
-    @State var balanceAccount: BalanceAccount
+    @State var balanceAccount: AccountValue
     
     @EnvironmentObject var accountViewModel: AccountViewModel
     
@@ -21,7 +21,7 @@ struct BalanceCardView: View {
         self.accountType = accountType
         self.isWatchListCardView = isWatchListCardView
         self.watchList = watchList
-        self.balanceAccount = BalanceAccount()
+        self.balanceAccount = AccountValue()
     }
     
     var body: some View {
@@ -86,16 +86,16 @@ struct BalanceCardView: View {
                 var previousDayValue = 0.0
                 
                 for account in accountList {
-                    currentDayValue += account.balance.currentDayValue.value
+                    currentDayValue += account.value.currentDayValue.value
                     if(areOneDayTransactions(account: account)) {
-                        previousDayValue += account.balance.previousDayValue.value
+                        previousDayValue += account.value.previousDayValue.value
                     } else {
-                        previousDayValue += account.balance.currentDayValue.value
+                        previousDayValue += account.value.currentDayValue.value
                     }
                 }
-                balanceAccount = BalanceAccount(currentDayValue: BalanceAccountDetail(value: currentDayValue), previousDayValue: BalanceAccountDetail(value: previousDayValue))
+                balanceAccount = AccountValue(currentDayValue: BalanceAccountDetail(value: currentDayValue), previousDayValue: BalanceAccountDetail(value: previousDayValue))
             } else {
-                var accountList = [Account]()
+                var accountList = [AccountRestModel]()
                 if(accountType.elementsEqual("Net Worth")) {
                     accountList = accountViewModel.accountList
                 } else {
@@ -105,14 +105,14 @@ struct BalanceCardView: View {
                 var previousDayValue = 0.0
                 
                 for account in accountList {
-                    currentDayValue += account.balance.currentDayValue.value
+                    currentDayValue += account.value.currentDayValue.value
                     if(areOneDayTransactions(account: account)) {
-                        previousDayValue += account.balance.previousDayValue.value
+                        previousDayValue += account.value.previousDayValue.value
                     } else {
-                        previousDayValue += account.balance.currentDayValue.value
+                        previousDayValue += account.value.currentDayValue.value
                     }
                 }
-                balanceAccount = BalanceAccount(currentDayValue: BalanceAccountDetail(value: currentDayValue), previousDayValue: BalanceAccountDetail(value: previousDayValue))
+                balanceAccount = AccountValue(currentDayValue: BalanceAccountDetail(value: currentDayValue), previousDayValue: BalanceAccountDetail(value: previousDayValue))
             }
         }
     }
@@ -125,7 +125,7 @@ struct BalanceCardView: View {
         return CommonController.getGrowthPercentage(previousBalance: balanceAccount.previousDayValue.value, currentBalance: balanceAccount.currentDayValue.value)
     }
     
-    private func areOneDayTransactions(account: Account) -> Bool {
-        return account.accountName != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+    private func areOneDayTransactions(account: AccountRestModel) -> Bool {
+        return account.accountName != "" && account.value.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }

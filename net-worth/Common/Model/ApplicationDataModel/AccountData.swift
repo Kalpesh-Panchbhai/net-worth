@@ -9,7 +9,7 @@ import Foundation
 
 struct AccountData: Codable {
     
-    var account: Account
+    var account: AccountRestModel
     
     var accountInBroker: [AccountInBrokerData]
     

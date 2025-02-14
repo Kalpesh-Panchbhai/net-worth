@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BalanceAccount : Codable, Hashable {
+struct AccountValue : Codable, Hashable {
     
     var currentDayValue: BalanceAccountDetail = BalanceAccountDetail()
     

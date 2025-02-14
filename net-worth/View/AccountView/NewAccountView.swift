@@ -95,7 +95,7 @@ struct NewAccountView: View {
             .toolbar {
                 ToolbarItem {
                     Button(action: {
-                        var newAccount = Account()
+                        var newAccount = AccountRestModel()
                         newAccount.accountType = accountType
                         if(accountType.elementsEqual(ConstantUtils.loanAccountType)) {
                             newAccount.loanType = loanType

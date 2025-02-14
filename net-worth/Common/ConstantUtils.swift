@@ -13,7 +13,7 @@ class ConstantUtils {
         case none = "None"
         case saving = "Saving"
         case creditcard = "Credit Card"
-        case loan = "Loan"
+//        case loan = "Loan"
         case broker = "Broker"
         case other = "Other"
     }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Account: Codable, Hashable {
+struct AccountRestModel: Codable, Hashable {
     
     var id: String
     var userId: String
@@ -16,13 +16,13 @@ struct Account: Codable, Hashable {
     var loanType: String
     var currency: String
     var active: Bool
-    var balance: BalanceAccount
+    var value: AccountValue
     
     private enum CodingKeys: String, CodingKey {
-        case id, userId, accountName, accountType, loanType, currency, active, balance
+        case id, userId, accountName, accountType, loanType, currency, active, value
     }
     
-    init(id: String = "", userId: String = "", accountName: String = "", accountType: String = "", loanType: String = "", currency: String = "", active: Bool = true, balance: BalanceAccount = BalanceAccount()) {
+    init(id: String = "", userId: String = "", accountName: String = "", accountType: String = "", loanType: String = "", currency: String = "", active: Bool = true, balance: AccountValue = AccountValue()) {
         self.id = id
         self.userId = userId
         self.accountName = accountName
@@ -30,7 +30,7 @@ struct Account: Codable, Hashable {
         self.loanType = loanType
         self.currency = currency
         self.active = active
-        self.balance = balance
+        self.value = balance
     }
     
     init(from decoder: Decoder) throws {
@@ -42,7 +42,7 @@ struct Account: Codable, Hashable {
         loanType = try container.decode(String.self, forKey: .loanType)
         currency = try container.decode(String.self, forKey: .currency)
         active = try container.decode(Bool.self, forKey: .active)
-        balance = try container.decode(BalanceAccount.self, forKey: .balance)
+        value = try container.decode(AccountValue.self, forKey: .value)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -56,6 +56,5 @@ struct Account: Codable, Hashable {
         try container.encode(loanType, forKey: .loanType)
         try container.encode(currency, forKey: .currency)
         try container.encode(active, forKey: .active)
-        try container.encode(balance, forKey: .balance)
     }
 }

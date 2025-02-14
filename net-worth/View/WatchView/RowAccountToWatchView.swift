@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RowAccountToWatchView: View {
     
-    var account: Account
+    var account: AccountRestModel
     var watchController = WatchController()
     
     @Binding var watch: Watch

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NetworthCardView: View {
     
-    @State var balanceAccount = BalanceAccount()
+    @State var balanceAccount = AccountValue()
     @State var percent: Double = 0.0
     @State var percentChange: Double = 0.0
     
@@ -65,21 +65,21 @@ struct NetworthCardView: View {
             var previousDayValue = 0.0
             
             for account in accountList {
-                currentDayValue += account.balance.currentDayValue.value
+                currentDayValue += account.value.currentDayValue.value
                 if(areOneDayTransactions(account: account)) {
-                    previousDayValue += account.balance.previousDayValue.value
+                    previousDayValue += account.value.previousDayValue.value
                 } else {
-                    previousDayValue += account.balance.currentDayValue.value
+                    previousDayValue += account.value.currentDayValue.value
                 }
             }
-            balanceAccount = BalanceAccount(currentDayValue: BalanceAccountDetail(value: currentDayValue), previousDayValue: BalanceAccountDetail(value: previousDayValue))
+            balanceAccount = AccountValue(currentDayValue: BalanceAccountDetail(value: currentDayValue), previousDayValue: BalanceAccountDetail(value: previousDayValue))
             let totalIncome = incomeViewModel.incomeTotalAmount
             percent = balanceAccount.currentDayValue.value / totalIncome * 100
             percentChange = (balanceAccount.currentDayValue.value - balanceAccount.previousDayValue.value) / totalIncome * 100
         }
     }
     
-    private func areOneDayTransactions(account: Account) -> Bool {
-        return account.accountName != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+    private func areOneDayTransactions(account: AccountRestModel) -> Bool {
+        return account.accountName != "" && account.value.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }

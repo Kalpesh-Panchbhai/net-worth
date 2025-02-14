@@ -10,7 +10,7 @@ import SwiftUI
 struct WatchViewRow: View {
     
     var watch: Watch
-    @State var balance = BalanceAccount()
+    @State var balance = AccountValue()
     
     @EnvironmentObject var accountViewModel: AccountViewModel
     
@@ -74,18 +74,18 @@ struct WatchViewRow: View {
         }
         .onAppear {
             Task.init {
-                balance = BalanceAccount(currentDayValue: BalanceAccountDetail(value: 0.0), previousDayValue: BalanceAccountDetail(value: 0.0))
+                balance = AccountValue(currentDayValue: BalanceAccountDetail(value: 0.0), previousDayValue: BalanceAccountDetail(value: 0.0))
                 let accountList = watch.accountList.map { id in
                     return accountViewModel.accountList.filter {
                         return $0.id.elementsEqual(id)
-                    }.first ?? Account(balance: BalanceAccount())
+                    }.first ?? AccountRestModel(balance: AccountValue())
                 }
                 for account in accountList {
-                    self.balance.currentDayValue.value += account.balance.currentDayValue.value
+                    self.balance.currentDayValue.value += account.value.currentDayValue.value
                     if(areOneDayTransactions(account: account)) {
-                        self.balance.previousDayValue.value += account.balance.previousDayValue.value
+                        self.balance.previousDayValue.value += account.value.previousDayValue.value
                     } else {
-                        self.balance.previousDayValue.value += account.balance.currentDayValue.value
+                        self.balance.previousDayValue.value += account.value.currentDayValue.value
                     }
                 }
                 
@@ -102,7 +102,7 @@ struct WatchViewRow: View {
         return CommonController.getGrowthPercentage(previousBalance: balance.previousDayValue.value, currentBalance: balance.currentDayValue.value)
     }
     
-    private func areOneDayTransactions(account: Account) -> Bool {
-        return account.accountName != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+    private func areOneDayTransactions(account: AccountRestModel) -> Bool {
+        return account.accountName != "" && account.value.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }

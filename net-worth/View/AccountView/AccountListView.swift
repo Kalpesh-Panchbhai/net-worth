@@ -15,7 +15,7 @@ struct AccountListView: View {
     @State var searchText = ""
     @State var isNewTransactionViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
-    @State var deletedAccount = Account()
+    @State var deletedAccount = AccountRestModel()
     
     @EnvironmentObject var accountViewModel: AccountViewModel
     @EnvironmentObject var watchViewModel: WatchViewModel
