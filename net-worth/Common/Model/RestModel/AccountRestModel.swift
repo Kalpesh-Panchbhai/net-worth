@@ -39,7 +39,8 @@ struct AccountRestModel: Codable, Hashable {
         type = try container.decode(String.self, forKey: .type)
         currency = try container.decode(String.self, forKey: .currency)
         active = try container.decode(Bool.self, forKey: .active)
-        value = try container.decode(AccountValue.self, forKey: .value)
+//        value = try container.decode(AccountValue.self, forKey: .value)
+        value = AccountValue()
     }
     
     func encode(to encoder: Encoder) throws {

@@ -3,4 +3,52 @@
    uuid = "30CB2CAC-0DD3-4952-858A-140758A02D85"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E8F96AFC-A3A9-441D-A832-2D11CF35C79D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "net-worth/View Model/AccountViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "96"
+            endingLineNumber = "96"
+            landmarkName = "getAccount(id:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "E8F96AFC-A3A9-441D-A832-2D11CF35C79D - 49536b50a9e43092"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for net_worth.AccountViewModel.getAccount(id: Swift.Int) async -&gt; ()"
+                  moduleName = "net-worth.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/Projects/Personal/net-worth/net-worth/View%20Model/AccountViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "96"
+                  endingLineNumber = "96">
+               </Location>
+               <Location
+                  uuid = "E8F96AFC-A3A9-441D-A832-2D11CF35C79D - 4e0ab4e5d800988a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (net_worth.AccountRestModel) -&gt; Swift.Bool in net_worth.AccountViewModel.getAccount(id: Swift.Int) async -&gt; ()"
+                  moduleName = "net-worth.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kalpesh.panchbhai/Projects/Personal/net-worth/net-worth/View%20Model/AccountViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "97"
+                  endingLineNumber = "97">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

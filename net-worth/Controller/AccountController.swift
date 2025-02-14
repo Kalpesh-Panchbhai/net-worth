@@ -14,11 +14,9 @@ class AccountController {
     private var entityName = ConstantUtils.Entity.ACCOUNT.rawValue
     
     public func addAccount(newAccount: AccountRestModel) async {
-//        let userId = ApplicationData.shared.userId
-//        let requestData = Account(userId: userId, accountName: newAccount.accountName, accountType: newAccount.accountType, loanType: newAccount.loanType, currency: newAccount.currency, active: newAccount.active)
-//        let encoder = JSONEncoder()
-//        let data = try! encoder.encode(requestData)
-//        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: RestResponse.self)
+        let encoder = JSONEncoder()
+        let data = try! encoder.encode(newAccount)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: RestResponse.self)
     }
     
     public func updateAccount(account: AccountRestModel) async {

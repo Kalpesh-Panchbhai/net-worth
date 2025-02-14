@@ -13,21 +13,23 @@ class WatchController {
     private var entityName = ConstantUtils.Entity.WATCH.rawValue
     
     public func addWatchList(watch: Watch) async {
-        let encoder = JSONEncoder()
-        let data = try! encoder.encode(watch)
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: RestResponse.self)
+//        let encoder = JSONEncoder()
+//        let data = try! encoder.encode(watch)
+//        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: RestResponse.self)
     }
     
     public func getAllWatchList() async -> [Watch] {
-        let userId = ApplicationData.shared.userId
-        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [Watch].self)
-        return response
+//        let userId = ApplicationData.shared.userId
+//        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: userId, forClass: [Watch].self)
+//        return response
+        
+        return [Watch]()
     }
     
     public func updateWatchList(watch: Watch) async {
-        let encoder = JSONEncoder()
-        let data = try! encoder.encode(watch)
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: RestResponse.self)
+//        let encoder = JSONEncoder()
+//        let data = try! encoder.encode(watch)
+//        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: RestResponse.self)
     }
     
     public func deleteWatchList(watch: Watch) async {

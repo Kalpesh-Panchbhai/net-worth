@@ -88,8 +88,10 @@ struct NewAccountView: View {
                 ToolbarItem {
                     Button(action: {
                         var newAccount = AccountRestModel()
-                        newAccount.type = accountType
+                        newAccount.userId = ApplicationData.shared.userId
+                        newAccount.active = true
                         newAccount.name = name
+                        newAccount.type = accountType
                         newAccount.currency = currencySelected.code
                         Task.init {
                             await accountController.addAccount(newAccount: newAccount)
