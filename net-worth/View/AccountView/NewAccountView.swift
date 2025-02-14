@@ -21,7 +21,6 @@ struct NewAccountView: View {
     @State var name: String = ""
     @State var currencySelected: Currency = Currency()
     @State var monthlyEmi: Double = 0.0
-    @State var loanPaymentDate = 1
     @State var dates = Array(1...28)
     @State var isPlus = true
     
@@ -45,7 +44,6 @@ struct NewAccountView: View {
                         name=""
                         currencySelected = SettingsController().getDefaultCurrency()
                         isPlus = true
-                        loanPaymentDate = 1
                         monthlyEmi = 0.0
                     }
                     if(accountType == ConstantUtils.savingAccountType) {
@@ -69,12 +67,6 @@ struct NewAccountView: View {
                         
                         nameField(labelName: "Loan Name")
                             .foregroundColor(Color.theme.primaryText)
-                        if(loanType.elementsEqual("Consumer")) {
-                            monthlyEMIField
-                                .foregroundColor(Color.theme.primaryText)
-                            loanPaymentDateField(labelName: "Loan payment date")
-                                .foregroundColor(Color.theme.primaryText)
-                        }
                         CurrencyPicker(currenySelected: $currencySelected)
                             .foregroundColor(Color.theme.primaryText)
                     } else if(accountType == ConstantUtils.brokerAccountType) {
@@ -97,9 +89,6 @@ struct NewAccountView: View {
                     Button(action: {
                         var newAccount = AccountRestModel()
                         newAccount.type = accountType
-                        if(accountType.elementsEqual(ConstantUtils.loanAccountType)) {
-                            newAccount.loanType = loanType
-                        }
                         newAccount.name = name
                         newAccount.currency = currencySelected.code
                         Task.init {
@@ -186,14 +175,6 @@ struct NewAccountView: View {
             Spacer()
             TextField("Monthly EMI", value: $monthlyEmi, formatter: Double().formatter())
                 .keyboardType(.decimalPad)
-        }
-    }
-    
-    private func loanPaymentDateField(labelName: String) -> Picker<Text, Int, ForEach<[Int], Int, some View>> {
-        return Picker(labelName, selection: $loanPaymentDate) {
-            ForEach(dates, id: \.self) {
-                Text("\($0.formatted(.number.grouping(.never)))").tag($0)
-            }
         }
     }
     
