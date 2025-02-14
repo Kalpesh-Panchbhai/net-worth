@@ -15,6 +15,7 @@ struct UpdateBalanceAccountView: View {
     @State var amount: String = "0.0"
     @State var isPlus = true
     @State var scenePhaseBlur = 0
+    @State var date = Date()
     
     @EnvironmentObject var accountViewModel: AccountViewModel
     
@@ -27,6 +28,8 @@ struct UpdateBalanceAccountView: View {
                 Section("Transaction detail") {
                     currentBalanceField
                         .foregroundColor(Color.theme.primaryText)
+                    transactionDate
+                        .foregroundColor(Color.theme.primaryText)
                 }
                 .listRowBackground(Color.theme.foreground)
                 .foregroundColor(Color.theme.primaryText)
@@ -36,8 +39,9 @@ struct UpdateBalanceAccountView: View {
                     Button(action: {
                         var accountTransaction = AccountTransactionRestModel()
                         accountTransaction.accountId = accountId
+                        accountTransaction.transactionDate = date.localToLocalString()
                         accountTransaction.value = (Double(amount) ?? 0.0) * (isPlus ? 1.0 : -1.0)
-                        accountTransaction.operation = "ADD"
+                        accountTransaction.operation = "add"
                         Task.init {
                             await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
                             await accountViewModel.getAccountList()
@@ -53,8 +57,9 @@ struct UpdateBalanceAccountView: View {
                     Button(action: {
                         var accountTransaction = AccountTransactionRestModel()
                         accountTransaction.accountId = accountId
+                        accountTransaction.transactionDate = date.localToLocalString()
                         accountTransaction.value = (Double(amount) ?? 0.0) * (isPlus ? 1.0 : -1.0)
-                        accountTransaction.operation = "UPDATE"
+                        accountTransaction.operation = "update"
                         Task.init {
                             await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
                             await accountViewModel.getAccountList()
@@ -132,6 +137,12 @@ struct UpdateBalanceAccountView: View {
                     }
                 }
                 .multilineTextAlignment(.trailing)
+        }
+    }
+    
+    private var transactionDate: some View {
+        HStack{
+            DatePicker("Transaction Date", selection: $date, in: ...Date(), displayedComponents: [.date])
         }
     }
 }

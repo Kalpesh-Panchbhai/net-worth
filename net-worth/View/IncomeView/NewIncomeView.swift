@@ -114,7 +114,7 @@ struct NewIncomeView: View {
                     .foregroundColor(Color.theme.primaryText)
                     
                     HStack{
-                        DatePicker("Credited on", selection: $date, in: ...Date(), displayedComponents: [.date])
+                        DatePicker("Credited Date", selection: $date, in: ...Date(), displayedComponents: [.date])
                     }
                     .foregroundColor(Color.theme.primaryText)
                     

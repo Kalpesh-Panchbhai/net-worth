@@ -20,15 +20,13 @@ class AccountController {
     }
     
     public func updateAccount(account: AccountRestModel) async {
-//        let userId = ApplicationData.shared.userId
-//        let requestData = Account(id: account.id, userId: userId, accountName: account.accountName, accountType: account.accountType, loanType: account.loanType, currency: account.currency, active: account.active)
-//        let encoder = JSONEncoder()
-//        let data = try! encoder.encode(requestData)
-//        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: RestResponse.self)
+        let encoder = JSONEncoder()
+        let data = try! encoder.encode(account)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.PATCH.rawValue, body: data, forClass: RestResponse.self)
     }
     
-    public func deleteAccount(accountId: String) async {
-//        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: accountId, forClass: RestResponse.self)
+    public func deleteAccount(accountId: Int) async {
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: accountId, forClass: RestResponse.self)
     }
     
     public func getAccountList() async ->  [AccountRestModel] {

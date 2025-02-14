@@ -144,7 +144,8 @@ struct AccountCardList: View {
     }
     
     private func showAccount(account: AccountRestModel) -> Bool {
-        return ((hideZeroAmountAccount && !isAccountAmountZero(account: account)) || !hideZeroAmountAccount)
+        return true
+//        return ((hideZeroAmountAccount && !isAccountAmountZero(account: account)) || !hideZeroAmountAccount)
     }
     
     private func areAllAccountsForAccountTypeZero(accountType: String) -> Bool {
@@ -160,6 +161,7 @@ struct AccountCardList: View {
     }
     
     private func showAccountType(accountType: String) -> Bool {
-        return ((hideZeroAmountAccount && !areAllAccountsForAccountTypeZero(accountType: accountType)) || !hideZeroAmountAccount)
+        return true
+//        return ((hideZeroAmountAccount && !areAllAccountsForAccountTypeZero(accountType: accountType)) || !hideZeroAmountAccount)
     }
 }
