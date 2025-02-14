@@ -51,10 +51,6 @@ struct IncomeRestModel: Codable, Hashable {
         currency = try container.decode(String.self, forKey: .currency)
         incomeType = try container.decode(TypeValueRestModel.self, forKey: .incomeType)
         incomeTag = try container.decode(TypeValueRestModel.self, forKey: .incomeTag)
-        avgAmount = try container.decode(Double.self, forKey: .avgAmount)
-        avgTaxPaid = try container.decode(Double.self, forKey: .avgTaxPaid)
-        cumulativeAmount = try container.decode(Double.self, forKey: .cumulativeAmount)
-        cumulativeTaxPaid = try container.decode(Double.self, forKey: .cumulativeTaxPaid)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -69,9 +65,5 @@ struct IncomeRestModel: Codable, Hashable {
         try container.encode(currency, forKey: .currency)
         try container.encode(incomeType, forKey: .incomeType)
         try container.encode(incomeTag, forKey: .incomeTag)
-        try container.encode(avgAmount, forKey: .avgAmount)
-        try container.encode(avgTaxPaid, forKey: .avgTaxPaid)
-        try container.encode(cumulativeAmount, forKey: .cumulativeAmount)
-        try container.encode(cumulativeTaxPaid, forKey: .cumulativeTaxPaid)
     }
 }

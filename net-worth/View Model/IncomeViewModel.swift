@@ -34,53 +34,54 @@ class IncomeViewModel: ObservableObject {
     @Published var groupView = false
     
     func getIncomeList() async {
-//        DispatchQueue.main.async {
-//            self.incomeListLoaded = false
-//            self.groupView = false
-//        }
-//        let list = await incomeController.getIncomeList()
-//        var cumAmount = 0.0
-//        var cumTaxPaid = 0.0
-//        let returnIncomeList = list.map { value1 in
-//            var sumAmount = 0.0
-//            var sumTaxPaid = 0.0
-//            var totalMonth = 0.0
-//            var totalDays = 0
-//            var maxDays = 0
-//            cumAmount = cumAmount + value1.amount
-//            cumTaxPaid = cumTaxPaid + value1.taxPaid
-//            incomeList.forEach { value2 in
-//                if(value1.creditedDate >= value2.creditedDate) {
-//                    sumAmount += value2.amount
-//                    sumTaxPaid += value2.taxPaid
-//                    
-//                    let date = DateComponents(
-//                        calendar: Calendar.current,
-//                        year: value2.creditedDate.getDateComponents().year,
-//                        month: value2.creditedDate.getDateComponents().month,
-//                        day: 1)
-//                    totalDays = value1.creditedOn.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
-//                    maxDays = maxDays < totalDays ? totalDays : maxDays
-//                }
-//            }
-//            totalMonth = Double(maxDays) / Double(30)
-//            return IncomeRestModel(id: value1.id,
-//                                     amount: value1.amount,
-//                                     taxpaid: value1.taxpaid,
-//                                     creditedOn: value1.creditedDate,
-//                                     currency: value1.currency,
-//                                     type: value1.type,
-//                                     tag: value1.tag,
-//                                     avgAmount: sumAmount / totalMonth,
-//                                     avgTaxPaid: sumTaxPaid / totalMonth,
-//                                     cumulativeAmount: cumAmount,
-//                                     cumulativeTaxPaid: cumTaxPaid)
-//        }
-//        DispatchQueue.main.async {
-//            self.incomeListNew = list
-//            self.incomeList = returnIncomeList.reversed()
-//            self.incomeListLoaded = true
-//        }
+        DispatchQueue.main.async {
+            self.incomeListLoaded = false
+            self.groupView = false
+        }
+        let list = await incomeController.getIncomeList()
+        var cumAmount = 0.0
+        var cumTaxPaid = 0.0
+        let returnIncomeList = list.map { value1 in
+            var sumAmount = 0.0
+            var sumTaxPaid = 0.0
+            var totalMonth = 0.0
+            var totalDays = 0
+            var maxDays = 0
+            cumAmount = cumAmount + value1.amount
+            cumTaxPaid = cumTaxPaid + value1.taxPaid
+            incomeList.forEach { value2 in
+                if(value1.creditedDate >= value2.creditedDate) {
+                    sumAmount += value2.amount
+                    sumTaxPaid += value2.taxPaid
+                    
+                    let date = DateComponents(
+                        calendar: Calendar.current,
+                        year: value2.creditedDate.toFullDateFormat().getDateComponents().year,
+                        month: value2.creditedDate.toFullDateFormat().getDateComponents().month,
+                        day: 1)
+                    totalDays = value1.creditedDate.toFullDateFormat().removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
+                    maxDays = maxDays < totalDays ? totalDays : maxDays
+                }
+            }
+            totalMonth = Double(maxDays) / Double(30)
+            return IncomeRestModel(id: value1.id,
+                                   userId: value1.userId,
+                                   amount: value1.amount,
+                                   taxPaid: value1.taxPaid,
+                                   creditedDate: value1.creditedDate,
+                                   currency: value1.currency,
+                                   incomeType: value1.incomeType,
+                                   incomeTag: value1.incomeTag,
+                                   avgAmount: sumAmount / totalMonth,
+                                   avgTaxPaid: sumTaxPaid / totalMonth,
+                                   cumulativeAmount: cumAmount,
+                                   cumulativeTaxPaid: cumTaxPaid)
+        }
+        DispatchQueue.main.async {
+            self.incomeListNew = list
+            self.incomeList = returnIncomeList.reversed()
+            self.incomeListLoaded = true
+        }
     }
     
     func getIncomeList(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async {
@@ -126,10 +127,10 @@ class IncomeViewModel: ObservableObject {
     }
     
     func getTotalTaxPaid(incomeType: [String] = [String](), incomeTag: [String] = [String](), year: [String] = [String](), financialYear: [String] = [String]()) async {
-//        let amount = await incomeController.fetchTotal(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear, field: "Tax", income: incomeListNew)
-//        DispatchQueue.main.async {
-//            self.incomeTaxPaidAmount = amount
-//        }
+        let amount = await incomeController.fetchTotal(incomeType: incomeType, incomeTag: incomeTag, year: year, financialYear: financialYear, field: "Tax", income: incomeListNew)
+        DispatchQueue.main.async {
+            self.incomeTaxPaidAmount = amount
+        }
     }
     
     func getIncomeTagList() async {

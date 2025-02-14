@@ -41,9 +41,9 @@ struct IncomeRowView: View {
                     }.fixedSize()
                 }
                 Spacer()
-//                Text(income.creditedDate.getDateAndFormat())
-//                    .font(.system(size: 10))
-//                    .bold()
+                Text(income.creditedDate.toFullDateFormat().getDateAndFormat())
+                    .font(.system(size: 10))
+                    .bold()
             }
             if(showCumulative) {
                 HStack {
