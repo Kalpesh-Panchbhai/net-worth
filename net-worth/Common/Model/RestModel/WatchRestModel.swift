@@ -42,7 +42,5 @@ struct WatchRestModel: Codable, Hashable {
         }
         try container.encode(userId, forKey: .userId)
         try container.encode(name, forKey: .name)
-        try container.encode(totalAccount, forKey: .totalAccount)
-        try container.encode(value, forKey: .value)
     }
 }

@@ -74,7 +74,7 @@ struct WatchView: View {
                     }
                     .confirmationDialog("Are you sure?",
                                         isPresented: $isPresentingWatchDeleteConfirm) {
-                        Button("Delete account " + selectedWatch.name + "?", role: .destructive) {
+                        Button("Delete watch list " + selectedWatch.name + "?", role: .destructive) {
                             Task.init {
                                 await watchController.deleteWatchList(watch: selectedWatch)
                                 await watchViewModel.getAllWatchList()
