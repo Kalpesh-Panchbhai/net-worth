@@ -37,6 +37,10 @@ class AccountController {
         })
     }
     
+    public func getChartDataList(id: Any, type: String) async ->  [ChartData] {
+        return await restController.executeAPI(entity: "chart", httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: [id, type], forClass: [ChartData].self)
+    }
+    
     public func calculateTotalBalance(accountList: [AccountRestModel]) async -> AccountValue {
         var balance = AccountValue(currentValue: 0.0, previousValue: 0.0)
         accountList.forEach {

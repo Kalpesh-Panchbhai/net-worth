@@ -39,10 +39,10 @@ class RestController {
                 if !pathParams.isEmpty {
                     pathParams = pathParams + "/"
                 }
-                pathParams = pathParams + (param as! Int != 0 ? ("/" + String(param as! Int)) : "")
+                pathParams = pathParams + (param as! Int != 0 ? (String(param as! Int)) : "")
             }
         }
-        return baseURL + pathParams
+        return baseURL + "/" + pathParams
     }
     
     private func getURLRequest(url: URL, httpMethod: String, body: Data) -> URLRequest {

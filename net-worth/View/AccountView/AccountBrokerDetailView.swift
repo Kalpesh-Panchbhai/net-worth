@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AccountBrokerDetailView: View {
     
-    var AccountInbroker: AccountInBrokerRestModel
+    var accountInbroker: AccountInBrokerRestModel
     
     @State var tabItem = 1
     @EnvironmentObject var accountViewModel: AccountViewModel
@@ -30,17 +30,17 @@ struct AccountBrokerDetailView: View {
                 impact.impactOccurred()
             }
             if(tabItem == 1) {
-                AccountTransactionView(id: AccountInbroker.id, type: "account_broker")
+                AccountTransactionView(id: accountInbroker.id, type: "account_broker")
             } else {
-                SingleLineLollipopChartView(chartDataList: [ChartData]())
+                AccountChartView(id: accountInbroker.id, type: "single_broker")
             }
         }
         .onAppear {
             Task.init {
-                await accountViewModel.getAccountTransactionList(accountID: AccountInbroker.id, type: "account_broker")
+                await accountViewModel.getAccountTransactionList(accountID: accountInbroker.id, type: "account_broker")
             }
         }
-        .navigationTitle(AccountInbroker.name)
+        .navigationTitle(accountInbroker.name)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(

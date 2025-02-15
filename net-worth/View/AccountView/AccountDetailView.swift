@@ -62,7 +62,7 @@ struct AccountDetailView: View {
                     if(tabItem == 1) {
                         AccountBrokerView(brokerID: accountID, sortOrder: $sortOrder, sortType: $sortType)
                     } else if(tabItem == 2) {
-                        SingleLineLollipopChartView(chartDataList: [ChartData]())
+                        AccountChartView(id: accountID, type: "one_broker")
                     } else {
                         AccountWatchView()
                     }
@@ -70,7 +70,7 @@ struct AccountDetailView: View {
                     if(tabItem == 1) {
                         AccountTransactionView(id: accountID, type: "account")
                     } else if(tabItem == 2) {
-                        SingleLineLollipopChartView(chartDataList: [ChartData]())
+                        AccountChartView(id: accountID, type: "one_non_broker")
                     } else {
                         AccountWatchView()
                     }

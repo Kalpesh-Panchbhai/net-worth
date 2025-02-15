@@ -14,6 +14,7 @@ struct AccountListView: View {
     
     @State var searchText = ""
     @State var isNewTransactionViewOpen = false
+    @State var isChartViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
     @State var deletedAccount = AccountRestModel()
     
@@ -62,6 +63,21 @@ struct AccountListView: View {
             }
                 .font(.system(size: 14).bold())
         )
+        .navigationBarItems(
+            trailing: Button(action: {
+                self.isChartViewOpen.toggle()
+            }) {
+                Image(systemName: ConstantUtils.chartImageName)
+                    .foregroundColor(Color.theme.primaryText)
+                    .bold()
+            }
+                .font(.system(size: 14).bold())
+        )
+        .sheet(isPresented: $isChartViewOpen, onDismiss: {
+            
+        }, content: {
+            AccountChartView(id: accountType, type: accountType == "Broker" ? "broker_type" : "non_broker_type")
+        })
         .searchable(text: $searchText)
     }
 }

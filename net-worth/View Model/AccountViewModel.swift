@@ -19,6 +19,7 @@ class AccountViewModel: ObservableObject {
     @Published var accountListLoaded = false
     @Published var account = AccountRestModel()
     @Published var totalBalance = AccountValue()
+    @Published var chartDataList = [ChartData]()
     @Published var grouping: Grouping = .accountType
     
     @Published var accountsInBroker = [AccountInBrokerRestModel]()
@@ -129,6 +130,13 @@ class AccountViewModel: ObservableObject {
         let list = await accountTransactionController.getAccountTransactionList(accountID: accountID, type: type)
         DispatchQueue.main.async {
             self.accountTransactionList = list
+        }
+    }
+    
+    func getChartDataList(id: Any, type: String) async {
+        let list = await accountController.getChartDataList(id: id, type: type)
+        DispatchQueue.main.async {
+            self.chartDataList = list
         }
     }
 }

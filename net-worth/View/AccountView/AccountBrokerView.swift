@@ -31,7 +31,7 @@ struct AccountBrokerView: View {
                     Spacer()
                     ForEach(0..<getAccountsInBrokerList().count, id: \.self) { i in
                         NavigationLink(destination: {
-                            AccountBrokerDetailView(AccountInbroker: getAccountsInBrokerList()[i])
+                            AccountBrokerDetailView(accountInbroker: getAccountsInBrokerList()[i])
                         }, label: {
                             AccountBrokerRowView(account: getAccountsInBrokerList()[i])
                                 .frame(width: 360, height: 40)
