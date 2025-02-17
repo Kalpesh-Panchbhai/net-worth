@@ -53,10 +53,10 @@ struct MainScreenView: View {
                         }
                         .badge(getTotalIncomeCount())
                     
-//                    ChartView()
-//                        .tabItem {
-//                            Label("Charts", systemImage: "chart.line.uptrend.xyaxis.circle")
-//                        }
+                    ChartView()
+                        .tabItem {
+                            Label("Charts", systemImage: "chart.line.uptrend.xyaxis.circle")
+                        }
                     
                     SettingsView()
                         .tabItem {
