@@ -9,8 +9,8 @@ import Foundation
 
 class RestController {
     
-    public func executeAPI<T>(entity: String, httpMethod: String, body: Data = Data(), pathParam: [Any] = [], forClass: T.Type) async -> T where T : Codable {
-        let url = URL(string: getURL(entity: entity, pathParam: pathParam))
+    public func executeAPI<T>(entity: String, httpMethod: String, body: Data = Data(), pathParam: [Any] = [], queryParams: [String: String] = [:], forClass: T.Type) async -> T where T : Codable {
+        let url = URL(string: getURL(entity: entity, pathParam: pathParam, queryParams: queryParams))
         
         let request = getURLRequest(url: url!, httpMethod: httpMethod, body: body)
         do {
@@ -26,7 +26,7 @@ class RestController {
         return try! T(from: EmptyResponse() as! Decoder)
     }
     
-    private func getURL(entity: String, pathParam: [Any]) -> String {
+    private func getURL(entity: String, pathParam: [Any], queryParams: [String: String]) -> String {
         let baseURL = ConstantUtils.baseRESTURL + entity
         var pathParams = ""
         for param in pathParam {
@@ -42,7 +42,12 @@ class RestController {
                 pathParams = pathParams + (param as! Int != 0 ? (String(param as! Int)) : "")
             }
         }
-        return baseURL + "/" + pathParams
+        
+        var queryParamString = ""
+        for queryParam in queryParams {
+            queryParamString = (queryParamString.isEmpty ? "" : "&") + queryParam.key + "=" + queryParam.value
+        }
+        return baseURL + "/" + pathParams + (queryParamString.isEmpty ? "" : "?" + queryParamString)
     }
     
     private func getURLRequest(url: URL, httpMethod: String, body: Data) -> URLRequest {

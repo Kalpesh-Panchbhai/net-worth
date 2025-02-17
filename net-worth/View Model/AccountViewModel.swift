@@ -133,8 +133,8 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func getChartDataList(id: Any, type: String) async {
-        let list = await accountController.getChartDataList(id: id, type: type)
+    func getChartDataList(id: Any, type: String, range: String) async {
+        let list = await accountController.getChartDataList(id: id, type: type, range: range)
         DispatchQueue.main.async {
             self.chartDataList = list
         }

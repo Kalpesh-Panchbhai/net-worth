@@ -67,9 +67,14 @@ struct AccountListView: View {
             trailing: Button(action: {
                 self.isChartViewOpen.toggle()
             }) {
-                Image(systemName: ConstantUtils.chartImageName)
-                    .foregroundColor(Color.theme.primaryText)
-                    .bold()
+                ZStack {
+                    Circle()
+                        .frame(width: 25, height: 25)
+                        .foregroundColor(ColorTheme().foreground)
+                    Image(systemName: ConstantUtils.chartImageName)
+                        .foregroundColor(Color.theme.primaryText)
+                        .font(.system(size: 12))
+                }
             }
                 .font(.system(size: 14).bold())
         )

@@ -37,7 +37,7 @@ class AccountController {
         })
     }
     
-    public func getChartDataList(id: Any, type: String) async ->  [ChartData] {
+    public func getChartDataList(id: Any, type: String, range: String) async ->  [ChartData] {
         return await restController.executeAPI(entity: "chart", httpMethod: ConstantUtils.HTTP_METHOD.GET.rawValue, pathParam: [id, type], forClass: [ChartData].self)
     }
     
