@@ -11,6 +11,7 @@ struct WatchDetailView: View {
     
     @State var watch: WatchRestModel
     @State var addAccountViewOpen = false
+    @State var chartViewOpen = false
     @State var sortOrder = "Asc"
     @State var sortType = "Name"
     @State var hideZeroAmountAccount = true
@@ -91,6 +92,22 @@ struct WatchDetailView: View {
                     .font(.system(size: 14))
                 })
             }
+            
+            ToolbarItem(content: {
+                Button(action: {
+                    self.chartViewOpen.toggle()
+                }, label: {
+                    ZStack {
+                        Circle()
+                            .frame(width: 25, height: 25)
+                            .foregroundColor(ColorTheme().foreground)
+                        Image(systemName: ConstantUtils.chartImageName)
+                            .foregroundColor(Color.theme.primaryText)
+                            .font(.system(size: 12))
+                    }
+                })
+                .font(.system(size: 14))
+            })
             
             ToolbarItem(content: {
                 Menu(content: {
@@ -197,6 +214,11 @@ struct WatchDetailView: View {
             }
         }, content: {
             AccountToWatchView(watch: watch)
+        })
+        .sheet(isPresented: $chartViewOpen, onDismiss: {
+            
+        }, content: {
+            AccountChartView(id: watch.id, type: watch.name == "All" ? "all_watch" : "non_all_watch")
         })
         .onAppear {
             Task.init {
