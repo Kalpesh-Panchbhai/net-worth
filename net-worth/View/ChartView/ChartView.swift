@@ -20,6 +20,7 @@ struct ChartView: View {
     @State var isChartDataEnabled = false
     
     @EnvironmentObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var watchAccountViewModel: WatchAccountViewModel
     @EnvironmentObject var accountViewModel: AccountViewModel
     @EnvironmentObject var incomeViewModel: IncomeViewModel
     
@@ -352,10 +353,13 @@ struct ChartView: View {
     }
     
     private func getAccountsForWatchList(watch: WatchRestModel) -> [AccountRestModel] {
-        return [AccountRestModel]()
-//        return getAccounts().filter {
-//            watch.accountList.contains($0.id)
-//        }
+        Task.init {
+            await watchAccountViewModel.getAllAccountsByWatchID(watchID: watch.id)
+        }
+        var allAccountsByWatchID = watchAccountViewModel.allAccountsByWatchID.map {$0.accountId}
+        return getAccounts().filter {
+            allAccountsByWatchID.contains($0.id)
+        }
     }
     
     private func getBrokerList() -> [AccountRestModel] {
