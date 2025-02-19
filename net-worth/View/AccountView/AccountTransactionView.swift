@@ -21,7 +21,7 @@ struct AccountTransactionView: View {
         NavigationView {
             List {
                 ForEach(accountViewModel.accountTransactionList, id: \.self, content: { accountTransaction in
-                    TransactionRow(accountTransaction: accountTransaction)
+                    TransactionRow(accountTransaction: accountTransaction, type: type)
                         .contextMenu {
                             Button(role: .destructive, action: {
                                 Task.init {
@@ -45,6 +45,7 @@ struct AccountTransactionView: View {
 struct TransactionRow: View {
     
     var accountTransaction: AccountTransactionRestModel
+    var type: String
     
     var body: some View {
         VStack {
@@ -53,9 +54,11 @@ struct TransactionRow: View {
                     .foregroundColor(Color.theme.primaryText)
                     .font(.system(size: 11).bold())
                 Spacer()
-                Text(SettingsController().getDefaultCurrency().code)
-                    .foregroundColor(Color.theme.primaryText)
-                    .font(.system(size: 11).bold())
+                if(type.elementsEqual("account")) {
+                    Text(SettingsController().getDefaultCurrency().code)
+                        .foregroundColor(Color.theme.primaryText)
+                        .font(.system(size: 11).bold())
+                }
                 Text(accountTransaction.value.withCommas(decimalPlace: 2))
                     .foregroundColor(Color.theme.primaryText)
                     .font(.system(size: 11).bold())

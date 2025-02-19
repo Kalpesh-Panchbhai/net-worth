@@ -107,7 +107,7 @@ struct AccountDetailView: View {
                 Button(action: {
                     self.showAddWatchListView.toggle()
                 }, label: {
-                    if(watchViewModel.watchListForAccount.count > 1) {
+                    if(watchAccountViewModel.allWatchListByAccountID.count > 1) {
                         Image(systemName: ConstantUtils.bookmarkImageName)
                             .foregroundColor(Color.theme.primaryText)
                             .bold()
