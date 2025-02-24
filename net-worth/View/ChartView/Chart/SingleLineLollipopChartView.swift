@@ -36,7 +36,7 @@ struct SingleLineLollipopChartView: View {
                         x: .value("Date", data.date),
                         y: .value("Value", data.value)
                     )
-                    .foregroundStyle(.green)
+                    .foregroundStyle(getTransactionDateCircleColor(date: data.date.localToLocalStringFull()))
                     .symbol(.circle)
                 }
                 AreaMark(
@@ -208,5 +208,12 @@ struct SingleLineLollipopChartView: View {
         return accountTransactionList.filter {
             return $0.transactionDate.elementsEqual(date)
         }.count > 0
+    }
+    
+    private func getTransactionDateCircleColor(date: String) -> Color {
+        var accountTransactionFilteredList = accountTransactionList.filter {
+            return $0.transactionDate <= date
+        }
+        return (accountTransactionFilteredList.count > 1 ? (accountTransactionFilteredList[0].value >= accountTransactionFilteredList[1].value ? Color.theme.green : Color.theme.red) : Color.theme.green)
     }
 }
