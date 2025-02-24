@@ -101,14 +101,16 @@ struct ChartView: View {
     var leftTopView: some View {
         Button(action: {
             if(showingAssetsData) {
-                chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
+                getAccountsForWatchList(watch: watchListSelected)
+                chartDataList = chartDataList.filter {
                     return $0.value.currentValue < 0
                 }.sorted(by: {
                     $0.value.currentValue < $1.value.currentValue
                 })
                 showingAssetsData.toggle()
             } else {
-                chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
+                getAccountsForWatchList(watch: watchListSelected)
+                chartDataList = chartDataList.filter {
                     return $0.value.currentValue > 0
                 }.sorted(by: {
                     $0.value.currentValue > $1.value.currentValue
@@ -174,13 +176,12 @@ struct ChartView: View {
                 brokerSelected = AccountRestModel()
                 compareAssetsToLiabilities = false
                 multipleWatchListSelection = Set<WatchRestModel>()
-                var accountList = getAccountsForWatchList(watch: watchListSelected).filter {
+                getAccountsForWatchList(watch: watchListSelected)
+                self.chartDataList = chartDataList.filter({
                     return $0.value.currentValue > 0
-                }
-                accountList.sort(by: {
+                }).sorted(by: {
                     $0.value.currentValue > $1.value.currentValue
                 })
-                self.chartDataList = accountList
                 
                 showingAssetsData = true
             }
@@ -244,8 +245,8 @@ struct ChartView: View {
                     }
                     self.multipleWatchListSelection.insert(watch)
                     
-                    let accountList = getAccountsForWatchList(watch: watch)
-                    var totalAmount = accountList.map( {
+                    getAccountsForWatchList(watch: watch)
+                    var totalAmount = chartDataList.map( {
                         $0.value.currentValue
                     }).reduce(0, +)
                     totalAmount = totalAmount < 0 ? totalAmount * -1.0 : totalAmount * 1.0
@@ -352,13 +353,13 @@ struct ChartView: View {
         return watchViewModel.watchList
     }
     
-    private func getAccountsForWatchList(watch: WatchRestModel) -> [AccountRestModel] {
+    private func getAccountsForWatchList(watch: WatchRestModel) {
         Task.init {
             await watchAccountViewModel.getAllAccountsByWatchID(watchID: watch.id)
-        }
-        var allAccountsByWatchID = watchAccountViewModel.allAccountsByWatchID.map {$0.accountId}
-        return getAccounts().filter {
-            allAccountsByWatchID.contains($0.id)
+            let allAccountsByWatchID = watchAccountViewModel.allAccountsByWatchID.map {$0.accountId}
+            chartDataList = getAccounts().filter {
+                allAccountsByWatchID.contains($0.id)
+            }
         }
     }
     
