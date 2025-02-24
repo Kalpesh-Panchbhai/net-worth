@@ -11,6 +11,7 @@ import Charts
 struct SingleLineLollipopChartView: View {
     
     var chartDataList: [ChartData]
+    var accountTransactionList: [AccountTransactionRestModel] = [AccountTransactionRestModel]()
     var isPercentageChart: Bool = false
     var isColorChart: Bool = true
     
@@ -28,12 +29,22 @@ struct SingleLineLollipopChartView: View {
                 .accessibilityValue("\(data.value)")
                 .lineStyle(StrokeStyle(lineWidth: lineWidth))
                 .foregroundStyle(getChartColor().gradient)
+                .interpolationMethod(.catmullRom)
                 
+                if(isTransactionDate(date: data.date.localToLocalStringFull())) {
+                    PointMark(
+                        x: .value("Date", data.date),
+                        y: .value("Value", data.value)
+                    )
+                    .foregroundStyle(.green)
+                    .symbol(.circle)
+                }
                 AreaMark(
                     x: .value("Date", data.date),
                     y: .value("Value", data.value)
                 )
                 .foregroundStyle(Gradient(colors: [getChartColor().opacity(0.05), .clear]))
+                .interpolationMethod(.catmullRom)
             }
         }
         .chartYScale(domain: getMinValue()...getMaxValue())
@@ -170,9 +181,9 @@ struct SingleLineLollipopChartView: View {
             $0.value
         }.min() ?? 0.0) > 0.0 ? ((chartDataList.map {
             $0.value
-        }.min() ?? 0.0) * 0.99) : ((chartDataList.map {
+        }.min() ?? 0.0) * 0.95) : ((chartDataList.map {
             $0.value
-        }.min() ?? 0.0)) * 1.01
+        }.min() ?? 0.0)) * 1.05
     }
     
     private func getMaxValue() -> Double {
@@ -180,9 +191,9 @@ struct SingleLineLollipopChartView: View {
             $0.value
         }.max() ?? 0.0) > 0.0 ? ((chartDataList.map {
             $0.value
-        }.max() ?? 0.0) * 1.01) : ((chartDataList.map {
+        }.max() ?? 0.0) * 1.05) : ((chartDataList.map {
             $0.value
-        }.max() ?? 0.0)) * 0.99
+        }.max() ?? 0.0)) * 0.95
     }
     
     private func isPositiveValue() -> Bool {
@@ -191,5 +202,11 @@ struct SingleLineLollipopChartView: View {
     
     private func getChartColor() -> Color {
         isColorChart ? (isPositiveValue() ? Color.theme.green : Color.theme.red) : Color.theme.primaryText
+    }
+    
+    private func isTransactionDate(date: String) -> Bool {
+        return accountTransactionList.filter {
+            return $0.transactionDate.elementsEqual(date)
+        }.count > 0
     }
 }

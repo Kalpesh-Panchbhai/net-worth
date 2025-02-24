@@ -25,7 +25,7 @@ struct AccountChartView: View {
             HStack(alignment: .top) {
                 VStack(alignment: .center) {
                     HStack {
-                        SingleLineLollipopChartView(chartDataList: accountViewModel.chartDataList)
+                        SingleLineLollipopChartView(chartDataList: accountViewModel.chartDataList, accountTransactionList: accountViewModel.accountTransactionList)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(15)
@@ -52,6 +52,11 @@ struct AccountChartView: View {
                         
                         Task.init {
                             await accountViewModel.getChartDataList(id: id, type: type, range: range)
+                            if(type.elementsEqual("single_broker") || type.elementsEqual("one_non_broker")) {
+                                await accountViewModel.getAccountTransactionList(accountID: (id as? Int) ?? 0, type: type.elementsEqual("single_broker") ? "account_broker" : "account")
+                            } else {
+                                accountViewModel.accountTransactionList.removeAll()
+                            }
                         }
                     }
                 }
@@ -72,7 +77,13 @@ struct AccountChartView: View {
         .onAppear {
             Task.init {
                 await accountViewModel.getChartDataList(id: id, type: type, range: range)
+                if(type.elementsEqual("single_broker") || type.elementsEqual("one_non_broker")) {
+                    await accountViewModel.getAccountTransactionList(accountID: (id as? Int) ?? 0, type: type.elementsEqual("single_broker") ? "account_broker" : "account")
+                } else {
+                    accountViewModel.accountTransactionList.removeAll()
+                }
             }
+
         }
     }
 
