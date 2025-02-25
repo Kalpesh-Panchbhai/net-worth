@@ -14,6 +14,7 @@ struct AccountChartView: View {
     
     @State var range: String = "1M"
     @State var scenePhaseBlur = 0
+    @State var chartDataList = [ChartData]()
     
     @EnvironmentObject var accountViewModel: AccountViewModel
     
@@ -25,7 +26,7 @@ struct AccountChartView: View {
             HStack(alignment: .top) {
                 VStack(alignment: .center) {
                     HStack {
-                        SingleLineLollipopChartView(chartDataList: accountViewModel.chartDataList, accountTransactionList: accountViewModel.accountTransactionList)
+                        SingleLineLollipopChartView(chartDataList: chartDataList, accountTransactionList: accountViewModel.accountTransactionList)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(15)
@@ -57,6 +58,7 @@ struct AccountChartView: View {
                             } else {
                                 accountViewModel.accountTransactionList.removeAll()
                             }
+                            filterChartData()
                         }
                     }
                 }
@@ -82,9 +84,40 @@ struct AccountChartView: View {
                 } else {
                     accountViewModel.accountTransactionList.removeAll()
                 }
+                filterChartData()
             }
 
         }
+    }
+    
+    private func filterChartData() {
+        let chartDataList = accountViewModel.chartDataList
+        self.chartDataList = chartDataList.reversed().enumerated().compactMap { index, item in
+            (index % getFilterIndex() == 0 || isTransactionDateChartData(item: item)) ? item : nil
+        }.reversed()
+    }
+    
+    private func getFilterIndex() -> Int {
+        if (range == "1M") {
+            return 1
+        } else if(range == "3M") {
+            return 2
+        } else if(range == "6M") {
+            return 3
+        } else if(range == "1Y") {
+            return 4
+        } else if(range == "2Y") {
+            return 5
+        } else if(range == "5Y") {
+            return 6
+        } else {
+            return 7
+        }
+    }
+    
+    private func isTransactionDateChartData(item: ChartData) -> Bool {
+        let accountTransactionList = accountViewModel.accountTransactionList
+        return accountTransactionList.firstIndex(where: { $0.transactionDate == item.date.localToLocalStringFull() }) != nil
     }
 
 }

@@ -36,8 +36,17 @@ struct SingleLineLollipopChartView: View {
                         x: .value("Date", data.date),
                         y: .value("Value", data.value)
                     )
-                    .foregroundStyle(getTransactionDateCircleColor(date: data.date.localToLocalStringFull()))
-                    .symbol(.circle)
+                    .annotation(position: .overlay, alignment: .center) {
+                        ZStack {
+                            Circle()
+                                .fill(getTransactionDateCircleColor(date: data.date.localToLocalStringFull()).opacity(0.3))
+                                .frame(width: 17, height: 17)
+                            Image(systemName: getTransactionDateCircleImageName(date: data.date.localToLocalStringFull()))
+                                .foregroundColor(getTransactionDateCircleColor(date: data.date.localToLocalStringFull()))
+                                .font(.system(size: 11).bold())
+                        }
+                    }
+                    .symbolSize(0)
                 }
                 AreaMark(
                     x: .value("Date", data.date),
@@ -211,9 +220,16 @@ struct SingleLineLollipopChartView: View {
     }
     
     private func getTransactionDateCircleColor(date: String) -> Color {
-        var accountTransactionFilteredList = accountTransactionList.filter {
+        let accountTransactionFilteredList = accountTransactionList.filter {
             return $0.transactionDate <= date
         }
         return (accountTransactionFilteredList.count > 1 ? (accountTransactionFilteredList[0].value >= accountTransactionFilteredList[1].value ? Color.theme.green : Color.theme.red) : Color.theme.green)
+    }
+    
+    private func getTransactionDateCircleImageName(date: String) -> String {
+        let accountTransactionFilteredList = accountTransactionList.filter {
+            return $0.transactionDate <= date
+        }
+        return (accountTransactionFilteredList.count > 1 ? (accountTransactionFilteredList[0].value >= accountTransactionFilteredList[1].value ? ConstantUtils.arrowUpImageName : ConstantUtils.arrowDownImageName) : ConstantUtils.arrowUpImageName)
     }
 }
