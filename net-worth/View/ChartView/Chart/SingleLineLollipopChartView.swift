@@ -39,11 +39,8 @@ struct SingleLineLollipopChartView: View {
                     .annotation(position: .overlay, alignment: .center) {
                         ZStack {
                             Circle()
-                                .fill(getTransactionDateCircleColor(date: data.date.localToLocalStringFull()).opacity(0.3))
-                                .frame(width: 17, height: 17)
-                            Image(systemName: getTransactionDateCircleImageName(date: data.date.localToLocalStringFull()))
-                                .foregroundColor(getTransactionDateCircleColor(date: data.date.localToLocalStringFull()))
-                                .font(.system(size: 11).bold())
+                                .fill(getTransactionDateCircleColor(date: data.date.localToLocalStringFull()).opacity(1))
+                                .frame(width: 13, height: 13)
                         }
                     }
                     .symbolSize(0)
@@ -224,12 +221,5 @@ struct SingleLineLollipopChartView: View {
             return $0.transactionDate <= date
         }
         return (accountTransactionFilteredList.count > 1 ? (accountTransactionFilteredList[0].value >= accountTransactionFilteredList[1].value ? Color.theme.green : Color.theme.red) : Color.theme.green)
-    }
-    
-    private func getTransactionDateCircleImageName(date: String) -> String {
-        let accountTransactionFilteredList = accountTransactionList.filter {
-            return $0.transactionDate <= date
-        }
-        return (accountTransactionFilteredList.count > 1 ? (accountTransactionFilteredList[0].value >= accountTransactionFilteredList[1].value ? ConstantUtils.arrowUpImageName : ConstantUtils.arrowDownImageName) : ConstantUtils.arrowUpImageName)
     }
 }
