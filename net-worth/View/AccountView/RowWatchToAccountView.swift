@@ -9,10 +9,11 @@ import SwiftUI
 
 struct RowWatchToAccountView: View {
     
-    var accountID: String
-    var watchController = WatchController()
+    var accountID: Int
+    var rowId: Int
+    var watchAccountController = WatchAccountController()
     
-    @State var watch: Watch
+    @State var watch: WatchRestModel
     @State var isAdded: Bool
     
     @EnvironmentObject var watchViewModel: WatchViewModel
@@ -31,12 +32,8 @@ struct RowWatchToAccountView: View {
                         .bold()
                         .onTapGesture {
                             isAdded.toggle()
-                            self.watch.accountList = self.watch.accountList.filter { item in
-                                item != accountID
-                            }
                             Task.init {
-                                await watchController.updateWatchList(watch: watch)
-                                await watchViewModel.getAllWatchList()
+                                await watchAccountController.deleteWatchAccount(id: rowId)
                             }
                         }
                 } else {
@@ -45,10 +42,8 @@ struct RowWatchToAccountView: View {
                         .bold()
                         .onTapGesture {
                             isAdded.toggle()
-                            self.watch.accountList.append(accountID)
                             Task.init {
-                                await watchController.updateWatchList(watch: watch)
-                                await watchViewModel.getAllWatchList()
+                                await watchAccountController.addWatchAccount(watch: WatchAccountRestModel(accountId: accountID, watchId: watch.id))
                             }
                         }
                 }

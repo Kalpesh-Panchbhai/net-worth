@@ -12,16 +12,16 @@ struct BalanceCardView: View {
     var accountType: String
     var isWatchListCardView: Bool
     
-    @State var watchList: Watch
-    @State var balanceAccount: BalanceAccount
+    @State var watchList: WatchRestModel
+    @State var balanceAccount: AccountValue
     
     @EnvironmentObject var accountViewModel: AccountViewModel
     
-    init(accountType: String, isWatchListCardView: Bool, watchList: Watch) {
+    init(accountType: String, isWatchListCardView: Bool, watchList: WatchRestModel) {
         self.accountType = accountType
         self.isWatchListCardView = isWatchListCardView
         self.watchList = watchList
-        self.balanceAccount = BalanceAccount()
+        self.balanceAccount = AccountValue()
     }
     
     var body: some View {
@@ -32,7 +32,7 @@ struct BalanceCardView: View {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
-                    Text("\(balanceAccount.currentDayValue.value.withCommas(decimalPlace: 2))")
+                    Text("\(balanceAccount.currentValue.withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
                 }
@@ -79,23 +79,9 @@ struct BalanceCardView: View {
         }
         .onAppear {
             if(isWatchListCardView) {
-                let accountList = accountViewModel.accountList.filter {
-                    return watchList.accountList.contains($0.id)
-                }
-                var currentDayValue = 0.0
-                var previousDayValue = 0.0
-                
-                for account in accountList {
-                    currentDayValue += account.balance.currentDayValue.value
-                    if(areOneDayTransactions(account: account)) {
-                        previousDayValue += account.balance.previousDayValue.value
-                    } else {
-                        previousDayValue += account.balance.currentDayValue.value
-                    }
-                }
-                balanceAccount = BalanceAccount(currentDayValue: BalanceAccountDetail(value: currentDayValue), previousDayValue: BalanceAccountDetail(value: previousDayValue))
+                balanceAccount = AccountValue(currentValue: watchList.value.currentValue, previousValue: watchList.value.previousValue)
             } else {
-                var accountList = [Account]()
+                var accountList = [AccountRestModel]()
                 if(accountType.elementsEqual("Net Worth")) {
                     accountList = accountViewModel.accountList
                 } else {
@@ -105,27 +91,19 @@ struct BalanceCardView: View {
                 var previousDayValue = 0.0
                 
                 for account in accountList {
-                    currentDayValue += account.balance.currentDayValue.value
-                    if(areOneDayTransactions(account: account)) {
-                        previousDayValue += account.balance.previousDayValue.value
-                    } else {
-                        previousDayValue += account.balance.currentDayValue.value
-                    }
+                    currentDayValue += account.value.currentValue
+                    previousDayValue += account.value.previousValue
                 }
-                balanceAccount = BalanceAccount(currentDayValue: BalanceAccountDetail(value: currentDayValue), previousDayValue: BalanceAccountDetail(value: previousDayValue))
+                balanceAccount = AccountValue(currentValue: currentDayValue, previousValue: previousDayValue)
             }
         }
     }
     
     private func getOneDayChange() -> Double {
-        return balanceAccount.currentDayValue.value - balanceAccount.previousDayValue.value
+        return balanceAccount.currentValue - balanceAccount.previousValue
     }
     
     private func getOneDayPercentageChange() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: balanceAccount.previousDayValue.value, currentBalance: balanceAccount.currentDayValue.value)
-    }
-    
-    private func areOneDayTransactions(account: Account) -> Bool {
-        return account.accountName != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+        return CommonController.getGrowthPercentage(previousBalance: balanceAccount.previousValue, currentBalance: balanceAccount.currentValue)
     }
 }

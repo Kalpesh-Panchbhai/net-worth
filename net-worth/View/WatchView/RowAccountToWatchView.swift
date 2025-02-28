@@ -9,18 +9,19 @@ import SwiftUI
 
 struct RowAccountToWatchView: View {
     
-    var account: Account
-    var watchController = WatchController()
+    var account: AccountRestModel
+    var watchAccountController = WatchAccountController()
+    var rowId: Int
     
-    @Binding var watch: Watch
+    @Binding var watch: WatchRestModel
     @State var isAdded: Bool
     
-    @EnvironmentObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var watchAccountViewModel: WatchAccountViewModel
     
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(account.accountName)
+                Text(account.name)
                     .foregroundColor(Color.theme.primaryText)
             }
             .padding()
@@ -32,12 +33,8 @@ struct RowAccountToWatchView: View {
                         .bold()
                         .onTapGesture {
                             isAdded.toggle()
-                            self.watch.accountList = self.watch.accountList.filter { item in
-                                item != account.id
-                            }
                             Task.init {
-                                await watchController.updateWatchList(watch: watch)
-                                await watchViewModel.getAllWatchList()
+                                await watchAccountController.deleteWatchAccount(id: rowId)
                             }
                         }
                 } else {
@@ -46,10 +43,8 @@ struct RowAccountToWatchView: View {
                         .bold()
                         .onTapGesture {
                             isAdded.toggle()
-                            self.watch.accountList.append(account.id)
                             Task.init {
-                                await watchController.updateWatchList(watch: watch)
-                                await watchViewModel.getAllWatchList()
+                                await watchAccountController.addWatchAccount(watch: WatchAccountRestModel(accountId: account.id, watchId: watch.id))
                             }
                         }
                 }

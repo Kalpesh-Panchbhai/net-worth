@@ -9,14 +9,15 @@ import SwiftUI
 
 struct UpdateBalanceAccountBrokerView: View {
     
-    var brokerID: String
-    var accountBroker: AccountInBroker
+    var brokerID: Int
+    var accountBroker: AccountInBrokerRestModel
     
     var accountTransactionController = AccountTransactionController()
     
     @State var unit: String = "0.0"
     @State var isPlus = true
     @State var scenePhaseBlur = 0
+    @State var date = Date()
     
     @EnvironmentObject var accountViewModel: AccountViewModel
     
@@ -29,6 +30,8 @@ struct UpdateBalanceAccountBrokerView: View {
                 Section("Transaction detail") {
                     currenUnitField
                         .foregroundColor(Color.theme.primaryText)
+                    transactionDate
+                        .foregroundColor(Color.theme.primaryText)
                 }
                 .listRowBackground(Color.theme.foreground)
                 .foregroundColor(Color.theme.primaryText)
@@ -36,12 +39,13 @@ struct UpdateBalanceAccountBrokerView: View {
             .toolbar {
                 ToolbarItem {
                     Button(action: {
-                        var accountTransaction = AccountTransaction(isAccountTransaction: false)
-                        accountTransaction.accountId = accountBroker.id
-                        accountTransaction.amount = (Double(unit) ?? 0.0) * (isPlus ? 1.0 : -1.0)
-                        accountTransaction.operation = "UPDATE"
+                        var accountTransaction = AccountTransactionRestModel()
+                        accountTransaction.accountBrokerId = accountBroker.id
+                        accountTransaction.transactionDate = date.localToLocalString()
+                        accountTransaction.value = (Double(unit) ?? 0.0) * (isPlus ? 1.0 : -1.0)
+                        accountTransaction.operation = "update"
                         Task.init {
-                            await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
+                            await accountTransactionController.addAccountTransaction(accountTransaction: accountTransaction)
                             await accountViewModel.getAccountInBrokerList(brokerID: brokerID)
                         }
                         dismiss()
@@ -55,12 +59,13 @@ struct UpdateBalanceAccountBrokerView: View {
                 
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        var accountTransaction = AccountTransaction(isAccountTransaction: false)
-                        accountTransaction.accountId = accountBroker.id
-                        accountTransaction.amount = (Double(unit) ?? 0.0) * (isPlus ? 1.0 : -1.0)
-                        accountTransaction.operation = "ADD"
+                        var accountTransaction = AccountTransactionRestModel()
+                        accountTransaction.accountBrokerId = accountBroker.id
+                        accountTransaction.transactionDate = date.localToLocalString()
+                        accountTransaction.value = (Double(unit) ?? 0.0) * (isPlus ? 1.0 : -1.0)
+                        accountTransaction.operation = "add"
                         Task.init {
-                            await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
+                            await accountTransactionController.addAccountTransaction(accountTransaction: accountTransaction)
                             await accountViewModel.getAccountInBrokerList(brokerID: brokerID)
                         }
                         dismiss()
@@ -138,6 +143,12 @@ struct UpdateBalanceAccountBrokerView: View {
                     }
                 }
                 .multilineTextAlignment(.trailing)
+        }
+    }
+    
+    private var transactionDate: some View {
+        HStack{
+            DatePicker("Transaction Date", selection: $date, in: ...Date(), displayedComponents: [.date])
         }
     }
 }

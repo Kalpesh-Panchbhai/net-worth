@@ -19,15 +19,15 @@ class IncomeViewModel: ObservableObject {
     var selectedYearList = [String]()
     var selectedFinancialYearList = [String]()
     
-    @Published var incomeList = [IncomeCalculation]()
-    @Published var incomeListNew = [Income]()
-    @Published var incomeListByGroup = [String: [IncomeCalculation]]()
+    @Published var incomeList = [IncomeRestModel]()
+    @Published var incomeListNew = [IncomeRestModel]()
+    @Published var incomeListByGroup = [String: [IncomeRestModel]]()
     @Published var incomeListLoaded = false
     @Published var incomeTotalAmount = 0.0
     @Published var incomeTaxPaidAmount = 0.0
     
-    @Published var incomeTagList = [IncomeTag]()
-    @Published var incomeTypeList = [IncomeType]()
+    @Published var incomeTagList = [TypeValueRestModel]()
+    @Published var incomeTypeList = [TypeValueRestModel]()
     @Published var incomeYearList = [String]()
     @Published var incomeFinancialYearList = [String]()
     
@@ -48,33 +48,34 @@ class IncomeViewModel: ObservableObject {
             var totalDays = 0
             var maxDays = 0
             cumAmount = cumAmount + value1.amount
-            cumTaxPaid = cumTaxPaid + value1.taxpaid
+            cumTaxPaid = cumTaxPaid + value1.taxPaid
             incomeList.forEach { value2 in
-                if(value1.creditedOn >= value2.creditedOn) {
+                if(value1.creditedDate >= value2.creditedDate) {
                     sumAmount += value2.amount
-                    sumTaxPaid += value2.taxpaid
+                    sumTaxPaid += value2.taxPaid
                     
                     let date = DateComponents(
                         calendar: Calendar.current,
-                        year: value2.creditedOn.getDateComponents().year,
-                        month: value2.creditedOn.getDateComponents().month,
+                        year: value2.creditedDate.toFullDateFormat().getDateComponents().year,
+                        month: value2.creditedDate.toFullDateFormat().getDateComponents().month,
                         day: 1)
-                    totalDays = value1.creditedOn.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
+                    totalDays = value1.creditedDate.toFullDateFormat().removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
                     maxDays = maxDays < totalDays ? totalDays : maxDays
                 }
             }
             totalMonth = Double(maxDays) / Double(30)
-            return IncomeCalculation(id: value1.id,
-                                     amount: value1.amount,
-                                     taxpaid: value1.taxpaid,
-                                     creditedOn: value1.creditedOn,
-                                     currency: value1.currency,
-                                     type: value1.type,
-                                     tag: value1.tag,
-                                     avgAmount: sumAmount / totalMonth,
-                                     avgTaxPaid: sumTaxPaid / totalMonth,
-                                     cumulativeAmount: cumAmount,
-                                     cumulativeTaxPaid: cumTaxPaid)
+            return IncomeRestModel(id: value1.id,
+                                   userId: value1.userId,
+                                   amount: value1.amount,
+                                   taxPaid: value1.taxPaid,
+                                   creditedDate: value1.creditedDate,
+                                   currency: value1.currency,
+                                   incomeType: value1.incomeType,
+                                   incomeTag: value1.incomeTag,
+                                   avgAmount: sumAmount / totalMonth,
+                                   avgTaxPaid: sumTaxPaid / totalMonth,
+                                   cumulativeAmount: cumAmount,
+                                   cumulativeTaxPaid: cumTaxPaid)
         }
         DispatchQueue.main.async {
             self.incomeListNew = list
@@ -112,7 +113,7 @@ class IncomeViewModel: ObservableObject {
             }
         } else {
             DispatchQueue.main.async {
-                self.incomeListByGroup = [String: [IncomeCalculation]]()
+                self.incomeListByGroup = [String: [IncomeRestModel]]()
                 self.incomeListLoaded = true
             }
         }

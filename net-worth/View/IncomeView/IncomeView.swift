@@ -474,7 +474,7 @@ struct IncomeView: View {
     }
     
     private func deleteIncome(offsets: IndexSet) {
-        var deletedIncome = Income()
+        var deletedIncome = IncomeRestModel()
         withAnimation {
             offsets.map {
                 deletedIncome = incomeViewModel.incomeList[$0]

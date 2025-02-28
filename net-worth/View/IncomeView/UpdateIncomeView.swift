@@ -9,14 +9,14 @@ import SwiftUI
 
 struct UpdateIncomeView: View {
     
-    var income: IncomeCalculation
+    var income: IncomeRestModel
     var incomeController = IncomeController()
     var currencyList = CurrencyList().currencyList
     
     @State var amount: String = "0.0"
     @State var taxPaid: String = "0.0"
-    @State var incomeTypeSelected: IncomeType = IncomeType()
-    @State var incomeTagSelected: IncomeTag = IncomeTag()
+    @State var incomeTypeSelected: TypeValueRestModel = TypeValueRestModel()
+    @State var incomeTagSelected: TypeValueRestModel = TypeValueRestModel()
     @State var currencySelected: Currency = Currency()
     @State var date = Date().getEarliestDate()
     
@@ -29,7 +29,7 @@ struct UpdateIncomeView: View {
             Form {
                 Section("Income detail") {
                     Picker(selection: $incomeTypeSelected, label: Text("Type")) {
-                        Text("Select").tag(IncomeType())
+                        Text("Select").tag(TypeValueRestModel())
                         ForEach(incomeViewModel.incomeTypeList, id: \.self) {
                             Text($0.name).tag($0)
                         }
@@ -115,7 +115,7 @@ struct UpdateIncomeView: View {
                         .foregroundColor(Color.theme.primaryText)
                     
                     Picker(selection: $incomeTagSelected, label: Text("Tag")) {
-                        Text("Select").tag(IncomeTag())
+                        Text("Select").tag(TypeValueRestModel())
                         ForEach(incomeViewModel.incomeTagList, id: \.self) {
                             Text($0.name).tag($0)
                         }
@@ -130,7 +130,7 @@ struct UpdateIncomeView: View {
                 ToolbarItem {
                     Button(action: {
                         Task.init {
-                            let updatedIncome = Income(id: income.id,amount: amount.toDouble() ?? 0.0, taxpaid: taxPaid.toDouble() ?? 0.0, creditedOn: date, currency: currencySelected.code, type: incomeTypeSelected.name, tag: incomeTagSelected.name)
+                            let updatedIncome = IncomeRestModel(id: income.id, userId: ApplicationData.shared.userId, amount: amount.toDouble() ?? 0.0, taxPaid: taxPaid.toDouble() ?? 0.0, creditedDate: date.localToLocalString(), currency: currencySelected.code, incomeType: incomeTypeSelected, incomeTag: incomeTagSelected)
                             await incomeController.updateIncome(income: updatedIncome)
                             await incomeViewModel.getIncomeList()
                             
@@ -164,14 +164,14 @@ struct UpdateIncomeView: View {
                 Task.init {
                     if(incomeTypeSelected.name.isEmpty) {
                         incomeTypeSelected = incomeViewModel.incomeTypeList.filter { item in
-                            item.name.elementsEqual(income.type)
-                        }.first ?? IncomeType()
+                            item.name.elementsEqual(income.incomeType.name)
+                        }.first ?? TypeValueRestModel()
                     }
                     
                     if(incomeTagSelected.name.isEmpty) {
                         incomeTagSelected = incomeViewModel.incomeTagList.filter { item in
-                            item.name.elementsEqual(income.tag)
-                        }.first ?? IncomeTag()
+                            item.name.elementsEqual(income.incomeTag.name)
+                        }.first ?? TypeValueRestModel()
                     }
                     
                     if(amount.elementsEqual("0.0")) {
@@ -179,7 +179,7 @@ struct UpdateIncomeView: View {
                     }
                     
                     if(taxPaid.elementsEqual("0.0")) {
-                        taxPaid = income.taxpaid.withCommas(decimalPlace: 2)
+                        taxPaid = income.taxPaid.withCommas(decimalPlace: 2)
                     }
                     
                     if(currencySelected.name.isEmpty) {
@@ -189,7 +189,7 @@ struct UpdateIncomeView: View {
                     }
                     
                     if(Calendar.current.isDate(date, equalTo: Date().getEarliestDate(), toGranularity: .day)) {
-                        date = income.creditedOn
+                        date = income.creditedDate.toFullDateFormat()
                     }
                 }
             }

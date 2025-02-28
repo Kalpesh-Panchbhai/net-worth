@@ -9,12 +9,13 @@ import SwiftUI
 
 struct UpdateBalanceAccountView: View {
     
-    var accountId: String
+    var accountId: Int
     var accountTransactionController = AccountTransactionController()
     
     @State var amount: String = "0.0"
     @State var isPlus = true
     @State var scenePhaseBlur = 0
+    @State var date = Date()
     
     @EnvironmentObject var accountViewModel: AccountViewModel
     
@@ -27,6 +28,8 @@ struct UpdateBalanceAccountView: View {
                 Section("Transaction detail") {
                     currentBalanceField
                         .foregroundColor(Color.theme.primaryText)
+                    transactionDate
+                        .foregroundColor(Color.theme.primaryText)
                 }
                 .listRowBackground(Color.theme.foreground)
                 .foregroundColor(Color.theme.primaryText)
@@ -34,12 +37,13 @@ struct UpdateBalanceAccountView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        var accountTransaction = AccountTransaction(isAccountTransaction: true)
+                        var accountTransaction = AccountTransactionRestModel()
                         accountTransaction.accountId = accountId
-                        accountTransaction.amount = (Double(amount) ?? 0.0) * (isPlus ? 1.0 : -1.0)
-                        accountTransaction.operation = "ADD"
+                        accountTransaction.transactionDate = date.localToLocalString()
+                        accountTransaction.value = (Double(amount) ?? 0.0) * (isPlus ? 1.0 : -1.0)
+                        accountTransaction.operation = "add"
                         Task.init {
-                            await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
+                            await accountTransactionController.addAccountTransaction(accountTransaction: accountTransaction)
                             await accountViewModel.getAccountList()
                         }
                         dismiss()
@@ -51,12 +55,13 @@ struct UpdateBalanceAccountView: View {
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        var accountTransaction = AccountTransaction(isAccountTransaction: true)
+                        var accountTransaction = AccountTransactionRestModel()
                         accountTransaction.accountId = accountId
-                        accountTransaction.amount = (Double(amount) ?? 0.0) * (isPlus ? 1.0 : -1.0)
-                        accountTransaction.operation = "UPDATE"
+                        accountTransaction.transactionDate = date.localToLocalString()
+                        accountTransaction.value = (Double(amount) ?? 0.0) * (isPlus ? 1.0 : -1.0)
+                        accountTransaction.operation = "update"
                         Task.init {
-                            await accountTransactionController.addTransaction(accountTransaction: accountTransaction)
+                            await accountTransactionController.addAccountTransaction(accountTransaction: accountTransaction)
                             await accountViewModel.getAccountList()
                         }
                         dismiss()
@@ -66,7 +71,7 @@ struct UpdateBalanceAccountView: View {
                     .font(.system(size: 14).bold())
                 }
             }
-            .navigationTitle(accountViewModel.account.accountName)
+            .navigationTitle(accountViewModel.account.name)
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.theme.background)
             .scrollContentBackground(.hidden)
@@ -132,6 +137,12 @@ struct UpdateBalanceAccountView: View {
                     }
                 }
                 .multilineTextAlignment(.trailing)
+        }
+    }
+    
+    private var transactionDate: some View {
+        HStack{
+            DatePicker("Transaction Date", selection: $date, in: ...Date(), displayedComponents: [.date])
         }
     }
 }

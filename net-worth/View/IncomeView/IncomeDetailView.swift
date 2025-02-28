@@ -9,7 +9,7 @@ import SwiftUI
 
 struct IncomeDetailView: View {
     
-    @State var income: IncomeCalculation
+    @State var income: IncomeRestModel
     
     @State var modifyViewOpen = false
     
@@ -23,13 +23,13 @@ struct IncomeDetailView: View {
                 HStack {
                     Text("Income Tag")
                     Spacer()
-                    Text(income.tag)
+                    Text(income.incomeTag.name)
                 }
                 
                 HStack {
                     Text("Income Type")
                     Spacer()
-                    Text(income.type)
+                    Text(income.incomeType.name)
                 }
                 
                 HStack {
@@ -41,13 +41,13 @@ struct IncomeDetailView: View {
                 HStack {
                     Text("Tax Paid")
                     Spacer()
-                    Text(income.currency + " \(income.taxpaid.withCommas(decimalPlace: 2))")
+                    Text(income.currency + " \(income.taxPaid.withCommas(decimalPlace: 2))")
                 }
                 
                 HStack {
-                    Text("Credited On")
+                    Text("Credited Date")
                     Spacer()
-                    Text(income.creditedOn.getDateAndFormat())
+                    Text(income.creditedDate.toFullDateFormat().getDateAndFormat())
                 }
                 
             }
@@ -87,8 +87,8 @@ struct IncomeDetailView: View {
             if(incomeViewModel.groupView) {
                 incomeViewModel.incomeListByGroup.forEach {
                     let filterIncome = $0.value.filter { data in
-                        data.id.elementsEqual(income.id)
-                    }.first ?? IncomeCalculation(amount: 0.0, taxpaid: 0.0, creditedOn: Date(), currency: "", type: "", tag: "", avgAmount: 0.0, avgTaxPaid: 0.0, cumulativeAmount: 0.0, cumulativeTaxPaid: 0.0)
+                        data.id == income.id
+                    }.first ?? IncomeRestModel()
                     if(!filterIncome.currency.isEmpty) {
                         self.income = filterIncome
                     }
@@ -96,7 +96,7 @@ struct IncomeDetailView: View {
             } else {
                 Task.init {
                     self.income = incomeViewModel.incomeList.filter { data in
-                        data.id.elementsEqual(income.id)
+                        data.id == income.id
                     }.first!
                 }
             }

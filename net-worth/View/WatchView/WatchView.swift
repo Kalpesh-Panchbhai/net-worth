@@ -14,7 +14,7 @@ struct WatchView: View {
     @State var newWatchListViewOpen = false
     @State var updateWatchViewOpen = false
     @State var isPresentingWatchDeleteConfirm = false
-    @State var selectedWatch = Watch()
+    @State var selectedWatch = WatchRestModel()
     
     @EnvironmentObject var watchViewModel: WatchViewModel
     @EnvironmentObject var accountViewModel: AccountViewModel
@@ -34,7 +34,7 @@ struct WatchView: View {
                             }, label: {
                                 WatchViewRow(watch: watch)
                                     .badge(
-                                        Text("\(watch.accountList.count)")
+                                        Text("\(watch.totalAccount)")
                                             .foregroundColor(Color.theme.secondaryText)
                                             .font(.caption.italic())
                                     )
@@ -74,7 +74,7 @@ struct WatchView: View {
                     }
                     .confirmationDialog("Are you sure?",
                                         isPresented: $isPresentingWatchDeleteConfirm) {
-                        Button("Delete account " + selectedWatch.name + "?", role: .destructive) {
+                        Button("Delete watch list " + selectedWatch.name + "?", role: .destructive) {
                             Task.init {
                                 await watchController.deleteWatchList(watch: selectedWatch)
                                 await watchViewModel.getAllWatchList()

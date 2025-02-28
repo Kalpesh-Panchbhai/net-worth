@@ -7,13 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D5194BE2D61037000795833 /* AccountChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5194BD2D61037000795833 /* AccountChartView.swift */; };
+		7D55C7F92D5FAB54004286C2 /* AccountTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D55C7F82D5FAB54004286C2 /* AccountTransactionView.swift */; };
+		7D55C7FB2D5FB27C004286C2 /* AccountBrokerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D55C7FA2D5FB27C004286C2 /* AccountBrokerDetailView.swift */; };
 		7D59B4012BE246FF006F3F00 /* net_worthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4002BE246FF006F3F00 /* net_worthApp.swift */; };
 		7D59B4052BE24701006F3F00 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B4042BE24701006F3F00 /* Assets.xcassets */; };
 		7D59B4082BE24701006F3F00 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B4072BE24701006F3F00 /* Preview Assets.xcassets */; };
-		7D59B43C2BE249B7006F3F00 /* AccountData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4102BE249B7006F3F00 /* AccountData.swift */; };
-		7D59B43D2BE249B7006F3F00 /* AccountInBrokerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4112BE249B7006F3F00 /* AccountInBrokerData.swift */; };
-		7D59B43E2BE249B7006F3F00 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4122BE249B7006F3F00 /* Data.swift */; };
-		7D59B43F2BE249B7006F3F00 /* IncomeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4132BE249B7006F3F00 /* IncomeData.swift */; };
 		7D59B4402BE249B7006F3F00 /* AccountBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4152BE249B7006F3F00 /* AccountBackupModel.swift */; };
 		7D59B4412BE249B7006F3F00 /* AccountInBrokerBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4162BE249B7006F3F00 /* AccountInBrokerBackupModel.swift */; };
 		7D59B4422BE249B7006F3F00 /* AccountTransactionBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4172BE249B7006F3F00 /* AccountTransactionBackupModel.swift */; };
@@ -22,23 +21,17 @@
 		7D59B4452BE249B7006F3F00 /* IncomeTagBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B41A2BE249B7006F3F00 /* IncomeTagBackupModel.swift */; };
 		7D59B4462BE249B7006F3F00 /* IncomeTypeBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B41B2BE249B7006F3F00 /* IncomeTypeBackupModel.swift */; };
 		7D59B4472BE249B7006F3F00 /* WatchBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B41C2BE249B7006F3F00 /* WatchBackupModel.swift */; };
-		7D59B4492BE249B7006F3F00 /* AccountInBroker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B41F2BE249B7006F3F00 /* AccountInBroker.swift */; };
-		7D59B44B2BE249B7006F3F00 /* Income.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4212BE249B7006F3F00 /* Income.swift */; };
-		7D59B44C2BE249B7006F3F00 /* IncomeTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4222BE249B7006F3F00 /* IncomeTag.swift */; };
-		7D59B44D2BE249B7006F3F00 /* IncomeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4232BE249B7006F3F00 /* IncomeType.swift */; };
-		7D59B44E2BE249B7006F3F00 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4242BE249B7006F3F00 /* User.swift */; };
-		7D59B44F2BE249B7006F3F00 /* Watch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4252BE249B7006F3F00 /* Watch.swift */; };
+		7D59B4492BE249B7006F3F00 /* AccountInBrokerRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B41F2BE249B7006F3F00 /* AccountInBrokerRestModel.swift */; };
+		7D59B44F2BE249B7006F3F00 /* WatchRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4252BE249B7006F3F00 /* WatchRestModel.swift */; };
 		7D59B4502BE249B7006F3F00 /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4272BE249B7006F3F00 /* EmptyResponse.swift */; };
 		7D59B4532BE249B7006F3F00 /* IncomeRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B42A2BE249B7006F3F00 /* IncomeRestModel.swift */; };
 		7D59B4552BE249B7006F3F00 /* TypeValueRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B42C2BE249B7006F3F00 /* TypeValueRestModel.swift */; };
 		7D59B4572BE249B7006F3F00 /* UserRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B42E2BE249B7006F3F00 /* UserRestModel.swift */; };
 		7D59B4582BE249B7006F3F00 /* ApplicationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4302BE249B7006F3F00 /* ApplicationData.swift */; };
-		7D59B4592BE249B7006F3F00 /* Balance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4312BE249B7006F3F00 /* Balance.swift */; };
 		7D59B45A2BE249B7006F3F00 /* ChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4322BE249B7006F3F00 /* ChartData.swift */; };
 		7D59B45B2BE249B7006F3F00 /* FinanceDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4332BE249B7006F3F00 /* FinanceDetailModel.swift */; };
 		7D59B45C2BE249B7006F3F00 /* FinanceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4342BE249B7006F3F00 /* FinanceModel.swift */; };
 		7D59B45D2BE249B7006F3F00 /* GroupChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4352BE249B7006F3F00 /* GroupChartData.swift */; };
-		7D59B45E2BE249B7006F3F00 /* IncomeCalculation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4362BE249B7006F3F00 /* IncomeCalculation.swift */; };
 		7D59B45F2BE249B7006F3F00 /* SymbolDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4372BE249B7006F3F00 /* SymbolDetailModel.swift */; };
 		7D59B4602BE249B7006F3F00 /* CommonUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4392BE249B7006F3F00 /* CommonUtils.swift */; };
 		7D59B4612BE249B7006F3F00 /* ConstantUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B43A2BE249B7006F3F00 /* ConstantUtils.swift */; };
@@ -128,25 +121,25 @@
 		7D59B5372BE24ABA006F3F00 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 7D59B5362BE24ABA006F3F00 /* GoogleSignIn */; };
 		7D59B5392BE24ABA006F3F00 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7D59B5382BE24ABA006F3F00 /* GoogleSignInSwift */; };
 		7D59B53D2BE24B1C006F3F00 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B53C2BE24B1C006F3F00 /* GoogleService-Info.plist */; };
-		7D6437402BE6171B00E580F0 /* AccountTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D64373F2BE6171B00E580F0 /* AccountTransaction.swift */; };
+		7D6437402BE6171B00E580F0 /* AccountTransactionRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D64373F2BE6171B00E580F0 /* AccountTransactionRestModel.swift */; };
 		7D670AAC2BF1EBB50043D63F /* NetworthCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D670AAB2BF1EBB50043D63F /* NetworthCardView.swift */; };
-		7D97202D2BE50F4800E5797D /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D97202C2BE50F4800E5797D /* Account.swift */; };
+		7D6A4D462D5F56A000C433A8 /* WatchAccountRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6A4D452D5F56A000C433A8 /* WatchAccountRestModel.swift */; };
+		7D6A4D482D5F570700C433A8 /* WatchAccountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6A4D472D5F570700C433A8 /* WatchAccountController.swift */; };
+		7D6A4D4A2D5F57A200C433A8 /* WatchAccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6A4D492D5F57A200C433A8 /* WatchAccountViewModel.swift */; };
+		7D97202D2BE50F4800E5797D /* AccountRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D97202C2BE50F4800E5797D /* AccountRestModel.swift */; };
 		7DA46C252BE782BF00DF71C1 /* RestResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA46C242BE782BF00DF71C1 /* RestResponse.swift */; };
-		7DA46C272BE7946D00DF71C1 /* BalanceAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA46C262BE7946D00DF71C1 /* BalanceAccount.swift */; };
-		7DB87FBB2BFB360500ADC5D8 /* BalanceAccountDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB87FBA2BFB360500ADC5D8 /* BalanceAccountDetail.swift */; };
-		7DD742A32BEBC241005B51AF /* ChartRest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD742A22BEBC241005B51AF /* ChartRest.swift */; };
+		7DA46C272BE7946D00DF71C1 /* AccountValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DA46C262BE7946D00DF71C1 /* AccountValue.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7D5194BD2D61037000795833 /* AccountChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountChartView.swift; sourceTree = "<group>"; };
+		7D55C7F82D5FAB54004286C2 /* AccountTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTransactionView.swift; sourceTree = "<group>"; };
+		7D55C7FA2D5FB27C004286C2 /* AccountBrokerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountBrokerDetailView.swift; sourceTree = "<group>"; };
 		7D59B3FD2BE246FF006F3F00 /* net-worth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "net-worth.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D59B4002BE246FF006F3F00 /* net_worthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = net_worthApp.swift; sourceTree = "<group>"; };
 		7D59B4042BE24701006F3F00 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7D59B4072BE24701006F3F00 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		7D59B40E2BE24774006F3F00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		7D59B4102BE249B7006F3F00 /* AccountData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountData.swift; sourceTree = "<group>"; };
-		7D59B4112BE249B7006F3F00 /* AccountInBrokerData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountInBrokerData.swift; sourceTree = "<group>"; };
-		7D59B4122BE249B7006F3F00 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
-		7D59B4132BE249B7006F3F00 /* IncomeData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeData.swift; sourceTree = "<group>"; };
 		7D59B4152BE249B7006F3F00 /* AccountBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountBackupModel.swift; sourceTree = "<group>"; };
 		7D59B4162BE249B7006F3F00 /* AccountInBrokerBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountInBrokerBackupModel.swift; sourceTree = "<group>"; };
 		7D59B4172BE249B7006F3F00 /* AccountTransactionBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountTransactionBackupModel.swift; sourceTree = "<group>"; };
@@ -155,23 +148,17 @@
 		7D59B41A2BE249B7006F3F00 /* IncomeTagBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeTagBackupModel.swift; sourceTree = "<group>"; };
 		7D59B41B2BE249B7006F3F00 /* IncomeTypeBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeTypeBackupModel.swift; sourceTree = "<group>"; };
 		7D59B41C2BE249B7006F3F00 /* WatchBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchBackupModel.swift; sourceTree = "<group>"; };
-		7D59B41F2BE249B7006F3F00 /* AccountInBroker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountInBroker.swift; sourceTree = "<group>"; };
-		7D59B4212BE249B7006F3F00 /* Income.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Income.swift; sourceTree = "<group>"; };
-		7D59B4222BE249B7006F3F00 /* IncomeTag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeTag.swift; sourceTree = "<group>"; };
-		7D59B4232BE249B7006F3F00 /* IncomeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeType.swift; sourceTree = "<group>"; };
-		7D59B4242BE249B7006F3F00 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		7D59B4252BE249B7006F3F00 /* Watch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Watch.swift; sourceTree = "<group>"; };
+		7D59B41F2BE249B7006F3F00 /* AccountInBrokerRestModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountInBrokerRestModel.swift; sourceTree = "<group>"; };
+		7D59B4252BE249B7006F3F00 /* WatchRestModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchRestModel.swift; sourceTree = "<group>"; };
 		7D59B4272BE249B7006F3F00 /* EmptyResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
 		7D59B42A2BE249B7006F3F00 /* IncomeRestModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeRestModel.swift; sourceTree = "<group>"; };
 		7D59B42C2BE249B7006F3F00 /* TypeValueRestModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeValueRestModel.swift; sourceTree = "<group>"; };
 		7D59B42E2BE249B7006F3F00 /* UserRestModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserRestModel.swift; sourceTree = "<group>"; };
 		7D59B4302BE249B7006F3F00 /* ApplicationData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationData.swift; sourceTree = "<group>"; };
-		7D59B4312BE249B7006F3F00 /* Balance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Balance.swift; sourceTree = "<group>"; };
 		7D59B4322BE249B7006F3F00 /* ChartData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartData.swift; sourceTree = "<group>"; };
 		7D59B4332BE249B7006F3F00 /* FinanceDetailModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinanceDetailModel.swift; sourceTree = "<group>"; };
 		7D59B4342BE249B7006F3F00 /* FinanceModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinanceModel.swift; sourceTree = "<group>"; };
 		7D59B4352BE249B7006F3F00 /* GroupChartData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupChartData.swift; sourceTree = "<group>"; };
-		7D59B4362BE249B7006F3F00 /* IncomeCalculation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeCalculation.swift; sourceTree = "<group>"; };
 		7D59B4372BE249B7006F3F00 /* SymbolDetailModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SymbolDetailModel.swift; sourceTree = "<group>"; };
 		7D59B4392BE249B7006F3F00 /* CommonUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonUtils.swift; sourceTree = "<group>"; };
 		7D59B43A2BE249B7006F3F00 /* ConstantUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstantUtils.swift; sourceTree = "<group>"; };
@@ -258,13 +245,14 @@
 		7D59B5252BE249E0006F3F00 /* WatchViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchViewModel.swift; sourceTree = "<group>"; };
 		7D59B5272BE249E0006F3F00 /* net_worth.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = net_worth.xcdatamodel; sourceTree = "<group>"; };
 		7D59B53C2BE24B1C006F3F00 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		7D64373F2BE6171B00E580F0 /* AccountTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTransaction.swift; sourceTree = "<group>"; };
+		7D64373F2BE6171B00E580F0 /* AccountTransactionRestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTransactionRestModel.swift; sourceTree = "<group>"; };
 		7D670AAB2BF1EBB50043D63F /* NetworthCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworthCardView.swift; sourceTree = "<group>"; };
-		7D97202C2BE50F4800E5797D /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
+		7D6A4D452D5F56A000C433A8 /* WatchAccountRestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAccountRestModel.swift; sourceTree = "<group>"; };
+		7D6A4D472D5F570700C433A8 /* WatchAccountController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAccountController.swift; sourceTree = "<group>"; };
+		7D6A4D492D5F57A200C433A8 /* WatchAccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAccountViewModel.swift; sourceTree = "<group>"; };
+		7D97202C2BE50F4800E5797D /* AccountRestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountRestModel.swift; sourceTree = "<group>"; };
 		7DA46C242BE782BF00DF71C1 /* RestResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestResponse.swift; sourceTree = "<group>"; };
-		7DA46C262BE7946D00DF71C1 /* BalanceAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceAccount.swift; sourceTree = "<group>"; };
-		7DB87FBA2BFB360500ADC5D8 /* BalanceAccountDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceAccountDetail.swift; sourceTree = "<group>"; };
-		7DD742A22BEBC241005B51AF /* ChartRest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartRest.swift; sourceTree = "<group>"; };
+		7DA46C262BE7946D00DF71C1 /* AccountValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountValue.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -331,17 +319,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		7D59B4142BE249B7006F3F00 /* ApplicationDataModel */ = {
-			isa = PBXGroup;
-			children = (
-				7D59B4102BE249B7006F3F00 /* AccountData.swift */,
-				7D59B4112BE249B7006F3F00 /* AccountInBrokerData.swift */,
-				7D59B4122BE249B7006F3F00 /* Data.swift */,
-				7D59B4132BE249B7006F3F00 /* IncomeData.swift */,
-			);
-			path = ApplicationDataModel;
-			sourceTree = "<group>";
-		};
 		7D59B41D2BE249B7006F3F00 /* Backup */ = {
 			isa = PBXGroup;
 			children = (
@@ -357,30 +334,19 @@
 			path = Backup;
 			sourceTree = "<group>";
 		};
-		7D59B4262BE249B7006F3F00 /* FirebaseModel */ = {
-			isa = PBXGroup;
-			children = (
-				7D59B41F2BE249B7006F3F00 /* AccountInBroker.swift */,
-				7D59B4212BE249B7006F3F00 /* Income.swift */,
-				7D59B4222BE249B7006F3F00 /* IncomeTag.swift */,
-				7D59B4232BE249B7006F3F00 /* IncomeType.swift */,
-				7D59B4242BE249B7006F3F00 /* User.swift */,
-				7D59B4252BE249B7006F3F00 /* Watch.swift */,
-			);
-			path = FirebaseModel;
-			sourceTree = "<group>";
-		};
 		7D59B42F2BE249B7006F3F00 /* RestModel */ = {
 			isa = PBXGroup;
 			children = (
-				7D97202C2BE50F4800E5797D /* Account.swift */,
-				7D64373F2BE6171B00E580F0 /* AccountTransaction.swift */,
-				7DD742A22BEBC241005B51AF /* ChartRest.swift */,
+				7D59B41F2BE249B7006F3F00 /* AccountInBrokerRestModel.swift */,
+				7D97202C2BE50F4800E5797D /* AccountRestModel.swift */,
+				7D64373F2BE6171B00E580F0 /* AccountTransactionRestModel.swift */,
 				7D59B4272BE249B7006F3F00 /* EmptyResponse.swift */,
 				7D59B42A2BE249B7006F3F00 /* IncomeRestModel.swift */,
 				7DA46C242BE782BF00DF71C1 /* RestResponse.swift */,
 				7D59B42C2BE249B7006F3F00 /* TypeValueRestModel.swift */,
 				7D59B42E2BE249B7006F3F00 /* UserRestModel.swift */,
+				7D6A4D452D5F56A000C433A8 /* WatchAccountRestModel.swift */,
+				7D59B4252BE249B7006F3F00 /* WatchRestModel.swift */,
 			);
 			path = RestModel;
 			sourceTree = "<group>";
@@ -389,18 +355,13 @@
 			isa = PBXGroup;
 			children = (
 				7D59B4302BE249B7006F3F00 /* ApplicationData.swift */,
-				7D59B4312BE249B7006F3F00 /* Balance.swift */,
-				7DA46C262BE7946D00DF71C1 /* BalanceAccount.swift */,
-				7DB87FBA2BFB360500ADC5D8 /* BalanceAccountDetail.swift */,
+				7DA46C262BE7946D00DF71C1 /* AccountValue.swift */,
 				7D59B4322BE249B7006F3F00 /* ChartData.swift */,
 				7D59B4332BE249B7006F3F00 /* FinanceDetailModel.swift */,
 				7D59B4342BE249B7006F3F00 /* FinanceModel.swift */,
 				7D59B4352BE249B7006F3F00 /* GroupChartData.swift */,
-				7D59B4362BE249B7006F3F00 /* IncomeCalculation.swift */,
 				7D59B4372BE249B7006F3F00 /* SymbolDetailModel.swift */,
-				7D59B4142BE249B7006F3F00 /* ApplicationDataModel */,
 				7D59B41D2BE249B7006F3F00 /* Backup */,
-				7D59B4262BE249B7006F3F00 /* FirebaseModel */,
 				7D59B42F2BE249B7006F3F00 /* RestModel */,
 			);
 			path = Model;
@@ -432,6 +393,7 @@
 				7D59B4712BE249C8006F3F00 /* RestController.swift */,
 				7D59B4722BE249C8006F3F00 /* SettingsController.swift */,
 				7D59B4732BE249C8006F3F00 /* UserController.swift */,
+				7D6A4D472D5F570700C433A8 /* WatchAccountController.swift */,
 				7D59B4742BE249C8006F3F00 /* WatchController.swift */,
 			);
 			path = Controller;
@@ -453,23 +415,26 @@
 		7D59B4AB2BE249D9006F3F00 /* AccountView */ = {
 			isa = PBXGroup;
 			children = (
+				7D55C7FA2D5FB27C004286C2 /* AccountBrokerDetailView.swift */,
 				7D59B4992BE249D9006F3F00 /* AccountBrokerRowView.swift */,
 				7D59B49A2BE249D9006F3F00 /* AccountBrokerView.swift */,
 				7D59B49B2BE249D9006F3F00 /* AccountCardList.swift */,
 				7D59B49C2BE249D9006F3F00 /* AccountCardView.swift */,
+				7D5194BD2D61037000795833 /* AccountChartView.swift */,
 				7D59B49E2BE249D9006F3F00 /* AccountDetailCardView.swift */,
 				7D59B49F2BE249D9006F3F00 /* AccountDetailView.swift */,
 				7D59B4A02BE249D9006F3F00 /* AccountListView.swift */,
 				7D59B4A12BE249D9006F3F00 /* AccountRowView.swift */,
+				7D55C7F82D5FAB54004286C2 /* AccountTransactionView.swift */,
 				7D59B4A22BE249D9006F3F00 /* AccountWatchView.swift */,
 				7D59B4A32BE249D9006F3F00 /* BalanceCardView.swift */,
+				7D670AAB2BF1EBB50043D63F /* NetworthCardView.swift */,
 				7D59B4A42BE249D9006F3F00 /* NewAccountInBrokerView.swift */,
 				7D59B4A52BE249D9006F3F00 /* NewAccountView.swift */,
 				7D59B4A62BE249D9006F3F00 /* RowWatchToAccountView.swift */,
 				7D59B4A82BE249D9006F3F00 /* UpdateBalanceAccountBrokerView.swift */,
 				7D59B4A92BE249D9006F3F00 /* UpdateBalanceAccountView.swift */,
 				7D59B4AA2BE249D9006F3F00 /* WatchToAccountView.swift */,
-				7D670AAB2BF1EBB50043D63F /* NetworthCardView.swift */,
 			);
 			path = AccountView;
 			sourceTree = "<group>";
@@ -588,6 +553,7 @@
 		7D59B5262BE249E0006F3F00 /* View Model */ = {
 			isa = PBXGroup;
 			children = (
+				7D6A4D492D5F57A200C433A8 /* WatchAccountViewModel.swift */,
 				7D59B51E2BE249E0006F3F00 /* AccountViewModel.swift */,
 				7D59B5202BE249E0006F3F00 /* FileViewModel.swift */,
 				7D59B5212BE249E0006F3F00 /* FinanceViewModel.swift */,
@@ -679,13 +645,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D59B4402BE249B7006F3F00 /* AccountBackupModel.swift in Sources */,
-				7D97202D2BE50F4800E5797D /* Account.swift in Sources */,
+				7D97202D2BE50F4800E5797D /* AccountRestModel.swift in Sources */,
 				7D59B4612BE249B7006F3F00 /* ConstantUtils.swift in Sources */,
 				7D59B4EF2BE249D9006F3F00 /* RowWatchToAccountView.swift in Sources */,
 				7D59B4812BE249C8006F3F00 /* IncomeTypeController.swift in Sources */,
-				7DB87FBB2BFB360500ADC5D8 /* BalanceAccountDetail.swift in Sources */,
 				7D59B4F62BE249D9006F3F00 /* SingleLineLollipopChartView.swift in Sources */,
 				7DA46C252BE782BF00DF71C1 /* RestResponse.swift in Sources */,
+				7D6A4D4A2D5F57A200C433A8 /* WatchAccountViewModel.swift in Sources */,
 				7D59B4762BE249C8006F3F00 /* AccountController.swift in Sources */,
 				7D59B5282BE249E0006F3F00 /* AccountViewModel.swift in Sources */,
 				7D59B5062BE249D9006F3F00 /* NewIncomeView.swift in Sources */,
@@ -695,7 +661,6 @@
 				7D59B4E22BE249D9006F3F00 /* AccountBrokerRowView.swift in Sources */,
 				7D59B45F2BE249B7006F3F00 /* SymbolDetailModel.swift in Sources */,
 				7D59B4EC2BE249D9006F3F00 /* BalanceCardView.swift in Sources */,
-				7D59B43E2BE249B7006F3F00 /* Data.swift in Sources */,
 				7D59B4F32BE249D9006F3F00 /* WatchToAccountView.swift in Sources */,
 				7D59B4FC2BE249D9006F3F00 /* PieSliceView.swift in Sources */,
 				7D59B51B2BE249D9006F3F00 /* WatchDetailView.swift in Sources */,
@@ -708,22 +673,18 @@
 				7D59B45B2BE249B7006F3F00 /* FinanceDetailModel.swift in Sources */,
 				7D59B4932BE249D0006F3F00 /* DoubleExtension.swift in Sources */,
 				7D59B4572BE249B7006F3F00 /* UserRestModel.swift in Sources */,
-				7DA46C272BE7946D00DF71C1 /* BalanceAccount.swift in Sources */,
+				7D6A4D462D5F56A000C433A8 /* WatchAccountRestModel.swift in Sources */,
+				7DA46C272BE7946D00DF71C1 /* AccountValue.swift in Sources */,
 				7D59B5042BE249D9006F3F00 /* NewIncomeTagView.swift in Sources */,
 				7D59B4EA2BE249D9006F3F00 /* AccountRowView.swift in Sources */,
-				7D59B44B2BE249B7006F3F00 /* Income.swift in Sources */,
 				7D59B4E72BE249D9006F3F00 /* AccountDetailCardView.swift in Sources */,
 				7D59B5172BE249D9006F3F00 /* AccountToWatchView.swift in Sources */,
-				7D59B45E2BE249B7006F3F00 /* IncomeCalculation.swift in Sources */,
 				7D59B4862BE249C8006F3F00 /* SettingsController.swift in Sources */,
-				7DD742A32BEBC241005B51AF /* ChartRest.swift in Sources */,
 				7D59B4782BE249C8006F3F00 /* AccountTransactionController.swift in Sources */,
-				7D59B43C2BE249B7006F3F00 /* AccountData.swift in Sources */,
 				7D59B4462BE249B7006F3F00 /* IncomeTypeBackupModel.swift in Sources */,
 				7D59B4E92BE249D9006F3F00 /* AccountListView.swift in Sources */,
 				7D59B5102BE249D9006F3F00 /* DefaultCurrencyPicker.swift in Sources */,
 				7D59B52C2BE249E0006F3F00 /* ImportExportViewModel.swift in Sources */,
-				7D59B44C2BE249B7006F3F00 /* IncomeTag.swift in Sources */,
 				7D59B4FB2BE249D9006F3F00 /* PieChartView.swift in Sources */,
 				7D59B51A2BE249D9006F3F00 /* UpdateWatchView.swift in Sources */,
 				7D59B4602BE249B7006F3F00 /* CommonUtils.swift in Sources */,
@@ -731,7 +692,6 @@
 				7D59B50D2BE249D9006F3F00 /* BackupView.swift in Sources */,
 				7D59B4E42BE249D9006F3F00 /* AccountCardList.swift in Sources */,
 				7D59B5082BE249D9006F3F00 /* +View.swift in Sources */,
-				7D59B44D2BE249B7006F3F00 /* IncomeType.swift in Sources */,
 				7D59B45D2BE249B7006F3F00 /* GroupChartData.swift in Sources */,
 				7D59B4F42BE249D9006F3F00 /* BarLollipopChartView.swift in Sources */,
 				7D59B50C2BE249D9006F3F00 /* AuthenticationView.swift in Sources */,
@@ -742,8 +702,8 @@
 				7D59B4F22BE249D9006F3F00 /* UpdateBalanceAccountView.swift in Sources */,
 				7D59B4E52BE249D9006F3F00 /* AccountCardView.swift in Sources */,
 				7D59B4552BE249B7006F3F00 /* TypeValueRestModel.swift in Sources */,
-				7D59B4592BE249B7006F3F00 /* Balance.swift in Sources */,
 				7D59B4502BE249B7006F3F00 /* EmptyResponse.swift in Sources */,
+				7D6A4D482D5F570700C433A8 /* WatchAccountController.swift in Sources */,
 				7D59B5162BE249D9006F3F00 /* SettingsView.swift in Sources */,
 				7D59B4FD2BE249D9006F3F00 /* EmptyView.swift in Sources */,
 				7D59B4FF2BE249D9006F3F00 /* IncomeDetailView.swift in Sources */,
@@ -760,7 +720,7 @@
 				7D59B4E82BE249D9006F3F00 /* AccountDetailView.swift in Sources */,
 				7D59B4532BE249B7006F3F00 /* IncomeRestModel.swift in Sources */,
 				7D59B4EB2BE249D9006F3F00 /* AccountWatchView.swift in Sources */,
-				7D59B44F2BE249B7006F3F00 /* Watch.swift in Sources */,
+				7D59B44F2BE249B7006F3F00 /* WatchRestModel.swift in Sources */,
 				7D59B52B2BE249E0006F3F00 /* FinanceViewModel.swift in Sources */,
 				7D59B5012BE249D9006F3F00 /* IncomeTagView.swift in Sources */,
 				7D59B4EE2BE249D9006F3F00 /* NewAccountView.swift in Sources */,
@@ -768,7 +728,7 @@
 				7D59B4912BE249D0006F3F00 /* DateExtension.swift in Sources */,
 				7D59B52A2BE249E0006F3F00 /* FileViewModel.swift in Sources */,
 				7D59B4F82BE249D9006F3F00 /* ChartView.swift in Sources */,
-				7D59B4492BE249B7006F3F00 /* AccountInBroker.swift in Sources */,
+				7D59B4492BE249B7006F3F00 /* AccountInBrokerRestModel.swift in Sources */,
 				7D670AAC2BF1EBB50043D63F /* NetworthCardView.swift in Sources */,
 				7D59B4452BE249B7006F3F00 /* IncomeTagBackupModel.swift in Sources */,
 				7D59B4852BE249C8006F3F00 /* RestController.swift in Sources */,
@@ -778,8 +738,7 @@
 				7D59B4802BE249C8006F3F00 /* IncomeTagController.swift in Sources */,
 				7D59B5052BE249D9006F3F00 /* NewIncomeTypeView.swift in Sources */,
 				7D59B5022BE249D9006F3F00 /* IncomeTypeView.swift in Sources */,
-				7D59B43F2BE249B7006F3F00 /* IncomeData.swift in Sources */,
-				7D6437402BE6171B00E580F0 /* AccountTransaction.swift in Sources */,
+				7D6437402BE6171B00E580F0 /* AccountTransactionRestModel.swift in Sources */,
 				7D59B5032BE249D9006F3F00 /* IncomeView.swift in Sources */,
 				7D59B4772BE249C8006F3F00 /* AccountInBrokerController.swift in Sources */,
 				7D59B4472BE249B7006F3F00 /* WatchBackupModel.swift in Sources */,
@@ -792,14 +751,15 @@
 				7D59B4582BE249B7006F3F00 /* ApplicationData.swift in Sources */,
 				7D59B4902BE249D0006F3F00 /* Color.swift in Sources */,
 				7D59B47E2BE249C8006F3F00 /* ImportExportController.swift in Sources */,
-				7D59B43D2BE249B7006F3F00 /* AccountInBrokerData.swift in Sources */,
 				7D59B45C2BE249B7006F3F00 /* FinanceModel.swift in Sources */,
+				7D5194BE2D61037000795833 /* AccountChartView.swift in Sources */,
 				7D59B45A2BE249B7006F3F00 /* ChartData.swift in Sources */,
 				7D59B51D2BE249D9006F3F00 /* WatchView.swift in Sources */,
+				7D55C7FB2D5FB27C004286C2 /* AccountBrokerDetailView.swift in Sources */,
+				7D55C7F92D5FAB54004286C2 /* AccountTransactionView.swift in Sources */,
 				7D59B4922BE249D0006F3F00 /* DictionaryExtension.swift in Sources */,
 				7D59B52D2BE249E0006F3F00 /* IncomeViewModel.swift in Sources */,
 				7D59B4882BE249C8006F3F00 /* WatchController.swift in Sources */,
-				7D59B44E2BE249B7006F3F00 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

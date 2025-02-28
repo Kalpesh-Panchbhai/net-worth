@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AccountBrokerView: View {
     
-    var brokerID: String
+    var brokerID: Int
     @Binding var sortOrder: String
     @Binding var sortType: String
     
@@ -17,7 +17,7 @@ struct AccountBrokerView: View {
     
     @State var isPresentingAccountDeleteConfirm = false
     @State var isNewTransactionViewOpen = false
-    @State var selectedAccount = AccountInBroker()
+    @State var selectedAccount = AccountInBrokerRestModel()
 
     
     @EnvironmentObject var accountViewModel: AccountViewModel
@@ -30,26 +30,30 @@ struct AccountBrokerView: View {
                 LazyVStack {
                     Spacer()
                     ForEach(0..<getAccountsInBrokerList().count, id: \.self) { i in
-                        AccountBrokerRowView(account: getAccountsInBrokerList()[i])
-                            .frame(width: 360, height: 40)
-                            .padding(8)
-                            .background(Color.theme.foreground)
-                            .cornerRadius(10)
-                            .contextMenu {
-                                Button(action: {
-                                    self.isNewTransactionViewOpen.toggle()
-                                    self.selectedAccount = getAccountsInBrokerList()[i]
-                                }, label: {
-                                    Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
-                                })
-                                
-                                Button(role: .destructive, action: {
-                                    self.isPresentingAccountDeleteConfirm.toggle()
-                                    self.selectedAccount = getAccountsInBrokerList()[i]
-                                }, label: {
-                                    Label("Delete", systemImage: ConstantUtils.deleteImageName)
-                                })
-                            }
+                        NavigationLink(destination: {
+                            AccountBrokerDetailView(accountInbroker: getAccountsInBrokerList()[i])
+                        }, label: {
+                            AccountBrokerRowView(account: getAccountsInBrokerList()[i])
+                                .frame(width: 360, height: 40)
+                                .padding(8)
+                                .background(Color.theme.foreground)
+                                .cornerRadius(10)
+                                .contextMenu {
+                                    Button(action: {
+                                        self.isNewTransactionViewOpen.toggle()
+                                        self.selectedAccount = getAccountsInBrokerList()[i]
+                                    }, label: {
+                                        Label("New Transaction", systemImage: ConstantUtils.newTransactionImageName)
+                                    })
+                                    
+                                    Button(role: .destructive, action: {
+                                        self.isPresentingAccountDeleteConfirm.toggle()
+                                        self.selectedAccount = getAccountsInBrokerList()[i]
+                                    }, label: {
+                                        Label("Delete", systemImage: ConstantUtils.deleteImageName)
+                                    })
+                                }
+                        })
                     }
                 }
                 .confirmationDialog("Are you sure?",
@@ -70,7 +74,8 @@ struct AccountBrokerView: View {
             .background(Color.theme.background)
         }
     }
-    private func getAccountsInBrokerList() -> [AccountInBroker] {
+    
+    private func getAccountsInBrokerList() -> [AccountInBrokerRestModel] {
         var accountsInBrokerList = accountViewModel.accountsInBroker
         if(sortType.elementsEqual("Name")) {
             if(sortOrder.elementsEqual("Asc")) {
@@ -85,11 +90,11 @@ struct AccountBrokerView: View {
         } else if(sortType.elementsEqual("Amount")) {
             if(sortOrder.elementsEqual("Asc")) {
                 accountsInBrokerList.sort(by: {
-                    return $0.balance.currentDayValue.value <= $1.balance.currentDayValue.value
+                    return $0.value.currentValue <= $1.value.currentValue
                 })
             } else {
                 accountsInBrokerList.sort(by: {
-                    return $0.balance.currentDayValue.value >= $1.balance.currentDayValue.value
+                    return $0.value.currentValue >= $1.value.currentValue
                 })
             }
         } else if(sortType.elementsEqual("Price Change")) {
@@ -116,15 +121,11 @@ struct AccountBrokerView: View {
         return accountsInBrokerList
     }
     
-    private func getOneDayChange(account: AccountInBroker) -> Double {
-        return areOneDayTransactions(account: account) ? account.balance.currentDayValue.value - account.balance.previousDayValue.value : 0.0
+    private func getOneDayChange(account: AccountInBrokerRestModel) -> Double {
+        return account.value.currentValue - account.value.previousValue
     }
     
-    private func getOneDayPercentageChange(account: AccountInBroker) -> Double {
-        return areOneDayTransactions(account: account) ? CommonController.getGrowthPercentageInDouble(previousBalance: account.balance.previousDayValue.value, currentBalance: account.balance.currentDayValue.value) : 0.0
-    }
-    
-    private func areOneDayTransactions(account: AccountInBroker) -> Bool {
-        return account.name != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+    private func getOneDayPercentageChange(account: AccountInBrokerRestModel) -> Double {
+        return CommonController.getGrowthPercentageInDouble(previousBalance: account.value.previousValue, currentBalance: account.value.currentValue)
     }
 }

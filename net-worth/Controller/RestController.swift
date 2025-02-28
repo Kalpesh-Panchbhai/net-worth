@@ -9,8 +9,8 @@ import Foundation
 
 class RestController {
     
-    public func executeAPI<T>(entity: String, httpMethod: String, body: Data = Data(), pathParam: String = "", forClass: T.Type) async -> T where T : Codable {
-        let url = URL(string: getURL(entity: entity, pathParam: pathParam))
+    public func executeAPI<T>(entity: String, httpMethod: String, body: Data = Data(), pathParam: [Any] = [], queryParams: [String: Any] = [:], forClass: T.Type) async -> T where T : Codable {
+        let url = URL(string: getURL(entity: entity, pathParam: pathParam, queryParams: queryParams))
         
         let request = getURLRequest(url: url!, httpMethod: httpMethod, body: body)
         do {
@@ -26,8 +26,28 @@ class RestController {
         return try! T(from: EmptyResponse() as! Decoder)
     }
     
-    private func getURL(entity: String, pathParam: String) -> String {
-        return ConstantUtils.baseRESTURL + entity + (pathParam != "" ? ("/" + pathParam) : "")
+    private func getURL(entity: String, pathParam: [Any], queryParams: [String: Any]) -> String {
+        let baseURL = ConstantUtils.baseRESTURL + entity
+        var pathParams = ""
+        for param in pathParam {
+            if ((param as? String) != nil) {
+                if !pathParams.isEmpty {
+                    pathParams = pathParams + "/"
+                }
+                pathParams = pathParams + (param as! String)
+            } else if ((param as? Int) != nil) {
+                if !pathParams.isEmpty {
+                    pathParams = pathParams + "/"
+                }
+                pathParams = pathParams + (param as! Int != 0 ? (String(param as! Int)) : "")
+            }
+        }
+        
+        var queryParamString = ""
+        for queryParam in queryParams {
+            queryParamString = queryParamString + (queryParamString.isEmpty ? "" : "&") + queryParam.key + "=\(queryParam.value)"
+        }
+        return baseURL + (pathParams.isEmpty ? "" : "/" + pathParams) + (queryParamString.isEmpty ? "" : "?" + queryParamString)
     }
     
     private func getURLRequest(url: URL, httpMethod: String, body: Data) -> URLRequest {

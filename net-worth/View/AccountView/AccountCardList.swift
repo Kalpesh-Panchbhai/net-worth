@@ -29,7 +29,7 @@ struct AccountCardList: View {
                         Color.theme.background.ignoresSafeArea()
                         VStack {
                             VStack {
-                                BalanceCardView(accountType: "Net Worth", isWatchListCardView: false, watchList: Watch())
+                                BalanceCardView(accountType: "Net Worth", isWatchListCardView: false, watchList: WatchRestModel())
                                     .frame(width: 360, height: 70)
                                     .cornerRadius(10)
                                 NetworthCardView()
@@ -139,12 +139,12 @@ struct AccountCardList: View {
         })
     }
     
-    private func isAccountAmountZero(account: Account) -> Bool {
-        return account.balance.currentDayValue.value.isZero
+    private func showAccount(account: AccountRestModel) -> Bool {
+        return ((hideZeroAmountAccount && !isAccountAmountZero(account: account)) || !hideZeroAmountAccount)
     }
     
-    private func showAccount(account: Account) -> Bool {
-        return ((hideZeroAmountAccount && !isAccountAmountZero(account: account)) || !hideZeroAmountAccount)
+    private func showAccountType(accountType: String) -> Bool {
+        return ((hideZeroAmountAccount && !areAllAccountsForAccountTypeZero(accountType: accountType)) || !hideZeroAmountAccount)
     }
     
     private func areAllAccountsForAccountTypeZero(accountType: String) -> Bool {
@@ -159,7 +159,7 @@ struct AccountCardList: View {
         return isZero
     }
     
-    private func showAccountType(accountType: String) -> Bool {
-        return ((hideZeroAmountAccount && !areAllAccountsForAccountTypeZero(accountType: accountType)) || !hideZeroAmountAccount)
+    private func isAccountAmountZero(account: AccountRestModel) -> Bool {
+        return account.value.currentValue.isZero
     }
 }

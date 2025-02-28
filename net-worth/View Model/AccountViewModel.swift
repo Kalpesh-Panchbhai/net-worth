@@ -9,21 +9,23 @@ import Foundation
 
 class AccountViewModel: ObservableObject {
     
-    var watchList = [Account]()
-    var originalAccountList = [Account]()
+    var watchList = [AccountRestModel]()
+    var originalAccountList = [AccountRestModel]()
     var accountController = AccountController()
+    var accountTransactionController = AccountTransactionController()
     var accountInBrokerController = AccountInBrokerController()
     
-    @Published var accountList = [Account]()
+    @Published var accountList = [AccountRestModel]()
     @Published var accountListLoaded = false
-    @Published var account = Account()
-    @Published var accountOneDayChange = Balance()
-    @Published var totalBalance = Balance(currentValue: 0.0)
+    @Published var account = AccountRestModel()
+    @Published var totalBalance = AccountValue()
+    @Published var chartDataList = [ChartData]()
     @Published var grouping: Grouping = .accountType
     
-    @Published var accountsInBroker = [AccountInBroker]()
-    @Published var accountBroker = AccountInBroker()
-    @Published var accountBrokerCurrentBalance = Balance(currentValue: 0.0, previousDayValue: 0.0)
+    @Published var accountsInBroker = [AccountInBrokerRestModel]()
+    @Published var accountBroker = AccountInBrokerRestModel()
+    
+    @Published var accountTransactionList = [AccountTransactionRestModel]()
     
     enum Grouping: String, CaseIterable, Identifiable {
         case accountType = "Account Type"
@@ -33,12 +35,12 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    var groupedAccount: [String: [Account]] {
+    var groupedAccount: [String: [AccountRestModel]] {
         switch grouping {
         case .accountType:
             return Dictionary(grouping: accountList) {
                 if($0.active) {
-                    return $0.accountType
+                    return $0.type
                 } else {
                     return "Inactive Account"
                 }
@@ -53,7 +55,7 @@ class AccountViewModel: ObservableObject {
         case .accountType:
             let array = Array(Set(accountList.map {
                 if($0.active) {
-                    return $0.accountType
+                    return $0.type
                 } else {
                     return "Inactive Account"
                 }
@@ -74,13 +76,13 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func sectionContent(key: String, searchKeyword: String) -> [Account] {
+    func sectionContent(key: String, searchKeyword: String) -> [AccountRestModel] {
         let data = groupedAccount[key] ?? []
         if searchKeyword.isEmpty {
             return data
         } else {
             return data.filter { value in
-                value.accountName.lowercased().contains(searchKeyword.lowercased()) || value.accountType.lowercased().contains(searchKeyword.lowercased())
+                value.name.lowercased().contains(searchKeyword.lowercased()) || value.type.lowercased().contains(searchKeyword.lowercased())
             }
         }
     }
@@ -88,14 +90,14 @@ class AccountViewModel: ObservableObject {
     func filterAccountList(filter: String) {
         accountList = originalAccountList
             .filter { account in
-                account.accountType.lowercased().elementsEqual(filter.lowercased())
+                account.type.lowercased().elementsEqual(filter.lowercased())
             }
     }
     
-    func getAccount(id: String) async {
+    func getAccount(id: Int) async {
         let account = accountList.first(where: {
-            return $0.id.elementsEqual(id)
-        }) ?? Account()
+            return $0.id == id
+        }) ?? AccountRestModel()
         DispatchQueue.main.async {
             self.account = account
         }
@@ -110,18 +112,31 @@ class AccountViewModel: ObservableObject {
         }
     }
     
-    func getTotalBalance(accountList: [Account]) async {
+    func getTotalBalance(accountList: [AccountRestModel]) async {
         let balance = await accountController.calculateTotalBalance(accountList: accountList)
         DispatchQueue.main.async {
             self.totalBalance = balance
         }
     }
     
-    func getAccountInBrokerList(brokerID: String) async {
+    func getAccountInBrokerList(brokerID: Int) async {
         let accountList = await accountInBrokerController.getAccountListInBroker(brokerID: brokerID)
         DispatchQueue.main.async {
             self.accountsInBroker = accountList
         }
     }
     
+    func getAccountTransactionList(accountID: Int, type: String) async {
+        let list = await accountTransactionController.getAccountTransactionList(accountID: accountID, type: type)
+        DispatchQueue.main.async {
+            self.accountTransactionList = list
+        }
+    }
+    
+    func getChartDataList(id: Any, type: String, range: String) async {
+        let list = await accountController.getChartDataList(id: id, type: type, range: range)
+        DispatchQueue.main.async {
+            self.chartDataList = list
+        }
+    }
 }

@@ -9,19 +9,22 @@ import SwiftUI
 
 struct WatchDetailView: View {
     
-    @State var watch: Watch
+    @State var watch: WatchRestModel
     @State var addAccountViewOpen = false
+    @State var chartViewOpen = false
     @State var sortOrder = "Asc"
     @State var sortType = "Name"
     @State var hideZeroAmountAccount = true
     @State var isZeroAmountAccountPresent = false
+    @State var accountListToShown = [Int]()
     
     @EnvironmentObject var accountViewModel: AccountViewModel
     @EnvironmentObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var watchAccountViewModel: WatchAccountViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
-    init(watch: Watch) {
+    init(watch: WatchRestModel) {
         self.watch = watch
     }
     
@@ -30,7 +33,7 @@ struct WatchDetailView: View {
             ZStack {
                 Color.theme.background.ignoresSafeArea()
                 VStack {
-                    if(watch.accountList.count > 0) {
+//                    if(watch.accountList.count > 0) {
                         // MARK: Balance Card
                         VStack {
                             BalanceCardView(accountType: watch.name, isWatchListCardView: true, watchList: watch)
@@ -41,7 +44,7 @@ struct WatchDetailView: View {
                         Divider()
                         ScrollView(.vertical, showsIndicators: false) {
                             LazyVStack {
-                                ForEach(getWatchListData(), id: \.self) { accountID in
+                                ForEach(accountListToShown, id: \.self) { accountID in
                                     NavigationLink(destination: {
                                         // MARK: Account Detail View
                                         AccountDetailView(accountID: accountID)
@@ -54,7 +57,7 @@ struct WatchDetailView: View {
                             }
                         }
                         .padding(10)
-                    }
+//                    }
                 }
             }
         }
@@ -91,10 +94,27 @@ struct WatchDetailView: View {
             }
             
             ToolbarItem(content: {
+                Button(action: {
+                    self.chartViewOpen.toggle()
+                }, label: {
+                    ZStack {
+                        Circle()
+                            .frame(width: 25, height: 25)
+                            .foregroundColor(ColorTheme().foreground)
+                        Image(systemName: ConstantUtils.chartImageName)
+                            .foregroundColor(Color.theme.primaryText)
+                            .font(.system(size: 12))
+                    }
+                })
+                .font(.system(size: 14))
+            })
+            
+            ToolbarItem(content: {
                 Menu(content: {
                     Menu(content: {
                         Button(action: {
                             sortType = "Name"
+                            getWatchListData()
                         }, label: {
                             if(sortType.elementsEqual("Name")) {
                                 Label("Name", systemImage: "checkmark")
@@ -105,6 +125,7 @@ struct WatchDetailView: View {
                         
                         Button(action: {
                             sortType = "Amount"
+                            getWatchListData()
                         }, label: {
                             if(sortType.elementsEqual("Amount")){
                                 Label("Amount", systemImage: "checkmark")
@@ -115,6 +136,7 @@ struct WatchDetailView: View {
                         
                         Button(action: {
                             sortType = "Price Change"
+                            getWatchListData()
                         }, label: {
                             if(sortType.elementsEqual("Price Change")){
                                 Label("Price Change", systemImage: "checkmark")
@@ -125,6 +147,7 @@ struct WatchDetailView: View {
                         
                         Button(action: {
                             sortType = "Percentage Change"
+                            getWatchListData()
                         }, label: {
                             if(sortType.elementsEqual("Percentage Change")){
                                 Label("Percentage Change", systemImage: "checkmark")
@@ -137,6 +160,7 @@ struct WatchDetailView: View {
                         
                         Button(action: {
                             sortOrder = "Asc"
+                            getWatchListData()
                         }, label: {
                             if(sortOrder.elementsEqual("Asc")){
                                 Label("Ascending", systemImage: "checkmark")
@@ -147,6 +171,7 @@ struct WatchDetailView: View {
                         
                         Button(action: {
                             sortOrder = "Desc"
+                            getWatchListData()
                         }, label: {
                             if(sortOrder.elementsEqual("Desc")){
                                 Label("Descending", systemImage: "checkmark")
@@ -163,6 +188,9 @@ struct WatchDetailView: View {
                         Toggle(isOn: $hideZeroAmountAccount, label: {
                             Text("Hide zero amount accounts")
                         })
+                        .onChange(of: hideZeroAmountAccount) {
+                            getWatchListData()
+                        }
                     }
                     
                 }, label: {
@@ -179,62 +207,62 @@ struct WatchDetailView: View {
             })
         }
         .sheet(isPresented: $addAccountViewOpen, onDismiss: {
-            self.watch = self.watchViewModel.watchList.first(where: {
-                return $0.id.elementsEqual(watch.id)
-            })!
-            var watchSorted = self.watch
-            watchSorted.accountList.sort(by: { item1, item2 in
-                accountViewModel.accountList.filter { account1 in
-                    account1.id.elementsEqual(item1)
-                }.first!.accountName <= accountViewModel.accountList.filter { account2 in
-                    account2.id.elementsEqual(item2)
-                }.first!.accountName
-            })
-            self.watch = watchSorted
+            Task.init {
+                await watchViewModel.getAllWatchList()
+                await watchAccountViewModel.getAllAccountsByWatchID(watchID: watch.id)
+                getWatchListData()
+            }
         }, content: {
             AccountToWatchView(watch: watch)
         })
-        .onAppear {
-            let accountList = accountViewModel.accountList.filter {
-                return watch.accountList.contains($0.id)
-            }
-            let count = accountList.filter {
-                return $0.balance.currentDayValue.value.isZero
-            }.count
+        .sheet(isPresented: $chartViewOpen, onDismiss: {
             
-            isZeroAmountAccountPresent = count > 0
+        }, content: {
+            AccountChartView(id: watch.id, type: watch.name == "All" ? "all_watch" : "non_all_watch")
+        })
+        .onAppear {
+            Task.init {
+                await watchAccountViewModel.getAllAccountsByWatchID(watchID: watch.id)
+                getWatchListData()
+            }
         }
     }
     
-    private func getAccountForWatchListAccount(accountId: String) -> Account {
+    private func getAccountForWatchListAccount(accountId: Int) -> AccountRestModel {
         return accountViewModel.accountList.first {
-            return $0.id.elementsEqual(accountId)
+            return $0.id == accountId
         }!
     }
     
-    private func getWatchListData() -> [String] {
-        var accountList = accountViewModel.accountList.filter {
-            return watch.accountList.contains($0.id)
+    private func getWatchListData() {
+        let accountListInAWatch = watchAccountViewModel.allAccountsByWatchID.map { $0.accountId }
+        var accountList = accountViewModel.accountList.filter { account in
+            return accountListInAWatch.contains(account.id)
         }
+        let count = accountList.filter {
+            return $0.value.currentValue.isZero
+        }.count
+        
+        isZeroAmountAccountPresent = count > 0
         
         if(sortType.elementsEqual("Name")) {
             if(sortOrder.elementsEqual("Asc")) {
                 accountList.sort(by: {
-                    return $0.accountName <= $1.accountName
+                    return $0.name <= $1.name
                 })
             } else {
                 accountList.sort(by: {
-                    return $0.accountName >= $1.accountName
+                    return $0.name >= $1.name
                 })
             }
         } else if(sortType.elementsEqual("Amount")) {
             if(sortOrder.elementsEqual("Asc")) {
                 accountList.sort(by: {
-                    return $0.balance.currentDayValue.value <= $1.balance.currentDayValue.value
+                    return $0.value.currentValue <= $1.value.currentValue
                 })
             } else {
                 accountList.sort(by: {
-                    return $0.balance.currentDayValue.value >= $1.balance.currentDayValue.value
+                    return $0.value.currentValue >= $1.value.currentValue
                 })
             }
         } else if(sortType.elementsEqual("Price Change")) {
@@ -260,21 +288,17 @@ struct WatchDetailView: View {
         }
         if(hideZeroAmountAccount) {
             accountList = accountList.filter {
-                return !$0.balance.currentDayValue.value.isZero
+                return !$0.value.currentValue.isZero
             }
         }
-        return accountList.map { $0.id }
+        accountListToShown = accountList.map { $0.id }
     }
     
-    private func getOneDayChange(account: Account) -> Double {
-        return areOneDayTransactions(account: account) ? account.balance.currentDayValue.value - account.balance.previousDayValue.value : 0.0
+    private func getOneDayChange(account: AccountRestModel) -> Double {
+        return account.value.currentValue - account.value.previousValue
     }
     
-    private func getOneDayPercentageChange(account: Account) -> Double {
-        return areOneDayTransactions(account: account) ? CommonController.getGrowthPercentageInDouble(previousBalance: account.balance.previousDayValue.value, currentBalance: account.balance.currentDayValue.value) : 0.0
-    }
-    
-    private func areOneDayTransactions(account: Account) -> Bool {
-        return account.accountName != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+    private func getOneDayPercentageChange(account: AccountRestModel) -> Double {
+        return CommonController.getGrowthPercentageInDouble(previousBalance: account.value.previousValue, currentBalance: account.value.currentValue)
     }
 }

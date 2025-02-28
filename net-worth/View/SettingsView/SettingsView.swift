@@ -25,8 +25,8 @@ struct SettingsView: View {
     @State var inProgress = false
     
     @State var currencySelected = Currency()
-    @State var defaultIncomeType = IncomeType()
-    @State var defaultIncomeTag = IncomeTag()
+    @State var defaultIncomeType = TypeValueRestModel()
+    @State var defaultIncomeTag = TypeValueRestModel()
     
     @EnvironmentObject var incomeViewModel: IncomeViewModel
     @EnvironmentObject var accountViewModel: AccountViewModel
@@ -172,11 +172,11 @@ struct SettingsView: View {
             Task.init {
                 profilePhoto = await fetchProfilePhoto()
                 self.defaultIncomeType = incomeViewModel.incomeTypeList.filter({
-                    $0.isdefault
-                }).first ?? IncomeType()
+                    $0.isDefault
+                }).first ?? TypeValueRestModel()
                 self.defaultIncomeTag = incomeViewModel.incomeTagList.filter({
-                    $0.isdefault
-                }).first ?? IncomeTag()
+                    $0.isDefault
+                }).first ?? TypeValueRestModel()
             }
         }
         .fullScreenCover(isPresented: $logout, content: {
@@ -203,7 +203,6 @@ struct SettingsView: View {
             defaults.removeObject(forKey: key)
         }
         settingsController.setAuthentication(newValue: false)
-        ApplicationData.clear()
     }
     
     private func deleteAccountAndData() async {
@@ -212,8 +211,9 @@ struct SettingsView: View {
     }
     
     private func getLastUpdatedTime() -> String {
-        return accountViewModel.accountList.filter {
-            return $0.accountType.elementsEqual(ConstantUtils.brokerAccountType)
-        }.first?.balance.currentDayValue.dateTime.UTCToLocalDate().format() ?? ""
+        return ""
+//        return accountViewModel.accountList.filter {
+//            return $0.type.elementsEqual(ConstantUtils.brokerAccountType)
+//        }.first?.value.currentBalance.dateTime.UTCToLocalDate().format() ?? ""
     }
 }

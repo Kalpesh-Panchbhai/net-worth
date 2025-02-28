@@ -10,7 +10,7 @@ import SwiftUI
 struct UpdateWatchView: View {
     
     var watchController = WatchController()
-    @State var watch: Watch
+    @State var watch: WatchRestModel
     
     @State var scenePhaseBlur = 0
     @State var isFieldEmpty = false

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NetworthCardView: View {
     
-    @State var balanceAccount = BalanceAccount()
+    @State var balanceAccount = AccountValue()
     @State var percent: Double = 0.0
     @State var percentChange: Double = 0.0
     
@@ -65,21 +65,13 @@ struct NetworthCardView: View {
             var previousDayValue = 0.0
             
             for account in accountList {
-                currentDayValue += account.balance.currentDayValue.value
-                if(areOneDayTransactions(account: account)) {
-                    previousDayValue += account.balance.previousDayValue.value
-                } else {
-                    previousDayValue += account.balance.currentDayValue.value
-                }
+                currentDayValue += account.value.currentValue
+                previousDayValue += account.value.previousValue
             }
-            balanceAccount = BalanceAccount(currentDayValue: BalanceAccountDetail(value: currentDayValue), previousDayValue: BalanceAccountDetail(value: previousDayValue))
+            balanceAccount = AccountValue(currentValue: currentDayValue, previousValue: previousDayValue)
             let totalIncome = incomeViewModel.incomeTotalAmount
-            percent = balanceAccount.currentDayValue.value / totalIncome * 100
-            percentChange = (balanceAccount.currentDayValue.value - balanceAccount.previousDayValue.value) / totalIncome * 100
+            percent = balanceAccount.currentValue / totalIncome * 100
+            percentChange = (balanceAccount.currentValue - balanceAccount.previousValue) / totalIncome * 100
         }
-    }
-    
-    private func areOneDayTransactions(account: Account) -> Bool {
-        return account.accountName != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
     }
 }

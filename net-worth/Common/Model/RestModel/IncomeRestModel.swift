@@ -7,52 +7,61 @@
 
 import Foundation
 
-struct IncomeRestModel: Codable {
-    var id: String
-    var userId: String
+struct IncomeRestModel: Codable, Hashable {
+    var id: Int
+    var userId: Int
     var amount: Double
     var taxPaid: Double
-    var creditedOn: String
+    var creditedDate: String
     var currency: String
-    var incomeType: String
-    var incomeTag: String
+    var incomeType: TypeValueRestModel
+    var incomeTag: TypeValueRestModel
+    
+    var avgAmount: Double = 0.0
+    var avgTaxPaid: Double = 0.0
+    var cumulativeAmount: Double = 0.0
+    var cumulativeTaxPaid: Double = 0.0
     
     private enum CodingKeys: String, CodingKey {
-        case id, userId, amount, creditedOn, taxPaid, currency, incomeType, incomeTag
+        case id, userId, amount, creditedDate, taxPaid, currency, incomeType, incomeTag, avgAmount, avgTaxPaid, cumulativeAmount, cumulativeTaxPaid
     }
     
-    init(id: String = "", userId: String = "", amount: Double = 0.0, taxPaid: Double = 0.0, creditedOn: String = "", currency: String = "", incomeType: String = "", incomeTag: String = "") {
+    init(id: Int = 0, userId: Int = 0, amount: Double = 0.0, taxPaid: Double = 0.0, creditedDate: String = "", currency: String = "", incomeType: TypeValueRestModel = TypeValueRestModel(), incomeTag: TypeValueRestModel = TypeValueRestModel(), avgAmount: Double = 0.0, avgTaxPaid: Double = 0.0, cumulativeAmount: Double = 0.0, cumulativeTaxPaid: Double = 0.0) {
         self.id = id
         self.userId = userId
         self.amount = amount
         self.taxPaid = taxPaid
-        self.creditedOn = creditedOn
+        self.creditedDate = creditedDate
         self.currency = currency
         self.incomeType = incomeType
         self.incomeTag = incomeTag
+        self.avgAmount = avgAmount
+        self.avgTaxPaid = avgTaxPaid
+        self.cumulativeAmount = cumulativeAmount
+        self.cumulativeTaxPaid = cumulativeTaxPaid
     }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
-        userId = try container.decode(String.self, forKey: .userId)
+        id = try container.decode(Int.self, forKey: .id)
+        userId = try container.decode(Int.self, forKey: .userId)
         amount = try container.decode(Double.self, forKey: .amount)
         taxPaid = try container.decode(Double.self, forKey: .taxPaid)
-        creditedOn = try container.decode(String.self, forKey: .creditedOn)
+        creditedDate = try container.decode(String.self, forKey: .creditedDate)
         currency = try container.decode(String.self, forKey: .currency)
-        incomeType = try container.decode(String.self, forKey: .incomeType)
-        incomeTag = try container.decode(String.self, forKey: .incomeTag)
+        incomeType = try container.decode(TypeValueRestModel.self, forKey: .incomeType)
+        incomeTag = try container.decode(TypeValueRestModel.self, forKey: .incomeTag)
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        if(!id.isEmpty) {
+        if(id != 0) {
             try container.encode(id, forKey: .id)
         }
         try container.encode(userId, forKey: .userId)
         try container.encode(amount, forKey: .amount)
         try container.encode(taxPaid, forKey: .taxPaid)
-        try container.encode(creditedOn, forKey: .creditedOn)
+        try container.encode(creditedDate, forKey: .creditedDate)
         try container.encode(currency, forKey: .currency)
         try container.encode(incomeType, forKey: .incomeType)
         try container.encode(incomeTag, forKey: .incomeTag)

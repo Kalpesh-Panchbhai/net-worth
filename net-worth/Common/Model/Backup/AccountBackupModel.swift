@@ -14,7 +14,7 @@ struct AccountBackupModel: Codable {
     var loanType: String
     var currency: String
     var active: Bool
-    var balance: BalanceAccount
+    var balance: AccountValue
     
     var accountInBroker: [AccountInBrokerBackupModel]
     

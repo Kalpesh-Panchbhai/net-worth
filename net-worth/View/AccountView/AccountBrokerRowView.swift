@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AccountBrokerRowView: View {
     
-    var account: AccountInBroker
+    var account: AccountInBrokerRestModel
     
     var body: some View {
         HStack {
@@ -31,7 +31,7 @@ struct AccountBrokerRowView: View {
                     Text(SettingsController().getDefaultCurrency().code)
                         .font(.system(size: 14))
                         .foregroundColor(Color.theme.secondaryText)
-                    Text(account.balance.currentDayValue.value.withCommas(decimalPlace: 2))
+                    Text(account.value.currentValue.withCommas(decimalPlace: 2))
                         .font(.headline)
                         .foregroundColor(Color.theme.primaryText)
                 }
@@ -64,14 +64,10 @@ struct AccountBrokerRowView: View {
     }
     
     private func getOneDayChange() -> Double {
-        return areOneDayTransactions() ? account.balance.currentDayValue.value - account.balance.previousDayValue.value : 0.0
+        return account.value.currentValue - account.value.previousValue
     }
     
     private func getOneDayPercentageChange() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: account.balance.previousDayValue.value, currentBalance: account.balance.currentDayValue.value)
-    }
-    
-    private func areOneDayTransactions() -> Bool {
-        return account.name != "" && account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
+        return CommonController.getGrowthPercentage(previousBalance: account.value.previousValue, currentBalance: account.value.currentValue)
     }
 }

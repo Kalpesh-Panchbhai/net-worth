@@ -18,7 +18,7 @@ class UserController {
         let requestData = UserRestModel(userId: userId)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(requestData)
-        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: UserRestModel.self)
+        let response = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.POST.rawValue, body: data, forClass: RestResponse.self)
         ApplicationData.shared.userId = response.id
     }
     
@@ -29,7 +29,7 @@ class UserController {
     
     func deleteUser() async {
         let userId = ApplicationData.shared.userId
-        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: userId, forClass: RestResponse.self)
+        _ = await restController.executeAPI(entity: entityName, httpMethod: ConstantUtils.HTTP_METHOD.DELETE.rawValue, pathParam: [userId], forClass: RestResponse.self)
     }
     
 }

@@ -14,8 +14,9 @@ struct AccountListView: View {
     
     @State var searchText = ""
     @State var isNewTransactionViewOpen = false
+    @State var isChartViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
-    @State var deletedAccount = Account()
+    @State var deletedAccount = AccountRestModel()
     
     @EnvironmentObject var accountViewModel: AccountViewModel
     @EnvironmentObject var watchViewModel: WatchViewModel
@@ -28,7 +29,7 @@ struct AccountListView: View {
             VStack {
                 if(!accountType.elementsEqual("Inactive Account") && !accountViewModel.sectionContent(key: accountType, searchKeyword: searchText).isEmpty) {
                     VStack {
-                        BalanceCardView(accountType: accountType, isWatchListCardView: false, watchList: Watch())
+                        BalanceCardView(accountType: accountType, isWatchListCardView: false, watchList: WatchRestModel())
                             .frame(width: 360, height: 70)
                             .cornerRadius(10)
                     }
@@ -62,6 +63,26 @@ struct AccountListView: View {
             }
                 .font(.system(size: 14).bold())
         )
+        .navigationBarItems(
+            trailing: Button(action: {
+                self.isChartViewOpen.toggle()
+            }) {
+                ZStack {
+                    Circle()
+                        .frame(width: 25, height: 25)
+                        .foregroundColor(ColorTheme().foreground)
+                    Image(systemName: ConstantUtils.chartImageName)
+                        .foregroundColor(Color.theme.primaryText)
+                        .font(.system(size: 12))
+                }
+            }
+                .font(.system(size: 14).bold())
+        )
+        .sheet(isPresented: $isChartViewOpen, onDismiss: {
+            
+        }, content: {
+            AccountChartView(id: accountType, type: accountType == "Broker" ? "broker_type" : "non_broker_type")
+        })
         .searchable(text: $searchText)
     }
 }

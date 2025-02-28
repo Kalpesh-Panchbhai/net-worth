@@ -10,18 +10,19 @@ import SwiftUI
 struct AccountWatchView: View {
     
     @EnvironmentObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var watchAccountViewModel: WatchAccountViewModel
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(watchViewModel.watchListForAccount, id: \.self, content: { watch in
+                ForEach(getWatchListData(), id: \.self, content: { watch in
                     NavigationLink(destination: {
                         WatchDetailView(watch: watch)
                             .toolbarRole(.editor)
                     }, label: {
                         WatchViewRow(watch: watch)
                             .badge(
-                                Text("\(watch.accountList.count)")
+                                Text("\(watch.totalAccount)")
                                     .foregroundColor(Color.theme.secondaryText)
                                     .font(.caption.italic())
                             )
@@ -33,5 +34,13 @@ struct AccountWatchView: View {
             .background(Color.theme.background)
             .scrollContentBackground(.hidden)
         }
+    }
+    
+    private func getWatchListData() -> [WatchRestModel] {
+        let WatchListForAccount = watchAccountViewModel.allWatchListByAccountID.map {$0.watchId}
+        let watchList = watchViewModel.watchList.filter {
+            return WatchListForAccount.contains($0.id)
+        }
+        return watchList
     }
 }

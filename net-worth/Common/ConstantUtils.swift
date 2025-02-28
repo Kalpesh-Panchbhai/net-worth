@@ -27,6 +27,7 @@ class ConstantUtils {
         case INCOME_TAG = "income_tag"
         case INCOME_TYPE = "income_type"
         case WATCH = "watch"
+        case WATCH_ACCOUNT = "watch_account"
         case CHART = "chart"
     }
     

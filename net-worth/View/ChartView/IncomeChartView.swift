@@ -12,7 +12,7 @@ struct IncomeChartView: View {
     
     @State var scenePhaseBlur = 0
     
-    @State var currentActiveIncome: Income?
+    @State var currentActiveIncome: IncomeRestModel?
     @State var plotWidth: CGFloat = 0
     
     // MARK: List Filter Variables
@@ -49,7 +49,7 @@ struct IncomeChartView: View {
                     }
                     
                     let totalTaxPaid = incomeViewModel.incomeList.reduce(0.0) { partialResult, item in
-                        item.taxpaid + partialResult
+                        item.taxPaid + partialResult
                     }
                     
                     let totalAmount = totalIncomeAmount + totalTaxPaid
@@ -387,7 +387,7 @@ struct IncomeChartView: View {
                 await incomeViewModel.getIncomeList(incomeType: filterIncomeType, incomeTag: filterIncomeTag, year: filterYear, financialYear: filterFinancialYear)
                 
                 for income in incomeViewModel.incomeList.reversed() {
-                    incomeChartDataList.append(ChartData(date: income.creditedOn.removeTimeStamp(), value: getValue(income: income)))
+                    incomeChartDataList.append(ChartData(date: income.creditedDate.toFullDateFormat().removeTimeStamp(), value: getValue(income: income)))
                 }
                 
                 if(showTotal) {
@@ -420,14 +420,14 @@ struct IncomeChartView: View {
         }
     }
     
-    private func getValue(income: IncomeCalculation) -> Double {
+    private func getValue(income: IncomeRestModel) -> Double {
         if(showTotal) {
             if(cumulativeView) {
                 return income.cumulativeAmount + income.cumulativeTaxPaid
             } else if(averageView ){
                 return income.avgAmount + income.avgTaxPaid
             } else {
-                return income.amount + income.taxpaid
+                return income.amount + income.taxPaid
             }
         } else {
             if(cumulativeView) {
@@ -441,7 +441,7 @@ struct IncomeChartView: View {
                     if(averageView) {
                         return income.avgTaxPaid
                     } else {
-                        return income.taxpaid
+                        return income.taxPaid
                     }
                 } else {
                     if(averageView) {

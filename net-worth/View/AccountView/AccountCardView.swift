@@ -9,20 +9,20 @@ import SwiftUI
 
 struct AccountCardView: View {
     
-    var account: Account
+    var account: AccountRestModel
     
     var body: some View {
         VStack(alignment: .leading) {
             Spacer()
             HStack {
-                Text(account.accountName)
+                Text(account.name)
                     .foregroundColor(Color.theme.primaryText)
                     .font(.subheadline.bold())
                     .multilineTextAlignment(.leading)
                 Spacer()
-                if(account.accountType != ConstantUtils.brokerAccountType) {
+                if(account.type != ConstantUtils.brokerAccountType) {
                     if(!account.active) {
-                        Text(account.accountType)
+                        Text(account.type)
                             .foregroundColor(Color.theme.secondaryText)
                             .font(.caption)
                             .multilineTextAlignment(.leading)
@@ -31,25 +31,25 @@ struct AccountCardView: View {
             }
             Spacer()
             HStack(alignment: .center) {
-                if(account.accountType == ConstantUtils.brokerAccountType) {
+                if(account.type == ConstantUtils.brokerAccountType) {
                     Text(SettingsController().getDefaultCurrency().code)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
-                    Text("\(account.balance.currentDayValue.value.withCommas(decimalPlace: 2))")
+                    Text("\(account.value.currentValue.withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 } else {
                     Text(account.currency)
                         .foregroundColor(Color.theme.secondaryText)
                         .font(.caption)
-                    Text("\(account.balance.currentDayValue.value.withCommas(decimalPlace: 2))")
+                    Text("\(account.value.currentValue.withCommas(decimalPlace: 2))")
                         .foregroundColor(Color.theme.primaryText)
                         .font(.caption.bold())
                 }
             }
             Spacer()
             HStack {
-                if(account.accountType == ConstantUtils.brokerAccountType) {
+                if(account.type == ConstantUtils.brokerAccountType) {
                     if(getOneDayChange() > 0) {
                         ZStack {
                             Circle()
@@ -127,15 +127,10 @@ struct AccountCardView: View {
     }
     
     private func getOneDayPercentage() -> String {
-        return CommonController.getGrowthPercentage(previousBalance: account.balance.previousDayValue.value, currentBalance: account.balance.currentDayValue.value)
+        return CommonController.getGrowthPercentage(previousBalance: account.value.previousValue, currentBalance: account.value.currentValue)
     }
     
     private func getOneDayChange() -> Double {
-        return areOneDayTransactions() ? account.balance.currentDayValue.value - account.balance.previousDayValue.value : 0.0
+        return account.value.currentValue - account.value.previousValue
     }
-    
-    private func areOneDayTransactions() -> Bool {
-        return account.balance.currentDayValue.dateTime.UTCToLocalDate() >= Date.now.addingTimeInterval(-86400)
-    }
-    
 }

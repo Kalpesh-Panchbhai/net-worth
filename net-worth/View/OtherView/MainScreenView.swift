@@ -14,6 +14,7 @@ struct MainScreenView: View {
     
     @StateObject var accountViewModel = AccountViewModel()
     @StateObject var watchViewModel = WatchViewModel()
+    @StateObject var watchAccountViewModel = WatchAccountViewModel()
     @StateObject var incomeViewModel = IncomeViewModel()
     @StateObject var networkMonitor = NetworkMonitor()
     
@@ -93,6 +94,7 @@ struct MainScreenView: View {
         }
         .environmentObject(accountViewModel)
         .environmentObject(watchViewModel)
+        .environmentObject(watchAccountViewModel)
         .environmentObject(incomeViewModel)
     }
 }

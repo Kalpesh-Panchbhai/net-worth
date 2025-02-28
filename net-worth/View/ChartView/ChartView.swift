@@ -9,17 +9,21 @@ import SwiftUI
 
 struct ChartView: View {
     
-    @State var watchListSelected = Watch()
-    @State var brokerSelected = Account()
+    @State var fetchedChartDataList = [AccountRestModel]()
+    
+    @State var watchListSelected = WatchRestModel()
+    @State var brokerSelected = AccountRestModel()
     @State var showingAssetsData = true
-    @State var chartDataList = [Account]()
+    @State var chartDataList = [AccountRestModel]()
+
     @State var compareAssetsToLiabilities = false
-    @State var multipleWatchListSelection = Set<Watch>()
+    @State var multipleWatchListSelection = Set<WatchRestModel>()
     @State var filterSelected = ""
     @State var showNetWorthChart = false
     @State var isChartDataEnabled = false
     
     @EnvironmentObject var watchViewModel: WatchViewModel
+    @EnvironmentObject var watchAccountViewModel: WatchAccountViewModel
     @EnvironmentObject var accountViewModel: AccountViewModel
     @EnvironmentObject var incomeViewModel: IncomeViewModel
     
@@ -53,7 +57,7 @@ struct ChartView: View {
                             brokerListPicker
                         }, label: {
                             Text("Broker List")
-                            Text(brokerSelected.accountName)
+                            Text(brokerSelected.name)
                         })
                         
                         Menu(content: {
@@ -100,19 +104,23 @@ struct ChartView: View {
     var leftTopView: some View {
         Button(action: {
             if(showingAssetsData) {
-                chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
-                    return $0.balance.currentDayValue.value < 0
-                }.sorted(by: {
-                    $0.balance.currentDayValue.value < $1.balance.currentDayValue.value
-                })
-                showingAssetsData.toggle()
+                Task.init {
+                    chartDataList = fetchedChartDataList.filter {
+                        return $0.value.currentValue < 0
+                    }.sorted(by: {
+                        $0.value.currentValue < $1.value.currentValue
+                    })
+                    showingAssetsData.toggle()
+                }
             } else {
-                chartDataList = getAccountsForWatchList(watch: watchListSelected).filter {
-                    return $0.balance.currentDayValue.value > 0
-                }.sorted(by: {
-                    $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
-                })
-                showingAssetsData.toggle()
+                Task.init {
+                    chartDataList = fetchedChartDataList.filter {
+                        return $0.value.currentValue > 0
+                    }.sorted(by: {
+                        $0.value.currentValue > $1.value.currentValue
+                    })
+                    showingAssetsData.toggle()
+                }
             }
         }, label: {
             if(showingAssetsData) {
@@ -129,11 +137,11 @@ struct ChartView: View {
     
     var rightTopView: some View {
         Button(action: {
-            watchListSelected = Watch()
-            brokerSelected = Account()
+            watchListSelected = WatchRestModel()
+            brokerSelected = AccountRestModel()
             compareAssetsToLiabilities = false
-            multipleWatchListSelection = Set<Watch>()
-            chartDataList = [Account]()
+            multipleWatchListSelection = Set<WatchRestModel>()
+            chartDataList = [AccountRestModel]()
             showingAssetsData = true
             self.isChartDataEnabled = false
             filterSelected = ""
@@ -162,7 +170,7 @@ struct ChartView: View {
                 }
                 
                 if(!filterSelected.elementsEqual("COMPARE_MULTIPLE")) {
-                    multipleWatchListSelection = Set<Watch>()
+                    multipleWatchListSelection = Set<WatchRestModel>()
                 }
                 if(filterSelected.isEmpty) {
                     isChartDataEnabled = false
@@ -170,18 +178,19 @@ struct ChartView: View {
             } else {
                 filterSelected = "WATCH"
                 isChartDataEnabled = true
-                brokerSelected = Account()
+                brokerSelected = AccountRestModel()
                 compareAssetsToLiabilities = false
-                multipleWatchListSelection = Set<Watch>()
-                var accountList = getAccountsForWatchList(watch: watchListSelected).filter {
-                    return $0.balance.currentDayValue.value > 0
+                multipleWatchListSelection = Set<WatchRestModel>()
+                Task.init {
+                    await getAccountsForWatchList(watch: watchListSelected)
+                    self.chartDataList = fetchedChartDataList.filter({
+                        return $0.value.currentValue > 0
+                    }).sorted(by: {
+                        $0.value.currentValue > $1.value.currentValue
+                    })
+                    
+                    showingAssetsData = true
                 }
-                accountList.sort(by: {
-                    $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
-                })
-                self.chartDataList = accountList
-                
-                showingAssetsData = true
             }
         })
     }
@@ -189,20 +198,20 @@ struct ChartView: View {
     var brokerListPicker: some View {
         Picker(selection: $brokerSelected, content: {
             ForEach(getBrokerList(), id: \.self, content: {
-                Text($0.accountName).tag($0)
+                Text($0.name).tag($0)
             })
         }, label: {
             Text("Broker List")
         })
         .listRowBackground(Color.theme.foreground)
         .onChange(of: brokerSelected, perform: { _ in
-            if(brokerSelected.accountName.isEmpty) {
+            if(brokerSelected.name.isEmpty) {
                 if(!filterSelected.elementsEqual("COMPARE")) {
                     compareAssetsToLiabilities = false
                 }
                 
                 if(!filterSelected.elementsEqual("COMPARE_MULTIPLE")) {
-                    multipleWatchListSelection = Set<Watch>()
+                    multipleWatchListSelection = Set<WatchRestModel>()
                 }
                 if(filterSelected.isEmpty) {
                     isChartDataEnabled = false
@@ -210,17 +219,17 @@ struct ChartView: View {
             } else {
                 filterSelected = "BROKER"
                 isChartDataEnabled = true
-                watchListSelected = Watch()
+                watchListSelected = WatchRestModel()
                 compareAssetsToLiabilities = false
-                multipleWatchListSelection = Set<Watch>()
+                multipleWatchListSelection = Set<WatchRestModel>()
                 Task.init {
                     await accountViewModel.getAccountInBrokerList(brokerID: brokerSelected.id)
                     var accountList = accountViewModel.accountsInBroker
                     accountList.sort(by: {
-                        $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
+                        $0.value.currentValue > $1.value.currentValue
                     })
                     self.chartDataList = accountList.map {
-                        return Account(accountName: $0.name, balance: $0.balance)
+                        return AccountRestModel(name: $0.name, balance: $0.value)
                     }
                 }
             }
@@ -233,28 +242,30 @@ struct ChartView: View {
                 if self.multipleWatchListSelection.contains(watch) {
                     self.multipleWatchListSelection.remove(watch)
                     self.chartDataList.removeAll(where: {
-                        $0.accountName.elementsEqual(watch.name)
+                        $0.name.elementsEqual(watch.name)
                     })
                 }
                 else {
                     filterSelected = "COMPARE_MULTIPLE"
                     if(self.multipleWatchListSelection.isEmpty) {
-                        self.chartDataList = [Account]()
+                        self.chartDataList = [AccountRestModel]()
                     }
                     self.multipleWatchListSelection.insert(watch)
                     
-                    let accountList = getAccountsForWatchList(watch: watch)
-                    var totalAmount = accountList.map( {
-                        $0.balance.currentDayValue.value
-                    }).reduce(0, +)
-                    totalAmount = totalAmount < 0 ? totalAmount * -1.0 : totalAmount * 1.0
-                    var account = Account()
-                    account.accountName = watch.name
-                    account.balance.currentDayValue.value = totalAmount
-                    self.chartDataList.append(account)
-                    self.chartDataList.sort(by: {
-                        $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
-                    })
+                    Task.init {
+                        await getAccountsForWatchList(watch: watch)
+                        var totalAmount = fetchedChartDataList.map( {
+                            $0.value.currentValue
+                        }).reduce(0, +)
+                        totalAmount = totalAmount < 0 ? totalAmount * -1.0 : totalAmount * 1.0
+                        var account = AccountRestModel()
+                        account.name = watch.name
+                        account.value.currentValue = totalAmount
+                        self.chartDataList.append(account)
+                        self.chartDataList.sort(by: {
+                            $0.value.currentValue > $1.value.currentValue
+                        })
+                    }
                 }
                 if(multipleWatchListSelection.isEmpty) {
                     isChartDataEnabled = false
@@ -263,11 +274,11 @@ struct ChartView: View {
                 }
                 
                 if(!filterSelected.elementsEqual("WATCH")) {
-                    watchListSelected = Watch()
+                    watchListSelected = WatchRestModel()
                 }
                 
                 if(!filterSelected.elementsEqual("BROKER")) {
-                    brokerSelected = Account()
+                    brokerSelected = AccountRestModel()
                 }
                 
                 if(!filterSelected.elementsEqual("COMPARE")) {
@@ -285,44 +296,44 @@ struct ChartView: View {
                     filterSelected = "COMPARE"
                     
                     isChartDataEnabled = true
-                    self.chartDataList = [Account]()
-                    var assetAccount = Account()
-                    assetAccount.accountName = "Assets"
-                    assetAccount.balance.currentDayValue.value = getAccounts().filter {
-                        return $0.balance.currentDayValue.value > 0
+                    self.chartDataList = [AccountRestModel]()
+                    var assetAccount = AccountRestModel()
+                    assetAccount.name = "Assets"
+                    assetAccount.value.currentValue = getAccounts().filter {
+                        return $0.value.currentValue > 0
                     }.map {
-                        $0.balance.currentDayValue.value
+                        $0.value.currentValue
                     }.reduce(0, +)
                     self.chartDataList.append(assetAccount)
                     
-                    var liabilitiesAccount = Account()
-                    liabilitiesAccount.accountName = "Liabilities"
-                    liabilitiesAccount.balance.currentDayValue.value = getAccounts().filter {
-                        return $0.balance.currentDayValue.value < 0
+                    var liabilitiesAccount = AccountRestModel()
+                    liabilitiesAccount.name = "Liabilities"
+                    liabilitiesAccount.value.currentValue = getAccounts().filter {
+                        return $0.value.currentValue < 0
                     }.map {
-                        $0.balance.currentDayValue.value
+                        $0.value.currentValue
                     }.reduce(0, +) * -1.0
                     self.chartDataList.append(liabilitiesAccount)
                     self.chartDataList.sort(by: {
-                        $0.balance.currentDayValue.value > $1.balance.currentDayValue.value
+                        $0.value.currentValue > $1.value.currentValue
                     })
                 }
                 else if(filterSelected.isEmpty || (filterSelected.elementsEqual("COMPARE") && !value)) {
                     filterSelected = ""
                     isChartDataEnabled = false
-                    self.chartDataList = [Account]()
+                    self.chartDataList = [AccountRestModel]()
                 }
                 
                 if(!filterSelected.elementsEqual("WATCH")) {
-                    watchListSelected = Watch()
+                    watchListSelected = WatchRestModel()
                 }
                 
                 if(!filterSelected.elementsEqual("BROKER")) {
-                    brokerSelected = Account()
+                    brokerSelected = AccountRestModel()
                 }
                 
                 if(!filterSelected.elementsEqual("COMPARE_MULTIPLE")) {
-                    multipleWatchListSelection = Set<Watch>()
+                    multipleWatchListSelection = Set<WatchRestModel>()
                 }
             }
             .listRowBackground(Color.theme.foreground)
@@ -331,10 +342,10 @@ struct ChartView: View {
     var chartView: some View {
         PieChartView(
             values: chartDataList.map {
-                $0.balance.currentDayValue.value
+                $0.value.currentValue
             },
             names: chartDataList.map {
-                $0.accountName
+                $0.name
             },
             formatter: {value in String(format: "%.2f", value)},
             colors: chartDataList.map { _ in
@@ -343,25 +354,27 @@ struct ChartView: View {
         .frame(maxHeight: .infinity)
     }
     
-    private func getAccounts() -> [Account] {
+    private func getAccounts() -> [AccountRestModel] {
         return accountViewModel.accountList
     }
     
-    private func getWatchLists() -> [Watch] {
+    private func getWatchLists() -> [WatchRestModel] {
         return watchViewModel.watchList
     }
     
-    private func getAccountsForWatchList(watch: Watch) -> [Account] {
-        return getAccounts().filter {
-            watch.accountList.contains($0.id)
+    private func getAccountsForWatchList(watch: WatchRestModel) async {
+        await watchAccountViewModel.getAllAccountsByWatchID(watchID: watch.id)
+        let allAccountsByWatchID = watchAccountViewModel.allAccountsByWatchID.map {$0.accountId}
+        fetchedChartDataList = getAccounts().filter {
+            allAccountsByWatchID.contains($0.id)
         }
     }
     
-    private func getBrokerList() -> [Account] {
+    private func getBrokerList() -> [AccountRestModel] {
         return getAccounts().filter {
-            return $0.accountType.elementsEqual("Broker")
+            return $0.type.elementsEqual("Broker")
         }.sorted(by: {
-            return $0.accountName < $1.accountName
+            return $0.name < $1.name
         })
     }
 }
