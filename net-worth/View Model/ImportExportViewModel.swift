@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ImportExportViewModel: ObservableObject {
+class ImportExportViewModel: ObservableObject, @unchecked Sendable {
     
     var importExportController = ImportExportController()
     

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class FileViewModel: ObservableObject {
+class FileViewModel: ObservableObject, @unchecked Sendable {
     
     @Published var dataLoadingCompleted = false
     
