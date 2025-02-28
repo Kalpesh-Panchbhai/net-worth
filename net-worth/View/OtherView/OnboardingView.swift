@@ -180,7 +180,7 @@ extension OnboardingView {
             
             Toggle(isOn: $isAuthenticationRequired, label: {
                 Label("Require Face ID", systemImage: "faceid")
-            }).onChange(of: isAuthenticationRequired) { newValue in
+            }).onChange(of: isAuthenticationRequired) { oldValue, newValue in
                 settingsController.setAuthentication(newValue: newValue)
             }
             Spacer()

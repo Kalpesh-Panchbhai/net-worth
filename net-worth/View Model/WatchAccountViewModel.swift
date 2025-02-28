@@ -7,7 +7,7 @@
 
 import Foundation
 
-class WatchAccountViewModel: ObservableObject {
+class WatchAccountViewModel: ObservableObject, @unchecked Sendable {
     
     var watchAccountController = WatchAccountController()
     

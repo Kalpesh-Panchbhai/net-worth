@@ -7,7 +7,7 @@
 
 import Foundation
 
-class AccountViewModel: ObservableObject {
+class AccountViewModel: ObservableObject, @unchecked Sendable {
     
     var watchList = [AccountRestModel]()
     var originalAccountList = [AccountRestModel]()

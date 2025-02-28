@@ -32,11 +32,11 @@ struct SymbolPicker: View {
             .scrollContentBackground(.hidden)
             .foregroundColor(Color.theme.primaryText)
             .searchable(text: $search)
-            .onChange(of: search, perform: { _ in
+            .onChange(of: search) {
                 Task.init {
                     await financeViewModel.getAllSymbol(search: search)
                 }
-            })
+            }
         }, label: {
             if(symbolSelected.symbol!.isEmpty) {
                 HStack {

@@ -8,7 +8,7 @@
 import Foundation
 import Firebase
 
-class IncomeViewModel: ObservableObject {
+class IncomeViewModel: ObservableObject, @unchecked Sendable {
     
     var incomeController = IncomeController()
     var incomeTypeController = IncomeTypeController()
