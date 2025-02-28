@@ -189,7 +189,7 @@ struct UpdateIncomeView: View {
                     }
                     
                     if(Calendar.current.isDate(date, equalTo: Date().getEarliestDate(), toGranularity: .day)) {
-                        date = income.creditedDate.toFullDateFormat()
+                        date = income.creditDateDate
                     }
                 }
             }

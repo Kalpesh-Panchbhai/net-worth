@@ -41,7 +41,7 @@ struct IncomeRowView: View {
                     }.fixedSize()
                 }
                 Spacer()
-                Text(income.creditedDate.toFullDateFormat().getDateAndFormat())
+                Text(income.creditDateDate.getDateAndFormat())
                     .font(.system(size: 10))
                     .bold()
             }

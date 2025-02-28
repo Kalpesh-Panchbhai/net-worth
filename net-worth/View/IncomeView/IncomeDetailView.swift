@@ -47,7 +47,7 @@ struct IncomeDetailView: View {
                 HStack {
                     Text("Credited Date")
                     Spacer()
-                    Text(income.creditedDate.toFullDateFormat().getDateAndFormat())
+                    Text(income.creditDateDate.getDateAndFormat())
                 }
                 
             }

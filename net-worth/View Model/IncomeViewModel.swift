@@ -56,10 +56,10 @@ class IncomeViewModel: ObservableObject, @unchecked Sendable {
                     
                     let date = DateComponents(
                         calendar: Calendar.current,
-                        year: value2.creditedDate.toFullDateFormat().getDateComponents().year,
-                        month: value2.creditedDate.toFullDateFormat().getDateComponents().month,
+                        year: value2.creditDateDate.getDateComponents().year,
+                        month: value2.creditDateDate.getDateComponents().month,
                         day: 1)
-                    totalDays = value1.creditedDate.toFullDateFormat().removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
+                    totalDays = value1.creditDateDate.removeTimeStamp().days(from: Calendar.current.date(from: date)!) + 1
                     maxDays = maxDays < totalDays ? totalDays : maxDays
                 }
             }
@@ -75,7 +75,8 @@ class IncomeViewModel: ObservableObject, @unchecked Sendable {
                                    avgAmount: sumAmount / totalMonth,
                                    avgTaxPaid: sumTaxPaid / totalMonth,
                                    cumulativeAmount: cumAmount,
-                                   cumulativeTaxPaid: cumTaxPaid)
+                                   cumulativeTaxPaid: cumTaxPaid,
+                                   creditDateDate: value1.creditDateDate)
         }
         DispatchQueue.main.async {
             self.incomeListNew = list

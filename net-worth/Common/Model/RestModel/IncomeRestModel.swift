@@ -17,6 +17,7 @@ struct IncomeRestModel: Codable, Hashable {
     var incomeType: TypeValueRestModel
     var incomeTag: TypeValueRestModel
     
+    var creditDateDate: Date
     var avgAmount: Double = 0.0
     var avgTaxPaid: Double = 0.0
     var cumulativeAmount: Double = 0.0
@@ -26,7 +27,7 @@ struct IncomeRestModel: Codable, Hashable {
         case id, userId, amount, creditedDate, taxPaid, currency, incomeType, incomeTag, avgAmount, avgTaxPaid, cumulativeAmount, cumulativeTaxPaid
     }
     
-    init(id: Int = 0, userId: Int = 0, amount: Double = 0.0, taxPaid: Double = 0.0, creditedDate: String = "", currency: String = "", incomeType: TypeValueRestModel = TypeValueRestModel(), incomeTag: TypeValueRestModel = TypeValueRestModel(), avgAmount: Double = 0.0, avgTaxPaid: Double = 0.0, cumulativeAmount: Double = 0.0, cumulativeTaxPaid: Double = 0.0) {
+    init(id: Int = 0, userId: Int = 0, amount: Double = 0.0, taxPaid: Double = 0.0, creditedDate: String = "", currency: String = "", incomeType: TypeValueRestModel = TypeValueRestModel(), incomeTag: TypeValueRestModel = TypeValueRestModel(), avgAmount: Double = 0.0, avgTaxPaid: Double = 0.0, cumulativeAmount: Double = 0.0, cumulativeTaxPaid: Double = 0.0, creditDateDate: Date = Date()) {
         self.id = id
         self.userId = userId
         self.amount = amount
@@ -39,6 +40,7 @@ struct IncomeRestModel: Codable, Hashable {
         self.avgTaxPaid = avgTaxPaid
         self.cumulativeAmount = cumulativeAmount
         self.cumulativeTaxPaid = cumulativeTaxPaid
+        self.creditDateDate = creditDateDate
     }
     
     init(from decoder: Decoder) throws {
@@ -51,6 +53,7 @@ struct IncomeRestModel: Codable, Hashable {
         currency = try container.decode(String.self, forKey: .currency)
         incomeType = try container.decode(TypeValueRestModel.self, forKey: .incomeType)
         incomeTag = try container.decode(TypeValueRestModel.self, forKey: .incomeTag)
+        creditDateDate = creditedDate.toFullDateFormat()
     }
     
     func encode(to encoder: Encoder) throws {
