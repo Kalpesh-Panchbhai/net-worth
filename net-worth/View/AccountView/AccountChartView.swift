@@ -42,7 +42,6 @@ struct AccountChartView: View {
                         Text("1Y").tag("1Y")
                         Text("2Y").tag("2Y")
                         Text("5Y").tag("5Y")
-                        Text("Max").tag("Max")
                     }, label: {
                         Text("Account Chart Tab View")
                     })
@@ -98,21 +97,7 @@ struct AccountChartView: View {
     }
     
     private func getFilterIndex() -> Int {
-        if (range == "1M") {
-            return 1
-        } else if(range == "3M") {
-            return 2
-        } else if(range == "6M") {
-            return 3
-        } else if(range == "1Y") {
-            return 4
-        } else if(range == "2Y") {
-            return 5
-        } else if(range == "5Y") {
-            return 6
-        } else {
-            return 7
-        }
+        return Int(ceil(Double(accountViewModel.chartDataList.count) / Double(100)))
     }
     
     private func isTransactionDateChartData(item: ChartData) -> Bool {
