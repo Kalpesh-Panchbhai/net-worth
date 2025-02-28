@@ -344,10 +344,10 @@ struct IncomeChartView: View {
                             })
                             
                             Toggle("Show Total", isOn: $showTotal)
-                                .onChange(of: showTotal, perform: { _ in
+                                .onChange(of: showTotal) {
                                     self.taxPaidView = false
                                     updateChartData()
-                                })
+                                }
                         }, label: {
                             ZStack {
                                 Circle()
@@ -364,13 +364,13 @@ struct IncomeChartView: View {
             }
         }
         .blur(radius: CGFloat(scenePhaseBlur))
-        .onChange(of: scenePhase, perform: { value in
-            if(value == .active) {
+        .onChange(of: scenePhase) { oldValue, newValue in
+            if(newValue == .active) {
                 scenePhaseBlur = 0
             } else {
                 scenePhaseBlur = 5
             }
-        })
+        }
         .onAppear {
             Task.init {
                 updateChartData()

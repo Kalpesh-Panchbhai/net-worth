@@ -55,12 +55,12 @@ struct UpdateWatchView: View {
             Alert(title: Text("Watch List Name cannot be empty"))
         }
         .blur(radius: CGFloat(scenePhaseBlur))
-        .onChange(of: scenePhase, perform: { value in
-            if(value == .active) {
+        .onChange(of: scenePhase) { oldValue, newValue in
+            if(newValue == .active) {
                 scenePhaseBlur = 0
             } else {
                 scenePhaseBlur = 5
             }
-        })
+        }
     }
 }

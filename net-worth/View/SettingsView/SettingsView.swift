@@ -60,8 +60,8 @@ struct SettingsView: View {
                     // MARK: Authentication Required toggle
                     Toggle(isOn: $isAuthenticationRequired, label: {
                         Label("Require Face ID", systemImage: "faceid")
-                    }).onChange(of: isAuthenticationRequired) {
-                        settingsController.setAuthentication(newValue: $0)
+                    }).onChange(of: isAuthenticationRequired) { oldValue, newValue in
+                        settingsController.setAuthentication(newValue: newValue)
                     }
                     .foregroundColor(Color.theme.primaryText)
                     .listRowBackground(Color.theme.foreground)

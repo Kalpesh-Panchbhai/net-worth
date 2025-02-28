@@ -77,8 +77,8 @@ struct UpdateBalanceAccountView: View {
             .scrollContentBackground(.hidden)
         }
         .blur(radius: CGFloat(scenePhaseBlur))
-        .onChange(of: scenePhase) {
-            if($0 == .active) {
+        .onChange(of: scenePhase) { oldValue, newValue in
+            if(newValue == .active) {
                 scenePhaseBlur = 0
             } else {
                 scenePhaseBlur = 5

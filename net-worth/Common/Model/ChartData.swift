@@ -24,7 +24,7 @@ struct ChartData: Codable, Hashable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        var stringDate = try container.decode(String.self, forKey: .date)
+        let stringDate = try container.decode(String.self, forKey: .date)
         date = stringDate.toFullDateFormat()
         value = try container.decode(Double.self, forKey: .value)
     }

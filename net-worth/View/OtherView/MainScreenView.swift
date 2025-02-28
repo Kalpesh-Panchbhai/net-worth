@@ -69,13 +69,13 @@ struct MainScreenView: View {
             }
         }
         .blur(radius: CGFloat(scenePhaseBlur))
-        .onChange(of: scenePhase, perform: { value in
-            if(value == .active) {
+        .onChange(of: scenePhase) { oldValue, newValue in
+            if(newValue == .active) {
                 scenePhaseBlur = 0
             } else {
                 scenePhaseBlur = 5
             }
-        })
+        }
         .onAppear {
             networkUnavailable = !networkMonitor.isConnected
             Task.init {

@@ -213,13 +213,13 @@ struct NewIncomeView: View {
             .scrollContentBackground(.hidden)
         }
         .blur(radius: CGFloat(scenePhaseBlur))
-        .onChange(of: scenePhase, perform: { value in
-            if(value == .active) {
+        .onChange(of: scenePhase) { oldValue, newValue in
+            if(newValue == .active) {
                 scenePhaseBlur = 0
             } else {
                 scenePhaseBlur = 5
             }
-        })
+        }
     }
     
     private func allFieldsFilled () -> Bool {

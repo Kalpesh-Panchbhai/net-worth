@@ -163,7 +163,7 @@ struct ChartView: View {
             Text("Watch List")
         })
         .listRowBackground(Color.theme.foreground)
-        .onChange(of: watchListSelected, perform: { _ in
+        .onChange(of: watchListSelected) {
             if(watchListSelected.name.isEmpty) {
                 if(!filterSelected.elementsEqual("COMPARE")) {
                     compareAssetsToLiabilities = false
@@ -192,7 +192,7 @@ struct ChartView: View {
                     showingAssetsData = true
                 }
             }
-        })
+        }
     }
     
     var brokerListPicker: some View {
@@ -204,7 +204,7 @@ struct ChartView: View {
             Text("Broker List")
         })
         .listRowBackground(Color.theme.foreground)
-        .onChange(of: brokerSelected, perform: { _ in
+        .onChange(of: brokerSelected) {
             if(brokerSelected.name.isEmpty) {
                 if(!filterSelected.elementsEqual("COMPARE")) {
                     compareAssetsToLiabilities = false
@@ -233,7 +233,7 @@ struct ChartView: View {
                     }
                 }
             }
-        })
+        }
     }
     
     var selectMultipleWatchListForCompare: some View {
@@ -291,8 +291,8 @@ struct ChartView: View {
     
     var compareAssetsAndLiabilitiesToggle: some View {
         Toggle("Compare Assets and Liabilities", isOn: $compareAssetsToLiabilities)
-            .onChange(of: compareAssetsToLiabilities) { value in
-                if(value) {
+            .onChange(of: compareAssetsToLiabilities) { oldValue, newValue in
+                if(newValue) {
                     filterSelected = "COMPARE"
                     
                     isChartDataEnabled = true
@@ -318,7 +318,7 @@ struct ChartView: View {
                         $0.value.currentValue > $1.value.currentValue
                     })
                 }
-                else if(filterSelected.isEmpty || (filterSelected.elementsEqual("COMPARE") && !value)) {
+                else if(filterSelected.isEmpty || (filterSelected.elementsEqual("COMPARE") && !newValue)) {
                     filterSelected = ""
                     isChartDataEnabled = false
                     self.chartDataList = [AccountRestModel]()

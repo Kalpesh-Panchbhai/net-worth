@@ -60,8 +60,8 @@ struct NewAccountInBrokerView: View {
             .scrollContentBackground(.hidden)
         }
         .blur(radius: CGFloat(scenePhaseBlur))
-        .onChange(of: scenePhase) { value in
-            if(value == .active) {
+        .onChange(of: scenePhase) { oldValue, newValue in
+            if(newValue == .active) {
                 scenePhaseBlur = 0
             } else {
                 scenePhaseBlur = 5
