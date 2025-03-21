@@ -26,7 +26,7 @@ struct AccountChartView: View {
             HStack(alignment: .top) {
                 VStack(alignment: .center) {
                     HStack {
-                        SingleLineLollipopChartView(chartDataList: chartDataList, accountTransactionList: accountViewModel.accountTransactionList)
+                        SingleLineLollipopChartView(chartDataList: chartDataList, accountTransactionList: accountViewModel.accountTransactionList, showMessage: true)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(15)
@@ -85,7 +85,6 @@ struct AccountChartView: View {
                 }
                 filterChartData()
             }
-
         }
     }
     

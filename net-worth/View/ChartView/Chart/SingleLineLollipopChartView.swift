@@ -15,151 +15,175 @@ struct SingleLineLollipopChartView: View {
     var isPercentageChart: Bool = false
     var isColorChart: Bool = true
     
+    var showMessage: Bool
+    
     @State private var lineWidth = 2.0
     @State private var selectedElement: ChartData?
     
     var body: some View {
-        Chart {
-            ForEach(chartDataList, id: \.self) { data in
-                LineMark(
-                    x: .value("Date", data.date),
-                    y: .value("Value", data.value)
-                )
-                .accessibilityLabel(data.date.formatted(date: .complete, time: .omitted))
-                .accessibilityValue("\(data.value)")
-                .lineStyle(StrokeStyle(lineWidth: lineWidth))
-                .foregroundStyle(getChartColor().gradient)
-                .interpolationMethod(.catmullRom)
-                
-                if(isTransactionDate(date: data.date.localToLocalStringFull())) {
-                    PointMark(
+        ZStack {
+            Chart {
+                ForEach(chartDataList, id: \.self) { data in
+                    LineMark(
                         x: .value("Date", data.date),
                         y: .value("Value", data.value)
                     )
-                    .annotation(position: .overlay, alignment: .center) {
-                        ZStack {
-                            Circle()
-                                .fill(getTransactionDateCircleColor(date: data.date.localToLocalStringFull()).opacity(1))
-                                .frame(width: 13, height: 13)
+                    .accessibilityLabel(data.date.formatted(date: .complete, time: .omitted))
+                    .accessibilityValue("\(data.value)")
+                    .lineStyle(StrokeStyle(lineWidth: lineWidth))
+                    .foregroundStyle(getChartColor().gradient)
+                    .interpolationMethod(.catmullRom)
+                    
+                    if(isTransactionDate(date: data.date.localToLocalStringFull())) {
+                        PointMark(
+                            x: .value("Date", data.date),
+                            y: .value("Value", data.value)
+                        )
+                        .annotation(position: .overlay, alignment: .center) {
+                            ZStack {
+                                Circle()
+                                    .fill(getTransactionDateCircleColor(date: data.date.localToLocalStringFull()).opacity(1))
+                                    .frame(width: 13, height: 13)
+                            }
+                        }
+                        .symbolSize(0)
+                    }
+                    AreaMark(
+                        x: .value("Date", data.date),
+                        y: .value("Value", data.value)
+                    )
+                    .foregroundStyle(Gradient(colors: [getChartColor().opacity(0.05), .clear]))
+                    .interpolationMethod(.catmullRom)
+                }
+            }
+            .chartYScale(domain: getMinValue()...getMaxValue())
+            .chartXAxis {
+                AxisMarks(values: .automatic) { _ in
+                    AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 0.1, dash: [0]))
+                        .foregroundStyle(Color.theme.primaryText)
+                    AxisTick(stroke: StrokeStyle(lineWidth: 1))
+                        .foregroundStyle(Color.theme.primaryText)
+                    AxisValueLabel()
+                        .foregroundStyle(Color.theme.primaryText)
+                }
+            }
+            .chartYAxis {
+                AxisMarks(position: .leading, values: .automatic) { value in
+                    AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 0.1, dash: [0]))
+                        .foregroundStyle(Color.theme.primaryText)
+                    AxisTick(stroke: StrokeStyle(lineWidth: 1))
+                        .foregroundStyle(Color.theme.primaryText)
+                    AxisValueLabel {
+                        if(isPercentageChart) {
+                            Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))%")
+                        } else {
+                            Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))")
                         }
                     }
-                    .symbolSize(0)
+                    .foregroundStyle(Color.theme.primaryText)
                 }
-                AreaMark(
-                    x: .value("Date", data.date),
-                    y: .value("Value", data.value)
-                )
-                .foregroundStyle(Gradient(colors: [getChartColor().opacity(0.05), .clear]))
-                .interpolationMethod(.catmullRom)
             }
-        }
-        .chartYScale(domain: getMinValue()...getMaxValue())
-        .chartXAxis {
-            AxisMarks(values: .automatic) { _ in
-                AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 0.1, dash: [0]))
-                    .foregroundStyle(Color.theme.primaryText)
-                AxisTick(stroke: StrokeStyle(lineWidth: 1))
-                    .foregroundStyle(Color.theme.primaryText)
-                AxisValueLabel()
-                    .foregroundStyle(Color.theme.primaryText)
-            }
-        }
-        .chartYAxis {
-            AxisMarks(position: .leading, values: .automatic) { value in
-                AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 0.1, dash: [0]))
-                    .foregroundStyle(Color.theme.primaryText)
-                AxisTick(stroke: StrokeStyle(lineWidth: 1))
-                    .foregroundStyle(Color.theme.primaryText)
-                AxisValueLabel {
-                    if(isPercentageChart) {
-                        Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))%")
-                    } else {
-                        Text("\(CommonController.abbreviateAxisValue(string: CommonController.parseAxisValue(value: value) ?? ""))")
-                    }
+            .chartOverlay { proxy in
+                GeometryReader { geo in
+                    Rectangle().fill(.clear).contentShape(Rectangle())
+                        .gesture(
+                            SpatialTapGesture()
+                                .onEnded { value in
+                                    let element = findElement(location: value.location, proxy: proxy, geometry: geo)
+                                    if selectedElement?.date == element?.date {
+                                        selectedElement = nil
+                                    } else {
+                                        selectedElement = element
+                                    }
+                                }
+                                .exclusively(
+                                    before: DragGesture()
+                                        .onChanged { value in
+                                            selectedElement = findElement(location: value.location, proxy: proxy, geometry: geo)
+                                        }
+                                )
+                        )
                 }
-                .foregroundStyle(Color.theme.primaryText)
             }
-        }
-        .chartOverlay { proxy in
-            GeometryReader { geo in
-                Rectangle().fill(.clear).contentShape(Rectangle())
-                    .gesture(
-                        SpatialTapGesture()
-                            .onEnded { value in
-                                let element = findElement(location: value.location, proxy: proxy, geometry: geo)
-                                if selectedElement?.date == element?.date {
-                                    selectedElement = nil
+            .chartBackground { proxy in
+                ZStack(alignment: .topLeading) {
+                    GeometryReader { geo in
+                        if let selectedElement {
+                            let dateInterval = Calendar.current.dateInterval(of: .day, for: selectedElement.date)!
+                            let startPositionX1 = proxy.position(forX: dateInterval.start) ?? 0
+                            let startPositionY1 = proxy.position(forY: selectedElement.value) ?? 0
+                            
+                            let lineX = startPositionX1 + geo[proxy.plotFrame!].origin.x
+                            let lineY = startPositionY1 + geo[proxy.plotFrame!].origin.y
+                            
+                            let lineHeight = geo[proxy.plotFrame!].maxY
+                            let boxWidth: CGFloat = 100
+                            let boxOffset = max(0, min(geo.size.width - boxWidth, lineX - boxWidth / 2))
+                            
+                            Rectangle()
+                                .fill(getChartColor())
+                                .frame(width: 2, height: lineHeight)
+                                .position(x: lineX, y: lineHeight / 2)
+                            
+                            Circle()
+                                .strokeBorder(Color.theme.primaryText, lineWidth: 3)
+                                .background(Circle().fill(getChartColor()))
+                                .frame(width: 12, height: 12)
+                                .position(x: lineX, y: lineY)
+                            
+                            VStack(alignment: .center) {
+                                Text("\(selectedElement.date, format: .dateTime.year().month().day())")
+                                    .font(.system(size: 10).bold())
+                                    .foregroundColor(Color.theme.background)
+                                if(isPercentageChart) {
+                                    Text("\(selectedElement.value.withCommas(decimalPlace: 2))%")
+                                        .font(.system(size: 12).bold())
+                                        .foregroundColor(Color.theme.background)
                                 } else {
-                                    selectedElement = element
+                                    Text("\(selectedElement.value.withCommas(decimalPlace: 2))")
+                                        .font(.system(size: 12).bold())
+                                        .foregroundColor(Color.theme.background)
                                 }
                             }
-                            .exclusively(
-                                before: DragGesture()
-                                    .onChanged { value in
-                                        selectedElement = findElement(location: value.location, proxy: proxy, geometry: geo)
-                                    }
-                            )
-                    )
+                            .accessibilityElement(children: .combine)
+                            .accessibilityHidden(false)
+                            .frame(width: boxWidth, alignment: .center)
+                            .background {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(Color.theme.primaryText)
+                                }
+                                .padding(.horizontal, -8)
+                                .padding(.vertical, -4)
+                            }
+                            .offset(x: boxOffset)
+                            .shadow(radius: 5)
+                        }
+                    }
+                }
             }
-        }
-        .chartBackground { proxy in
-            ZStack(alignment: .topLeading) {
-                GeometryReader { geo in
-                    if let selectedElement {
-                        let dateInterval = Calendar.current.dateInterval(of: .day, for: selectedElement.date)!
-                        let startPositionX1 = proxy.position(forX: dateInterval.start) ?? 0
-                        let startPositionY1 = proxy.position(forY: selectedElement.value) ?? 0
-                        
-                        let lineX = startPositionX1 + geo[proxy.plotFrame!].origin.x
-                        let lineY = startPositionY1 + geo[proxy.plotFrame!].origin.y
-                        
-                        let lineHeight = geo[proxy.plotFrame!].maxY
-                        let boxWidth: CGFloat = 100
-                        let boxOffset = max(0, min(geo.size.width - boxWidth, lineX - boxWidth / 2))
-                        
-                        Rectangle()
-                            .fill(getChartColor())
-                            .frame(width: 2, height: lineHeight)
-                            .position(x: lineX, y: lineHeight / 2)
-                        
-                        Circle()
-                            .strokeBorder(Color.theme.primaryText, lineWidth: 3)
-                            .background(Circle().fill(getChartColor()))
-                            .frame(width: 12, height: 12)
-                            .position(x: lineX, y: lineY)
-                        
-                        VStack(alignment: .center) {
-                            Text("\(selectedElement.date, format: .dateTime.year().month().day())")
-                                .font(.system(size: 10).bold())
-                                .foregroundColor(Color.theme.background)
-                            if(isPercentageChart) {
-                                Text("\(selectedElement.value.withCommas(decimalPlace: 2))%")
-                                    .font(.system(size: 12).bold())
-                                    .foregroundColor(Color.theme.background)
-                            } else {
-                                Text("\(selectedElement.value.withCommas(decimalPlace: 2))")
-                                    .font(.system(size: 12).bold())
-                                    .foregroundColor(Color.theme.background)
-                            }
-                        }
-                        .accessibilityElement(children: .combine)
-                        .accessibilityHidden(false)
-                        .frame(width: boxWidth, alignment: .center)
-                        .background {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 8)
-                                    .fill(Color.theme.primaryText)
-                            }
-                            .padding(.horizontal, -8)
-                            .padding(.vertical, -4)
-                        }
-                        .offset(x: boxOffset)
-                        .shadow(radius: 5)
+            .frame(maxHeight: .infinity)
+            
+            if showMessage {
+                if !chartDataList.isEmpty {
+                    withAnimation {
+                        RoundedRectangle(cornerRadius: 5)
+                            .fill(Color.theme.primaryText.opacity(0.8))
+                            .frame(width: 100, height: 60)
+                            .overlay(
+                                Text(getChangedPercentage())
+                                    .font(.headline.bold())
+                                    .foregroundColor(getChangedPercentage().hasPrefix("-") ? Color.theme.red : Color.theme.green)
+                                )
+                            .transition(.opacity)
                     }
                 }
             }
         }
-        .frame(maxHeight: .infinity)
+    }
+        
+    private func getChangedPercentage() -> String {
+        return CommonController.getGrowthPercentage(previousBalance: chartDataList[0].value, currentBalance: chartDataList[chartDataList.count - 1].value)
     }
     
     private func findElement(location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy) -> ChartData? {
