@@ -272,9 +272,9 @@
 		7D59B3F42BE246FF006F3F00 = {
 			isa = PBXGroup;
 			children = (
+				7D59B40F2BE24873006F3F00 /* Frameworks */,
 				7D59B3FF2BE246FF006F3F00 /* net-worth */,
 				7D59B3FE2BE246FF006F3F00 /* Products */,
-				7D59B40F2BE24873006F3F00 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
