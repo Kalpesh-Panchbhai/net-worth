@@ -64,19 +64,19 @@ struct TransactionRow: View {
                         .foregroundColor(Color.theme.primaryText)
                         .font(.system(size: 11).bold())
                 }
-                Text(accountTransaction.value.withCommas(decimalPlace: 2))
+                Text(accountTransaction.value.withCommas(decimalPlace: 4))
                     .foregroundColor(Color.theme.primaryText)
                     .font(.system(size: 11).bold())
             }
             HStack {
                 Spacer()
                 if(change < 0) {
-                    Text((type.elementsEqual("account") ? (SettingsController().getDefaultCurrency().code) : "") + " (\(change.withCommas(decimalPlace: 2)))")
+                    Text((type.elementsEqual("account") ? (SettingsController().getDefaultCurrency().code) : "") + " (\(change.withCommas(decimalPlace: 4)))")
                         .font(.system(size: 10))
                         .foregroundColor(Color.theme.red)
                         .padding(.leading)
                 } else if(change > 0) {
-                    Text((type.elementsEqual("account") ? (SettingsController().getDefaultCurrency().code) : "") + " (\(change.withCommas(decimalPlace: 2)))")
+                    Text((type.elementsEqual("account") ? (SettingsController().getDefaultCurrency().code) : "") + " (\(change.withCommas(decimalPlace: 4)))")
                         .font(.system(size: 10))
                         .foregroundColor(Color.theme.green)
                         .padding(.leading)
