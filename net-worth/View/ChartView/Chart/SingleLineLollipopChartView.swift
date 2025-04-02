@@ -16,6 +16,7 @@ struct SingleLineLollipopChartView: View {
     var isColorChart: Bool = true
     
     var showMessage: Bool
+    var isAccount: Bool
     
     @State private var lineWidth = 2.0
     @State private var selectedElement: ChartData?
@@ -26,7 +27,8 @@ struct SingleLineLollipopChartView: View {
                 ForEach(chartDataList, id: \.self) { data in
                     LineMark(
                         x: .value("Date", data.date),
-                        y: .value("Value", data.value)
+                        y: .value("Value", data.value),
+                        series: .value("Type", "Value")
                     )
                     .accessibilityLabel(data.date.formatted(date: .complete, time: .omitted))
                     .accessibilityValue("\(data.value)")
@@ -34,6 +36,18 @@ struct SingleLineLollipopChartView: View {
                     .foregroundStyle(getChartColor().gradient)
                     .interpolationMethod(.catmullRom)
                     
+                    if(isAccount) {
+                        LineMark(
+                            x: .value("Date", data.date),
+                            y: .value("Value", data.invested),
+                            series: .value("Type", "Invested")
+                        )
+                        .accessibilityLabel(data.date.formatted(date: .complete, time: .omitted))
+                        .accessibilityValue("\(data.invested)")
+                        .lineStyle(StrokeStyle(lineWidth: lineWidth))
+                        .foregroundStyle(getChartColor().gradient)
+                        .interpolationMethod(.catmullRom)
+                    }
                     if(isTransactionDate(date: data.date.localToLocalStringFull())) {
                         PointMark(
                             x: .value("Date", data.date),
@@ -112,12 +126,14 @@ struct SingleLineLollipopChartView: View {
                             let dateInterval = Calendar.current.dateInterval(of: .day, for: selectedElement.date)!
                             let startPositionX1 = proxy.position(forX: dateInterval.start) ?? 0
                             let startPositionY1 = proxy.position(forY: selectedElement.value) ?? 0
+                            let startPositionY2 = proxy.position(forY: selectedElement.invested) ?? 0
                             
                             let lineX = startPositionX1 + geo[proxy.plotFrame!].origin.x
-                            let lineY = startPositionY1 + geo[proxy.plotFrame!].origin.y
+                            let lineY1 = startPositionY1 + geo[proxy.plotFrame!].origin.y
+                            let lineY2 = startPositionY2 + geo[proxy.plotFrame!].origin.y
                             
                             let lineHeight = geo[proxy.plotFrame!].maxY
-                            let boxWidth: CGFloat = 100
+                            let boxWidth: CGFloat = 200
                             let boxOffset = max(0, min(geo.size.width - boxWidth, lineX - boxWidth / 2))
                             
                             Rectangle()
@@ -129,20 +145,64 @@ struct SingleLineLollipopChartView: View {
                                 .strokeBorder(Color.theme.primaryText, lineWidth: 3)
                                 .background(Circle().fill(getChartColor()))
                                 .frame(width: 12, height: 12)
-                                .position(x: lineX, y: lineY)
+                                .position(x: lineX, y: lineY1)
+                            
+                            if(isAccount) {
+                                Circle()
+                                    .strokeBorder(Color.theme.primaryText, lineWidth: 3)
+                                    .background(Circle().fill(getChartColor()))
+                                    .frame(width: 12, height: 12)
+                                    .position(x: lineX, y: lineY2)
+                            }
                             
                             VStack(alignment: .center) {
                                 Text("\(selectedElement.date, format: .dateTime.year().month().day())")
                                     .font(.system(size: 10).bold())
                                     .foregroundColor(Color.theme.background)
                                 if(isPercentageChart) {
-                                    Text("\(selectedElement.value.withCommas(decimalPlace: 2))%")
-                                        .font(.system(size: 12).bold())
-                                        .foregroundColor(Color.theme.background)
+                                    if(isAccount) {
+                                        HStack {
+                                            VStack {
+                                                Text("Current: \(selectedElement.value.withCommas(decimalPlace: 2))%")
+                                                    .font(.system(size: 12).bold())
+                                                    .foregroundColor(Color.theme.background)
+                                                Text("Invested: \(selectedElement.invested.withCommas(decimalPlace: 2))%")
+                                                    .font(.system(size: 12).bold())
+                                                    .foregroundColor(Color.theme.background)
+                                            }
+                                            VStack {
+                                                Text(getPercentageChange())
+                                                    .font(.system(size: 12).bold())
+                                                    .foregroundColor(getGrowthColor())
+                                            }
+                                        }
+                                    } else {
+                                        Text("\(selectedElement.value.withCommas(decimalPlace: 2))%")
+                                            .font(.system(size: 12).bold())
+                                            .foregroundColor(Color.theme.background)
+                                    }
                                 } else {
-                                    Text("\(selectedElement.value.withCommas(decimalPlace: 2))")
-                                        .font(.system(size: 12).bold())
-                                        .foregroundColor(Color.theme.background)
+                                    if(isAccount) {
+                                        HStack {
+                                            VStack {
+                                                Text("Current: \(selectedElement.value.withCommas(decimalPlace: 2))")
+                                                    .font(.system(size: 12).bold())
+                                                    .foregroundColor(Color.theme.background)
+                                                Text("Invested: \(selectedElement.invested.withCommas(decimalPlace: 2))")
+                                                    .font(.system(size: 12).bold())
+                                                    .foregroundColor(Color.theme.background)
+                                            }
+                                            VStack {
+                                                Text(getPercentageChange())
+                                                    .font(.system(size: 12).bold())
+                                                    .foregroundColor(getGrowthColor())
+                                            }
+                                        }
+                                    } else {
+                                        Text("\(selectedElement.value.withCommas(decimalPlace: 2))")
+                                            .font(.system(size: 12).bold())
+                                            .foregroundColor(Color.theme.background)
+                                    }
                                 }
                             }
                             .accessibilityElement(children: .combine)
@@ -208,21 +268,21 @@ struct SingleLineLollipopChartView: View {
     
     private func getMinValue() -> Double {
         return (chartDataList.map {
-            $0.value
+            return $0.value < $0.invested ? $0.value : $0.invested
         }.min() ?? 0.0) > 0.0 ? ((chartDataList.map {
-            $0.value
+            return $0.value < $0.invested ? $0.value : $0.invested
         }.min() ?? 0.0) * 0.95) : ((chartDataList.map {
-            $0.value
+            return $0.value < $0.invested ? $0.value : $0.invested
         }.min() ?? 0.0)) * 1.05
     }
     
     private func getMaxValue() -> Double {
         return (chartDataList.map {
-            $0.value
+            return $0.value > $0.invested ? $0.value : $0.invested
         }.max() ?? 0.0) > 0.0 ? ((chartDataList.map {
-            $0.value
+            return $0.value > $0.invested ? $0.value : $0.invested
         }.max() ?? 0.0) * 1.05) : ((chartDataList.map {
-            $0.value
+            return $0.value > $0.invested ? $0.value : $0.invested
         }.max() ?? 0.0)) * 0.95
     }
     
@@ -245,5 +305,14 @@ struct SingleLineLollipopChartView: View {
             return $0.transactionDate <= date
         }
         return (accountTransactionFilteredList.count > 1 ? (accountTransactionFilteredList[0].value >= accountTransactionFilteredList[1].value ? Color.theme.green : Color.theme.red) : Color.theme.green)
+    }
+    
+    private func getPercentageChange() -> String {
+        return CommonController.getGrowthPercentage(previousBalance: selectedElement?.invested ?? 0.0, currentBalance: selectedElement?.value ?? 0.0)
+    }
+    
+    public func getGrowthColor() -> Color {
+        let value = CommonController.getGrowthPercentageInDouble(previousBalance: selectedElement?.invested ?? 0.0, currentBalance: selectedElement?.value ?? 0.0)
+        return value >= 0 ? Color.theme.green : Color.theme.red
     }
 }

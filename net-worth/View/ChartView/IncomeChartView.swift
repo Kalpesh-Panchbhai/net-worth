@@ -106,7 +106,7 @@ struct IncomeChartView: View {
                             BarLollipopGroupChartView(chartDataList: incomeListByGroup)
                         } else {
                             if(cumulativeView || averageView) {
-                                SingleLineLollipopChartView(chartDataList: incomeChartDataList, isColorChart: false, showMessage: false)
+                                SingleLineLollipopChartView(chartDataList: incomeChartDataList, isColorChart: false, showMessage: false, isAccount: false)
                             } else {
                                 BarLollipopChartView(chartDataList: incomeChartDataList, average: incomeAvg, isAverageChart: true)
                             }

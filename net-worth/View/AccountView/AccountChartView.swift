@@ -26,7 +26,7 @@ struct AccountChartView: View {
             HStack(alignment: .top) {
                 VStack(alignment: .center) {
                     HStack {
-                        SingleLineLollipopChartView(chartDataList: chartDataList, accountTransactionList: accountViewModel.accountTransactionList, showMessage: true)
+                        SingleLineLollipopChartView(chartDataList: chartDataList, accountTransactionList: accountViewModel.accountTransactionList, showMessage: true, isAccount: isMultiLineChart())
                     }
                     .frame(maxWidth: .infinity)
                     .padding(15)
@@ -102,6 +102,10 @@ struct AccountChartView: View {
     private func isTransactionDateChartData(item: ChartData) -> Bool {
         let accountTransactionList = accountViewModel.accountTransactionList
         return accountTransactionList.firstIndex(where: { $0.transactionDate == item.date.localToLocalStringFull() }) != nil
+    }
+    
+    private func isMultiLineChart() -> Bool {
+        return !(type.elementsEqual("one_non_broker") || type.elementsEqual("non_broker_type"))
     }
 
 }

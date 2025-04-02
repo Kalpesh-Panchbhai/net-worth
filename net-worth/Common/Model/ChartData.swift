@@ -13,13 +13,16 @@ struct ChartData: Codable, Hashable {
     
     var value: Double
     
+    var invested: Double
+    
     private enum CodingKeys: String, CodingKey {
-        case date, value
+        case date, value, invested
     }
     
-    init(date: Date = Date(), value: Double = 0.0) {
+    init(date: Date = Date(), value: Double = 0.0, invested: Double = 0.0) {
         self.date = date
         self.value = value
+        self.invested = invested
     }
     
     init(from decoder: Decoder) throws {
@@ -27,5 +30,6 @@ struct ChartData: Codable, Hashable {
         let stringDate = try container.decode(String.self, forKey: .date)
         date = stringDate.toFullDateFormat()
         value = try container.decode(Double.self, forKey: .value)
+        invested = try container.decode(Double.self, forKey: .invested)
     }
 }
