@@ -13,4 +13,6 @@ struct AccountValue : Codable, Hashable {
     
     var previousValue: Double = 0.0
     
+    var invested: Double = 0.0
+    
 }

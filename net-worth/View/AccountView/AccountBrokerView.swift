@@ -97,7 +97,7 @@ struct AccountBrokerView: View {
                     return $0.value.currentValue >= $1.value.currentValue
                 })
             }
-        } else if(sortType.elementsEqual("Price Change")) {
+        } else if(sortType.elementsEqual("One Day Change")) {
             if(sortOrder.elementsEqual("Asc")) {
                 accountsInBrokerList.sort(by: {
                     return getOneDayChange(account: $0) <= getOneDayChange(account: $1)
@@ -107,7 +107,7 @@ struct AccountBrokerView: View {
                     return getOneDayChange(account: $0) >= getOneDayChange(account: $1)
                 })
             }
-        } else if(sortType.elementsEqual("Percentage Change")) {
+        } else if(sortType.elementsEqual("One Day Percentage Change")) {
             if(sortOrder.elementsEqual("Asc")) {
                 accountsInBrokerList.sort(by: {
                     return getOneDayPercentageChange(account: $0) <= getOneDayPercentageChange(account: $1)
@@ -115,6 +115,26 @@ struct AccountBrokerView: View {
             } else {
                 accountsInBrokerList.sort(by: {
                     return getOneDayPercentageChange(account: $0) >= getOneDayPercentageChange(account: $1)
+                })
+            }
+        } else if(sortType.elementsEqual("Total Change")) {
+            if(sortOrder.elementsEqual("Asc")) {
+                accountsInBrokerList.sort(by: {
+                    return getTotalChange(account: $0) <= getTotalChange(account: $1)
+                })
+            } else {
+                accountsInBrokerList.sort(by: {
+                    return getTotalChange(account: $0) >= getTotalChange(account: $1)
+                })
+            }
+        } else if(sortType.elementsEqual("Total Percentage Change")) {
+            if(sortOrder.elementsEqual("Asc")) {
+                accountsInBrokerList.sort(by: {
+                    return getTotalPercentageChange(account: $0) <= getTotalPercentageChange(account: $1)
+                })
+            } else {
+                accountsInBrokerList.sort(by: {
+                    return getTotalPercentageChange(account: $0) >= getTotalPercentageChange(account: $1)
                 })
             }
         }
@@ -127,5 +147,13 @@ struct AccountBrokerView: View {
     
     private func getOneDayPercentageChange(account: AccountInBrokerRestModel) -> Double {
         return CommonController.getGrowthPercentageInDouble(previousBalance: account.value.previousValue, currentBalance: account.value.currentValue)
+    }
+    
+    private func getTotalChange(account: AccountInBrokerRestModel) -> Double {
+        return account.value.currentValue - account.value.invested
+    }
+    
+    private func getTotalPercentageChange(account: AccountInBrokerRestModel) -> Double {
+        return CommonController.getGrowthPercentageInDouble(previousBalance: account.value.invested, currentBalance: account.value.currentValue)
     }
 }

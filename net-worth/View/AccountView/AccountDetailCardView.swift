@@ -13,7 +13,6 @@ struct AccountDetailCardView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Spacer()
             HStack {
                 Text(account.currency)
                     .foregroundColor(Color.theme.secondaryText)
@@ -29,7 +28,39 @@ struct AccountDetailCardView: View {
                         .multilineTextAlignment(.leading)
                 }
             }
-            Spacer()
+            HStack {
+                if(getTotalChange() > 0) {
+                    ZStack {
+                        Circle()
+                            .fill(Color.theme.green.opacity(0.2))
+                            .frame(width: 17, height: 17)
+                        Image(systemName: ConstantUtils.arrowUpImageName)
+                            .foregroundColor(Color.theme.green)
+                            .font(.caption.bold())
+                    }
+                    Text("+\(getTotalChange().withCommas(decimalPlace: 2))")
+                        .foregroundColor(Color.theme.green)
+                        .font(.caption.bold())
+                    Text("(+\(getTotalPercentageChange()))")
+                        .foregroundColor(Color.theme.green)
+                        .font(.caption.bold())
+                } else if(getTotalChange() < 0) {
+                    ZStack {
+                        Circle()
+                            .fill(Color.theme.red.opacity(0.2))
+                            .frame(width: 17, height: 17)
+                        Image(systemName: ConstantUtils.arrowDownImageName)
+                            .foregroundColor(Color.theme.red)
+                            .font(.caption.bold())
+                    }
+                    Text("\(getTotalChange().withCommas(decimalPlace: 2))")
+                        .foregroundColor(Color.theme.red)
+                        .font(.caption.bold())
+                    Text("(\(getTotalPercentageChange()))")
+                        .foregroundColor(Color.theme.red)
+                        .font(.caption.bold())
+                }
+            }
             HStack {
                 if(getOneDayChange() > 0) {
                     ZStack {
@@ -63,10 +94,9 @@ struct AccountDetailCardView: View {
                         .font(.caption.bold())
                 }
             }
-            Spacer()
         }
         .padding(.horizontal)
-        .frame(width: 360,height: 50)
+        .frame(width: 360,height: 70)
         .padding(8)
         .background(Color.theme.foreground)
     }
@@ -77,5 +107,13 @@ struct AccountDetailCardView: View {
     
     private func getOneDayPercentageChange() -> String {
         return CommonController.getGrowthPercentage(previousBalance: account.value.previousValue, currentBalance: account.value.currentValue)
+    }
+    
+    private func getTotalChange() -> Double {
+        return account.value.currentValue - account.value.invested
+    }
+    
+    private func getTotalPercentageChange() -> String {
+        return CommonController.getGrowthPercentage(previousBalance: account.value.invested, currentBalance: account.value.currentValue)
     }
 }

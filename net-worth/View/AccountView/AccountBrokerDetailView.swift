@@ -19,7 +19,7 @@ struct AccountBrokerDetailView: View {
     var body: some View {
         VStack {
             Picker(selection: $tabItem, content: {
-                Text("Transactions").tag(1)
+                Text("Transactions (\(accountViewModel.accountTransactionList.count))").tag(1)
                 Text("Chart").tag(2)
             }, label: {
                 Text("Account Broker Tab View")

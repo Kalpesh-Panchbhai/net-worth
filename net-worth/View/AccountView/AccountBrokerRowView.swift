@@ -18,44 +18,44 @@ struct AccountBrokerRowView: View {
                     .font(.headline)
                     .foregroundColor(Color.theme.primaryText)
                     .padding(.horizontal)
-                HStack {
-                    Text("Qty. " + account.currentUnit.withCommas(decimalPlace: 4))
-                        .font(.system(size: 12))
-                        .foregroundColor(Color.theme.secondaryText)
-                        .padding(.leading)
-                }
+                Text("Invested " + SettingsController().getDefaultCurrency().code + " " + account.value.invested.withCommas(decimalPlace: 2))
+                    .font(.system(size: 12))
+                    .foregroundColor(Color.theme.secondaryText)
+                    .padding(.horizontal)
+                Text("Qty. " + account.currentUnit.withCommas(decimalPlace: 4))
+                    .font(.system(size: 10))
+                    .foregroundColor(Color.theme.secondaryText)
+                    .padding(.horizontal)
             }
             Spacer()
             VStack(alignment: .trailing) {
-                HStack {
-                    Text(SettingsController().getDefaultCurrency().code)
-                        .font(.system(size: 14))
-                        .foregroundColor(Color.theme.secondaryText)
-                    Text(account.value.currentValue.withCommas(decimalPlace: 2))
-                        .font(.headline)
-                        .foregroundColor(Color.theme.primaryText)
+                Text(SettingsController().getDefaultCurrency().code + " " + account.value.currentValue.withCommas(decimalPlace: 2))
+                    .font(.system(size: 14))
+                    .foregroundColor(Color.theme.primaryText)
+                    .padding(.horizontal)
+                if(getTotalChange() > 0) {
+                    Text(getTotalChange().withCommas(decimalPlace: 2) + " " + "(+" + getTotalPercentageChange() + ")")
+                        .font(.system(size: 12))
+                        .foregroundColor(Color.theme.green)
+                        .padding(.horizontal)
+                } else if(getTotalChange() < 0) {
+                    Text(getTotalChange().withCommas(decimalPlace: 2) + " " + "(" + getTotalPercentageChange() + ")")
+                        .font(.system(size: 12))
+                        .foregroundColor(Color.theme.red)
+                        .padding(.horizontal)
+                } else {
+                    Text("")
                 }
-                .padding(.horizontal)
                 if(getOneDayChange() > 0) {
-                    HStack {
-                        Text(getOneDayChange().withCommas(decimalPlace: 2))
-                            .font(.system(size: 12))
-                            .foregroundColor(Color.theme.green)
-                        Text("(+" + getOneDayPercentageChange() + ")")
-                            .font(.system(size: 12))
-                            .foregroundColor(Color.theme.green)
-                    }
-                    .padding(.horizontal)
+                    Text(getOneDayChange().withCommas(decimalPlace: 2) + " " + "(+" + getOneDayPercentageChange() + ")")
+                        .font(.system(size: 12))
+                        .foregroundColor(Color.theme.green)
+                        .padding(.horizontal)
                 } else if(getOneDayChange() < 0) {
-                    HStack {
-                        Text(getOneDayChange().withCommas(decimalPlace: 2))
-                            .font(.system(size: 12))
-                            .foregroundColor(Color.theme.red)
-                        Text("(" + getOneDayPercentageChange() + ")")
-                            .font(.system(size: 12))
-                            .foregroundColor(Color.theme.red)
-                    }
-                    .padding(.horizontal)
+                    Text(getOneDayChange().withCommas(decimalPlace: 2) + " " + "(" + getOneDayPercentageChange() + ")")
+                        .font(.system(size: 12))
+                        .foregroundColor(Color.theme.red)
+                        .padding(.horizontal)
                 } else {
                     Text("")
                 }
@@ -69,5 +69,13 @@ struct AccountBrokerRowView: View {
     
     private func getOneDayPercentageChange() -> String {
         return CommonController.getGrowthPercentage(previousBalance: account.value.previousValue, currentBalance: account.value.currentValue)
+    }
+    
+    private func getTotalChange() -> Double {
+        return account.value.currentValue - account.value.invested
+    }
+    
+    private func getTotalPercentageChange() -> String {
+        return CommonController.getGrowthPercentage(previousBalance: account.value.invested, currentBalance: account.value.currentValue)
     }
 }

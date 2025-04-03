@@ -158,22 +158,42 @@ struct AccountDetailView: View {
                                     })
                                     
                                     Button(action: {
-                                        sortType = "Price Change"
+                                        sortType = "One Day Change"
                                     }, label: {
-                                        if(sortType.elementsEqual("Price Change")){
-                                            Label("Price Change", systemImage: "checkmark")
+                                        if(sortType.elementsEqual("One Day Change")){
+                                            Label("One Day Change", systemImage: "checkmark")
                                         } else {
-                                            Text("Price Change")
+                                            Text("One Day Change")
                                         }
                                     })
                                     
                                     Button(action: {
-                                        sortType = "Percentage Change"
+                                        sortType = "One Day Percentage Change"
                                     }, label: {
-                                        if(sortType.elementsEqual("Percentage Change")){
-                                            Label("Percentage Change", systemImage: "checkmark")
+                                        if(sortType.elementsEqual("One Day Percentage Change")){
+                                            Label("One Day Percentage Change", systemImage: "checkmark")
                                         } else {
-                                            Text("Percentage Change")
+                                            Text("One Day Percentage Change")
+                                        }
+                                    })
+                                    
+                                    Button(action: {
+                                        sortType = "Total Change"
+                                    }, label: {
+                                        if(sortType.elementsEqual("Total Change")){
+                                            Label("Total Change", systemImage: "checkmark")
+                                        } else {
+                                            Text("Total Change")
+                                        }
+                                    })
+                                    
+                                    Button(action: {
+                                        sortType = "Total Percentage Change"
+                                    }, label: {
+                                        if(sortType.elementsEqual("Total Percentage Change")){
+                                            Label("Total Percentage Change", systemImage: "checkmark")
+                                        } else {
+                                            Text("Total Percentage Change")
                                         }
                                     })
                                     
