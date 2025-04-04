@@ -105,7 +105,26 @@ struct AccountChartView: View {
     }
     
     private func isMultiLineChart() -> Bool {
-        return !(type.elementsEqual("one_non_broker") || type.elementsEqual("non_broker_type"))
+        var showMultiLineChart = false
+        if(type.elementsEqual("one_non_broker")) {
+            let account = accountViewModel.originalAccountList.first(where: {
+                return $0.id == Int(id as! Int)
+            })!
+            showMultiLineChart = !(type.elementsEqual("one_non_broker") && (account.type.elementsEqual("Other") && account.value.currentValue == account.value.invested))
+        } else if(type.elementsEqual("non_broker_type")) {
+            if(String(id as! String).elementsEqual("Other")) {
+                let accountList = accountViewModel.originalAccountList.filter {
+                    return $0.type == String(id as! String)
+                }
+                
+                accountList.forEach {
+                    showMultiLineChart = showMultiLineChart || $0.value.currentValue != $0.value.invested
+                }
+            }
+        } else {
+            showMultiLineChart = !type.elementsEqual("non_broker_type")
+        }
+        return showMultiLineChart
     }
 
 }
