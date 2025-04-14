@@ -17,8 +17,9 @@ struct AccountDetailCardView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
                         Text(account.name)
-                            .font(.headline)
+                            .font(.system(size: 16, weight: .bold))
                             .foregroundColor(ColorTheme().primaryText)
+                        
                         Spacer()
                         if(!account.active) {
                             Text("(Closed)")
@@ -27,11 +28,15 @@ struct AccountDetailCardView: View {
                                 .multilineTextAlignment(.leading)
                         }
                     }
-                            
+                    
                     HStack {
-                        Text("1D Change: " + SettingsController().getDefaultCurrency().symbol + getOneDayChange().abbreviated())
-                            .font(.subheadline)
-                            .foregroundColor(ColorTheme().secondaryText)
+                        Text("1D Change: ")
+                            .font(.system(size: 12))
+                            .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
+                        
+                        Text(SettingsController().getDefaultCurrency().symbol + getOneDayChange().abbreviated())
+                            .font(.system(size: 14))
+                            .foregroundColor(ColorTheme().primaryText)
                                 
                         if(getOneDayChange() > 0) {
                             ZStack {
@@ -40,11 +45,11 @@ struct AccountDetailCardView: View {
                                     .frame(width: 17, height: 17)
                                 Image(systemName: ConstantUtils.arrowUpImageName)
                                     .foregroundColor(Color.theme.green)
-                                    .font(.caption.bold())
+                                    .font(.system(size: 12))
                             }
                             
                             Text(getOneDayPercentageChange())
-                                .font(.caption)
+                                .font(.system(size: 12))
                                 .foregroundColor(ColorTheme().green)
                         } else if(getOneDayChange() < 0) {
                             ZStack {
@@ -53,11 +58,11 @@ struct AccountDetailCardView: View {
                                     .frame(width: 17, height: 17)
                                 Image(systemName: ConstantUtils.arrowDownImageName)
                                     .foregroundColor(Color.theme.red)
-                                    .font(.caption.bold())
+                                    .font(.system(size: 12))
                             }
                             
                             Text(getOneDayPercentageChange())
-                                .font(.caption)
+                                .font(.system(size: 12))
                                 .foregroundColor(ColorTheme().red)
                         }
                     }
@@ -67,9 +72,10 @@ struct AccountDetailCardView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text("Invested")
-                        .font(.caption)
-                        .foregroundColor(ColorTheme().secondaryText)
+                        .font(.system(size: 12))
+                        .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
                     Text(SettingsController().getDefaultCurrency().symbol + account.value.invested.abbreviated())
+                        .font(.system(size: 14))
                         .foregroundColor(ColorTheme().primaryText)
                 }
                         
@@ -77,9 +83,10 @@ struct AccountDetailCardView: View {
                         
                 VStack(alignment: .leading) {
                     Text("Current Value")
-                        .font(.caption)
-                        .foregroundColor(ColorTheme().secondaryText)
+                        .font(.system(size: 12))
+                        .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
                     Text(SettingsController().getDefaultCurrency().symbol + account.value.currentValue.abbreviated())
+                        .font(.system(size: 14))
                         .foregroundColor(ColorTheme().primaryText)
                 }
                         
@@ -87,25 +94,26 @@ struct AccountDetailCardView: View {
                         
                 VStack(alignment: .leading) {
                     Text("Gain/Loss")
-                        .font(.caption)
-                        .foregroundColor(ColorTheme().secondaryText)
+                        .font(.system(size: 12))
+                        .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
                     HStack(spacing: 4) {
                         Text(SettingsController().getDefaultCurrency().symbol + getTotalChange().abbreviated())
+                            .font(.system(size: 14))
                             .foregroundColor(ColorTheme().primaryText)
                         if(getTotalChange() > 0) {
                             Text(getTotalPercentageChange())
-                                .font(.caption)
+                                .font(.system(size: 12))
                                 .foregroundColor(ColorTheme().green)
                         } else if(getTotalChange() < 0) {
                             Text(getTotalPercentageChange())
-                                .font(.caption)
+                                .font(.system(size: 12))
                                 .foregroundColor(ColorTheme().red)
                         }
                     }
                 }
             }
         }
-        .frame(width: 360)
+        .padding(8)
     }
     
     private func getOneDayChange() -> Double {
