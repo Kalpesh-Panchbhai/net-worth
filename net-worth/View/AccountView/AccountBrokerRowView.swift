@@ -12,52 +12,97 @@ struct AccountBrokerRowView: View {
     var account: AccountInBrokerRestModel
     
     var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text(account.name)
-                    .font(.headline)
-                    .foregroundColor(Color.theme.primaryText)
-                    .padding(.horizontal)
-                Text("Invested " + SettingsController().getDefaultCurrency().code + " " + account.value.invested.withCommas(decimalPlace: 2))
-                    .font(.system(size: 12))
-                    .foregroundColor(Color.theme.secondaryText)
-                    .padding(.horizontal)
-                Text("Qty. " + account.currentUnit.withCommas(decimalPlace: 4))
-                    .font(.system(size: 10))
-                    .foregroundColor(Color.theme.secondaryText)
-                    .padding(.horizontal)
-            }
-            Spacer()
-            VStack(alignment: .trailing) {
-                Text(SettingsController().getDefaultCurrency().code + " " + account.value.currentValue.withCommas(decimalPlace: 2))
-                    .font(.system(size: 14))
-                    .foregroundColor(Color.theme.primaryText)
-                    .padding(.horizontal)
-                if(getTotalChange() > 0) {
-                    Text(getTotalChange().withCommas(decimalPlace: 2) + " " + "(+" + getTotalPercentageChange() + ")")
-                        .font(.system(size: 12))
-                        .foregroundColor(Color.theme.green)
-                        .padding(.horizontal)
-                } else if(getTotalChange() < 0) {
-                    Text(getTotalChange().withCommas(decimalPlace: 2) + " " + "(" + getTotalPercentageChange() + ")")
-                        .font(.system(size: 12))
-                        .foregroundColor(Color.theme.red)
-                        .padding(.horizontal)
-                } else {
-                    Text("")
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(account.name)
+                        .font(.headline)
+                        .foregroundColor(ColorTheme().primaryText)
+                            
+                    HStack {
+                        Text("1D Change: " + SettingsController().getDefaultCurrency().symbol + getOneDayChange().abbreviated())
+                            .font(.subheadline)
+                            .foregroundColor(ColorTheme().secondaryText)
+                                
+                        if(getOneDayChange() > 0) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.theme.green.opacity(0.2))
+                                    .frame(width: 17, height: 17)
+                                Image(systemName: ConstantUtils.arrowUpImageName)
+                                    .foregroundColor(Color.theme.green)
+                                    .font(.caption.bold())
+                            }
+                            
+                            Text(getOneDayPercentageChange())
+                                .font(.caption)
+                                .foregroundColor(ColorTheme().green)
+                        } else if(getOneDayChange() < 0) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.theme.red.opacity(0.2))
+                                    .frame(width: 17, height: 17)
+                                Image(systemName: ConstantUtils.arrowDownImageName)
+                                    .foregroundColor(Color.theme.red)
+                                    .font(.caption.bold())
+                            }
+                            
+                            Text(getOneDayPercentageChange())
+                                .font(.caption)
+                                .foregroundColor(ColorTheme().red)
+                        }
+                    }
                 }
-                if(getOneDayChange() > 0) {
-                    Text(getOneDayChange().withCommas(decimalPlace: 2) + " " + "(+" + getOneDayPercentageChange() + ")")
-                        .font(.system(size: 12))
-                        .foregroundColor(Color.theme.green)
-                        .padding(.horizontal)
-                } else if(getOneDayChange() < 0) {
-                    Text(getOneDayChange().withCommas(decimalPlace: 2) + " " + "(" + getOneDayPercentageChange() + ")")
-                        .font(.system(size: 12))
-                        .foregroundColor(Color.theme.red)
-                        .padding(.horizontal)
-                } else {
-                    Text("")
+            }
+                    
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Invested")
+                        .font(.caption)
+                        .foregroundColor(ColorTheme().secondaryText)
+                    Text(SettingsController().getDefaultCurrency().symbol + account.value.invested.abbreviated())
+                        .foregroundColor(ColorTheme().primaryText)
+                }
+                        
+                Spacer()
+                        
+                VStack(alignment: .leading) {
+                    Text("Current Value")
+                        .font(.caption)
+                        .foregroundColor(ColorTheme().secondaryText)
+                    Text(SettingsController().getDefaultCurrency().symbol + account.value.currentValue.abbreviated())
+                        .foregroundColor(ColorTheme().primaryText)
+                }
+                        
+                Spacer()
+                
+                VStack(alignment: .leading) {
+                    Text("Total Units")
+                        .font(.caption)
+                        .foregroundColor(ColorTheme().secondaryText)
+                    Text(account.currentUnit.abbreviated())
+                        .foregroundColor(ColorTheme().primaryText)
+                }
+                        
+                Spacer()
+                        
+                VStack(alignment: .leading) {
+                    Text("Gain/Loss")
+                        .font(.caption)
+                        .foregroundColor(ColorTheme().secondaryText)
+                    HStack(spacing: 4) {
+                        Text(SettingsController().getDefaultCurrency().symbol + getTotalChange().abbreviated())
+                            .foregroundColor(ColorTheme().primaryText)
+                        if(getTotalChange() > 0) {
+                            Text(getTotalPercentageChange())
+                                .font(.caption)
+                                .foregroundColor(ColorTheme().green)
+                        } else if(getTotalChange() < 0) {
+                            Text(getTotalPercentageChange())
+                                .font(.caption)
+                                .foregroundColor(ColorTheme().red)
+                        }
+                    }
                 }
             }
         }
