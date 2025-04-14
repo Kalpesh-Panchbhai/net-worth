@@ -39,6 +39,8 @@ struct AccountDetailView: View {
         VStack {
             VStack {
                 AccountDetailCardView(account: account)
+                    .padding(8)
+                    .background(Color.theme.foreground)
                     .cornerRadius(10)
                 Picker(selection: $tabItem, content: {
                     if(account.type == ConstantUtils.brokerAccountType) {

@@ -45,10 +45,9 @@ extension Double {
     
     func abbreviated() -> String {
         let num = abs(self)
-        let sign = self < 0 ? "-" : ""
 
         let formatter = NumberFormatter()
-        formatter.maximumFractionDigits = 1
+        formatter.maximumFractionDigits = 2
         formatter.minimumFractionDigits = 0
         formatter.locale = Locale.current
 

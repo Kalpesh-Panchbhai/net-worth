@@ -34,7 +34,6 @@ struct AccountBrokerView: View {
                             AccountBrokerDetailView(accountInbroker: getAccountsInBrokerList()[i])
                         }, label: {
                             AccountBrokerRowView(account: getAccountsInBrokerList()[i])
-//                                .frame(width: 360, height: 100)
                                 .padding(8)
                                 .background(Color.theme.foreground)
                                 .cornerRadius(10)

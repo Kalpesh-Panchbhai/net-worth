@@ -16,12 +16,12 @@ struct AccountBrokerRowView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(account.name)
-                        .font(.headline)
+                        .font(.system(size: 16, weight: .bold))
                         .foregroundColor(ColorTheme().primaryText)
                             
                     HStack {
                         Text("1D Change: " + SettingsController().getDefaultCurrency().symbol + getOneDayChange().abbreviated())
-                            .font(.subheadline)
+                            .font(.system(size: 14))
                             .foregroundColor(ColorTheme().secondaryText)
                                 
                         if(getOneDayChange() > 0) {
@@ -31,11 +31,11 @@ struct AccountBrokerRowView: View {
                                     .frame(width: 17, height: 17)
                                 Image(systemName: ConstantUtils.arrowUpImageName)
                                     .foregroundColor(Color.theme.green)
-                                    .font(.caption.bold())
+                                    .font(.system(size: 12))
                             }
                             
                             Text(getOneDayPercentageChange())
-                                .font(.caption)
+                                .font(.system(size: 12))
                                 .foregroundColor(ColorTheme().green)
                         } else if(getOneDayChange() < 0) {
                             ZStack {
@@ -44,11 +44,11 @@ struct AccountBrokerRowView: View {
                                     .frame(width: 17, height: 17)
                                 Image(systemName: ConstantUtils.arrowDownImageName)
                                     .foregroundColor(Color.theme.red)
-                                    .font(.caption.bold())
+                                    .font(.system(size: 12))
                             }
                             
                             Text(getOneDayPercentageChange())
-                                .font(.caption)
+                                .font(.system(size: 12))
                                 .foregroundColor(ColorTheme().red)
                         }
                     }
@@ -58,9 +58,10 @@ struct AccountBrokerRowView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text("Invested")
-                        .font(.caption)
+                        .font(.system(size: 12))
                         .foregroundColor(ColorTheme().secondaryText)
                     Text(SettingsController().getDefaultCurrency().symbol + account.value.invested.abbreviated())
+                        .font(.system(size: 14))
                         .foregroundColor(ColorTheme().primaryText)
                 }
                         
@@ -68,9 +69,10 @@ struct AccountBrokerRowView: View {
                         
                 VStack(alignment: .leading) {
                     Text("Current Value")
-                        .font(.caption)
+                        .font(.system(size: 12))
                         .foregroundColor(ColorTheme().secondaryText)
                     Text(SettingsController().getDefaultCurrency().symbol + account.value.currentValue.abbreviated())
+                        .font(.system(size: 14))
                         .foregroundColor(ColorTheme().primaryText)
                 }
                         
@@ -78,9 +80,10 @@ struct AccountBrokerRowView: View {
                 
                 VStack(alignment: .leading) {
                     Text("Total Units")
-                        .font(.caption)
+                        .font(.system(size: 12))
                         .foregroundColor(ColorTheme().secondaryText)
                     Text(account.currentUnit.abbreviated())
+                        .font(.system(size: 14))
                         .foregroundColor(ColorTheme().primaryText)
                 }
                         
@@ -88,18 +91,19 @@ struct AccountBrokerRowView: View {
                         
                 VStack(alignment: .leading) {
                     Text("Gain/Loss")
-                        .font(.caption)
+                        .font(.system(size: 12))
                         .foregroundColor(ColorTheme().secondaryText)
                     HStack(spacing: 4) {
                         Text(SettingsController().getDefaultCurrency().symbol + getTotalChange().abbreviated())
+                            .font(.system(size: 14))
                             .foregroundColor(ColorTheme().primaryText)
                         if(getTotalChange() > 0) {
                             Text(getTotalPercentageChange())
-                                .font(.caption)
+                                .font(.system(size: 12))
                                 .foregroundColor(ColorTheme().green)
                         } else if(getTotalChange() < 0) {
                             Text(getTotalPercentageChange())
-                                .font(.caption)
+                                .font(.system(size: 12))
                                 .foregroundColor(ColorTheme().red)
                         }
                     }
