@@ -20,9 +20,13 @@ struct AccountBrokerRowView: View {
                         .foregroundColor(ColorTheme().primaryText)
                             
                     HStack {
-                        Text("1D Change: " + SettingsController().getDefaultCurrency().symbol + getOneDayChange().abbreviated())
+                        Text("1D Change: ")
+                            .font(.system(size: 12))
+                            .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
+                        
+                        Text(SettingsController().getDefaultCurrency().symbol + getOneDayChange().abbreviated())
                             .font(.system(size: 14))
-                            .foregroundColor(ColorTheme().secondaryText)
+                            .foregroundColor(ColorTheme().primaryText)
                                 
                         if(getOneDayChange() > 0) {
                             ZStack {
@@ -59,7 +63,7 @@ struct AccountBrokerRowView: View {
                 VStack(alignment: .leading) {
                     Text("Invested")
                         .font(.system(size: 12))
-                        .foregroundColor(ColorTheme().secondaryText)
+                        .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
                     Text(SettingsController().getDefaultCurrency().symbol + account.value.invested.abbreviated())
                         .font(.system(size: 14))
                         .foregroundColor(ColorTheme().primaryText)
@@ -70,7 +74,7 @@ struct AccountBrokerRowView: View {
                 VStack(alignment: .leading) {
                     Text("Current Value")
                         .font(.system(size: 12))
-                        .foregroundColor(ColorTheme().secondaryText)
+                        .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
                     Text(SettingsController().getDefaultCurrency().symbol + account.value.currentValue.abbreviated())
                         .font(.system(size: 14))
                         .foregroundColor(ColorTheme().primaryText)
@@ -81,7 +85,7 @@ struct AccountBrokerRowView: View {
                 VStack(alignment: .leading) {
                     Text("Total Units")
                         .font(.system(size: 12))
-                        .foregroundColor(ColorTheme().secondaryText)
+                        .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
                     Text(account.currentUnit.abbreviated())
                         .font(.system(size: 14))
                         .foregroundColor(ColorTheme().primaryText)
@@ -92,7 +96,7 @@ struct AccountBrokerRowView: View {
                 VStack(alignment: .leading) {
                     Text("Gain/Loss")
                         .font(.system(size: 12))
-                        .foregroundColor(ColorTheme().secondaryText)
+                        .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
                     HStack(spacing: 4) {
                         Text(SettingsController().getDefaultCurrency().symbol + getTotalChange().abbreviated())
                             .font(.system(size: 14))
@@ -110,6 +114,7 @@ struct AccountBrokerRowView: View {
                 }
             }
         }
+        .padding(8)
     }
     
     private func getOneDayChange() -> Double {
