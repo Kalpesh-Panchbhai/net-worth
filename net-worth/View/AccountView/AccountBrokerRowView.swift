@@ -61,7 +61,7 @@ struct AccountBrokerRowView: View {
                     
             HStack {
                 VStack(alignment: .leading) {
-                    Text("Total Units")
+                    Text("Total Qty.")
                         .font(.system(size: 12))
                         .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
                     Text(account.currentUnit.abbreviated())
