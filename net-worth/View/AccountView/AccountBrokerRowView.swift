@@ -61,6 +61,17 @@ struct AccountBrokerRowView: View {
                     
             HStack {
                 VStack(alignment: .leading) {
+                    Text("Total Units")
+                        .font(.system(size: 12))
+                        .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
+                    Text(account.currentUnit.abbreviated())
+                        .font(.system(size: 14))
+                        .foregroundColor(ColorTheme().primaryText)
+                }
+                        
+                Spacer()
+                
+                VStack(alignment: .leading) {
                     Text("Invested")
                         .font(.system(size: 12))
                         .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
@@ -76,17 +87,6 @@ struct AccountBrokerRowView: View {
                         .font(.system(size: 12))
                         .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
                     Text(SettingsController().getDefaultCurrency().symbol + account.value.currentValue.abbreviated())
-                        .font(.system(size: 14))
-                        .foregroundColor(ColorTheme().primaryText)
-                }
-                        
-                Spacer()
-                
-                VStack(alignment: .leading) {
-                    Text("Total Units")
-                        .font(.system(size: 12))
-                        .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
-                    Text(account.currentUnit.abbreviated())
                         .font(.system(size: 14))
                         .foregroundColor(ColorTheme().primaryText)
                 }
