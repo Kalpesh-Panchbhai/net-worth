@@ -90,24 +90,26 @@ struct AccountDetailCardView: View {
                         .foregroundColor(ColorTheme().primaryText)
                 }
                         
-                Spacer()
-                        
-                VStack(alignment: .leading) {
-                    Text("Gain/Loss")
-                        .font(.system(size: 14))
-                        .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
-                    HStack(spacing: 4) {
-                        Text(SettingsController().getDefaultCurrency().symbol + getTotalChange().abbreviated())
-                            .font(.system(size: 16))
-                            .foregroundColor(ColorTheme().primaryText)
-                        if(getTotalChange() > 0) {
-                            Text(getTotalPercentageChange())
-                                .font(.system(size: 14))
-                                .foregroundColor(ColorTheme().green)
-                        } else if(getTotalChange() < 0) {
-                            Text(getTotalPercentageChange())
-                                .font(.system(size: 14))
-                                .foregroundColor(ColorTheme().red)
+                if(isGainLossDataApplicable()) {
+                    Spacer()
+                    
+                    VStack(alignment: .leading) {
+                        Text("Gain/Loss")
+                            .font(.system(size: 14))
+                            .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
+                        HStack(spacing: 4) {
+                            Text(SettingsController().getDefaultCurrency().symbol + getTotalChange().abbreviated())
+                                .font(.system(size: 16))
+                                .foregroundColor(ColorTheme().primaryText)
+                            if(getTotalChange() > 0) {
+                                Text(getTotalPercentageChange())
+                                    .font(.system(size: 14))
+                                    .foregroundColor(ColorTheme().green)
+                            } else if(getTotalChange() < 0) {
+                                Text(getTotalPercentageChange())
+                                    .font(.system(size: 14))
+                                    .foregroundColor(ColorTheme().red)
+                            }
                         }
                     }
                 }
@@ -130,5 +132,9 @@ struct AccountDetailCardView: View {
     
     private func getTotalPercentageChange() -> String {
         return CommonController.getGrowthPercentage(previousBalance: account.value.invested, currentBalance: account.value.currentValue)
+    }
+    
+    private func isGainLossDataApplicable() -> Bool {
+        return (!account.type.elementsEqual("Other") || (account.type.elementsEqual("Other") && getTotalChange() > 0))
     }
 }
