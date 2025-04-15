@@ -135,6 +135,6 @@ struct AccountDetailCardView: View {
     }
     
     private func isGainLossDataApplicable() -> Bool {
-        return (!account.type.elementsEqual("Other") || (account.type.elementsEqual("Other") && getTotalChange() > 0))
+        return ((account.type.elementsEqual("Other") && getTotalChange() > 0) || account.type.elementsEqual("Broker"))
     }
 }

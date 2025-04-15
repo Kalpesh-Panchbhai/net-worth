@@ -117,7 +117,7 @@ struct AccountCardView: View {
                 }
             }
         }
-        .padding(8)
+        .padding(16)
         .background(Color.theme.foreground)
         .cornerRadius(10)
     }
@@ -139,6 +139,6 @@ struct AccountCardView: View {
     }
     
     private func isGainLossDataApplicable() -> Bool {
-        return (!account.type.elementsEqual("Other") || (account.type.elementsEqual("Other") && getTotalChange() > 0))
+        return ((account.type.elementsEqual("Other") && getTotalChange() > 0) || account.type.elementsEqual("Broker"))
     }
 }
