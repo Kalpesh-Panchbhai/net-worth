@@ -12,125 +12,133 @@ struct AccountCardView: View {
     var account: AccountRestModel
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Spacer()
+        VStack(alignment: .leading, spacing: 16) {
             HStack {
-                Text(account.name)
-                    .foregroundColor(Color.theme.primaryText)
-                    .font(.subheadline.bold())
-                    .multilineTextAlignment(.leading)
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack {
+                        Text(account.name)
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundColor(ColorTheme().primaryText)
+                        
+                        Spacer()
+                        if(account.type != ConstantUtils.brokerAccountType) {
+                            if(!account.active) {
+                                Text(account.type)
+                                    .foregroundColor(Color.theme.secondaryText)
+                                    .font(.caption)
+                                    .multilineTextAlignment(.leading)
+                            }
+                        }
+                    }
+                    
+                    HStack {
+                        Text("1D Change: ")
+                            .font(.system(size: 14))
+                            .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
+                        
+                        Text(SettingsController().getDefaultCurrency().symbol + getOneDayChange().abbreviated())
+                            .font(.system(size: 16))
+                            .foregroundColor(ColorTheme().primaryText)
+                                
+                        if(getOneDayChange() > 0) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.theme.green.opacity(0.2))
+                                    .frame(width: 17, height: 17)
+                                Image(systemName: ConstantUtils.arrowUpImageName)
+                                    .foregroundColor(Color.theme.green)
+                                    .font(.system(size: 14))
+                            }
+                            
+                            Text(getOneDayPercentageChange())
+                                .font(.system(size: 14))
+                                .foregroundColor(ColorTheme().green)
+                        } else if(getOneDayChange() < 0) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.theme.red.opacity(0.2))
+                                    .frame(width: 17, height: 17)
+                                Image(systemName: ConstantUtils.arrowDownImageName)
+                                    .foregroundColor(Color.theme.red)
+                                    .font(.system(size: 14))
+                            }
+                            
+                            Text(getOneDayPercentageChange())
+                                .font(.system(size: 14))
+                                .foregroundColor(ColorTheme().red)
+                        }
+                    }
+                }
+            }
+                    
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Invested")
+                        .font(.system(size: 14))
+                        .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
+                    Text(SettingsController().getDefaultCurrency().symbol + account.value.invested.abbreviated())
+                        .font(.system(size: 16))
+                        .foregroundColor(ColorTheme().primaryText)
+                }
+                        
                 Spacer()
-                if(account.type != ConstantUtils.brokerAccountType) {
-                    if(!account.active) {
-                        Text(account.type)
-                            .foregroundColor(Color.theme.secondaryText)
-                            .font(.caption)
-                            .multilineTextAlignment(.leading)
-                    }
+                        
+                VStack(alignment: .leading) {
+                    Text("Current Value")
+                        .font(.system(size: 14))
+                        .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
+                    Text(SettingsController().getDefaultCurrency().symbol + account.value.currentValue.abbreviated())
+                        .font(.system(size: 16))
+                        .foregroundColor(ColorTheme().primaryText)
                 }
-            }
-            Spacer()
-            HStack(alignment: .center) {
-                if(account.type == ConstantUtils.brokerAccountType) {
-                    Text(SettingsController().getDefaultCurrency().code)
-                        .foregroundColor(Color.theme.secondaryText)
-                        .font(.caption)
-                    Text("\(account.value.currentValue.withCommas(decimalPlace: 2))")
-                        .foregroundColor(Color.theme.primaryText)
-                        .font(.caption.bold())
-                } else {
-                    Text(account.currency)
-                        .foregroundColor(Color.theme.secondaryText)
-                        .font(.caption)
-                    Text("\(account.value.currentValue.withCommas(decimalPlace: 2))")
-                        .foregroundColor(Color.theme.primaryText)
-                        .font(.caption.bold())
-                }
-            }
-            Spacer()
-            HStack {
-                if(account.type == ConstantUtils.brokerAccountType) {
-                    if(getOneDayChange() > 0) {
-                        ZStack {
-                            Circle()
-                                .fill(Color.theme.green.opacity(0.2))
-                                .frame(width: 17, height: 17)
-                            Image(systemName: ConstantUtils.arrowUpImageName)
-                                .foregroundColor(Color.theme.green)
-                                .font(.system(size: 11).bold())
+                        
+                if(isGainLossDataApplicable()) {
+                    Spacer()
+                    
+                    VStack(alignment: .leading) {
+                        Text("Gain/Loss")
+                            .font(.system(size: 14))
+                            .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
+                        HStack(spacing: 4) {
+                            Text(SettingsController().getDefaultCurrency().symbol + getTotalChange().abbreviated())
+                                .font(.system(size: 16))
+                                .foregroundColor(ColorTheme().primaryText)
+                            if(getTotalChange() > 0) {
+                                Text(getTotalPercentageChange())
+                                    .font(.system(size: 14))
+                                    .foregroundColor(ColorTheme().green)
+                            } else if(getTotalChange() < 0) {
+                                Text(getTotalPercentageChange())
+                                    .font(.system(size: 14))
+                                    .foregroundColor(ColorTheme().red)
+                            }
                         }
-                        Text("+\(getOneDayChange().withCommas(decimalPlace: 2))")
-                            .foregroundColor(Color.theme.green)
-                            .font(.system(size: 11).bold())
-                        Text("(+\(getOneDayPercentage()))")
-                            .foregroundColor(Color.theme.green)
-                            .font(.system(size: 11).bold())
-                    } else if(getOneDayChange() < 0) {
-                        ZStack {
-                            Circle()
-                                .fill(Color.theme.red.opacity(0.2))
-                                .frame(width: 17, height: 17)
-                            Image(systemName: ConstantUtils.arrowDownImageName)
-                                .foregroundColor(Color.theme.red)
-                                .font(.system(size: 11).bold())
-                        }
-                        Text("\(getOneDayChange().withCommas(decimalPlace: 2))")
-                            .foregroundColor(Color.theme.red)
-                            .font(.system(size: 11).bold())
-                        Text("(\(getOneDayPercentage()))")
-                            .foregroundColor(Color.theme.red)
-                            .font(.system(size: 11).bold())
-                    } else {
-                        Text("")
-                    }
-                } else {
-                    if(getOneDayChange() > 0) {
-                        ZStack {
-                            Circle()
-                                .fill(Color.theme.green.opacity(0.2))
-                                .frame(width: 17, height: 17)
-                            Image(systemName: ConstantUtils.arrowUpImageName)
-                                .foregroundColor(Color.theme.green)
-                                .font(.system(size: 11).bold())
-                        }
-                        Text("+\(getOneDayChange().withCommas(decimalPlace: 2))")
-                            .foregroundColor(Color.theme.green)
-                            .font(.system(size: 11).bold())
-                        Text("(+\(getOneDayPercentage()))")
-                            .foregroundColor(Color.theme.green)
-                            .font(.system(size: 11).bold())
-                    } else if(getOneDayChange() < 0) {
-                        ZStack {
-                            Circle()
-                                .fill(Color.theme.red.opacity(0.2))
-                                .frame(width: 17, height: 17)
-                            Image(systemName: ConstantUtils.arrowDownImageName)
-                                .foregroundColor(Color.theme.red)
-                                .font(.system(size: 11).bold())
-                        }
-                        Text("\(getOneDayChange().withCommas(decimalPlace: 2))")
-                            .foregroundColor(Color.theme.red)
-                            .font(.system(size: 11).bold())
-                        Text("(\(getOneDayPercentage()))")
-                            .foregroundColor(Color.theme.red)
-                            .font(.system(size: 11).bold())
-                    } else {
-                        Text("")
                     }
                 }
             }
         }
-        .frame(height: 80)
         .padding(8)
         .background(Color.theme.foreground)
         .cornerRadius(10)
     }
     
-    private func getOneDayPercentage() -> String {
+    private func getOneDayChange() -> Double {
+        return account.value.currentValue - account.value.previousValue
+    }
+    
+    private func getOneDayPercentageChange() -> String {
         return CommonController.getGrowthPercentage(previousBalance: account.value.previousValue, currentBalance: account.value.currentValue)
     }
     
-    private func getOneDayChange() -> Double {
-        return account.value.currentValue - account.value.previousValue
+    private func getTotalChange() -> Double {
+        return account.value.currentValue - account.value.invested
+    }
+    
+    private func getTotalPercentageChange() -> String {
+        return CommonController.getGrowthPercentage(previousBalance: account.value.invested, currentBalance: account.value.currentValue)
+    }
+    
+    private func isGainLossDataApplicable() -> Bool {
+        return (!account.type.elementsEqual("Other") || (account.type.elementsEqual("Other") && getTotalChange() > 0))
     }
 }
