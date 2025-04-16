@@ -26,46 +26,43 @@ struct WatchView: View {
                     //MARK: Loading View
                     LoadingView()
                 } else {
-                    List {
-                        ForEach(watchViewModel.watchList, id: \.self) { watch in
-                            NavigationLink(destination: {
-                                WatchDetailView(watch: watch)
-                                    .toolbarRole(.editor)
-                            }, label: {
-                                WatchViewRow(watch: watch)
-                                    .badge(
-                                        Text("\(watch.totalAccount)")
-                                            .foregroundColor(Color.theme.secondaryText)
-                                            .font(.caption.italic())
-                                    )
-                            })
-                            // MARK: Update
-                            .swipeActions(edge: .leading, content: {
-                                if(!watch.name.elementsEqual("All")) {
-                                    Button("Update") {
-                                        self.selectedWatch = watch
-                                        self.updateWatchViewOpen = true
+                    ScrollView(.vertical, showsIndicators: false) {
+                        LazyVStack {
+                            ForEach(watchViewModel.watchList, id: \.self) { watch in
+                                NavigationLink(destination: {
+                                    WatchDetailView(watch: watch)
+                                        .toolbarRole(.editor)
+                                }, label: {
+                                    WatchViewRow(watch: watch)
+                                })
+                                // MARK: Update
+                                .swipeActions(edge: .leading, content: {
+                                    if(!watch.name.elementsEqual("All")) {
+                                        Button("Update") {
+                                            self.selectedWatch = watch
+                                            self.updateWatchViewOpen = true
+                                        }
+                                        .tint(Color.theme.green)
                                     }
-                                    .tint(Color.theme.green)
+                                })
+                                .sheet(isPresented: $updateWatchViewOpen) {
+                                    UpdateWatchView(watch: selectedWatch)
+                                        .presentationDetents([.medium])
                                 }
-                            })
-                            .sheet(isPresented: $updateWatchViewOpen) {
-                                UpdateWatchView(watch: selectedWatch)
-                                    .presentationDetents([.medium])
+                                // MARK: Delete
+                                .swipeActions(edge: .trailing, content: {
+                                    if(!watch.name.elementsEqual("All")) {
+                                        Button("Delete") {
+                                            self.isPresentingWatchDeleteConfirm = true
+                                            self.selectedWatch = watch
+                                        }
+                                        .tint(Color.theme.red)
+                                    }
+                                })
                             }
-                            // MARK: Delete
-                            .swipeActions(edge: .trailing, content: {
-                                if(!watch.name.elementsEqual("All")) {
-                                    Button("Delete") {
-                                        self.isPresentingWatchDeleteConfirm = true
-                                        self.selectedWatch = watch
-                                    }
-                                    .tint(Color.theme.red)
-                                }
-                            })
                         }
-                        .listRowBackground(Color.theme.foreground)
                     }
+                    .padding(10)
                     .foregroundColor(Color.theme.primaryText)
                     .refreshable {
                         Task.init {

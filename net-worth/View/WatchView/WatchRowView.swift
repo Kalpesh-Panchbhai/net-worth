@@ -21,6 +21,10 @@ struct WatchViewRow: View {
                         Text(watch.name)
                             .font(.system(size: 16, weight: .bold))
                             .foregroundColor(ColorTheme().primaryText)
+                        Spacer()
+                        Text("\(watch.totalAccount)")
+                            .foregroundColor(Color.theme.secondaryText)
+                            .font(.system(size: 12).italic())
                     }
                     
                     HStack {
@@ -107,6 +111,9 @@ struct WatchViewRow: View {
                 }
             }
         }
+        .padding(16)
+        .background(Color.theme.foreground)
+        .cornerRadius(10)
     }
     
     private func getOneDayChange() -> Double {
