@@ -14,23 +14,19 @@ struct AccountWatchView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(getWatchListData(), id: \.self, content: { watch in
-                    NavigationLink(destination: {
-                        WatchDetailView(watch: watch)
-                            .toolbarRole(.editor)
-                    }, label: {
-                        WatchViewRow(watch: watch)
-                            .badge(
-                                Text("\(watch.totalAccount)")
-                                    .foregroundColor(Color.theme.secondaryText)
-                                    .font(.caption.italic())
-                            )
+            ScrollView(.vertical, showsIndicators: false) {
+                LazyVStack {
+                    ForEach(getWatchListData(), id: \.self, content: { watch in
+                        NavigationLink(destination: {
+                            WatchDetailView(watch: watch)
+                                .toolbarRole(.editor)
+                        }, label: {
+                            WatchViewRow(watch: watch)
+                        })
                     })
-                })
-                .listRowBackground(Color.theme.foreground)
-                .foregroundColor(Color.theme.primaryText)
+                }
             }
+            .padding(10)
             .background(Color.theme.background)
             .scrollContentBackground(.hidden)
         }
