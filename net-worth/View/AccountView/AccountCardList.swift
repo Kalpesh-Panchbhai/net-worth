@@ -32,7 +32,7 @@ struct AccountCardList: View {
                                 BalanceCardView(accountType: "Net Worth", isWatchListCardView: false, watchList: WatchRestModel())
                                     .frame(width: 380)
                                 NetworthCardView()
-                                    .frame(width: 360, height: 30)
+                                    .frame(width: 380, height: 30)
                                     .cornerRadius(10)
                             }
                             Divider()
@@ -70,7 +70,6 @@ struct AccountCardList: View {
                                                                 }
                                                             }
                                                         }
-                                                        .padding(5)
                                                     }
                                                     .padding(5)
                                                 }
@@ -80,8 +79,8 @@ struct AccountCardList: View {
                                         }
                                     }
                                 }
-                                .padding(10)
                             }
+                            .padding(8)
                             .refreshable {
                                 Task.init {
                                     await accountViewModel.getAccountList()

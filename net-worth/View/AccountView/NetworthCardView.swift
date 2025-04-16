@@ -24,7 +24,7 @@ struct NetworthCardView: View {
                     Text("Net worth :")
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
-                    Text(percent.withCommas(decimalPlace: 2) + "%")
+                    Text(percent.abbreviated() + "%")
                         .foregroundColor(Color.theme.primaryText)
                         .bold()
                     if(percentChange > 0) {
@@ -37,7 +37,7 @@ struct NetworthCardView: View {
                                 .font(.system(size: 10)
                                     .bold())
                         }
-                        Text("+\(percentChange.withCommas(decimalPlace: 2))%")
+                        Text("+\(percentChange.abbreviated())%")
                             .foregroundColor(Color.theme.green)
                             .font(.system(size: 12))
                             .bold()
@@ -51,7 +51,7 @@ struct NetworthCardView: View {
                                 .font(.system(size: 10)
                                     .bold())
                         }
-                        Text("\(percentChange.withCommas(decimalPlace: 2))%")
+                        Text("\(percentChange.abbreviated())%")
                             .foregroundColor(Color.theme.red)
                             .font(.system(size: 12))
                             .bold()
