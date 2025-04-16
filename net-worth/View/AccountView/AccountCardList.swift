@@ -30,8 +30,6 @@ struct AccountCardList: View {
                         VStack {
                             VStack {
                                 BalanceCardView(accountType: "Net Worth", isWatchListCardView: false, watchList: WatchRestModel())
-                                    .frame(width: 360, height: 70)
-                                    .cornerRadius(10)
                                 NetworthCardView()
                                     .frame(width: 360, height: 30)
                                     .cornerRadius(10)

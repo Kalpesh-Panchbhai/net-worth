@@ -25,61 +25,102 @@ struct BalanceCardView: View {
     }
     
     var body: some View {
-        ZStack {
-            Color.theme.foreground
-            VStack(alignment: .center) {
-                HStack {
-                    Text(SettingsController().getDefaultCurrency().code)
-                        .foregroundColor(Color.theme.primaryText)
-                        .bold()
-                    Text("\(balanceAccount.currentValue.withCommas(decimalPlace: 2))")
-                        .foregroundColor(Color.theme.primaryText)
-                        .bold()
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack {
+                        Text(accountType)
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundColor(ColorTheme().primaryText)
+                        
+                    }
+                    
+                    HStack {
+                        Text("1D Change: ")
+                            .font(.system(size: 14))
+                            .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
+                        
+                        Text(SettingsController().getDefaultCurrency().symbol + getOneDayChange().abbreviated())
+                            .font(.system(size: 18))
+                            .foregroundColor(ColorTheme().primaryText)
+                                
+                        if(getOneDayChange() > 0) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.theme.green.opacity(0.2))
+                                    .frame(width: 17, height: 17)
+                                Image(systemName: ConstantUtils.arrowUpImageName)
+                                    .foregroundColor(Color.theme.green)
+                                    .font(.system(size: 14))
+                            }
+                            
+                            Text(getOneDayPercentageChange())
+                                .font(.system(size: 14))
+                                .foregroundColor(ColorTheme().green)
+                        } else if(getOneDayChange() < 0) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.theme.red.opacity(0.2))
+                                    .frame(width: 17, height: 17)
+                                Image(systemName: ConstantUtils.arrowDownImageName)
+                                    .foregroundColor(Color.theme.red)
+                                    .font(.system(size: 14))
+                            }
+                            
+                            Text(getOneDayPercentageChange())
+                                .font(.system(size: 14))
+                                .foregroundColor(ColorTheme().red)
+                        }
+                    }
                 }
-                HStack {
-                    if(getOneDayChange() > 0) {
-                        ZStack {
-                            Circle()
-                                .fill(Color.theme.green.opacity(0.2))
-                                .frame(width: 20, height: 20)
-                            Image(systemName: ConstantUtils.arrowUpImageName)
-                                .foregroundColor(Color.theme.green)
-                                .font(.system(size: 14)
-                                    .bold())
+            }
+                    
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Invested")
+                        .font(.system(size: 14))
+                        .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
+                    Text(SettingsController().getDefaultCurrency().symbol + balanceAccount.invested.abbreviated())
+                        .font(.system(size: 16))
+                        .foregroundColor(ColorTheme().primaryText)
+                }
+                        
+                Spacer()
+                        
+                VStack(alignment: .leading) {
+                    Text("Current Value")
+                        .font(.system(size: 14))
+                        .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
+                    Text(SettingsController().getDefaultCurrency().symbol + balanceAccount.currentValue.abbreviated())
+                        .font(.system(size: 16))
+                        .foregroundColor(ColorTheme().primaryText)
+                }
+                Spacer()
+                
+                VStack(alignment: .leading) {
+                    Text("Gain/Loss")
+                        .font(.system(size: 14))
+                        .foregroundColor(ColorTheme().secondaryText.opacity(0.6))
+                    HStack(spacing: 4) {
+                        Text(SettingsController().getDefaultCurrency().symbol + getTotalChange().abbreviated())
+                            .font(.system(size: 16))
+                            .foregroundColor(ColorTheme().primaryText)
+                        if(getTotalChange() > 0) {
+                            Text(getTotalPercentageChange())
+                                .font(.system(size: 14))
+                                .foregroundColor(ColorTheme().green)
+                        } else if(getTotalChange() < 0) {
+                            Text(getTotalPercentageChange())
+                                .font(.system(size: 14))
+                                .foregroundColor(ColorTheme().red)
                         }
-                        Text("+\(getOneDayChange().withCommas(decimalPlace: 2))")
-                            .foregroundColor(Color.theme.green)
-                            .font(.system(size: 14))
-                            .bold()
-                        Text("(+\(getOneDayPercentageChange()))")
-                            .foregroundColor(Color.theme.green)
-                            .font(.system(size: 14))
-                            .bold()
-                    } else if(getOneDayChange() < 0) {
-                        ZStack {
-                            Circle()
-                                .fill(Color.theme.red.opacity(0.2))
-                                .frame(width: 20, height: 20)
-                            Image(systemName: ConstantUtils.arrowDownImageName)
-                                .foregroundColor(Color.theme.red)
-                                .font(.system(size: 14)
-                                    .bold())
-                        }
-                        Text("\(getOneDayChange().withCommas(decimalPlace: 2))")
-                            .foregroundColor(Color.theme.red)
-                            .font(.system(size: 14))
-                            .bold()
-                        Text("(\(getOneDayPercentageChange()))")
-                            .foregroundColor(Color.theme.red)
-                            .font(.system(size: 14))
-                            .bold()
                     }
                 }
             }
         }
         .onAppear {
             if(isWatchListCardView) {
-                balanceAccount = AccountValue(currentValue: watchList.value.currentValue, previousValue: watchList.value.previousValue)
+                balanceAccount = AccountValue(currentValue: watchList.value.currentValue, previousValue: watchList.value.previousValue, invested: watchList.value.invested)
             } else {
                 var accountList = [AccountRestModel]()
                 if(accountType.elementsEqual("Net Worth")) {
@@ -89,14 +130,19 @@ struct BalanceCardView: View {
                 }
                 var currentDayValue = 0.0
                 var previousDayValue = 0.0
+                var invested = 0.0
                 
                 for account in accountList {
                     currentDayValue += account.value.currentValue
                     previousDayValue += account.value.previousValue
+                    invested += account.value.invested
                 }
-                balanceAccount = AccountValue(currentValue: currentDayValue, previousValue: previousDayValue)
+                balanceAccount = AccountValue(currentValue: currentDayValue, previousValue: previousDayValue , invested: invested)
             }
         }
+        .padding(16)
+        .background(Color.theme.foreground)
+        .cornerRadius(10)
     }
     
     private func getOneDayChange() -> Double {
@@ -105,5 +151,13 @@ struct BalanceCardView: View {
     
     private func getOneDayPercentageChange() -> String {
         return CommonController.getGrowthPercentage(previousBalance: balanceAccount.previousValue, currentBalance: balanceAccount.currentValue)
+    }
+    
+    private func getTotalChange() -> Double {
+        return balanceAccount.currentValue - balanceAccount.invested
+    }
+    
+    private func getTotalPercentageChange() -> String {
+        return CommonController.getGrowthPercentage(previousBalance: balanceAccount.invested, currentBalance: balanceAccount.currentValue)
     }
 }
