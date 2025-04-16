@@ -44,7 +44,6 @@ struct AccountListView: View {
                                 AccountRowView(account: account, fromWatchView: accountType.elementsEqual("Inactive Account"), isInActiveAccount: accountType.elementsEqual("Inactive Account"))
                             })
                         }
-                        .padding(10)
                     }
                 }
                 .padding(10)
