@@ -36,6 +36,7 @@ struct WatchDetailView: View {
                     // MARK: Balance Card
                     VStack {
                         BalanceCardView(accountType: watch.name, isWatchListCardView: true, watchList: watch)
+                            .frame(width: 380)
                     }
                     .padding(.top, 5)
                     Divider()

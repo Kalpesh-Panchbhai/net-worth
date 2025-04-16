@@ -39,6 +39,7 @@ struct AccountDetailView: View {
         VStack {
             VStack {
                 AccountDetailCardView(account: account)
+                    .frame(width: 360)
                     .padding(8)
                     .background(Color.theme.foreground)
                     .cornerRadius(10)
