@@ -47,16 +47,16 @@ extension Double {
         let num = abs(self)
 
         let formatter = NumberFormatter()
-        formatter.maximumFractionDigits = 2
+        formatter.maximumFractionDigits = 3
         formatter.minimumFractionDigits = 0
         formatter.locale = Locale.current
 
         let (value, suffix): (Double, String) = {
             switch num {
-            case 1_000_000_000...:
-                return (self / 1_000_000_000, "B")
-            case 1_000_000...:
-                return (self / 1_000_000, "M")
+            case 1_00_00_000...:
+                return (self / 1_00_00_000, "Cr")
+            case 1_00_000...:
+                return (self / 1_00_000, "L")
             case 1_000...:
                 return (self / 1_000, "K")
             default:
