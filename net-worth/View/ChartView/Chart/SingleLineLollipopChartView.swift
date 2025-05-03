@@ -133,7 +133,7 @@ struct SingleLineLollipopChartView: View {
                             let lineY2 = startPositionY2 + geo[proxy.plotFrame!].origin.y
                             
                             let lineHeight = geo[proxy.plotFrame!].maxY
-                            let boxWidth: CGFloat = 200
+                            let boxWidth: CGFloat = 250
                             let boxOffset = max(0, min(geo.size.width - boxWidth, lineX - boxWidth / 2))
                             
                             Rectangle()
