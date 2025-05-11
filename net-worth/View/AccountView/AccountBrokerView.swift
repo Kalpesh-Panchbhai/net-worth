@@ -12,6 +12,7 @@ struct AccountBrokerView: View {
     var brokerID: Int
     @Binding var sortOrder: String
     @Binding var sortType: String
+    @Binding var isHideZeroQtyAccounts: Bool
     
     var accountInBrokerController = AccountInBrokerController()
     
@@ -136,6 +137,9 @@ struct AccountBrokerView: View {
                     return getTotalPercentageChange(account: $0) >= getTotalPercentageChange(account: $1)
                 })
             }
+        }
+        if(isHideZeroQtyAccounts) {
+            accountsInBrokerList.removeAll(where: {$0.currentUnit.isZero})
         }
         return accountsInBrokerList
     }

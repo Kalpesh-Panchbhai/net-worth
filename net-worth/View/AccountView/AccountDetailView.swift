@@ -13,6 +13,7 @@ struct AccountDetailView: View {
     
     @State var showAddWatchListView = false
     @State var isNewTransactionViewOpen = false
+    @State var isHideZeroQtyAccounts = true
     @State var isNewAccountInBrokerViewOpen = false
     @State var isPresentingAccountDeleteConfirm = false
     @State var tabItem = 1
@@ -63,7 +64,7 @@ struct AccountDetailView: View {
                 }
                 if(account.type == ConstantUtils.brokerAccountType) {
                     if(tabItem == 1) {
-                        AccountBrokerView(brokerID: accountID, sortOrder: $sortOrder, sortType: $sortType)
+                        AccountBrokerView(brokerID: accountID, sortOrder: $sortOrder, sortType: $sortType, isHideZeroQtyAccounts: $isHideZeroQtyAccounts)
                     } else if(tabItem == 2) {
                         AccountChartView(id: accountID, type: "one_broker")
                     } else {
@@ -138,6 +139,17 @@ struct AccountDetailView: View {
                             }, label: {
                                 Label("New Account", systemImage: ConstantUtils.newTransactionImageName)
                             })
+                            if(isZeroQtyAccountAvailableInAccountBrokerList()) {
+                                Button(action: {
+                                    self.isHideZeroQtyAccounts.toggle()
+                                }, label: {
+                                    if(isHideZeroQtyAccounts) {
+                                        Label("Hide zero qty accounts", systemImage: "checkmark")
+                                    } else {
+                                        Text("Hide zero qty accounts")
+                                    }
+                                })
+                            }
                             if(accountViewModel.accountsInBroker.count > 1) {
                                 Menu(content: {
                                     Button(action: {
@@ -317,5 +329,11 @@ struct AccountDetailView: View {
             WatchToAccountView(accountID: accountID)
         })
         .background(Color.theme.background)
+    }
+    
+    private func isZeroQtyAccountAvailableInAccountBrokerList() -> Bool {
+        return accountViewModel.accountsInBroker.contains(where: {
+            return $0.currentUnit.isZero
+        })
     }
 }
