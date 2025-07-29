@@ -169,6 +169,9 @@ struct SingleLineLollipopChartView: View {
                                                 Text("Invested: \(selectedElement.invested.withCommas(decimalPlace: 2))%")
                                                     .font(.system(size: 12).bold())
                                                     .foregroundColor(Color.theme.background)
+                                                Text("Profit/Loss: " + getProfitLossAmount(selectedElement: selectedElement).withCommas(decimalPlace: 2) + "%")
+                                                    .font(.system(size: 12).bold())
+                                                    .foregroundColor(Color.theme.background)
                                             }
                                             VStack {
                                                 Text(getPercentageChange())
@@ -189,6 +192,9 @@ struct SingleLineLollipopChartView: View {
                                                     .font(.system(size: 12).bold())
                                                     .foregroundColor(Color.theme.background)
                                                 Text("Invested: \(selectedElement.invested.withCommas(decimalPlace: 2))")
+                                                    .font(.system(size: 12).bold())
+                                                    .foregroundColor(Color.theme.background)
+                                                Text("Profit/Loss: " + getProfitLossAmount(selectedElement: selectedElement).withCommas(decimalPlace: 2))
                                                     .font(.system(size: 12).bold())
                                                     .foregroundColor(Color.theme.background)
                                             }
@@ -314,5 +320,9 @@ struct SingleLineLollipopChartView: View {
     public func getGrowthColor() -> Color {
         let value = CommonController.getGrowthPercentageInDouble(previousBalance: selectedElement?.invested ?? 0.0, currentBalance: selectedElement?.value ?? 0.0)
         return value >= 0 ? Color.theme.green : Color.theme.red
+    }
+    
+    private func getProfitLossAmount(selectedElement: ChartData) -> Double {
+        return selectedElement.value - selectedElement.invested
     }
 }
