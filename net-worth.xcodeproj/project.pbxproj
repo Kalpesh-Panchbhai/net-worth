@@ -452,11 +452,11 @@
 		7D59B4B62BE249D9006F3F00 /* ChartView */ = {
 			isa = PBXGroup;
 			children = (
-				7D59B4AF2BE249D9006F3F00 /* Chart */,
 				7D59B4B12BE249D9006F3F00 /* ChartView.swift */,
 				7D59B4B22BE249D9006F3F00 /* IncomeChartView.swift */,
 				7D59B4B42BE249D9006F3F00 /* PieChartView.swift */,
 				7D59B4B52BE249D9006F3F00 /* PieSliceView.swift */,
+				7D59B4AF2BE249D9006F3F00 /* Chart */,
 			);
 			path = ChartView;
 			sourceTree = "<group>";
