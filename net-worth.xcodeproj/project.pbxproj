@@ -15,7 +15,6 @@
 		7D59B4082BE24701006F3F00 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B4072BE24701006F3F00 /* Preview Assets.xcassets */; };
 		7D59B4402BE249B7006F3F00 /* AccountBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4152BE249B7006F3F00 /* AccountBackupModel.swift */; };
 		7D59B4412BE249B7006F3F00 /* AccountInBrokerBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4162BE249B7006F3F00 /* AccountInBrokerBackupModel.swift */; };
-		7D59B4422BE249B7006F3F00 /* AccountTransactionBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4172BE249B7006F3F00 /* AccountTransactionBackupModel.swift */; };
 		7D59B4432BE249B7006F3F00 /* BackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4182BE249B7006F3F00 /* BackupModel.swift */; };
 		7D59B4442BE249B7006F3F00 /* IncomeBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4192BE249B7006F3F00 /* IncomeBackupModel.swift */; };
 		7D59B4452BE249B7006F3F00 /* IncomeTagBackupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B41A2BE249B7006F3F00 /* IncomeTagBackupModel.swift */; };
@@ -142,7 +141,6 @@
 		7D59B40E2BE24774006F3F00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		7D59B4152BE249B7006F3F00 /* AccountBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountBackupModel.swift; sourceTree = "<group>"; };
 		7D59B4162BE249B7006F3F00 /* AccountInBrokerBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountInBrokerBackupModel.swift; sourceTree = "<group>"; };
-		7D59B4172BE249B7006F3F00 /* AccountTransactionBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountTransactionBackupModel.swift; sourceTree = "<group>"; };
 		7D59B4182BE249B7006F3F00 /* BackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackupModel.swift; sourceTree = "<group>"; };
 		7D59B4192BE249B7006F3F00 /* IncomeBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeBackupModel.swift; sourceTree = "<group>"; };
 		7D59B41A2BE249B7006F3F00 /* IncomeTagBackupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomeTagBackupModel.swift; sourceTree = "<group>"; };
@@ -324,7 +322,6 @@
 			children = (
 				7D59B4152BE249B7006F3F00 /* AccountBackupModel.swift */,
 				7D59B4162BE249B7006F3F00 /* AccountInBrokerBackupModel.swift */,
-				7D59B4172BE249B7006F3F00 /* AccountTransactionBackupModel.swift */,
 				7D59B4182BE249B7006F3F00 /* BackupModel.swift */,
 				7D59B4192BE249B7006F3F00 /* IncomeBackupModel.swift */,
 				7D59B41A2BE249B7006F3F00 /* IncomeTagBackupModel.swift */,
@@ -708,7 +705,6 @@
 				7D59B4FD2BE249D9006F3F00 /* EmptyView.swift in Sources */,
 				7D59B4FF2BE249D9006F3F00 /* IncomeDetailView.swift in Sources */,
 				7D59B47D2BE249C8006F3F00 /* FinanceController.swift in Sources */,
-				7D59B4422BE249B7006F3F00 /* AccountTransactionBackupModel.swift in Sources */,
 				7D59B4432BE249B7006F3F00 /* BackupModel.swift in Sources */,
 				7D59B51C2BE249D9006F3F00 /* WatchRowView.swift in Sources */,
 				7D59B4012BE246FF006F3F00 /* net_worthApp.swift in Sources */,
