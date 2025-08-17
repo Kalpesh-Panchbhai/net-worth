@@ -75,30 +75,46 @@ struct DataCard: View {
 
 // MARK: - Reusable Settings Components
 struct SettingsGroup<Content: View>: View {
-    let title: String
+    let title: String?
+    let showHeader: Bool
+    let footer: String?
     let content: Content
-    init(title: String, @ViewBuilder content: () -> Content) {
+    init(title: String? = nil, showHeader: Bool = true, footer: String? = nil, @ViewBuilder content: () -> Content) {
         self.title = title
+        self.showHeader = showHeader
+        self.footer = footer
         self.content = content()
     }
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title.uppercased())
-                .font(.caption).bold()
-                .foregroundColor(.secondary)
-                .tracking(0.8)
-            content
+        VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 12) {
+                if showHeader, let title {
+                    Text(title.uppercased())
+                        .font(.caption).bold()
+                        .foregroundColor(.secondary)
+                        .tracking(0.8)
+                }
+                content
+            }
+            .padding(16)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(Color.elevatedBackground)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(Color.subtleSeparator, lineWidth: 1)
+            )
+            .elevatedShadow()
+            if let footer, !footer.isEmpty {
+                Text(footer)
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                    .padding(.leading, 4)
+                    .padding(.top, 2)
+            }
         }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color.elevatedBackground)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(Color.subtleSeparator, lineWidth: 1)
-        )
-        .elevatedShadow()
     }
 }
 

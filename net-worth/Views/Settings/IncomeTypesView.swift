@@ -8,7 +8,8 @@ struct IncomeTypesView: View {
             userId: userId,
             regularIcon: "list.bullet",
             defaultIcon: "star.fill",
-            fetch: { service, uid in try await service.fetchIncomeTypes(userId: uid) }
+            fetch: { service, uid in try await service.fetchIncomeTypes(userId: uid) },
+            setDefault: { service, item in try await service.setDefault(incomeType: item) }
         )
     }
 }

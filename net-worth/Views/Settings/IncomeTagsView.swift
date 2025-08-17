@@ -8,7 +8,8 @@ struct IncomeTagsView: View {
             userId: userId,
             regularIcon: "tag",
             defaultIcon: "star.fill",
-            fetch: { service, uid in try await service.fetchIncomeTags(userId: uid) }
+            fetch: { service, uid in try await service.fetchIncomeTags(userId: uid) },
+            setDefault: { service, item in try await service.setDefault(incomeTag: item) }
         )
     }
 }

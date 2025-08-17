@@ -102,4 +102,39 @@ struct IncomeService {
             throw APIError.transport(error)
         }
     }
+
+    // MARK: - Set Default (PATCH)
+    func setDefault(incomeType: IncomeType) async throws {
+        let url = baseURL.appendingPathComponent("income_type")
+        var request = URLRequest(url: url)
+        request.httpMethod = "PATCH"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let payload = IncomeType(id: incomeType.id, userId: incomeType.userId, name: incomeType.name, isDefault: true)
+        let encoder = JSONEncoder()
+        request.httpBody = try encoder.encode(payload)
+        do {
+            let (_, response) = try await URLSession.shared.data(for: request)
+            guard let http = response as? HTTPURLResponse else { throw APIError.badStatus(-1) }
+            guard (200...299).contains(http.statusCode) else { throw APIError.badStatus(http.statusCode) }
+        } catch {
+            throw APIError.transport(error)
+        }
+    }
+
+    func setDefault(incomeTag: IncomeTag) async throws {
+        let url = baseURL.appendingPathComponent("income_tag")
+        var request = URLRequest(url: url)
+        request.httpMethod = "PATCH"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let payload = IncomeTag(id: incomeTag.id, userId: incomeTag.userId, name: incomeTag.name, isDefault: true)
+        let encoder = JSONEncoder()
+        request.httpBody = try encoder.encode(payload)
+        do {
+            let (_, response) = try await URLSession.shared.data(for: request)
+            guard let http = response as? HTTPURLResponse else { throw APIError.badStatus(-1) }
+            guard (200...299).contains(http.statusCode) else { throw APIError.badStatus(http.statusCode) }
+        } catch {
+            throw APIError.transport(error)
+        }
+    }
 }

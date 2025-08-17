@@ -7,11 +7,14 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
     let regularIcon: String
     let defaultIcon: String
     let fetch: (IncomeService, Int) async throws -> [T]
+    let setDefault: ((IncomeService, T) async throws -> Void)?
 
     @State private var items: [T] = []
     @State private var isLoading = false
     @State private var errorMessage: String? = nil
     @State private var query: String = ""
+    @State private var patchingId: Int? = nil
+    @State private var pendingItem: T? = nil
     private let service = IncomeService()
 
     var body: some View {
@@ -35,7 +38,7 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
                     }
                     .padding(.horizontal, 16)
                 }
-                SettingsGroup(title: title) {
+                SettingsGroup(title: title, showHeader: false) {
                     VStack(spacing: 0) {
                         let displayed = items.filter { query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? true : $0.name.localizedCaseInsensitiveContains(query) }
                         if isLoading && items.isEmpty {
@@ -57,7 +60,31 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
                             .padding(.vertical, 12)
                         } else {
                             ForEach(Array(displayed.enumerated()), id: \.element) { idx, item in
-                                NamedEntityRow(entity: item, regularIcon: regularIcon, defaultIcon: defaultIcon)
+                                let canSwipe = setDefault != nil && !item.isDefault
+                                SwipeRevealRow(actionWidth: canSwipe ? 112 : 0) {
+                                    if canSwipe {
+                                        Button(action: { pendingItem = item }) {
+                                            HStack(spacing: 6) {
+                                                Image(systemName: "star.fill")
+                                                Text("Set default")
+                                            }
+                                            .font(.footnote.weight(.semibold))
+                                            .foregroundColor(.white)
+                                            .padding(.vertical, 10)
+                                            .frame(maxWidth: .infinity)
+                                        }
+                                        .buttonStyle(PressableButtonStyle(scale: 0.98))
+                                        .background(LinearGradient.airbnbAccent)
+                                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                        .padding(.trailing, 8)
+                                    } else {
+                                        EmptyView()
+                                    }
+                                } content: {
+                                    NamedEntityRow(entity: item, regularIcon: regularIcon, defaultIcon: defaultIcon)
+                                        .contentShape(Rectangle())
+                                }
+                                .disabled(patchingId != nil)
                                 if idx < displayed.count - 1 { Hairline() }
                             }
                         }
@@ -73,6 +100,20 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
         .refreshable { await load() }
         .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .automatic), prompt: Text("Search"))
         .animation(.easeInOut(duration: 0.2), value: query)
+        .alert(item: $pendingItem) { item in
+            if let setDefault {
+                return Alert(
+                    title: Text("Set as default?"),
+                    message: Text("Make \(item.name) the default?"),
+                    primaryButton: .default(Text("Set default")) {
+                        Task { await markDefault(item, setDefault: setDefault) }
+                    },
+                    secondaryButton: .cancel()
+                )
+            } else {
+                return Alert(title: Text(""))
+            }
+        }
     }
 
     private func load() async {
@@ -90,6 +131,19 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
         }
         isLoading = false
     }
+
+    private func markDefault(_ item: T, setDefault: @escaping (IncomeService, T) async throws -> Void) async {
+        patchingId = item.id
+        do {
+            try await setDefault(service, item)
+            Haptics.success()
+            await load()
+        } catch {
+            errorMessage = (error as? APIError)?.errorDescription ?? error.localizedDescription
+        }
+        patchingId = nil
+    }
+
 }
 
 // Row
@@ -167,5 +221,59 @@ private extension NamedEntityRow where T == IncomeTag {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
+    }
+}
+
+// MARK: - Swipe Reveal Row
+private struct SwipeRevealRow<ActionContent: View, RowContent: View>: View {
+    let actionWidth: CGFloat
+    let actions: ActionContent
+    let content: RowContent
+    @GestureState private var dragX: CGFloat = 0
+    @State private var revealed: CGFloat = 0
+    
+    init(actionWidth: CGFloat = 96, @ViewBuilder actions: () -> ActionContent, @ViewBuilder content: () -> RowContent) {
+        self.actionWidth = actionWidth
+        self.actions = actions()
+        self.content = content()
+    }
+    
+    var body: some View {
+        ZStack(alignment: .trailing) {
+            HStack(spacing: 0) {
+                Spacer(minLength: 0)
+                actions
+                    .frame(width: actionWidth)
+                    .frame(maxHeight: .infinity)
+            }
+            .contentShape(Rectangle())
+            
+            content
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .offset(x: -(revealed + dragX))
+                .gesture(
+                    DragGesture(minimumDistance: 10, coordinateSpace: .local)
+                        .updating($dragX) { value, state, _ in
+                            let dx = -value.translation.width
+                            state = max(0, min(actionWidth, dx))
+                        }
+                        .onEnded { value in
+                            let dx = -value.translation.width + revealed
+                            let target = dx > actionWidth * 0.5 ? actionWidth : 0
+                            withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
+                                revealed = target
+                            }
+                        }
+                )
+                .onTapGesture {
+                    if revealed > 0 {
+                        withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) { revealed = 0 }
+                    }
+                }
+        }
+        .frame(maxWidth: .infinity)
+        .clipped()
+        .animation(.spring(response: 0.25, dampingFraction: 0.9), value: revealed)
+        .contentShape(Rectangle())
     }
 }
