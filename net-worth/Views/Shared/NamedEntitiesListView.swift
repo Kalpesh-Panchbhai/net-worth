@@ -20,28 +20,12 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
     @State private var createIsDefault: Bool = false
     @State private var creating: Bool = false
     private let service = IncomeService()
+    @EnvironmentObject private var banners: BannerCenter
 
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                if let err = errorMessage, items.isEmpty {
-                    SettingsGroup(title: "Error") {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(err)
-                                .font(.footnote)
-                                .foregroundColor(.secondary)
-                            Button(action: { Task { await load() } }) {
-                                Text("Retry").bold()
-                                    .padding(.vertical, 8)
-                                    .padding(.horizontal, 14)
-                                    .background(Capsule(style: .continuous).fill(LinearGradient.airbnbAccent))
-                                    .foregroundColor(.white)
-                            }
-                            .buttonStyle(PressableButtonStyle())
-                        }
-                    }
-                    .padding(.horizontal, 16)
-                }
+                // Errors are shown via the global top banner.
                 SettingsGroup(title: title, showHeader: false) {
                     VStack(spacing: 0) {
                         let displayed = items.filter { query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? true : $0.name.localizedCaseInsensitiveContains(query) }
@@ -143,6 +127,10 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
                     .padding(.trailing, 16)
                     .padding(.bottom, 96)
             }
+        }
+        .onChange(of: errorMessage) { _, newValue in
+            guard let message = newValue, !message.isEmpty else { return }
+            banners.showError(message: message, retryTitle: "Retry", retry: { Task { await load() } })
         }
     }
 
@@ -319,3 +307,4 @@ private extension NamedEntityRow where T == IncomeTag {
         .padding(.vertical, 10)
     }
 }
+

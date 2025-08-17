@@ -41,7 +41,7 @@ struct RootView: View {
             AirbnbTabBar(selected: $selected, tabs: AppTab.allCases)
         }
         .safeAreaInset(edge: .top) {
-            if !networkMonitor.isConnected { OfflineBanner() }
+            GlobalBannerHost()
         }
         .preferredColorScheme(colorSchemeOverride)
         .overlay {

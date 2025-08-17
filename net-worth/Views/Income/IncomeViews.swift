@@ -4,6 +4,7 @@ import SwiftUI
 struct IncomeListView: View {
     @StateObject private var vm: IncomeController
     @State private var navCollapsed = false
+    @EnvironmentObject private var banners: BannerCenter
     
     init(userId: Int) {
         _vm = StateObject(wrappedValue: IncomeController(userId: userId))
@@ -24,9 +25,7 @@ struct IncomeListView: View {
                         
                         FilterBar(selectedType: $vm.selectedType, types: vm.uniqueTypes)
                         
-                        if let message = vm.errorMessage {
-                            ErrorCard(message: message) { Task { await vm.refresh() } }
-                        }
+                        // Inline error card removed; errors surface via global banner.
                         
                         if vm.isLoading && vm.incomes.isEmpty {
                             ForEach(0..<5, id: \.self) { _ in
@@ -69,6 +68,10 @@ struct IncomeListView: View {
         .refreshable { await vm.refresh() }
         .animation(.spring(response: 0.35, dampingFraction: 0.85), value: vm.incomes)
         .animation(.easeInOut(duration: 0.2), value: vm.selectedType)
+        .onChange(of: vm.errorMessage) { _, newValue in
+            guard let message = newValue, !message.isEmpty else { return }
+            banners.showError(message: message, retryTitle: "Retry", retry: { Task { await vm.refresh() } })
+        }
     }
 }
 
@@ -429,65 +432,6 @@ private struct FloatingAddButton: View {
 }
 
 // MARK: - Cards
-private struct ErrorCard: View {
-    let message: String
-    var retry: () -> Void
-    @State private var showDetails: Bool = false
-    var body: some View {
-        let isNetwork = message.localizedCaseInsensitiveContains("network") || message.localizedCaseInsensitiveContains("internet") || message.localizedCaseInsensitiveContains("offline")
-        return VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .center, spacing: 12) {
-                ZStack {
-                    Circle().fill(Color.airbnbPrimary.opacity(0.12))
-                    Image(systemName: isNetwork ? "wifi.exclamationmark" : "exclamationmark.triangle.fill")
-                        .foregroundColor(.airbnbPrimary)
-                }
-                .frame(width: 36, height: 36)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(isNetwork ? "No internet connection" : "Something went wrong")
-                        .font(.headline)
-                    Text(isNetwork ? "You're offline or the connection was lost. Check your internet and try again." : "Please try again in a moment.")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                Spacer()
-            }
-            HStack(spacing: 8) {
-                Button(action: retry) {
-                    Text("Retry").bold()
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 14)
-                        .background(Capsule(style: .continuous).fill(LinearGradient.airbnbAccent))
-                        .foregroundColor(.white)
-                }
-                .buttonStyle(PressableButtonStyle())
-                Button(action: { withAnimation(.easeInOut(duration: 0.2)) { showDetails.toggle() } }) {
-                    Text(showDetails ? "Hide details" : "Details")
-                        .font(.subheadline.weight(.semibold))
-                }
-                .buttonStyle(.borderless)
-                .tint(.secondary)
-            }
-            if showDetails {
-                Text(message)
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
-                    .transition(.opacity)
-            }
-        }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(Color.elevatedBackground)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(Color.subtleSeparator, lineWidth: 1)
-        )
-        .elevatedShadow()
-    }
-}
-
 private struct EmptyStateCard: View {
     let text: String
     var body: some View {
