@@ -21,3 +21,38 @@ extension DateFormatter {
         return df
     }()
 }
+
+// MARK: - Currency Short Formatter (with Indian numbering for INR)
+enum CurrencyShort {
+    static func symbol(for code: String) -> String {
+        let nf = NumberFormatter()
+        nf.numberStyle = .currency
+        nf.currencyCode = code
+        return nf.currencySymbol ?? code
+    }
+    
+    static func shortString(_ amount: Double, currency: String) -> String {
+        let sym = symbol(for: currency)
+        let absVal = abs(amount)
+        let sign = amount < 0 ? "-" : ""
+        func fmt(_ value: Double, places: Int = 2) -> String {
+            String(format: "%0.*f", places, value)
+        }
+        if currency.uppercased() == "INR" {
+            if absVal >= 1.0e7 { // Crore
+                return "\(sign)\(sym)\(fmt(absVal/1.0e7)) Cr"
+            } else if absVal >= 1.0e5 { // Lakh
+                return "\(sign)\(sym)\(fmt(absVal/1.0e5)) L"
+            } else if absVal >= 1.0e3 { // Thousand
+                return "\(sign)\(sym)\(fmt(absVal/1.0e3, places: 1)) K"
+            } else {
+                return amount.formatted(.currency(code: currency))
+            }
+        } else {
+            if absVal >= 1.0e9 { return "\(sign)\(sym)\(fmt(absVal/1.0e9)) B" }
+            if absVal >= 1.0e6 { return "\(sign)\(sym)\(fmt(absVal/1.0e6)) M" }
+            if absVal >= 1.0e3 { return "\(sign)\(sym)\(fmt(absVal/1.0e3, places: 1)) K" }
+            return amount.formatted(.currency(code: currency))
+        }
+    }
+}

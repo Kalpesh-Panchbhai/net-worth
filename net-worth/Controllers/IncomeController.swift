@@ -6,7 +6,10 @@ final class IncomeController: ObservableObject {
     @Published var incomes: [Income] = []
     @Published var isLoading = false
     @Published var errorMessage: String? = nil
-    @Published var selectedType: String? = nil
+    @Published var selectedTypes: Set<String> = [] // Sources
+    @Published var selectedTags: Set<String> = []
+    @Published var selectedYears: Set<Int> = []
+    @Published var selectedFYs: Set<FinancialYear> = []
     
     let userId: Int
     private let service: IncomeService
@@ -34,12 +37,48 @@ final class IncomeController: ObservableObject {
     var uniqueTypes: [String] {
         Array(Set(incomes.map { $0.incomeType.name })).sorted()
     }
+    var uniqueTags: [String] {
+        Array(Set(incomes.map { $0.incomeTag.name })).sorted()
+    }
+    var availableYears: [Int] {
+        let years = incomes.map { Calendar.current.component(.year, from: $0.creditedDate) }
+        return Array(Set(years)).sorted(by: >)
+    }
+    struct FinancialYear: Identifiable, Hashable {
+        let startYear: Int // e.g., 2024 represents FY 2024-25 (Apr 1, 2024 ... Mar 31, 2025)
+        var id: Int { startYear }
+        var title: String { "FY \(startYear)-\(String(format: "%02d", (startYear + 1) % 100))" }
+        var startDate: Date { Calendar.current.date(from: DateComponents(year: startYear, month: 4, day: 1)) ?? Date() }
+        var endDateExclusive: Date { Calendar.current.date(from: DateComponents(year: startYear + 1, month: 4, day: 1)) ?? Date() }
+    }
+    var availableFYs: [FinancialYear] {
+        let cal = Calendar.current
+        let startYears: [Int] = incomes.map { income in
+            let comp = cal.dateComponents([.year, .month], from: income.creditedDate)
+            guard let y = comp.year, let m = comp.month else { return 0 }
+            return m >= 4 ? y : (y - 1)
+        }
+        let setYears = Set(startYears.filter { $0 > 0 })
+        return setYears.map { FinancialYear(startYear: $0) }.sorted { $0.startYear > $1.startYear }
+    }
     
     var filtered: [Income] {
-        if let type = selectedType, !type.isEmpty {
-            return incomes.filter { $0.incomeType.name == type }
+        incomes.filter { income in
+            // Source filter
+            (selectedTypes.isEmpty || selectedTypes.contains(income.incomeType.name)) &&
+            // Tag filter
+            (selectedTags.isEmpty || selectedTags.contains(income.incomeTag.name)) &&
+            // Financial Year filter
+            {
+                if selectedFYs.isEmpty { return true }
+                let comp = calendar.dateComponents([.year, .month], from: income.creditedDate)
+                guard let y = comp.year, let m = comp.month else { return true }
+                let startYear = m >= 4 ? y : (y - 1)
+                return selectedFYs.contains(FinancialYear(startYear: startYear))
+            }() &&
+            // Calendar Year filter
+            (selectedYears.isEmpty || selectedYears.contains(calendar.component(.year, from: income.creditedDate)))
         }
-        return incomes
     }
     
     struct Section: Identifiable, Hashable {
@@ -62,6 +101,10 @@ final class IncomeController: ObservableObject {
     var totalAll: Double { incomes.reduce(0) { $0 + $1.amount } }
     var totalTaxPaid: Double { incomes.reduce(0) { $0 + $1.taxPaid } }
     var totalNet: Double { max(0, totalAll - totalTaxPaid) }
+    // Filtered totals for summary when filters are applied
+    var filteredTotalAll: Double { filtered.reduce(0) { $0 + $1.amount } }
+    var filteredTotalTax: Double { filtered.reduce(0) { $0 + $1.taxPaid } }
+    var filteredTotalNet: Double { max(0, filteredTotalAll - filteredTotalTax) }
     var totalThisMonth: Double {
         guard let start = calendar.date(from: calendar.dateComponents([.year, .month], from: Date())) else { return 0 }
         return incomes.filter { $0.creditedDate >= start }.reduce(0) { $0 + $1.amount }
