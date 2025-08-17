@@ -447,17 +447,27 @@ private struct IncomeRowCard: View {
                 Spacer(minLength: 8)
                 HStack(alignment: .top, spacing: 10) {
                     VStack(alignment: .trailing, spacing: 8) {
-                        Text(
-                            max(0, income.amount - income.taxPaid),
-                            format: .currency(code: income.currency)
-                        )
-                        .font(.headline.weight(.semibold))
-                        .foregroundColor(.primary)
-                        .monospacedDigit()
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.75)
-                        .allowsTightening(true)
+                        HStack(spacing: 8) {
+                            Text("Total").font(.caption2.bold()).foregroundColor(.secondary)
+                            Text(income.amount + income.taxPaid, format: .currency(code: income.currency))
+                                .font(.headline.weight(.semibold))
+                                .foregroundColor(.primary)
+                                .monospacedDigit()
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.75)
+                                .allowsTightening(true)
+                        }
                         VStack(alignment: .trailing, spacing: 6) {
+                            HStack(spacing: 8) {
+                                Text("Net").font(.caption2.bold()).foregroundColor(.secondary)
+                                Text(income.amount, format: .currency(code: income.currency))
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundColor(.primary)
+                                    .monospacedDigit()
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.8)
+                                    .allowsTightening(true)
+                            }
                             HStack(spacing: 8) {
                                 Text("Tax").font(.caption2.bold()).foregroundColor(.airbnbPrimary)
                                 Text(income.taxPaid, format: .currency(code: income.currency))
@@ -502,9 +512,11 @@ extension IncomeRowCard {
             Spacer()
             VStack(alignment: .trailing, spacing: 8) {
                 RoundedRectangle(cornerRadius: 4).fill(Color.subtleSeparator).frame(
-                    width: 100, height: 18)
+                    width: 120, height: 18) // Total
                 RoundedRectangle(cornerRadius: 4).fill(Color.subtleSeparator).frame(
-                    width: 80, height: 14)
+                    width: 90, height: 14) // Net
+                RoundedRectangle(cornerRadius: 4).fill(Color.subtleSeparator).frame(
+                    width: 80, height: 14) // Tax
             }
         }
         .padding(16)
