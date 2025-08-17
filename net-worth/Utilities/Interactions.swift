@@ -1,5 +1,7 @@
 import SwiftUI
 import UIKit
+import Network
+import Combine
 
 // MARK: - Haptics & Interactions
 enum Haptics {
@@ -26,4 +28,19 @@ struct PressableButtonStyle: ButtonStyle {
             .opacity(configuration.isPressed ? opacity : 1)
             .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
     }
+}
+
+// MARK: - Global Network Monitor
+final class NetworkMonitor: ObservableObject {
+    @Published var isConnected: Bool = true
+    private let monitor = NWPathMonitor()
+    private let queue = DispatchQueue(label: "NetworkMonitorQueue")
+    
+    init() {
+        monitor.pathUpdateHandler = { [weak self] path in
+            DispatchQueue.main.async { self?.isConnected = (path.status == .satisfied) }
+        }
+        monitor.start(queue: queue)
+    }
+    deinit { monitor.cancel() }
 }

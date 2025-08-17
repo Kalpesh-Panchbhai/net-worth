@@ -19,7 +19,7 @@ struct IncomeListView: View {
                     }
                     .frame(height: 0)
                     VStack(spacing: 16) {
-                        SummaryCard(totalAll: vm.totalAll, totalThisMonth: vm.totalThisMonth, avgLast3Months: vm.avgLast3Months, currency: vm.displayCurrency, trend: vm.monthlySumsLast12)
+                        SummaryCard(totalAll: vm.totalAll, currency: vm.displayCurrency, trend: vm.monthlySumsLast12)
                             .padding(.top, 8)
                         
                         FilterBar(selectedType: $vm.selectedType, types: vm.uniqueTypes)
@@ -74,8 +74,6 @@ struct IncomeListView: View {
 
 private struct SummaryCard: View {
     let totalAll: Double
-    let totalThisMonth: Double
-    let avgLast3Months: Double
     let currency: String
     let trend: [Double]
     
@@ -92,19 +90,17 @@ private struct SummaryCard: View {
                 Text(totalAll, format: .currency(code: currency))
                     .font(.system(size: 34, weight: .bold))
                     .foregroundStyle(LinearGradient.airbnbAccent)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.65)
+                    .allowsTightening(true)
+                    .monospacedDigit()
                     .contentTransition(.numericText())
                     .animation(.snappy(duration: 0.45), value: totalAll)
-                TrendBadge(delta: delta, pct: pct, currency: currency)
-            }
-            
-            HStack(spacing: 16) {
-                StatPill(title: "This month", value: totalThisMonth, currency: currency)
-                StatPill(title: "Avg (3 mo)", value: avgLast3Months, currency: currency)
             }
         }
         .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color.elevatedBackground)
         )
         .elevatedShadow()
@@ -113,6 +109,11 @@ private struct SummaryCard: View {
                 .frame(width: 140, height: 64)
                 .padding(10)
                 .opacity(0.75)
+        }
+        .overlay(alignment: .topTrailing) {
+            TrendBadge(delta: delta, pct: pct, currency: currency)
+                .padding(.trailing, 10)
+                .padding(.top, 52)
         }
         .tilt(amount: 0.35)
         .accessibilityElement(children: .combine)
@@ -131,12 +132,12 @@ private struct TrendBadge: View {
             Image(systemName: isUp ? "arrow.up.right" : (delta < -0.0001 ? "arrow.down.right" : "equal"))
                 .font(.caption.bold())
             Text(pct, format: .percent.precision(.fractionLength(0...1)))
-                .font(.subheadline).bold()
+                .font(.footnote).bold()
             Text("(\(delta, format: .currency(code: currency)))")
-                .font(.caption)
+                .font(.caption2)
                 .opacity(0.8)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 3)
         .padding(.horizontal, 8)
         .foregroundColor(.white)
         .background(
@@ -194,6 +195,13 @@ private struct FilterBar: View {
                     }
                 }
                 
+                if selectedType != nil {
+                    ClearFilterChip {
+                        withAnimation(.snappy) { selectedType = nil }
+                        Haptics.selection()
+                    }
+                }
+                
                 Spacer(minLength: 0)
             }
             .padding(.horizontal, 2)
@@ -211,16 +219,15 @@ private struct FilterChip: View {
     var body: some View {
         Button(action: action) {
             Text(label)
-                .font(.subheadline)
-                .fontWeight(.semibold)
+                .font(.subheadline.weight(.semibold))
                 .foregroundColor(isSelected ? .white : .primary)
                 .padding(.vertical, 8)
                 .padding(.horizontal, 12)
                 .background(
                     Capsule(style: .continuous)
-                        .fill(Color.subtleSeparator)
+                        .fill(isSelected ? Color.clear : Color.subtleSeparator)
                 )
-                .overlay(
+                .background(
                     Group {
                         if isSelected {
                             Capsule(style: .continuous)
@@ -229,6 +236,26 @@ private struct FilterChip: View {
                         }
                     }
                 )
+        }
+        .buttonStyle(PressableButtonStyle())
+    }
+}
+
+private struct ClearFilterChip: View {
+    let action: () -> Void
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 6) {
+                Image(systemName: "xmark.circle.fill").font(.subheadline)
+                Text("Clear").font(.subheadline.weight(.semibold))
+            }
+            .foregroundColor(.airbnbPrimary)
+            .padding(.vertical, 8)
+            .padding(.horizontal, 12)
+            .background(
+                Capsule(style: .continuous)
+                    .fill(Color.airbnbPrimary.opacity(0.12))
+            )
         }
         .buttonStyle(PressableButtonStyle())
     }
@@ -405,17 +432,48 @@ private struct FloatingAddButton: View {
 private struct ErrorCard: View {
     let message: String
     var retry: () -> Void
+    @State private var showDetails: Bool = false
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: "exclamationmark.triangle").foregroundColor(.airbnbPrimary)
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Something went wrong").font(.headline)
-                Text(message).font(.subheadline).foregroundColor(.secondary)
-                Button("Retry", action: retry)
-                    .buttonStyle(.borderedProminent)
-                    .tint(.airbnbPrimary)
+        let isNetwork = message.localizedCaseInsensitiveContains("network") || message.localizedCaseInsensitiveContains("internet") || message.localizedCaseInsensitiveContains("offline")
+        return VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .center, spacing: 12) {
+                ZStack {
+                    Circle().fill(Color.airbnbPrimary.opacity(0.12))
+                    Image(systemName: isNetwork ? "wifi.exclamationmark" : "exclamationmark.triangle.fill")
+                        .foregroundColor(.airbnbPrimary)
+                }
+                .frame(width: 36, height: 36)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(isNetwork ? "No internet connection" : "Something went wrong")
+                        .font(.headline)
+                    Text(isNetwork ? "You're offline or the connection was lost. Check your internet and try again." : "Please try again in a moment.")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                Spacer()
             }
-            Spacer()
+            HStack(spacing: 8) {
+                Button(action: retry) {
+                    Text("Retry").bold()
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 14)
+                        .background(Capsule(style: .continuous).fill(LinearGradient.airbnbAccent))
+                        .foregroundColor(.white)
+                }
+                .buttonStyle(PressableButtonStyle())
+                Button(action: { withAnimation(.easeInOut(duration: 0.2)) { showDetails.toggle() } }) {
+                    Text(showDetails ? "Hide details" : "Details")
+                        .font(.subheadline.weight(.semibold))
+                }
+                .buttonStyle(.borderless)
+                .tint(.secondary)
+            }
+            if showDetails {
+                Text(message)
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                    .transition(.opacity)
+            }
         }
         .padding(16)
         .background(

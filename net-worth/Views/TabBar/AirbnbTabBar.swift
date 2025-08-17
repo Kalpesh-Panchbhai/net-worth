@@ -7,7 +7,7 @@ struct AirbnbTabBar: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 10) {
+            HStack(spacing: 0) {
                 ForEach(tabs) { tab in
                     TabButton(tab: tab, isSelected: tab == selected, ns: ns) {
                         if selected != tab { Haptics.selection() }
@@ -15,14 +15,19 @@ struct AirbnbTabBar: View {
                     }
                 }
             }
-            .padding(.top, 6)
-            .padding(.bottom, 0)
-            .padding(.horizontal, 12)
+            .frame(height: 50)
+            .frame(maxWidth: .infinity)
         }
-        .background(Color.elevatedBackground)
+        .frame(maxWidth: .infinity)
+        .background(.ultraThinMaterial)
+        .overlay(alignment: .top) {
+            Rectangle()
+                .fill(Color.subtleSeparator)
+                .frame(height: 0.5)
+        }
         .compositingGroup()
-        .transaction { t in t.animation = nil }
-        .animation(nil, value: selected)
+        .ignoresSafeArea(edges: .bottom)
+        .animation(.spring(response: 0.35, dampingFraction: 0.85), value: selected)
     }
 }
 
@@ -34,26 +39,23 @@ struct TabButton: View {
     
     var body: some View {
         Button(action: action) {
-            ZStack {
-                VStack(spacing: 4) {
-                    Image(systemName: tab.icon)
-                        .symbolRenderingMode(.monochrome)
-                        .font(.system(size: 22, weight: .regular))
-                        .foregroundColor(isSelected ? .airbnbPrimary : .secondary)
-                    Text(tab.title)
-                        .font(isSelected ? .footnote.weight(.semibold) : .footnote.weight(.regular))
-                        .foregroundColor(isSelected ? .airbnbPrimary : .secondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
-                        .allowsTightening(true)
-                        .opacity(isSelected ? 1.0 : 0.9)
-                }
-                .padding(.horizontal, 2)
-                .frame(height: 46)
-                .frame(maxWidth: .infinity)
-                .contentShape(Rectangle())
+            VStack(spacing: 1) {
+                Image(systemName: tab.icon)
+                    .font(.system(size: 22, weight: .regular))
+                    .foregroundColor(isSelected ? .airbnbPrimary : .secondary)
+                Text(tab.title)
+                    .font(.caption2.weight(isSelected ? .semibold : .regular))
+                    .foregroundColor(isSelected ? .airbnbPrimary : .secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .allowsTightening(true)
+                    .opacity(isSelected ? 1.0 : 0.9)
             }
+            .frame(maxWidth: .infinity)
+            .frame(height: 50)
+            .contentShape(Rectangle())
         }
-        .buttonStyle(PressableButtonStyle())
+        .buttonStyle(.plain)
     }
 }
+

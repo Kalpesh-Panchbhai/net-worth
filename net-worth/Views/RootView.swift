@@ -4,6 +4,7 @@ import LocalAuthentication
 struct RootView: View {
     let userId: Int
     @State private var selected: AppTab = .home
+    @EnvironmentObject private var networkMonitor: NetworkMonitor
     @AppStorage("appAppearance") private var appAppearanceRaw: String = AppAppearance.system.rawValue
     private var appAppearance: AppAppearance { AppAppearance(rawValue: appAppearanceRaw) ?? .system }
     private var colorSchemeOverride: ColorScheme? {
@@ -38,8 +39,9 @@ struct RootView: View {
         }
         .safeAreaInset(edge: .bottom) {
             AirbnbTabBar(selected: $selected, tabs: AppTab.allCases)
-                .padding(.horizontal, 12)
-                .padding(.bottom, -4)
+        }
+        .safeAreaInset(edge: .top) {
+            if !networkMonitor.isConnected { OfflineBanner() }
         }
         .preferredColorScheme(colorSchemeOverride)
         .overlay {
