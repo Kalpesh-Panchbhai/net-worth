@@ -8,18 +8,23 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
     let defaultIcon: String
     let fetch: (IncomeService, Int) async throws -> [T]
     let setDefault: ((IncomeService, T) async throws -> Void)?
+    let create: ((IncomeService, Int, String, Bool) async throws -> T)?
 
     @State private var items: [T] = []
     @State private var isLoading = false
     @State private var errorMessage: String? = nil
     @State private var query: String = ""
     @State private var patchingId: Int? = nil
+    @State private var isShowingCreate: Bool = false
+    @State private var createName: String = ""
+    @State private var createIsDefault: Bool = false
+    @State private var creating: Bool = false
     private let service = IncomeService()
 
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                if let err = errorMessage {
+                if let err = errorMessage, items.isEmpty {
                     SettingsGroup(title: "Error") {
                         VStack(alignment: .leading, spacing: 8) {
                             Text(err)
@@ -84,43 +89,157 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
             .padding(.vertical, 16)
             .padding(.horizontal, 16)
         }
+        .refreshable { await load(force: true) }
         .background(Color.canvasBackground.ignoresSafeArea())
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
         .task { await load() }
-        .refreshable { await load() }
-        .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .automatic), prompt: Text("Search"))
-        .animation(.easeInOut(duration: 0.2), value: query)
+        .toolbarBackground(Color.canvasBackground, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .sheet(isPresented: $isShowingCreate) {
+            ZStack {
+                Rectangle().fill(.ultraThinMaterial).ignoresSafeArea()
+                NavigationStack {
+                    ScrollView {
+                        VStack(spacing: 16) {
+                            SettingsGroup(showHeader: false) {
+                                VStack(alignment: .leading, spacing: 12) {
+                                    TextField("Name", text: $createName)
+                                        .textInputAutocapitalization(.words)
+                                        .disableAutocorrection(true)
+                                    Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(.horizontal, 0)
+                                    Toggle("Set as default", isOn: $createIsDefault)
+                                        .tint(.airbnbPrimary)
+                                }
+                                .padding(.horizontal, 4)
+                            }
+                            .padding(.horizontal, 16)
+                        }
+                        .padding(.vertical, 16)
+                        .background(Color.clear)
+                    }
+                    .navigationTitle("New")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") { isShowingCreate = false }
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button(creating ? "Saving…" : "Save") { Task { await createItem() } }
+                                .disabled(createName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || creating)
+                        }
+                    }
+                    .toolbarBackground(Color.canvasBackground, for: .navigationBar)
+                    .toolbarBackground(.visible, for: .navigationBar)
+                }
+            }
+            .presentationDetents([.height(220), .medium, .large])
+            .interactiveDismissDisabled(creating)
+            .presentationDragIndicator(.visible)
+        }
+        .overlay(alignment: .bottomTrailing) {
+            if create != nil {
+                FloatingPlusButton { isShowingCreate = true }
+                    .padding(.trailing, 16)
+                    .padding(.bottom, 96)
+            }
+        }
     }
 
-    private func load() async {
-        errorMessage = nil
-        isLoading = true
+    private func load(force: Bool = false) async {
+        if isLoading && !force { return }
+        await MainActor.run {
+            errorMessage = nil
+            isLoading = true
+        }
         do {
             let fetched = try await fetch(service, userId)
             // Sort: default first, then name ascending
-            items = fetched.sorted { a, b in
+            let sorted = fetched.sorted { a, b in
                 if a.isDefault != b.isDefault { return a.isDefault && !b.isDefault }
                 return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
             }
+            await MainActor.run {
+                items = sorted
+                errorMessage = nil
+            }
+        } catch is CancellationError {
+            // Ignore refresh/task cancellation
         } catch {
-            errorMessage = (error as? APIError)?.errorDescription ?? error.localizedDescription
+            if let urlErr = error as? URLError, urlErr.code == .cancelled {
+                // ignore
+            } else {
+                let message = (error as? APIError)?.errorDescription ?? error.localizedDescription
+                await MainActor.run { errorMessage = message }
+            }
         }
-        isLoading = false
+        await MainActor.run { isLoading = false }
     }
 
     private func markDefault(_ item: T, setDefault: @escaping (IncomeService, T) async throws -> Void) async {
-        patchingId = item.id
+        await MainActor.run { patchingId = item.id }
         do {
             try await setDefault(service, item)
             Haptics.success()
             await load()
         } catch {
-            errorMessage = (error as? APIError)?.errorDescription ?? error.localizedDescription
+            let message = (error as? APIError)?.errorDescription ?? error.localizedDescription
+            await MainActor.run { errorMessage = message }
         }
-        patchingId = nil
+        await MainActor.run { patchingId = nil }
     }
 
+    private func createItem() async {
+        guard let create else { return }
+        // Snapshot values and close the sheet immediately for better UX
+        let name = createName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let isDef = createIsDefault
+        await MainActor.run {
+            isShowingCreate = false
+            errorMessage = nil
+        }
+        do {
+            let created = try await create(service, userId, name, isDef)
+            Haptics.success()
+            // Optimistic local update
+            await MainActor.run {
+                items.append(created)
+                items.sort { a, b in
+                    if a.isDefault != b.isDefault { return a.isDefault && !b.isDefault }
+                    return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
+                }
+            }
+            await MainActor.run {
+                createName = ""
+                createIsDefault = false
+            }
+            // Give backend a tiny moment to persist, then reload
+            try? await Task.sleep(nanoseconds: 250_000_000)
+            await load(force: true)
+        } catch {
+            let message = (error as? APIError)?.errorDescription ?? error.localizedDescription
+            await MainActor.run { errorMessage = message }
+        }
+        await MainActor.run { creating = false }
+    }
+
+}
+
+// MARK: - Floating + Button
+private struct FloatingPlusButton: View {
+    var action: () -> Void
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: "plus")
+                .font(.headline)
+                .foregroundColor(.white)
+                .frame(width: 56, height: 56)
+                .background(Circle().fill(LinearGradient.airbnbAccent))
+                .shadow(color: .airbnbPrimary.opacity(0.35), radius: 12, x: 0, y: 6)
+        }
+        .buttonStyle(PressableButtonStyle(scale: 0.94))
+        .accessibilityLabel("Add")
+    }
 }
 
 // Row
