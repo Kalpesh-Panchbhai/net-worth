@@ -98,16 +98,17 @@ final class IncomeController: ObservableObject {
         return mapped.sorted { $0.month > $1.month }
     }
     
-    var totalAll: Double { incomes.reduce(0) { $0 + $1.amount } }
+    // Totals per new semantics: Total = amount + taxPaid, Net = amount, Tax = taxPaid
+    var totalAll: Double { incomes.reduce(0) { $0 + $1.amount + $1.taxPaid } }
     var totalTaxPaid: Double { incomes.reduce(0) { $0 + $1.taxPaid } }
-    var totalNet: Double { max(0, totalAll - totalTaxPaid) }
+    var totalNet: Double { incomes.reduce(0) { $0 + $1.amount } }
     // Filtered totals for summary when filters are applied
-    var filteredTotalAll: Double { filtered.reduce(0) { $0 + $1.amount } }
+    var filteredTotalAll: Double { filtered.reduce(0) { $0 + $1.amount + $1.taxPaid } }
     var filteredTotalTax: Double { filtered.reduce(0) { $0 + $1.taxPaid } }
-    var filteredTotalNet: Double { max(0, filteredTotalAll - filteredTotalTax) }
+    var filteredTotalNet: Double { filtered.reduce(0) { $0 + $1.amount } }
     var totalThisMonth: Double {
         guard let start = calendar.date(from: calendar.dateComponents([.year, .month], from: Date())) else { return 0 }
-        return incomes.filter { $0.creditedDate >= start }.reduce(0) { $0 + $1.amount }
+        return incomes.filter { $0.creditedDate >= start }.reduce(0) { $0 + $1.amount + $1.taxPaid }
     }
     var avgLast3Months: Double {
         let now = Date()
@@ -115,7 +116,7 @@ final class IncomeController: ObservableObject {
         let starts = months.compactMap { calendar.date(from: calendar.dateComponents([.year, .month], from: $0)) }
         let monthSums: [Double] = starts.map { start in
             let end = calendar.date(byAdding: DateComponents(month: 1, day: 0), to: start) ?? start
-            let sum = incomes.filter { $0.creditedDate >= start && $0.creditedDate < end }.reduce(0) { $0 + $1.amount }
+            let sum = incomes.filter { $0.creditedDate >= start && $0.creditedDate < end }.reduce(0) { $0 + $1.amount + $1.taxPaid }
             return sum
         }
         guard !monthSums.isEmpty else { return 0 }
@@ -129,7 +130,7 @@ final class IncomeController: ObservableObject {
             let start = calendar.date(byAdding: .month, value: -offset, to: startOfCurrent) ?? Date()
             let end = calendar.date(byAdding: .month, value: 1, to: start) ?? start
             return incomes.filter { $0.creditedDate >= start && $0.creditedDate < end }
-                .reduce(0) { $0 + $1.amount }
+                .reduce(0) { $0 + $1.amount + $1.taxPaid }
         }
     }
     
