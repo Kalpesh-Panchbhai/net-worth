@@ -121,21 +121,34 @@ struct IncomeListView: View {
     }
 }
 
-// Small pill to display a labeled amount (e.g., Net / Tax)
-private struct AmountBadge: View {
-    let label: String
+// Tinted mini stat (Airbnb style): subtle background with tinted text
+private struct MiniStat: View {
+    let title: String
     let value: Double
     let currency: String
-    var style: Color = .green
+    let tint: Color
     var body: some View {
-        HStack(spacing: 6) {
-            Text(label).font(.caption2.bold())
-            Text(value, format: .currency(code: currency)).font(.caption2.weight(.semibold))
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title)
+                .font(.caption2.bold())
+                .foregroundColor(tint)
+            Text(value, format: .currency(code: currency))
+                .font(.footnote.weight(.semibold))
+                .foregroundColor(tint)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+                .monospacedDigit()
         }
-        .foregroundColor(.white)
-        .padding(.vertical, 4)
-        .padding(.horizontal, 8)
-        .background(Capsule().fill(style.gradient))
+        .padding(.vertical, 6)
+        .padding(.horizontal, 10)
+        .background(
+            Capsule(style: .continuous)
+                .fill(tint.opacity(0.10))
+        )
+        .overlay(
+            Capsule(style: .continuous)
+                .stroke(tint.opacity(0.18), lineWidth: 1)
+        )
     }
 }
 
@@ -287,29 +300,42 @@ private struct IncomeRowCard: View {
             Haptics.softImpact()
         } label: {
             HStack(alignment: .center, spacing: 12) {
-                Capsule()
-                    .fill(Color.airbnbPrimary.opacity(0.2))
-                    .frame(width: 6, height: 44)
+                ZStack {
+                    Circle().fill(Color.airbnbPrimary.opacity(0.10))
+                    Image(systemName: "tag")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(LinearGradient.airbnbAccent)
+                }
+                .frame(width: 32, height: 32)
+                .overlay(Circle().stroke(Color.subtleSeparator, lineWidth: 1))
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(income.incomeTag.name)
-                        .font(.headline)
+                        .font(.headline.weight(.semibold))
                         .foregroundColor(.primary)
                         .lineLimit(1)
                     Text("\(income.incomeType.name) • \(DateFormatter.dayMonYear.string(from: income.creditedDate))")
-                        .font(.subheadline)
+                        .font(.footnote)
                         .foregroundColor(.secondary)
                         .lineLimit(1)
                 }
-                Spacer()
-                VStack(alignment: .trailing, spacing: 6) {
-                    Text(income.amount, format: .currency(code: income.currency))
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                    HStack(spacing: 6) {
-                        AmountBadge(label: "Net", value: max(0, income.amount - income.taxPaid), currency: income.currency)
-                        AmountBadge(label: "Tax", value: income.taxPaid, currency: income.currency, style: .airbnbPrimary)
+                Spacer(minLength: 8)
+                HStack(alignment: .top, spacing: 10) {
+                    VStack(alignment: .trailing, spacing: 6) {
+                        Text(income.amount, format: .currency(code: income.currency))
+                            .font(.headline.weight(.semibold))
+                            .foregroundColor(.primary)
+                            .monospacedDigit()
+                        HStack(spacing: 6) {
+                            MiniStat(title: "Net", value: max(0, income.amount - income.taxPaid), currency: income.currency, tint: .airbnbSuccess)
+                            MiniStat(title: "Tax", value: income.taxPaid, currency: income.currency, tint: .airbnbPrimary)
+                        }
                     }
+                    Image(systemName: "chevron.right")
+                        .font(.footnote.weight(.semibold))
+                        .foregroundColor(.secondary)
+                        .opacity(0.6)
+                        .padding(.top, 2)
                 }
             }
             .padding(16)
@@ -342,15 +368,19 @@ private struct IncomeRowCard: View {
 private extension IncomeRowCard {
     static func placeholder() -> some View {
         HStack(alignment: .center, spacing: 12) {
-            Capsule()
-                .fill(Color.airbnbPrimary.opacity(0.2))
-                .frame(width: 6, height: 44)
+            Circle().fill(Color.airbnbPrimary.opacity(0.12)).frame(width: 32, height: 32)
             VStack(alignment: .leading, spacing: 6) {
                 RoundedRectangle(cornerRadius: 4).fill(Color.subtleSeparator).frame(width: 120, height: 16)
                 RoundedRectangle(cornerRadius: 4).fill(Color.subtleSeparator).frame(width: 180, height: 14)
             }
             Spacer()
-            RoundedRectangle(cornerRadius: 4).fill(Color.subtleSeparator).frame(width: 80, height: 18)
+            VStack(alignment: .trailing, spacing: 6) {
+                RoundedRectangle(cornerRadius: 4).fill(Color.subtleSeparator).frame(width: 80, height: 18)
+                HStack(spacing: 6) {
+                    Capsule().fill(Color.subtleSeparator).frame(width: 64, height: 22)
+                    Capsule().fill(Color.subtleSeparator).frame(width: 54, height: 22)
+                }
+            }
         }
         .padding(16)
         .background(
