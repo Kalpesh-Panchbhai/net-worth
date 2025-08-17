@@ -14,6 +14,23 @@
 		7D59B5372BE24ABA006F3F00 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 7D59B5362BE24ABA006F3F00 /* GoogleSignIn */; };
 		7D59B5392BE24ABA006F3F00 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7D59B5382BE24ABA006F3F00 /* GoogleSignInSwift */; };
 		7D59B53D2BE24B1C006F3F00 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B53C2BE24B1C006F3F00 /* GoogleService-Info.plist */; };
+		7DAA10012BE3000000000001 /* AppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00012BE3000000000001 /* AppTab.swift */; };
+		7DAA10022BE3000000000002 /* IncomeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00022BE3000000000002 /* IncomeModels.swift */; };
+		7DAA10032BE3000000000003 /* IncomeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00032BE3000000000003 /* IncomeService.swift */; };
+		7DAA10042BE3000000000004 /* IncomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00042BE3000000000004 /* IncomeController.swift */; };
+		7DAA10052BE3000000000005 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00052BE3000000000005 /* Formatters.swift */; };
+		7DAA10062BE3000000000006 /* Design.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00062BE3000000000006 /* Design.swift */; };
+		7DAA10072BE3000000000007 /* Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00072BE3000000000007 /* Interactions.swift */; };
+		7DAA10082BE3000000000008 /* NavBarUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00082BE3000000000008 /* NavBarUtils.swift */; };
+		7DAA10092BE3000000000009 /* Shimmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00092BE3000000000009 /* Shimmer.swift */; };
+		7DAA100A2BE300000000000A /* AirbnbTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA000A2BE300000000000A /* AirbnbTabBar.swift */; };
+		7DAA100B2BE300000000000B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA000B2BE300000000000B /* SettingsView.swift */; };
+		7DAA100C2BE300000000000C /* PlaceholderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA000C2BE300000000000C /* PlaceholderScreen.swift */; };
+		7DAA100D2BE300000000000D /* IncomeViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA000D2BE300000000000D /* IncomeViews.swift */; };
+		7DAA100E2BE300000000000E /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA000E2BE300000000000E /* AppAppearance.swift */; };
+		7DAA100F2BE300000000000F /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA000F2BE300000000000F /* RootView.swift */; };
+		7DAA10102BE3000000000010 /* Transitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00102BE3000000000010 /* Transitions.swift */; };
+		7DAA10112BE3000000000011 /* Motion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00112BE3000000000011 /* Motion.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +40,23 @@
 		7D59B4072BE24701006F3F00 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		7D59B40E2BE24774006F3F00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		7D59B53C2BE24B1C006F3F00 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		7DAA00012BE3000000000001 /* AppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTab.swift; sourceTree = "<group>"; };
+		7DAA00022BE3000000000002 /* IncomeModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeModels.swift; sourceTree = "<group>"; };
+		7DAA00032BE3000000000003 /* IncomeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeService.swift; sourceTree = "<group>"; };
+		7DAA00042BE3000000000004 /* IncomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeController.swift; sourceTree = "<group>"; };
+		7DAA00052BE3000000000005 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
+		7DAA00062BE3000000000006 /* Design.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Design.swift; sourceTree = "<group>"; };
+		7DAA00082BE3000000000008 /* NavBarUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarUtils.swift; sourceTree = "<group>"; };
+		7DAA00092BE3000000000009 /* Shimmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shimmer.swift; sourceTree = "<group>"; };
+		7DAA000A2BE300000000000A /* AirbnbTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirbnbTabBar.swift; sourceTree = "<group>"; };
+		7DAA000B2BE300000000000B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		7DAA000C2BE300000000000C /* PlaceholderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderScreen.swift; sourceTree = "<group>"; };
+		7DAA000D2BE300000000000D /* IncomeViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeViews.swift; sourceTree = "<group>"; };
+		7DAA000E2BE300000000000E /* AppAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAppearance.swift; sourceTree = "<group>"; };
+		7DAA000F2BE300000000000F /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		7DAA00102BE3000000000010 /* Transitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transitions.swift; sourceTree = "<group>"; };
+		7DAA00112BE3000000000011 /* Motion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Motion.swift; sourceTree = "<group>"; };
+		7DAA00072BE3000000000007 /* Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interactions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +92,11 @@
 		7D59B3FF2BE246FF006F3F00 /* net-worth */ = {
 			isa = PBXGroup;
 			children = (
+				7DAA10002BE30000000000A0 /* Models */,
+				7DAA10002BE30000000000A1 /* Services */,
+				7DAA10002BE30000000000A2 /* Controllers */,
+				7DAA10002BE30000000000A3 /* Utilities */,
+				7DAA10002BE30000000000A4 /* Views */,
 				7D59B53C2BE24B1C006F3F00 /* GoogleService-Info.plist */,
 				7D59B40E2BE24774006F3F00 /* Info.plist */,
 				7D59B4002BE246FF006F3F00 /* net_worthApp.swift */,
@@ -65,6 +104,90 @@
 				7D59B4062BE24701006F3F00 /* Preview Content */,
 			);
 			path = "net-worth";
+			sourceTree = "<group>";
+		};
+		7DAA10002BE30000000000A0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7DAA00012BE3000000000001 /* AppTab.swift */,
+				7DAA00022BE3000000000002 /* IncomeModels.swift */,
+				7DAA000E2BE300000000000E /* AppAppearance.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		7DAA10002BE30000000000A1 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				7DAA00032BE3000000000003 /* IncomeService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		7DAA10002BE30000000000A2 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				7DAA00042BE3000000000004 /* IncomeController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		7DAA10002BE30000000000A3 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				7DAA00052BE3000000000005 /* Formatters.swift */,
+				7DAA00062BE3000000000006 /* Design.swift */,
+				7DAA00072BE3000000000007 /* Interactions.swift */,
+				7DAA00082BE3000000000008 /* NavBarUtils.swift */,
+				7DAA00092BE3000000000009 /* Shimmer.swift */,
+				7DAA00102BE3000000000010 /* Transitions.swift */,
+				7DAA00112BE3000000000011 /* Motion.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		7DAA10002BE30000000000A4 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7DAA000F2BE300000000000F /* RootView.swift */,
+				7DAA10002BE30000000000B0 /* TabBar */,
+				7DAA10002BE30000000000B1 /* Settings */,
+				7DAA10002BE30000000000B2 /* Shared */,
+				7DAA10002BE30000000000B3 /* Income */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		7DAA10002BE30000000000B0 /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				7DAA000A2BE300000000000A /* AirbnbTabBar.swift */,
+			);
+			path = TabBar;
+			sourceTree = "<group>";
+		};
+		7DAA10002BE30000000000B1 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				7DAA000B2BE300000000000B /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		7DAA10002BE30000000000B2 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				7DAA000C2BE300000000000C /* PlaceholderScreen.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		7DAA10002BE30000000000B3 /* Income */ = {
+			isa = PBXGroup;
+			children = (
+				7DAA000D2BE300000000000D /* IncomeViews.swift */,
+			);
+			path = Income;
 			sourceTree = "<group>";
 		};
 		7D59B4062BE24701006F3F00 /* Preview Content */ = {
@@ -156,6 +279,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D59B4012BE246FF006F3F00 /* net_worthApp.swift in Sources */,
+				7DAA10012BE3000000000001 /* AppTab.swift in Sources */,
+				7DAA10022BE3000000000002 /* IncomeModels.swift in Sources */,
+				7DAA10032BE3000000000003 /* IncomeService.swift in Sources */,
+				7DAA10042BE3000000000004 /* IncomeController.swift in Sources */,
+				7DAA10052BE3000000000005 /* Formatters.swift in Sources */,
+				7DAA10062BE3000000000006 /* Design.swift in Sources */,
+				7DAA10072BE3000000000007 /* Interactions.swift in Sources */,
+				7DAA10082BE3000000000008 /* NavBarUtils.swift in Sources */,
+				7DAA10092BE3000000000009 /* Shimmer.swift in Sources */,
+				7DAA100A2BE300000000000A /* AirbnbTabBar.swift in Sources */,
+				7DAA100B2BE300000000000B /* SettingsView.swift in Sources */,
+				7DAA100C2BE300000000000C /* PlaceholderScreen.swift in Sources */,
+				7DAA100D2BE300000000000D /* IncomeViews.swift in Sources */,
+				7DAA100E2BE300000000000E /* AppAppearance.swift in Sources */,
+				7DAA100F2BE300000000000F /* RootView.swift in Sources */,
+				7DAA10102BE3000000000010 /* Transitions.swift in Sources */,
+				7DAA10112BE3000000000011 /* Motion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
