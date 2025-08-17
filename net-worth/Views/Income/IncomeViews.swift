@@ -5,6 +5,8 @@ struct IncomeListView: View {
     @StateObject private var vm: IncomeController
     @State private var navCollapsed = false
     @EnvironmentObject private var banners: BannerCenter
+    @EnvironmentObject private var tabCommands: TabCommandCenter
+    @State private var showFilterSheet = false
     
     init(userId: Int) {
         _vm = StateObject(wrappedValue: IncomeController(userId: userId))
@@ -12,45 +14,70 @@ struct IncomeListView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack(alignment: .top) {
-                Color.canvasBackground.ignoresSafeArea()
-                ScrollView {
-                    GeometryReader { proxy in
-                        Color.clear.preference(key: NavBarOffsetKey.self, value: proxy.frame(in: .named("incomeScroll")).minY)
-                    }
-                    .frame(height: 0)
-                    VStack(spacing: 16) {
-                        SummaryCard(totalAll: vm.totalAll, currency: vm.displayCurrency, trend: vm.monthlySumsLast12)
-                            .padding(.top, 8)
-                        
-                        FilterBar(selectedType: $vm.selectedType, types: vm.uniqueTypes)
-                        
-                        // Inline error card removed; errors surface via global banner.
-                        
-                        if vm.isLoading && vm.incomes.isEmpty {
-                            ForEach(0..<5, id: \.self) { _ in
-                                IncomeRowCard.placeholder()
+            ScrollViewReader { proxy in
+                ZStack(alignment: .top) {
+                    Color.canvasBackground.ignoresSafeArea()
+                    ScrollView {
+                        GeometryReader { geo in
+                            Color.clear.preference(key: NavBarOffsetKey.self, value: geo.frame(in: .named("incomeScroll")).minY)
+                        }
+                        .frame(height: 0)
+                        VStack(spacing: 16) {
+                            SummaryCard(totalAll: vm.totalAll, totalNet: vm.totalNet, totalTax: vm.totalTaxPaid, currency: vm.displayCurrency)
+                                .padding(.top, 8)
+                            HStack {
+                                Button {
+                                    showFilterSheet = true
+                                    Haptics.selection()
+                                } label: {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: "line.3.horizontal.decrease.circle")
+                                        Text(vm.selectedType == nil ? "Filter" : vm.selectedType!)
+                                    }
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundColor(.airbnbPrimary)
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 12)
+                                    .background(Capsule().fill(Color.airbnbPrimary.opacity(0.12)))
+                                }
+                                .buttonStyle(PressableButtonStyle())
+                                Spacer(minLength: 0)
                             }
-                            .shimmer()
-                        } else if vm.sections.isEmpty {
-                            EmptyStateCard(text: "No income records yet")
-                        } else {
-                            LazyVStack(spacing: 12, pinnedViews: []) {
-                                ForEach(vm.sections) { section in
-                                    SectionHeader(title: section.title)
-                                        .padding(.top, 8)
-                                    ForEach(section.items, id: \.id) { item in
-                                        IncomeRowCard(income: item)
+                            
+                            if vm.isLoading && vm.incomes.isEmpty {
+                                ForEach(0..<5, id: \.self) { _ in
+                                    IncomeRowCard.placeholder()
+                                }
+                                .shimmer()
+                            } else if vm.sections.isEmpty {
+                                EmptyStateCard(text: "No income records yet")
+                            } else {
+                                LazyVStack(spacing: 12) {
+                                    ForEach(vm.sections) { section in
+                                        SectionHeader(title: section.title)
+                                            .padding(.top, 8)
+                                        ForEach(section.items, id: \.id) { item in
+                                            IncomeRowCard(income: item)
+                                        }
                                     }
                                 }
                             }
+                            // Bottom anchor for scroll-to-bottom
+                            Color.clear.frame(height: 1).id("incomeBottom")
                         }
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 8)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 8)
+                    .scrollIndicators(.hidden)
+                    .coordinateSpace(name: "incomeScroll")
                 }
-                .scrollIndicators(.hidden)
-                .coordinateSpace(name: "incomeScroll")
+                .onChange(of: tabCommands.scrollToBottomRequest) { _, req in
+                    guard req == .income else { return }
+                    withAnimation(.easeInOut(duration: 0.35)) {
+                        proxy.scrollTo("incomeBottom", anchor: .bottom)
+                    }
+                    DispatchQueue.main.async { tabCommands.scrollToBottomRequest = nil }
+                }
             }
             .overlay(alignment: .bottomTrailing) {
                 FloatingAddButton { Haptics.softImpact() }
@@ -72,20 +99,116 @@ struct IncomeListView: View {
             guard let message = newValue, !message.isEmpty else { return }
             banners.showError(message: message, retryTitle: "Retry", retry: { Task { await vm.refresh() } })
         }
+        .sheet(isPresented: $showFilterSheet) {
+            NavigationStack {
+                FilterSheet(types: vm.uniqueTypes, selected: $vm.selectedType) {
+                    showFilterSheet = false
+                } onClear: {
+                    vm.selectedType = nil
+                }
+                .navigationTitle("Filters")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) { Button("Close") { showFilterSheet = false } }
+                    ToolbarItem(placement: .confirmationAction) { Button("Apply") { showFilterSheet = false } }
+                }
+                .toolbarBackground(Color.canvasBackground, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
+            }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
+        }
     }
 }
 
+// Small pill to display a labeled amount (e.g., Net / Tax)
+private struct AmountBadge: View {
+    let label: String
+    let value: Double
+    let currency: String
+    var style: Color = .green
+    var body: some View {
+        HStack(spacing: 6) {
+            Text(label).font(.caption2.bold())
+            Text(value, format: .currency(code: currency)).font(.caption2.weight(.semibold))
+        }
+        .foregroundColor(.white)
+        .padding(.vertical, 4)
+        .padding(.horizontal, 8)
+        .background(Capsule().fill(style.gradient))
+    }
+}
+
+// MARK: - Filter Sheet
+private struct FilterSheet: View {
+    let types: [String]
+    @Binding var selected: String?
+    var onClose: () -> Void
+    var onClear: () -> Void
+    @State private var query: String = ""
+    var body: some View {
+        VStack(spacing: 0) {
+            List {
+                Section("Type") {
+                    Button {
+                        withAnimation(.snappy) { selected = nil }
+                        Haptics.selection()
+                    } label: {
+                        HStack {
+                            Text("All").bold()
+                            Spacer()
+                            if selected == nil { Image(systemName: "checkmark").foregroundColor(.airbnbPrimary) }
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    let filtered = types.filter { query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? true : $0.localizedCaseInsensitiveContains(query) }
+                    ForEach(filtered, id: \.self) { t in
+                        Button {
+                            withAnimation(.snappy) { selected = t }
+                            Haptics.selection()
+                        } label: {
+                            HStack {
+                                Text(t)
+                                Spacer()
+                                if selected == t { Image(systemName: "checkmark").foregroundColor(.airbnbPrimary) }
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+            .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always))
+            .listStyle(.insetGrouped)
+            HStack(spacing: 12) {
+                Button(action: { onClear(); onClose() }) {
+                    Text("Clear filters").bold()
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(RoundedRectangle(cornerRadius: 12).fill(Color.subtleSeparator))
+                }
+                .buttonStyle(PressableButtonStyle())
+                Button(action: onClose) {
+                    Text("Apply").bold()
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(RoundedRectangle(cornerRadius: 12).fill(LinearGradient.airbnbAccent))
+                }
+                .buttonStyle(PressableButtonStyle())
+            }
+            .padding(16)
+            .background(Color.canvasBackground.ignoresSafeArea(edges: .bottom))
+        }
+    }
+}
 private struct SummaryCard: View {
     let totalAll: Double
+    let totalNet: Double
+    let totalTax: Double
     let currency: String
-    let trend: [Double]
     
     var body: some View {
-        let last = trend.last ?? 0
-        let prev = trend.dropLast().last ?? 0
-        let delta = last - prev
-        let pct = prev != 0 ? delta / prev : 0
-        return VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 12) {
             Text("Total income")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
@@ -100,6 +223,11 @@ private struct SummaryCard: View {
                     .contentTransition(.numericText())
                     .animation(.snappy(duration: 0.45), value: totalAll)
             }
+            HStack(spacing: 8) {
+                StatPill(title: "Net income", value: totalNet, currency: currency)
+                StatPill(title: "Tax paid", value: totalTax, currency: currency)
+                Spacer(minLength: 0)
+            }
         }
         .padding(16)
         .background(
@@ -107,49 +235,12 @@ private struct SummaryCard: View {
                 .fill(Color.elevatedBackground)
         )
         .elevatedShadow()
-        .overlay(alignment: .topTrailing) {
-            Sparkline(values: trend)
-                .frame(width: 140, height: 64)
-                .padding(10)
-                .opacity(0.75)
-        }
-        .overlay(alignment: .topTrailing) {
-            TrendBadge(delta: delta, pct: pct, currency: currency)
-                .padding(.trailing, 10)
-                .padding(.top, 52)
-        }
         .tilt(amount: 0.35)
         .accessibilityElement(children: .combine)
     }
 }
 
-private struct TrendBadge: View {
-    let delta: Double
-    let pct: Double
-    let currency: String
-    
-    var body: some View {
-        let isUp = delta > 0.0001
-        let color = isUp ? Color.airbnbSuccess : (delta < -0.0001 ? Color.airbnbPrimary : Color.secondary)
-        HStack(spacing: 6) {
-            Image(systemName: isUp ? "arrow.up.right" : (delta < -0.0001 ? "arrow.down.right" : "equal"))
-                .font(.caption.bold())
-            Text(pct, format: .percent.precision(.fractionLength(0...1)))
-                .font(.footnote).bold()
-            Text("(\(delta, format: .currency(code: currency)))")
-                .font(.caption2)
-                .opacity(0.8)
-        }
-        .padding(.vertical, 3)
-        .padding(.horizontal, 8)
-        .foregroundColor(.white)
-        .background(
-            Capsule(style: .continuous)
-                .fill(color.gradient)
-        )
-        .accessibilityLabel(isUp ? "Up by \(Int(pct * 100)) percent" : (delta < -0.0001 ? "Down by \(Int(-pct * 100)) percent" : "No change"))
-    }
-}
+// Trend/Sparkline removed per new design
 
 private struct StatPill: View {
     let title: String
@@ -174,95 +265,6 @@ private struct StatPill: View {
     }
 }
 
-private struct FilterBar: View {
-    @Binding var selectedType: String?
-    let types: [String]
-    @Namespace private var ns
-    
-    var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                Image(systemName: "line.3.horizontal.decrease.circle")
-                    .foregroundColor(.airbnbPrimary)
-                    .symbolEffect(.bounce, value: selectedType)
-                
-                FilterChip(label: "All", isSelected: selectedType == nil, ns: ns) {
-                    withAnimation(.snappy) { selectedType = nil }
-                    Haptics.selection()
-                }
-                
-                ForEach(types, id: \.self) { t in
-                    FilterChip(label: t, isSelected: selectedType == t, ns: ns) {
-                        withAnimation(.snappy) { selectedType = t }
-                        Haptics.selection()
-                    }
-                }
-                
-                if selectedType != nil {
-                    ClearFilterChip {
-                        withAnimation(.snappy) { selectedType = nil }
-                        Haptics.selection()
-                    }
-                }
-                
-                Spacer(minLength: 0)
-            }
-            .padding(.horizontal, 2)
-            .padding(.vertical, 6)
-        }
-    }
-}
-
-private struct FilterChip: View {
-    let label: String
-    let isSelected: Bool
-    let ns: Namespace.ID
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            Text(label)
-                .font(.subheadline.weight(.semibold))
-                .foregroundColor(isSelected ? .white : .primary)
-                .padding(.vertical, 8)
-                .padding(.horizontal, 12)
-                .background(
-                    Capsule(style: .continuous)
-                        .fill(isSelected ? Color.clear : Color.subtleSeparator)
-                )
-                .background(
-                    Group {
-                        if isSelected {
-                            Capsule(style: .continuous)
-                                .fill(LinearGradient.airbnbAccent)
-                                .matchedGeometryEffect(id: "chipHighlight", in: ns)
-                        }
-                    }
-                )
-        }
-        .buttonStyle(PressableButtonStyle())
-    }
-}
-
-private struct ClearFilterChip: View {
-    let action: () -> Void
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 6) {
-                Image(systemName: "xmark.circle.fill").font(.subheadline)
-                Text("Clear").font(.subheadline.weight(.semibold))
-            }
-            .foregroundColor(.airbnbPrimary)
-            .padding(.vertical, 8)
-            .padding(.horizontal, 12)
-            .background(
-                Capsule(style: .continuous)
-                    .fill(Color.airbnbPrimary.opacity(0.12))
-            )
-        }
-        .buttonStyle(PressableButtonStyle())
-    }
-}
 
 private struct SectionHeader: View {
     let title: String
@@ -300,9 +302,15 @@ private struct IncomeRowCard: View {
                         .lineLimit(1)
                 }
                 Spacer()
-                Text(income.amount, format: .currency(code: income.currency))
-                    .font(.headline)
-                    .foregroundColor(.primary)
+                VStack(alignment: .trailing, spacing: 6) {
+                    Text(income.amount, format: .currency(code: income.currency))
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    HStack(spacing: 6) {
+                        AmountBadge(label: "Net", value: max(0, income.amount - income.taxPaid), currency: income.currency)
+                        AmountBadge(label: "Tax", value: income.taxPaid, currency: income.currency, style: .airbnbPrimary)
+                    }
+                }
             }
             .padding(16)
             .background(
@@ -357,60 +365,7 @@ private extension IncomeRowCard {
     }
 }
 
-// MARK: - Sparkline
-private struct Sparkline: View {
-    let values: [Double]
-    @State private var progress: CGFloat = 0
-    
-    var body: some View {
-        GeometryReader { geo in
-            let size = geo.size
-            let points = normalized(values: values)
-            let path = Path { p in
-                guard !points.isEmpty else { return }
-                let stepX = points.count > 1 ? size.width / CGFloat(points.count - 1) : 0
-                for (idx, v) in points.enumerated() {
-                    let x = CGFloat(idx) * stepX
-                    let y = size.height - (CGFloat(v) * size.height)
-                    if idx == 0 { p.move(to: CGPoint(x: x, y: y)) }
-                    else { p.addLine(to: CGPoint(x: x, y: y)) }
-                }
-            }
-            
-            path.trim(from: 0, to: progress)
-                .stroke(LinearGradient.airbnbAccent, style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
-                .shadow(color: .airbnbPrimary.opacity(0.25), radius: 4, x: 0, y: 2)
-            
-            path.trim(from: 0, to: progress)
-                .fill(
-                    LinearGradient(
-                        colors: [.airbnbPrimary.opacity(0.18), .clear],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
-                .mask(
-                    VStack(spacing: 0) {
-                        path.stroke(style: StrokeStyle(lineWidth: 0)).opacity(0)
-                        Rectangle().fill(Color.white)
-                    }
-                )
-        }
-        .onAppear { withAnimation(.easeOut(duration: 0.9)) { progress = 1 } }
-        .onChange(of: values) { _, _ in
-            progress = 0
-            withAnimation(.easeOut(duration: 0.9)) { progress = 1 }
-        }
-    }
-    
-    private func normalized(values: [Double]) -> [Double] {
-        guard let maxV = values.max(), let minV = values.min(), maxV > minV else {
-            return values.map { _ in 0.5 }
-        }
-        let range = maxV - minV
-        return values.map { ($0 - minV) / range }
-    }
-}
+// Sparkline removed per new design
 
 // MARK: - Floating Add Button
 private struct FloatingAddButton: View {

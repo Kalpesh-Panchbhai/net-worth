@@ -60,6 +60,8 @@ final class IncomeController: ObservableObject {
     }
     
     var totalAll: Double { incomes.reduce(0) { $0 + $1.amount } }
+    var totalTaxPaid: Double { incomes.reduce(0) { $0 + $1.taxPaid } }
+    var totalNet: Double { max(0, totalAll - totalTaxPaid) }
     var totalThisMonth: Double {
         guard let start = calendar.date(from: calendar.dateComponents([.year, .month], from: Date())) else { return 0 }
         return incomes.filter { $0.creditedDate >= start }.reduce(0) { $0 + $1.amount }

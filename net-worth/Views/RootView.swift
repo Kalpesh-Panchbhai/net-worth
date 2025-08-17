@@ -25,11 +25,11 @@ struct RootView: View {
             Group {
                 switch selected {
                 case .home:
-                    PlaceholderScreen(title: AppTab.home.title, systemImage: AppTab.home.icon)
+                    PlaceholderScreen(title: AppTab.home.title, systemImage: AppTab.home.icon, tab: .home)
                 case .accounts:
-                    PlaceholderScreen(title: AppTab.accounts.title, systemImage: AppTab.accounts.icon)
+                    PlaceholderScreen(title: AppTab.accounts.title, systemImage: AppTab.accounts.icon, tab: .accounts)
                 case .watchlist:
-                    PlaceholderScreen(title: AppTab.watchlist.title, systemImage: AppTab.watchlist.icon)
+                    PlaceholderScreen(title: AppTab.watchlist.title, systemImage: AppTab.watchlist.icon, tab: .watchlist)
                 case .income:
                     IncomeListView(userId: userId)
                 case .settings:

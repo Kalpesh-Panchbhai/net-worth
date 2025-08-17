@@ -4,14 +4,16 @@ struct AirbnbTabBar: View {
     @Binding var selected: AppTab
     let tabs: [AppTab]
     @Namespace private var ns
+    @EnvironmentObject private var tabCommands: TabCommandCenter
     
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 0) {
                 ForEach(tabs) { tab in
                     TabButton(tab: tab, isSelected: tab == selected, ns: ns) {
-                        if selected != tab { Haptics.selection() }
-                        selected = tab
+                        if selected != tab { Haptics.selection(); selected = tab }
+                        // On any tap, request scroll-to-bottom for that tab
+                        DispatchQueue.main.async { tabCommands.scrollToBottomRequest = tab }
                     }
                 }
             }

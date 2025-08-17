@@ -5,6 +5,7 @@ struct SettingsView: View {
     @AppStorage("appAppearance") private var appAppearanceRaw: String = AppAppearance.system.rawValue
     private var appAppearance: AppAppearance { AppAppearance(rawValue: appAppearanceRaw) ?? .system }
     @State private var navCollapsed = false
+    @EnvironmentObject private var tabCommands: TabCommandCenter
     
     private var appearanceBinding: Binding<AppAppearance> {
         Binding(
@@ -18,7 +19,8 @@ struct SettingsView: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
+            ScrollViewReader { proxy in
+                ScrollView {
                 GeometryReader { proxy in
                     Color.clear.preference(key: NavBarOffsetKey.self, value: proxy.frame(in: .named("settingsScroll")).minY)
                 }
@@ -29,9 +31,17 @@ struct SettingsView: View {
                     DataCard(userId: userId)
                 }
                 .padding(16)
+                // Bottom anchor
+                Color.clear.frame(height: 1).id("settingsBottom")
+                }
+                .background(Color.canvasBackground.ignoresSafeArea())
+                .coordinateSpace(name: "settingsScroll")
+                .onChange(of: tabCommands.scrollToBottomRequest) { _, req in
+                    guard req == .settings else { return }
+                    withAnimation(.easeInOut(duration: 0.35)) { proxy.scrollTo("settingsBottom", anchor: .bottom) }
+                    DispatchQueue.main.async { tabCommands.scrollToBottomRequest = nil }
+                }
             }
-            .background(Color.canvasBackground.ignoresSafeArea())
-            .coordinateSpace(name: "settingsScroll")
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)
             .airbnbNavBarBackground(collapsed: navCollapsed)

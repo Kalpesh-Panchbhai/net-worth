@@ -5,6 +5,7 @@ import UIKit
 struct net_worthApp: App {
     @StateObject private var networkMonitor = NetworkMonitor()
     @StateObject private var bannerCenter = BannerCenter()
+    @StateObject private var tabCommands = TabCommandCenter()
     init() {
         // Hide hairline at top (scroll edge large title), show after scrolling (standard)
         let scrollEdge = UINavigationBarAppearance()
@@ -27,6 +28,7 @@ struct net_worthApp: App {
             RootView(userId: 1)
                 .environmentObject(networkMonitor)
                 .environmentObject(bannerCenter)
+                .environmentObject(tabCommands)
                 .tint(.airbnbPrimary)
         }
     }

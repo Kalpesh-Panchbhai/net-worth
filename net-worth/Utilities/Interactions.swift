@@ -44,3 +44,8 @@ final class NetworkMonitor: ObservableObject {
     }
     deinit { monitor.cancel() }
 }
+
+// MARK: - Tab Command Center (e.g., scroll to bottom on retap)
+final class TabCommandCenter: ObservableObject {
+    @Published var scrollToBottomRequest: AppTab? = nil
+}
