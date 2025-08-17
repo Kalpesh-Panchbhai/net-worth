@@ -50,7 +50,7 @@ struct DataCard: View {
                 NavigationLink {
                     IncomeTypesView(userId: userId)
                 } label: {
-                    SettingsCell(icon: "list.bullet", title: "Income types", subtitle: "View all income types") {
+                    SettingsCell(icon: "creditcard", title: "Income sources", subtitle: "View all income sources") {
                         Image(systemName: "chevron.right")
                             .font(.footnote.weight(.semibold))
                             .foregroundColor(.secondary)

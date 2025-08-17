@@ -4,10 +4,10 @@ struct IncomeTypesView: View {
     let userId: Int
     var body: some View {
         NamedEntitiesListView<IncomeType>(
-            title: "Income types",
+            title: "Income sources",
             userId: userId,
-            regularIcon: "list.bullet",
-            defaultIcon: "star.fill",
+            regularIcon: "creditcard",
+            defaultIcon: "creditcard.fill",
             fetch: { service, uid in try await service.fetchIncomeTypes(userId: uid) },
             setDefault: { service, item in try await service.setDefault(incomeType: item) }
         )
