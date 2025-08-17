@@ -62,4 +62,44 @@ struct IncomeService {
             throw APIError.transport(error)
         }
     }
+
+    func fetchIncomeTypes(userId: Int) async throws -> [IncomeType] {
+        let url = baseURL.appendingPathComponent("income_type").appendingPathComponent(String(userId))
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard let http = response as? HTTPURLResponse else { throw APIError.badStatus(-1) }
+            guard (200...299).contains(http.statusCode) else { throw APIError.badStatus(http.statusCode) }
+            do {
+                let decoder = JSONDecoder()
+                return try decoder.decode([IncomeType].self, from: data)
+            } catch {
+                throw APIError.decoding(error)
+            }
+        } catch {
+            throw APIError.transport(error)
+        }
+    }
+
+    func fetchIncomeTags(userId: Int) async throws -> [IncomeTag] {
+        let url = baseURL.appendingPathComponent("income_tag").appendingPathComponent(String(userId))
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard let http = response as? HTTPURLResponse else { throw APIError.badStatus(-1) }
+            guard (200...299).contains(http.statusCode) else { throw APIError.badStatus(http.statusCode) }
+            do {
+                let decoder = JSONDecoder()
+                return try decoder.decode([IncomeTag].self, from: data)
+            } catch {
+                throw APIError.decoding(error)
+            }
+        } catch {
+            throw APIError.transport(error)
+        }
+    }
 }

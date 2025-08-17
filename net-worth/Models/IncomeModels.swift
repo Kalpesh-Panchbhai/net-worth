@@ -7,12 +7,24 @@ struct IncomeType: Codable, Identifiable, Hashable {
     let isDefault: Bool
 }
 
+// MARK: - Reusable Named Entity protocol
+protocol NamedEntity: Identifiable, Hashable, Codable {
+    var id: Int { get }
+    var userId: Int { get }
+    var name: String { get }
+    var isDefault: Bool { get }
+}
+
+extension IncomeType: NamedEntity {}
+
 struct IncomeTag: Codable, Identifiable, Hashable {
     let id: Int
     let userId: Int
     let name: String
     let isDefault: Bool
 }
+
+extension IncomeTag: NamedEntity {}
 
 struct Income: Codable, Identifiable, Hashable {
     let id: Int

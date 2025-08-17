@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct SettingsView: View {
+    let userId: Int
     @AppStorage("appAppearance") private var appAppearanceRaw: String = AppAppearance.system.rawValue
     private var appAppearance: AppAppearance { AppAppearance(rawValue: appAppearanceRaw) ?? .system }
     @State private var navCollapsed = false
@@ -25,6 +26,7 @@ struct SettingsView: View {
                 VStack(spacing: 16) {
                     AppearanceCard(selection: appearanceBinding)
                     SecurityCard()
+                    DataCard(userId: userId)
                 }
                 .padding(16)
             }
@@ -35,6 +37,37 @@ struct SettingsView: View {
             .airbnbNavBarBackground(collapsed: navCollapsed)
             .onPreferenceChange(NavBarOffsetKey.self) { y in
                 withAnimation(.easeInOut(duration: 0.2)) { navCollapsed = y < -8 }
+            }
+        }
+    }
+}
+
+struct DataCard: View {
+    let userId: Int
+    var body: some View {
+        SettingsGroup(title: "Data") {
+            VStack(spacing: 0) {
+                NavigationLink {
+                    IncomeTypesView(userId: userId)
+                } label: {
+                    SettingsCell(icon: "list.bullet", title: "Income types", subtitle: "View all income types") {
+                        Image(systemName: "chevron.right")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundColor(.secondary)
+                    }
+                }
+                Rectangle().fill(Color.subtleSeparator)
+                    .frame(height: 0.5)
+                    .padding(.horizontal, 12)
+                NavigationLink {
+                    IncomeTagsView(userId: userId)
+                } label: {
+                    SettingsCell(icon: "tag", title: "Income tags", subtitle: "View all income tags") {
+                        Image(systemName: "chevron.right")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundColor(.secondary)
+                    }
+                }
             }
         }
     }

@@ -33,7 +33,7 @@ struct RootView: View {
                 case .income:
                     IncomeListView(userId: userId)
                 case .settings:
-                    SettingsView()
+                    SettingsView(userId: userId)
                 }
             }
         }

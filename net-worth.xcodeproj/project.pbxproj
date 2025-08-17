@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7D2FBCA12E51B43A0046FE17 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FBCA02E51B43A0046FE17 /* NetworkMonitor.swift */; };
+		7D2FBCA32E51CCDD0046FE17 /* IncomeTypesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FBCA22E51CCDD0046FE17 /* IncomeTypesView.swift */; };
+		7D2FBCA52E51CCE50046FE17 /* ConnectivityBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FBCA42E51CCE50046FE17 /* ConnectivityBanner.swift */; };
+		7D2FBCA72E51CEF70046FE17 /* IncomeTagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FBCA62E51CEF70046FE17 /* IncomeTagsView.swift */; };
+		7D2FBCA92E51CEFD0046FE17 /* NamedEntitiesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FBCA82E51CEFD0046FE17 /* NamedEntitiesListView.swift */; };
 		7D59B4012BE246FF006F3F00 /* net_worthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4002BE246FF006F3F00 /* net_worthApp.swift */; };
 		7D59B4052BE24701006F3F00 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B4042BE24701006F3F00 /* Assets.xcassets */; };
 		7D59B4082BE24701006F3F00 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B4072BE24701006F3F00 /* Preview Assets.xcassets */; };
@@ -35,7 +38,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		7D2FBCA02E51B43A0046FE17 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
+		7D2FBCA22E51CCDD0046FE17 /* IncomeTypesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTypesView.swift; sourceTree = "<group>"; };
+		7D2FBCA42E51CCE50046FE17 /* ConnectivityBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityBanner.swift; sourceTree = "<group>"; };
+		7D2FBCA62E51CEF70046FE17 /* IncomeTagsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTagsView.swift; sourceTree = "<group>"; };
+		7D2FBCA82E51CEFD0046FE17 /* NamedEntitiesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamedEntitiesListView.swift; sourceTree = "<group>"; };
 		7D59B3FD2BE246FF006F3F00 /* net-worth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "net-worth.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D59B4002BE246FF006F3F00 /* net_worthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = net_worthApp.swift; sourceTree = "<group>"; };
 		7D59B4042BE24701006F3F00 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -150,7 +156,6 @@
 				7DAA00072BE3000000000007 /* Interactions.swift */,
 				7DAA00112BE3000000000011 /* Motion.swift */,
 				7DAA00082BE3000000000008 /* NavBarUtils.swift */,
-				7D2FBCA02E51B43A0046FE17 /* NetworkMonitor.swift */,
 				7DAA00092BE3000000000009 /* Shimmer.swift */,
 				7DAA00102BE3000000000010 /* Transitions.swift */,
 			);
@@ -180,6 +185,8 @@
 		7DAA10002BE30000000000B1 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				7D2FBCA62E51CEF70046FE17 /* IncomeTagsView.swift */,
+				7D2FBCA22E51CCDD0046FE17 /* IncomeTypesView.swift */,
 				7DAA000B2BE300000000000B /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -188,6 +195,8 @@
 		7DAA10002BE30000000000B2 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				7D2FBCA82E51CEFD0046FE17 /* NamedEntitiesListView.swift */,
+				7D2FBCA42E51CCE50046FE17 /* ConnectivityBanner.swift */,
 				7DAA000C2BE300000000000C /* PlaceholderScreen.swift */,
 			);
 			path = Shared;
@@ -288,17 +297,20 @@
 				7DAA10042BE3000000000004 /* IncomeController.swift in Sources */,
 				7DAA10052BE3000000000005 /* Formatters.swift in Sources */,
 				7DAA10062BE3000000000006 /* Design.swift in Sources */,
+				7D2FBCA32E51CCDD0046FE17 /* IncomeTypesView.swift in Sources */,
 				7DAA10072BE3000000000007 /* Interactions.swift in Sources */,
+				7D2FBCA92E51CEFD0046FE17 /* NamedEntitiesListView.swift in Sources */,
 				7DAA10082BE3000000000008 /* NavBarUtils.swift in Sources */,
 				7DAA10092BE3000000000009 /* Shimmer.swift in Sources */,
 				7DAA100A2BE300000000000A /* AirbnbTabBar.swift in Sources */,
 				7DAA100B2BE300000000000B /* SettingsView.swift in Sources */,
 				7DAA100C2BE300000000000C /* PlaceholderScreen.swift in Sources */,
+				7D2FBCA72E51CEF70046FE17 /* IncomeTagsView.swift in Sources */,
 				7DAA100D2BE300000000000D /* IncomeViews.swift in Sources */,
 				7DAA100E2BE300000000000E /* AppAppearance.swift in Sources */,
 				7DAA100F2BE300000000000F /* RootView.swift in Sources */,
-				7D2FBCA12E51B43A0046FE17 /* NetworkMonitor.swift in Sources */,
 				7DAA10102BE3000000000010 /* Transitions.swift in Sources */,
+				7D2FBCA52E51CCE50046FE17 /* ConnectivityBanner.swift in Sources */,
 				7DAA10112BE3000000000011 /* Motion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
