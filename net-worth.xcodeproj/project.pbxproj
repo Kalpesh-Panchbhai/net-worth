@@ -36,6 +36,10 @@
 		7DAA100F2BE300000000000F /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA000F2BE300000000000F /* RootView.swift */; };
 		7DAA10102BE3000000000010 /* Transitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00102BE3000000000010 /* Transitions.swift */; };
 		7DAA10112BE3000000000011 /* Motion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00112BE3000000000011 /* Motion.swift */; };
+		7DAB01012E70000100000001 /* WatchModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAB02012E70000100000001 /* WatchModels.swift */; };
+		7DAB01022E70000100000002 /* WatchlistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAB02022E70000100000002 /* WatchlistController.swift */; };
+		7DAB01032E70000100000003 /* WatchlistViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAB02032E70000100000003 /* WatchlistViews.swift */; };
+		7DAB01042E70000200000004 /* FloatingActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAB02042E70000200000004 /* FloatingActionButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +71,10 @@
 		7DAA000F2BE300000000000F /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		7DAA00102BE3000000000010 /* Transitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transitions.swift; sourceTree = "<group>"; };
 		7DAA00112BE3000000000011 /* Motion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Motion.swift; sourceTree = "<group>"; };
+		7DAB02012E70000100000001 /* WatchModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchModels.swift; sourceTree = "<group>"; };
+		7DAB02022E70000100000002 /* WatchlistController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistController.swift; sourceTree = "<group>"; };
+		7DAB02032E70000100000003 /* WatchlistViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistViews.swift; sourceTree = "<group>"; };
+		7DAB02042E70000200000004 /* FloatingActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingActionButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +138,7 @@
 				7DAA000E2BE300000000000E /* AppAppearance.swift */,
 				7DAA00012BE3000000000001 /* AppTab.swift */,
 				7DAA00022BE3000000000002 /* IncomeModels.swift */,
+				7DAB02012E70000100000001 /* WatchModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -147,6 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				7DAA00042BE3000000000004 /* IncomeController.swift */,
+				7DAB02022E70000100000002 /* WatchlistController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -173,6 +183,7 @@
 				7DAA10002BE30000000000B1 /* Settings */,
 				7DAA10002BE30000000000B2 /* Shared */,
 				7DAA10002BE30000000000B0 /* TabBar */,
+				7DAB03012E70000100000001 /* Watchlist */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -201,6 +212,7 @@
 				7D74B2912E52375A00E35786 /* BannerCenter.swift */,
 				7D2FBCA82E51CEFD0046FE17 /* NamedEntitiesListView.swift */,
 				7DAA000C2BE300000000000C /* PlaceholderScreen.swift */,
+				7DAB02042E70000200000004 /* FloatingActionButton.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -211,6 +223,14 @@
 				7DAA000D2BE300000000000D /* IncomeViews.swift */,
 			);
 			path = Income;
+			sourceTree = "<group>";
+		};
+		7DAB03012E70000100000001 /* Watchlist */ = {
+			isa = PBXGroup;
+			children = (
+				7DAB02032E70000100000003 /* WatchlistViews.swift */,
+			);
+			path = Watchlist;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -316,6 +336,10 @@
 				7DAA100F2BE300000000000F /* RootView.swift in Sources */,
 				7DAA10102BE3000000000010 /* Transitions.swift in Sources */,
 				7DAA10112BE3000000000011 /* Motion.swift in Sources */,
+				7DAB01012E70000100000001 /* WatchModels.swift in Sources */,
+				7DAB01022E70000100000002 /* WatchlistController.swift in Sources */,
+				7DAB01032E70000100000003 /* WatchlistViews.swift in Sources */,
+				7DAB01042E70000200000004 /* FloatingActionButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

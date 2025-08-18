@@ -14,6 +14,22 @@ struct RootView: View {
         case .dark: return .dark
         }
     }
+
+    @ViewBuilder
+    private func tabContent() -> some View {
+        switch selected {
+        case .home:
+            PlaceholderScreen(title: AppTab.home.title, systemImage: AppTab.home.icon, tab: .home)
+        case .accounts:
+            PlaceholderScreen(title: AppTab.accounts.title, systemImage: AppTab.accounts.icon, tab: .accounts)
+        case .watchlist:
+            WatchlistListView(userId: userId)
+        case .income:
+            IncomeListView(userId: userId)
+        case .settings:
+            SettingsView(userId: userId)
+        }
+    }
     @AppStorage("biometricLockEnabled") private var biometricEnabled: Bool = false
     @AppStorage("allowPasscodeFallback") private var allowPasscodeFallback: Bool = true
     @State private var isLocked: Bool = false
@@ -22,20 +38,7 @@ struct RootView: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            Group {
-                switch selected {
-                case .home:
-                    PlaceholderScreen(title: AppTab.home.title, systemImage: AppTab.home.icon, tab: .home)
-                case .accounts:
-                    PlaceholderScreen(title: AppTab.accounts.title, systemImage: AppTab.accounts.icon, tab: .accounts)
-                case .watchlist:
-                    PlaceholderScreen(title: AppTab.watchlist.title, systemImage: AppTab.watchlist.icon, tab: .watchlist)
-                case .income:
-                    IncomeListView(userId: userId)
-                case .settings:
-                    SettingsView(userId: userId)
-                }
-            }
+            tabContent()
         }
         .safeAreaInset(edge: .bottom) {
             AirbnbTabBar(selected: $selected, tabs: AppTab.allCases)

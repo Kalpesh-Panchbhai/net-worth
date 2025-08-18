@@ -151,9 +151,9 @@ struct IncomeListView: View {
                 }
             }
             .overlay(alignment: .bottomTrailing) {
-                FloatingAddButton { Haptics.softImpact() }
+                FloatingActionButton(accessibilityLabel: "Add income") { Haptics.softImpact() }
                     .padding(.trailing, 16)
-                    .padding(.bottom, 96)
+                    .padding(.bottom, 56)
             }
             .navigationTitle("Incomes")
             .navigationBarTitleDisplayMode(.large)
@@ -647,24 +647,7 @@ extension IncomeRowCard {
 
 // Sparkline removed per new design
 
-// MARK: - Floating Add Button
-private struct FloatingAddButton: View {
-    var action: () -> Void
-    var body: some View {
-        Button(action: action) {
-            Image(systemName: "plus")
-                .font(.headline)
-                .foregroundColor(.white)
-                .frame(width: 56, height: 56)
-                .background(
-                    Circle().fill(LinearGradient.airbnbAccent)
-                )
-                .shadow(color: .airbnbPrimary.opacity(0.35), radius: 12, x: 0, y: 6)
-        }
-        .buttonStyle(PressableButtonStyle(scale: 0.94))
-        .accessibilityLabel("Add income")
-    }
-}
+// FloatingAddButton moved to Shared/FloatingActionButton.swift
 
 // MARK: - Cards
 private struct EmptyStateCard: View {

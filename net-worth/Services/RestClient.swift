@@ -144,6 +144,22 @@ extension RestClient {
     func fetchIncomeTags(userId: Int) async throws -> [IncomeTag] {
         try await getList("income_tag/\(userId)")
     }
+    func fetchWatchlists(userId: Int) async throws -> [Watchlist] {
+        try await getList("watch/\(userId)")
+    }
+    func createWatchlist(userId: Int, name: String) async throws -> Watchlist {
+        struct Payload: Codable { let userId: Int; let name: String }
+        let body = Payload(userId: userId, name: name)
+        return try await postWithFallback("watch", body: body) { newId in
+            Watchlist(
+                id: newId ?? -1,
+                userId: userId,
+                name: name,
+                totalAccount: 0,
+                value: WatchlistValue(currentValue: 0, previousValue: 0, invested: 0)
+            )
+        }
+    }
     func setDefault(incomeType: IncomeType) async throws {
         let payload = IncomeType(
             id: incomeType.id, userId: incomeType.userId, name: incomeType.name, isDefault: true)
