@@ -66,6 +66,44 @@ final class WatchlistController: ObservableObject {
         }
     }
 
+    // MARK: - Delete
+    func delete(_ item: Watchlist) async -> Bool {
+        do {
+            try await client.deleteWatchlist(id: item.id)
+            self.items.removeAll { $0.id == item.id }
+            return true
+        } catch let api as APIError {
+            self.errorMessage = api.errorDescription ?? "Request failed"
+            return false
+        } catch {
+            self.errorMessage = error.localizedDescription
+            return false
+        }
+    }
+
+    // MARK: - Rename
+    func rename(_ item: Watchlist, to newName: String) async -> Bool {
+        let trimmed = newName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return false }
+        do {
+            try await client.updateWatchlist(id: item.id, userId: userId, name: trimmed)
+            if let idx = items.firstIndex(where: { $0.id == item.id }) {
+                var updated = items
+                var changed = updated[idx]
+                changed = Watchlist(id: changed.id, userId: changed.userId, name: trimmed, totalAccount: changed.totalAccount, value: changed.value)
+                updated[idx] = changed
+                self.items = sortWatchlists(updated)
+            }
+            return true
+        } catch let api as APIError {
+            self.errorMessage = api.errorDescription ?? "Request failed"
+            return false
+        } catch {
+            self.errorMessage = error.localizedDescription
+            return false
+        }
+    }
+
     // MARK: - Helpers
     private func sortWatchlists(_ list: [Watchlist]) -> [Watchlist] {
         list.sorted { a, b in

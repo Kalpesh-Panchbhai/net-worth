@@ -160,6 +160,13 @@ extension RestClient {
             )
         }
     }
+    func deleteWatchlist(id: Int) async throws {
+        try await delete("watch/\(id)")
+    }
+    func updateWatchlist(id: Int, userId: Int, name: String) async throws {
+        struct Payload: Codable { let id: Int; let userId: Int; let name: String }
+        try await patch("watch", body: Payload(id: id, userId: userId, name: name))
+    }
     func setDefault(incomeType: IncomeType) async throws {
         let payload = IncomeType(
             id: incomeType.id, userId: incomeType.userId, name: incomeType.name, isDefault: true)

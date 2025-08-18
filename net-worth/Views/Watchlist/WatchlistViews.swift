@@ -9,6 +9,10 @@ struct WatchlistListView: View {
     @State private var showCreate = false
     @State private var createName = ""
     @State private var creating = false
+    @State private var pendingDelete: Watchlist? = nil
+    @State private var renaming: Watchlist? = nil
+    @State private var renameText: String = ""
+    @State private var renamingSaving: Bool = false
 
     init(userId: Int) {
         _vm = StateObject(wrappedValue: WatchlistController(userId: userId))
@@ -39,7 +43,19 @@ struct WatchlistListView: View {
                             } else if vm.items.isEmpty {
                                 EmptyStateCard(text: "No watchlists yet")
                             } else {
-                                WatchlistRowsList(items: vm.items, currency: vm.displayCurrency)
+                                WatchlistRowsList(
+                                    items: vm.items,
+                                    currency: vm.displayCurrency,
+                                    onRename: { item in
+                                        renaming = item
+                                        renameText = item.name
+                                        Haptics.selection()
+                                    },
+                                    onDelete: { item in
+                                        pendingDelete = item
+                                        Haptics.selection()
+                                    }
+                                )
                             }
 
                             Color.clear.frame(height: 1).id("watchBottom")
@@ -68,6 +84,23 @@ struct WatchlistListView: View {
         .fabOverlay(accessibilityLabel: "Add watchlist") {
             Haptics.selection()
             showCreate = true
+        }
+        .alert(item: $pendingDelete) { item in
+            Alert(
+                title: Text("Delete watchlist?"),
+                message: Text("This will remove \(item.name)."),
+                primaryButton: .destructive(Text("Delete")) {
+                    Task {
+                        let ok = await vm.delete(item)
+                        if ok { Haptics.success() } else {
+                            Haptics.softImpact()
+                            let msg = vm.errorMessage ?? "Failed to delete watchlist."
+                            banners.showError(message: msg, retryTitle: "Retry", retry: { Task { _ = await vm.delete(item) } })
+                        }
+                    }
+                },
+                secondaryButton: .cancel()
+            )
         }
         .task { await vm.load() }
         .refreshable { await vm.refresh() }
@@ -127,6 +160,58 @@ struct WatchlistListView: View {
             .presentationDetents([.height(220), .medium, .large])
             .interactiveDismissDisabled(creating)
             .presentationDragIndicator(.visible)
+        }
+        .sheet(item: $renaming) { item in
+            ZStack {
+                Rectangle().fill(.ultraThinMaterial).ignoresSafeArea()
+                NavigationStack {
+                    ScrollView {
+                        VStack(spacing: 16) {
+                            SettingsGroup(showHeader: false) {
+                                VStack(alignment: .leading, spacing: 12) {
+                                    TextField("Name", text: $renameText)
+                                        .textInputAutocapitalization(.words)
+                                        .disableAutocorrection(true)
+                                    Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(.horizontal, 0)
+                                }
+                                .padding(.horizontal, 4)
+                            }
+                            .padding(.horizontal, 16)
+                        }
+                        .padding(.vertical, 16)
+                        .background(Color.clear)
+                    }
+                    .navigationTitle("Rename")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") { renaming = nil }
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button(renamingSaving ? "Saving…" : "Save") {
+                                let name = renameText.trimmingCharacters(in: .whitespacesAndNewlines)
+                                guard !name.isEmpty else { return }
+                                renamingSaving = true
+                                Task {
+                                    let ok = await vm.rename(item, to: name)
+                                    if ok { Haptics.success(); renaming = nil } else {
+                                        Haptics.softImpact()
+                                        let msg = vm.errorMessage ?? "Failed to update."
+                                        banners.showError(message: msg, retryTitle: "Retry", retry: { Task { _ = await vm.rename(item, to: name) } })
+                                    }
+                                    renamingSaving = false
+                                }
+                            }
+                            .disabled(renameText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || renamingSaving)
+                        }
+                    }
+                    .toolbarBackground(Color.canvasBackground, for: .navigationBar)
+                    .toolbarBackground(.visible, for: .navigationBar)
+                }
+            }
+            .presentationDetents([.height(220), .medium, .large])
+            .presentationDragIndicator(.visible)
+            .interactiveDismissDisabled(renamingSaving)
         }
     }
 }
@@ -223,10 +308,17 @@ private struct ChangePill: View {
 private struct WatchlistRowsList: View {
     let items: [Watchlist]
     let currency: String
+    var onRename: (Watchlist) -> Void
+    var onDelete: (Watchlist) -> Void
     var body: some View {
         LazyVStack(spacing: 12) {
             ForEach(items, id: \.id) { item in
-                WatchlistRowCard(item: item, currency: currency)
+                WatchlistRowCard(
+                    item: item,
+                    currency: currency,
+                    onRename: item.name.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame ? nil : onRename,
+                    onDelete: item.name.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame ? nil : onDelete
+                )
             }
         }
     }
@@ -235,6 +327,8 @@ private struct WatchlistRowsList: View {
 private struct WatchlistRowCard: View {
     let item: Watchlist
     let currency: String
+    var onRename: ((Watchlist) -> Void)? = nil
+    var onDelete: ((Watchlist) -> Void)? = nil
 
     private var delta: Double { item.value.currentValue - item.value.invested }
     private var dayChange: Double { item.value.currentValue - item.value.previousValue }
@@ -297,6 +391,14 @@ private struct WatchlistRowCard: View {
         }
         .buttonStyle(PressableButtonStyle())
         .transition(.moveAndFade)
+        .contextMenu {
+            if let onRename {
+                Button { onRename(item) } label: { Label("Rename", systemImage: "pencil") }
+            }
+            if let onDelete {
+                Button(role: .destructive) { onDelete(item) } label: { Label("Delete", systemImage: "trash") }
+            }
+        }
     }
 }
 
