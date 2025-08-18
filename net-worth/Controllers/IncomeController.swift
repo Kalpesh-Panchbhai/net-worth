@@ -120,7 +120,7 @@ final class IncomeController: ObservableObject {
             let keys = grouped.keys.sorted(by: <)
             return keys.map { tag in
                 let items = (grouped[tag] ?? []).sorted { $0.creditedDate > $1.creditedDate }
-                return Section(title: "Tag: \(tag)", items: items)
+                return Section(title: tag, items: items)
             }
 
         case .source:
@@ -129,7 +129,7 @@ final class IncomeController: ObservableObject {
             let keys = grouped.keys.sorted(by: <)
             return keys.map { source in
                 let items = (grouped[source] ?? []).sorted { $0.creditedDate > $1.creditedDate }
-                return Section(title: "Source: \(source)", items: items)
+                return Section(title: source, items: items)
             }
 
         case .year:
@@ -140,7 +140,7 @@ final class IncomeController: ObservableObject {
             let keys = grouped.keys.sorted(by: >)
             return keys.map { year in
                 let items = (grouped[year] ?? []).sorted { $0.creditedDate > $1.creditedDate }
-                return Section(title: "Year: \(year)", items: items)
+                return Section(title: String(year), items: items)
             }
 
         case .fy:

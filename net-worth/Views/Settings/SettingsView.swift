@@ -112,10 +112,6 @@ struct SettingsGroup<Content: View>: View {
                     .fill(Color.elevatedBackground)
             )
             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke(Color.subtleSeparator, lineWidth: 1)
-            )
             .elevatedShadow()
             if let footer, !footer.isEmpty {
                 Text(footer)
@@ -256,10 +252,6 @@ struct AppearancePreview: View {
             .padding(12)
         }
         .frame(height: 120)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(Color.subtleSeparator, lineWidth: 1)
-        )
         .preferredColorScheme(scheme)
     }
 }

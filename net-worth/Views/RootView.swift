@@ -74,10 +74,6 @@ struct RootView: View {
                         RoundedRectangle(cornerRadius: 16, style: .continuous)
                             .fill(Color.elevatedBackground)
                     )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .stroke(Color.subtleSeparator, lineWidth: 1)
-                    )
                     .elevatedShadow()
                     .padding(24)
                 }

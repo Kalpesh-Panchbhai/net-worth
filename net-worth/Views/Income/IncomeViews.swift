@@ -128,7 +128,7 @@ struct IncomeListView: View {
                             } else {
                                 LazyVStack(spacing: 12) {
                                     ForEach(vm.sections) { section in
-                                        SectionHeader(title: section.title)
+                                        SectionHeader(grouping: vm.grouping, rawTitle: section.title, count: section.items.count)
                                             .padding(.top, 8)
                                         ForEach(section.items, id: \.id) { item in
                                             IncomeRowCard(income: item)
@@ -433,15 +433,48 @@ private struct StatPill: View {
 }
 
 private struct SectionHeader: View {
-    let title: String
+    let grouping: IncomeController.Grouping
+    let rawTitle: String
+    let count: Int
+
+    private var iconName: String {
+        switch grouping {
+        case .month: return "calendar"
+        case .year: return "calendar"
+        case .fy: return "calendar"
+        case .tag: return "tag"
+        case .source: return "square.grid.2x2"
+        }
+    }
+
     var body: some View {
-        HStack {
-            Text(title)
-                .font(.title3).bold()
+        HStack(spacing: 10) {
+            ZStack {
+                Circle()
+                    .fill(Color.airbnbPrimary.opacity(0.12))
+                    .frame(width: 26, height: 26)
+                Image(systemName: iconName)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundColor(.airbnbPrimary)
+            }
+            Text(rawTitle)
+                .font(.headline)
+                .foregroundColor(.primary)
+                .lineLimit(1)
+                .truncationMode(.tail)
             Spacer()
+            Text("\(count)")
+                .font(.caption2.bold())
+                .foregroundColor(.airbnbPrimary)
+                .padding(.vertical, 4)
+                .padding(.horizontal, 8)
+                .background(
+                    Capsule(style: .continuous)
+                        .fill(Color.airbnbPrimary.opacity(0.12))
+                )
         }
         .padding(.horizontal, 2)
-        .padding(.bottom, 4)
+        .padding(.vertical, 6)
     }
 }
 
@@ -517,12 +550,8 @@ private struct IncomeRowCard: View {
             }
             .padding(16)
             .background(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .fill(Color.elevatedBackground)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(Color.subtleSeparator, lineWidth: 1)
             )
             .elevatedShadow()
         }
@@ -552,12 +581,8 @@ extension IncomeRowCard {
         }
         .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color.elevatedBackground)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(Color.subtleSeparator, lineWidth: 1)
         )
         .elevatedShadow()
     }
@@ -595,12 +620,8 @@ private struct EmptyStateCard: View {
         .frame(maxWidth: .infinity)
         .padding(32)
         .background(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color.elevatedBackground)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(Color.subtleSeparator, lineWidth: 1)
         )
         .elevatedShadow()
     }
