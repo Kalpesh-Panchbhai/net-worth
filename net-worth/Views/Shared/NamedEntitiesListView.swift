@@ -121,13 +121,7 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
             .interactiveDismissDisabled(creating)
             .presentationDragIndicator(.visible)
         }
-        .overlay(alignment: .bottomTrailing) {
-            if create != nil {
-                FloatingPlusButton { isShowingCreate = true }
-                    .padding(.trailing, 16)
-                    .padding(.bottom, 96)
-            }
-        }
+        .fabOverlay(accessibilityLabel: "Add", isVisible: create != nil) { isShowingCreate = true }
         .onChange(of: errorMessage) { _, newValue in
             guard let message = newValue, !message.isEmpty else { return }
             banners.showError(message: message, retryTitle: "Retry", retry: { Task { await load() } })
@@ -216,22 +210,7 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
 
 }
 
-// MARK: - Floating + Button
-private struct FloatingPlusButton: View {
-    var action: () -> Void
-    var body: some View {
-        Button(action: action) {
-            Image(systemName: "plus")
-                .font(.headline)
-                .foregroundColor(.white)
-                .frame(width: 56, height: 56)
-                .background(Circle().fill(LinearGradient.airbnbAccent))
-                .shadow(color: .airbnbPrimary.opacity(0.35), radius: 12, x: 0, y: 6)
-        }
-        .buttonStyle(PressableButtonStyle(scale: 0.94))
-        .accessibilityLabel("Add")
-    }
-}
+// FloatingPlusButton replaced by Shared/FloatingActionButton
 
 // Row
 private struct NamedEntityRow<T: NamedEntity>: View {

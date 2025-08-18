@@ -150,11 +150,7 @@ struct IncomeListView: View {
                     DispatchQueue.main.async { tabCommands.scrollToBottomRequest = nil }
                 }
             }
-            .overlay(alignment: .bottomTrailing) {
-                FloatingActionButton(accessibilityLabel: "Add income") { Haptics.softImpact() }
-                    .padding(.trailing, 16)
-                    .padding(.bottom, 56)
-            }
+            .fabOverlay(accessibilityLabel: "Add income") { Haptics.softImpact() }
             .navigationTitle("Incomes")
             .navigationBarTitleDisplayMode(.large)
             .airbnbNavBarBackground(collapsed: navCollapsed)

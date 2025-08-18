@@ -71,3 +71,35 @@ struct ElevatedShadow: ViewModifier {
 extension View {
     func elevatedShadow() -> some View { modifier(ElevatedShadow()) }
 }
+
+// MARK: - Global Layout Tokens
+enum LayoutConstants {
+    // Custom tab bar height used across the app
+    static let tabBarHeight: CGFloat = 50
+    // Floating Action Button default paddings
+    static let fabTrailing: CGFloat = 20
+    // Keep FAB close to the tab bar; since content sits above the safe-area inset
+    // (RootView uses .safeAreaInset for the tab bar), a small margin is sufficient.
+    static let fabBottomMargin: CGFloat = 16
+}
+
+extension View {
+    // Standardized padding for FloatingActionButton overlay so it hugs above the tab bar
+    func fabPadding() -> some View {
+        self
+            .padding(.trailing, LayoutConstants.fabTrailing)
+            .padding(.bottom, LayoutConstants.fabBottomMargin)
+    }
+    // Overlay helper that anchors the FAB to the content area's bottom-trailing.
+    // RootView adds the tab bar via .safeAreaInset. To sit just above it,
+    // lift by tabBarHeight + a small margin.
+    func fabOverlay(icon: String = "plus", accessibilityLabel: String = "Add", isVisible: Bool = true, action: @escaping () -> Void) -> some View {
+        overlay(alignment: .bottomTrailing) {
+            if isVisible {
+                FloatingActionButton(icon: icon, accessibilityLabel: accessibilityLabel, action: action)
+                    .padding(.trailing, LayoutConstants.fabTrailing)
+                    .padding(.bottom, LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin)
+            }
+        }
+    }
+}

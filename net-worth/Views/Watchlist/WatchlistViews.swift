@@ -65,13 +65,9 @@ struct WatchlistListView: View {
                 withAnimation(.easeInOut(duration: 0.2)) { navCollapsed = y < -8 }
             }
         }
-        .overlay(alignment: .bottomTrailing) {
-            FloatingActionButton(accessibilityLabel: "Add watchlist") {
-                Haptics.selection()
-                showCreate = true
-            }
-            .padding(.trailing, 16)
-            .padding(.bottom, 64)
+        .fabOverlay(accessibilityLabel: "Add watchlist") {
+            Haptics.selection()
+            showCreate = true
         }
         .task { await vm.load() }
         .refreshable { await vm.refresh() }
@@ -83,39 +79,54 @@ struct WatchlistListView: View {
             banners.showError(message: message, retryTitle: "Retry", retry: { Task { await vm.refresh() } })
         }
         .sheet(isPresented: $showCreate) {
-            NavigationStack {
-                Form {
-                    Section(header: Text("Name")) {
-                        TextField("Watchlist name", text: $createName)
-                            .textInputAutocapitalization(.words)
-                            .disableAutocorrection(true)
-                    }
-                }
-                .navigationTitle("New Watchlist")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") { showCreate = false }
-                    }
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button(creating ? "Saving…" : "Save") {
-                            let name = createName.trimmingCharacters(in: .whitespacesAndNewlines)
-                            guard !name.isEmpty else { return }
-                            creating = true
-                            Task {
-                                await vm.create(name: name)
-                                creating = false
-                                showCreate = false
-                                createName = ""
-                                Haptics.success()
+            ZStack {
+                Rectangle().fill(.ultraThinMaterial).ignoresSafeArea()
+                NavigationStack {
+                    ScrollView {
+                        VStack(spacing: 16) {
+                            SettingsGroup(showHeader: false) {
+                                VStack(alignment: .leading, spacing: 12) {
+                                    TextField("Name", text: $createName)
+                                        .textInputAutocapitalization(.words)
+                                        .disableAutocorrection(true)
+                                    Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(.horizontal, 0)
+                                }
+                                .padding(.horizontal, 4)
                             }
+                            .padding(.horizontal, 16)
                         }
-                        .disabled(createName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || creating)
+                        .padding(.vertical, 16)
+                        .background(Color.clear)
                     }
+                    .navigationTitle("New")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") { showCreate = false }
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button(creating ? "Saving…" : "Save") {
+                                let name = createName.trimmingCharacters(in: .whitespacesAndNewlines)
+                                guard !name.isEmpty else { return }
+                                creating = true
+                                Task {
+                                    await vm.create(name: name)
+                                    creating = false
+                                    showCreate = false
+                                    createName = ""
+                                    Haptics.success()
+                                }
+                            }
+                            .disabled(createName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || creating)
+                        }
+                    }
+                    .toolbarBackground(Color.canvasBackground, for: .navigationBar)
+                    .toolbarBackground(.visible, for: .navigationBar)
                 }
             }
-            .presentationDetents([.medium, .large])
+            .presentationDetents([.height(220), .medium, .large])
             .interactiveDismissDisabled(creating)
+            .presentationDragIndicator(.visible)
         }
     }
 }
