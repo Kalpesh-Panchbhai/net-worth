@@ -370,8 +370,8 @@ private struct SummaryCard: View {
                     .animation(.snappy(duration: 0.45), value: totalAll)
             }
             HStack(spacing: 8) {
-                StatPill(title: "Net income", value: totalNet, currency: currency)
-                StatPill(title: "Tax paid", value: totalTax, currency: currency)
+                StatPill(title: "Net income", value: totalNet, currency: currency, tint: .airbnbSuccess)
+                StatPill(title: "Tax paid", value: totalTax, currency: currency, tint: .airbnbPrimary)
                 Spacer(minLength: 0)
             }
         }
@@ -392,6 +392,7 @@ private struct StatPill: View {
     let title: String
     let value: Double
     let currency: String
+    var tint: Color = .airbnbPrimary
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
@@ -399,6 +400,7 @@ private struct StatPill: View {
                 .foregroundColor(.secondary)
             Text(value, format: .currency(code: currency))
                 .font(.headline)
+                .foregroundColor(tint)
                 .contentTransition(.numericText())
                 .animation(.snappy(duration: 0.45), value: value)
         }
@@ -406,7 +408,7 @@ private struct StatPill: View {
         .padding(.horizontal, 12)
         .background(
             Capsule(style: .continuous)
-                .fill(Color.airbnbPrimary.opacity(0.08))
+                .fill(tint.opacity(0.08))
         )
     }
 }
@@ -458,26 +460,36 @@ private struct IncomeRowCard: View {
                                 .allowsTightening(true)
                         }
                         VStack(alignment: .trailing, spacing: 6) {
-                            HStack(spacing: 8) {
-                                Text("Net").font(.caption2.bold()).foregroundColor(.secondary)
+                            HStack(spacing: 6) {
+                                Text("Net").font(.caption2.bold())
                                 Text(income.amount, format: .currency(code: income.currency))
                                     .font(.subheadline.weight(.semibold))
-                                    .foregroundColor(.primary)
                                     .monospacedDigit()
                                     .lineLimit(1)
                                     .minimumScaleFactor(0.8)
                                     .allowsTightening(true)
                             }
-                            HStack(spacing: 8) {
-                                Text("Tax").font(.caption2.bold()).foregroundColor(.airbnbPrimary)
+                            .foregroundColor(.airbnbSuccess)
+                            .padding(.vertical, 4)
+                            .padding(.horizontal, 8)
+                            .background(
+                                Capsule(style: .continuous).fill(Color.airbnbSuccess.opacity(0.12))
+                            )
+                            HStack(spacing: 6) {
+                                Text("Tax").font(.caption2.bold())
                                 Text(income.taxPaid, format: .currency(code: income.currency))
                                     .font(.subheadline.weight(.semibold))
-                                    .foregroundColor(.airbnbPrimary)
                                     .monospacedDigit()
                                     .lineLimit(1)
                                     .minimumScaleFactor(0.8)
                                     .allowsTightening(true)
                             }
+                            .foregroundColor(.airbnbPrimary)
+                            .padding(.vertical, 4)
+                            .padding(.horizontal, 8)
+                            .background(
+                                Capsule(style: .continuous).fill(Color.airbnbPrimary.opacity(0.12))
+                            )
                         }
                         .layoutPriority(1)
                     }
