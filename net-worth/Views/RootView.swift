@@ -21,7 +21,7 @@ struct RootView: View {
         case .home:
             PlaceholderScreen(title: AppTab.home.title, systemImage: AppTab.home.icon, tab: .home)
         case .accounts:
-            PlaceholderScreen(title: AppTab.accounts.title, systemImage: AppTab.accounts.icon, tab: .accounts)
+            AccountsListView(userId: userId)
         case .watchlist:
             WatchlistListView(userId: userId)
         case .income:

@@ -40,6 +40,9 @@
 		7DAB01022E70000100000002 /* WatchlistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAB02022E70000100000002 /* WatchlistController.swift */; };
 		7DAB01032E70000100000003 /* WatchlistViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAB02032E70000100000003 /* WatchlistViews.swift */; };
 		7DAB01042E70000200000004 /* FloatingActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAB02042E70000200000004 /* FloatingActionButton.swift */; };
+		7DAC01112E70000300000011 /* AccountModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAC01012E70000300000001 /* AccountModels.swift */; };
+		7DAC01122E70000300000012 /* AccountsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAC01022E70000300000002 /* AccountsController.swift */; };
+		7DAC01132E70000300000013 /* AccountsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAC01032E70000300000003 /* AccountsListView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -75,6 +78,9 @@
 		7DAB02022E70000100000002 /* WatchlistController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistController.swift; sourceTree = "<group>"; };
 		7DAB02032E70000100000003 /* WatchlistViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistViews.swift; sourceTree = "<group>"; };
 		7DAB02042E70000200000004 /* FloatingActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingActionButton.swift; sourceTree = "<group>"; };
+		7DAC01012E70000300000001 /* AccountModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountModels.swift; sourceTree = "<group>"; };
+		7DAC01022E70000300000002 /* AccountsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsController.swift; sourceTree = "<group>"; };
+		7DAC01032E70000300000003 /* AccountsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +145,7 @@
 				7DAA00012BE3000000000001 /* AppTab.swift */,
 				7DAA00022BE3000000000002 /* IncomeModels.swift */,
 				7DAB02012E70000100000001 /* WatchModels.swift */,
+				7DAC01012E70000300000001 /* AccountModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -157,6 +164,7 @@
 			children = (
 				7DAA00042BE3000000000004 /* IncomeController.swift */,
 				7DAB02022E70000100000002 /* WatchlistController.swift */,
+				7DAC01022E70000300000002 /* AccountsController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -179,6 +187,7 @@
 			isa = PBXGroup;
 			children = (
 				7DAA000F2BE300000000000F /* RootView.swift */,
+				7DAC02012E70000300000021 /* Accounts */,
 				7DAA10002BE30000000000B3 /* Income */,
 				7DAA10002BE30000000000B1 /* Settings */,
 				7DAA10002BE30000000000B2 /* Shared */,
@@ -186,6 +195,14 @@
 				7DAB03012E70000100000001 /* Watchlist */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		7DAC02012E70000300000021 /* Accounts */ = {
+			isa = PBXGroup;
+			children = (
+				7DAC01032E70000300000003 /* AccountsListView.swift */,
+			);
+			path = Accounts;
 			sourceTree = "<group>";
 		};
 		7DAA10002BE30000000000B0 /* TabBar */ = {
@@ -340,6 +357,9 @@
 				7DAB01022E70000100000002 /* WatchlistController.swift in Sources */,
 				7DAB01032E70000100000003 /* WatchlistViews.swift in Sources */,
 				7DAB01042E70000200000004 /* FloatingActionButton.swift in Sources */,
+				7DAC01112E70000300000011 /* AccountModels.swift in Sources */,
+				7DAC01122E70000300000012 /* AccountsController.swift in Sources */,
+				7DAC01132E70000300000013 /* AccountsListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

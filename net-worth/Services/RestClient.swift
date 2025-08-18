@@ -138,6 +138,9 @@ extension RestClient {
     func fetchIncomes(userId: Int) async throws -> [Income] {
         try await getList("income/\(userId)")
     }
+    func fetchAccounts(userId: Int) async throws -> [Account] {
+        try await getList("account/\(userId)")
+    }
     func fetchIncomeTypes(userId: Int) async throws -> [IncomeType] {
         try await getList("income_type/\(userId)")
     }
