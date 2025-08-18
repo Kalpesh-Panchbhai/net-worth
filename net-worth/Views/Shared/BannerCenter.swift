@@ -37,15 +37,17 @@ public final class BannerCenter: ObservableObject {
 // MARK: - Helpers
 public extension BannerCenter {
     func showError(message: String, retryTitle: String? = nil, retry: (() -> Void)? = nil) {
-        let isNetwork = message.localizedCaseInsensitiveContains("network") || message.localizedCaseInsensitiveContains("internet") || message.localizedCaseInsensitiveContains("offline")
-        let title = isNetwork ? "No internet connection" : "Something went wrong"
-        let subtitle = isNetwork ? "You're offline or the connection was lost." : nil
+        // Only treat as offline when the message explicitly indicates offline,
+        // not for generic transport errors, timeouts, or connection lost.
+        let isOffline = message.localizedCaseInsensitiveContains("offline") || message.localizedCaseInsensitiveContains("no internet")
+        let title = isOffline ? "No internet connection" : "Something went wrong"
+        let subtitle = isOffline ? "You're offline or the connection was lost." : nil
         show(
             AppBanner(
-                icon: isNetwork ? "wifi.exclamationmark" : "exclamationmark.triangle.fill",
+                icon: isOffline ? "wifi.exclamationmark" : "exclamationmark.triangle.fill",
                 title: title,
                 message: subtitle,
-                style: isNetwork ? .error : .warning,
+                style: isOffline ? .error : .warning,
                 actionTitle: retryTitle,
                 action: retry
             )

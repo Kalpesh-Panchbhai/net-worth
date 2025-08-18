@@ -39,8 +39,14 @@ final class IncomeController: ObservableObject {
         do {
             let list = try await client.fetchIncomes(userId: userId)
             self.incomes = list.sorted { $0.creditedDate > $1.creditedDate }
+        } catch let api as APIError {
+            // Suppress banners for user-initiated cancellations (common with pull-to-refresh overlapping loads)
+            if case .transport(let err) = api, let urlErr = err as? URLError, urlErr.code == .cancelled {
+                return
+            }
+            self.errorMessage = api.errorDescription ?? "Request failed"
         } catch {
-            self.errorMessage = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+            self.errorMessage = error.localizedDescription
         }
     }
     

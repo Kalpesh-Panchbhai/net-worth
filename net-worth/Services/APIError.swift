@@ -27,12 +27,15 @@ enum APIError: LocalizedError {
                 case .cannotFindHost, .cannotConnectToHost, .dnsLookupFailed:
                     return "Can’t reach the server. Please try again."
                 case .networkConnectionLost:
-                    return "The network connection was lost."
+                    return "The connection was lost. Please try again."
+                case .cancelled:
+                    // Silent cancellation (e.g., user-initiated refresh overlap). Don’t show a banner.
+                    return nil
                 default:
-                    return "Network error: \(urlErr.localizedDescription)"
+                    return "Request failed: \(urlErr.localizedDescription)"
                 }
             }
-            return "Network error: \(err.localizedDescription)"
+            return "Request failed: \(err.localizedDescription)"
         }
     }
 }
