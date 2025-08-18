@@ -73,7 +73,7 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
             .padding(.vertical, 16)
             .padding(.horizontal, 16)
         }
-        .refreshable { await load(force: true) }
+        .refreshable { await load(force: true, suppressErrors: true) }
         .background(Color.canvasBackground.ignoresSafeArea())
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
@@ -134,7 +134,7 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
         }
     }
 
-    private func load(force: Bool = false) async {
+    private func load(force: Bool = false, suppressErrors: Bool = false) async {
         if isLoading && !force { return }
         await MainActor.run {
             errorMessage = nil
@@ -158,7 +158,10 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
                 // ignore
             } else {
                 let message = (error as? APIError)?.errorDescription ?? error.localizedDescription
-                await MainActor.run { errorMessage = message }
+                // Suppress banners during pull-to-refresh if we already have data
+                if !suppressErrors && items.isEmpty {
+                    await MainActor.run { errorMessage = message }
+                }
             }
         }
         await MainActor.run { isLoading = false }

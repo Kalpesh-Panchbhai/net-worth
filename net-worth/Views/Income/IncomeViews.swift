@@ -172,6 +172,8 @@ struct IncomeListView: View {
         .animation(.easeInOut(duration: 0.2), value: vm.grouping)
         .onChange(of: vm.errorMessage) { _, newValue in
             guard let message = newValue, !message.isEmpty else { return }
+            // Suppress banners for pull-to-refresh if we already have data
+            guard vm.incomes.isEmpty else { return }
             banners.showError(
                 message: message, retryTitle: "Retry", retry: { Task { await vm.refresh() } })
         }
