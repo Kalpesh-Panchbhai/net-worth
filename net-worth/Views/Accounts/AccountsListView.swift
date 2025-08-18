@@ -45,13 +45,16 @@ struct AccountsListView: View {
                                 )
                                 .padding(.horizontal, 16)
                                 .padding(.bottom, 12)
-                                HStack {
-                                    Toggle("Hide inactive", isOn: $hideInactive)
-                                        .toggleStyle(SwitchToggleStyle(tint: .airbnbPrimary))
-                                        .font(.subheadline.weight(.semibold))
-                                    Spacer(minLength: 0)
+                                let hasInactive = vm.items.contains { !$0.active }
+                                if hasInactive {
+                                    HStack {
+                                        Toggle("Hide inactive", isOn: $hideInactive)
+                                            .toggleStyle(SwitchToggleStyle(tint: .airbnbPrimary))
+                                            .font(.subheadline.weight(.semibold))
+                                        Spacer(minLength: 0)
+                                    }
+                                    .padding(.horizontal, 2)
                                 }
-                                .padding(.horizontal, 2)
                                 let sections = groupedSections()
                                 LazyVStack(spacing: 12, pinnedViews: [.sectionHeaders]) {
                                     ForEach(sections, id: \.title) { section in
@@ -282,7 +285,8 @@ private struct AccountRow: View {
 private extension AccountsListView {
     struct SectionData { let title: String; let items: [Account] }
     func groupedSections() -> [SectionData] {
-        let base = hideInactive ? vm.items.filter { $0.active } : vm.items
+        let anyInactive = vm.items.contains { !$0.active }
+        let base = (anyInactive && hideInactive) ? vm.items.filter { $0.active } : vm.items
         let order = ["Broker", "Saving", "Loan", "Other"]
         var buckets: [String: [Account]] = [:]
         for acc in base {
