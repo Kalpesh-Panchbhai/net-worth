@@ -37,17 +37,32 @@ struct IncomeListView: View {
                             )
                             .padding(.top, 8)
                             HStack(spacing: 8) {
+                                // Group-by control
+                                Menu {
+                                    Picker("Group by", selection: $vm.grouping) {
+                                        ForEach(IncomeController.Grouping.allCases) { g in
+                                            Text(g.title).tag(g)
+                                        }
+                                    }
+                                } label: {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: "square.grid.2x2")
+                                        Text(vm.grouping.title)
+                                    }
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundColor(.airbnbPrimary)
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 12)
+                                    .background(Capsule().fill(Color.airbnbPrimary.opacity(0.12)))
+                                }
+
+                                // Filters button
                                 Button {
                                     showFilterSheet = true
                                     Haptics.selection()
                                 } label: {
                                     HStack(spacing: 8) {
-                                        Image(systemName: "line.3.horizontal.decrease.circle")
-                                        if activeCount == 0 {
-                                            Text("Filter")
-                                        } else {
-                                            Text("\(activeCount) filters")
-                                        }
+                                        Image(systemName: activeCount == 0 ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
                                     }
                                     .font(.subheadline.weight(.semibold))
                                     .foregroundColor(.airbnbPrimary)
@@ -56,6 +71,10 @@ struct IncomeListView: View {
                                     .background(Capsule().fill(Color.airbnbPrimary.opacity(0.12)))
                                 }
                                 .buttonStyle(PressableButtonStyle())
+
+                                Spacer(minLength: 0)
+
+                                // Clear button moved to the far right
                                 if activeCount > 0 {
                                     Button {
                                         withAnimation(.snappy) {
@@ -79,7 +98,6 @@ struct IncomeListView: View {
                                     }
                                     .buttonStyle(PressableButtonStyle())
                                 }
-                                Spacer(minLength: 0)
                             }
                             if activeCount > 0 {
                                 let sourcesText = vm.selectedTypes.sorted().joined(separator: ", ")
@@ -151,6 +169,7 @@ struct IncomeListView: View {
         .refreshable { await vm.refresh() }
         .animation(.spring(response: 0.35, dampingFraction: 0.85), value: vm.incomes)
         .animation(.easeInOut(duration: 0.2), value: vm.selectedTypes)
+        .animation(.easeInOut(duration: 0.2), value: vm.grouping)
         .onChange(of: vm.errorMessage) { _, newValue in
             guard let message = newValue, !message.isEmpty else { return }
             banners.showError(

@@ -10,6 +10,18 @@ final class IncomeController: ObservableObject {
     @Published var selectedTags: Set<String> = []
     @Published var selectedYears: Set<Int> = []
     @Published var selectedFYs: Set<FinancialYear> = []
+    // Grouping selection for the list view
+    @Published var grouping: Grouping = .month
+
+    enum Grouping: String, CaseIterable, Identifiable {
+        case month = "Month"
+        case tag = "Tag"
+        case source = "Source"
+        case year = "Year"
+        case fy = "FY"
+        var id: String { rawValue }
+        var title: String { rawValue }
+    }
     
     let userId: Int
     private let service: IncomeService
@@ -83,19 +95,69 @@ final class IncomeController: ObservableObject {
     
     struct Section: Identifiable, Hashable {
         let id = UUID()
-        let month: Date
         let title: String
         let items: [Income]
     }
     
     var sections: [Section] {
-        let grouped = Dictionary(grouping: filtered) { income in
-            calendar.date(from: calendar.dateComponents([.year, .month], from: income.creditedDate)) ?? income.creditedDate
+        switch grouping {
+        case .month:
+            // Group by calendar month
+            let grouped = Dictionary(grouping: filtered) { income in
+                calendar.date(
+                    from: calendar.dateComponents([.year, .month], from: income.creditedDate)
+                ) ?? income.creditedDate
+            }
+            let keys = grouped.keys.sorted(by: >)
+            return keys.map { month in
+                let items = (grouped[month] ?? []).sorted { $0.creditedDate > $1.creditedDate }
+                return Section(title: DateFormatter.monthYear.string(from: month), items: items)
+            }
+
+        case .tag:
+            // Group by income tag name
+            let grouped = Dictionary(grouping: filtered) { $0.incomeTag.name }
+            let keys = grouped.keys.sorted(by: <)
+            return keys.map { tag in
+                let items = (grouped[tag] ?? []).sorted { $0.creditedDate > $1.creditedDate }
+                return Section(title: "Tag: \(tag)", items: items)
+            }
+
+        case .source:
+            // Group by income type/source name
+            let grouped = Dictionary(grouping: filtered) { $0.incomeType.name }
+            let keys = grouped.keys.sorted(by: <)
+            return keys.map { source in
+                let items = (grouped[source] ?? []).sorted { $0.creditedDate > $1.creditedDate }
+                return Section(title: "Source: \(source)", items: items)
+            }
+
+        case .year:
+            // Group by calendar year
+            let grouped = Dictionary(grouping: filtered) {
+                calendar.component(.year, from: $0.creditedDate)
+            }
+            let keys = grouped.keys.sorted(by: >)
+            return keys.map { year in
+                let items = (grouped[year] ?? []).sorted { $0.creditedDate > $1.creditedDate }
+                return Section(title: "Year: \(year)", items: items)
+            }
+
+        case .fy:
+            // Group by financial year starting April 1
+            let grouped = Dictionary(grouping: filtered) { income -> Int in
+                let comp = calendar.dateComponents([.year, .month], from: income.creditedDate)
+                let y = comp.year ?? 0
+                let m = comp.month ?? 1
+                return m >= 4 ? y : (y - 1)
+            }
+            let keys = grouped.keys.filter { $0 > 0 }.sorted(by: >)
+            return keys.map { startYear in
+                let title = FinancialYear(startYear: startYear).title
+                let items = (grouped[startYear] ?? []).sorted { $0.creditedDate > $1.creditedDate }
+                return Section(title: title, items: items)
+            }
         }
-        let mapped = grouped.map { (month, items) in
-            Section(month: month, title: DateFormatter.monthYear.string(from: month), items: items.sorted { $0.creditedDate > $1.creditedDate })
-        }
-        return mapped.sorted { $0.month > $1.month }
     }
     
     // Totals per new semantics: Total = amount + taxPaid, Net = amount, Tax = taxPaid
