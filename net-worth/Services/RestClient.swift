@@ -114,6 +114,10 @@ struct RestClient {
     func patch<Body: Encodable>(_ path: String, body: Body) async throws {
         _ = try await perform(method: "PATCH", path: path, body: body)
     }
+
+    func delete(_ path: String) async throws {
+        _ = try await perform(method: "DELETE", path: path)
+    }
 }
 
 // Helper to encode existential Encodable
@@ -171,6 +175,10 @@ extension RestClient {
         return try await postWithFallback("income_tag", body: body) { newId in
             IncomeTag(id: newId ?? -1, userId: userId, name: name, isDefault: isDefault)
         }
+    }
+
+    func deleteIncome(id: Int) async throws {
+        try await delete("income/\(id)")
     }
 }
 

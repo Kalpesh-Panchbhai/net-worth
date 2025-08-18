@@ -52,6 +52,26 @@ final class IncomeController: ObservableObject {
     
     func refresh() async { await load() }
     
+    // Delete an income by calling backend and updating local state
+    func delete(_ income: Income) async -> Bool {
+        errorMessage = nil
+        do {
+            try await client.deleteIncome(id: income.id)
+            // Update local list
+            incomes.removeAll { $0.id == income.id }
+            return true
+        } catch let api as APIError {
+            if case .transport(let err) = api, let urlErr = err as? URLError, urlErr.code == .cancelled {
+                return false
+            }
+            self.errorMessage = api.errorDescription ?? "Delete failed"
+            return false
+        } catch {
+            self.errorMessage = error.localizedDescription
+            return false
+        }
+    }
+    
     var uniqueTypes: [String] {
         Array(Set(incomes.map { $0.incomeType.name })).sorted()
     }

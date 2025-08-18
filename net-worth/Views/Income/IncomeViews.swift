@@ -7,6 +7,7 @@ struct IncomeListView: View {
     @EnvironmentObject private var banners: BannerCenter
     @EnvironmentObject private var tabCommands: TabCommandCenter
     @State private var showFilterSheet = false
+    @State private var pendingDelete: Income? = nil
 
     init(userId: Int) {
         _vm = StateObject(wrappedValue: IncomeController(userId: userId))
@@ -126,15 +127,11 @@ struct IncomeListView: View {
                             } else if vm.sections.isEmpty {
                                 EmptyStateCard(text: "No income records yet")
                             } else {
-                                LazyVStack(spacing: 12) {
-                                    ForEach(vm.sections) { section in
-                                        SectionHeader(grouping: vm.grouping, rawTitle: section.title, count: section.items.count)
-                                            .padding(.top, 8)
-                                        ForEach(section.items, id: \.id) { item in
-                                            IncomeRowCard(income: item)
-                                        }
-                                    }
-                                }
+                                IncomeSectionsList(
+                                    sections: vm.sections,
+                                    grouping: vm.grouping,
+                                    onLongPress: { item in pendingDelete = item }
+                                )
                             }
                             // Bottom anchor for scroll-to-bottom
                             Color.clear.frame(height: 1).id("incomeBottom")
@@ -208,6 +205,29 @@ struct IncomeListView: View {
             }
             .presentationDetents([.medium, .large])
             .presentationDragIndicator(.visible)
+        }
+        .alert(item: $pendingDelete) { income in
+            Alert(
+                title: Text("Delete income?"),
+                message: Text("This will permanently remove the record."),
+                primaryButton: .destructive(Text("Delete"), action: { deleteIncome(income) }),
+                secondaryButton: .cancel()
+            )
+        }
+    }
+}
+
+private extension IncomeListView {
+    func deleteIncome(_ income: Income) {
+        Task {
+            let ok = await vm.delete(income)
+            if ok {
+                Haptics.success()
+            } else {
+                Haptics.softImpact()
+                let msg = vm.errorMessage ?? "Failed to delete income."
+                banners.showError(message: msg, retryTitle: "Retry", retry: { Task { await vm.refresh() } })
+            }
         }
     }
 }
@@ -440,6 +460,32 @@ private struct StatPill: View {
             Capsule(style: .continuous)
                 .fill(tint.opacity(0.08))
         )
+    }
+}
+
+private struct IncomeSectionsList: View {
+    let sections: [IncomeController.Section]
+    let grouping: IncomeController.Grouping
+    var onLongPress: (Income) -> Void
+    var body: some View {
+        LazyVStack(spacing: 12) {
+            ForEach(sections) { section in
+                SectionHeader(grouping: grouping, rawTitle: section.title, count: section.items.count)
+                    .padding(.top, 8)
+                ForEach(section.items, id: \.id) { item in
+                    IncomeRowCard(income: item)
+                        .contentShape(Rectangle())
+                        .contextMenu {
+                            Button(role: .destructive) {
+                                Haptics.selection()
+                                onLongPress(item)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
+                }
+            }
+        }
     }
 }
 
