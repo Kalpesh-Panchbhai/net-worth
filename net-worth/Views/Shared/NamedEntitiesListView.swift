@@ -6,9 +6,9 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
     let userId: Int
     let regularIcon: String
     let defaultIcon: String
-    let fetch: (IncomeService, Int) async throws -> [T]
-    let setDefault: ((IncomeService, T) async throws -> Void)?
-    let create: ((IncomeService, Int, String, Bool) async throws -> T)?
+    let fetch: (RestClient, Int) async throws -> [T]
+    let setDefault: ((RestClient, T) async throws -> Void)?
+    let create: ((RestClient, Int, String, Bool) async throws -> T)?
 
     @State private var items: [T] = []
     @State private var isLoading = false
@@ -19,7 +19,7 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
     @State private var createName: String = ""
     @State private var createIsDefault: Bool = false
     @State private var creating: Bool = false
-    private let service = IncomeService()
+    private let client = RestClient()
     @EnvironmentObject private var banners: BannerCenter
 
     var body: some View {
@@ -141,7 +141,7 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
             isLoading = true
         }
         do {
-            let fetched = try await fetch(service, userId)
+            let fetched = try await fetch(client, userId)
             // Sort: default first, then name ascending
             let sorted = fetched.sorted { a, b in
                 if a.isDefault != b.isDefault { return a.isDefault && !b.isDefault }
@@ -164,10 +164,10 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
         await MainActor.run { isLoading = false }
     }
 
-    private func markDefault(_ item: T, setDefault: @escaping (IncomeService, T) async throws -> Void) async {
+    private func markDefault(_ item: T, setDefault: @escaping (RestClient, T) async throws -> Void) async {
         await MainActor.run { patchingId = item.id }
         do {
-            try await setDefault(service, item)
+            try await setDefault(client, item)
             Haptics.success()
             await load()
         } catch {
@@ -187,7 +187,7 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
             errorMessage = nil
         }
         do {
-            let created = try await create(service, userId, name, isDef)
+            let created = try await create(client, userId, name, isDef)
             Haptics.success()
             // Optimistic local update
             await MainActor.run {

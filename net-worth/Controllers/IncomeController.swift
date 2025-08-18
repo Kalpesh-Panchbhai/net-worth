@@ -24,12 +24,12 @@ final class IncomeController: ObservableObject {
     }
     
     let userId: Int
-    private let service: IncomeService
+    private let client: RestClient
     private let calendar = Calendar.current
     
-    init(userId: Int, service: IncomeService = IncomeService()) {
+    init(userId: Int, service: RestClient = RestClient()) {
         self.userId = userId
-        self.service = service
+        self.client = service
     }
     
     func load() async {
@@ -37,7 +37,7 @@ final class IncomeController: ObservableObject {
         errorMessage = nil
         defer { isLoading = false }
         do {
-            let list = try await service.fetchIncomes(userId: userId)
+            let list = try await client.fetchIncomes(userId: userId)
             self.incomes = list.sorted { $0.creditedDate > $1.creditedDate }
         } catch {
             self.errorMessage = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription

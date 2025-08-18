@@ -10,6 +10,8 @@
 		7D2FBCA32E51CCDD0046FE17 /* IncomeTypesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FBCA22E51CCDD0046FE17 /* IncomeTypesView.swift */; };
 		7D2FBCA72E51CEF70046FE17 /* IncomeTagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FBCA62E51CEF70046FE17 /* IncomeTagsView.swift */; };
 		7D2FBCA92E51CEFD0046FE17 /* NamedEntitiesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FBCA82E51CEFD0046FE17 /* NamedEntitiesListView.swift */; };
+		7D4D09482E53021B00E188D0 /* RestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4D09472E53021B00E188D0 /* RestClient.swift */; };
+		7D4D094A2E5304B200E188D0 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4D09492E5304B200E188D0 /* APIError.swift */; };
 		7D59B4012BE246FF006F3F00 /* net_worthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D59B4002BE246FF006F3F00 /* net_worthApp.swift */; };
 		7D59B4052BE24701006F3F00 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B4042BE24701006F3F00 /* Assets.xcassets */; };
 		7D59B4082BE24701006F3F00 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B4072BE24701006F3F00 /* Preview Assets.xcassets */; };
@@ -20,7 +22,6 @@
 		7D74B2922E52375A00E35786 /* BannerCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74B2912E52375A00E35786 /* BannerCenter.swift */; };
 		7DAA10012BE3000000000001 /* AppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00012BE3000000000001 /* AppTab.swift */; };
 		7DAA10022BE3000000000002 /* IncomeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00022BE3000000000002 /* IncomeModels.swift */; };
-		7DAA10032BE3000000000003 /* IncomeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00032BE3000000000003 /* IncomeService.swift */; };
 		7DAA10042BE3000000000004 /* IncomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00042BE3000000000004 /* IncomeController.swift */; };
 		7DAA10052BE3000000000005 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00052BE3000000000005 /* Formatters.swift */; };
 		7DAA10062BE3000000000006 /* Design.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00062BE3000000000006 /* Design.swift */; };
@@ -41,6 +42,8 @@
 		7D2FBCA22E51CCDD0046FE17 /* IncomeTypesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTypesView.swift; sourceTree = "<group>"; };
 		7D2FBCA62E51CEF70046FE17 /* IncomeTagsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTagsView.swift; sourceTree = "<group>"; };
 		7D2FBCA82E51CEFD0046FE17 /* NamedEntitiesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamedEntitiesListView.swift; sourceTree = "<group>"; };
+		7D4D09472E53021B00E188D0 /* RestClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestClient.swift; sourceTree = "<group>"; };
+		7D4D09492E5304B200E188D0 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		7D59B3FD2BE246FF006F3F00 /* net-worth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "net-worth.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D59B4002BE246FF006F3F00 /* net_worthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = net_worthApp.swift; sourceTree = "<group>"; };
 		7D59B4042BE24701006F3F00 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -50,7 +53,6 @@
 		7D74B2912E52375A00E35786 /* BannerCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerCenter.swift; sourceTree = "<group>"; };
 		7DAA00012BE3000000000001 /* AppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTab.swift; sourceTree = "<group>"; };
 		7DAA00022BE3000000000002 /* IncomeModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeModels.swift; sourceTree = "<group>"; };
-		7DAA00032BE3000000000003 /* IncomeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeService.swift; sourceTree = "<group>"; };
 		7DAA00042BE3000000000004 /* IncomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeController.swift; sourceTree = "<group>"; };
 		7DAA00052BE3000000000005 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
 		7DAA00062BE3000000000006 /* Design.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Design.swift; sourceTree = "<group>"; };
@@ -135,7 +137,8 @@
 		7DAA10002BE30000000000A1 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				7DAA00032BE3000000000003 /* IncomeService.swift */,
+				7D4D09492E5304B200E188D0 /* APIError.swift */,
+				7D4D09472E53021B00E188D0 /* RestClient.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -293,14 +296,15 @@
 				7D59B4012BE246FF006F3F00 /* net_worthApp.swift in Sources */,
 				7DAA10012BE3000000000001 /* AppTab.swift in Sources */,
 				7DAA10022BE3000000000002 /* IncomeModels.swift in Sources */,
-				7DAA10032BE3000000000003 /* IncomeService.swift in Sources */,
 				7D74B2922E52375A00E35786 /* BannerCenter.swift in Sources */,
 				7DAA10042BE3000000000004 /* IncomeController.swift in Sources */,
 				7DAA10052BE3000000000005 /* Formatters.swift in Sources */,
 				7DAA10062BE3000000000006 /* Design.swift in Sources */,
 				7D2FBCA32E51CCDD0046FE17 /* IncomeTypesView.swift in Sources */,
 				7DAA10072BE3000000000007 /* Interactions.swift in Sources */,
+				7D4D09482E53021B00E188D0 /* RestClient.swift in Sources */,
 				7D2FBCA92E51CEFD0046FE17 /* NamedEntitiesListView.swift in Sources */,
+				7D4D094A2E5304B200E188D0 /* APIError.swift in Sources */,
 				7DAA10082BE3000000000008 /* NavBarUtils.swift in Sources */,
 				7DAA10092BE3000000000009 /* Shimmer.swift in Sources */,
 				7DAA100A2BE300000000000A /* AirbnbTabBar.swift in Sources */,
