@@ -21,7 +21,7 @@ struct AirbnbTabBar: View {
             .frame(maxWidth: .infinity)
         }
         .frame(maxWidth: .infinity)
-        .background(.ultraThinMaterial)
+        .background(Color.elevatedBackground)
         .overlay(alignment: .top) {
             Rectangle()
                 .fill(Color.subtleSeparator)

@@ -4,15 +4,33 @@ import UIKit
 // MARK: - Design Tokens (Airbnb-inspired)
 extension Color {
     static let airbnbPrimary = Color(red: 255/255, green: 90/255, blue: 95/255)
-    // Canvas for screens and grouped lists
-    static let canvasBackground = Color(UIColor.systemGroupedBackground)
-    // Elevated card background; use secondary grouped background to lift from canvas in Dark Mode
-    static let elevatedBackground = Color(UIColor.secondarySystemGroupedBackground)
+    // Canvas for screens
+    // Light: pure white canvas, Dark: grouped canvas
+    static let canvasBackground = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark ? UIColor.systemGroupedBackground : UIColor.systemBackground
+    })
+    // Elevated card background
+    // Light: pure surface (systemBackground) for crisp white cards
+    // Dark: secondarySystemGroupedBackground for separation from canvas
+    static let elevatedBackground = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark ? UIColor.secondarySystemGroupedBackground : UIColor.systemBackground
+    })
     // Optional alt surface for nested cards
-    static let elevatedBackgroundAlt = Color(UIColor.tertiarySystemGroupedBackground)
+    // Light: secondary grouped for subtle contrast, Dark: tertiary grouped for deeper nesting
+    static let elevatedBackgroundAlt = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark ? UIColor.tertiarySystemGroupedBackground : UIColor.secondarySystemGroupedBackground
+    })
     // Subtle hairline separator (stronger in Dark Mode for crisper borders)
     static let subtleSeparator = Color(UIColor { trait in
-        UIColor.separator.withAlphaComponent(trait.userInterfaceStyle == .dark ? 0.55 : 0.35)
+        UIColor.separator.withAlphaComponent(trait.userInterfaceStyle == .dark ? 0.55 : 0.22)
+    })
+    // Neutral placeholder fill for preview blocks/skeletons
+    static let placeholderFill = Color(UIColor { trait in
+        if trait.userInterfaceStyle == .dark {
+            return UIColor.tertiarySystemFill // subtle on dark
+        } else {
+            return UIColor.systemBackground // pure white in Light Mode to avoid gray blocks
+        }
     })
     static let airbnbSecondary = Color(red: 255/255, green: 56/255, blue: 92/255)
     static let airbnbInk = Color(red: 34/255, green: 34/255, blue: 34/255)

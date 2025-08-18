@@ -349,6 +349,8 @@ private struct FilterSheet: View {
             }
             .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always))
             .listStyle(.insetGrouped)
+            .scrollContentBackground(.hidden)
+            .background(Color.canvasBackground)
             HStack(spacing: 12) {
                 Button(action: {
                     onClear()
@@ -357,7 +359,14 @@ private struct FilterSheet: View {
                     Text("Clear filters").bold()
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
-                        .background(RoundedRectangle(cornerRadius: 12).fill(Color.subtleSeparator))
+                        .background(
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .fill(Color.elevatedBackground)
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .stroke(Color.subtleSeparator, lineWidth: 1)
+                        )
                 }
                 .buttonStyle(PressableButtonStyle())
             }
@@ -564,18 +573,18 @@ extension IncomeRowCard {
     fileprivate static func placeholder() -> some View {
         HStack(alignment: .center, spacing: 12) {
             VStack(alignment: .leading, spacing: 6) {
-                RoundedRectangle(cornerRadius: 4).fill(Color.subtleSeparator).frame(
+                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
                     width: 120, height: 16)
-                RoundedRectangle(cornerRadius: 4).fill(Color.subtleSeparator).frame(
+                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
                     width: 180, height: 14)
             }
             Spacer()
             VStack(alignment: .trailing, spacing: 8) {
-                RoundedRectangle(cornerRadius: 4).fill(Color.subtleSeparator).frame(
+                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
                     width: 120, height: 18) // Total
-                RoundedRectangle(cornerRadius: 4).fill(Color.subtleSeparator).frame(
+                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
                     width: 90, height: 14) // Net
-                RoundedRectangle(cornerRadius: 4).fill(Color.subtleSeparator).frame(
+                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
                     width: 80, height: 14) // Tax
             }
         }

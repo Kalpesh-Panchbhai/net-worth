@@ -188,12 +188,21 @@ struct AppearanceCard: View {
                             .frame(height: 78)
                             .background(
                                 ZStack {
-                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                        .fill(Color.subtleSeparator)
                                     if selection == mode {
                                         RoundedRectangle(cornerRadius: 12, style: .continuous)
                                             .fill(LinearGradient.airbnbAccent)
                                             .matchedGeometryEffect(id: "appearanceSel", in: ns)
+                                    } else {
+                                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                            .fill(Color.elevatedBackground)
+                                    }
+                                }
+                            )
+                            .overlay(
+                                Group {
+                                    if selection != mode {
+                                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                            .stroke(Color.subtleSeparator, lineWidth: 1)
                                     }
                                 }
                             )
@@ -233,20 +242,20 @@ struct AppearancePreview: View {
             VStack(spacing: 10) {
                 // Simulated nav bar (neutral to avoid confusion with real header)
                 RoundedRectangle(cornerRadius: 6)
-                    .fill(Color.subtleSeparator)
+                    .fill(Color.placeholderFill)
                     .frame(height: 18)
                     .opacity(1)
                 // Simulated content cards
                 HStack(spacing: 8) {
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.subtleSeparator)
+                        .fill(Color.placeholderFill)
                         .frame(height: 28)
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.subtleSeparator)
+                        .fill(Color.placeholderFill)
                         .frame(height: 28)
                 }
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.subtleSeparator)
+                    .fill(Color.placeholderFill)
                     .frame(height: 28)
             }
             .padding(12)

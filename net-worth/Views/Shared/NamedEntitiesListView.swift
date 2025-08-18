@@ -273,9 +273,9 @@ private extension NamedEntityRow {
     static func placeholder() -> some View {
         HStack(spacing: 12) {
             Circle().fill(Color.airbnbPrimary.opacity(0.12)).frame(width: 28, height: 28)
-            RoundedRectangle(cornerRadius: 4).fill(Color.subtleSeparator).frame(width: 150, height: 14)
+            RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(width: 150, height: 14)
             Spacer()
-            RoundedRectangle(cornerRadius: 12).fill(Color.subtleSeparator).frame(width: 60, height: 20)
+            RoundedRectangle(cornerRadius: 12).fill(Color.placeholderFill).frame(width: 60, height: 20)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
@@ -286,9 +286,9 @@ private extension NamedEntityRow where T == IncomeType {
     static func placeholder() -> some View {
         HStack(spacing: 12) {
             Circle().fill(Color.airbnbPrimary.opacity(0.12)).frame(width: 28, height: 28)
-            RoundedRectangle(cornerRadius: 4).fill(Color.subtleSeparator).frame(width: 140, height: 14)
+            RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(width: 140, height: 14)
             Spacer()
-            RoundedRectangle(cornerRadius: 12).fill(Color.subtleSeparator).frame(width: 60, height: 20)
+            RoundedRectangle(cornerRadius: 12).fill(Color.placeholderFill).frame(width: 60, height: 20)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
@@ -299,9 +299,9 @@ private extension NamedEntityRow where T == IncomeTag {
     static func placeholder() -> some View {
         HStack(spacing: 12) {
             Circle().fill(Color.airbnbPrimary.opacity(0.12)).frame(width: 28, height: 28)
-            RoundedRectangle(cornerRadius: 4).fill(Color.subtleSeparator).frame(width: 160, height: 14)
+            RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(width: 160, height: 14)
             Spacer()
-            RoundedRectangle(cornerRadius: 12).fill(Color.subtleSeparator).frame(width: 60, height: 20)
+            RoundedRectangle(cornerRadius: 12).fill(Color.placeholderFill).frame(width: 60, height: 20)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
