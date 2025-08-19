@@ -47,41 +47,51 @@ struct RootView: View {
             GlobalBannerHost()
         }
         .preferredColorScheme(colorSchemeOverride)
+        .privacySensitive()
         .overlay {
-            if biometricEnabled && isLocked {
-                ZStack {
-                    Color.black.opacity(0.35).ignoresSafeArea()
-                    VStack(spacing: 12) {
-                        Image(systemName: "faceid").font(.system(size: 42, weight: .bold))
-                        Text("Unlock with Face ID").font(.headline)
-                        if let err = authError {
-                            Text(err).font(.footnote).foregroundColor(.secondary).multilineTextAlignment(.center).padding(.horizontal, 8)
-                        }
-                        Button(action: authenticate) {
-                            HStack(spacing: 8) {
-                                Image(systemName: "faceid")
-                                Text("Unlock")
-                                    .bold()
+            ZStack {
+                if biometricEnabled && isLocked {
+                    ZStack {
+                        Color.black.opacity(0.35).ignoresSafeArea()
+                        VStack(spacing: 12) {
+                            Image(systemName: "faceid").font(.system(size: 42, weight: .bold))
+                            Text("Unlock with Face ID").font(.headline)
+                            if let err = authError {
+                                Text(err).font(.footnote).foregroundColor(.secondary).multilineTextAlignment(.center).padding(.horizontal, 8)
                             }
-                            .foregroundColor(.white)
-                            .padding(.vertical, 10)
-                            .padding(.horizontal, 16)
-                            .background(
-                                Capsule(style: .continuous).fill(LinearGradient.airbnbAccent)
-                            )
+                            Button(action: authenticate) {
+                                HStack(spacing: 8) {
+                                    Image(systemName: "faceid")
+                                    Text("Unlock with Face ID")
+                                        .bold()
+                                }
+                                .foregroundColor(.white)
+                                .padding(.vertical, 10)
+                                .padding(.horizontal, 16)
+                                .background(
+                                    Capsule(style: .continuous).fill(LinearGradient.airbnbAccent)
+                                )
+                            }
+                            .buttonStyle(PressableButtonStyle())
                         }
-                        .buttonStyle(PressableButtonStyle())
+                        .padding(20)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .fill(Color.elevatedBackground)
+                        )
+                        .elevatedShadow()
+                        .padding(24)
                     }
-                    .padding(20)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(Color.elevatedBackground)
-                    )
-                    .elevatedShadow()
-                    .padding(24)
+                }
+                // Privacy shield above everything when app is not active
+                if scenePhase != .active {
+                    PrivacyShieldView()
+                        .transition(.opacity)
+                        .zIndex(1)
                 }
             }
         }
+        .animation(.easeInOut(duration: 0.18), value: scenePhase)
         .onAppear {
             if biometricEnabled { isLocked = true; authenticate() }
         }

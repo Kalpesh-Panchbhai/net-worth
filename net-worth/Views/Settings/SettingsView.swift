@@ -1,4 +1,5 @@
 import SwiftUI
+import LocalAuthentication
 
 struct SettingsView: View {
     let userId: Int
@@ -268,11 +269,31 @@ struct AppearancePreview: View {
 struct SecurityCard: View {
     @AppStorage("biometricLockEnabled") private var biometricEnabled: Bool = false
     @AppStorage("allowPasscodeFallback") private var allowPasscodeFallback: Bool = true
+    @EnvironmentObject private var banners: BannerCenter
+    @State private var faceIDToggle: Bool = false
+
+    private var biometricBinding: Binding<Bool> {
+        Binding(
+            get: { faceIDToggle },
+            set: { newValue in
+                if newValue {
+                    // Enable directly
+                    faceIDToggle = true
+                    biometricEnabled = true
+                    Haptics.selection()
+                } else {
+                    // Keep UI ON until user authenticates to disable
+                    faceIDToggle = true
+                    confirmDisableFaceID()
+                }
+            }
+        )
+    }
     var body: some View {
         SettingsGroup(title: "Security") {
             VStack(spacing: 0) {
                 SettingsCell(icon: "faceid", title: "Face ID", subtitle: "Require Face ID when reopening the app.") {
-                    Toggle("", isOn: $biometricEnabled)
+                    Toggle("", isOn: biometricBinding)
                         .labelsHidden()
                         .tint(.airbnbPrimary)
                 }
@@ -284,6 +305,33 @@ struct SecurityCard: View {
                         .labelsHidden()
                         .tint(.airbnbPrimary)
                 }
+            }
+            .onAppear { faceIDToggle = biometricEnabled }
+            .onChange(of: biometricEnabled) { _, newVal in faceIDToggle = newVal }
+        }
+    }
+    private func confirmDisableFaceID() {
+        let context = LAContext()
+        context.localizedFallbackTitle = "Use Passcode"
+        var error: NSError?
+        let reason = "Authenticate to disable Face ID lock"
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, evalErr in
+                DispatchQueue.main.async {
+                    if success {
+                        self.faceIDToggle = false
+                        self.biometricEnabled = false
+                        Haptics.selection()
+                    } else {
+                        self.faceIDToggle = true
+                        self.banners.showTemporary(AppBanner(icon: "exclamationmark.triangle.fill", title: "Authentication required", message: (evalErr as NSError?)?.localizedDescription ?? "Face ID authentication failed", style: .warning))
+                    }
+                }
+            }
+        } else {
+            DispatchQueue.main.async {
+                self.faceIDToggle = true
+                self.banners.showTemporary(AppBanner(icon: "faceid", title: "Face ID not available", message: error?.localizedDescription, style: .warning))
             }
         }
     }

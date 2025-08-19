@@ -3,9 +3,11 @@ import UIKit
 
 @main
 struct net_worthApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @StateObject private var networkMonitor = NetworkMonitor()
     @StateObject private var bannerCenter = BannerCenter()
     @StateObject private var tabCommands = TabCommandCenter()
+    @Environment(\.scenePhase) private var scenePhase
     init() {
         // Hide hairline at top (scroll edge large title), show after scrolling (standard)
         let scrollEdge = UINavigationBarAppearance()
@@ -30,6 +32,10 @@ struct net_worthApp: App {
                 .environmentObject(bannerCenter)
                 .environmentObject(tabCommands)
                 .tint(.airbnbPrimary)
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            // Show a window-level privacy shield above all content (including sheets) when not active
+            PrivacyShieldManager.shared.setVisible(newPhase != .active)
         }
     }
 }
