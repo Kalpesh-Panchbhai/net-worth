@@ -256,7 +256,6 @@ private struct WatchSummaryCard: View {
                 .fill(Color.elevatedBackground)
         )
         .elevatedShadow()
-        .tilt(amount: 0.35)
         .accessibilityElement(children: .combine)
     }
 }
