@@ -63,7 +63,8 @@ struct AccountsListView: View {
                                                 AccountRow(item: item)
                                             }
                                         } header: {
-                                            AccountSectionHeader(title: section.title, count: section.items.count)
+                                            let sectionTotal = section.items.reduce(0) { $0 + $1.value.currentValue }
+                                            AccountSectionHeader(title: section.title, count: section.items.count, total: sectionTotal, currency: vm.displayCurrency)
                                                 .padding(.top, 8)
                                         }
                                     }
@@ -108,63 +109,63 @@ private struct AccountSummaryCard: View {
     let changePercent: Double?
     let currency: String
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 10) {
+            // Title
             Text("Net worth")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text(total, format: .currency(code: currency))
-                    .font(.system(size: 34, weight: .bold))
-                    .foregroundStyle(LinearGradient.airbnbAccent)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.65)
-                    .allowsTightening(true)
+            // Primary value
+            Text(total, format: .currency(code: currency))
+                .font(.system(size: 34, weight: .bold))
+                .foregroundStyle(LinearGradient.airbnbAccent)
+                .lineLimit(1)
+                .minimumScaleFactor(0.65)
+                .allowsTightening(true)
+                .monospacedDigit()
+                .contentTransition(.numericText())
+            // Rows
+            VStack(spacing: 8) {
+                HStack {
+                    Text("Invested").font(.caption).foregroundColor(.secondary)
+                    Spacer()
+                    Text(invested, format: .currency(code: currency))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(.airbnbPrimary)
+                        .monospacedDigit()
+                        .contentTransition(.numericText())
+                }
+                HStack {
+                    Text("1 day change").font(.caption).foregroundColor(.secondary)
+                    Spacer()
+                    let isUp = changeVsPrev >= 0
+                    HStack(spacing: 6) {
+                        Text(abs(changeVsPrev), format: .currency(code: currency))
+                        if let p = changePercent {
+                            Text("\(p, format: .percent.precision(.fractionLength(2)))")
+                        }
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(isUp ? .airbnbSuccess : .red)
                     .monospacedDigit()
                     .contentTransition(.numericText())
-            }
-            HStack(spacing: 8) {
-                StatPill(title: "Invested", value: invested, currency: currency, tint: .airbnbPrimary)
-                if changeVsPrev != 0 {
-                    let isUp = changeVsPrev >= 0
-                    StatPill(title: isUp ? "Up vs prev" : "Down vs prev", value: abs(changeVsPrev), currency: currency, tint: isUp ? .airbnbSuccess : .red)
                 }
-                Spacer(minLength: 0)
             }
         }
-        .padding(16)
+        .padding(14)
         .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .fill(Color.elevatedBackground)
         )
+        .overlay(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(Color.subtleSeparator, lineWidth: 1)
+        )
         .elevatedShadow()
-        .tilt(amount: 0.35)
         .accessibilityElement(children: .combine)
     }
 }
 
-private struct StatPill: View {
-    let title: String
-    let value: Double
-    let currency: String
-    var tint: Color = .airbnbPrimary
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(title)
-                .font(.caption)
-                .foregroundColor(.secondary)
-            Text(value, format: .currency(code: currency))
-                .font(.headline)
-                .foregroundColor(tint)
-                .contentTransition(.numericText())
-        }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background(
-            Capsule(style: .continuous)
-                .fill(tint.opacity(0.08))
-        )
-    }
-}
+// StatChip removed in compact design
 
 private struct EmptyStateCard: View {
     let text: String
@@ -216,7 +217,7 @@ private struct AccountRow: View {
                         .contentTransition(.numericText())
                 }
                 HStack(spacing: 8) {
-                    Text(item.type)
+                    Text(normalizedAccountType(item.type))
                         .font(.caption2.weight(.semibold))
                         .foregroundColor(.secondary)
                         .padding(.vertical, 4)
@@ -225,25 +226,45 @@ private struct AccountRow: View {
                         .overlay(
                             Capsule().stroke(Color.subtleSeparator, lineWidth: 0.8)
                         )
+                    // Invested chip
+                    HStack(spacing: 6) {
+                        Text("Invested")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                        Text(CurrencyShort.shortString(item.value.invested, currency: item.currency))
+                            .font(.caption2.weight(.semibold))
+                    }
+                    .padding(.vertical, 4)
+                    .padding(.horizontal, 8)
+                    .background(Capsule().fill(Color.elevatedBackground))
+                    .overlay(Capsule().stroke(Color.subtleSeparator, lineWidth: 0.8))
                     Spacer(minLength: 0)
                     let delta = item.value.currentValue - item.value.previousValue
                     if delta != 0 {
-                        Text(delta >= 0 ? "↑ " + CurrencyShort.shortString(abs(delta), currency: item.currency) : "↓ " + CurrencyShort.shortString(abs(delta), currency: item.currency))
-                            .font(.caption2.bold())
-                            .foregroundColor(delta >= 0 ? .airbnbSuccess : .red)
-                            .monospacedDigit()
-                            .contentTransition(.numericText())
+                        HStack(spacing: 4) {
+                            Image(systemName: delta >= 0 ? "arrow.up.right" : "arrow.down.right")
+                                .font(.caption2.weight(.bold))
+                            let prev = item.value.previousValue
+                            let pct = abs(prev) > 0 ? (delta / abs(prev)) : nil
+                            Text(CurrencyShort.shortString(abs(delta), currency: item.currency))
+                                .font(.caption2.weight(.semibold))
+                            if let p = pct {
+                                Text("• \(p, format: .percent.precision(.fractionLength(2)))")
+                                    .font(.caption2.weight(.semibold))
+                            }
+                        }
+                        .foregroundColor(delta >= 0 ? .airbnbSuccess : .red)
                     }
                 }
             }
         }
-        .padding(16)
+        .padding(14)
         .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .fill(Color.elevatedBackground)
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .stroke(Color.subtleSeparator, lineWidth: 1)
         )
         .elevatedShadow()
@@ -262,11 +283,11 @@ private struct AccountRow: View {
         }
         .padding(12)
         .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .fill(Color.elevatedBackground)
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .stroke(Color.subtleSeparator, lineWidth: 1)
         )
     }
@@ -279,6 +300,16 @@ private struct AccountRow: View {
         if t.contains("credit") { return "creditcard" }
         return "wallet.pass" // other
     }
+}
+
+// File-scope helper so rows can normalize labels consistently with grouping
+private func normalizedAccountType(_ raw: String) -> String {
+    let t = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+    if t.contains("broker") { return "Broker" }
+    if t.contains("saving") { return "Saving" }
+    if t.contains("loan") { return "Loan" }
+    if t.contains("credit") { return "Loan" }
+    return "Other"
 }
 
 // MARK: - Grouping Helpers
@@ -318,6 +349,8 @@ private extension AccountsListView {
 private struct AccountSectionHeader: View {
     let title: String
     let count: Int
+    let total: Double
+    let currency: String
     var body: some View {
         HStack(spacing: 10) {
             ZStack {
@@ -334,19 +367,32 @@ private struct AccountSectionHeader: View {
                 .lineLimit(1)
                 .truncationMode(.tail)
             Spacer()
+            // Total for this section
+            Text(total, format: .currency(code: currency))
+                .font(.subheadline.weight(.semibold))
+                .foregroundColor(.primary)
+                .monospacedDigit()
+            // Count pill
             Text("\(count)")
                 .font(.caption2.bold())
-                .foregroundColor(.airbnbPrimary)
+                .foregroundColor(.secondary)
                 .padding(.vertical, 4)
                 .padding(.horizontal, 8)
                 .background(
                     Capsule(style: .continuous)
-                        .fill(Color.airbnbPrimary.opacity(0.12))
+                        .fill(Color.elevatedBackground)
+                )
+                .overlay(
+                    Capsule(style: .continuous)
+                        .stroke(Color.subtleSeparator, lineWidth: 1)
                 )
         }
         .padding(.horizontal, 2)
         .padding(.vertical, 6)
         .background(Color.canvasBackground)
+        .overlay(alignment: .bottom) {
+            Rectangle().fill(Color.subtleSeparator).frame(height: 0.5)
+        }
     }
     private func icon(for title: String) -> String {
         let t = title.lowercased()
