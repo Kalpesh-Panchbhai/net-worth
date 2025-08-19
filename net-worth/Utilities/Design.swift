@@ -81,6 +81,12 @@ enum LayoutConstants {
     // Keep FAB close to the tab bar; since content sits above the safe-area inset
     // (RootView uses .safeAreaInset for the tab bar), a small margin is sufficient.
     static let fabBottomMargin: CGFloat = 16
+    // Standard min height for elevated cards (summary and list rows)
+    static let cardMinHeight: CGFloat = 120
+    // Standard card corner radius
+    static let cardCornerRadius: CGFloat = 14
+    // Fixed width for stat pills to align columns across rows
+    static let statPillWidth: CGFloat = 176
 }
 
 extension View {

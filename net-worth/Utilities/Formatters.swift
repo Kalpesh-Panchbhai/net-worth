@@ -38,20 +38,21 @@ enum CurrencyShort {
         func fmt(_ value: Double, places: Int = 2) -> String {
             String(format: "%0.*f", places, value)
         }
+        let nbsp = "\u{00A0}" // non‑breaking space to keep suffix with number
         if currency.uppercased() == "INR" {
             if absVal >= 1.0e7 { // Crore
-                return "\(sign)\(sym)\(fmt(absVal/1.0e7)) Cr"
+                return "\(sign)\(sym)\(fmt(absVal/1.0e7))\(nbsp)Cr"
             } else if absVal >= 1.0e5 { // Lakh
-                return "\(sign)\(sym)\(fmt(absVal/1.0e5)) L"
+                return "\(sign)\(sym)\(fmt(absVal/1.0e5))\(nbsp)L"
             } else if absVal >= 1.0e3 { // Thousand
-                return "\(sign)\(sym)\(fmt(absVal/1.0e3, places: 1)) K"
+                return "\(sign)\(sym)\(fmt(absVal/1.0e3, places: 1))\(nbsp)K"
             } else {
                 return amount.formatted(.currency(code: currency))
             }
         } else {
-            if absVal >= 1.0e9 { return "\(sign)\(sym)\(fmt(absVal/1.0e9)) B" }
-            if absVal >= 1.0e6 { return "\(sign)\(sym)\(fmt(absVal/1.0e6)) M" }
-            if absVal >= 1.0e3 { return "\(sign)\(sym)\(fmt(absVal/1.0e3, places: 1)) K" }
+            if absVal >= 1.0e9 { return "\(sign)\(sym)\(fmt(absVal/1.0e9))\(nbsp)B" }
+            if absVal >= 1.0e6 { return "\(sign)\(sym)\(fmt(absVal/1.0e6))\(nbsp)M" }
+            if absVal >= 1.0e3 { return "\(sign)\(sym)\(fmt(absVal/1.0e3, places: 1))\(nbsp)K" }
             return amount.formatted(.currency(code: currency))
         }
     }
