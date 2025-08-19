@@ -27,16 +27,14 @@ struct PrivacyShieldView: View {
             // Centerpiece: frosted badge + animated gradient ring
             VStack(spacing: 12) {
                 ZStack {
-                    ZStack {
-                        Circle()
-                            .fill(Color.white.opacity(0.18))
-                            .blur(radius: 10)
-                            .frame(width: 70, height: 70)
-                        Image(systemName: "lock.fill")
-                            .font(.system(size: 36, weight: .bold))
-                            .foregroundColor(.airbnbPrimary)
-                            .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
-                    }
+                    Circle()
+                        .fill(Color.white.opacity(0.18))
+                        .blur(radius: 10)
+                        .frame(width: 70, height: 70)
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 50, weight: .bold))
+                        .foregroundColor(.airbnbPrimary)
+                        .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
                 }
             }
             .accessibilityHidden(true)
