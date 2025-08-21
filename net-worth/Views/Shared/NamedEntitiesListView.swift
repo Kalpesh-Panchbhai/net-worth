@@ -79,7 +79,12 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
             }
             .padding(.vertical, 16)
             .padding(.horizontal, 16)
-            .padding(.bottom, LayoutConstants.tabBarHeight + 24)
+            .padding(
+                .bottom,
+                (create != nil)
+                    ? (LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin + LayoutConstants.fabSize + 24)
+                    : (LayoutConstants.tabBarHeight + 24)
+            )
         }
         .background(ScrollToTopEnabler())
         .refreshable {

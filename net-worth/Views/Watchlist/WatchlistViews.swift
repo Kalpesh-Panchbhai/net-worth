@@ -109,7 +109,6 @@ struct WatchlistListView: View {
         .onAppear { vm.attachStore(lookup) }
         .task { await vm.load() }
         .refreshable { await vm.refresh() }
-        .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 66) }
         .animation(.spring(response: 0.35, dampingFraction: 0.85), value: vm.items)
         .onChange(of: vm.errorMessage) { _, newValue in
             guard let message = newValue, !message.isEmpty else { return }

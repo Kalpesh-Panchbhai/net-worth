@@ -136,12 +136,11 @@ struct IncomeListView: View {
                                     onLongPress: { item in pendingDelete = item }
                                 )
                             }
-                            // Bottom anchor for scroll-to-bottom
-                            let bottomPad = LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin + LayoutConstants.fabSize + 24
-                            Color.clear.frame(height: bottomPad).id("incomeBottom")
+                            // Bottom anchor for scroll-to-bottom (no FAB on this screen)
+                            Color.clear.frame(height: LayoutConstants.tabBarHeight + 24).id("incomeBottom")
                         }
                         .padding(.horizontal, 16)
-                        .padding(.bottom, LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin + LayoutConstants.fabSize + 24)
+                        .padding(.bottom, LayoutConstants.tabBarHeight + 24)
                     }
                     .background(ScrollToTopEnabler())
                     .scrollIndicators(.hidden)
@@ -155,7 +154,6 @@ struct IncomeListView: View {
                     DispatchQueue.main.async { tabCommands.scrollToBottomRequest = nil }
                 }
             }
-            .fabOverlay(accessibilityLabel: "Add income") { Haptics.softImpact() }
             .navigationTitle("Incomes")
             .navigationBarTitleDisplayMode(.large)
             .airbnbNavBarBackground(collapsed: navCollapsed)

@@ -96,7 +96,6 @@ struct AccountsListView: View {
         .onAppear { vm.attachStore(lookup) }
         .task { await vm.load() }
         .refreshable { await vm.refresh() }
-        .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 66) }
         .onChange(of: vm.errorMessage) { _, newValue in
             guard let message = newValue, !message.isEmpty else { return }
             banners.showError(message: message, retryTitle: "Retry", retry: { Task { await vm.refresh() } })
@@ -157,10 +156,6 @@ private struct AccountSummaryCard: View {
             RoundedRectangle(cornerRadius: LayoutConstants.cardCornerRadius, style: .continuous)
                 .fill(Color.elevatedBackground)
         )
-        .overlay(
-            RoundedRectangle(cornerRadius: LayoutConstants.cardCornerRadius, style: .continuous)
-                .stroke(Color.subtleSeparator, lineWidth: 1)
-        )
         .elevatedShadow()
         .accessibilityElement(children: .combine)
     }
@@ -207,10 +202,6 @@ private struct AccountRow: View {
         .background(
             RoundedRectangle(cornerRadius: LayoutConstants.cardCornerRadius, style: .continuous)
                 .fill(Color.elevatedBackground)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: LayoutConstants.cardCornerRadius, style: .continuous)
-                .stroke(Color.subtleSeparator, lineWidth: 1)
         )
         .elevatedShadow()
         .buttonStyle(PressableButtonStyle())
@@ -356,9 +347,6 @@ private struct StatPill: View {
         .background(
             Capsule().fill(tint.opacity(0.10))
         )
-        .overlay(
-            Capsule().stroke(Color.subtleSeparator, lineWidth: 0.8)
-        )
         .lineLimit(1)
         .minimumScaleFactor(0.8)
     }
@@ -373,7 +361,6 @@ private struct TypeBadge: View {
             .padding(.horizontal, 8)
             .frame(height: 22)
             .background(Capsule().fill(Color.elevatedBackground))
-            .overlay(Capsule().stroke(Color.subtleSeparator, lineWidth: 0.8))
     }
 }
 
@@ -464,10 +451,7 @@ private struct AccountSectionHeader: View {
         }
         .padding(.horizontal, 2)
         .padding(.vertical, 6)
-        .background(Color.canvasBackground)
-        .overlay(alignment: .bottom) {
-            Rectangle().fill(Color.subtleSeparator).frame(height: 0.5)
-        }
+        .background(.ultraThinMaterial)
     }
     private func icon(for title: String) -> String {
         let t = title.lowercased()
