@@ -163,11 +163,11 @@ struct SettingsCell<Trailing: View>: View {
 struct AppearanceCard: View {
     @Binding var selection: AppAppearance
     @Namespace private var ns
+    @Environment(\.colorScheme) private var colorScheme
     
     var body: some View {
         SettingsGroup(title: "Appearance") {
-            VStack(spacing: 12) {
-                AppearancePreview(selection: selection)
+            VStack(spacing: 10) {
                 HStack(spacing: 8) {
                     ForEach(AppAppearance.allCases) { mode in
                         Button {
@@ -182,31 +182,34 @@ struct AppearanceCard: View {
                                     .lineLimit(1)
                                     .minimumScaleFactor(0.8)
                             }
-                            .foregroundColor(selection == mode ? .white : .primary)
-                            .padding(.vertical, 12)
+                            .foregroundColor(
+                                selection == mode ? .white : (colorScheme == .dark ? Color.white.opacity(0.92) : .primary)
+                            )
+                            .padding(.vertical, 10)
                             .padding(.horizontal, 8)
                             .frame(maxWidth: .infinity)
-                            .frame(height: 78)
+                            .frame(height: 64)
                             .background(
                                 ZStack {
                                     if selection == mode {
                                         RoundedRectangle(cornerRadius: 12, style: .continuous)
                                             .fill(LinearGradient.airbnbAccent)
                                             .matchedGeometryEffect(id: "appearanceSel", in: ns)
+                                            .modifier(ElevatedShadow(radiusLight: 8, yLight: 4, radiusDark: 6, yDark: 3))
                                     } else {
                                         RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                            .fill(Color.elevatedBackground)
+                                            .fill(colorScheme == .dark ? Color(red: 58/255, green: 58/255, blue: 63/255) : Color.elevatedBackground)
+                                            .modifier(ElevatedShadow(radiusLight: 8, yLight: 4, radiusDark: 6, yDark: 3))
                                     }
                                 }
                             )
-                            .overlay(
-                                Group {
-                                    if selection != mode {
-                                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                            .stroke(Color.subtleSeparator, lineWidth: 1)
-                                    }
+                            // Soft top highlight only for selected chip in dark mode
+                            .overlay(alignment: .top) {
+                                if colorScheme == .dark && selection == mode {
+                                    LinearGradient(colors: [Color.white.opacity(0.10), .clear], startPoint: .top, endPoint: .bottom)
+                                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                                 }
-                            )
+                            }
                             .overlay(alignment: .topTrailing) {
                                 if selection == mode {
                                     Image(systemName: "checkmark")
@@ -223,46 +226,6 @@ struct AppearanceCard: View {
                 }
             }
         }
-    }
-}
-
-struct AppearancePreview: View {
-    let selection: AppAppearance
-    private var scheme: ColorScheme? {
-        switch selection {
-        case .system: return nil
-        case .light: return .light
-        case .dark: return .dark
-        }
-    }
-    
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(Color.elevatedBackground)
-            VStack(spacing: 10) {
-                // Simulated nav bar (neutral to avoid confusion with real header)
-                RoundedRectangle(cornerRadius: 6)
-                    .fill(Color.placeholderFill)
-                    .frame(height: 18)
-                    .opacity(1)
-                // Simulated content cards
-                HStack(spacing: 8) {
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.placeholderFill)
-                        .frame(height: 28)
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.placeholderFill)
-                        .frame(height: 28)
-                }
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.placeholderFill)
-                    .frame(height: 28)
-            }
-            .padding(12)
-        }
-        .frame(height: 120)
-        .preferredColorScheme(scheme)
     }
 }
 
