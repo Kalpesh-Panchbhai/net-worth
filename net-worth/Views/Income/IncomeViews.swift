@@ -762,6 +762,15 @@ struct CreateIncomeView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
+                // Summary card
+                SummaryCard(
+                    totalAll: totalAll,
+                    totalNet: amount ?? 0,
+                    totalTax: tax ?? 0,
+                    currency: currencyCode
+                )
+
+                // Amount inputs
                 SettingsGroup(title: "Amount", showHeader: true) {
                     VStack(alignment: .leading, spacing: 12) {
                         HStack(spacing: 12) {
@@ -800,6 +809,7 @@ struct CreateIncomeView: View {
                     }
                 }
 
+                // Details (date, currency)
                 SettingsGroup(title: "Details") {
                     VStack(spacing: 0) {
                         // Date (sheet)
@@ -836,6 +846,7 @@ struct CreateIncomeView: View {
                     }
                 }
 
+                // Categorize (source, tag)
                 SettingsGroup(title: "Categorize") {
                     VStack(spacing: 0) {
                         // Source (sheet)
@@ -867,24 +878,6 @@ struct CreateIncomeView: View {
                         .buttonStyle(.plain)
                         .contentShape(Rectangle())
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                }
-
-                // Summary
-                SettingsGroup(title: "Summary") {
-                    HStack(spacing: 12) {
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack(spacing: 6) {
-                                Text("Total").font(.caption2.bold()).foregroundColor(.secondary)
-                                Text(totalAll, format: .currency(code: currencyCode))
-                                    .font(.headline.weight(.semibold))
-                            }
-                            HStack(spacing: 8) {
-                                StatPill(title: "Net", value: amount ?? 0, currency: currencyCode, tint: .airbnbSuccess)
-                                StatPill(title: "Tax", value: tax ?? 0, currency: currencyCode, tint: .airbnbPrimary)
-                            }
-                        }
-                        Spacer()
                     }
                 }
             }
@@ -1165,7 +1158,7 @@ private struct EntityPickerSheet<T: NamedEntity>: View {
         HStack(spacing: 12) {
             ZStack {
                 Circle().fill(Color.airbnbPrimary.opacity(0.12))
-                Image(systemName: icon)
+                Image(systemName: (selected?.id == item.id) ? filledIcon(icon) : icon)
                     .font(.subheadline.weight(.semibold))
                     .foregroundColor(.airbnbPrimary)
             }
@@ -1188,6 +1181,11 @@ private struct EntityPickerSheet<T: NamedEntity>: View {
             Haptics.selection()
             dismiss()
         }
+    }
+
+    // Use a filled variant of the SF Symbol when selected
+    private func filledIcon(_ base: String) -> String {
+        base.hasSuffix(".fill") ? base : base + ".fill"
     }
 }
 

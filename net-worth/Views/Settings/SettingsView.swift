@@ -289,6 +289,8 @@ struct SettingsCell<Trailing: View>: View {
             Spacer()
             trailing
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
         .padding(.horizontal, 12)
         .padding(.vertical, 12)
     }
