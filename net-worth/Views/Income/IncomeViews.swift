@@ -780,6 +780,10 @@ struct CreateIncomeView: View {
         return true
     }
     private var totalAll: Double { (amount ?? 0) + (tax ?? 0) }
+    private var confirmTitle: String {
+        if existing == nil { return saving ? "Saving…" : "Save" }
+        else { return saving ? "Updating…" : "Update" }
+    }
 
     var body: some View {
         ScrollView {
@@ -915,7 +919,7 @@ struct CreateIncomeView: View {
                 Button("Cancel") { dismiss() }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button(saving ? "Saving…" : "Save") { Task { await save() } }
+                Button(confirmTitle) { Task { await save() } }
                     .disabled(!isValid || saving)
             }
         }
