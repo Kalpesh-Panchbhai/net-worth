@@ -6,6 +6,7 @@ struct WatchlistListView: View {
     @State private var navCollapsed = false
     @EnvironmentObject private var banners: BannerCenter
     @EnvironmentObject private var tabCommands: TabCommandCenter
+    @AppStorage("defaultCurrencyCode") private var defaultCurrencyCode: String = "INR"
     @State private var showCreate = false
     @State private var createName = ""
     @State private var creating = false
@@ -45,7 +46,7 @@ struct WatchlistListView: View {
                             } else {
                                 WatchlistRowsList(
                                     items: vm.items,
-                                    currency: vm.displayCurrency,
+                                    currency: defaultCurrencyCode.uppercased(),
                                     onRename: { item in
                                         renaming = item
                                         renameText = item.name

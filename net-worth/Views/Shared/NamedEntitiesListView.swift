@@ -220,13 +220,12 @@ private struct NamedEntityRow<T: NamedEntity>: View {
     var body: some View {
         HStack(spacing: 12) {
             ZStack {
-                Circle().fill(Color.airbnbPrimary.opacity(0.10))
+                Circle().fill(Color.airbnbPrimary.opacity(0.12))
                 Image(systemName: entity.isDefault ? defaultIcon : regularIcon)
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(LinearGradient.airbnbAccent)
+                    .foregroundColor(.airbnbPrimary)
             }
             .frame(width: 32, height: 32)
-            .overlay(Circle().stroke(Color.subtleSeparator, lineWidth: 1))
             Text(entity.name)
                 .font(.body.weight(.semibold))
                 .foregroundColor(.primary)
@@ -247,6 +246,7 @@ private struct NamedEntityRow<T: NamedEntity>: View {
         .accessibilityLabel(Text("\(entity.name) \(entity.isDefault ? "default" : "")"))
     }
 }
+
 
 private struct Hairline: View { var body: some View { Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(.horizontal, 12) } }
 

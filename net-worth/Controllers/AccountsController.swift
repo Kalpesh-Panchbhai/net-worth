@@ -47,7 +47,9 @@ final class AccountsController: ObservableObject {
         return changeVsPrev / denom
     }
 
-    var displayCurrency: String { "INR" }
+    var displayCurrency: String {
+        (UserDefaults.standard.string(forKey: "defaultCurrencyCode") ?? "INR").uppercased()
+    }
 
     // MARK: - Helpers
     private func sortAccounts(_ list: [Account]) -> [Account] {

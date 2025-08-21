@@ -6,6 +6,7 @@ struct IncomeListView: View {
     @State private var navCollapsed = false
     @EnvironmentObject private var banners: BannerCenter
     @EnvironmentObject private var tabCommands: TabCommandCenter
+    @AppStorage("defaultCurrencyCode") private var defaultCurrencyCode: String = "INR"
     @State private var showFilterSheet = false
     @State private var pendingDelete: Income? = nil
 
@@ -34,7 +35,7 @@ struct IncomeListView: View {
                                 totalAll: useFiltered ? vm.filteredTotalAll : vm.totalAll,
                                 totalNet: useFiltered ? vm.filteredTotalNet : vm.totalNet,
                                 totalTax: useFiltered ? vm.filteredTotalTax : vm.totalTaxPaid,
-                                currency: vm.displayCurrency
+                                currency: defaultCurrencyCode.uppercased()
                             )
                             .padding(.top, 8)
                             HStack(spacing: 8) {
@@ -130,6 +131,7 @@ struct IncomeListView: View {
                                 IncomeSectionsList(
                                     sections: vm.sections,
                                     grouping: vm.grouping,
+                                    currency: defaultCurrencyCode.uppercased(),
                                     onLongPress: { item in pendingDelete = item }
                                 )
                             }
@@ -461,6 +463,7 @@ private struct StatPill: View {
 private struct IncomeSectionsList: View {
     let sections: [IncomeController.Section]
     let grouping: IncomeController.Grouping
+    let currency: String
     var onLongPress: (Income) -> Void
     var body: some View {
         LazyVStack(spacing: 12) {
@@ -468,7 +471,7 @@ private struct IncomeSectionsList: View {
                 SectionHeader(grouping: grouping, rawTitle: section.title, count: section.items.count)
                     .padding(.top, 8)
                 ForEach(section.items, id: \.id) { item in
-                    IncomeRowCard(income: item)
+                    IncomeRowCard(income: item, currency: currency)
                         .contentShape(Rectangle())
                         .contextMenu {
                             Button(role: .destructive) {
@@ -532,6 +535,7 @@ private struct SectionHeader: View {
 
 private struct IncomeRowCard: View {
     let income: Income
+    let currency: String
 
     var body: some View {
         Button {
@@ -555,7 +559,7 @@ private struct IncomeRowCard: View {
                     VStack(alignment: .trailing, spacing: 8) {
                         HStack(spacing: 8) {
                             Text("Total").font(.caption2.bold()).foregroundColor(.secondary)
-                            Text(income.amount + income.taxPaid, format: .currency(code: income.currency))
+                            Text(income.amount + income.taxPaid, format: .currency(code: currency))
                                 .font(.headline.weight(.semibold))
                                 .foregroundColor(.primary)
                                 .monospacedDigit()
@@ -566,7 +570,7 @@ private struct IncomeRowCard: View {
                         VStack(alignment: .trailing, spacing: 6) {
                             HStack(spacing: 6) {
                                 Text("Net").font(.caption2.bold())
-                                Text(income.amount, format: .currency(code: income.currency))
+                                Text(income.amount, format: .currency(code: currency))
                                     .font(.subheadline.weight(.semibold))
                                     .monospacedDigit()
                                     .lineLimit(1)
@@ -581,7 +585,7 @@ private struct IncomeRowCard: View {
                             )
                             HStack(spacing: 6) {
                                 Text("Tax").font(.caption2.bold())
-                                Text(income.taxPaid, format: .currency(code: income.currency))
+                                Text(income.taxPaid, format: .currency(code: currency))
                                     .font(.subheadline.weight(.semibold))
                                     .monospacedDigit()
                                     .lineLimit(1)

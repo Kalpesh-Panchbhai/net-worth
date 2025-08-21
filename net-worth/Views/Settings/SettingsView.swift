@@ -7,6 +7,7 @@ struct SettingsView: View {
     private var appAppearance: AppAppearance { AppAppearance(rawValue: appAppearanceRaw) ?? .system }
     @State private var navCollapsed = false
     @EnvironmentObject private var tabCommands: TabCommandCenter
+    @AppStorage("defaultCurrencyCode") private var defaultCurrencyCode: String = "INR"
     
     private var appearanceBinding: Binding<AppAppearance> {
         Binding(
@@ -28,8 +29,8 @@ struct SettingsView: View {
                 .frame(height: 0)
                 VStack(spacing: 16) {
                     AppearanceCard(selection: appearanceBinding)
+                    PreferencesCard(userId: userId)
                     SecurityCard()
-                    DataCard(userId: userId)
                 }
                 .padding(16)
                 // Bottom anchor
@@ -49,6 +50,25 @@ struct SettingsView: View {
             .onPreferenceChange(NavBarOffsetKey.self) { y in
                 withAnimation(.easeInOut(duration: 0.2)) { navCollapsed = y < -8 }
             }
+        }
+    }
+}
+
+private extension PreferencesCard {
+    func sfSymbolForCurrency(code: String) -> String? {
+        let c = code.uppercased()
+        switch c {
+        case "USD", "CAD", "AUD", "NZD", "SGD", "HKD", "MXN", "ARS", "CLP": return "dollarsign.circle"
+        case "EUR": return "eurosign.circle"
+        case "GBP": return "sterlingsign.circle"
+        case "JPY", "CNY": return "yensign.circle"
+        case "INR": return "indianrupeesign.circle"
+        case "KRW": return "wonsign.circle"
+        case "RUB": return "rublesign.circle"
+        case "TRY": return "turkishlirasign.circle"
+        case "THB": return "bahtsign.circle"
+        case "ILS": return "shekelsign.circle"
+        default: return nil
         }
     }
 }
@@ -80,6 +100,126 @@ struct DataCard: View {
                     }
                 }
             }
+        }
+    }
+}
+
+struct PreferencesCard: View {
+    let userId: Int
+    @AppStorage("defaultCurrencyCode") private var code: String = "INR"
+    @State private var defaultIncomeTypeName: String? = nil
+    @State private var defaultIncomeTagName: String? = nil
+    @State private var loadingDefaults: Bool = false
+    private let restClient = RestClient()
+    var body: some View {
+        SettingsGroup(title: "Preferences") {
+            VStack(spacing: 0) {
+                // Default currency
+                NavigationLink { DefaultCurrencyView() } label: {
+                    let selected = CurrencyCatalog.byCode[code.uppercased()]
+                    SettingsCell(
+                        title: "Default currency",
+                        subtitle: selected?.name ?? code.uppercased(),
+                        leading: {
+                            ZStack {
+                                Circle().fill(Color.airbnbPrimary.opacity(0.12))
+                                if let icon = sfSymbolForCurrency(code: code) {
+                                    Image(systemName: icon)
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundColor(.airbnbPrimary)
+                                } else {
+                                    Text((selected?.symbol ?? code))
+                                        .font(.caption2.weight(.bold))
+                                        .foregroundColor(.airbnbPrimary)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.3)
+                                        .allowsTightening(true)
+                                        .frame(width: 20, height: 20, alignment: .center)
+                                }
+                            }
+                            .frame(width: 32, height: 32)
+                            .clipShape(Circle())
+                        }
+                    ) {
+                        HStack(spacing: 6) {
+                            Text(selected?.symbol ?? code)
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundColor(.secondary)
+                            Image(systemName: "chevron.right")
+                                .font(.footnote.weight(.semibold))
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
+                Rectangle().fill(Color.subtleSeparator)
+                    .frame(height: 0.5)
+                    .padding(.horizontal, 12)
+                // Income sources
+                NavigationLink { IncomeTypesView(userId: userId) } label: {
+                    SettingsCell(
+                        title: "Income sources",
+                        subtitle: defaultIncomeTypeName ?? "Not set",
+                        leading: {
+                            ZStack {
+                                Circle().fill(Color.airbnbPrimary.opacity(0.12))
+                                Image(systemName: "creditcard")
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundColor(.airbnbPrimary)
+                            }
+                            .frame(width: 32, height: 32)
+                        }
+                    ) {
+                        Image(systemName: "chevron.right")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundColor(.secondary)
+                    }
+                }
+                Rectangle().fill(Color.subtleSeparator)
+                    .frame(height: 0.5)
+                    .padding(.horizontal, 12)
+                // Income tags
+                NavigationLink { IncomeTagsView(userId: userId) } label: {
+                    SettingsCell(
+                        title: "Income tags",
+                        subtitle: defaultIncomeTagName ?? "Not set",
+                        leading: {
+                            ZStack {
+                                Circle().fill(Color.airbnbPrimary.opacity(0.12))
+                                Image(systemName: "tag")
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundColor(.airbnbPrimary)
+                            }
+                            .frame(width: 32, height: 32)
+                        }
+                    ) {
+                        Image(systemName: "chevron.right")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+            .onAppear { Task { await loadDefaults() } }
+        }
+    }
+}
+
+private extension PreferencesCard {
+    func loadDefaults() async {
+        if loadingDefaults { return }
+        loadingDefaults = true
+        defer { loadingDefaults = false }
+        async let typesTask = restClient.fetchIncomeTypes(userId: userId)
+        async let tagsTask = restClient.fetchIncomeTags(userId: userId)
+        do {
+            let (types, tags) = try await (typesTask, tagsTask)
+            let typeName = types.first(where: { $0.isDefault })?.name
+            let tagName = tags.first(where: { $0.isDefault })?.name
+            await MainActor.run {
+                self.defaultIncomeTypeName = typeName
+                self.defaultIncomeTagName = tagName
+            }
+        } catch {
+            // Keep existing values on failure
         }
     }
 }
@@ -126,30 +266,46 @@ struct SettingsGroup<Content: View>: View {
 }
 
 struct SettingsCell<Trailing: View>: View {
-    let icon: String
+    let icon: String?
     let title: String
     let subtitle: String?
     let trailing: Trailing
+    private let customLeading: AnyView?
     init(icon: String, title: String, subtitle: String? = nil, @ViewBuilder trailing: () -> Trailing) {
         self.icon = icon
         self.title = title
         self.subtitle = subtitle
         self.trailing = trailing()
+        self.customLeading = nil
+    }
+    init(title: String, subtitle: String? = nil, @ViewBuilder leading: () -> some View, @ViewBuilder trailing: () -> Trailing) {
+        self.icon = nil
+        self.title = title
+        self.subtitle = subtitle
+        self.trailing = trailing()
+        self.customLeading = AnyView(leading())
     }
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
-            ZStack {
-                Circle().fill(Color.airbnbPrimary.opacity(0.12))
-                Image(systemName: icon)
-                    .foregroundColor(.airbnbPrimary)
+            if let customLeading {
+                customLeading
+            } else {
+                ZStack {
+                    Circle().fill(Color.airbnbPrimary.opacity(0.12))
+                    if let icon { Image(systemName: icon).foregroundColor(.airbnbPrimary) }
+                }
+                .frame(width: 32, height: 32)
             }
-            .frame(width: 32, height: 32)
             VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.subheadline).bold()
+                Text(title)
+                    .font(.subheadline).bold()
+                    .foregroundColor(.primary)
                 if let subtitle {
                     Text(subtitle)
                         .font(.footnote)
                         .foregroundColor(.secondary)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
                 }
             }
             Spacer()

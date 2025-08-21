@@ -4,6 +4,7 @@ struct AccountsListView: View {
     @StateObject private var vm: AccountsController
     @State private var navCollapsed = false
     @AppStorage("hideInactiveAccounts") private var hideInactive: Bool = true
+    @AppStorage("defaultCurrencyCode") private var defaultCurrencyCode: String = "INR"
     @EnvironmentObject private var banners: BannerCenter
     @EnvironmentObject private var tabCommands: TabCommandCenter
 
@@ -39,7 +40,7 @@ struct AccountsListView: View {
                                     invested: vm.totalInvested,
                                     changeVsPrev: vm.changeVsPrev,
                                     changePercent: vm.changePercent,
-                                    currency: vm.displayCurrency
+                                    currency: defaultCurrencyCode.uppercased()
                                 )
                                 .padding(.bottom, 12)
                                 let hasInactive = vm.items.contains { !$0.active }
@@ -57,11 +58,11 @@ struct AccountsListView: View {
                                     ForEach(sections, id: \.title) { section in
                                         Section {
                                             ForEach(section.items, id: \.id) { item in
-                                                AccountRow(item: item)
+                                                AccountRow(item: item, currency: defaultCurrencyCode.uppercased())
                                             }
                                         } header: {
                                             let sectionTotal = section.items.reduce(0) { $0 + $1.value.currentValue }
-                                            AccountSectionHeader(title: section.title, count: section.items.count, total: sectionTotal, currency: vm.displayCurrency)
+                                            AccountSectionHeader(title: section.title, count: section.items.count, total: sectionTotal, currency: defaultCurrencyCode.uppercased())
                                                 .padding(.top, 8)
                                         }
                                     }
@@ -187,6 +188,7 @@ private struct EmptyStateCard: View {
 
 private struct AccountRow: View {
     let item: Account
+    let currency: String
     var body: some View {
         HStack(alignment: .top, spacing: 8) {
             // Removed leading icon to simplify rows and align with request
@@ -219,7 +221,7 @@ private struct AccountRow: View {
                 .lineLimit(1)
                 .truncationMode(.tail)
             Spacer(minLength: 0)
-            Text(CurrencyShort.shortString(item.value.currentValue, currency: item.currency))
+            Text(CurrencyShort.shortString(item.value.currentValue, currency: currency))
                 .font(.headline.weight(.bold))
                 .foregroundColor(.primary)
                 .monospacedDigit()
@@ -230,7 +232,7 @@ private struct AccountRow: View {
     private var meta: some View {
         HStack(spacing: 8) {
             TypeBadge(text: normalizedAccountType(item.type))
-            Text("Invested \(CurrencyShort.shortString(item.value.invested, currency: item.currency))")
+            Text("Invested \(CurrencyShort.shortString(item.value.invested, currency: currency))")
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .lineLimit(1)
@@ -260,7 +262,7 @@ private struct AccountRow: View {
                 StatPill(
                     label: "P&L",
                     icon: totalPL >= 0 ? "arrow.up.right" : "arrow.down.right",
-                    value: CurrencyShort.shortString(abs(totalPL), currency: item.currency),
+                    value: CurrencyShort.shortString(abs(totalPL), currency: currency),
                     percent: plPctText,
                     tint: totalPL >= 0 ? .airbnbSuccess : .red
                 )
@@ -273,7 +275,7 @@ private struct AccountRow: View {
                 StatPill(
                     label: "1D",
                     icon: dayDelta >= 0 ? "arrow.up.right" : "arrow.down.right",
-                    value: CurrencyShort.shortString(abs(dayDelta), currency: item.currency),
+                    value: CurrencyShort.shortString(abs(dayDelta), currency: currency),
                     percent: dayPctText,
                     tint: dayDelta >= 0 ? .airbnbSuccess : .red
                 )

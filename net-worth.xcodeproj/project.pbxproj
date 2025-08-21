@@ -45,6 +45,8 @@
 		7DC4221D2E545F73000D62BD /* PrivacyShieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC4221C2E545F73000D62BD /* PrivacyShieldView.swift */; };
 		7DC4221F2E54633B000D62BD /* PrivacyShieldManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC4221E2E54633B000D62BD /* PrivacyShieldManager.swift */; };
 		7DC422212E546A29000D62BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC422202E546A29000D62BD /* AppDelegate.swift */; };
+		7DCE00022E7A000100000002 /* CurrencyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCE00012E7A000100000001 /* CurrencyModels.swift */; };
+		7DCE00042E7A000100000004 /* DefaultCurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCE00032E7A000100000003 /* DefaultCurrencyView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,6 +87,8 @@
 		7DC4221C2E545F73000D62BD /* PrivacyShieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyShieldView.swift; sourceTree = "<group>"; };
 		7DC4221E2E54633B000D62BD /* PrivacyShieldManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyShieldManager.swift; sourceTree = "<group>"; };
 		7DC422202E546A29000D62BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		7DCE00012E7A000100000001 /* CurrencyModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyModels.swift; sourceTree = "<group>"; };
+		7DCE00032E7A000100000003 /* DefaultCurrencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCurrencyView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +154,7 @@
 				7DAA00022BE3000000000002 /* IncomeModels.swift */,
 				7DAB02012E70000100000001 /* WatchModels.swift */,
 				7DAC01012E70000300000001 /* AccountModels.swift */,
+				7DCE00012E7A000100000001 /* CurrencyModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -216,6 +221,7 @@
 				7D2FBCA62E51CEF70046FE17 /* IncomeTagsView.swift */,
 				7D2FBCA22E51CCDD0046FE17 /* IncomeTypesView.swift */,
 				7DAA000B2BE300000000000B /* SettingsView.swift */,
+				7DCE00032E7A000100000003 /* DefaultCurrencyView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -368,6 +374,8 @@
 				7DAC01112E70000300000011 /* AccountModels.swift in Sources */,
 				7DAC01122E70000300000012 /* AccountsController.swift in Sources */,
 				7DAC01132E70000300000013 /* AccountsListView.swift in Sources */,
+				7DCE00022E7A000100000002 /* CurrencyModels.swift in Sources */,
+				7DCE00042E7A000100000004 /* DefaultCurrencyView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
