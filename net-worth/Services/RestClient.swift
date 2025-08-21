@@ -130,9 +130,10 @@ struct RestClient {
         incomeType: IncomeType,
         incomeTag: IncomeTag
     ) async throws {
-        // Normalize to midnight in the user's current timezone and build a naive backend string
+        // Normalize to midnight IST and build backend string in IST (naive "yyyy-MM-dd 00:00:00")
         var cal = Calendar(identifier: .gregorian)
-        cal.timeZone = .current
+        let ist = TimeZone(identifier: "Asia/Kolkata") ?? .current
+        cal.timeZone = ist
         let comps = cal.dateComponents([.year, .month, .day], from: creditedDate)
         let dateString = String(format: "%04d-%02d-%02d 00:00:00", comps.year ?? 1970, comps.month ?? 1, comps.day ?? 1)
 
@@ -258,12 +259,13 @@ extension RestClient {
         incomeType: IncomeType,
         incomeTag: IncomeTag
     ) async throws -> Income {
-        // Normalize to midnight in the user's current timezone and build a naive backend string
+        // Normalize to midnight IST and build backend string in IST (naive "yyyy-MM-dd 00:00:00")
         var cal = Calendar(identifier: .gregorian)
-        cal.timeZone = .current
+        let ist = TimeZone(identifier: "Asia/Kolkata") ?? .current
+        cal.timeZone = ist
         let comps = cal.dateComponents([.year, .month, .day], from: creditedDate)
-        let midnightLocal = cal.date(from: DateComponents(
-            calendar: cal, timeZone: .current, year: comps.year, month: comps.month, day: comps.day, hour: 0, minute: 0, second: 0
+        let midnightIST = cal.date(from: DateComponents(
+            calendar: cal, timeZone: ist, year: comps.year, month: comps.month, day: comps.day, hour: 0, minute: 0, second: 0
         )) ?? creditedDate
         let dateString = String(format: "%04d-%02d-%02d 00:00:00", comps.year ?? 1970, comps.month ?? 1, comps.day ?? 1)
 
@@ -293,7 +295,7 @@ extension RestClient {
                 userId: userId,
                 amount: amount,
                 taxPaid: taxPaid,
-                creditedDate: midnightLocal,
+                creditedDate: midnightIST,
                 currency: currency,
                 incomeType: incomeType,
                 incomeTag: incomeTag
