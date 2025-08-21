@@ -33,9 +33,11 @@ struct SettingsView: View {
                     SecurityCard()
                 }
                 .padding(16)
+                .padding(.bottom, LayoutConstants.tabBarHeight + 24)
                 // Bottom anchor
-                Color.clear.frame(height: 1).id("settingsBottom")
+                Color.clear.frame(height: LayoutConstants.tabBarHeight + 24).id("settingsBottom")
                 }
+                .background(ScrollToTopEnabler())
                 .background(Color.canvasBackground.ignoresSafeArea())
                 .coordinateSpace(name: "settingsScroll")
                 .onChange(of: tabCommands.scrollToBottomRequest) { _, req in
@@ -51,6 +53,7 @@ struct SettingsView: View {
                 withAnimation(.easeInOut(duration: 0.2)) { navCollapsed = y < -8 }
             }
         }
+        .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 66) }
     }
 }
 

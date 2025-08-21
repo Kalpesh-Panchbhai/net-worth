@@ -81,6 +81,8 @@ enum LayoutConstants {
     // Keep FAB close to the tab bar; since content sits above the safe-area inset
     // (RootView uses .safeAreaInset for the tab bar), a small margin is sufficient.
     static let fabBottomMargin: CGFloat = 16
+    // Standard FAB diameter used by FloatingActionButton
+    static let fabSize: CGFloat = 56
     // Standard min height for elevated cards (summary and list rows)
     static let cardMinHeight: CGFloat = 120
     // Standard card corner radius

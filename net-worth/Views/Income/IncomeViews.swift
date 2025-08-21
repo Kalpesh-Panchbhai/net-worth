@@ -137,11 +137,13 @@ struct IncomeListView: View {
                                 )
                             }
                             // Bottom anchor for scroll-to-bottom
-                            Color.clear.frame(height: 1).id("incomeBottom")
+                            let bottomPad = LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin + LayoutConstants.fabSize + 24
+                            Color.clear.frame(height: bottomPad).id("incomeBottom")
                         }
                         .padding(.horizontal, 16)
-                        .padding(.bottom, 8)
+                        .padding(.bottom, LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin + LayoutConstants.fabSize + 24)
                     }
+                    .background(ScrollToTopEnabler())
                     .scrollIndicators(.hidden)
                     .coordinateSpace(name: "incomeScroll")
                 }
@@ -164,6 +166,7 @@ struct IncomeListView: View {
         .onAppear { vm.attachStore(lookup) }
         .task { await vm.load() }
         .refreshable { await vm.refresh() }
+        .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 66) }
         .animation(.spring(response: 0.35, dampingFraction: 0.85), value: vm.incomes)
         .animation(.easeInOut(duration: 0.2), value: vm.selectedTypes)
         .animation(.easeInOut(duration: 0.2), value: vm.grouping)

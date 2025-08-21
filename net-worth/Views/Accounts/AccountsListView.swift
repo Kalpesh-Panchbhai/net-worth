@@ -69,11 +69,12 @@ struct AccountsListView: View {
                                     }
                                 }
                             }
-                            Color.clear.frame(height: 1).id("accountsBottom")
+                            Color.clear.frame(height: LayoutConstants.tabBarHeight + 24).id("accountsBottom")
                         }
                         .padding(.horizontal, 16)
-                        .padding(.bottom, 16)
+                        .padding(.bottom, LayoutConstants.tabBarHeight + 24)
                     }
+                    .background(ScrollToTopEnabler())
                     .scrollIndicators(.hidden)
                     .coordinateSpace(name: "accountsScroll")
                 }
@@ -95,6 +96,7 @@ struct AccountsListView: View {
         .onAppear { vm.attachStore(lookup) }
         .task { await vm.load() }
         .refreshable { await vm.refresh() }
+        .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 66) }
         .onChange(of: vm.errorMessage) { _, newValue in
             guard let message = newValue, !message.isEmpty else { return }
             banners.showError(message: message, retryTitle: "Retry", retry: { Task { await vm.refresh() } })

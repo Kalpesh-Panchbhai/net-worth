@@ -11,9 +11,14 @@ struct AirbnbTabBar: View {
             HStack(spacing: 0) {
                 ForEach(tabs) { tab in
                     TabButton(tab: tab, isSelected: tab == selected, ns: ns) {
-                        if selected != tab { Haptics.selection(); selected = tab }
-                        // On any tap, request scroll-to-bottom for that tab
-                        DispatchQueue.main.async { tabCommands.scrollToBottomRequest = tab }
+                        if selected == tab {
+                            // Retap on the same tab: request scroll-to-bottom
+                            DispatchQueue.main.async { tabCommands.scrollToBottomRequest = tab }
+                        } else {
+                            // Switching tabs: just change selection, do not auto-scroll
+                            Haptics.selection();
+                            selected = tab
+                        }
                     }
                 }
             }

@@ -32,8 +32,10 @@ struct PlaceholderScreen: View {
                         }
                         .frame(maxWidth: .infinity, alignment: .top)
                     }
-                    Color.clear.frame(height: 1).id("placeholderBottom")
+                    .padding(.bottom, LayoutConstants.tabBarHeight + 24)
+                    Color.clear.frame(height: LayoutConstants.tabBarHeight + 24).id("placeholderBottom")
                 }
+                .background(ScrollToTopEnabler())
                 .coordinateSpace(name: "placeholderScroll")
                 .onChange(of: tabCommands.scrollToBottomRequest) { _, req in
                     guard req == tab else { return }
@@ -48,5 +50,6 @@ struct PlaceholderScreen: View {
                 withAnimation(.easeInOut(duration: 0.2)) { navCollapsed = y < -8 }
             }
         }
+        .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 66) }
     }
 }
