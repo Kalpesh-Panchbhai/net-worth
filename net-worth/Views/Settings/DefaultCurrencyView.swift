@@ -41,13 +41,16 @@ struct DefaultCurrencyView: View {
             }
             .padding(.vertical, 16)
             .padding(.horizontal, 16)
+            .padding(.bottom, LayoutConstants.tabBarHeight + 24)
         }
+        .background(ScrollToTopEnabler())
         .background(Color.canvasBackground.ignoresSafeArea())
         .navigationTitle("Default currency")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(Color.canvasBackground, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always), prompt: Text("Search currency"))
+        .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 66) }
     }
 
     @ViewBuilder

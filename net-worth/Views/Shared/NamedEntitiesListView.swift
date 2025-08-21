@@ -79,7 +79,9 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
             }
             .padding(.vertical, 16)
             .padding(.horizontal, 16)
+            .padding(.bottom, LayoutConstants.tabBarHeight + 24)
         }
+        .background(ScrollToTopEnabler())
         .refreshable {
             if useStore { await refreshStore() }
             else { await load(force: true, suppressErrors: true) }
