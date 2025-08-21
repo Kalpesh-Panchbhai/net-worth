@@ -6,6 +6,7 @@ struct IncomeListView: View {
     @State private var navCollapsed = false
     @EnvironmentObject private var banners: BannerCenter
     @EnvironmentObject private var tabCommands: TabCommandCenter
+    @EnvironmentObject private var lookup: LookupStore
     @AppStorage("defaultCurrencyCode") private var defaultCurrencyCode: String = "INR"
     @State private var showFilterSheet = false
     @State private var pendingDelete: Income? = nil
@@ -160,6 +161,7 @@ struct IncomeListView: View {
                 withAnimation(.easeInOut(duration: 0.2)) { navCollapsed = y < -8 }
             }
         }
+        .onAppear { vm.attachStore(lookup) }
         .task { await vm.load() }
         .refreshable { await vm.refresh() }
         .animation(.spring(response: 0.35, dampingFraction: 0.85), value: vm.incomes)

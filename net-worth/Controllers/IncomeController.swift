@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import Combine
 
 @MainActor
 final class IncomeController: ObservableObject {
@@ -26,13 +27,29 @@ final class IncomeController: ObservableObject {
     let userId: Int
     private let client: RestClient
     private let calendar = Calendar.current
+    private var store: LookupStore? = nil
+    private var cancellables = Set<AnyCancellable>()
     
     init(userId: Int, service: RestClient = RestClient()) {
         self.userId = userId
         self.client = service
     }
     
+    func attachStore(_ store: LookupStore) {
+        guard self.store == nil else { return }
+        self.store = store
+        store.$incomes
+            .sink { [weak self] list in
+                self?.incomes = list.sorted { $0.creditedDate > $1.creditedDate }
+            }
+            .store(in: &cancellables)
+    }
+
     func load() async {
+        if let store = store {
+            self.incomes = store.incomes.sorted { $0.creditedDate > $1.creditedDate }
+            return
+        }
         isLoading = true
         errorMessage = nil
         defer { isLoading = false }
@@ -50,7 +67,10 @@ final class IncomeController: ObservableObject {
         }
     }
     
-    func refresh() async { await load() }
+    func refresh() async {
+        if let store = store { await store.refreshIncomes(userId: userId) }
+        else { await load() }
+    }
     
     // Delete an income by calling backend and updating local state
     func delete(_ income: Income) async -> Bool {
@@ -59,6 +79,7 @@ final class IncomeController: ObservableObject {
             try await client.deleteIncome(id: income.id)
             // Update local list
             incomes.removeAll { $0.id == income.id }
+            if let store = store { await store.refreshIncomes(userId: userId) }
             return true
         } catch let api as APIError {
             if case .transport(let err) = api, let urlErr = err as? URLError, urlErr.code == .cancelled {

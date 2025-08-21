@@ -7,6 +7,7 @@ struct AccountsListView: View {
     @AppStorage("defaultCurrencyCode") private var defaultCurrencyCode: String = "INR"
     @EnvironmentObject private var banners: BannerCenter
     @EnvironmentObject private var tabCommands: TabCommandCenter
+    @EnvironmentObject private var lookup: LookupStore
 
     init(userId: Int) {
         _vm = StateObject(wrappedValue: AccountsController(userId: userId))
@@ -91,6 +92,7 @@ struct AccountsListView: View {
                 withAnimation(.easeInOut(duration: 0.2)) { navCollapsed = y < -8 }
             }
         }
+        .onAppear { vm.attachStore(lookup) }
         .task { await vm.load() }
         .refreshable { await vm.refresh() }
         .onChange(of: vm.errorMessage) { _, newValue in

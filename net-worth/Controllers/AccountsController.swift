@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import Combine
 
 @MainActor
 final class AccountsController: ObservableObject {
@@ -9,13 +10,30 @@ final class AccountsController: ObservableObject {
 
     let userId: Int
     private let client: RestClient
+    private var store: LookupStore? = nil
+    private var cancellables = Set<AnyCancellable>()
 
     init(userId: Int, service: RestClient = RestClient()) {
         self.userId = userId
         self.client = service
     }
 
+    func attachStore(_ store: LookupStore) {
+        guard self.store == nil else { return }
+        self.store = store
+        store.$accounts
+            .sink { [weak self] accounts in
+                guard let self = self else { return }
+                self.items = self.sortAccounts(accounts)
+            }
+            .store(in: &cancellables)
+    }
+
     func load() async {
+        if store != nil { // Use store-driven updates; no direct fetch
+            self.items = sortAccounts(store?.accounts ?? [])
+            return
+        }
         if isLoading { return }
         isLoading = true
         errorMessage = nil
@@ -34,7 +52,10 @@ final class AccountsController: ObservableObject {
         }
     }
 
-    func refresh() async { await load() }
+    func refresh() async {
+        if let store = store { await store.refreshAccounts(userId: userId) }
+        else { await load() }
+    }
 
     // MARK: - Aggregates
     var totalCurrent: Double { items.reduce(0) { $0 + $1.value.currentValue } }
