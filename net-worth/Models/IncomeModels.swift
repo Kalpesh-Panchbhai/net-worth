@@ -68,4 +68,16 @@ struct Income: Codable, Identifiable, Hashable {
         incomeType = try container.decode(IncomeType.self, forKey: .incomeType)
         incomeTag = try container.decode(IncomeTag.self, forKey: .incomeTag)
     }
+
+    // Convenience initializer used when synthesizing an Income locally (e.g., after POST returns only an id)
+    init(id: Int, userId: Int, amount: Double, taxPaid: Double, creditedDate: Date, currency: String, incomeType: IncomeType, incomeTag: IncomeTag) {
+        self.id = id
+        self.userId = userId
+        self.amount = amount
+        self.taxPaid = taxPaid
+        self.creditedDate = creditedDate
+        self.currency = currency
+        self.incomeType = incomeType
+        self.incomeTag = incomeTag
+    }
 }

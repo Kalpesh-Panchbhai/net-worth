@@ -206,6 +206,60 @@ extension RestClient {
     func deleteIncome(id: Int) async throws {
         try await delete("income/\(id)")
     }
+
+    // Create an income record
+    func createIncome(
+        userId: Int,
+        amount: Double,
+        taxPaid: Double,
+        creditedDate: Date,
+        currency: String,
+        incomeType: IncomeType,
+        incomeTag: IncomeTag
+    ) async throws -> Income {
+        // Normalize date to midnight UTC as expected by backend ("yyyy-MM-dd 00:00:00")
+        var cal = Calendar(identifier: .gregorian)
+        let utc = TimeZone(secondsFromGMT: 0) ?? TimeZone(abbreviation: "UTC") ?? .current
+        cal.timeZone = utc
+        let comps = cal.dateComponents([.year, .month, .day], from: creditedDate)
+        let midnightUTC = cal.date(from: DateComponents(
+            calendar: cal, timeZone: utc, year: comps.year, month: comps.month, day: comps.day, hour: 0, minute: 0, second: 0
+        )) ?? creditedDate
+        let dateString = DateFormatter.incomeBackend.string(from: midnightUTC)
+
+        struct Payload: Codable {
+            let userId: Int
+            let amount: Double
+            let taxPaid: Double
+            let creditedDate: String
+            let currency: String
+            let incomeType: IncomeType
+            let incomeTag: IncomeTag
+        }
+        let body = Payload(
+            userId: userId,
+            amount: amount,
+            taxPaid: taxPaid,
+            creditedDate: dateString,
+            currency: currency,
+            incomeType: incomeType,
+            incomeTag: incomeTag
+        )
+
+        return try await postWithFallback("income", body: body) { newId in
+            // Synthesize minimal Income when backend returns only an id
+            Income(
+                id: newId ?? -1,
+                userId: userId,
+                amount: amount,
+                taxPaid: taxPaid,
+                creditedDate: midnightUTC,
+                currency: currency,
+                incomeType: incomeType,
+                incomeTag: incomeTag
+            )
+        }
+    }
 }
 
 // Note: Use RestClient directly going forward. A thin deprecated IncomeService wrapper

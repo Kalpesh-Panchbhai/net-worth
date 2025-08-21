@@ -1,4 +1,43 @@
 import SwiftUI
+// MARK: - Currency helpers
+fileprivate func sfSymbolForCurrency(code: String) -> String? {
+    switch code.uppercased() {
+    case "USD", "CAD", "AUD", "NZD", "SGD", "HKD", "MXN", "ARS", "CLP": return "dollarsign.circle"
+    case "EUR": return "eurosign.circle"
+    case "GBP": return "sterlingsign.circle"
+    case "JPY", "CNY": return "yensign.circle"
+    case "INR": return "indianrupeesign.circle"
+    case "KRW": return "wonsign.circle"
+    case "RUB": return "rublesign.circle"
+    case "TRY": return "turkishlirasign.circle"
+    case "THB": return "bahtsign.circle"
+    case "ILS": return "shekelsign.circle"
+    default: return nil
+    }
+}
+private struct CurrencyBadge: View {
+    let code: String
+    var body: some View {
+        ZStack {
+            Circle().fill(Color.airbnbPrimary.opacity(0.12))
+            if let icon = sfSymbolForCurrency(code: code) {
+                Image(systemName: icon)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(.airbnbPrimary)
+            } else {
+                Text(code.uppercased())
+                    .font(.caption2.weight(.bold))
+                    .foregroundColor(.airbnbPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+                    .allowsTightening(true)
+                    .frame(width: 20, height: 20, alignment: .center)
+            }
+        }
+        .frame(width: 32, height: 32)
+        .clipShape(Circle())
+    }
+}
 
 // MARK: - Income
 struct IncomeListView: View {
@@ -10,11 +49,11 @@ struct IncomeListView: View {
     @AppStorage("defaultCurrencyCode") private var defaultCurrencyCode: String = "INR"
     @State private var showFilterSheet = false
     @State private var pendingDelete: Income? = nil
+    @State private var showCreateSheet = false
 
     init(userId: Int) {
         _vm = StateObject(wrappedValue: IncomeController(userId: userId))
     }
-
     var body: some View {
         NavigationStack {
             ScrollViewReader { proxy in
@@ -142,6 +181,7 @@ struct IncomeListView: View {
                         .padding(.horizontal, 16)
                         .padding(.bottom, LayoutConstants.tabBarHeight + 24)
                     }
+                    .refreshable { await vm.refresh() }
                     .background(ScrollToTopEnabler())
                     .scrollIndicators(.hidden)
                     .coordinateSpace(name: "incomeScroll")
@@ -163,7 +203,6 @@ struct IncomeListView: View {
         }
         .onAppear { vm.attachStore(lookup) }
         .task { await vm.load() }
-        .refreshable { await vm.refresh() }
         .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 66) }
         .animation(.spring(response: 0.35, dampingFraction: 0.85), value: vm.incomes)
         .animation(.easeInOut(duration: 0.2), value: vm.selectedTypes)
@@ -214,6 +253,18 @@ struct IncomeListView: View {
                 primaryButton: .destructive(Text("Delete"), action: { deleteIncome(income) }),
                 secondaryButton: .cancel()
             )
+        }
+        // Create Income sheet
+        .sheet(isPresented: $showCreateSheet) {
+            NavigationStack {
+                CreateIncomeView(userId: vm.userId)
+                    .navigationBarTitleDisplayMode(.inline)
+            }
+        }
+        // Floating action button to add new income
+        .fabOverlay(icon: "plus", accessibilityLabel: "Add income") {
+            showCreateSheet = true
+            Haptics.selection()
         }
     }
 }
@@ -473,7 +524,7 @@ private struct IncomeSectionsList: View {
             ForEach(sections) { section in
                 SectionHeader(grouping: grouping, rawTitle: section.title, count: section.items.count)
                     .padding(.top, 8)
-                ForEach(section.items, id: \.id) { item in
+                ForEach(section.items, id: \.self) { item in
                     IncomeRowCard(income: item, currency: currency)
                         .contentShape(Rectangle())
                         .contextMenu {
@@ -668,3 +719,475 @@ private struct EmptyStateCard: View {
         .elevatedShadow()
     }
 }
+
+// MARK: - Create Income
+struct CreateIncomeView: View {
+    let userId: Int
+    @EnvironmentObject private var lookup: LookupStore
+    @EnvironmentObject private var banners: BannerCenter
+    @Environment(\.dismiss) private var dismiss
+    @AppStorage("defaultCurrencyCode") private var defaultCurrencyCode: String = "INR"
+
+    @State private var amountText: String = ""
+    @State private var taxText: String = ""
+    @State private var creditedDate: Date = Date()
+    @State private var currencyCode: String = "INR"
+    @State private var selectedType: IncomeType? = nil
+    @State private var selectedTag: IncomeTag? = nil
+    @State private var saving: Bool = false
+    @State private var showCurrencyPicker: Bool = false
+    @State private var showDatePicker: Bool = false
+    @State private var showTypePicker: Bool = false
+    @State private var showTagPicker: Bool = false
+
+    private let client = RestClient()
+
+    // MARK: - Validation
+    private var amount: Double? {
+        let normalized = amountText.replacingOccurrences(of: ",", with: ".").trimmingCharacters(in: .whitespacesAndNewlines)
+        return Double(normalized)
+    }
+    private var tax: Double? {
+        let normalized = taxText.replacingOccurrences(of: ",", with: ".").trimmingCharacters(in: .whitespacesAndNewlines)
+        return Double(normalized) ?? 0
+    }
+    private var isValid: Bool {
+        guard let amount = amount, amount >= 0 else { return false }
+        guard let tax = tax, tax >= 0 else { return false }
+        guard selectedType != nil, selectedTag != nil else { return false }
+        return true
+    }
+    private var totalAll: Double { (amount ?? 0) + (tax ?? 0) }
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 16) {
+                SettingsGroup(title: "Amount", showHeader: true) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack(spacing: 12) {
+                            TextField("Net amount", text: $amountText)
+                                .keyboardType(.decimalPad)
+                                .textInputAutocapitalization(.never)
+                                .disableAutocorrection(true)
+                                .onChange(of: amountText) { _, newVal in
+                                    amountText = sanitizeDecimalInput(newVal)
+                                }
+                            Spacer(minLength: 8)
+                            Text(currencyCode.uppercased())
+                                .font(.footnote.weight(.semibold))
+                                .foregroundColor(.secondary)
+                        }
+                        Rectangle().fill(Color.subtleSeparator).frame(height: 0.5)
+                        HStack(spacing: 12) {
+                            TextField("Tax paid", text: $taxText)
+                                .keyboardType(.decimalPad)
+                                .textInputAutocapitalization(.never)
+                                .disableAutocorrection(true)
+                                .onChange(of: taxText) { _, newVal in
+                                    taxText = sanitizeDecimalInput(newVal)
+                                }
+                            Spacer(minLength: 8)
+                            Text(currencyCode.uppercased())
+                                .font(.footnote.weight(.semibold))
+                                .foregroundColor(.secondary)
+                        }
+                        if let amt = amount, amt < 0 {
+                            Text("Amount must be non‑negative").font(.footnote).foregroundColor(.airbnbPrimary)
+                        }
+                        if let t = tax, t < 0 {
+                            Text("Tax must be non‑negative").font(.footnote).foregroundColor(.airbnbPrimary)
+                        }
+                    }
+                }
+
+                SettingsGroup(title: "Details") {
+                    VStack(spacing: 0) {
+                        // Date (sheet)
+                        Button {
+                            showDatePicker = true
+                            Haptics.selection()
+                        } label: {
+                            SettingsCell(icon: "calendar", title: "Credited on", subtitle: DateFormatter.dayMonYear.string(from: creditedDate)) {
+                                Image(systemName: "chevron.right")
+                                    .font(.footnote.weight(.semibold))
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .contentShape(Rectangle())
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(.horizontal, 12)
+                        // Currency (sheet)
+                        Button {
+                            showCurrencyPicker = true
+                            Haptics.selection()
+                        } label: {
+                            SettingsCell(title: "Currency", subtitle: CurrencyCatalog.byCode[currencyCode.uppercased()]?.name ?? currencyCode, leading: {
+                                CurrencyBadge(code: currencyCode)
+                            }) {
+                                Image(systemName: "chevron.right")
+                                    .font(.footnote.weight(.semibold))
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .contentShape(Rectangle())
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                SettingsGroup(title: "Categorize") {
+                    VStack(spacing: 0) {
+                        // Source (sheet)
+                        Button {
+                            showTypePicker = true
+                            Haptics.selection()
+                        } label: {
+                            SettingsCell(icon: "creditcard", title: "Source", subtitle: selectedType?.name ?? "Not set") {
+                                Image(systemName: "chevron.right")
+                                    .font(.footnote.weight(.semibold))
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .contentShape(Rectangle())
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(.horizontal, 12)
+                        // Tag (sheet)
+                        Button {
+                            showTagPicker = true
+                            Haptics.selection()
+                        } label: {
+                            SettingsCell(icon: "tag", title: "Tag", subtitle: selectedTag?.name ?? "Not set") {
+                                Image(systemName: "chevron.right")
+                                    .font(.footnote.weight(.semibold))
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .contentShape(Rectangle())
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                // Summary
+                SettingsGroup(title: "Summary") {
+                    HStack(spacing: 12) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack(spacing: 6) {
+                                Text("Total").font(.caption2.bold()).foregroundColor(.secondary)
+                                Text(totalAll, format: .currency(code: currencyCode))
+                                    .font(.headline.weight(.semibold))
+                            }
+                            HStack(spacing: 8) {
+                                StatPill(title: "Net", value: amount ?? 0, currency: currencyCode, tint: .airbnbSuccess)
+                                StatPill(title: "Tax", value: tax ?? 0, currency: currencyCode, tint: .airbnbPrimary)
+                            }
+                        }
+                        Spacer()
+                    }
+                }
+            }
+            .padding(.vertical, 16)
+            .padding(.horizontal, 16)
+            .padding(.bottom, LayoutConstants.tabBarHeight + 24)
+        }
+        .background(ScrollToTopEnabler())
+        .background(Color.canvasBackground.ignoresSafeArea())
+        .navigationTitle("New income")
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Cancel") { dismiss() }
+            }
+            ToolbarItem(placement: .confirmationAction) {
+                Button(saving ? "Saving…" : "Save") { Task { await save() } }
+                    .disabled(!isValid || saving)
+            }
+        }
+        .toolbarBackground(Color.canvasBackground, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .onAppear {
+            Task {
+                await lookup.loadIncomeTypesIfNeeded(userId: userId)
+                await lookup.loadIncomeTagsIfNeeded(userId: userId)
+                bootstrapDefaults()
+            }
+        }
+        .sheet(isPresented: $showCurrencyPicker) {
+            NavigationStack {
+                CurrencyPickerSheet(selectedCode: $currencyCode)
+                    .navigationTitle("Select currency")
+                    .navigationBarTitleDisplayMode(.inline)
+            }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
+        }
+        .sheet(isPresented: $showDatePicker) {
+            NavigationStack {
+                DatePickerSheet(selectedDate: $creditedDate)
+                    .navigationTitle("Select date")
+                    .navigationBarTitleDisplayMode(.inline)
+            }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
+        }
+        .sheet(isPresented: $showTypePicker) {
+            NavigationStack {
+                EntityPickerSheet<IncomeType>(title: "Select source", items: lookup.incomeTypes, icon: "creditcard", selected: $selectedType)
+                    .navigationBarTitleDisplayMode(.inline)
+            }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
+        }
+        .sheet(isPresented: $showTagPicker) {
+            NavigationStack {
+                EntityPickerSheet<IncomeTag>(title: "Select tag", items: lookup.incomeTags, icon: "tag", selected: $selectedTag)
+                    .navigationBarTitleDisplayMode(.inline)
+            }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
+        }
+    }
+
+    private func bootstrapDefaults() {
+        currencyCode = defaultCurrencyCode.uppercased()
+        if selectedType == nil {
+            selectedType = lookup.incomeTypes.first(where: { $0.isDefault }) ?? lookup.incomeTypes.first
+        }
+        if selectedTag == nil {
+            selectedTag = lookup.incomeTags.first(where: { $0.isDefault }) ?? lookup.incomeTags.first
+        }
+    }
+
+    private func save() async {
+        guard isValid, let amount = amount, let tax = tax, let type = selectedType, let tag = selectedTag else { return }
+        await MainActor.run { saving = true }
+        do {
+            _ = try await client.createIncome(
+                userId: userId,
+                amount: amount,
+                taxPaid: tax,
+                creditedDate: creditedDate,
+                currency: currencyCode,
+                incomeType: type,
+                incomeTag: tag
+            )
+            Haptics.success()
+            await lookup.refreshIncomes(userId: userId)
+            await MainActor.run { dismiss() }
+        } catch {
+            let msg = (error as? APIError)?.errorDescription ?? error.localizedDescription
+            await MainActor.run { banners.showError(message: msg) }
+        }
+        await MainActor.run { saving = false }
+    }
+}
+
+// MARK: - Currency Picker Sheet
+private struct CurrencyPickerSheet: View {
+    @Binding var selectedCode: String
+    @Environment(\.dismiss) private var dismiss
+    @State private var query: String = ""
+    private var list: [Currency] {
+        let base: [Currency]
+        let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        if q.isEmpty {
+            base = CurrencyCatalog.all
+        } else {
+            base = CurrencyCatalog.all.filter { c in
+                c.name.localizedCaseInsensitiveContains(q) ||
+                c.code.localizedCaseInsensitiveContains(q) ||
+                c.symbol.localizedCaseInsensitiveContains(q)
+            }
+        }
+        // Pin selected to top
+        let sel = selectedCode.uppercased()
+        return base.sorted { a, b in
+            let aSel = a.code.uppercased() == sel
+            let bSel = b.code.uppercased() == sel
+            if aSel != bSel { return aSel && !bSel }
+            return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
+        }
+    }
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 16) {
+                SettingsGroup(showHeader: false) {
+                    VStack(spacing: 0) {
+                        ForEach(Array(list.enumerated()), id: \.element) { idx, c in
+                            row(c)
+                            if idx < list.count - 1 { Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(.horizontal, 12) }
+                        }
+                    }
+                }
+            }
+            .padding(.vertical, 16)
+            .padding(.horizontal, 16)
+        }
+        .background(Color.canvasBackground.ignoresSafeArea())
+        .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always), prompt: Text("Search currency"))
+    }
+    @ViewBuilder
+    private func row(_ c: Currency) -> some View {
+        HStack(spacing: 12) {
+            ZStack {
+                Circle().fill(Color.airbnbPrimary.opacity(0.12))
+                Text(c.code)
+                    .font(.caption2.weight(.bold))
+                    .foregroundColor(.airbnbPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+            }
+            .frame(width: 32, height: 32)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(c.name).font(.subheadline.weight(.semibold))
+                Text(c.code).font(.caption).foregroundColor(.secondary)
+            }
+            Spacer()
+            if c.code.uppercased() == selectedCode.uppercased() {
+                Text("Selected")
+                    .font(.caption2.bold())
+                    .foregroundColor(.white)
+                    .padding(.vertical, 4)
+                    .padding(.horizontal, 8)
+                    .background(Capsule().fill(LinearGradient.airbnbAccent))
+                    .shadow(color: .airbnbPrimary.opacity(0.25), radius: 6, x: 0, y: 3)
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            selectedCode = c.code
+            Haptics.selection()
+            dismiss()
+        }
+    }
+}
+
+// MARK: - Input sanitization (numbers with up to 2 decimals)
+fileprivate func sanitizeDecimalInput(_ input: String) -> String {
+    let s = input.replacingOccurrences(of: ",", with: ".")
+    // Keep only digits and the first dot
+    var result = ""
+    var hasDot = false
+    for ch in s {
+        if ch.isNumber { result.append(ch) }
+        else if ch == "." && !hasDot { result.append(ch); hasDot = true }
+    }
+    if result == "." { result = "0." }
+    // Limit to 2 decimals
+    if let dotIdx = result.firstIndex(of: ".") {
+        let after = result[result.index(after: dotIdx)...]
+        let limited = String(after.prefix(2))
+        result = String(result[..<result.index(after: dotIdx)]) + limited
+    }
+    // Trim leading zeros for integer part (keep one zero)
+    if let dotIdx = result.firstIndex(of: ".") {
+        var intPart = String(result[..<dotIdx])
+        while intPart.count > 1 && intPart.first == "0" { intPart.removeFirst() }
+        result = intPart + String(result[dotIdx...])
+    } else {
+        while result.count > 1 && result.first == "0" { result.removeFirst() }
+    }
+    return result
+}
+
+// MARK: - Date Picker Sheet (Airbnb style)
+private struct DatePickerSheet: View {
+    @Binding var selectedDate: Date
+    @Environment(\.dismiss) private var dismiss
+    var body: some View {
+        VStack(spacing: 16) {
+            SettingsGroup(showHeader: false) {
+                VStack(alignment: .leading, spacing: 12) {
+                    DatePicker("Date", selection: $selectedDate, in: ...Date(), displayedComponents: .date)
+                        .datePickerStyle(.graphical)
+                        .labelsHidden()
+                }
+            }
+        }
+        .padding(.vertical, 16)
+        .padding(.horizontal, 16)
+        .background(Color.canvasBackground.ignoresSafeArea())
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
+        }
+        .toolbarBackground(Color.canvasBackground, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+    }
+}
+
+// MARK: - Generic Entity Picker Sheet
+private struct EntityPickerSheet<T: NamedEntity>: View {
+    let title: String
+    let items: [T]
+    let icon: String
+    @Binding var selected: T?
+    @Environment(\.dismiss) private var dismiss
+    @State private var query: String = ""
+    private var displayed: [T] {
+        let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        let filtered = q.isEmpty ? items : items.filter { $0.name.localizedCaseInsensitiveContains(q) }
+        // Default on top, name asc
+        return filtered.sorted { a, b in
+            if a.isDefault != b.isDefault { return a.isDefault && !b.isDefault }
+            return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
+        }
+    }
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 16) {
+                SettingsGroup(showHeader: false) {
+                    VStack(spacing: 0) {
+                        ForEach(Array(displayed.enumerated()), id: \.element) { idx, item in
+                            row(item)
+                            if idx < displayed.count - 1 { Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(.horizontal, 12) }
+                        }
+                    }
+                }
+            }
+            .padding(.vertical, 16)
+            .padding(.horizontal, 16)
+        }
+        .background(Color.canvasBackground.ignoresSafeArea())
+        .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always), prompt: Text("Search"))
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
+        }
+        .navigationTitle(title)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(Color.canvasBackground, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+    }
+    @ViewBuilder
+    private func row(_ item: T) -> some View {
+        HStack(spacing: 12) {
+            ZStack {
+                Circle().fill(Color.airbnbPrimary.opacity(0.12))
+                Image(systemName: icon)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(.airbnbPrimary)
+            }
+            .frame(width: 32, height: 32)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(item.name).font(.subheadline.weight(.semibold))
+                if item.isDefault { Text("Default").font(.caption2).foregroundColor(.secondary) }
+            }
+            Spacer()
+            if selected?.id == item.id {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundStyle(LinearGradient.airbnbAccent)
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            selected = item
+            Haptics.selection()
+            dismiss()
+        }
+    }
+}
+
