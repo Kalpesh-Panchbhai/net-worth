@@ -19,6 +19,7 @@
 		7D59B5372BE24ABA006F3F00 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 7D59B5362BE24ABA006F3F00 /* GoogleSignIn */; };
 		7D59B5392BE24ABA006F3F00 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7D59B5382BE24ABA006F3F00 /* GoogleSignInSwift */; };
 		7D59B53D2BE24B1C006F3F00 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B53C2BE24B1C006F3F00 /* GoogleService-Info.plist */; };
+		7D6F68E82E5730A900E0AD02 /* LookupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6F68E72E5730A900E0AD02 /* LookupStore.swift */; };
 		7D74B2922E52375A00E35786 /* BannerCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74B2912E52375A00E35786 /* BannerCenter.swift */; };
 		7DAA10012BE3000000000001 /* AppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00012BE3000000000001 /* AppTab.swift */; };
 		7DAA10022BE3000000000002 /* IncomeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00022BE3000000000002 /* IncomeModels.swift */; };
@@ -61,6 +62,7 @@
 		7D59B4072BE24701006F3F00 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		7D59B40E2BE24774006F3F00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		7D59B53C2BE24B1C006F3F00 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		7D6F68E72E5730A900E0AD02 /* LookupStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupStore.swift; sourceTree = "<group>"; };
 		7D74B2912E52375A00E35786 /* BannerCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerCenter.swift; sourceTree = "<group>"; };
 		7DAA00012BE3000000000001 /* AppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTab.swift; sourceTree = "<group>"; };
 		7DAA00022BE3000000000002 /* IncomeModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeModels.swift; sourceTree = "<group>"; };
@@ -185,6 +187,7 @@
 				7DAA00062BE3000000000006 /* Design.swift */,
 				7DAA00052BE3000000000005 /* Formatters.swift */,
 				7DAA00072BE3000000000007 /* Interactions.swift */,
+				7D6F68E72E5730A900E0AD02 /* LookupStore.swift */,
 				7DAA00082BE3000000000008 /* NavBarUtils.swift */,
 				7DC4221E2E54633B000D62BD /* PrivacyShieldManager.swift */,
 				7DAA00092BE3000000000009 /* Shimmer.swift */,
@@ -348,6 +351,7 @@
 				7DAA10022BE3000000000002 /* IncomeModels.swift in Sources */,
 				7D74B2922E52375A00E35786 /* BannerCenter.swift in Sources */,
 				7DAA10042BE3000000000004 /* IncomeController.swift in Sources */,
+				7D6F68E82E5730A900E0AD02 /* LookupStore.swift in Sources */,
 				7DAA10052BE3000000000005 /* Formatters.swift in Sources */,
 				7DAA10062BE3000000000006 /* Design.swift in Sources */,
 				7DC4221F2E54633B000D62BD /* PrivacyShieldManager.swift in Sources */,

@@ -6,6 +6,7 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
     let userId: Int
     let regularIcon: String
     let defaultIcon: String
+    var useStore: Bool = false
     let fetch: (RestClient, Int) async throws -> [T]
     let setDefault: ((RestClient, T) async throws -> Void)?
     let create: ((RestClient, Int, String, Bool) async throws -> T)?
@@ -20,6 +21,7 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
     @State private var createIsDefault: Bool = false
     @State private var creating: Bool = false
     private let client = RestClient()
+    @EnvironmentObject private var lookup: LookupStore
     @EnvironmentObject private var banners: BannerCenter
 
     var body: some View {
@@ -28,14 +30,19 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
                 // Errors are shown via the global top banner.
                 SettingsGroup(title: title, showHeader: false) {
                     VStack(spacing: 0) {
-                        let displayed = items.filter { query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? true : $0.name.localizedCaseInsensitiveContains(query) }
-                        if isLoading && items.isEmpty {
+                        let source: [T] = useStore ? storeItems : items
+                        let displayed = source.filter { query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? true : $0.name.localizedCaseInsensitiveContains(query) }
+                        let displayedSorted = displayed.sorted { a, b in
+                            if a.isDefault != b.isDefault { return a.isDefault && !b.isDefault }
+                            return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
+                        }
+                        if !useStore && isLoading && source.isEmpty {
                             ForEach(0..<6, id: \.self) { i in
                                 NamedEntityRow<T>.placeholder()
                                 if i != 5 { Hairline() }
                             }
                             .shimmer()
-                        } else if displayed.isEmpty {
+                        } else if displayedSorted.isEmpty {
                             VStack(alignment: .center, spacing: 8) {
                                 Image(systemName: "tray")
                                     .font(.title2)
@@ -47,9 +54,9 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
                         } else {
-                            ForEach(Array(displayed.enumerated()), id: \.element) { idx, item in
+                            ForEach(Array(displayedSorted.enumerated()), id: \.element) { idx, item in
                                 if !item.isDefault, let setDefault {
-                                    NamedEntityRow(entity: item, regularIcon: regularIcon, defaultIcon: defaultIcon)
+                                    NamedEntityRow<T>(entity: item, regularIcon: regularIcon, defaultIcon: defaultIcon)
                                         .contentShape(Rectangle())
                                         .contextMenu {
                                             Button(action: { Task { await markDefault(item, setDefault: setDefault) } }) { Text("Set default") }
@@ -64,7 +71,7 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
                                     NamedEntityRow(entity: item, regularIcon: regularIcon, defaultIcon: defaultIcon)
                                         .contentShape(Rectangle())
                                 }
-                                if idx < displayed.count - 1 { Hairline() }
+                                if idx < displayedSorted.count - 1 { Hairline() }
                             }
                         }
                     }
@@ -73,11 +80,14 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
             .padding(.vertical, 16)
             .padding(.horizontal, 16)
         }
-        .refreshable { await load(force: true, suppressErrors: true) }
+        .refreshable {
+            if useStore { await refreshStore() }
+            else { await load(force: true, suppressErrors: true) }
+        }
         .background(Color.canvasBackground.ignoresSafeArea())
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
-        .task { await load() }
+        .task { if !useStore { await load() } }
         .toolbarBackground(Color.canvasBackground, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .sheet(isPresented: $isShowingCreate) {
@@ -166,7 +176,7 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
         do {
             try await setDefault(client, item)
             Haptics.success()
-            await load()
+            if useStore { await refreshStore() } else { await load() }
         } catch {
             let message = (error as? APIError)?.errorDescription ?? error.localizedDescription
             await MainActor.run { errorMessage = message }
@@ -187,20 +197,24 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
             let created = try await create(client, userId, name, isDef)
             Haptics.success()
             // Optimistic local update
-            await MainActor.run {
-                items.append(created)
-                items.sort { a, b in
-                    if a.isDefault != b.isDefault { return a.isDefault && !b.isDefault }
-                    return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
+            if useStore {
+                await refreshStore()
+            } else {
+                await MainActor.run {
+                    items.append(created)
+                    items.sort { a, b in
+                        if a.isDefault != b.isDefault { return a.isDefault && !b.isDefault }
+                        return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
+                    }
                 }
             }
             await MainActor.run {
                 createName = ""
                 createIsDefault = false
             }
-            // Give backend a tiny moment to persist, then reload
+            // Give backend a tiny moment to persist for non-store mode
             try? await Task.sleep(nanoseconds: 250_000_000)
-            await load(force: true)
+            if !useStore { await load(force: true) }
         } catch {
             let message = (error as? APIError)?.errorDescription ?? error.localizedDescription
             await MainActor.run { errorMessage = message }
@@ -208,6 +222,21 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
         await MainActor.run { creating = false }
     }
 
+}
+
+private extension NamedEntitiesListView {
+    var storeItems: [T] {
+        if T.self == IncomeType.self { return (lookup.incomeTypes as? [T]) ?? [] }
+        if T.self == IncomeTag.self { return (lookup.incomeTags as? [T]) ?? [] }
+        return []
+    }
+    func refreshStore() async {
+        if T.self == IncomeType.self {
+            await lookup.refreshIncomeTypes(userId: userId)
+        } else if T.self == IncomeTag.self {
+            await lookup.refreshIncomeTags(userId: userId)
+        }
+    }
 }
 
 // FloatingPlusButton replaced by Shared/FloatingActionButton

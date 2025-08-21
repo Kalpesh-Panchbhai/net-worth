@@ -7,6 +7,7 @@ struct net_worthApp: App {
     @StateObject private var networkMonitor = NetworkMonitor()
     @StateObject private var bannerCenter = BannerCenter()
     @StateObject private var tabCommands = TabCommandCenter()
+    @StateObject private var lookupStore = LookupStore()
     @Environment(\.scenePhase) private var scenePhase
     init() {
         // Hide hairline at top (scroll edge large title), show after scrolling (standard)
@@ -31,7 +32,9 @@ struct net_worthApp: App {
                 .environmentObject(networkMonitor)
                 .environmentObject(bannerCenter)
                 .environmentObject(tabCommands)
+                .environmentObject(lookupStore)
                 .tint(.airbnbPrimary)
+                .task { await lookupStore.loadIfNeeded(userId: 1) }
         }
         .onChange(of: scenePhase) { _, newPhase in
             // Show a window-level privacy shield above all content (including sheets) when not active

@@ -107,10 +107,7 @@ struct DataCard: View {
 struct PreferencesCard: View {
     let userId: Int
     @AppStorage("defaultCurrencyCode") private var code: String = "INR"
-    @State private var defaultIncomeTypeName: String? = nil
-    @State private var defaultIncomeTagName: String? = nil
-    @State private var loadingDefaults: Bool = false
-    private let restClient = RestClient()
+    @EnvironmentObject private var lookup: LookupStore
     var body: some View {
         SettingsGroup(title: "Preferences") {
             VStack(spacing: 0) {
@@ -158,7 +155,7 @@ struct PreferencesCard: View {
                 NavigationLink { IncomeTypesView(userId: userId) } label: {
                     SettingsCell(
                         title: "Income sources",
-                        subtitle: defaultIncomeTypeName ?? "Not set",
+                        subtitle: lookup.incomeTypes.first(where: { $0.isDefault })?.name ?? "Not set",
                         leading: {
                             ZStack {
                                 Circle().fill(Color.airbnbPrimary.opacity(0.12))
@@ -181,7 +178,7 @@ struct PreferencesCard: View {
                 NavigationLink { IncomeTagsView(userId: userId) } label: {
                     SettingsCell(
                         title: "Income tags",
-                        subtitle: defaultIncomeTagName ?? "Not set",
+                        subtitle: lookup.incomeTags.first(where: { $0.isDefault })?.name ?? "Not set",
                         leading: {
                             ZStack {
                                 Circle().fill(Color.airbnbPrimary.opacity(0.12))
@@ -198,28 +195,6 @@ struct PreferencesCard: View {
                     }
                 }
             }
-            .onAppear { Task { await loadDefaults() } }
-        }
-    }
-}
-
-private extension PreferencesCard {
-    func loadDefaults() async {
-        if loadingDefaults { return }
-        loadingDefaults = true
-        defer { loadingDefaults = false }
-        async let typesTask = restClient.fetchIncomeTypes(userId: userId)
-        async let tagsTask = restClient.fetchIncomeTags(userId: userId)
-        do {
-            let (types, tags) = try await (typesTask, tagsTask)
-            let typeName = types.first(where: { $0.isDefault })?.name
-            let tagName = tags.first(where: { $0.isDefault })?.name
-            await MainActor.run {
-                self.defaultIncomeTypeName = typeName
-                self.defaultIncomeTagName = tagName
-            }
-        } catch {
-            // Keep existing values on failure
         }
     }
 }
