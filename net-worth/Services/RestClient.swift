@@ -118,6 +118,47 @@ struct RestClient {
     func delete(_ path: String) async throws {
         _ = try await perform(method: "DELETE", path: path)
     }
+
+    // Update an income record
+    func updateIncome(
+        id: Int,
+        userId: Int,
+        amount: Double,
+        taxPaid: Double,
+        creditedDate: Date,
+        currency: String,
+        incomeType: IncomeType,
+        incomeTag: IncomeTag
+    ) async throws {
+        // Normalize to midnight in the user's current timezone and build a naive backend string
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = .current
+        let comps = cal.dateComponents([.year, .month, .day], from: creditedDate)
+        let dateString = String(format: "%04d-%02d-%02d 00:00:00", comps.year ?? 1970, comps.month ?? 1, comps.day ?? 1)
+
+        struct Payload: Codable {
+            let id: Int
+            let userId: Int
+            let amount: Double
+            let taxPaid: Double
+            let creditedDate: String
+            let currency: String
+            let incomeType: IncomeType
+            let incomeTag: IncomeTag
+        }
+        let body = Payload(
+            id: id,
+            userId: userId,
+            amount: amount,
+            taxPaid: taxPaid,
+            creditedDate: dateString,
+            currency: currency,
+            incomeType: incomeType,
+            incomeTag: incomeTag
+        )
+
+        try await patch("income", body: body)
+    }
 }
 
 // Helper to encode existential Encodable
@@ -217,15 +258,14 @@ extension RestClient {
         incomeType: IncomeType,
         incomeTag: IncomeTag
     ) async throws -> Income {
-        // Normalize date to midnight UTC as expected by backend ("yyyy-MM-dd 00:00:00")
+        // Normalize to midnight in the user's current timezone and build a naive backend string
         var cal = Calendar(identifier: .gregorian)
-        let utc = TimeZone(secondsFromGMT: 0) ?? TimeZone(abbreviation: "UTC") ?? .current
-        cal.timeZone = utc
+        cal.timeZone = .current
         let comps = cal.dateComponents([.year, .month, .day], from: creditedDate)
-        let midnightUTC = cal.date(from: DateComponents(
-            calendar: cal, timeZone: utc, year: comps.year, month: comps.month, day: comps.day, hour: 0, minute: 0, second: 0
+        let midnightLocal = cal.date(from: DateComponents(
+            calendar: cal, timeZone: .current, year: comps.year, month: comps.month, day: comps.day, hour: 0, minute: 0, second: 0
         )) ?? creditedDate
-        let dateString = DateFormatter.incomeBackend.string(from: midnightUTC)
+        let dateString = String(format: "%04d-%02d-%02d 00:00:00", comps.year ?? 1970, comps.month ?? 1, comps.day ?? 1)
 
         struct Payload: Codable {
             let userId: Int
@@ -253,7 +293,7 @@ extension RestClient {
                 userId: userId,
                 amount: amount,
                 taxPaid: taxPaid,
-                creditedDate: midnightUTC,
+                creditedDate: midnightLocal,
                 currency: currency,
                 incomeType: incomeType,
                 incomeTag: incomeTag

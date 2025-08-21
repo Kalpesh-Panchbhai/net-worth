@@ -49,6 +49,7 @@ struct IncomeListView: View {
     @AppStorage("defaultCurrencyCode") private var defaultCurrencyCode: String = "INR"
     @State private var showFilterSheet = false
     @State private var pendingDelete: Income? = nil
+    @State private var pendingEdit: Income? = nil
     @State private var showCreateSheet = false
 
     init(userId: Int) {
@@ -172,6 +173,7 @@ struct IncomeListView: View {
                                     sections: vm.sections,
                                     grouping: vm.grouping,
                                     currency: defaultCurrencyCode.uppercased(),
+                                    onEdit: { item in pendingEdit = item },
                                     onLongPress: { item in pendingDelete = item }
                                 )
                             }
@@ -258,6 +260,13 @@ struct IncomeListView: View {
         .sheet(isPresented: $showCreateSheet) {
             NavigationStack {
                 CreateIncomeView(userId: vm.userId)
+                    .navigationBarTitleDisplayMode(.inline)
+            }
+        }
+        // Edit Income sheet
+        .sheet(item: $pendingEdit) { income in
+            NavigationStack {
+                CreateIncomeView(userId: vm.userId, existing: income)
                     .navigationBarTitleDisplayMode(.inline)
             }
         }
@@ -518,6 +527,7 @@ private struct IncomeSectionsList: View {
     let sections: [IncomeController.Section]
     let grouping: IncomeController.Grouping
     let currency: String
+    var onEdit: (Income) -> Void
     var onLongPress: (Income) -> Void
     var body: some View {
         LazyVStack(spacing: 12) {
@@ -528,6 +538,12 @@ private struct IncomeSectionsList: View {
                     IncomeRowCard(income: item, currency: currency)
                         .contentShape(Rectangle())
                         .contextMenu {
+                            Button {
+                                Haptics.selection()
+                                onEdit(item)
+                            } label: {
+                                Label("Modify", systemImage: "pencil")
+                            }
                             Button(role: .destructive) {
                                 Haptics.selection()
                                 onLongPress(item)
@@ -723,6 +739,7 @@ private struct EmptyStateCard: View {
 // MARK: - Create Income
 struct CreateIncomeView: View {
     let userId: Int
+    let existing: Income?
     @EnvironmentObject private var lookup: LookupStore
     @EnvironmentObject private var banners: BannerCenter
     @Environment(\.dismiss) private var dismiss
@@ -741,6 +758,11 @@ struct CreateIncomeView: View {
     @State private var showTagPicker: Bool = false
 
     private let client = RestClient()
+
+    init(userId: Int, existing: Income? = nil) {
+        self.userId = userId
+        self.existing = existing
+    }
 
     // MARK: - Validation
     private var amount: Double? {
@@ -887,7 +909,7 @@ struct CreateIncomeView: View {
         }
         .background(ScrollToTopEnabler())
         .background(Color.canvasBackground.ignoresSafeArea())
-        .navigationTitle("New income")
+        .navigationTitle(existing == nil ? "New income" : "Edit income")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel") { dismiss() }
@@ -943,6 +965,15 @@ struct CreateIncomeView: View {
     }
 
     private func bootstrapDefaults() {
+        if let ex = existing {
+            amountText = String(format: "%.2f", ex.amount)
+            taxText = String(format: "%.2f", ex.taxPaid)
+            creditedDate = ex.creditedDate
+            currencyCode = ex.currency.uppercased()
+            selectedType = ex.incomeType
+            selectedTag = ex.incomeTag
+            return
+        }
         currencyCode = defaultCurrencyCode.uppercased()
         if selectedType == nil {
             selectedType = lookup.incomeTypes.first(where: { $0.isDefault }) ?? lookup.incomeTypes.first
@@ -956,15 +987,28 @@ struct CreateIncomeView: View {
         guard isValid, let amount = amount, let tax = tax, let type = selectedType, let tag = selectedTag else { return }
         await MainActor.run { saving = true }
         do {
-            _ = try await client.createIncome(
-                userId: userId,
-                amount: amount,
-                taxPaid: tax,
-                creditedDate: creditedDate,
-                currency: currencyCode,
-                incomeType: type,
-                incomeTag: tag
-            )
+            if let ex = existing {
+                try await client.updateIncome(
+                    id: ex.id,
+                    userId: userId,
+                    amount: amount,
+                    taxPaid: tax,
+                    creditedDate: creditedDate,
+                    currency: currencyCode,
+                    incomeType: type,
+                    incomeTag: tag
+                )
+            } else {
+                _ = try await client.createIncome(
+                    userId: userId,
+                    amount: amount,
+                    taxPaid: tax,
+                    creditedDate: creditedDate,
+                    currency: currencyCode,
+                    incomeType: type,
+                    incomeTag: tag
+                )
+            }
             Haptics.success()
             await lookup.refreshIncomes(userId: userId)
             await MainActor.run { dismiss() }
