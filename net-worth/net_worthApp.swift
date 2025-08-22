@@ -174,10 +174,22 @@ private struct OnboardingScreen: View {
         }
     }
 
-    private func topViewController(base: UIViewController? = UIApplication.shared.connectedScenes.compactMap { ($0 as? UIWindowScene)?.keyWindow }.first?.rootViewController) -> UIViewController? {
-        if let nav = base as? UINavigationController { return topViewController(base: nav.visibleViewController) }
-        if let tab = base as? UITabBarController { return topViewController(base: tab.selectedViewController) }
-        if let presented = base?.presentedViewController { return topViewController(base: presented) }
-        return base
+    @MainActor
+    private func topViewController(base: UIViewController? = nil) -> UIViewController? {
+        if let base { return ascend(from: base) }
+        guard let scene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first(where: { $0.activationState == .foregroundActive }),
+              let root = scene.windows.first(where: { $0.isKeyWindow })?.rootViewController else {
+            return nil
+        }
+        return ascend(from: root)
+    }
+
+    private func ascend(from root: UIViewController) -> UIViewController {
+        if let nav = root as? UINavigationController, let vis = nav.visibleViewController { return ascend(from: vis) }
+        if let tab = root as? UITabBarController, let sel = tab.selectedViewController { return ascend(from: sel) }
+        if let presented = root.presentedViewController { return ascend(from: presented) }
+        return root
     }
 }
