@@ -57,6 +57,7 @@ final class IncomeController: ObservableObject {
             }
             return
         }
+        if isLoading { return }
         isLoading = true
         errorMessage = nil
         defer { isLoading = false }

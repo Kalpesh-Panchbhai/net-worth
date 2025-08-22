@@ -115,8 +115,10 @@ struct WatchlistListView: View {
                 secondaryButton: .cancel()
             )
         }
-        .onAppear { vm.attachStore(lookup) }
-        .task { await vm.load() }
+        .task {
+            vm.attachStore(lookup)
+            await vm.load()
+        }
         .refreshable { await vm.refresh() }
         .animation(.spring(response: 0.35, dampingFraction: 0.85), value: vm.items)
         .onChange(of: vm.errorMessage) { _, newValue in

@@ -14,6 +14,12 @@ final class LookupStore: ObservableObject {
     private var accountsLoaded = false
     private var watchlistsLoaded = false
     private var incomesLoaded = false
+    // In-flight guards for initial loads (prevent duplicate concurrent GETs)
+    private var typesLoading = false
+    private var tagsLoading = false
+    private var accountsLoading = false
+    private var watchlistsLoading = false
+    private var incomesLoading = false
     private var typesRefreshing = false
     private var tagsRefreshing = false
     private var accountsRefreshing = false
@@ -31,7 +37,9 @@ final class LookupStore: ObservableObject {
     }
 
     func loadIncomeTypesIfNeeded(userId: Int) async {
-        if typesLoaded { return }
+        if typesLoaded || typesLoading { return }
+        typesLoading = true
+        defer { typesLoading = false }
         do {
             let list = try await client.fetchIncomeTypes(userId: userId)
             self.incomeTypes = list
@@ -42,7 +50,9 @@ final class LookupStore: ObservableObject {
     }
 
     func loadIncomeTagsIfNeeded(userId: Int) async {
-        if tagsLoaded { return }
+        if tagsLoaded || tagsLoading { return }
+        tagsLoading = true
+        defer { tagsLoading = false }
         do {
             let list = try await client.fetchIncomeTags(userId: userId)
             self.incomeTags = list
@@ -53,7 +63,9 @@ final class LookupStore: ObservableObject {
     }
 
     func loadAccountsIfNeeded(userId: Int) async {
-        if accountsLoaded { return }
+        if accountsLoaded || accountsLoading { return }
+        accountsLoading = true
+        defer { accountsLoading = false }
         do {
             let list: [Account] = try await client.fetchAccounts(userId: userId)
             self.accounts = list.sorted { a, b in
@@ -67,7 +79,9 @@ final class LookupStore: ObservableObject {
     }
 
     func loadWatchlistsIfNeeded(userId: Int) async {
-        if watchlistsLoaded { return }
+        if watchlistsLoaded || watchlistsLoading { return }
+        watchlistsLoading = true
+        defer { watchlistsLoading = false }
         do {
             let list: [Watchlist] = try await client.fetchWatchlists(userId: userId)
             self.watchlists = list.sorted { a, b in
@@ -83,7 +97,9 @@ final class LookupStore: ObservableObject {
     }
 
     func loadIncomesIfNeeded(userId: Int) async {
-        if incomesLoaded { return }
+        if incomesLoaded || incomesLoading { return }
+        incomesLoading = true
+        defer { incomesLoading = false }
         do {
             let list: [Income] = try await client.fetchIncomes(userId: userId)
             self.incomes = list.sorted { $0.creditedDate > $1.creditedDate }

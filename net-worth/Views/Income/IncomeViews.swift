@@ -208,8 +208,10 @@ struct IncomeListView: View {
                 withAnimation(.easeInOut(duration: 0.2)) { navCollapsed = y < -8 }
             }
         }
-        .onAppear { vm.attachStore(lookup) }
-        .task { await vm.load() }
+        .task {
+            vm.attachStore(lookup)
+            await vm.load()
+        }
         .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 66) }
         .animation(.spring(response: 0.35, dampingFraction: 0.85), value: vm.incomes)
         .animation(.easeInOut(duration: 0.2), value: vm.selectedTypes)

@@ -103,8 +103,10 @@ struct AccountsListView: View {
             }
             // Custom search bar used instead of .searchable for brand styling
         }
-        .onAppear { vm.attachStore(lookup) }
-        .task { await vm.load() }
+        .task {
+            vm.attachStore(lookup)
+            await vm.load()
+        }
         .refreshable { await vm.refresh() }
         .onChange(of: vm.errorMessage) { _, newValue in
             guard let message = newValue, !message.isEmpty else { return }

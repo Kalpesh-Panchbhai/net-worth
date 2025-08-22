@@ -41,6 +41,7 @@ final class WatchlistController: ObservableObject {
             }
             return
         }
+        if isLoading { return }
         isLoading = true
         errorMessage = nil
         defer { isLoading = false }
