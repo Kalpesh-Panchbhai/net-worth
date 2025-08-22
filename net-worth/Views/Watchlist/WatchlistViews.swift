@@ -335,11 +335,16 @@ private struct WatchlistRowCard: View {
     var onDelete: ((Watchlist) -> Void)? = nil
 
     private var delta: Double { item.value.currentValue - item.value.invested }
+    private var deltaPercentText: String? {
+        let denom = abs(item.value.invested)
+        guard denom > 0 else { return nil }
+        return (delta / denom).formatted(.percent.precision(.fractionLength(1)))
+    }
     private var dayChange: Double { item.value.currentValue - item.value.previousValue }
-    private var dayPercent: Double? {
+    private var dayPercentText: String? {
         let denom = abs(item.value.previousValue)
         guard denom > 0 else { return nil }
-        return dayChange / denom
+        return (dayChange / denom).formatted(.percent.precision(.fractionLength(1)))
     }
 
     var body: some View {
@@ -379,9 +384,21 @@ private struct WatchlistRowCard: View {
                 }
                 Spacer(minLength: 8)
                 VStack(alignment: .trailing, spacing: 8) {
-                    PLPill(value: delta, currency: currency)
-                    if let pct = dayPercent {
-                        DayChangePill(change: dayChange, percent: pct)
+                    WideStatPill(
+                        icon: delta >= 0 ? "arrow.up.right" : "arrow.down.right",
+                        value: abs(delta),
+                        currency: currency,
+                        percent: deltaPercentText,
+                        tint: delta >= 0 ? .airbnbSuccess : .red
+                    )
+                    if let _ = dayPercentText {
+                        WideStatPill(
+                            icon: dayChange >= 0 ? "arrow.up.right" : "arrow.down.right",
+                            value: abs(dayChange),
+                            currency: currency,
+                            percent: dayPercentText,
+                            tint: dayChange >= 0 ? .airbnbSuccess : .red
+                        )
                     }
                 }
                 .layoutPriority(1)
@@ -427,42 +444,7 @@ private struct ValueLabel: View {
     }
 }
 
-private struct PLPill: View {
-    let value: Double
-    let currency: String
-    private var isGain: Bool { value >= 0 }
-    var body: some View {
-        HStack(spacing: 6) {
-            Image(systemName: isGain ? "arrow.up.right" : "arrow.down.right")
-            Text("\(isGain ? "+" : "-")\(CurrencyShort.shortString(abs(value), currency: currency))")
-        }
-        .font(.subheadline.weight(.semibold))
-        .foregroundColor(isGain ? .airbnbSuccess : .red)
-        .padding(.vertical, 4)
-        .padding(.horizontal, 10)
-        .background(
-            Capsule(style: .continuous)
-                .fill((isGain ? Color.airbnbSuccess : .red).opacity(0.12))
-        )
-    }
-}
-
-private struct DayChangePill: View {
-    let change: Double
-    let percent: Double
-    private var isUp: Bool { change >= 0 }
-    var body: some View {
-        HStack(spacing: 6) {
-            Image(systemName: isUp ? "sun.max" : "sun.min")
-            Text(String(format: "%@%.2f%%", isUp ? "+" : "-", abs(percent * 100)))
-        }
-        .font(.caption.weight(.semibold))
-        .foregroundColor(isUp ? .airbnbSuccess : .red)
-        .padding(.vertical, 4)
-        .padding(.horizontal, 10)
-        .background(Capsule().fill((isUp ? Color.airbnbSuccess : .red).opacity(0.10)))
-    }
-}
+// Local custom pills removed in favor of shared WideStatPill
 
 // MARK: - Placeholders
 private extension WatchlistRowCard {

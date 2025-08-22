@@ -59,33 +59,7 @@ struct AccountsListView: View {
         }
     }
 
-// MARK: - Airbnb-style SearchBar
-private struct SearchBar: View {
-    @Binding var text: String
-    var placeholder: String = "Search"
-    var body: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "magnifyingglass")
-                .foregroundColor(.secondary)
-            TextField(placeholder, text: $text)
-                .textInputAutocapitalization(.never)
-                .disableAutocorrection(true)
-            if !text.isEmpty {
-                Button(action: { text = "" }) {
-                    Image(systemName: "xmark.circle.fill").foregroundColor(.secondary)
-                }
-                .buttonStyle(.plain)
-            }
-        }
-        .padding(.vertical, 10)
-        .padding(.horizontal, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(Color.elevatedBackground)
-        )
-        .elevatedShadow()
-    }
-}
+// Local SearchBar removed in favor of Shared/AppSearchBar
 
     var body: some View {
         NavigationStack {
@@ -103,7 +77,7 @@ private struct SearchBar: View {
 
                         LazyVStack(spacing: 16, pinnedViews: [.sectionHeaders]) {
                             // Airbnb-style search just under the large title
-                            SearchBar(text: $searchText, placeholder: "Search accounts")
+                            AppSearchBar(text: $searchText, placeholder: "Search accounts")
                                 .padding(.horizontal, 0)
                             contentView
                             Color.clear.frame(height: LayoutConstants.tabBarHeight + 24).id("accountsBottom")
@@ -116,7 +90,7 @@ private struct SearchBar: View {
                     .coordinateSpace(name: "accountsScroll")
                 }
                 .onChange(of: tabCommands.scrollToBottomRequest) { _, value in
-                    guard value != nil else { return }
+                    guard value == .accounts else { return }
                     withAnimation { proxy.scrollTo("accountsBottom", anchor: .bottom) }
                     DispatchQueue.main.async { tabCommands.scrollToBottomRequest = nil }
                 }
@@ -139,38 +113,7 @@ private struct SearchBar: View {
     }
 }
 
-// Wide filled pill used on the right of labels like "P/L" and "1 day change"
-private struct WideStatPill: View {
-    let icon: String
-    let value: Double
-    let currency: String
-    let percent: String?
-    let tint: Color
-    var body: some View {
-        HStack(spacing: 6) {
-            Image(systemName: icon).font(.caption2.weight(.bold))
-            Text(CurrencyShort.shortString(value, currency: currency))
-                .font(.footnote.weight(.semibold))
-                .monospacedDigit()
-                .lineLimit(1)
-                .minimumScaleFactor(0.9)
-            if let p = percent, p.isEmpty == false {
-                Text("•").font(.caption2.weight(.semibold))
-                Text(p)
-                    .font(.footnote.weight(.semibold))
-                    .monospacedDigit()
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.9)
-            }
-        }
-        .foregroundColor(tint)
-        .padding(.vertical, 4)
-        .padding(.horizontal, 10)
-        .background(
-            Capsule().fill(tint.opacity(0.12))
-        )
-    }
-}
+// WideStatPill now provided by Shared/DesignSystem.swift
 
 private struct AccountSummaryCard: View {
     let total: Double
@@ -387,63 +330,7 @@ private struct AccountRow: View {
     private func iconForType(_ type: String) -> String { "" }
 }
 
-// Compact tinted pill for stats like P&L and 1D
-private struct StatPill: View {
-    let label: String
-    let icon: String?
-    let value: String
-    let percent: String?
-    let tint: Color
-    var body: some View {
-        // Heuristic: hide percent if combined text would likely overflow the fixed pill width
-        let showPercent: Bool = {
-            guard let p = percent else { return false }
-            // value like "₹21.3 K" ~ up to 8 chars, percent like "12.3%" ~ up to 6
-            // allow percent only when both are reasonably short
-            return value.count <= 9 && p.count <= 6
-        }()
-        HStack(spacing: 3) {
-            if let icon { Image(systemName: icon).font(.caption2.weight(.bold)) }
-            Text(value)
-                .font(.footnote.weight(.semibold))
-                .monospacedDigit()
-                .allowsTightening(true)
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
-                .contentTransition(.numericText())
-            if showPercent, let p = percent {
-                Text("•").font(.caption2.weight(.semibold))
-                Text(p)
-                    .font(.caption2.weight(.semibold))
-                    .monospacedDigit()
-                    .allowsTightening(true)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-                    .contentTransition(.numericText())
-            }
-        }
-        .foregroundColor(tint)
-        .padding(.horizontal, 8)
-        .frame(width: LayoutConstants.statPillWidth, height: 24, alignment: .trailing)
-        .background(
-            Capsule().fill(tint.opacity(0.10))
-        )
-        .lineLimit(1)
-        .minimumScaleFactor(0.8)
-    }
-}
-
-private struct TypeBadge: View {
-    let text: String
-    var body: some View {
-        Text(text)
-            .font(.caption2.weight(.semibold))
-            .foregroundColor(.secondary)
-            .padding(.horizontal, 8)
-            .frame(height: 22)
-            .background(Capsule().fill(Color.elevatedBackground))
-    }
-}
+// Local StatPill/TypeBadge removed; consolidated in Shared components where needed
 
 // File-scope helper so rows can normalize labels consistently with grouping
 private func normalizedAccountType(_ raw: String) -> String {
@@ -519,12 +406,12 @@ private struct FiltersBar: View {
             if !types.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
-                        Chip(title: "All", isOn: selectedTypes.isEmpty) {
+                        FilterChip(title: "All", isOn: selectedTypes.isEmpty) {
                             selectedTypes.removeAll()
                             Haptics.selection()
                         }
                         ForEach(types, id: \.self) { t in
-                            Chip(title: t, isOn: selectedTypes.contains(t)) {
+                            FilterChip(title: t, isOn: selectedTypes.contains(t)) {
                                 if selectedTypes.contains(t) { selectedTypes.remove(t) }
                                 else { selectedTypes.insert(t) }
                                 Haptics.selection()
@@ -538,29 +425,7 @@ private struct FiltersBar: View {
     }
 }
 
-private struct Chip: View {
-    let title: String
-    let isOn: Bool
-    let action: () -> Void
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 6) {
-                Text(title)
-                    .font(.caption.weight(.semibold))
-                    .foregroundColor(isOn ? .white : .airbnbPrimary)
-            }
-            .padding(.vertical, 6)
-            .padding(.horizontal, 10)
-            .background(
-                ZStack {
-                    Capsule().fill(Color.airbnbPrimary.opacity(0.12))
-                    if isOn { Capsule().fill(LinearGradient.airbnbAccent) }
-                }
-            )
-        }
-        .buttonStyle(PressableButtonStyle())
-    }
-}
+// Local Chip removed in favor of Shared/FilterChip
 
 // MARK: - Section Header
 private struct AccountSectionHeader: View {

@@ -68,9 +68,109 @@ struct ElevatedShadow: ViewModifier {
     }
 }
 
+// Expose elevatedShadow globally
 extension View {
     func elevatedShadow() -> some View { modifier(ElevatedShadow()) }
 }
+
+// Reusable elevated card background helper
+extension View {
+    func elevatedCardBackground(cornerRadius: CGFloat = 16) -> some View {
+        self.background(
+            RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                .fill(Color.elevatedBackground)
+        )
+        .elevatedShadow()
+    }
+}
+
+// MARK: - Airbnb-style Search Bar
+public struct AppSearchBar: View {
+    @Binding var text: String
+    var placeholder: String = "Search"
+    public var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(.secondary)
+            TextField(placeholder, text: $text)
+                .textInputAutocapitalization(.never)
+                .disableAutocorrection(true)
+            if !text.isEmpty {
+                Button(action: { text = "" }) {
+                    Image(systemName: "xmark.circle.fill").foregroundColor(.secondary)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.vertical, 10)
+        .padding(.horizontal, 12)
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(Color.elevatedBackground)
+        )
+        .elevatedShadow()
+    }
+}
+
+// MARK: - Filter Chip
+public struct FilterChip: View {
+    let title: String
+    let isOn: Bool
+    let action: () -> Void
+    public var body: some View {
+        Button(action: action) {
+            HStack(spacing: 6) {
+                Text(title)
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(isOn ? .white : .airbnbPrimary)
+            }
+            .padding(.vertical, 6)
+            .padding(.horizontal, 10)
+            .background(
+                ZStack {
+                    Capsule().fill(Color.airbnbPrimary.opacity(0.12))
+                    if isOn { Capsule().fill(LinearGradient.airbnbAccent) }
+                }
+            )
+        }
+        .buttonStyle(PressableButtonStyle())
+    }
+}
+
+// MARK: - Wide Stat Pill (value + optional percent)
+public struct WideStatPill: View {
+    let icon: String
+    let value: Double
+    let currency: String
+    let percent: String?
+    let tint: Color
+    public var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: icon).font(.caption2.weight(.bold))
+            Text(CurrencyShort.shortString(value, currency: currency))
+                .font(.footnote.weight(.semibold))
+                .monospacedDigit()
+                .lineLimit(1)
+                .minimumScaleFactor(0.9)
+            if let p = percent, !p.isEmpty {
+                Text("•").font(.caption2.weight(.semibold))
+                Text(p)
+                    .font(.footnote.weight(.semibold))
+                    .monospacedDigit()
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.9)
+            }
+        }
+        .foregroundColor(tint)
+        .padding(.vertical, 4)
+        .padding(.horizontal, 10)
+        .background(
+            Capsule().fill(tint.opacity(0.12))
+        )
+    }
+}
+
+// duplicate elevatedShadow extension removed (already declared above)
 
 // MARK: - Global Layout Tokens
 enum LayoutConstants {
