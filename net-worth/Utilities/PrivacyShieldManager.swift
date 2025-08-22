@@ -27,7 +27,9 @@ final class PrivacyShieldManager {
                     window.frame = scene.screen.bounds
                     window.windowLevel = .alert + 1 // ensure above sheets
                     let host = UIHostingController(rootView: PrivacyShieldView())
-                    host.view.backgroundColor = .white // ensure opaque background
+                    // Use dynamic system background so the shield matches Light/Dark
+                    host.view.backgroundColor = .systemBackground
+                    host.overrideUserInterfaceStyle = .unspecified
                     window.rootViewController = host
                     window.isOpaque = true
                     window.isUserInteractionEnabled = false

@@ -2,13 +2,14 @@ import SwiftUI
 
 struct PrivacyShieldView: View {
     @State private var animate = false
+    @Environment(\.colorScheme) private var colorScheme
     var body: some View {
         ZStack {
-            // Light, airy background inspired by Airbnb
+            // Dynamic background that follows Light/Dark mode
             LinearGradient(
                 colors: [
-                    Color.white,
-                    Color(red: 0.98, green: 0.98, blue: 0.98),
+                    Color(UIColor.systemBackground),
+                    Color(UIColor.secondarySystemBackground),
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -28,7 +29,7 @@ struct PrivacyShieldView: View {
             VStack(spacing: 12) {
                 ZStack {
                     Circle()
-                        .fill(Color.white.opacity(0.18))
+                        .fill(Color(UIColor.tertiarySystemBackground).opacity(0.22))
                         .blur(radius: 10)
                         .frame(width: 70, height: 70)
                     Image(systemName: "lock.fill")
