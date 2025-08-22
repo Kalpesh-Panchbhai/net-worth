@@ -933,26 +933,16 @@ struct CreateIncomeView: View {
             .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $showTypePicker) {
-            NavigationStack {
-                EntityPickerSheet<IncomeType>(
-                    title: "Select source", items: lookup.incomeTypes, icon: "creditcard",
-                    selected: $selectedType
-                )
-                .navigationBarTitleDisplayMode(.inline)
-            }
-            .presentationDetents([.medium, .large])
-            .presentationDragIndicator(.visible)
+            NamedEntityPickerSheet<IncomeType>(
+                title: "Select source", items: lookup.incomeTypes, icon: "creditcard",
+                selected: $selectedType
+            )
         }
         .sheet(isPresented: $showTagPicker) {
-            NavigationStack {
-                EntityPickerSheet<IncomeTag>(
-                    title: "Select tag", items: lookup.incomeTags, icon: "tag",
-                    selected: $selectedTag
-                )
-                .navigationBarTitleDisplayMode(.inline)
-            }
-            .presentationDetents([.medium, .large])
-            .presentationDragIndicator(.visible)
+            NamedEntityPickerSheet<IncomeTag>(
+                title: "Select tag", items: lookup.incomeTags, icon: "tag",
+                selected: $selectedTag
+            )
         }
     }
 
@@ -1077,87 +1067,4 @@ private struct DatePickerSheet: View {
     }
 }
 
-// MARK: - Generic Entity Picker Sheet
-private struct EntityPickerSheet<T: NamedEntity>: View {
-    let title: String
-    let items: [T]
-    let icon: String
-    @Binding var selected: T?
-    @Environment(\.dismiss) private var dismiss
-    @State private var query: String = ""
-    private var displayed: [T] {
-        let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
-        let filtered =
-            q.isEmpty ? items : items.filter { $0.name.localizedCaseInsensitiveContains(q) }
-        // Default on top, name asc
-        return filtered.sorted { a, b in
-            if a.isDefault != b.isDefault { return a.isDefault && !b.isDefault }
-            return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
-        }
-    }
-    var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                SettingsGroup(showHeader: false) {
-                    VStack(spacing: 0) {
-                        ForEach(Array(displayed.enumerated()), id: \.element) { idx, item in
-                            row(item)
-                            if idx < displayed.count - 1 {
-                                Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(
-                                    .horizontal, 12)
-                            }
-                        }
-                    }
-                }
-            }
-            .padding(.vertical, 16)
-            .padding(.horizontal, 16)
-        }
-        .background(Color.canvasBackground.ignoresSafeArea())
-        .searchable(
-            text: $query, placement: .navigationBarDrawer(displayMode: .always),
-            prompt: Text("Search")
-        )
-        .toolbar {
-            ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
-        }
-        .navigationTitle(title)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(Color.canvasBackground, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-    }
-    @ViewBuilder
-    private func row(_ item: T) -> some View {
-        HStack(spacing: 12) {
-            ZStack {
-                Circle().fill(Color.airbnbPrimary.opacity(0.12))
-                Image(systemName: (selected?.id == item.id) ? filledIcon(icon) : icon)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundColor(.airbnbPrimary)
-            }
-            .frame(width: 32, height: 32)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(item.name).font(.subheadline.weight(.semibold))
-                if item.isDefault { Text("Default").font(.caption2).foregroundColor(.secondary) }
-            }
-            Spacer()
-            if selected?.id == item.id {
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundStyle(LinearGradient.airbnbAccent)
-            }
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
-        .contentShape(Rectangle())
-        .onTapGesture {
-            selected = item
-            Haptics.selection()
-            dismiss()
-        }
-    }
-
-    // Use a filled variant of the SF Symbol when selected
-    private func filledIcon(_ base: String) -> String {
-        base.hasSuffix(".fill") ? base : base + ".fill"
-    }
-}
+// Shared NamedEntityPickerSheet is used instead (in Views/Shared/NamedEntityPickerSheet.swift)

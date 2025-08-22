@@ -53,6 +53,7 @@
 		7DECCEE82E5875FF00225DDA /* CreateAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DECCEE72E5875FF00225DDA /* CreateAccountView.swift */; };
 		7DECCEEA2E58791600225DDA /* CurrencyPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DECCEE92E58791600225DDA /* CurrencyPickerSheet.swift */; };
 		7DECCEEC2E587C5200225DDA /* StringPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DECCEEB2E587C5200225DDA /* StringPickerSheet.swift */; };
+		7DECCEEE2E587D8400225DDA /* NamedEntityPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DECCEED2E587D8400225DDA /* NamedEntityPickerSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -101,6 +102,7 @@
 		7DECCEE72E5875FF00225DDA /* CreateAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountView.swift; sourceTree = "<group>"; };
 		7DECCEE92E58791600225DDA /* CurrencyPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPickerSheet.swift; sourceTree = "<group>"; };
 		7DECCEEB2E587C5200225DDA /* StringPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringPickerSheet.swift; sourceTree = "<group>"; };
+		7DECCEED2E587D8400225DDA /* NamedEntityPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamedEntityPickerSheet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -248,6 +250,7 @@
 				7DECCEE92E58791600225DDA /* CurrencyPickerSheet.swift */,
 				7DAB02042E70000200000004 /* FloatingActionButton.swift */,
 				7D2FBCA82E51CEFD0046FE17 /* NamedEntitiesListView.swift */,
+				7DECCEED2E587D8400225DDA /* NamedEntityPickerSheet.swift */,
 				7DAA000C2BE300000000000C /* PlaceholderScreen.swift */,
 				7DC4221C2E545F73000D62BD /* PrivacyShieldView.swift */,
 				7DECCEEB2E587C5200225DDA /* StringPickerSheet.swift */,
@@ -375,6 +378,7 @@
 				7DAA10072BE3000000000007 /* Interactions.swift in Sources */,
 				7D4D09482E53021B00E188D0 /* RestClient.swift in Sources */,
 				7D6F68EA2E5739D400E0AD02 /* ScrollToTop.swift in Sources */,
+				7DECCEEE2E587D8400225DDA /* NamedEntityPickerSheet.swift in Sources */,
 				7D2FBCA92E51CEFD0046FE17 /* NamedEntitiesListView.swift in Sources */,
 				7D4D094A2E5304B200E188D0 /* APIError.swift in Sources */,
 				7DAA10082BE3000000000008 /* NavBarUtils.swift in Sources */,
