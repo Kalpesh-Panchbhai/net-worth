@@ -39,7 +39,7 @@ struct SettingsView: View {
                     AppearanceCard(selection: appearanceBinding)
                     PreferencesCard(userId: userId)
                     SecurityCard()
-                    AccountManagementCard(onLogout: logoutAndWipe)
+                    AccountManagementCard(userId: userId, onLogout: logoutAndWipe)
                 }
                 .padding(16)
                 .padding(.bottom, LayoutConstants.tabBarHeight + 24)
@@ -91,14 +91,20 @@ struct SettingsView: View {
         banners.showTemporary(AppBanner(icon: "checkmark.circle.fill", title: "Signed out", message: "Local data cleared.", style: .success))
     }
 }
-
-// MARK: - Account Management (Logout & Wipe)
+// MARK: - Account Management (Logout & Delete)
 struct AccountManagementCard: View {
+    let userId: Int
     @State private var showConfirm = false
+    @State private var showConfirmDelete = false
+    @State private var isDeleting = false
     var onLogout: () -> Void
+    @AppStorage("backendUserId") private var backendUserId: Int = -1
+    @EnvironmentObject private var banners: BannerCenter
+    @EnvironmentObject private var lookupStore: LookupStore
     var body: some View {
         SettingsGroup(title: "Account") {
             VStack(spacing: 0) {
+                // Sign out & local wipe
                 Button(action: { showConfirm = true }) {
                     HStack {
                         ZStack {
@@ -135,7 +141,81 @@ struct AccountManagementCard: View {
                 } message: {
                     Text("This will sign you out, clear preferences, and remove all locally stored data. This won't delete data on the server.")
                 }
+
+                // Divider between rows
+                Rectangle().fill(Color.subtleSeparator)
+                    .frame(height: 0.5)
+                    .padding(.horizontal, 12)
+
+                // Delete account (server + local wipe)
+                Button(action: { showConfirmDelete = true }) {
+                    HStack {
+                        ZStack {
+                            Circle().fill(Color.red.opacity(0.12))
+                            Image(systemName: "trash").foregroundColor(.red)
+                        }
+                        .frame(width: 32, height: 32)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Delete account permanently")
+                                .font(.subheadline).bold()
+                                .foregroundColor(.red)
+                            Text("Deletes your account and data from the server. This action cannot be undone.")
+                                .font(.footnote)
+                                .foregroundColor(.secondary)
+                                .lineLimit(2)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundColor(.secondary)
+                    }
+                    .contentShape(Rectangle())
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 12)
+                }
+                .buttonStyle(.plain)
+                .disabled(isDeleting)
+                .confirmationDialog(
+                    "Delete account permanently?",
+                    isPresented: $showConfirmDelete,
+                    titleVisibility: .visible
+                ) {
+                    Button("Delete account", role: .destructive) { Task { await deleteAccount() } }
+                    Button("Cancel", role: .cancel) {}
+                } message: {
+                    Text("This will permanently delete your account and server-side data. You cannot undo this.")
+                }
             }
+        }
+    }
+
+    @MainActor
+    private func deleteAccount() async {
+        guard !isDeleting else { return }
+        isDeleting = true
+        defer { isDeleting = false }
+        do {
+            try await RestClient().deleteUser(id: userId)
+            // Sign out providers
+            #if canImport(GoogleSignIn)
+            GIDSignIn.sharedInstance.signOut()
+            #endif
+            #if canImport(FirebaseAuth)
+            _ = try? Auth.auth().signOut()
+            #endif
+            // Clear all UserDefaults
+            if let bundleId = Bundle.main.bundleIdentifier {
+                UserDefaults.standard.removePersistentDomain(forName: bundleId)
+                UserDefaults.standard.synchronize()
+            }
+            // Reset in-memory stores
+            lookupStore.reset()
+            // Route back to onboarding
+            backendUserId = -1
+            banners.showTemporary(AppBanner(icon: "trash.circle.fill", title: "Account deleted", message: "Your account has been removed.", style: .success))
+        } catch {
+            let msg = (error as NSError).localizedDescription
+            banners.showTemporary(AppBanner(icon: "exclamationmark.triangle.fill", title: "Delete failed", message: msg, style: .warning))
         }
     }
 }

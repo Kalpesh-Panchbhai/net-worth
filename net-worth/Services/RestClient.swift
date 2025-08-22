@@ -250,6 +250,10 @@ extension RestClient {
         }
         try await patch("watch", body: Payload(id: id, userId: userId, name: name))
     }
+    /// Permanently delete the user and all server-side data
+    func deleteUser(id: Int) async throws {
+        try await delete("user/\(id)")
+    }
     func setDefault(incomeType: IncomeType) async throws {
         let payload = IncomeType(
             id: incomeType.id, userId: incomeType.userId, name: incomeType.name, isDefault: true)

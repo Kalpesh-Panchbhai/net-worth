@@ -80,6 +80,9 @@ private struct OnboardingScreen: View {
     @AppStorage("backendUserId") private var backendUserId: Int = -1
     @EnvironmentObject private var banners: BannerCenter
     @EnvironmentObject private var lookupStore: LookupStore
+    @AppStorage("defaultCurrencyCode") private var defaultCurrencyCode: String = ""
+    @State private var showCurrencyPicker = false
+    @State private var pendingUserId: Int? = nil
 
     var body: some View {
         NavigationStack {
@@ -133,6 +136,24 @@ private struct OnboardingScreen: View {
             .navigationBarHidden(true)
             .overlay(alignment: .top) { GlobalBannerHost() }
         }
+        .fullScreenCover(isPresented: $showCurrencyPicker, onDismiss: {
+            // Proceed only after user has picked a currency
+            let code = defaultCurrencyCode.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !code.isEmpty, let id = pendingUserId {
+                backendUserId = id
+                Haptics.success()
+                Task { await lookupStore.loadIfNeeded(userId: id) }
+                pendingUserId = nil
+            }
+        }) {
+            NavigationStack {
+                DefaultCurrencyView()
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbarBackground(Color.canvasBackground, for: .navigationBar)
+                    .toolbarBackground(.visible, for: .navigationBar)
+            }
+            .interactiveDismissDisabled(true)
+        }
     }
 
     @MainActor
@@ -159,9 +180,15 @@ private struct OnboardingScreen: View {
             let firebaseUID = authResult.user.uid
             let id = try await RestClient().registerFirebaseUser(uid: firebaseUID)
             if id > 0 {
-                backendUserId = id
-                Haptics.success()
-                await lookupStore.loadIfNeeded(userId: id)
+                // If default currency is not set yet, force selection before proceeding
+                if defaultCurrencyCode.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    pendingUserId = id
+                    showCurrencyPicker = true
+                } else {
+                    backendUserId = id
+                    Haptics.success()
+                    await lookupStore.loadIfNeeded(userId: id)
+                }
             } else {
                 throw NSError(domain: "API", code: -4, userInfo: [NSLocalizedDescriptionKey: "Failed to create or fetch user. Please try again."])
             }
