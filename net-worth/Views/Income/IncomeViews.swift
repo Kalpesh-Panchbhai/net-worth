@@ -167,9 +167,8 @@ struct IncomeListView: View {
 
                             if vm.isLoading && vm.incomes.isEmpty {
                                 ForEach(0..<5, id: \.self) { _ in
-                                    IncomeRowCard.placeholder()
+                                    IncomeRowCard.placeholder().shimmer()
                                 }
-                                .shimmer()
                             } else if vm.sections.isEmpty {
                                 EmptyStateCard(text: "No income records yet")
                             } else {

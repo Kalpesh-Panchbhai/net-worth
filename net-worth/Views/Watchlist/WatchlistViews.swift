@@ -41,7 +41,6 @@ struct WatchlistListView: View {
                                 ForEach(0..<5, id: \.self) { _ in
                                     AssetRowCard.placeholder()
                                 }
-                                .shimmer()
                             } else if vm.items.isEmpty {
                                 EmptyStateCard(text: "No watchlists yet")
                             } else {

@@ -127,7 +127,11 @@ extension AssetRowCard {
 
 extension AssetRowCard {
     static func placeholder(countBadge: Int? = nil) -> some View {
-        HStack(alignment: .center, spacing: 12) {
+        ZStack(alignment: .leading) {
+            // Card background
+            RoundedRectangle(cornerRadius: LayoutConstants.cardCornerRadius, style: .continuous)
+                .fill(Color.elevatedBackground)
+            // Skeleton layer with shimmer applied
             VStack(alignment: .leading, spacing: 8) {
                 // Title + current value row
                 HStack(spacing: 8) {
@@ -177,12 +181,10 @@ extension AssetRowCard {
                     }
                 }
             }
+            .padding(14)
+            .shimmer()
         }
-        .padding(14)
-        .background(
-            RoundedRectangle(cornerRadius: LayoutConstants.cardCornerRadius, style: .continuous)
-                .fill(Color.elevatedBackground)
-        )
+        .frame(maxWidth: .infinity, minHeight: LayoutConstants.cardMinHeight, alignment: .leading)
         .elevatedShadow()
     }
 }

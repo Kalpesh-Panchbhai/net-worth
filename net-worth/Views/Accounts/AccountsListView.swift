@@ -22,7 +22,6 @@ struct AccountsListView: View {
             ForEach(0..<6, id: \.self) { _ in
                 AssetRowCard.placeholder()
             }
-            .shimmer()
         } else if vm.items.isEmpty {
             EmptyStateCard(text: "No accounts yet")
         } else {

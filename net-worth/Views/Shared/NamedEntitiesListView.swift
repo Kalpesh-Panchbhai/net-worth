@@ -38,10 +38,9 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
                         }
                         if !useStore && isLoading && source.isEmpty {
                             ForEach(0..<6, id: \.self) { i in
-                                NamedEntityRow<T>.placeholder()
+                                NamedEntityRow<T>.placeholder().shimmer()
                                 if i != 5 { Hairline() }
                             }
-                            .shimmer()
                         } else if displayedSorted.isEmpty {
                             VStack(alignment: .center, spacing: 8) {
                                 Image(systemName: "tray")

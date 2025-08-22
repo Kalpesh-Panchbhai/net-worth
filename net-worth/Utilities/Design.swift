@@ -27,9 +27,9 @@ extension Color {
     // Neutral placeholder fill for preview blocks/skeletons
     static let placeholderFill = Color(UIColor { trait in
         if trait.userInterfaceStyle == .dark {
-            return UIColor.tertiarySystemFill // subtle on dark
+            return UIColor.systemGray3 // opaque gray for strong masking in dark
         } else {
-            return UIColor.secondarySystemFill // light neutral so shimmer is visible in Light Mode
+            return UIColor.systemGray5 // opaque light gray for strong masking in light
         }
     })
     static let airbnbSecondary = Color(red: 255/255, green: 56/255, blue: 92/255)
