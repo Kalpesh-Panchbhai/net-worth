@@ -20,7 +20,7 @@ struct AccountsListView: View {
     private var contentView: some View {
         if vm.isLoading && vm.items.isEmpty {
             ForEach(0..<6, id: \.self) { _ in
-                AccountRow.placeholder()
+                AssetRowCard.placeholder()
             }
             .shimmer()
         } else if vm.items.isEmpty {
@@ -195,94 +195,13 @@ private struct AccountRow: View {
     let item: Account
     let currency: String
     var body: some View {
-        HStack(alignment: .top, spacing: 8) {
-            // Removed leading icon to simplify rows and align with request
-            VStack(alignment: .leading, spacing: 6) {
-                header
-                meta
-                stats
-            }
-        }
-        .padding(14)
-        .frame(maxWidth: .infinity, minHeight: LayoutConstants.cardMinHeight, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: LayoutConstants.cardCornerRadius, style: .continuous)
-                .fill(Color.elevatedBackground)
+        AssetRowCard(
+            name: item.name,
+            current: item.value.currentValue,
+            invested: item.value.invested,
+            previous: item.value.previousValue,
+            currency: currency
         )
-        .elevatedShadow()
-        .buttonStyle(PressableButtonStyle())
-    }
-
-    // MARK: - Subviews to simplify type-checking
-    private var header: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 8) {
-            Text(item.name)
-                .font(.headline.weight(.semibold))
-                .foregroundColor(.primary)
-                .lineLimit(1)
-                .truncationMode(.tail)
-            Spacer(minLength: 0)
-            Text(item.value.currentValue, format: .currency(code: currency))
-                .font(.headline.weight(.bold))
-                .foregroundColor(.primary)
-                .monospacedDigit()
-                .contentTransition(.numericText())
-        }
-    }
-
-    private var meta: some View {
-        HStack(spacing: 8) {
-            Text("Invested")
-                .font(.caption)
-                .foregroundColor(.secondary)
-            Spacer(minLength: 0)
-            Text(item.value.invested, format: .currency(code: currency))
-                .font(.subheadline.weight(.semibold))
-                .foregroundColor(.airbnbPrimary)
-                .monospacedDigit()
-                .contentTransition(.numericText())
-        }
-    }
-
-    private var stats: some View {
-        let invested = item.value.invested
-        let totalPL = item.value.currentValue - invested
-        let plPct: Double? = invested.magnitude > 0 ? (totalPL / invested.magnitude) : nil
-        let plPctText: String? = plPct.map { $0.formatted(.percent.precision(.fractionLength(1))) }
-
-        let dayDelta = item.value.currentValue - item.value.previousValue
-        let dayPrev = item.value.previousValue
-        let dayPct: Double? = dayPrev.magnitude > 0 ? (dayDelta / dayPrev.magnitude) : nil
-        let dayPctText: String? = dayPct.map { $0.formatted(.percent.precision(.fractionLength(1))) }
-
-        return VStack(spacing: 8) {
-            HStack(spacing: 10) {
-                Text("P/L")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                Spacer(minLength: 0)
-                WideStatPill(
-                    icon: totalPL >= 0 ? "arrow.up.right" : "arrow.down.right",
-                    value: abs(totalPL),
-                    currency: currency,
-                    percent: plPctText,
-                    tint: totalPL >= 0 ? .airbnbSuccess : .red
-                )
-            }
-            HStack(spacing: 10) {
-                Text("1 day change")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                Spacer(minLength: 0)
-                WideStatPill(
-                    icon: dayDelta >= 0 ? "arrow.up.right" : "arrow.down.right",
-                    value: abs(dayDelta),
-                    currency: currency,
-                    percent: dayPctText,
-                    tint: dayDelta >= 0 ? .airbnbSuccess : .red
-                )
-            }
-        }
     }
 
     static func placeholder() -> some View {

@@ -49,6 +49,7 @@
 		7DC422212E546A29000D62BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC422202E546A29000D62BD /* AppDelegate.swift */; };
 		7DCE00022E7A000100000002 /* CurrencyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCE00012E7A000100000001 /* CurrencyModels.swift */; };
 		7DCE00042E7A000100000004 /* DefaultCurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCE00032E7A000100000003 /* DefaultCurrencyView.swift */; };
+		7DECCEE62E58699D00225DDA /* AssetRowCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DECCEE52E58699D00225DDA /* AssetRowCard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -93,6 +94,7 @@
 		7DC422202E546A29000D62BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7DCE00012E7A000100000001 /* CurrencyModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyModels.swift; sourceTree = "<group>"; };
 		7DCE00032E7A000100000003 /* DefaultCurrencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCurrencyView.swift; sourceTree = "<group>"; };
+		7DECCEE52E58699D00225DDA /* AssetRowCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetRowCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -235,6 +237,7 @@
 		7DAA10002BE30000000000B2 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				7DECCEE52E58699D00225DDA /* AssetRowCard.swift */,
 				7D74B2912E52375A00E35786 /* BannerCenter.swift */,
 				7DAB02042E70000200000004 /* FloatingActionButton.swift */,
 				7D2FBCA82E51CEFD0046FE17 /* NamedEntitiesListView.swift */,
@@ -381,6 +384,7 @@
 				7DAB01042E70000200000004 /* FloatingActionButton.swift in Sources */,
 				7DAC01112E70000300000011 /* AccountModels.swift in Sources */,
 				7DAC01122E70000300000012 /* AccountsController.swift in Sources */,
+				7DECCEE62E58699D00225DDA /* AssetRowCard.swift in Sources */,
 				7DAC01132E70000300000013 /* AccountsListView.swift in Sources */,
 				7DCE00022E7A000100000002 /* CurrencyModels.swift in Sources */,
 				7DCE00042E7A000100000004 /* DefaultCurrencyView.swift in Sources */,

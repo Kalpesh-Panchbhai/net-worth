@@ -39,7 +39,7 @@ struct WatchlistListView: View {
                         VStack(spacing: 16) {
                             if vm.isLoading && vm.items.isEmpty {
                                 ForEach(0..<5, id: \.self) { _ in
-                                    WatchlistRowCard.placeholder()
+                                    AssetRowCard.placeholder()
                                 }
                                 .shimmer()
                             } else if vm.items.isEmpty {
@@ -380,69 +380,14 @@ private struct WatchlistRowCard: View {
 
     var body: some View {
         Button(action: { Haptics.softImpact() }) {
-            HStack(alignment: .center, spacing: 12) {
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack(alignment: .top, spacing: 8) {
-                        Text(item.name)
-                            .font(.headline.weight(.semibold))
-                            .foregroundColor(.primary)
-                            .lineLimit(2)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .layoutPriority(0)
-                        Spacer(minLength: 8)
-                        if item.totalAccount > 0 {
-                            HStack(spacing: 4) {
-                                Image(systemName: "rectangle.stack")
-                                    .font(.caption)
-                                Text("\(item.totalAccount)")
-                                    .font(.caption2.bold())
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.8)
-                            }
-                            .foregroundColor(.secondary)
-                            .padding(.vertical, 3)
-                            .padding(.horizontal, 6)
-                            .background(Capsule().fill(Color.secondary.opacity(0.12)))
-                            .fixedSize()
-                            .layoutPriority(2)
-                        }
-                    }
-                    HStack(spacing: 10) {
-                        ValueLabel(
-                            title: "Current", value: item.value.currentValue, currency: currency,
-                            emphasize: true)
-                        Divider().frame(height: 18)
-                        ValueLabel(
-                            title: "Invested", value: item.value.invested, currency: currency)
-                    }
-                }
-                Spacer(minLength: 8)
-                VStack(alignment: .trailing, spacing: 8) {
-                    WideStatPill(
-                        icon: delta >= 0 ? "arrow.up.right" : "arrow.down.right",
-                        value: abs(delta),
-                        currency: currency,
-                        percent: deltaPercentText,
-                        tint: delta >= 0 ? .airbnbSuccess : .red
-                    )
-                    if dayPercentText != nil {
-                        WideStatPill(
-                            icon: dayChange >= 0 ? "arrow.up.right" : "arrow.down.right",
-                            value: abs(dayChange),
-                            currency: currency,
-                            percent: dayPercentText,
-                            tint: dayChange >= 0 ? .airbnbSuccess : .red
-                        )
-                    }
-                }
-                .layoutPriority(1)
-            }
-            .padding(16)
-            .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color.elevatedBackground)
+            AssetRowCard(
+                name: item.name,
+                current: item.value.currentValue,
+                invested: item.value.invested,
+                previous: item.value.previousValue,
+                currency: currency,
+                countBadge: item.totalAccount > 0 ? item.totalAccount : nil
             )
-            .elevatedShadow()
         }
         .buttonStyle(PressableButtonStyle())
         .transition(.moveAndFade)
@@ -488,33 +433,4 @@ private struct ValueLabel: View {
 
 // Local custom pills removed in favor of shared WideStatPill
 
-// MARK: - Placeholders
-extension WatchlistRowCard {
-    fileprivate static func placeholder() -> some View {
-        HStack(alignment: .center, spacing: 12) {
-            VStack(alignment: .leading, spacing: 6) {
-                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
-                    width: 120, height: 16)
-                HStack(spacing: 10) {
-                    RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
-                        width: 90, height: 14)
-                    RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
-                        width: 90, height: 14)
-                }
-            }
-            Spacer()
-            VStack(alignment: .trailing, spacing: 8) {
-                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
-                    width: 100, height: 18)
-                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
-                    width: 80, height: 14)
-            }
-        }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color.elevatedBackground)
-        )
-        .elevatedShadow()
-    }
-}
+// (Unified placeholder now provided by AssetRowCard.placeholder())

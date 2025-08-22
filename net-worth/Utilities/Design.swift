@@ -29,7 +29,7 @@ extension Color {
         if trait.userInterfaceStyle == .dark {
             return UIColor.tertiarySystemFill // subtle on dark
         } else {
-            return UIColor.systemBackground // pure white in Light Mode to avoid gray blocks
+            return UIColor.secondarySystemFill // light neutral so shimmer is visible in Light Mode
         }
     })
     static let airbnbSecondary = Color(red: 255/255, green: 56/255, blue: 92/255)
@@ -229,7 +229,7 @@ public struct EmptyStateCard: View {
         )
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(Color.subtleSeparator, lineWidth: 1)
+                .stroke(Color.subtleSeparator.opacity(0.12), lineWidth: 1)
         )
         .elevatedShadow()
     }

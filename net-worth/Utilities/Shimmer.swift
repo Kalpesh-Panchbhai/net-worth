@@ -6,19 +6,31 @@ struct Shimmer: ViewModifier {
     @Environment(\.colorScheme) private var colorScheme
     func body(content: Content) -> some View {
         content
-            .overlay(
-                LinearGradient(
-                    colors: colorScheme == .dark
-                        ? [.white.opacity(0.0), .white.opacity(0.22), .white.opacity(0.0)]
-                        : [.white.opacity(0.0), .white.opacity(0.6), .white.opacity(0.0)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .blendMode(.screen)
-                .mask(content)
-                .offset(x: phase * 180)
-            )
-            .onAppear { withAnimation(.linear(duration: 1.2).repeatForever(autoreverses: false)) { phase = 1 } }
+            .overlay {
+                GeometryReader { geo in
+                    let width = geo.size.width
+                    let height = geo.size.height
+                    // Stronger highlight in light mode for visibility, softer in dark mode
+                    let highlight = colorScheme == .dark ? Color.white.opacity(0.28) : Color.white.opacity(0.65)
+                    LinearGradient(
+                        stops: [
+                            .init(color: .clear, location: 0.0),
+                            .init(color: highlight, location: 0.5),
+                            .init(color: .clear, location: 1.0)
+                        ],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                    .blendMode(colorScheme == .dark ? .screen : .overlay)
+                    .mask(content)
+                    .frame(width: width + 200, height: height)
+                    .offset(x: phase * (width + 200))
+                    .allowsHitTesting(false)
+                }
+            }
+            .onAppear {
+                withAnimation(.linear(duration: 1.2).repeatForever(autoreverses: false)) { phase = 1 }
+            }
     }
 }
 
