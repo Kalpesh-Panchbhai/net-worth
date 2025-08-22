@@ -921,13 +921,7 @@ struct CreateIncomeView: View {
             }
         }
         .sheet(isPresented: $showCurrencyPicker) {
-            NavigationStack {
-                CurrencyPickerSheet(selectedCode: $currencyCode)
-                    .navigationTitle("Select currency")
-                    .navigationBarTitleDisplayMode(.inline)
-            }
-            .presentationDetents([.medium, .large])
-            .presentationDragIndicator(.visible)
+            CurrencyPickerSheet(selectedCode: $currencyCode)
         }
         .sheet(isPresented: $showDatePicker) {
             NavigationStack {
@@ -1022,92 +1016,7 @@ struct CreateIncomeView: View {
     }
 }
 
-// MARK: - Currency Picker Sheet
-private struct CurrencyPickerSheet: View {
-    @Binding var selectedCode: String
-    @Environment(\.dismiss) private var dismiss
-    @State private var query: String = ""
-    private var list: [Currency] {
-        let base: [Currency]
-        let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
-        if q.isEmpty {
-            base = CurrencyCatalog.all
-        } else {
-            base = CurrencyCatalog.all.filter { c in
-                c.name.localizedCaseInsensitiveContains(q)
-                    || c.code.localizedCaseInsensitiveContains(q)
-                    || c.symbol.localizedCaseInsensitiveContains(q)
-            }
-        }
-        // Pin selected to top
-        let sel = selectedCode.uppercased()
-        return base.sorted { a, b in
-            let aSel = a.code.uppercased() == sel
-            let bSel = b.code.uppercased() == sel
-            if aSel != bSel { return aSel && !bSel }
-            return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
-        }
-    }
-    var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                SettingsGroup(showHeader: false) {
-                    VStack(spacing: 0) {
-                        ForEach(Array(list.enumerated()), id: \.element) { idx, c in
-                            row(c)
-                            if idx < list.count - 1 {
-                                Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(
-                                    .horizontal, 12)
-                            }
-                        }
-                    }
-                }
-            }
-            .padding(.vertical, 16)
-            .padding(.horizontal, 16)
-        }
-        .background(Color.canvasBackground.ignoresSafeArea())
-        .searchable(
-            text: $query, placement: .navigationBarDrawer(displayMode: .always),
-            prompt: Text("Search currency"))
-    }
-    @ViewBuilder
-    private func row(_ c: Currency) -> some View {
-        HStack(spacing: 12) {
-            ZStack {
-                Circle().fill(Color.airbnbPrimary.opacity(0.12))
-                Text(c.code)
-                    .font(.caption2.weight(.bold))
-                    .foregroundColor(.airbnbPrimary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
-            }
-            .frame(width: 32, height: 32)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(c.name).font(.subheadline.weight(.semibold))
-                Text(c.code).font(.caption).foregroundColor(.secondary)
-            }
-            Spacer()
-            if c.code.uppercased() == selectedCode.uppercased() {
-                Text("Selected")
-                    .font(.caption2.bold())
-                    .foregroundColor(.white)
-                    .padding(.vertical, 4)
-                    .padding(.horizontal, 8)
-                    .background(Capsule().fill(LinearGradient.airbnbAccent))
-                    .shadow(color: .airbnbPrimary.opacity(0.25), radius: 6, x: 0, y: 3)
-            }
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
-        .contentShape(Rectangle())
-        .onTapGesture {
-            selectedCode = c.code
-            Haptics.selection()
-            dismiss()
-        }
-    }
-}
+// Shared CurrencyPickerSheet is used instead (in Views/Shared/CurrencyPickerSheet.swift)
 
 // MARK: - Input sanitization (numbers with up to 2 decimals)
 private func sanitizeDecimalInput(_ input: String) -> String {

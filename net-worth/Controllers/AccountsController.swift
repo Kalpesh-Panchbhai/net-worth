@@ -64,6 +64,47 @@ final class AccountsController: ObservableObject {
         else { await load() }
     }
 
+    // MARK: - Mutations
+    func create(name: String, type: String, currency: String, active: Bool) async -> Bool {
+        do {
+            let new = try await client.createAccount(
+                userId: userId, name: name, type: type, currency: currency.uppercased(), active: active
+            )
+            if let store = store {
+                await store.refreshAccounts(userId: userId)
+            } else {
+                var copy = items
+                copy.append(new)
+                self.items = sortAccounts(copy)
+            }
+            return true
+        } catch let api as APIError {
+            self.errorMessage = api.errorDescription ?? "Request failed"
+            return false
+        } catch {
+            self.errorMessage = error.localizedDescription
+            return false
+        }
+    }
+
+    func delete(_ account: Account) async -> Bool {
+        do {
+            try await client.deleteAccount(id: account.id)
+            if let store = store {
+                await store.refreshAccounts(userId: userId)
+            } else {
+                self.items.removeAll { $0.id == account.id }
+            }
+            return true
+        } catch let api as APIError {
+            self.errorMessage = api.errorDescription ?? "Request failed"
+            return false
+        } catch {
+            self.errorMessage = error.localizedDescription
+            return false
+        }
+    }
+
     // MARK: - Aggregates
     var totalCurrent: Double { items.reduce(0) { $0 + $1.value.currentValue } }
     var totalInvested: Double { items.reduce(0) { $0 + $1.value.invested } }

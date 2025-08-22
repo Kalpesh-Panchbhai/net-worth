@@ -188,6 +188,41 @@ extension RestClient {
     func fetchWatchlists(userId: Int) async throws -> [Watchlist] {
         try await getList("watch/\(userId)")
     }
+    // MARK: - Accounts (Create/Delete)
+    func createAccount(
+        userId: Int,
+        name: String,
+        type: String,
+        currency: String,
+        active: Bool,
+        value: AccountValue = AccountValue(currentValue: 0, previousValue: 0, invested: 0)
+    ) async throws -> Account {
+        struct Payload: Codable {
+            let userId: Int
+            let name: String
+            let type: String
+            let currency: String
+            let active: Bool
+            let value: AccountValue
+        }
+        let body = Payload(
+            userId: userId, name: name, type: type, currency: currency, active: active, value: value
+        )
+        return try await postWithFallback("account", body: body) { newId in
+            Account(
+                id: newId ?? -1,
+                userId: userId,
+                name: name,
+                type: type,
+                currency: currency,
+                active: active,
+                value: value
+            )
+        }
+    }
+    func deleteAccount(id: Int) async throws {
+        try await delete("account/\(id)")
+    }
     func createWatchlist(userId: Int, name: String) async throws -> Watchlist {
         struct Payload: Codable {
             let userId: Int

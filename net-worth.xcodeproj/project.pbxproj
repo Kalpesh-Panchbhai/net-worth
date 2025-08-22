@@ -50,6 +50,9 @@
 		7DCE00022E7A000100000002 /* CurrencyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCE00012E7A000100000001 /* CurrencyModels.swift */; };
 		7DCE00042E7A000100000004 /* DefaultCurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCE00032E7A000100000003 /* DefaultCurrencyView.swift */; };
 		7DECCEE62E58699D00225DDA /* AssetRowCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DECCEE52E58699D00225DDA /* AssetRowCard.swift */; };
+		7DECCEE82E5875FF00225DDA /* CreateAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DECCEE72E5875FF00225DDA /* CreateAccountView.swift */; };
+		7DECCEEA2E58791600225DDA /* CurrencyPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DECCEE92E58791600225DDA /* CurrencyPickerSheet.swift */; };
+		7DECCEEC2E587C5200225DDA /* StringPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DECCEEB2E587C5200225DDA /* StringPickerSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -95,6 +98,9 @@
 		7DCE00012E7A000100000001 /* CurrencyModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyModels.swift; sourceTree = "<group>"; };
 		7DCE00032E7A000100000003 /* DefaultCurrencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCurrencyView.swift; sourceTree = "<group>"; };
 		7DECCEE52E58699D00225DDA /* AssetRowCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetRowCard.swift; sourceTree = "<group>"; };
+		7DECCEE72E5875FF00225DDA /* CreateAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountView.swift; sourceTree = "<group>"; };
+		7DECCEE92E58791600225DDA /* CurrencyPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPickerSheet.swift; sourceTree = "<group>"; };
+		7DECCEEB2E587C5200225DDA /* StringPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringPickerSheet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -239,10 +245,12 @@
 			children = (
 				7DECCEE52E58699D00225DDA /* AssetRowCard.swift */,
 				7D74B2912E52375A00E35786 /* BannerCenter.swift */,
+				7DECCEE92E58791600225DDA /* CurrencyPickerSheet.swift */,
 				7DAB02042E70000200000004 /* FloatingActionButton.swift */,
 				7D2FBCA82E51CEFD0046FE17 /* NamedEntitiesListView.swift */,
 				7DAA000C2BE300000000000C /* PlaceholderScreen.swift */,
 				7DC4221C2E545F73000D62BD /* PrivacyShieldView.swift */,
+				7DECCEEB2E587C5200225DDA /* StringPickerSheet.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -267,6 +275,7 @@
 			isa = PBXGroup;
 			children = (
 				7DAC01032E70000300000003 /* AccountsListView.swift */,
+				7DECCEE72E5875FF00225DDA /* CreateAccountView.swift */,
 			);
 			path = Accounts;
 			sourceTree = "<group>";
@@ -353,6 +362,7 @@
 			files = (
 				7DC422212E546A29000D62BD /* AppDelegate.swift in Sources */,
 				7D59B4012BE246FF006F3F00 /* net_worthApp.swift in Sources */,
+				7DECCEEA2E58791600225DDA /* CurrencyPickerSheet.swift in Sources */,
 				7DAA10012BE3000000000001 /* AppTab.swift in Sources */,
 				7DAA10022BE3000000000002 /* IncomeModels.swift in Sources */,
 				7D74B2922E52375A00E35786 /* BannerCenter.swift in Sources */,
@@ -371,6 +381,7 @@
 				7DAA10092BE3000000000009 /* Shimmer.swift in Sources */,
 				7DAA100A2BE300000000000A /* AirbnbTabBar.swift in Sources */,
 				7DAA100B2BE300000000000B /* SettingsView.swift in Sources */,
+				7DECCEE82E5875FF00225DDA /* CreateAccountView.swift in Sources */,
 				7DAA100C2BE300000000000C /* PlaceholderScreen.swift in Sources */,
 				7D2FBCA72E51CEF70046FE17 /* IncomeTagsView.swift in Sources */,
 				7DAA100D2BE300000000000D /* IncomeViews.swift in Sources */,
@@ -381,6 +392,7 @@
 				7DAB01012E70000100000001 /* WatchModels.swift in Sources */,
 				7DAB01022E70000100000002 /* WatchlistController.swift in Sources */,
 				7DAB01032E70000100000003 /* WatchlistViews.swift in Sources */,
+				7DECCEEC2E587C5200225DDA /* StringPickerSheet.swift in Sources */,
 				7DAB01042E70000200000004 /* FloatingActionButton.swift in Sources */,
 				7DAC01112E70000300000011 /* AccountModels.swift in Sources */,
 				7DAC01122E70000300000012 /* AccountsController.swift in Sources */,

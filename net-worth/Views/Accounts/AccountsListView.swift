@@ -3,6 +3,8 @@ import SwiftUI
 struct AccountsListView: View {
     @StateObject private var vm: AccountsController
     @State private var navCollapsed = false
+    @State private var showCreateSheet = false
+    @State private var pendingDelete: Account? = nil
     @AppStorage("hideInactiveAccounts") private var hideInactive: Bool = true
     @AppStorage("defaultCurrencyCode") private var defaultCurrencyCode: String = "INR"
     @State private var searchText: String = ""
@@ -49,6 +51,14 @@ struct AccountsListView: View {
                 Section {
                     ForEach(section.items, id: \.id) { item in
                         AccountRow(item: item, currency: defaultCurrencyCode.uppercased())
+                            .contextMenu {
+                                Button(role: .destructive) {
+                                    Haptics.selection()
+                                    pendingDelete = item
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            }
                     }
                 } header: {
                     let sectionTotal = section.items.reduce(0) { $0 + $1.value.currentValue }
@@ -110,6 +120,29 @@ struct AccountsListView: View {
         .onChange(of: vm.errorMessage) { _, newValue in
             guard let message = newValue, !message.isEmpty else { return }
             banners.showError(message: message, retryTitle: "Retry", retry: { Task { await vm.refresh() } })
+        }
+        .alert(item: $pendingDelete) { item in
+            Alert(
+                title: Text("Delete account?"),
+                message: Text("This will remove \(item.name)."),
+                primaryButton: .destructive(Text("Delete")) {
+                    Task { _ = await vm.delete(item) }
+                },
+                secondaryButton: .cancel()
+            )
+        }
+        .sheet(isPresented: $showCreateSheet) {
+            NavigationStack {
+                CreateAccountView(userId: vm.userId)
+                    .environmentObject(lookup)
+                    .environmentObject(banners)
+                    .navigationBarTitleDisplayMode(.inline)
+            }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
+        }
+        .fabOverlay(icon: "plus", accessibilityLabel: "Add account") {
+            showCreateSheet = true
         }
     }
 }
@@ -231,14 +264,14 @@ private struct AccountRow: View {
 // Local StatPill/TypeBadge removed; consolidated in Shared components where needed
 
 // File-scope helper so rows can normalize labels consistently with grouping
-private func normalizedAccountType(_ raw: String) -> String {
-    let t = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-    if t.contains("broker") { return "Broker" }
-    if t.contains("saving") { return "Saving" }
-    if t.contains("loan") { return "Loan" }
-    if t.contains("credit") { return "Loan" }
-    return "Other"
-}
+    private func normalizedAccountType(_ raw: String) -> String {
+        let t = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        if t.contains("broker") { return "Broker" }
+        if t.contains("saving") { return "Saving" }
+        if t.contains("credit") { return "Credit card" }
+        if t.contains("loan") { return "Loan" }
+        return "Other"
+    }
 
 // MARK: - Grouping Helpers
 private extension AccountsListView {
@@ -255,7 +288,7 @@ private extension AccountsListView {
         if !selectedTypes.isEmpty {
             base = base.filter { selectedTypes.contains(normalizedType($0.type)) }
         }
-        let order = ["Broker", "Saving", "Loan", "Other"]
+        let order = ["Broker", "Saving", "Credit card", "Loan", "Other"]
         var buckets: [String: [Account]] = [:]
         for acc in base {
             let t = normalizedType(acc.type)
@@ -276,14 +309,14 @@ private extension AccountsListView {
         let t = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         if t.contains("broker") { return "Broker" }
         if t.contains("saving") { return "Saving" }
+        if t.contains("credit") { return "Credit card" }
         if t.contains("loan") { return "Loan" }
-        if t.contains("credit") { return "Loan" }
         return "Other"
     }
     func availableTypes() -> [String] {
         let base = vm.items.map { normalizedType($0.type) }
         let unique = Array(Set(base)).sorted()
-        let order = ["Broker", "Saving", "Loan", "Other"]
+        let order = ["Broker", "Saving", "Credit card", "Loan", "Other"]
         return unique.sorted { a, b in
             let ia = order.firstIndex(of: a) ?? Int.max
             let ib = order.firstIndex(of: b) ?? Int.max
