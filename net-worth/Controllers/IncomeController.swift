@@ -48,6 +48,13 @@ final class IncomeController: ObservableObject {
     func load() async {
         if let store = store {
             self.incomes = store.incomes.sorted { $0.creditedDate > $1.creditedDate }
+            if store.incomes.isEmpty {
+                isLoading = true
+                errorMessage = nil
+                defer { isLoading = false }
+                await store.loadIncomesIfNeeded(userId: userId)
+                self.incomes = store.incomes.sorted { $0.creditedDate > $1.creditedDate }
+            }
             return
         }
         isLoading = true

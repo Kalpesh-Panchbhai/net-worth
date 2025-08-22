@@ -30,8 +30,15 @@ final class AccountsController: ObservableObject {
     }
 
     func load() async {
-        if store != nil { // Use store-driven updates; no direct fetch
-            self.items = sortAccounts(store?.accounts ?? [])
+        if let store = store { // Use store-driven updates; trigger store load if empty
+            self.items = sortAccounts(store.accounts)
+            if store.accounts.isEmpty {
+                isLoading = true
+                errorMessage = nil
+                defer { isLoading = false }
+                await store.loadAccountsIfNeeded(userId: userId)
+                self.items = sortAccounts(store.accounts)
+            }
             return
         }
         if isLoading { return }

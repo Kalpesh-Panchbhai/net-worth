@@ -1,12 +1,15 @@
-import SwiftUI
 import LocalAuthentication
+import SwiftUI
 
 struct RootView: View {
     let userId: Int
     @State private var selected: AppTab = .home
     @EnvironmentObject private var networkMonitor: NetworkMonitor
-    @AppStorage("appAppearance") private var appAppearanceRaw: String = AppAppearance.system.rawValue
-    private var appAppearance: AppAppearance { AppAppearance(rawValue: appAppearanceRaw) ?? .system }
+    @AppStorage("appAppearance") private var appAppearanceRaw: String = AppAppearance.system
+        .rawValue
+    private var appAppearance: AppAppearance {
+        AppAppearance(rawValue: appAppearanceRaw) ?? .system
+    }
     private var colorSchemeOverride: ColorScheme? {
         switch appAppearance {
         case .system: return nil
@@ -35,7 +38,7 @@ struct RootView: View {
     @State private var isLocked: Bool = false
     @State private var authError: String? = nil
     @Environment(\.scenePhase) private var scenePhase
-    
+
     var body: some View {
         ZStack(alignment: .bottom) {
             tabContent()
@@ -57,7 +60,8 @@ struct RootView: View {
                             Image(systemName: "faceid").font(.system(size: 42, weight: .bold))
                             Text("Unlock with Face ID").font(.headline)
                             if let err = authError {
-                                Text(err).font(.footnote).foregroundColor(.secondary).multilineTextAlignment(.center).padding(.horizontal, 8)
+                                Text(err).font(.footnote).foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center).padding(.horizontal, 8)
                             }
                             Button(action: authenticate) {
                                 HStack(spacing: 8) {
@@ -93,7 +97,10 @@ struct RootView: View {
         }
         .animation(.easeInOut(duration: 0.18), value: scenePhase)
         .onAppear {
-            if biometricEnabled { isLocked = true; authenticate() }
+            if biometricEnabled {
+                isLocked = true
+                authenticate()
+            }
         }
         .onChange(of: scenePhase) { _, newPhase in
             guard biometricEnabled else { return }
@@ -104,7 +111,12 @@ struct RootView: View {
             }
         }
         .onChange(of: biometricEnabled) { _, enabled in
-            if enabled { isLocked = true; authenticate() } else { isLocked = false }
+            if enabled {
+                isLocked = true
+                authenticate()
+            } else {
+                isLocked = false
+            }
         }
     }
 
@@ -114,21 +126,42 @@ struct RootView: View {
         var error: NSError?
         let reason = "Authenticate to continue"
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, evalErr in
+            context.evaluatePolicy(
+                .deviceOwnerAuthenticationWithBiometrics, localizedReason: reason
+            ) { success, evalErr in
                 DispatchQueue.main.async {
-                    if success { self.isLocked = false; self.authError = nil; Haptics.success() }
-                    else { self.authError = (evalErr as NSError?)?.localizedDescription ?? "Authentication failed" }
+                    if success {
+                        self.isLocked = false
+                        self.authError = nil
+                        Haptics.success()
+                    } else {
+                        self.authError =
+                            (evalErr as NSError?)?.localizedDescription ?? "Authentication failed"
+                    }
                 }
             }
-        } else if allowPasscodeFallback && context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
-            context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason) { success, evalErr in
+        } else if allowPasscodeFallback
+            && context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error)
+        {
+            context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason) {
+                success, evalErr in
                 DispatchQueue.main.async {
-                    if success { self.isLocked = false; self.authError = nil; Haptics.success() }
-                    else { self.authError = (evalErr as NSError?)?.localizedDescription ?? "Authentication failed" }
+                    if success {
+                        self.isLocked = false
+                        self.authError = nil
+                        Haptics.success()
+                    } else {
+                        self.authError =
+                            (evalErr as NSError?)?.localizedDescription ?? "Authentication failed"
+                    }
                 }
             }
         } else {
-            self.authError = error?.localizedDescription ?? (allowPasscodeFallback ? "Biometrics not available" : "Biometrics not available and passcode is disabled")
+            self.authError =
+                error?.localizedDescription
+                ?? (allowPasscodeFallback
+                    ? "Biometrics not available"
+                    : "Biometrics not available and passcode is disabled")
         }
     }
 }

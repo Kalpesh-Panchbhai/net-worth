@@ -32,6 +32,13 @@ final class WatchlistController: ObservableObject {
     func load() async {
         if let store = store {
             self.items = sortWatchlists(store.watchlists)
+            if store.watchlists.isEmpty {
+                isLoading = true
+                errorMessage = nil
+                defer { isLoading = false }
+                await store.loadWatchlistsIfNeeded(userId: userId)
+                self.items = sortWatchlists(store.watchlists)
+            }
             return
         }
         isLoading = true
