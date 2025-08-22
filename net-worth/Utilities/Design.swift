@@ -170,6 +170,71 @@ public struct WideStatPill: View {
     }
 }
 
+// MARK: - Labeled Currency Pill (title + full currency value)
+public struct LabeledCurrencyPill: View {
+    public let title: String
+    public let value: Double
+    public let currency: String
+    public var tint: Color
+    public init(title: String, value: Double, currency: String, tint: Color) {
+        self.title = title
+        self.value = value
+        self.currency = currency
+        self.tint = tint
+    }
+    public var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(.caption)
+                .foregroundColor(.secondary)
+            Text(value, format: .currency(code: currency))
+                .font(.headline)
+                .foregroundColor(tint)
+                .monospacedDigit()
+                .contentTransition(.numericText())
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
+        .background(
+            Capsule(style: .continuous)
+                .fill(tint.opacity(0.08))
+        )
+    }
+}
+
+// MARK: - Empty State Card (reusable)
+public struct EmptyStateCard: View {
+    public let text: String
+    public var icon: String
+    public var iconFont: Font
+    public init(text: String, icon: String = "tray", iconFont: Font = .title2) {
+        self.text = text
+        self.icon = icon
+        self.iconFont = iconFont
+    }
+    public var body: some View {
+        VStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(iconFont)
+                .foregroundColor(.secondary)
+            Text(text)
+                .font(.subheadline.weight(.semibold))
+                .foregroundColor(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color.elevatedBackground)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(Color.subtleSeparator, lineWidth: 1)
+        )
+        .elevatedShadow()
+    }
+}
+
 // duplicate elevatedShadow extension removed (already declared above)
 
 // MARK: - Global Layout Tokens

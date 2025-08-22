@@ -1,6 +1,7 @@
 import SwiftUI
+
 // MARK: - Currency helpers
-fileprivate func sfSymbolForCurrency(code: String) -> String? {
+private func sfSymbolForCurrency(code: String) -> String? {
     switch code.uppercased() {
     case "USD", "CAD", "AUD", "NZD", "SGD", "HKD", "MXN", "ARS", "CLP": return "dollarsign.circle"
     case "EUR": return "eurosign.circle"
@@ -105,7 +106,10 @@ struct IncomeListView: View {
                                     Haptics.selection()
                                 } label: {
                                     HStack(spacing: 8) {
-                                        Image(systemName: activeCount == 0 ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
+                                        Image(
+                                            systemName: activeCount == 0
+                                                ? "line.3.horizontal.decrease.circle"
+                                                : "line.3.horizontal.decrease.circle.fill")
                                     }
                                     .font(.subheadline.weight(.semibold))
                                     .foregroundColor(.airbnbPrimary)
@@ -178,7 +182,8 @@ struct IncomeListView: View {
                                 )
                             }
                             // Bottom anchor for scroll-to-bottom (no FAB on this screen)
-                            Color.clear.frame(height: LayoutConstants.tabBarHeight + 24).id("incomeBottom")
+                            Color.clear.frame(height: LayoutConstants.tabBarHeight + 24).id(
+                                "incomeBottom")
                         }
                         .padding(.horizontal, 16)
                         .padding(.bottom, LayoutConstants.tabBarHeight + 24)
@@ -278,8 +283,8 @@ struct IncomeListView: View {
     }
 }
 
-private extension IncomeListView {
-    func deleteIncome(_ income: Income) {
+extension IncomeListView {
+    fileprivate func deleteIncome(_ income: Income) {
         Task {
             let ok = await vm.delete(income)
             if ok {
@@ -287,7 +292,8 @@ private extension IncomeListView {
             } else {
                 Haptics.softImpact()
                 let msg = vm.errorMessage ?? "Failed to delete income."
-                banners.showError(message: msg, retryTitle: "Retry", retry: { Task { await vm.refresh() } })
+                banners.showError(
+                    message: msg, retryTitle: "Retry", retry: { Task { await vm.refresh() } })
             }
         }
     }
@@ -481,8 +487,10 @@ private struct SummaryCard: View {
                     .animation(.snappy(duration: 0.45), value: totalAll)
             }
             HStack(spacing: 8) {
-                StatPill(title: "Net income", value: totalNet, currency: currency, tint: .airbnbSuccess)
-                StatPill(title: "Tax paid", value: totalTax, currency: currency, tint: .airbnbPrimary)
+                LabeledCurrencyPill(
+                    title: "Net income", value: totalNet, currency: currency, tint: .airbnbSuccess)
+                LabeledCurrencyPill(
+                    title: "Tax paid", value: totalTax, currency: currency, tint: .airbnbPrimary)
                 Spacer(minLength: 0)
             }
         }
@@ -498,30 +506,7 @@ private struct SummaryCard: View {
 
 // Trend/Sparkline removed per new design
 
-private struct StatPill: View {
-    let title: String
-    let value: Double
-    let currency: String
-    var tint: Color = .airbnbPrimary
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(title)
-                .font(.caption)
-                .foregroundColor(.secondary)
-            Text(value, format: .currency(code: currency))
-                .font(.headline)
-                .foregroundColor(tint)
-                .contentTransition(.numericText())
-                .animation(.snappy(duration: 0.45), value: value)
-        }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background(
-            Capsule(style: .continuous)
-                .fill(tint.opacity(0.08))
-        )
-    }
-}
+// Local StatPill removed in favor of shared LabeledCurrencyPill
 
 private struct IncomeSectionsList: View {
     let sections: [IncomeController.Section]
@@ -532,8 +517,10 @@ private struct IncomeSectionsList: View {
     var body: some View {
         LazyVStack(spacing: 12) {
             ForEach(sections) { section in
-                SectionHeader(grouping: grouping, rawTitle: section.title, count: section.items.count)
-                    .padding(.top, 8)
+                SectionHeader(
+                    grouping: grouping, rawTitle: section.title, count: section.items.count
+                )
+                .padding(.top, 8)
                 ForEach(section.items, id: \.self) { item in
                     IncomeRowCard(income: item, currency: currency)
                         .contentShape(Rectangle())
@@ -698,36 +685,14 @@ extension IncomeRowCard {
             Spacer()
             VStack(alignment: .trailing, spacing: 8) {
                 RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
-                    width: 120, height: 18) // Total
+                    width: 120, height: 18)  // Total
                 RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
-                    width: 90, height: 14) // Net
+                    width: 90, height: 14)  // Net
                 RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
-                    width: 80, height: 14) // Tax
+                    width: 80, height: 14)  // Tax
             }
         }
         .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color.elevatedBackground)
-        )
-        .elevatedShadow()
-    }
-}
-
-// Sparkline removed per new design
-
-// FloatingAddButton moved to Shared/FloatingActionButton.swift
-
-// MARK: - Cards
-private struct EmptyStateCard: View {
-    let text: String
-    var body: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "tray").font(.largeTitle).foregroundColor(.secondary)
-            Text(text).font(.headline).foregroundColor(.secondary)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(32)
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color.elevatedBackground)
@@ -766,11 +731,13 @@ struct CreateIncomeView: View {
 
     // MARK: - Validation
     private var amount: Double? {
-        let normalized = amountText.replacingOccurrences(of: ",", with: ".").trimmingCharacters(in: .whitespacesAndNewlines)
+        let normalized = amountText.replacingOccurrences(of: ",", with: ".").trimmingCharacters(
+            in: .whitespacesAndNewlines)
         return Double(normalized)
     }
     private var tax: Double? {
-        let normalized = taxText.replacingOccurrences(of: ",", with: ".").trimmingCharacters(in: .whitespacesAndNewlines)
+        let normalized = taxText.replacingOccurrences(of: ",", with: ".").trimmingCharacters(
+            in: .whitespacesAndNewlines)
         return Double(normalized) ?? 0
     }
     private var isValid: Bool {
@@ -781,8 +748,11 @@ struct CreateIncomeView: View {
     }
     private var totalAll: Double { (amount ?? 0) + (tax ?? 0) }
     private var confirmTitle: String {
-        if existing == nil { return saving ? "Saving…" : "Save" }
-        else { return saving ? "Updating…" : "Update" }
+        if existing == nil {
+            return saving ? "Saving…" : "Save"
+        } else {
+            return saving ? "Updating…" : "Update"
+        }
     }
 
     var body: some View {
@@ -827,10 +797,12 @@ struct CreateIncomeView: View {
                                 .foregroundColor(.secondary)
                         }
                         if let amt = amount, amt < 0 {
-                            Text("Amount must be non‑negative").font(.footnote).foregroundColor(.airbnbPrimary)
+                            Text("Amount must be non‑negative").font(.footnote).foregroundColor(
+                                .airbnbPrimary)
                         }
                         if let t = tax, t < 0 {
-                            Text("Tax must be non‑negative").font(.footnote).foregroundColor(.airbnbPrimary)
+                            Text("Tax must be non‑negative").font(.footnote).foregroundColor(
+                                .airbnbPrimary)
                         }
                     }
                 }
@@ -843,7 +815,10 @@ struct CreateIncomeView: View {
                             showDatePicker = true
                             Haptics.selection()
                         } label: {
-                            SettingsCell(icon: "calendar", title: "Credited on", subtitle: DateFormatter.dayMonYear.string(from: creditedDate)) {
+                            SettingsCell(
+                                icon: "calendar", title: "Credited on",
+                                subtitle: DateFormatter.dayMonYear.string(from: creditedDate)
+                            ) {
                                 Image(systemName: "chevron.right")
                                     .font(.footnote.weight(.semibold))
                                     .foregroundColor(.secondary)
@@ -852,15 +827,21 @@ struct CreateIncomeView: View {
                         .buttonStyle(.plain)
                         .contentShape(Rectangle())
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(.horizontal, 12)
+                        Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(
+                            .horizontal, 12)
                         // Currency (sheet)
                         Button {
                             showCurrencyPicker = true
                             Haptics.selection()
                         } label: {
-                            SettingsCell(title: "Currency", subtitle: CurrencyCatalog.byCode[currencyCode.uppercased()]?.name ?? currencyCode, leading: {
-                                CurrencyBadge(code: currencyCode)
-                            }) {
+                            SettingsCell(
+                                title: "Currency",
+                                subtitle: CurrencyCatalog.byCode[currencyCode.uppercased()]?.name
+                                    ?? currencyCode,
+                                leading: {
+                                    CurrencyBadge(code: currencyCode)
+                                }
+                            ) {
                                 Image(systemName: "chevron.right")
                                     .font(.footnote.weight(.semibold))
                                     .foregroundColor(.secondary)
@@ -880,7 +861,10 @@ struct CreateIncomeView: View {
                             showTypePicker = true
                             Haptics.selection()
                         } label: {
-                            SettingsCell(icon: "creditcard", title: "Source", subtitle: selectedType?.name ?? "Not set") {
+                            SettingsCell(
+                                icon: "creditcard", title: "Source",
+                                subtitle: selectedType?.name ?? "Not set"
+                            ) {
                                 Image(systemName: "chevron.right")
                                     .font(.footnote.weight(.semibold))
                                     .foregroundColor(.secondary)
@@ -889,13 +873,16 @@ struct CreateIncomeView: View {
                         .buttonStyle(.plain)
                         .contentShape(Rectangle())
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(.horizontal, 12)
+                        Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(
+                            .horizontal, 12)
                         // Tag (sheet)
                         Button {
                             showTagPicker = true
                             Haptics.selection()
                         } label: {
-                            SettingsCell(icon: "tag", title: "Tag", subtitle: selectedTag?.name ?? "Not set") {
+                            SettingsCell(
+                                icon: "tag", title: "Tag", subtitle: selectedTag?.name ?? "Not set"
+                            ) {
                                 Image(systemName: "chevron.right")
                                     .font(.footnote.weight(.semibold))
                                     .foregroundColor(.secondary)
@@ -952,16 +939,22 @@ struct CreateIncomeView: View {
         }
         .sheet(isPresented: $showTypePicker) {
             NavigationStack {
-                EntityPickerSheet<IncomeType>(title: "Select source", items: lookup.incomeTypes, icon: "creditcard", selected: $selectedType)
-                    .navigationBarTitleDisplayMode(.inline)
+                EntityPickerSheet<IncomeType>(
+                    title: "Select source", items: lookup.incomeTypes, icon: "creditcard",
+                    selected: $selectedType
+                )
+                .navigationBarTitleDisplayMode(.inline)
             }
             .presentationDetents([.medium, .large])
             .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $showTagPicker) {
             NavigationStack {
-                EntityPickerSheet<IncomeTag>(title: "Select tag", items: lookup.incomeTags, icon: "tag", selected: $selectedTag)
-                    .navigationBarTitleDisplayMode(.inline)
+                EntityPickerSheet<IncomeTag>(
+                    title: "Select tag", items: lookup.incomeTags, icon: "tag",
+                    selected: $selectedTag
+                )
+                .navigationBarTitleDisplayMode(.inline)
             }
             .presentationDetents([.medium, .large])
             .presentationDragIndicator(.visible)
@@ -980,15 +973,19 @@ struct CreateIncomeView: View {
         }
         currencyCode = defaultCurrencyCode.uppercased()
         if selectedType == nil {
-            selectedType = lookup.incomeTypes.first(where: { $0.isDefault }) ?? lookup.incomeTypes.first
+            selectedType =
+                lookup.incomeTypes.first(where: { $0.isDefault }) ?? lookup.incomeTypes.first
         }
         if selectedTag == nil {
-            selectedTag = lookup.incomeTags.first(where: { $0.isDefault }) ?? lookup.incomeTags.first
+            selectedTag =
+                lookup.incomeTags.first(where: { $0.isDefault }) ?? lookup.incomeTags.first
         }
     }
 
     private func save() async {
-        guard isValid, let amount = amount, let tax = tax, let type = selectedType, let tag = selectedTag else { return }
+        guard isValid, let amount = amount, let tax = tax, let type = selectedType,
+            let tag = selectedTag
+        else { return }
         await MainActor.run { saving = true }
         do {
             if let ex = existing {
@@ -1036,9 +1033,9 @@ private struct CurrencyPickerSheet: View {
             base = CurrencyCatalog.all
         } else {
             base = CurrencyCatalog.all.filter { c in
-                c.name.localizedCaseInsensitiveContains(q) ||
-                c.code.localizedCaseInsensitiveContains(q) ||
-                c.symbol.localizedCaseInsensitiveContains(q)
+                c.name.localizedCaseInsensitiveContains(q)
+                    || c.code.localizedCaseInsensitiveContains(q)
+                    || c.symbol.localizedCaseInsensitiveContains(q)
             }
         }
         // Pin selected to top
@@ -1057,7 +1054,10 @@ private struct CurrencyPickerSheet: View {
                     VStack(spacing: 0) {
                         ForEach(Array(list.enumerated()), id: \.element) { idx, c in
                             row(c)
-                            if idx < list.count - 1 { Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(.horizontal, 12) }
+                            if idx < list.count - 1 {
+                                Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(
+                                    .horizontal, 12)
+                            }
                         }
                     }
                 }
@@ -1066,7 +1066,9 @@ private struct CurrencyPickerSheet: View {
             .padding(.horizontal, 16)
         }
         .background(Color.canvasBackground.ignoresSafeArea())
-        .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always), prompt: Text("Search currency"))
+        .searchable(
+            text: $query, placement: .navigationBarDrawer(displayMode: .always),
+            prompt: Text("Search currency"))
     }
     @ViewBuilder
     private func row(_ c: Currency) -> some View {
@@ -1107,14 +1109,18 @@ private struct CurrencyPickerSheet: View {
 }
 
 // MARK: - Input sanitization (numbers with up to 2 decimals)
-fileprivate func sanitizeDecimalInput(_ input: String) -> String {
+private func sanitizeDecimalInput(_ input: String) -> String {
     let s = input.replacingOccurrences(of: ",", with: ".")
     // Keep only digits and the first dot
     var result = ""
     var hasDot = false
     for ch in s {
-        if ch.isNumber { result.append(ch) }
-        else if ch == "." && !hasDot { result.append(ch); hasDot = true }
+        if ch.isNumber {
+            result.append(ch)
+        } else if ch == "." && !hasDot {
+            result.append(ch)
+            hasDot = true
+        }
     }
     if result == "." { result = "0." }
     // Limit to 2 decimals
@@ -1142,9 +1148,11 @@ private struct DatePickerSheet: View {
         VStack(spacing: 16) {
             SettingsGroup(showHeader: false) {
                 VStack(alignment: .leading, spacing: 12) {
-                    DatePicker("Date", selection: $selectedDate, in: ...Date(), displayedComponents: .date)
-                        .datePickerStyle(.graphical)
-                        .labelsHidden()
+                    DatePicker(
+                        "Date", selection: $selectedDate, in: ...Date(), displayedComponents: .date
+                    )
+                    .datePickerStyle(.graphical)
+                    .labelsHidden()
                 }
             }
         }
@@ -1169,7 +1177,8 @@ private struct EntityPickerSheet<T: NamedEntity>: View {
     @State private var query: String = ""
     private var displayed: [T] {
         let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
-        let filtered = q.isEmpty ? items : items.filter { $0.name.localizedCaseInsensitiveContains(q) }
+        let filtered =
+            q.isEmpty ? items : items.filter { $0.name.localizedCaseInsensitiveContains(q) }
         // Default on top, name asc
         return filtered.sorted { a, b in
             if a.isDefault != b.isDefault { return a.isDefault && !b.isDefault }
@@ -1183,7 +1192,10 @@ private struct EntityPickerSheet<T: NamedEntity>: View {
                     VStack(spacing: 0) {
                         ForEach(Array(displayed.enumerated()), id: \.element) { idx, item in
                             row(item)
-                            if idx < displayed.count - 1 { Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(.horizontal, 12) }
+                            if idx < displayed.count - 1 {
+                                Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(
+                                    .horizontal, 12)
+                            }
                         }
                     }
                 }
@@ -1192,7 +1204,10 @@ private struct EntityPickerSheet<T: NamedEntity>: View {
             .padding(.horizontal, 16)
         }
         .background(Color.canvasBackground.ignoresSafeArea())
-        .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always), prompt: Text("Search"))
+        .searchable(
+            text: $query, placement: .navigationBarDrawer(displayMode: .always),
+            prompt: Text("Search")
+        )
         .toolbar {
             ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
         }
@@ -1236,4 +1251,3 @@ private struct EntityPickerSheet<T: NamedEntity>: View {
         base.hasSuffix(".fill") ? base : base + ".fill"
     }
 }
-

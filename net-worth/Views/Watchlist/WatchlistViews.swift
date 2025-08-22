@@ -20,7 +20,7 @@ struct WatchlistListView: View {
         _vm = StateObject(wrappedValue: WatchlistController(userId: userId))
     }
 
-// FloatingAddButton moved to Shared/FloatingActionButton.swift
+    // FloatingAddButton moved to Shared/FloatingActionButton.swift
 
     var body: some View {
         NavigationStack {
@@ -60,11 +60,16 @@ struct WatchlistListView: View {
                                 )
                             }
 
-                            let bottomPad = LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin + LayoutConstants.fabSize + 24
+                            let bottomPad =
+                                LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin
+                                + LayoutConstants.fabSize + 24
                             Color.clear.frame(height: bottomPad).id("watchBottom")
                         }
                         .padding(.horizontal, 16)
-                        .padding(.bottom, LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin + LayoutConstants.fabSize + 24)
+                        .padding(
+                            .bottom,
+                            LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin
+                                + LayoutConstants.fabSize + 24)
                     }
                     .background(ScrollToTopEnabler())
                     .scrollIndicators(.hidden)
@@ -96,10 +101,14 @@ struct WatchlistListView: View {
                 primaryButton: .destructive(Text("Delete")) {
                     Task {
                         let ok = await vm.delete(item)
-                        if ok { Haptics.success() } else {
+                        if ok {
+                            Haptics.success()
+                        } else {
                             Haptics.softImpact()
                             let msg = vm.errorMessage ?? "Failed to delete watchlist."
-                            banners.showError(message: msg, retryTitle: "Retry", retry: { Task { _ = await vm.delete(item) } })
+                            banners.showError(
+                                message: msg, retryTitle: "Retry",
+                                retry: { Task { _ = await vm.delete(item) } })
                         }
                     }
                 },
@@ -114,7 +123,8 @@ struct WatchlistListView: View {
             guard let message = newValue, !message.isEmpty else { return }
             // Suppress banners for pull-to-refresh if we already have data
             guard vm.items.isEmpty else { return }
-            banners.showError(message: message, retryTitle: "Retry", retry: { Task { await vm.refresh() } })
+            banners.showError(
+                message: message, retryTitle: "Retry", retry: { Task { await vm.refresh() } })
         }
         .sheet(isPresented: $showCreate) {
             ZStack {
@@ -127,7 +137,8 @@ struct WatchlistListView: View {
                                     TextField("Name", text: $createName)
                                         .textInputAutocapitalization(.words)
                                         .disableAutocorrection(true)
-                                    Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(.horizontal, 0)
+                                    Rectangle().fill(Color.subtleSeparator).frame(height: 0.5)
+                                        .padding(.horizontal, 0)
                                 }
                                 .padding(.horizontal, 4)
                             }
@@ -144,7 +155,8 @@ struct WatchlistListView: View {
                         }
                         ToolbarItem(placement: .confirmationAction) {
                             Button(creating ? "Saving…" : "Save") {
-                                let name = createName.trimmingCharacters(in: .whitespacesAndNewlines)
+                                let name = createName.trimmingCharacters(
+                                    in: .whitespacesAndNewlines)
                                 guard !name.isEmpty else { return }
                                 creating = true
                                 Task {
@@ -155,7 +167,9 @@ struct WatchlistListView: View {
                                     Haptics.success()
                                 }
                             }
-                            .disabled(createName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || creating)
+                            .disabled(
+                                createName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                    || creating)
                         }
                     }
                     .toolbarBackground(Color.canvasBackground, for: .navigationBar)
@@ -177,7 +191,8 @@ struct WatchlistListView: View {
                                     TextField("Name", text: $renameText)
                                         .textInputAutocapitalization(.words)
                                         .disableAutocorrection(true)
-                                    Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(.horizontal, 0)
+                                    Rectangle().fill(Color.subtleSeparator).frame(height: 0.5)
+                                        .padding(.horizontal, 0)
                                 }
                                 .padding(.horizontal, 4)
                             }
@@ -194,20 +209,28 @@ struct WatchlistListView: View {
                         }
                         ToolbarItem(placement: .confirmationAction) {
                             Button(renamingSaving ? "Saving…" : "Save") {
-                                let name = renameText.trimmingCharacters(in: .whitespacesAndNewlines)
+                                let name = renameText.trimmingCharacters(
+                                    in: .whitespacesAndNewlines)
                                 guard !name.isEmpty else { return }
                                 renamingSaving = true
                                 Task {
                                     let ok = await vm.rename(item, to: name)
-                                    if ok { Haptics.success(); renaming = nil } else {
+                                    if ok {
+                                        Haptics.success()
+                                        renaming = nil
+                                    } else {
                                         Haptics.softImpact()
                                         let msg = vm.errorMessage ?? "Failed to update."
-                                        banners.showError(message: msg, retryTitle: "Retry", retry: { Task { _ = await vm.rename(item, to: name) } })
+                                        banners.showError(
+                                            message: msg, retryTitle: "Retry",
+                                            retry: { Task { _ = await vm.rename(item, to: name) } })
                                     }
                                     renamingSaving = false
                                 }
                             }
-                            .disabled(renameText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || renamingSaving)
+                            .disabled(
+                                renameText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                    || renamingSaving)
                         }
                     }
                     .toolbarBackground(Color.canvasBackground, for: .navigationBar)
@@ -225,8 +248,8 @@ struct WatchlistListView: View {
 private struct WatchSummaryCard: View {
     let totalCurrent: Double
     let totalInvested: Double
-    let change: Double // current - invested
-    let changeVsPrev: Double // current - previous
+    let change: Double  // current - invested
+    let changeVsPrev: Double  // current - previous
     let changePercent: Double?
     let currency: String
 
@@ -247,8 +270,12 @@ private struct WatchSummaryCard: View {
                     .animation(.snappy(duration: 0.45), value: totalCurrent)
             }
             HStack(spacing: 8) {
-                Pill(title: "Invested", value: totalInvested, currency: currency, tint: .secondary, isNeutral: true)
-                Pill(title: change >= 0 ? "P/L" : "Loss", value: abs(change), currency: currency, tint: change >= 0 ? .airbnbSuccess : .red)
+                Pill(
+                    title: "Invested", value: totalInvested, currency: currency, tint: .secondary,
+                    isNeutral: true)
+                Pill(
+                    title: change >= 0 ? "P/L" : "Loss", value: abs(change), currency: currency,
+                    tint: change >= 0 ? .airbnbSuccess : .red)
                 if let pct = changePercent {
                     ChangePill(change: changeVsPrev, percent: pct)
                 }
@@ -293,7 +320,7 @@ private struct Pill: View {
 
 private struct ChangePill: View {
     let change: Double
-    let percent: Double // -0.12 ... 0.34
+    let percent: Double  // -0.12 ... 0.34
     private var isUp: Bool { change >= 0 }
     var body: some View {
         HStack(spacing: 6) {
@@ -320,8 +347,10 @@ private struct WatchlistRowsList: View {
                 WatchlistRowCard(
                     item: item,
                     currency: currency,
-                    onRename: item.name.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame ? nil : onRename,
-                    onDelete: item.name.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame ? nil : onDelete
+                    onRename: item.name.trimmingCharacters(in: .whitespacesAndNewlines)
+                        .localizedCaseInsensitiveCompare("All") == .orderedSame ? nil : onRename,
+                    onDelete: item.name.trimmingCharacters(in: .whitespacesAndNewlines)
+                        .localizedCaseInsensitiveCompare("All") == .orderedSame ? nil : onDelete
                 )
             }
         }
@@ -377,9 +406,12 @@ private struct WatchlistRowCard: View {
                         }
                     }
                     HStack(spacing: 10) {
-                        ValueLabel(title: "Current", value: item.value.currentValue, currency: currency, emphasize: true)
+                        ValueLabel(
+                            title: "Current", value: item.value.currentValue, currency: currency,
+                            emphasize: true)
                         Divider().frame(height: 18)
-                        ValueLabel(title: "Invested", value: item.value.invested, currency: currency)
+                        ValueLabel(
+                            title: "Invested", value: item.value.invested, currency: currency)
                     }
                 }
                 Spacer(minLength: 8)
@@ -391,7 +423,7 @@ private struct WatchlistRowCard: View {
                         percent: deltaPercentText,
                         tint: delta >= 0 ? .airbnbSuccess : .red
                     )
-                    if let _ = dayPercentText {
+                    if dayPercentText != nil {
                         WideStatPill(
                             icon: dayChange >= 0 ? "arrow.up.right" : "arrow.down.right",
                             value: abs(dayChange),
@@ -414,10 +446,18 @@ private struct WatchlistRowCard: View {
         .transition(.moveAndFade)
         .contextMenu {
             if let onRename {
-                Button { onRename(item) } label: { Label("Rename", systemImage: "pencil") }
+                Button {
+                    onRename(item)
+                } label: {
+                    Label("Rename", systemImage: "pencil")
+                }
             }
             if let onDelete {
-                Button(role: .destructive) { onDelete(item) } label: { Label("Delete", systemImage: "trash") }
+                Button(role: .destructive) {
+                    onDelete(item)
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
             }
         }
     }
@@ -447,41 +487,28 @@ private struct ValueLabel: View {
 // Local custom pills removed in favor of shared WideStatPill
 
 // MARK: - Placeholders
-private extension WatchlistRowCard {
-    static func placeholder() -> some View {
+extension WatchlistRowCard {
+    fileprivate static func placeholder() -> some View {
         HStack(alignment: .center, spacing: 12) {
             VStack(alignment: .leading, spacing: 6) {
-                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(width: 120, height: 16)
+                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
+                    width: 120, height: 16)
                 HStack(spacing: 10) {
-                    RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(width: 90, height: 14)
-                    RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(width: 90, height: 14)
+                    RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
+                        width: 90, height: 14)
+                    RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
+                        width: 90, height: 14)
                 }
             }
             Spacer()
             VStack(alignment: .trailing, spacing: 8) {
-                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(width: 100, height: 18)
-                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(width: 80, height: 14)
+                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
+                    width: 100, height: 18)
+                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
+                    width: 80, height: 14)
             }
         }
         .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color.elevatedBackground)
-        )
-        .elevatedShadow()
-    }
-}
-
-// MARK: - Reusable Empty State Card (copied style)
-private struct EmptyStateCard: View {
-    let text: String
-    var body: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "tray").font(.largeTitle).foregroundColor(.secondary)
-            Text(text).font(.headline).foregroundColor(.secondary)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(32)
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color.elevatedBackground)

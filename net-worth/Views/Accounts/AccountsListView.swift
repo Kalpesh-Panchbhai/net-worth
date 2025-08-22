@@ -189,28 +189,6 @@ private struct AccountSummaryCard: View {
 
 // StatChip removed in compact design
 
-private struct EmptyStateCard: View {
-    let text: String
-    var body: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "tray").font(.title2).foregroundColor(.secondary)
-            Text(text).font(.subheadline.weight(.semibold)).foregroundColor(.secondary)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color.elevatedBackground)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(Color.subtleSeparator, lineWidth: 1)
-        )
-        .elevatedShadow()
-    }
-}
-
-
 private struct AccountRow: View {
     let item: Account
     let currency: String
