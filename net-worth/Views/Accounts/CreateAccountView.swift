@@ -120,7 +120,6 @@ struct CreateAccountView: View {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
         saving = true
-        defer { saving = false }
         do {
             _ = try await client.createAccount(
                 userId: userId,
@@ -129,13 +128,22 @@ struct CreateAccountView: View {
                 currency: currency.uppercased(),
                 active: true
             )
-            await lookup.refreshAccounts(userId: userId)
+            // POST succeeded; stop showing Saving…
+            saving = false
+            // Kick off refreshes in the background (don’t block UI)
+            Task {
+                async let a: Void = lookup.refreshAccounts(userId: userId)
+                async let b: Void = lookup.refreshWatchlists(userId: userId)
+                _ = await (a, b)
+            }
             Haptics.success()
             dismiss()
         } catch let api as APIError {
+            saving = false
             banners.showError(message: api.errorDescription ?? "Request failed")
             Haptics.softImpact()
         } catch {
+            saving = false
             banners.showError(message: error.localizedDescription)
             Haptics.softImpact()
         }

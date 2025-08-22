@@ -72,6 +72,7 @@ final class AccountsController: ObservableObject {
             )
             if let store = store {
                 await store.refreshAccounts(userId: userId)
+                await store.refreshWatchlists(userId: userId)
             } else {
                 var copy = items
                 copy.append(new)
@@ -90,10 +91,15 @@ final class AccountsController: ObservableObject {
     func delete(_ account: Account) async -> Bool {
         do {
             try await client.deleteAccount(id: account.id)
+            // Optimistic local update for responsiveness
+            self.items.removeAll { $0.id == account.id }
+            // Kick off background refreshes (don’t block UI)
             if let store = store {
-                await store.refreshAccounts(userId: userId)
-            } else {
-                self.items.removeAll { $0.id == account.id }
+                Task {
+                    async let a: Void = store.refreshAccounts(userId: userId)
+                    async let b: Void = store.refreshWatchlists(userId: userId)
+                    _ = await (a, b)
+                }
             }
             return true
         } catch let api as APIError {
