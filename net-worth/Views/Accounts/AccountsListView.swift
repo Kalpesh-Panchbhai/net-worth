@@ -5,6 +5,8 @@ struct AccountsListView: View {
     @State private var navCollapsed = false
     @AppStorage("hideInactiveAccounts") private var hideInactive: Bool = true
     @AppStorage("defaultCurrencyCode") private var defaultCurrencyCode: String = "INR"
+    @State private var searchText: String = ""
+    @State private var selectedTypes: Set<String> = [] // empty = all
     @EnvironmentObject private var banners: BannerCenter
     @EnvironmentObject private var tabCommands: TabCommandCenter
     @EnvironmentObject private var lookup: LookupStore
@@ -12,6 +14,78 @@ struct AccountsListView: View {
     init(userId: Int) {
         _vm = StateObject(wrappedValue: AccountsController(userId: userId))
     }
+
+    // Split out heavy content to help the compiler
+    @ViewBuilder
+    private var contentView: some View {
+        if vm.isLoading && vm.items.isEmpty {
+            ForEach(0..<6, id: \.self) { _ in
+                AccountRow.placeholder()
+            }
+            .shimmer()
+        } else if vm.items.isEmpty {
+            EmptyStateCard(text: "No accounts yet")
+        } else {
+            AccountSummaryCard(
+                total: vm.totalCurrent,
+                invested: vm.totalInvested,
+                changeVsPrev: vm.changeVsPrev,
+                changePercent: vm.changePercent,
+                currency: defaultCurrencyCode.uppercased()
+            )
+            .padding(.bottom, 12)
+            FiltersBar(types: availableTypes(), selectedTypes: $selectedTypes, hideInactive: $hideInactive)
+                .padding(.horizontal, 2)
+            let hasInactive = vm.items.contains { !$0.active }
+            if hasInactive {
+                HStack {
+                    Toggle("Hide inactive", isOn: $hideInactive)
+                        .toggleStyle(SwitchToggleStyle(tint: .airbnbPrimary))
+                        .font(.subheadline.weight(.semibold))
+                    Spacer(minLength: 0)
+                }
+                .padding(.horizontal, 2)
+            }
+            ForEach(groupedSections(), id: \.title) { section in
+                Section {
+                    ForEach(section.items, id: \.id) { item in
+                        AccountRow(item: item, currency: defaultCurrencyCode.uppercased())
+                    }
+                } header: {
+                    let sectionTotal = section.items.reduce(0) { $0 + $1.value.currentValue }
+                    AccountSectionHeader(title: section.title, count: section.items.count, total: sectionTotal, currency: defaultCurrencyCode.uppercased())
+                }
+            }
+        }
+    }
+
+// MARK: - Airbnb-style SearchBar
+private struct SearchBar: View {
+    @Binding var text: String
+    var placeholder: String = "Search"
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(.secondary)
+            TextField(placeholder, text: $text)
+                .textInputAutocapitalization(.never)
+                .disableAutocorrection(true)
+            if !text.isEmpty {
+                Button(action: { text = "" }) {
+                    Image(systemName: "xmark.circle.fill").foregroundColor(.secondary)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.vertical, 10)
+        .padding(.horizontal, 12)
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(Color.elevatedBackground)
+        )
+        .elevatedShadow()
+    }
+}
 
     var body: some View {
         NavigationStack {
@@ -27,48 +101,11 @@ struct AccountsListView: View {
                         }
                         .frame(height: 0)
 
-                        VStack(spacing: 16) {
-                            if vm.isLoading && vm.items.isEmpty {
-                                ForEach(0..<6, id: \.self) { _ in
-                                    AccountRow.placeholder()
-                                }
-                                .shimmer()
-                            } else if vm.items.isEmpty {
-                                EmptyStateCard(text: "No accounts yet")
-                            } else {
-                                AccountSummaryCard(
-                                    total: vm.totalCurrent,
-                                    invested: vm.totalInvested,
-                                    changeVsPrev: vm.changeVsPrev,
-                                    changePercent: vm.changePercent,
-                                    currency: defaultCurrencyCode.uppercased()
-                                )
-                                .padding(.bottom, 12)
-                                let hasInactive = vm.items.contains { !$0.active }
-                                if hasInactive {
-                                    HStack {
-                                        Toggle("Hide inactive", isOn: $hideInactive)
-                                            .toggleStyle(SwitchToggleStyle(tint: .airbnbPrimary))
-                                            .font(.subheadline.weight(.semibold))
-                                        Spacer(minLength: 0)
-                                    }
-                                    .padding(.horizontal, 2)
-                                }
-                                let sections = groupedSections()
-                                LazyVStack(spacing: 12, pinnedViews: [.sectionHeaders]) {
-                                    ForEach(sections, id: \.title) { section in
-                                        Section {
-                                            ForEach(section.items, id: \.id) { item in
-                                                AccountRow(item: item, currency: defaultCurrencyCode.uppercased())
-                                            }
-                                        } header: {
-                                            let sectionTotal = section.items.reduce(0) { $0 + $1.value.currentValue }
-                                            AccountSectionHeader(title: section.title, count: section.items.count, total: sectionTotal, currency: defaultCurrencyCode.uppercased())
-                                                .padding(.top, 8)
-                                        }
-                                    }
-                                }
-                            }
+                        LazyVStack(spacing: 16, pinnedViews: [.sectionHeaders]) {
+                            // Airbnb-style search just under the large title
+                            SearchBar(text: $searchText, placeholder: "Search accounts")
+                                .padding(.horizontal, 0)
+                            contentView
                             Color.clear.frame(height: LayoutConstants.tabBarHeight + 24).id("accountsBottom")
                         }
                         .padding(.horizontal, 16)
@@ -78,11 +115,9 @@ struct AccountsListView: View {
                     .scrollIndicators(.hidden)
                     .coordinateSpace(name: "accountsScroll")
                 }
-                .onChange(of: tabCommands.scrollToBottomRequest) { _, req in
-                    guard req == .accounts else { return }
-                    withAnimation(.easeInOut(duration: 0.35)) {
-                        proxy.scrollTo("accountsBottom", anchor: .bottom)
-                    }
+                .onChange(of: tabCommands.scrollToBottomRequest) { _, value in
+                    guard value != nil else { return }
+                    withAnimation { proxy.scrollTo("accountsBottom", anchor: .bottom) }
                     DispatchQueue.main.async { tabCommands.scrollToBottomRequest = nil }
                 }
             }
@@ -92,6 +127,7 @@ struct AccountsListView: View {
             .onPreferenceChange(NavBarOffsetKey.self) { y in
                 withAnimation(.easeInOut(duration: 0.2)) { navCollapsed = y < -8 }
             }
+            // Custom search bar used instead of .searchable for brand styling
         }
         .onAppear { vm.attachStore(lookup) }
         .task { await vm.load() }
@@ -100,6 +136,39 @@ struct AccountsListView: View {
             guard let message = newValue, !message.isEmpty else { return }
             banners.showError(message: message, retryTitle: "Retry", retry: { Task { await vm.refresh() } })
         }
+    }
+}
+
+// Wide filled pill used on the right of labels like "P/L" and "1 day change"
+private struct WideStatPill: View {
+    let icon: String
+    let value: Double
+    let currency: String
+    let percent: String?
+    let tint: Color
+    var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: icon).font(.caption2.weight(.bold))
+            Text(CurrencyShort.shortString(value, currency: currency))
+                .font(.footnote.weight(.semibold))
+                .monospacedDigit()
+                .lineLimit(1)
+                .minimumScaleFactor(0.9)
+            if let p = percent, p.isEmpty == false {
+                Text("•").font(.caption2.weight(.semibold))
+                Text(p)
+                    .font(.footnote.weight(.semibold))
+                    .monospacedDigit()
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.9)
+            }
+        }
+        .foregroundColor(tint)
+        .padding(.vertical, 4)
+        .padding(.horizontal, 10)
+        .background(
+            Capsule().fill(tint.opacity(0.12))
+        )
     }
 }
 
@@ -112,7 +181,7 @@ private struct AccountSummaryCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             // Title
-            Text("Net worth")
+            Text("Total value")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
             // Primary value
@@ -129,21 +198,35 @@ private struct AccountSummaryCard: View {
                 HStack {
                     Text("Invested").font(.caption).foregroundColor(.secondary)
                     Spacer()
-                    Text(CurrencyShort.shortString(invested, currency: currency))
+                    Text(invested, format: .currency(code: currency))
                         .font(.subheadline.weight(.semibold))
                         .foregroundColor(.airbnbPrimary)
                         .monospacedDigit()
                         .contentTransition(.numericText())
+                }
+                // P&L row
+                HStack(alignment: .center) {
+                    Text("P/L").font(.caption).foregroundColor(.secondary)
+                    Spacer()
+                    let pl = total - invested
+                    let plPct: String? = invested.magnitude > 0 ? (pl / invested.magnitude).formatted(.percent.precision(.fractionLength(1))) : nil
+                    WideStatPill(
+                        icon: pl >= 0 ? "arrow.up.right" : "arrow.down.right",
+                        value: abs(pl),
+                        currency: currency,
+                        percent: plPct,
+                        tint: pl >= 0 ? .airbnbSuccess : .red
+                    )
                 }
                 HStack(alignment: .center) {
                     Text("1 day change").font(.caption).foregroundColor(.secondary)
                     Spacer()
                     let isUp = changeVsPrev >= 0
                     let pctText = changePercent.map { $0.formatted(.percent.precision(.fractionLength(1))) }
-                    StatPill(
-                        label: "1D",
+                    WideStatPill(
                         icon: isUp ? "arrow.up.right" : "arrow.down.right",
-                        value: CurrencyShort.shortString(abs(changeVsPrev), currency: currency),
+                        value: abs(changeVsPrev),
+                        currency: currency,
                         percent: pctText,
                         tint: isUp ? .airbnbSuccess : .red
                     )
@@ -216,7 +299,7 @@ private struct AccountRow: View {
                 .lineLimit(1)
                 .truncationMode(.tail)
             Spacer(minLength: 0)
-            Text(CurrencyShort.shortString(item.value.currentValue, currency: currency))
+            Text(item.value.currentValue, format: .currency(code: currency))
                 .font(.headline.weight(.bold))
                 .foregroundColor(.primary)
                 .monospacedDigit()
@@ -226,14 +309,15 @@ private struct AccountRow: View {
 
     private var meta: some View {
         HStack(spacing: 8) {
-            TypeBadge(text: normalizedAccountType(item.type))
-            Text("Invested \(CurrencyShort.shortString(item.value.invested, currency: currency))")
+            Text("Invested")
                 .font(.caption)
                 .foregroundColor(.secondary)
-                .lineLimit(1)
-                .truncationMode(.tail)
-                .allowsTightening(true)
             Spacer(minLength: 0)
+            Text(item.value.invested, format: .currency(code: currency))
+                .font(.subheadline.weight(.semibold))
+                .foregroundColor(.airbnbPrimary)
+                .monospacedDigit()
+                .contentTransition(.numericText())
         }
     }
 
@@ -248,37 +332,34 @@ private struct AccountRow: View {
         let dayPct: Double? = dayPrev.magnitude > 0 ? (dayDelta / dayPrev.magnitude) : nil
         let dayPctText: String? = dayPct.map { $0.formatted(.percent.precision(.fractionLength(1))) }
 
-        return HStack(spacing: 10) {
-            Spacer(minLength: 0)
-            HStack(spacing: 6) {
-                Text("P&L")
-                    .font(.caption2)
+        return VStack(spacing: 8) {
+            HStack(spacing: 10) {
+                Text("P/L")
+                    .font(.caption)
                     .foregroundColor(.secondary)
-                StatPill(
-                    label: "P&L",
+                Spacer(minLength: 0)
+                WideStatPill(
                     icon: totalPL >= 0 ? "arrow.up.right" : "arrow.down.right",
-                    value: CurrencyShort.shortString(abs(totalPL), currency: currency),
+                    value: abs(totalPL),
+                    currency: currency,
                     percent: plPctText,
                     tint: totalPL >= 0 ? .airbnbSuccess : .red
                 )
-                .fixedSize(horizontal: true, vertical: true)
             }
-            HStack(spacing: 6) {
-                Text("1D")
-                    .font(.caption2)
+            HStack(spacing: 10) {
+                Text("1 day change")
+                    .font(.caption)
                     .foregroundColor(.secondary)
-                StatPill(
-                    label: "1D",
+                Spacer(minLength: 0)
+                WideStatPill(
                     icon: dayDelta >= 0 ? "arrow.up.right" : "arrow.down.right",
-                    value: CurrencyShort.shortString(abs(dayDelta), currency: currency),
+                    value: abs(dayDelta),
+                    currency: currency,
                     percent: dayPctText,
                     tint: dayDelta >= 0 ? .airbnbSuccess : .red
                 )
-                .fixedSize(horizontal: true, vertical: true)
             }
         }
-        .lineLimit(1)
-        .minimumScaleFactor(0.9)
     }
 
     static func placeholder() -> some View {
@@ -379,7 +460,16 @@ private extension AccountsListView {
     struct SectionData { let title: String; let items: [Account] }
     func groupedSections() -> [SectionData] {
         let anyInactive = vm.items.contains { !$0.active }
-        let base = (anyInactive && hideInactive) ? vm.items.filter { $0.active } : vm.items
+        var base = (anyInactive && hideInactive) ? vm.items.filter { $0.active } : vm.items
+        // Search filter
+        let q = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !q.isEmpty {
+            base = base.filter { $0.name.localizedCaseInsensitiveContains(q) }
+        }
+        // Type filters
+        if !selectedTypes.isEmpty {
+            base = base.filter { selectedTypes.contains(normalizedType($0.type)) }
+        }
         let order = ["Broker", "Saving", "Loan", "Other"]
         var buckets: [String: [Account]] = [:]
         for acc in base {
@@ -404,6 +494,71 @@ private extension AccountsListView {
         if t.contains("loan") { return "Loan" }
         if t.contains("credit") { return "Loan" }
         return "Other"
+    }
+    func availableTypes() -> [String] {
+        let base = vm.items.map { normalizedType($0.type) }
+        let unique = Array(Set(base)).sorted()
+        let order = ["Broker", "Saving", "Loan", "Other"]
+        return unique.sorted { a, b in
+            let ia = order.firstIndex(of: a) ?? Int.max
+            let ib = order.firstIndex(of: b) ?? Int.max
+            if ia != ib { return ia < ib }
+            return a < b
+        }
+    }
+}
+
+// MARK: - Filters Bar
+private struct FiltersBar: View {
+    let types: [String]
+    @Binding var selectedTypes: Set<String>
+    @Binding var hideInactive: Bool
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            // Types chips
+            if !types.isEmpty {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        Chip(title: "All", isOn: selectedTypes.isEmpty) {
+                            selectedTypes.removeAll()
+                            Haptics.selection()
+                        }
+                        ForEach(types, id: \.self) { t in
+                            Chip(title: t, isOn: selectedTypes.contains(t)) {
+                                if selectedTypes.contains(t) { selectedTypes.remove(t) }
+                                else { selectedTypes.insert(t) }
+                                Haptics.selection()
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 2)
+                }
+            }
+        }
+    }
+}
+
+private struct Chip: View {
+    let title: String
+    let isOn: Bool
+    let action: () -> Void
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 6) {
+                Text(title)
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(isOn ? .white : .airbnbPrimary)
+            }
+            .padding(.vertical, 6)
+            .padding(.horizontal, 10)
+            .background(
+                ZStack {
+                    Capsule().fill(Color.airbnbPrimary.opacity(0.12))
+                    if isOn { Capsule().fill(LinearGradient.airbnbAccent) }
+                }
+            )
+        }
+        .buttonStyle(PressableButtonStyle())
     }
 }
 
@@ -449,9 +604,15 @@ private struct AccountSectionHeader: View {
                         .stroke(Color.subtleSeparator, lineWidth: 1)
                 )
         }
-        .padding(.horizontal, 2)
-        .padding(.vertical, 6)
-        .background(.ultraThinMaterial)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 8)
+        .background(
+            RoundedRectangle(cornerRadius: LayoutConstants.cardCornerRadius, style: .continuous)
+                .fill(Color.elevatedBackground)
+        )
+        .elevatedShadow()
+        .frame(maxWidth: .infinity)
+        .zIndex(1) // keep header above rows while pinned
     }
     private func icon(for title: String) -> String {
         let t = title.lowercased()
