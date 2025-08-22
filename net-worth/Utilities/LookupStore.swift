@@ -182,4 +182,31 @@ final class LookupStore: ObservableObject {
             // no-op
         }
     }
+
+    // Wipe all in-memory data and flags (used on logout)
+    func reset() {
+        // Clear data
+        incomeTypes = []
+        incomeTags = []
+        accounts = []
+        watchlists = []
+        incomes = []
+        // Reset loaded flags
+        typesLoaded = false
+        tagsLoaded = false
+        accountsLoaded = false
+        watchlistsLoaded = false
+        incomesLoaded = false
+        // Cancel loading/refreshing guards
+        typesLoading = false
+        tagsLoading = false
+        accountsLoading = false
+        watchlistsLoading = false
+        incomesLoading = false
+        typesRefreshing = false
+        tagsRefreshing = false
+        accountsRefreshing = false
+        watchlistsRefreshing = false
+        incomesRefreshing = false
+    }
 }

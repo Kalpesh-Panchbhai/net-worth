@@ -1,5 +1,11 @@
 import SwiftUI
 import LocalAuthentication
+#if canImport(GoogleSignIn)
+import GoogleSignIn
+#endif
+#if canImport(FirebaseAuth)
+import FirebaseAuth
+#endif
 
 struct SettingsView: View {
     let userId: Int
@@ -7,8 +13,11 @@ struct SettingsView: View {
     private var appAppearance: AppAppearance { AppAppearance(rawValue: appAppearanceRaw) ?? .system }
     @State private var navCollapsed = false
     @EnvironmentObject private var tabCommands: TabCommandCenter
+    @EnvironmentObject private var lookupStore: LookupStore
+    @EnvironmentObject private var banners: BannerCenter
     @AppStorage("defaultCurrencyCode") private var defaultCurrencyCode: String = "INR"
-    
+    @AppStorage("backendUserId") private var backendUserId: Int = -1
+
     private var appearanceBinding: Binding<AppAppearance> {
         Binding(
             get: { appAppearance },
@@ -18,7 +27,6 @@ struct SettingsView: View {
             }
         )
     }
-    
     var body: some View {
         NavigationStack {
             ScrollViewReader { proxy in
@@ -31,6 +39,7 @@ struct SettingsView: View {
                     AppearanceCard(selection: appearanceBinding)
                     PreferencesCard(userId: userId)
                     SecurityCard()
+                    AccountManagementCard(onLogout: logoutAndWipe)
                 }
                 .padding(16)
                 .padding(.bottom, LayoutConstants.tabBarHeight + 24)
@@ -54,6 +63,80 @@ struct SettingsView: View {
             }
         }
         .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 66) }
+    }
+
+    // MARK: - Logout implementation
+    private func logoutAndWipe() {
+        // 1) Sign out from auth providers
+        #if canImport(GoogleSignIn)
+        GIDSignIn.sharedInstance.signOut()
+        #endif
+        #if canImport(FirebaseAuth)
+        _ = try? Auth.auth().signOut()
+        #endif
+
+        // 2) Clear UserDefaults
+        if let bundleId = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: bundleId)
+            UserDefaults.standard.synchronize()
+        }
+
+        // 3) Reset in-memory stores
+        lookupStore.reset()
+
+        // 4) Route back to onboarding
+        backendUserId = -1
+
+        // 5) Feedback
+        banners.showTemporary(AppBanner(icon: "checkmark.circle.fill", title: "Signed out", message: "Local data cleared.", style: .success))
+    }
+}
+
+// MARK: - Account Management (Logout & Wipe)
+struct AccountManagementCard: View {
+    @State private var showConfirm = false
+    var onLogout: () -> Void
+    var body: some View {
+        SettingsGroup(title: "Account") {
+            VStack(spacing: 0) {
+                Button(action: { showConfirm = true }) {
+                    HStack {
+                        ZStack {
+                            Circle().fill(Color.red.opacity(0.12))
+                            Image(systemName: "rectangle.portrait.and.arrow.right").foregroundColor(.red)
+                        }
+                        .frame(width: 32, height: 32)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Sign out & delete local data")
+                                .font(.subheadline).bold()
+                                .foregroundColor(.red)
+                            Text("Removes all data from this device and returns to onboarding.")
+                                .font(.footnote)
+                                .foregroundColor(.secondary)
+                                .lineLimit(2)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundColor(.secondary)
+                    }
+                    .contentShape(Rectangle())
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 12)
+                }
+                .buttonStyle(.plain)
+                .confirmationDialog(
+                    "Sign out & delete local data?",
+                    isPresented: $showConfirm,
+                    titleVisibility: .visible
+                ) {
+                    Button("Sign out & delete", role: .destructive) { onLogout() }
+                    Button("Cancel", role: .cancel) {}
+                } message: {
+                    Text("This will sign you out, clear preferences, and remove all locally stored data. This won't delete data on the server.")
+                }
+            }
+        }
     }
 }
 

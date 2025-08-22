@@ -335,6 +335,14 @@ extension RestClient {
             )
         }
     }
+
+    // Register Firebase user UID with backend
+    func registerFirebaseUser(uid: String) async throws -> Int {
+        struct Payload: Codable { let userId: String }
+        let body = Payload(userId: uid)
+        let response: MinimalIdResponse = try await post("user", body: body)
+        return response.id ?? -1
+    }
 }
 
 // Note: Use RestClient directly going forward. A thin deprecated IncomeService wrapper
