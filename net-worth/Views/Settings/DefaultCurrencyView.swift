@@ -30,6 +30,9 @@ struct DefaultCurrencyView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
+                // Use our custom AppSearchBar instead of .searchable
+                AppSearchBar(text: $query, placeholder: "Search currency")
+                    .padding(.horizontal, 0)
                 SettingsGroup(title: "Default currency", showHeader: false) {
                     VStack(spacing: 0) {
                         ForEach(Array(list.enumerated()), id: \.element) { idx, c in
@@ -49,7 +52,6 @@ struct DefaultCurrencyView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(Color.canvasBackground, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
-        .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always), prompt: Text("Search currency"))
         .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 66) }
     }
 
