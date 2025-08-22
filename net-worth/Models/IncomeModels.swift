@@ -60,6 +60,7 @@ struct Income: Codable, Identifiable, Hashable {
             taxPaid = 0
         }
         let dateString = try container.decode(String.self, forKey: .creditedDate)
+        // Parse backend IST date string into a Date. Display/formatting will reflect user's timezone.
         guard let parsed = DateFormatter.incomeBackend.date(from: dateString) else {
             throw DecodingError.dataCorruptedError(forKey: .creditedDate, in: container, debugDescription: "Invalid date format: \(dateString)")
         }

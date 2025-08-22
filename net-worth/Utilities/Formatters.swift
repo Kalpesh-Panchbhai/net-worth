@@ -57,3 +57,51 @@ enum CurrencyShort {
         }
     }
 }
+
+// MARK: - Time zone and backend date helpers
+extension TimeZone {
+    static let ist = TimeZone(identifier: "Asia/Kolkata")!
+}
+
+enum DateTZ {
+    static let ist = TimeZone.ist
+
+    // Build backend date string in IST midnight for the user's selected calendar date
+    static func toBackendISTString(fromUserDate date: Date) -> String {
+        var calUser = Calendar(identifier: .gregorian)
+        calUser.timeZone = .current
+        let comps = calUser.dateComponents([.year, .month, .day], from: date)
+        var calIST = Calendar(identifier: .gregorian)
+        calIST.timeZone = ist
+        let istMidnight = calIST.date(
+            from: DateComponents(
+                calendar: calIST,
+                timeZone: ist,
+                year: comps.year, month: comps.month, day: comps.day,
+                hour: 0, minute: 0, second: 0
+            )
+        ) ?? date
+        return DateFormatter.incomeBackend.string(from: istMidnight)
+    }
+
+    // Parse IST backend date string and convert to user's local midnight for the same calendar date
+    static func fromBackendISTStringToUserDate(_ s: String) -> Date? {
+        // Parse as IST
+        guard let istInstant = DateFormatter.incomeBackend.date(from: s) else { return nil }
+        // Extract IST Y-M-D
+        var calIST = Calendar(identifier: .gregorian)
+        calIST.timeZone = ist
+        let comps = calIST.dateComponents([.year, .month, .day], from: istInstant)
+        // Rebuild at midnight in the user's current timezone for the same Y-M-D
+        var calUser = Calendar(identifier: .gregorian)
+        calUser.timeZone = .current
+        return calUser.date(
+            from: DateComponents(
+                calendar: calUser,
+                timeZone: .current,
+                year: comps.year, month: comps.month, day: comps.day,
+                hour: 0, minute: 0, second: 0
+            )
+        )
+    }
+}

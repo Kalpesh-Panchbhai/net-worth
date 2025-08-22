@@ -130,12 +130,8 @@ struct RestClient {
         incomeType: IncomeType,
         incomeTag: IncomeTag
     ) async throws {
-        // Normalize to midnight IST and build backend string in IST (naive "yyyy-MM-dd 00:00:00")
-        var cal = Calendar(identifier: .gregorian)
-        let ist = TimeZone(identifier: "Asia/Kolkata") ?? .current
-        cal.timeZone = ist
-        let comps = cal.dateComponents([.year, .month, .day], from: creditedDate)
-        let dateString = String(format: "%04d-%02d-%02d 00:00:00", comps.year ?? 1970, comps.month ?? 1, comps.day ?? 1)
+        // Always send backend datetime as IST midnight for the user's selected calendar date
+        let dateString = DateTZ.toBackendISTString(fromUserDate: creditedDate)
 
         struct Payload: Codable {
             let id: Int
@@ -193,7 +189,10 @@ extension RestClient {
         try await getList("watch/\(userId)")
     }
     func createWatchlist(userId: Int, name: String) async throws -> Watchlist {
-        struct Payload: Codable { let userId: Int; let name: String }
+        struct Payload: Codable {
+            let userId: Int
+            let name: String
+        }
         let body = Payload(userId: userId, name: name)
         return try await postWithFallback("watch", body: body) { newId in
             Watchlist(
@@ -209,7 +208,11 @@ extension RestClient {
         try await delete("watch/\(id)")
     }
     func updateWatchlist(id: Int, userId: Int, name: String) async throws {
-        struct Payload: Codable { let id: Int; let userId: Int; let name: String }
+        struct Payload: Codable {
+            let id: Int
+            let userId: Int
+            let name: String
+        }
         try await patch("watch", body: Payload(id: id, userId: userId, name: name))
     }
     func setDefault(incomeType: IncomeType) async throws {
@@ -259,15 +262,10 @@ extension RestClient {
         incomeType: IncomeType,
         incomeTag: IncomeTag
     ) async throws -> Income {
-        // Normalize to midnight IST and build backend string in IST (naive "yyyy-MM-dd 00:00:00")
-        var cal = Calendar(identifier: .gregorian)
-        let ist = TimeZone(identifier: "Asia/Kolkata") ?? .current
-        cal.timeZone = ist
-        let comps = cal.dateComponents([.year, .month, .day], from: creditedDate)
-        let midnightIST = cal.date(from: DateComponents(
-            calendar: cal, timeZone: ist, year: comps.year, month: comps.month, day: comps.day, hour: 0, minute: 0, second: 0
-        )) ?? creditedDate
-        let dateString = String(format: "%04d-%02d-%02d 00:00:00", comps.year ?? 1970, comps.month ?? 1, comps.day ?? 1)
+        // Always send backend datetime as IST midnight for the user's selected calendar date
+        let dateString = DateTZ.toBackendISTString(fromUserDate: creditedDate)
+        // For local synthesized Income (when backend returns only id), keep user's local midnight
+        let midnightLocal = Calendar.current.startOfDay(for: creditedDate)
 
         struct Payload: Codable {
             let userId: Int
@@ -295,7 +293,7 @@ extension RestClient {
                 userId: userId,
                 amount: amount,
                 taxPaid: taxPaid,
-                creditedDate: midnightIST,
+                creditedDate: midnightLocal,
                 currency: currency,
                 incomeType: incomeType,
                 incomeTag: incomeTag
