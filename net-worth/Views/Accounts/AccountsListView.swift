@@ -16,6 +16,20 @@ struct AccountsListView: View {
     init(userId: Int) {
         _vm = StateObject(wrappedValue: AccountsController(userId: userId))
     }
+    func filteredAccounts() -> [Account] {
+        let anyInactive = vm.items.contains { !$0.active }
+        var base = (anyInactive && hideInactive) ? vm.items.filter { $0.active } : vm.items
+        // Search filter
+        let q = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !q.isEmpty {
+            base = base.filter { $0.name.localizedCaseInsensitiveContains(q) }
+        }
+        // Type filters
+        if !selectedTypes.isEmpty {
+            base = base.filter { selectedTypes.contains(normalizedType($0.type)) }
+        }
+        return base
+    }
 
     // Split out heavy content to help the compiler
     @ViewBuilder
@@ -27,11 +41,18 @@ struct AccountsListView: View {
         } else if vm.items.isEmpty {
             EmptyStateCard(text: "No accounts yet")
         } else {
+            // Recalculate aggregates based on current filters
+            let filtered = filteredAccounts()
+            let total = filtered.reduce(0) { $0 + $1.value.currentValue }
+            let invested = filtered.reduce(0) { $0 + $1.value.invested }
+            let previous = filtered.reduce(0) { $0 + $1.value.previousValue }
+            let changeVsPrev = total - previous
+            let changePercent: Double? = abs(previous) > 0 ? (changeVsPrev / abs(previous)) : nil
             AccountSummaryCard(
-                total: vm.totalCurrent,
-                invested: vm.totalInvested,
-                changeVsPrev: vm.changeVsPrev,
-                changePercent: vm.changePercent,
+                total: total,
+                invested: invested,
+                changeVsPrev: changeVsPrev,
+                changePercent: changePercent,
                 currency: defaultCurrencyCode.uppercased()
             )
             .padding(.bottom, 12)
@@ -277,17 +298,7 @@ private struct AccountRow: View {
 private extension AccountsListView {
     struct SectionData { let title: String; let items: [Account] }
     func groupedSections() -> [SectionData] {
-        let anyInactive = vm.items.contains { !$0.active }
-        var base = (anyInactive && hideInactive) ? vm.items.filter { $0.active } : vm.items
-        // Search filter
-        let q = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !q.isEmpty {
-            base = base.filter { $0.name.localizedCaseInsensitiveContains(q) }
-        }
-        // Type filters
-        if !selectedTypes.isEmpty {
-            base = base.filter { selectedTypes.contains(normalizedType($0.type)) }
-        }
+        let base = filteredAccounts()
         let order = ["Broker", "Saving", "Credit card", "Loan", "Other"]
         var buckets: [String: [Account]] = [:]
         for acc in base {
@@ -314,7 +325,8 @@ private extension AccountsListView {
         return "Other"
     }
     func availableTypes() -> [String] {
-        let base = vm.items.map { normalizedType($0.type) }
+        // Derive types from the currently filtered set so chips reflect the visible dataset
+        let base = filteredAccounts().map { normalizedType($0.type) }
         let unique = Array(Set(base)).sorted()
         let order = ["Broker", "Saving", "Credit card", "Loan", "Other"]
         return unique.sorted { a, b in
