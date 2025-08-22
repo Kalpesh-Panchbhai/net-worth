@@ -49,7 +49,6 @@
 		7DC422212E546A29000D62BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC422202E546A29000D62BD /* AppDelegate.swift */; };
 		7DCE00022E7A000100000002 /* CurrencyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCE00012E7A000100000001 /* CurrencyModels.swift */; };
 		7DCE00042E7A000100000004 /* DefaultCurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCE00032E7A000100000003 /* DefaultCurrencyView.swift */; };
-		7DECCEE42E584F8D00225DDA /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DECCEE32E584F8D00225DDA /* DesignSystem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -94,7 +93,6 @@
 		7DC422202E546A29000D62BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7DCE00012E7A000100000001 /* CurrencyModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyModels.swift; sourceTree = "<group>"; };
 		7DCE00032E7A000100000003 /* DefaultCurrencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCurrencyView.swift; sourceTree = "<group>"; };
-		7DECCEE32E584F8D00225DDA /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,7 +236,6 @@
 			isa = PBXGroup;
 			children = (
 				7D74B2912E52375A00E35786 /* BannerCenter.swift */,
-				7DECCEE32E584F8D00225DDA /* DesignSystem.swift */,
 				7DAB02042E70000200000004 /* FloatingActionButton.swift */,
 				7D2FBCA82E51CEFD0046FE17 /* NamedEntitiesListView.swift */,
 				7DAA000C2BE300000000000C /* PlaceholderScreen.swift */,
@@ -361,7 +358,6 @@
 				7DAA10052BE3000000000005 /* Formatters.swift in Sources */,
 				7DAA10062BE3000000000006 /* Design.swift in Sources */,
 				7DC4221F2E54633B000D62BD /* PrivacyShieldManager.swift in Sources */,
-				7DECCEE42E584F8D00225DDA /* DesignSystem.swift in Sources */,
 				7D2FBCA32E51CCDD0046FE17 /* IncomeTypesView.swift in Sources */,
 				7DAA10072BE3000000000007 /* Interactions.swift in Sources */,
 				7D4D09482E53021B00E188D0 /* RestClient.swift in Sources */,
