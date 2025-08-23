@@ -4,6 +4,8 @@ import SwiftUI
 struct WatchlistListView: View {
     @StateObject private var vm: WatchlistController
     @State private var navCollapsed = false
+    @State private var path: [Watchlist] = []
+    @State private var showFab: Bool = true
     @EnvironmentObject private var banners: BannerCenter
     @EnvironmentObject private var tabCommands: TabCommandCenter
     @EnvironmentObject private var lookup: LookupStore
@@ -20,10 +22,155 @@ struct WatchlistListView: View {
         _vm = StateObject(wrappedValue: WatchlistController(userId: userId))
     }
 
+    @ViewBuilder
+    private var listContent: some View {
+        VStack(spacing: 16) {
+            if vm.isLoading && vm.items.isEmpty {
+                ForEach(0..<5, id: \.self) { _ in
+                    AssetRowCard.placeholder()
+                }
+            } else if vm.items.isEmpty {
+                EmptyStateCard(text: "No watchlists yet")
+            } else {
+                WatchlistRowsList(
+                    items: vm.items,
+                    currency: defaultCurrencyCode.uppercased(),
+                    onRename: { item in
+                        renaming = item
+                        renameText = item.name
+                        Haptics.selection()
+                    },
+                    onDelete: { item in
+                        pendingDelete = item
+                        Haptics.selection()
+                    }
+                )
+            }
+
+            let bottomPad =
+                LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin
+                + LayoutConstants.fabSize + 24
+            Color.clear.frame(height: bottomPad).id("watchBottom")
+        }
+    }
+    
+    // MARK: - Sheets
+    @ViewBuilder
+    private var createSheetView: some View {
+        ZStack {
+            Rectangle().fill(.ultraThinMaterial).ignoresSafeArea()
+            NavigationStack {
+                ScrollView {
+                    VStack(spacing: 16) {
+                        SettingsGroup(showHeader: false) {
+                            VStack(alignment: .leading, spacing: 12) {
+                                TextField("Name", text: $createName)
+                                    .textInputAutocapitalization(.words)
+                                    .disableAutocorrection(true)
+                                Rectangle().fill(Color.subtleSeparator).frame(height: 0.5)
+                                    .padding(.horizontal, 0)
+                            }
+                            .padding(.horizontal, 4)
+                        }
+                        .padding(.horizontal, 16)
+                    }
+                    .padding(.vertical, 16)
+                    .background(Color.clear)
+                }
+                .navigationTitle("New")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { showCreate = false }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button(creating ? "Saving…" : "Save") {
+                            let name = createName.trimmingCharacters(in: .whitespacesAndNewlines)
+                            guard !name.isEmpty else { return }
+                            creating = true
+                            Task {
+                                await vm.create(name: name)
+                                creating = false
+                                showCreate = false
+                                createName = ""
+                                Haptics.success()
+                            }
+                        }
+                        .disabled(createName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || creating)
+                    }
+                }
+                .toolbarBackground(Color.canvasBackground, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
+            }
+        }
+        .presentationDetents([.height(220), .medium, .large])
+        .interactiveDismissDisabled(creating)
+        .presentationDragIndicator(.visible)
+    }
+
+    @ViewBuilder
+    private func renameSheetView(item: Watchlist) -> some View {
+        ZStack {
+            Rectangle().fill(.ultraThinMaterial).ignoresSafeArea()
+            NavigationStack {
+                ScrollView {
+                    VStack(spacing: 16) {
+                        SettingsGroup(showHeader: false) {
+                            VStack(alignment: .leading, spacing: 12) {
+                                TextField("Name", text: $renameText)
+                                    .textInputAutocapitalization(.words)
+                                    .disableAutocorrection(true)
+                                Rectangle().fill(Color.subtleSeparator).frame(height: 0.5)
+                                    .padding(.horizontal, 0)
+                            }
+                            .padding(.horizontal, 4)
+                        }
+                        .padding(.horizontal, 16)
+                    }
+                    .padding(.vertical, 16)
+                    .background(Color.clear)
+                }
+                .navigationTitle("Rename")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { renaming = nil }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button(renamingSaving ? "Saving…" : "Save") {
+                            let name = renameText.trimmingCharacters(in: .whitespacesAndNewlines)
+                            guard !name.isEmpty else { return }
+                            renamingSaving = true
+                            Task {
+                                let ok = await vm.rename(item, to: name)
+                                if ok {
+                                    Haptics.success()
+                                    renaming = nil
+                                } else {
+                                    Haptics.softImpact()
+                                    let msg = vm.errorMessage ?? "Failed to update."
+                                    banners.showError(
+                                        message: msg, retryTitle: "Retry",
+                                        retry: { Task { _ = await vm.rename(item, to: name) } })
+                                }
+                                renamingSaving = false
+                            }
+                        }
+                        .disabled(renameText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || renamingSaving)
+                    }
+                }
+                .toolbarBackground(Color.canvasBackground, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
+            }
+        }
+        .presentationDetents([.height(220), .medium, .large])
+        .presentationDragIndicator(.visible)
+        .interactiveDismissDisabled(renamingSaving)
+    }
     // FloatingAddButton moved to Shared/FloatingActionButton.swift
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ScrollViewReader { proxy in
                 ZStack(alignment: .top) {
                     Color.canvasBackground.ignoresSafeArea()
@@ -36,43 +183,20 @@ struct WatchlistListView: View {
                         }
                         .frame(height: 0)
 
-                        VStack(spacing: 16) {
-                            if vm.isLoading && vm.items.isEmpty {
-                                ForEach(0..<5, id: \.self) { _ in
-                                    AssetRowCard.placeholder()
-                                }
-                            } else if vm.items.isEmpty {
-                                EmptyStateCard(text: "No watchlists yet")
-                            } else {
-                                WatchlistRowsList(
-                                    items: vm.items,
-                                    currency: defaultCurrencyCode.uppercased(),
-                                    onRename: { item in
-                                        renaming = item
-                                        renameText = item.name
-                                        Haptics.selection()
-                                    },
-                                    onDelete: { item in
-                                        pendingDelete = item
-                                        Haptics.selection()
-                                    }
-                                )
-                            }
-
-                            let bottomPad =
+                        listContent
+                            .padding(.horizontal, 16)
+                            .padding(
+                                .bottom,
                                 LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin
-                                + LayoutConstants.fabSize + 24
-                            Color.clear.frame(height: bottomPad).id("watchBottom")
-                        }
-                        .padding(.horizontal, 16)
-                        .padding(
-                            .bottom,
-                            LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin
-                                + LayoutConstants.fabSize + 24)
+                                    + LayoutConstants.fabSize + 24)
                     }
                     .background(ScrollToTopEnabler())
                     .scrollIndicators(.hidden)
                     .coordinateSpace(name: "watchlistScroll")
+                }
+                .fabOverlay(accessibilityLabel: "Add watchlist", isVisible: showFab) {
+                    Haptics.selection()
+                    showCreate = true
                 }
                 .onChange(of: tabCommands.scrollToBottomRequest) { _, req in
                     guard req == .watchlist else { return }
@@ -85,13 +209,16 @@ struct WatchlistListView: View {
             .navigationTitle("Watchlists")
             .navigationBarTitleDisplayMode(.large)
             .airbnbNavBarBackground(collapsed: navCollapsed)
+            .toolbarBackground(Color(.systemBackground), for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .onPreferenceChange(NavBarOffsetKey.self) { y in
                 withAnimation(.easeInOut(duration: 0.2)) { navCollapsed = y < -8 }
             }
-        }
-        .fabOverlay(accessibilityLabel: "Add watchlist") {
-            Haptics.selection()
-            showCreate = true
+            .navigationDestination(for: Watchlist.self) { item in
+                WatchlistAccountsView(userId: vm.userId, watchlist: item)
+                    .onAppear { showFab = false }
+                    .onDisappear { showFab = path.isEmpty }
+            }
         }
         .alert(item: $pendingDelete) { item in
             Alert(
@@ -127,120 +254,10 @@ struct WatchlistListView: View {
             banners.showError(
                 message: message, retryTitle: "Retry", retry: { Task { await vm.refresh() } })
         }
-        .sheet(isPresented: $showCreate) {
-            ZStack {
-                Rectangle().fill(.ultraThinMaterial).ignoresSafeArea()
-                NavigationStack {
-                    ScrollView {
-                        VStack(spacing: 16) {
-                            SettingsGroup(showHeader: false) {
-                                VStack(alignment: .leading, spacing: 12) {
-                                    TextField("Name", text: $createName)
-                                        .textInputAutocapitalization(.words)
-                                        .disableAutocorrection(true)
-                                    Rectangle().fill(Color.subtleSeparator).frame(height: 0.5)
-                                        .padding(.horizontal, 0)
-                                }
-                                .padding(.horizontal, 4)
-                            }
-                            .padding(.horizontal, 16)
-                        }
-                        .padding(.vertical, 16)
-                        .background(Color.clear)
-                    }
-                    .navigationTitle("New")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Cancel") { showCreate = false }
-                        }
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button(creating ? "Saving…" : "Save") {
-                                let name = createName.trimmingCharacters(
-                                    in: .whitespacesAndNewlines)
-                                guard !name.isEmpty else { return }
-                                creating = true
-                                Task {
-                                    await vm.create(name: name)
-                                    creating = false
-                                    showCreate = false
-                                    createName = ""
-                                    Haptics.success()
-                                }
-                            }
-                            .disabled(
-                                createName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                                    || creating)
-                        }
-                    }
-                    .toolbarBackground(Color.canvasBackground, for: .navigationBar)
-                    .toolbarBackground(.visible, for: .navigationBar)
-                }
-            }
-            .presentationDetents([.height(220), .medium, .large])
-            .interactiveDismissDisabled(creating)
-            .presentationDragIndicator(.visible)
-        }
-        .sheet(item: $renaming) { item in
-            ZStack {
-                Rectangle().fill(.ultraThinMaterial).ignoresSafeArea()
-                NavigationStack {
-                    ScrollView {
-                        VStack(spacing: 16) {
-                            SettingsGroup(showHeader: false) {
-                                VStack(alignment: .leading, spacing: 12) {
-                                    TextField("Name", text: $renameText)
-                                        .textInputAutocapitalization(.words)
-                                        .disableAutocorrection(true)
-                                    Rectangle().fill(Color.subtleSeparator).frame(height: 0.5)
-                                        .padding(.horizontal, 0)
-                                }
-                                .padding(.horizontal, 4)
-                            }
-                            .padding(.horizontal, 16)
-                        }
-                        .padding(.vertical, 16)
-                        .background(Color.clear)
-                    }
-                    .navigationTitle("Rename")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Cancel") { renaming = nil }
-                        }
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button(renamingSaving ? "Saving…" : "Save") {
-                                let name = renameText.trimmingCharacters(
-                                    in: .whitespacesAndNewlines)
-                                guard !name.isEmpty else { return }
-                                renamingSaving = true
-                                Task {
-                                    let ok = await vm.rename(item, to: name)
-                                    if ok {
-                                        Haptics.success()
-                                        renaming = nil
-                                    } else {
-                                        Haptics.softImpact()
-                                        let msg = vm.errorMessage ?? "Failed to update."
-                                        banners.showError(
-                                            message: msg, retryTitle: "Retry",
-                                            retry: { Task { _ = await vm.rename(item, to: name) } })
-                                    }
-                                    renamingSaving = false
-                                }
-                            }
-                            .disabled(
-                                renameText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                                    || renamingSaving)
-                        }
-                    }
-                    .toolbarBackground(Color.canvasBackground, for: .navigationBar)
-                    .toolbarBackground(.visible, for: .navigationBar)
-                }
-            }
-            .presentationDetents([.height(220), .medium, .large])
-            .presentationDragIndicator(.visible)
-            .interactiveDismissDisabled(renamingSaving)
+        .sheet(isPresented: $showCreate) { createSheetView }
+        .sheet(item: $renaming) { item in renameSheetView(item: item) }
+        .onChange(of: path) { _, newPath in
+            showFab = newPath.isEmpty
         }
     }
 }
@@ -345,14 +362,16 @@ private struct WatchlistRowsList: View {
     var body: some View {
         LazyVStack(spacing: 12) {
             ForEach(items, id: \.id) { item in
-                WatchlistRowCard(
-                    item: item,
-                    currency: currency,
-                    onRename: item.name.trimmingCharacters(in: .whitespacesAndNewlines)
-                        .localizedCaseInsensitiveCompare("All") == .orderedSame ? nil : onRename,
-                    onDelete: item.name.trimmingCharacters(in: .whitespacesAndNewlines)
-                        .localizedCaseInsensitiveCompare("All") == .orderedSame ? nil : onDelete
-                )
+                NavigationLink(value: item) {
+                    WatchlistRowCard(
+                        item: item,
+                        currency: currency,
+                        onRename: item.name.trimmingCharacters(in: .whitespacesAndNewlines)
+                            .localizedCaseInsensitiveCompare("All") == .orderedSame ? nil : onRename,
+                        onDelete: item.name.trimmingCharacters(in: .whitespacesAndNewlines)
+                            .localizedCaseInsensitiveCompare("All") == .orderedSame ? nil : onDelete
+                    )
+                }
             }
         }
     }
@@ -378,18 +397,14 @@ private struct WatchlistRowCard: View {
     }
 
     var body: some View {
-        Button(action: { Haptics.softImpact() }) {
-            AssetRowCard(
-                name: item.name,
-                current: item.value.currentValue,
-                invested: item.value.invested,
-                previous: item.value.previousValue,
-                currency: currency,
-                countBadge: item.totalAccount > 0 ? item.totalAccount : nil
-            )
-        }
-        .buttonStyle(PressableButtonStyle())
-        .transition(.moveAndFade)
+        AssetRowCard(
+            name: item.name,
+            current: item.value.currentValue,
+            invested: item.value.invested,
+            previous: item.value.previousValue,
+            currency: currency,
+            countBadge: item.totalAccount > 0 ? item.totalAccount : nil
+        )
         .contextMenu {
             if let onRename {
                 Button {

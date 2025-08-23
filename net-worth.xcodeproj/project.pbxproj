@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D2736832E59DDAE00F32B4C /* WatchAccountsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2736822E59DDAE00F32B4C /* WatchAccountsController.swift */; };
+		7D2736852E59DDBB00F32B4C /* WatchlistAccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2736842E59DDBB00F32B4C /* WatchlistAccountsView.swift */; };
 		7D2FBCA32E51CCDD0046FE17 /* IncomeTypesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FBCA22E51CCDD0046FE17 /* IncomeTypesView.swift */; };
 		7D2FBCA72E51CEF70046FE17 /* IncomeTagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FBCA62E51CEF70046FE17 /* IncomeTagsView.swift */; };
 		7D2FBCA92E51CEFD0046FE17 /* NamedEntitiesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FBCA82E51CEFD0046FE17 /* NamedEntitiesListView.swift */; };
@@ -59,6 +61,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7D2736822E59DDAE00F32B4C /* WatchAccountsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAccountsController.swift; sourceTree = "<group>"; };
+		7D2736842E59DDBB00F32B4C /* WatchlistAccountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistAccountsView.swift; sourceTree = "<group>"; };
 		7D2FBCA22E51CCDD0046FE17 /* IncomeTypesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTypesView.swift; sourceTree = "<group>"; };
 		7D2FBCA62E51CEF70046FE17 /* IncomeTagsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTagsView.swift; sourceTree = "<group>"; };
 		7D2FBCA82E51CEFD0046FE17 /* NamedEntitiesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamedEntitiesListView.swift; sourceTree = "<group>"; };
@@ -206,9 +210,10 @@
 		7DAA10002BE30000000000A2 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				7DAA00042BE3000000000004 /* IncomeController.swift */,
-				7DAB02022E70000100000002 /* WatchlistController.swift */,
 				7DAC01022E70000300000002 /* AccountsController.swift */,
+				7DAA00042BE3000000000004 /* IncomeController.swift */,
+				7D2736822E59DDAE00F32B4C /* WatchAccountsController.swift */,
+				7DAB02022E70000100000002 /* WatchlistController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -291,6 +296,7 @@
 		7DAB03012E70000100000001 /* Watchlist */ = {
 			isa = PBXGroup;
 			children = (
+				7D2736842E59DDBB00F32B4C /* WatchlistAccountsView.swift */,
 				7DAB02032E70000100000003 /* WatchlistViews.swift */,
 			);
 			path = Watchlist;
@@ -392,6 +398,7 @@
 				7DAA10012BE3000000000001 /* AppTab.swift in Sources */,
 				7DAA10022BE3000000000002 /* IncomeModels.swift in Sources */,
 				7D74B2922E52375A00E35786 /* BannerCenter.swift in Sources */,
+				7D2736852E59DDBB00F32B4C /* WatchlistAccountsView.swift in Sources */,
 				7DAA10042BE3000000000004 /* IncomeController.swift in Sources */,
 				7D6F68E82E5730A900E0AD02 /* LookupStore.swift in Sources */,
 				7DAA10052BE3000000000005 /* Formatters.swift in Sources */,
@@ -428,6 +435,7 @@
 				7DAC01132E70000300000013 /* AccountsListView.swift in Sources */,
 				7DCE00022E7A000100000002 /* CurrencyModels.swift in Sources */,
 				7DCE00042E7A000100000004 /* DefaultCurrencyView.swift in Sources */,
+				7D2736832E59DDAE00F32B4C /* WatchAccountsController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

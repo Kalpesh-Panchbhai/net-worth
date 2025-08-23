@@ -13,3 +13,10 @@ struct WatchlistValue: Codable, Hashable {
     let previousValue: Double
     let invested: Double
 }
+
+// Link entity for accounts included in a watchlist
+struct WatchAccount: Codable, Identifiable, Hashable {
+    let id: Int
+    let accountId: Int
+    let watchId: Int
+}
