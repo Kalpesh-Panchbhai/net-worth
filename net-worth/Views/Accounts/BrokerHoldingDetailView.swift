@@ -7,6 +7,7 @@ struct BrokerHoldingDetailView: View {
     @State private var transactions: [AccountTransaction] = []
     @State private var isLoading = false
     @State private var errorMessage: String? = nil
+    @State private var showCreateTx = false
 
     var body: some View {
         ScrollView {
@@ -84,6 +85,19 @@ struct BrokerHoldingDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(Color(.systemBackground), for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
+        .fabOverlay(icon: "plus", accessibilityLabel: "Add transaction") {
+            showCreateTx = true
+            Haptics.selection()
+        }
+        .sheet(isPresented: $showCreateTx) {
+            NavigationStack {
+                CreateTransactionView(
+                    accountId: 0,
+                    accountBrokerId: holding.id,
+                    onSaved: { Task { await refresh() } }
+                )
+            }
+        }
         .task { await load() }
     }
 

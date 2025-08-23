@@ -9,6 +9,7 @@ struct AccountDetailView: View {
     @State private var transactions: [AccountTransaction] = []
     @State private var isLoadingTx = false
     @State private var txError: String? = nil
+    @State private var showCreateTx = false
     // Simplified transactions UI (no filters/search/summary)
 
     var body: some View {
@@ -150,8 +151,21 @@ struct AccountDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(Color(.systemBackground), for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
+        .fabOverlay(icon: "plus", accessibilityLabel: "Add transaction", isVisible: normalizedType(account.type) != "Broker") {
+            showCreateTx = true
+            Haptics.selection()
+        }
         .navigationDestination(for: AccountBroker.self) { holding in
             BrokerHoldingDetailView(holding: holding)
+        }
+        .sheet(isPresented: $showCreateTx) {
+            NavigationStack {
+                CreateTransactionView(
+                    accountId: account.id,
+                    accountBrokerId: 0,
+                    onSaved: { Task { await loadTransactions() } }
+                )
+            }
         }
         .task {
             await loadBroker()

@@ -29,6 +29,8 @@
 		7D627CAA2E5A38EA00BB1CD7 /* TransactionModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D627CA92E5A38EA00BB1CD7 /* TransactionModels.swift */; };
 		7D627CB42E5A3E2F00BB1CD7 /* TransactionRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D627CB32E5A3E2F00BB1CD7 /* TransactionRows.swift */; };
 		7D627CB62E5A445400BB1CD7 /* BrokerHoldingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D627CB52E5A445400BB1CD7 /* BrokerHoldingDetailView.swift */; };
+		7D627CB82E5A485A00BB1CD7 /* CreateTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D627CB72E5A485A00BB1CD7 /* CreateTransactionView.swift */; };
+		7D627CBA2E5A4AC700BB1CD7 /* DecimalTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D627CB92E5A4AC700BB1CD7 /* DecimalTextField.swift */; };
 		7D6F68E82E5730A900E0AD02 /* LookupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6F68E72E5730A900E0AD02 /* LookupStore.swift */; };
 		7D6F68EA2E5739D400E0AD02 /* ScrollToTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6F68E92E5739D400E0AD02 /* ScrollToTop.swift */; };
 		7D74B2922E52375A00E35786 /* BannerCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74B2912E52375A00E35786 /* BannerCenter.swift */; };
@@ -88,6 +90,8 @@
 		7D627CA92E5A38EA00BB1CD7 /* TransactionModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionModels.swift; sourceTree = "<group>"; };
 		7D627CB32E5A3E2F00BB1CD7 /* TransactionRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRows.swift; sourceTree = "<group>"; };
 		7D627CB52E5A445400BB1CD7 /* BrokerHoldingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrokerHoldingDetailView.swift; sourceTree = "<group>"; };
+		7D627CB72E5A485A00BB1CD7 /* CreateTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTransactionView.swift; sourceTree = "<group>"; };
+		7D627CB92E5A4AC700BB1CD7 /* DecimalTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecimalTextField.swift; sourceTree = "<group>"; };
 		7D6F68E72E5730A900E0AD02 /* LookupStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupStore.swift; sourceTree = "<group>"; };
 		7D6F68E92E5739D400E0AD02 /* ScrollToTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollToTop.swift; sourceTree = "<group>"; };
 		7D74B2912E52375A00E35786 /* BannerCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerCenter.swift; sourceTree = "<group>"; };
@@ -290,6 +294,7 @@
 				7DECCEE52E58699D00225DDA /* AssetRowCard.swift */,
 				7D74B2912E52375A00E35786 /* BannerCenter.swift */,
 				7DECCEE92E58791600225DDA /* CurrencyPickerSheet.swift */,
+				7D627CB92E5A4AC700BB1CD7 /* DecimalTextField.swift */,
 				7DAB02042E70000200000004 /* FloatingActionButton.swift */,
 				7D2FBCA82E51CEFD0046FE17 /* NamedEntitiesListView.swift */,
 				7DECCEED2E587D8400225DDA /* NamedEntityPickerSheet.swift */,
@@ -325,6 +330,7 @@
 				7DAC01032E70000300000003 /* AccountsListView.swift */,
 				7D627CB52E5A445400BB1CD7 /* BrokerHoldingDetailView.swift */,
 				7DECCEE72E5875FF00225DDA /* CreateAccountView.swift */,
+				7D627CB72E5A485A00BB1CD7 /* CreateTransactionView.swift */,
 			);
 			path = Accounts;
 			sourceTree = "<group>";
@@ -432,6 +438,7 @@
 				7D4D094A2E5304B200E188D0 /* APIError.swift in Sources */,
 				7DAA10082BE3000000000008 /* NavBarUtils.swift in Sources */,
 				7DAA10092BE3000000000009 /* Shimmer.swift in Sources */,
+				7D627CB82E5A485A00BB1CD7 /* CreateTransactionView.swift in Sources */,
 				7DAA100A2BE300000000000A /* AirbnbTabBar.swift in Sources */,
 				7DAA100B2BE300000000000B /* SettingsView.swift in Sources */,
 				7DECCEE82E5875FF00225DDA /* CreateAccountView.swift in Sources */,
@@ -453,6 +460,7 @@
 				7D627CA82E5A36BF00BB1CD7 /* BrokerModels.swift in Sources */,
 				7DECCEEC2E587C5200225DDA /* StringPickerSheet.swift in Sources */,
 				7DAB01042E70000200000004 /* FloatingActionButton.swift in Sources */,
+				7D627CBA2E5A4AC700BB1CD7 /* DecimalTextField.swift in Sources */,
 				7DAC01112E70000300000011 /* AccountModels.swift in Sources */,
 				7DAC01122E70000300000012 /* AccountsController.swift in Sources */,
 				7DECCEE62E58699D00225DDA /* AssetRowCard.swift in Sources */,

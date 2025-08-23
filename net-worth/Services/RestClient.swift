@@ -272,6 +272,40 @@ extension RestClient {
             WatchAccount(id: newId ?? -1, accountId: accountId, watchId: watchId)
         }
     }
+    // Create an account transaction (for account or broker holding)
+    func createAccountTransaction(
+        accountId: Int,
+        accountBrokerId: Int,
+        transactionDate: Date,
+        value: Double,
+        operation: String
+    ) async throws -> AccountTransaction {
+        struct Payload: Codable {
+            let accountId: Int
+            let accountBrokerId: Int
+            let transactionDate: String
+            let value: Double
+            let operation: String
+        }
+        let dateString = DateTZ.toBackendISTString(fromUserDate: transactionDate)
+        let body = Payload(
+            accountId: accountId,
+            accountBrokerId: accountBrokerId,
+            transactionDate: dateString,
+            value: value,
+            operation: operation
+        )
+        return try await postWithFallback("account_transaction", body: body) { newId in
+            AccountTransaction(
+                id: newId ?? -1,
+                accountId: accountId,
+                accountBrokerId: accountBrokerId,
+                transactionDate: dateString,
+                value: value,
+                operation: operation
+            )
+        }
+    }
     // Remove an account from a watchlist by link id
     func deleteWatchAccount(id: Int) async throws {
         try await delete("watch_account/\(id)")
