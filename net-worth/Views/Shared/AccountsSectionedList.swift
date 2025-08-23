@@ -74,13 +74,15 @@ struct AccountsSectionedList: View {
                 ForEach(groupedSections(), id: \.title) { section in
                     Section {
                         ForEach(section.items, id: \.id) { item in
-                            AssetRowCard(
-                                name: item.name,
-                                current: item.value.currentValue,
-                                invested: item.value.invested,
-                                previous: item.value.previousValue,
-                                currency: currency
-                            )
+                            NavigationLink(value: item) {
+                                AssetRowCard(
+                                    name: item.name,
+                                    current: item.value.currentValue,
+                                    invested: item.value.invested,
+                                    previous: item.value.previousValue,
+                                    currency: currency
+                                )
+                            }
                             .contextMenu {
                                 if let onAddToWatch {
                                     Button {

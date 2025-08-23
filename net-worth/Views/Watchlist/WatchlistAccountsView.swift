@@ -35,11 +35,6 @@ struct WatchlistAccountsView: View {
             .padding(.vertical, 16)
             Color.clear.frame(height: LayoutConstants.tabBarHeight + 24)
         }
-        .background(Color.canvasBackground.ignoresSafeArea())
-        .navigationTitle(watchlist.name)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(Color(.systemBackground), for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
         .fabOverlay(
             icon: "plus",
             accessibilityLabel: "Add account to watch",
@@ -49,6 +44,14 @@ struct WatchlistAccountsView: View {
             Haptics.selection()
             showAddSheet = true
         }
+        .background(Color.canvasBackground.ignoresSafeArea())
+        .navigationTitle(watchlist.name)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(for: Account.self) { account in
+            AccountDetailView(account: account)
+        }
+        .toolbarBackground(Color(.systemBackground), for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
         .scrollIndicators(.hidden)
         .task {
             vm.attachStore(lookup)

@@ -51,12 +51,18 @@ struct AccountsListView: View {
                     withAnimation { proxy.scrollTo("accountsBottom", anchor: .bottom) }
                     DispatchQueue.main.async { tabCommands.scrollToBottomRequest = nil }
                 }
+                .fabOverlay(icon: "plus", accessibilityLabel: "Add account") {
+                    showCreateSheet = true
+                }
             }
             .navigationTitle("Accounts")
             .navigationBarTitleDisplayMode(.large)
             .airbnbNavBarBackground(collapsed: navCollapsed)
             .onPreferenceChange(NavBarOffsetKey.self) { y in
                 withAnimation(.easeInOut(duration: 0.2)) { navCollapsed = y < -8 }
+            }
+            .navigationDestination(for: Account.self) { account in
+                AccountDetailView(account: account)
             }
             // Custom search bar used instead of .searchable for brand styling
         }
@@ -88,9 +94,6 @@ struct AccountsListView: View {
             }
             .presentationDetents([.medium, .large])
             .presentationDragIndicator(.visible)
-        }
-        .fabOverlay(icon: "plus", accessibilityLabel: "Add account") {
-            showCreateSheet = true
         }
     }
 }

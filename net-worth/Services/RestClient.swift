@@ -254,7 +254,10 @@ extension RestClient {
         try await patch("watch", body: Payload(id: id, userId: userId, name: name))
     }
     func createWatchAccount(accountId: Int, watchId: Int) async throws -> WatchAccount {
-        struct Payload: Codable { let accountId: Int; let watchId: Int }
+        struct Payload: Codable {
+            let accountId: Int
+            let watchId: Int
+        }
         let body = Payload(accountId: accountId, watchId: watchId)
         return try await postWithFallback("watch_account", body: body) { newId in
             WatchAccount(id: newId ?? -1, accountId: accountId, watchId: watchId)

@@ -24,6 +24,7 @@
 		7D59B5372BE24ABA006F3F00 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 7D59B5362BE24ABA006F3F00 /* GoogleSignIn */; };
 		7D59B5392BE24ABA006F3F00 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7D59B5382BE24ABA006F3F00 /* GoogleSignInSwift */; };
 		7D59B53D2BE24B1C006F3F00 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B53C2BE24B1C006F3F00 /* GoogleService-Info.plist */; };
+		7D627CA62E5A346800BB1CD7 /* AccountDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D627CA52E5A346800BB1CD7 /* AccountDetailView.swift */; };
 		7D6F68E82E5730A900E0AD02 /* LookupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6F68E72E5730A900E0AD02 /* LookupStore.swift */; };
 		7D6F68EA2E5739D400E0AD02 /* ScrollToTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6F68E92E5739D400E0AD02 /* ScrollToTop.swift */; };
 		7D74B2922E52375A00E35786 /* BannerCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74B2912E52375A00E35786 /* BannerCenter.swift */; };
@@ -78,6 +79,7 @@
 		7D59B4072BE24701006F3F00 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		7D59B40E2BE24774006F3F00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		7D59B53C2BE24B1C006F3F00 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		7D627CA52E5A346800BB1CD7 /* AccountDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailView.swift; sourceTree = "<group>"; };
 		7D6F68E72E5730A900E0AD02 /* LookupStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupStore.swift; sourceTree = "<group>"; };
 		7D6F68E92E5739D400E0AD02 /* ScrollToTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollToTop.swift; sourceTree = "<group>"; };
 		7D74B2912E52375A00E35786 /* BannerCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerCenter.swift; sourceTree = "<group>"; };
@@ -308,6 +310,7 @@
 		7DAC02012E70000300000021 /* Accounts */ = {
 			isa = PBXGroup;
 			children = (
+				7D627CA52E5A346800BB1CD7 /* AccountDetailView.swift */,
 				7DAC01032E70000300000003 /* AccountsListView.swift */,
 				7DECCEE72E5875FF00225DDA /* CreateAccountView.swift */,
 			);
@@ -412,6 +415,7 @@
 				7D4D09482E53021B00E188D0 /* RestClient.swift in Sources */,
 				7D6F68EA2E5739D400E0AD02 /* ScrollToTop.swift in Sources */,
 				7DECCEEE2E587D8400225DDA /* NamedEntityPickerSheet.swift in Sources */,
+				7D627CA62E5A346800BB1CD7 /* AccountDetailView.swift in Sources */,
 				7D2FBCA92E51CEFD0046FE17 /* NamedEntitiesListView.swift in Sources */,
 				7D4D094A2E5304B200E188D0 /* APIError.swift in Sources */,
 				7DAA10082BE3000000000008 /* NavBarUtils.swift in Sources */,
