@@ -82,11 +82,12 @@ struct AccountDetailView: View {
                             EmptyStateCard(
                                 text: "No transactions yet", icon: "tray", iconFont: .title3)
                         } else {
-                            let preview = Array(sortedTransactions(transactions).prefix(5))
+                            let sortedAll = sortedTransactions(transactions)
+                            let preview = Array(sortedAll.prefix(5))
                             VStack(spacing: 12) {
                                 ForEach(preview.indices, id: \.self) { i in
                                     let tx = preview[i]
-                                    let prevVal: Double? = (i + 1 < preview.count) ? preview[i + 1].value : nil
+                                    let prevVal: Double? = (i + 1 < sortedAll.count) ? sortedAll[i + 1].value : nil
                                     transactionRowView(
                                         date: DateTZ.fromBackendISTStringToUserDate(tx.transactionDate) ?? Date(),
                                         value: tx.value,

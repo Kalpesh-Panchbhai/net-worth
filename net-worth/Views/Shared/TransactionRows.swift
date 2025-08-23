@@ -59,12 +59,19 @@ public func transactionRowView(date: Date, value: Double, previousValue: Double?
             if let prev = previousValue {
                 let delta = value - prev
                 let tint: Color = delta >= 0 ? .airbnbSuccess : .red
+                let pctText: String? = prev.magnitude > 0 ? (delta / prev.magnitude).formatted(.percent.precision(.fractionLength(1))) : nil
                 HStack(spacing: 6) {
                     Image(systemName: delta >= 0 ? "arrow.up.right" : "arrow.down.right")
                         .font(.caption2.weight(.bold))
                     Text(CurrencyShort.shortString(abs(delta), currency: currency))
                         .font(.caption2.weight(.semibold))
                         .monospacedDigit()
+                    if let p = pctText {
+                        Text("•").font(.caption2.weight(.bold))
+                        Text(p)
+                            .font(.caption2.weight(.semibold))
+                            .monospacedDigit()
+                    }
                 }
                 .foregroundColor(tint)
                 .padding(.vertical, 3)
