@@ -253,6 +253,10 @@ extension RestClient {
         }
         try await patch("watch", body: Payload(id: id, userId: userId, name: name))
     }
+    // Remove an account from a watchlist by link id
+    func deleteWatchAccount(id: Int) async throws {
+        try await delete("watch_account/\(id)")
+    }
     /// Permanently delete the user and all server-side data
     func deleteUser(id: Int) async throws {
         try await delete("user/\(id)")

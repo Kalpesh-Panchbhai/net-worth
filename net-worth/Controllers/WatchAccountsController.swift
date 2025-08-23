@@ -12,6 +12,7 @@ final class WatchAccountsController: ObservableObject {
     let watchId: Int
     private let client: RestClient
     private var store: LookupStore? = nil
+    private var links: [WatchAccount] = []
     private var cancellables = Set<AnyCancellable>()
 
     init(userId: Int, watchId: Int, service: RestClient = RestClient()) {
@@ -31,8 +32,9 @@ final class WatchAccountsController: ObservableObject {
         errorMessage = nil
         defer { isLoading = false }
         do {
-            let links = try await client.fetchWatchAccounts(watchId: watchId)
-            let ids = Set(links.map { $0.accountId })
+            let fetched = try await client.fetchWatchAccounts(watchId: watchId)
+            self.links = fetched
+            let ids = Set(fetched.map { $0.accountId })
             var accounts: [Account]
             if let store = store {
                 if store.accounts.isEmpty {
@@ -60,8 +62,9 @@ final class WatchAccountsController: ObservableObject {
         errorMessage = nil
         defer { isLoading = false }
         do {
-            let links = try await client.fetchWatchAccounts(watchId: watchId)
-            let ids = Set(links.map { $0.accountId })
+            let fetched = try await client.fetchWatchAccounts(watchId: watchId)
+            self.links = fetched
+            let ids = Set(fetched.map { $0.accountId })
             var accounts: [Account]
             if let store = store {
                 await store.refreshAccounts(userId: userId)
@@ -74,6 +77,26 @@ final class WatchAccountsController: ObservableObject {
             self.errorMessage = api.errorDescription ?? "Request failed"
         } catch {
             self.errorMessage = error.localizedDescription
+        }
+    }
+
+    func deleteFromWatch(_ account: Account) async -> Bool {
+        guard let link = links.first(where: { $0.accountId == account.id }) else {
+            self.errorMessage = "Link not found for account."
+            return false
+        }
+        do {
+            try await client.deleteWatchAccount(id: link.id)
+            // Update local state
+            links.removeAll { $0.id == link.id }
+            items.removeAll { $0.id == account.id }
+            return true
+        } catch let api as APIError {
+            self.errorMessage = api.errorDescription ?? "Failed to remove from watch."
+            return false
+        } catch {
+            self.errorMessage = error.localizedDescription
+            return false
         }
     }
 
