@@ -6,6 +6,7 @@ struct AccountsSectionedList: View {
     var isLoading: Bool = false
     var enableDelete: Bool = false
     var onDelete: ((Account) -> Void)? = nil
+    var onAddToWatch: ((Account) -> Void)? = nil
 
     @AppStorage("hideInactiveAccounts") private var hideInactive: Bool = true
     @State private var searchText: String = ""
@@ -16,13 +17,15 @@ struct AccountsSectionedList: View {
         currency: String,
         isLoading: Bool = false,
         enableDelete: Bool = false,
-        onDelete: ((Account) -> Void)? = nil
+        onDelete: ((Account) -> Void)? = nil,
+        onAddToWatch: ((Account) -> Void)? = nil
     ) {
         self.items = items
         self.currency = currency
         self.isLoading = isLoading
         self.enableDelete = enableDelete
         self.onDelete = onDelete
+        self.onAddToWatch = onAddToWatch
     }
 
     // MARK: - Body
@@ -79,6 +82,13 @@ struct AccountsSectionedList: View {
                                 currency: currency
                             )
                             .contextMenu {
+                                if let onAddToWatch {
+                                    Button {
+                                        onAddToWatch(item)
+                                    } label: {
+                                        Label("Add to watch", systemImage: "text.badge.plus")
+                                    }
+                                }
                                 if enableDelete, let onDelete {
                                     Button(role: .destructive) {
                                         onDelete(item)

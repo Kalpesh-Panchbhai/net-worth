@@ -253,6 +253,13 @@ extension RestClient {
         }
         try await patch("watch", body: Payload(id: id, userId: userId, name: name))
     }
+    func createWatchAccount(accountId: Int, watchId: Int) async throws -> WatchAccount {
+        struct Payload: Codable { let accountId: Int; let watchId: Int }
+        let body = Payload(accountId: accountId, watchId: watchId)
+        return try await postWithFallback("watch_account", body: body) { newId in
+            WatchAccount(id: newId ?? -1, accountId: accountId, watchId: watchId)
+        }
+    }
     // Remove an account from a watchlist by link id
     func deleteWatchAccount(id: Int) async throws {
         try await delete("watch_account/\(id)")
