@@ -317,130 +317,148 @@ private struct FilterSheet: View {
     var onClear: () -> Void
     @State private var query: String = ""
     var body: some View {
-        VStack(spacing: 0) {
-            List {
-                Section("Source") {
+        ScrollView {
+            VStack(spacing: 16) {
+                AppSearchBar(text: $query, placeholder: "Search")
+                    .padding(.top, 8)
+
+                // Source (chips)
+                SettingsGroup(title: sourceTitle) {
                     let filtered = types.filter {
-                        query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                            ? true : $0.localizedCaseInsensitiveContains(query)
+                        let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
+                        return q.isEmpty ? true : $0.localizedCaseInsensitiveContains(q)
                     }
-                    ForEach(filtered, id: \.self) { t in
-                        Button {
-                            withAnimation(.snappy) {
-                                if selectedTypes.contains(t) {
-                                    selectedTypes.remove(t)
-                                } else {
-                                    selectedTypes.insert(t)
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 96), spacing: 8)], spacing: 8) {
+                        ForEach(filtered, id: \.self) { item in
+                            FilterChip(title: item, isOn: selectedTypes.contains(item)) {
+                                withAnimation(.snappy) {
+                                    if selectedTypes.contains(item) { selectedTypes.remove(item) }
+                                    else { selectedTypes.insert(item) }
                                 }
+                                Haptics.selection()
                             }
-                            Haptics.selection()
-                        } label: {
-                            HStack {
-                                Text(t)
-                                Spacer()
-                                if selectedTypes.contains(t) {
-                                    Image(systemName: "checkmark").foregroundColor(.airbnbPrimary)
-                                }
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .contentShape(Rectangle())
                         }
-                        .buttonStyle(.plain)
                     }
                 }
-                Section("Tag") {
-                    let tagsFiltered = tags.filter {
-                        query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                            ? true : $0.localizedCaseInsensitiveContains(query)
+
+                // Tag (chips)
+                SettingsGroup(title: tagTitle) {
+                    let filtered = tags.filter {
+                        let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
+                        return q.isEmpty ? true : $0.localizedCaseInsensitiveContains(q)
                     }
-                    ForEach(tagsFiltered, id: \.self) { tag in
-                        Button {
-                            withAnimation(.snappy) {
-                                if selectedTags.contains(tag) {
-                                    selectedTags.remove(tag)
-                                } else {
-                                    selectedTags.insert(tag)
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 120), spacing: 8)], spacing: 8) {
+                        ForEach(filtered, id: \.self) { item in
+                            FilterChip(title: item, isOn: selectedTags.contains(item)) {
+                                withAnimation(.snappy) {
+                                    if selectedTags.contains(item) { selectedTags.remove(item) }
+                                    else { selectedTags.insert(item) }
                                 }
+                                Haptics.selection()
                             }
-                            Haptics.selection()
-                        } label: {
-                            HStack {
-                                Text(tag)
-                                Spacer()
-                                if selectedTags.contains(tag) {
-                                    Image(systemName: "checkmark").foregroundColor(.airbnbPrimary)
-                                }
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .contentShape(Rectangle())
                         }
-                        .buttonStyle(.plain)
                     }
                 }
-                Section("Financial year") {
-                    let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
-                    let fysFiltered = fys.filter { fy in
-                        q.isEmpty ? true : fy.title.localizedCaseInsensitiveContains(q)
-                    }
-                    ForEach(fysFiltered) { fy in
-                        Button {
-                            withAnimation(.snappy) {
-                                // Tapping toggles FY; Years set is independent. Keep both multi-select.
-                                if selectedFYs.contains(fy) {
-                                    selectedFYs.remove(fy)
-                                } else {
-                                    selectedFYs.insert(fy)
+
+                // Year (list with highlight)
+                SettingsGroup(title: yearTitle) {
+                    let filteredYears = years.filter {
+                        let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
+                        return q.isEmpty ? true : String($0).localizedCaseInsensitiveContains(q)
+                    }.sorted(by: >)
+                    VStack(spacing: 0) {
+                        ForEach(filteredYears.indices, id: \.self) { idx in
+                            let y = filteredYears[idx]
+                            let isSel = selectedYears.contains(y)
+                            Button {
+                                withAnimation(.snappy) {
+                                    if isSel { selectedYears.remove(y) } else { selectedYears.insert(y) }
                                 }
-                            }
-                            Haptics.selection()
-                        } label: {
-                            HStack {
-                                Text(fy.title)
-                                Spacer()
-                                if selectedFYs.contains(fy) {
-                                    Image(systemName: "checkmark").foregroundColor(.airbnbPrimary)
+                                Haptics.selection()
+                            } label: {
+                                HStack {
+                                    Text(String(y))
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                    if isSel {
+                                        Image(systemName: "checkmark")
+                                            .font(.footnote.weight(.semibold))
+                                            .foregroundColor(.airbnbPrimary)
+                                            .padding(6)
+                                            .background(Circle().fill(Color.airbnbPrimary.opacity(0.12)))
+                                    }
                                 }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .contentShape(Rectangle())
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 10)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                        .fill(isSel ? Color.airbnbPrimary.opacity(0.06) : .clear)
+                                )
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .contentShape(Rectangle())
+                            .buttonStyle(.plain)
+                            if idx < filteredYears.count - 1 {
+                                Rectangle().fill(Color.subtleSeparator).frame(height: 0.5)
+                                    .padding(.horizontal, 12)
+                            }
                         }
-                        .buttonStyle(.plain)
                     }
                 }
-                Section("Year") {
-                    let yearsFiltered = years.filter {
-                        query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                            ? true : String($0).localizedCaseInsensitiveContains(query)
+
+                // Financial year (list with highlight)
+                SettingsGroup(title: fyTitle) {
+                    let filtered = fys.filter {
+                        let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
+                        return q.isEmpty ? true : $0.title.localizedCaseInsensitiveContains(q)
                     }
-                    ForEach(yearsFiltered, id: \.self) { y in
-                        Button {
-                            withAnimation(.snappy) {
-                                if selectedYears.contains(y) {
-                                    selectedYears.remove(y)
-                                } else {
-                                    selectedYears.insert(y)
+                    VStack(spacing: 0) {
+                        ForEach(filtered.indices, id: \.self) { idx in
+                            let fy = filtered[idx]
+                            let isSel = selectedFYs.contains(fy)
+                            Button {
+                                withAnimation(.snappy) {
+                                    if isSel { selectedFYs.remove(fy) } else { selectedFYs.insert(fy) }
                                 }
-                            }
-                            Haptics.selection()
-                        } label: {
-                            HStack {
-                                Text(String(y))
-                                Spacer()
-                                if selectedYears.contains(y) {
-                                    Image(systemName: "checkmark").foregroundColor(.airbnbPrimary)
+                                Haptics.selection()
+                            } label: {
+                                HStack {
+                                    Text(fy.title)
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                    if isSel {
+                                        Image(systemName: "checkmark")
+                                            .font(.footnote.weight(.semibold))
+                                            .foregroundColor(.airbnbPrimary)
+                                            .padding(6)
+                                            .background(Circle().fill(Color.airbnbPrimary.opacity(0.12)))
+                                    }
                                 }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .contentShape(Rectangle())
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 10)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                        .fill(isSel ? Color.airbnbPrimary.opacity(0.06) : .clear)
+                                )
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .contentShape(Rectangle())
+                            .buttonStyle(.plain)
+                            if idx < filtered.count - 1 {
+                                Rectangle().fill(Color.subtleSeparator).frame(height: 0.5)
+                                    .padding(.horizontal, 12)
+                            }
                         }
-                        .buttonStyle(.plain)
                     }
                 }
+
+                Color.clear.frame(height: 8)
             }
-            .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always))
-            .listStyle(.insetGrouped)
-            .scrollContentBackground(.hidden)
-            .background(Color.canvasBackground)
+            .padding(.horizontal, 16)
+            .padding(.bottom, 8)
+        }
+        .background(Color.canvasBackground)
+        .safeAreaInset(edge: .bottom) {
             HStack(spacing: 12) {
                 Button(action: {
                     onClear()
@@ -449,6 +467,7 @@ private struct FilterSheet: View {
                     Text("Clear filters").bold()
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
+                        .foregroundColor(.airbnbPrimary)
                         .background(
                             RoundedRectangle(cornerRadius: 12, style: .continuous)
                                 .fill(Color.elevatedBackground)
@@ -463,8 +482,39 @@ private struct FilterSheet: View {
             .padding(16)
             .background(Color.canvasBackground.ignoresSafeArea(edges: .bottom))
         }
+        .tint(.airbnbPrimary)
+    }
+
+    // MARK: - Helpers (titles and summaries)
+    private var sourceTitle: String {
+        selectedTypes.isEmpty ? "Source" : "Source (\(selectedTypes.count))"
+    }
+    private var tagTitle: String {
+        selectedTags.isEmpty ? "Tag" : "Tag (\(selectedTags.count))"
+    }
+    private var yearTitle: String {
+        selectedYears.isEmpty ? "Year" : "Year (\(selectedYears.count))"
+    }
+    private var fyTitle: String {
+        selectedFYs.isEmpty ? "Financial year" : "Financial year (\(selectedFYs.count))"
+    }
+
+    private var sourceSummary: String? { selectionSummary(Array(selectedTypes).sorted()) }
+    private var tagSummary: String? { selectionSummary(Array(selectedTags).sorted()) }
+    private var yearSummary: String? { selectionSummary(Array(selectedYears).sorted(by: >).map(String.init)) }
+    private var fySummary: String? { selectionSummary(selectedFYs.map { $0.title }.sorted()) }
+
+    private func selectionSummary(_ items: [String]) -> String? {
+        guard !items.isEmpty else { return nil }
+        let maxShow = 3
+        let shown = items.prefix(maxShow)
+        let extra = items.count - shown.count
+        let text = shown.joined(separator: ", ") + (extra > 0 ? "  ·  +\(extra) more" : "")
+        return text
     }
 }
+
+// MARK: - Summary Card (totals at top of Income screens)
 private struct SummaryCard: View {
     let totalAll: Double
     let totalNet: Double
