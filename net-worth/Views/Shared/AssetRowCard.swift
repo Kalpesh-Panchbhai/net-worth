@@ -7,6 +7,8 @@ struct AssetRowCard: View {
     let invested: Double
     let previous: Double
     let currency: String
+    // Optional number of units (e.g., broker holdings). If present, shown above Invested.
+    var units: Double? = nil
     // Optional badge shown near the title (e.g., watchlist account count)
     var countBadge: Int? = nil
 
@@ -59,16 +61,30 @@ struct AssetRowCard: View {
     }
 
     private var meta: some View {
-        HStack(spacing: 8) {
-            Text("Invested")
-                .font(.caption)
-                .foregroundColor(.secondary)
-            Spacer(minLength: 0)
-            Text(invested, format: .currency(code: currency))
-                .font(.subheadline.weight(.semibold))
-                .foregroundColor(.airbnbPrimary)
-                .monospacedDigit()
-                .contentTransition(.numericText())
+        VStack(spacing: 8) {
+            if let u = units {
+                HStack(spacing: 8) {
+                    Text("Units")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Spacer(minLength: 0)
+                    Text(String(format: "%.2f", u))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(.primary)
+                        .monospacedDigit()
+                }
+            }
+            HStack(spacing: 8) {
+                Text("Invested")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Spacer(minLength: 0)
+                Text(invested, format: .currency(code: currency))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(.airbnbPrimary)
+                    .monospacedDigit()
+                    .contentTransition(.numericText())
+            }
         }
     }
 

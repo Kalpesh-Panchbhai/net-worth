@@ -125,13 +125,16 @@ struct AccountDetailView: View {
                         } else {
                             VStack(spacing: 12) {
                                 ForEach(brokerHoldings, id: \.id) { h in
-                                    AssetRowCard(
-                                        name: h.name.isEmpty ? h.symbol : h.name,
-                                        current: h.value.currentValue,
-                                        invested: h.value.invested,
-                                        previous: h.value.previousValue,
-                                        currency: displayCurrency.uppercased()
-                                    )
+                                    NavigationLink(value: h) {
+                                        AssetRowCard(
+                                            name: h.name.isEmpty ? h.symbol : h.name,
+                                            current: h.value.currentValue,
+                                            invested: h.value.invested,
+                                            previous: h.value.previousValue,
+                                            currency: displayCurrency.uppercased(),
+                                            units: h.currentUnit
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -147,6 +150,9 @@ struct AccountDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(Color(.systemBackground), for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
+        .navigationDestination(for: AccountBroker.self) { holding in
+            BrokerHoldingDetailView(holding: holding)
+        }
         .task {
             await loadBroker()
             await loadTransactions()

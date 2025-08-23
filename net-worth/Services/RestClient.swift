@@ -197,6 +197,9 @@ extension RestClient {
     func fetchAccountTransactions(accountId: Int) async throws -> [AccountTransaction] {
         try await getList("account_transaction/\(accountId)/account")
     }
+    func fetchAccountBrokerTransactions(accountBrokerId: Int) async throws -> [AccountTransaction] {
+        try await getList("account_transaction/\(accountBrokerId)/account_broker")
+    }
     // MARK: - Accounts (Create/Delete)
     func createAccount(
         userId: Int,

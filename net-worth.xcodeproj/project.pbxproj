@@ -28,6 +28,7 @@
 		7D627CA82E5A36BF00BB1CD7 /* BrokerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D627CA72E5A36BF00BB1CD7 /* BrokerModels.swift */; };
 		7D627CAA2E5A38EA00BB1CD7 /* TransactionModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D627CA92E5A38EA00BB1CD7 /* TransactionModels.swift */; };
 		7D627CB42E5A3E2F00BB1CD7 /* TransactionRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D627CB32E5A3E2F00BB1CD7 /* TransactionRows.swift */; };
+		7D627CB62E5A445400BB1CD7 /* BrokerHoldingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D627CB52E5A445400BB1CD7 /* BrokerHoldingDetailView.swift */; };
 		7D6F68E82E5730A900E0AD02 /* LookupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6F68E72E5730A900E0AD02 /* LookupStore.swift */; };
 		7D6F68EA2E5739D400E0AD02 /* ScrollToTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6F68E92E5739D400E0AD02 /* ScrollToTop.swift */; };
 		7D74B2922E52375A00E35786 /* BannerCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74B2912E52375A00E35786 /* BannerCenter.swift */; };
@@ -86,6 +87,7 @@
 		7D627CA72E5A36BF00BB1CD7 /* BrokerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrokerModels.swift; sourceTree = "<group>"; };
 		7D627CA92E5A38EA00BB1CD7 /* TransactionModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionModels.swift; sourceTree = "<group>"; };
 		7D627CB32E5A3E2F00BB1CD7 /* TransactionRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRows.swift; sourceTree = "<group>"; };
+		7D627CB52E5A445400BB1CD7 /* BrokerHoldingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrokerHoldingDetailView.swift; sourceTree = "<group>"; };
 		7D6F68E72E5730A900E0AD02 /* LookupStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupStore.swift; sourceTree = "<group>"; };
 		7D6F68E92E5739D400E0AD02 /* ScrollToTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollToTop.swift; sourceTree = "<group>"; };
 		7D74B2912E52375A00E35786 /* BannerCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerCenter.swift; sourceTree = "<group>"; };
@@ -321,6 +323,7 @@
 			children = (
 				7D627CA52E5A346800BB1CD7 /* AccountDetailView.swift */,
 				7DAC01032E70000300000003 /* AccountsListView.swift */,
+				7D627CB52E5A445400BB1CD7 /* BrokerHoldingDetailView.swift */,
 				7DECCEE72E5875FF00225DDA /* CreateAccountView.swift */,
 			);
 			path = Accounts;
@@ -435,6 +438,7 @@
 				7D4E7B972E58C48B007AB2B9 /* OnboardingView.swift in Sources */,
 				7D627CB42E5A3E2F00BB1CD7 /* TransactionRows.swift in Sources */,
 				7DAA100C2BE300000000000C /* PlaceholderScreen.swift in Sources */,
+				7D627CB62E5A445400BB1CD7 /* BrokerHoldingDetailView.swift in Sources */,
 				7D2FBCA72E51CEF70046FE17 /* IncomeTagsView.swift in Sources */,
 				7DAA100D2BE300000000000D /* IncomeViews.swift in Sources */,
 				7D627CAA2E5A38EA00BB1CD7 /* TransactionModels.swift in Sources */,
