@@ -99,11 +99,18 @@ struct AccountsSectionedList: View {
 
     // MARK: - Helpers
     private func filteredAccounts() -> [Account] {
+        // Apply search + inactive, then chip selection
+        var base = searchAndInactiveFiltered()
+        if !selectedTypes.isEmpty { base = base.filter { selectedTypes.contains(normalizedType($0.type)) } }
+        return base
+    }
+
+    // Chips should be computed from search + inactive only, so user can add more chips while searching
+    private func searchAndInactiveFiltered() -> [Account] {
         let anyInactive = items.contains { !$0.active }
         var base = (anyInactive && hideInactive) ? items.filter { $0.active } : items
         let q = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
         if !q.isEmpty { base = base.filter { $0.name.localizedCaseInsensitiveContains(q) } }
-        if !selectedTypes.isEmpty { base = base.filter { selectedTypes.contains(normalizedType($0.type)) } }
         return base
     }
     private func normalizedType(_ raw: String) -> String {
@@ -115,7 +122,8 @@ struct AccountsSectionedList: View {
         return "Other"
     }
     private func availableTypes() -> [String] {
-        let base = filteredAccounts().map { normalizedType($0.type) }
+        // Derive from search+inactive results so chips remain available for multi-select
+        let base = searchAndInactiveFiltered().map { normalizedType($0.type) }
         let unique = Array(Set(base)).sorted()
         let order = ["Broker", "Saving", "Credit card", "Loan", "Other"]
         return unique.sorted { a, b in
