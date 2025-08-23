@@ -135,54 +135,35 @@ extension AssetRowCard {
             VStack(alignment: .leading, spacing: 8) {
                 // Title + current value row
                 HStack(spacing: 8) {
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.placeholderFill)
-                        .frame(width: 140, height: 14)
+                    ShimmerBlock(width: 140, height: 14, cornerRadius: 4)
                         .fixedSize()
                     if let c = countBadge, c > 0 {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color.placeholderFill)
-                            .frame(width: 36, height: 18)
+                        ShimmerBlock(width: 36, height: 18, cornerRadius: 10)
                     }
                     Spacer(minLength: 8)
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.placeholderFill)
-                        .frame(width: 90, height: 16)
+                    ShimmerBlock(width: 90, height: 16, cornerRadius: 4)
                 }
                 // Invested row
                 HStack {
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.placeholderFill)
-                        .frame(width: 60, height: 10)
+                    ShimmerBlock(width: 60, height: 10, cornerRadius: 4)
                     Spacer()
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.placeholderFill)
-                        .frame(width: 80, height: 12)
+                    ShimmerBlock(width: 80, height: 12, cornerRadius: 4)
                 }
                 // Two stat lines (P/L and 1 day change)
                 VStack(spacing: 8) {
                     HStack {
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(Color.placeholderFill)
-                            .frame(width: 40, height: 10)
+                        ShimmerBlock(width: 40, height: 10, cornerRadius: 4)
                         Spacer()
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(Color.placeholderFill)
-                            .frame(width: 110, height: 18)
+                        ShimmerBlock(width: 110, height: 18, cornerRadius: 6)
                     }
                     HStack {
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(Color.placeholderFill)
-                            .frame(width: 80, height: 10)
+                        ShimmerBlock(width: 80, height: 10, cornerRadius: 4)
                         Spacer()
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(Color.placeholderFill)
-                            .frame(width: 110, height: 18)
+                        ShimmerBlock(width: 110, height: 18, cornerRadius: 6)
                     }
                 }
             }
             .padding(14)
-            .shimmer()
         }
         .frame(maxWidth: .infinity, minHeight: LayoutConstants.cardMinHeight, alignment: .leading)
         .elevatedShadow()

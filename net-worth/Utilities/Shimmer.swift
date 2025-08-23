@@ -35,7 +35,39 @@ struct Shimmer: ViewModifier {
 }
 
 extension View {
+    @ViewBuilder
     func shimmer(active: Bool = true) -> some View {
-        self.modifier(active ? Shimmer() : Shimmer())
+        if active { self.modifier(Shimmer()) } else { self }
+    }
+}
+
+// MARK: - Generic Shimmer Placeholders
+/// A generic shimmering block placeholder. Useful for lines, rectangles, and card elements.
+public struct ShimmerBlock: View {
+    public var width: CGFloat? = nil
+    public var height: CGFloat
+    public var cornerRadius: CGFloat = 8
+    public init(width: CGFloat? = nil, height: CGFloat, cornerRadius: CGFloat = 8) {
+        self.width = width
+        self.height = height
+        self.cornerRadius = cornerRadius
+    }
+    public var body: some View {
+        RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+            .fill(Color.placeholderFill)
+            .frame(width: width, height: height)
+            .shimmer()
+    }
+}
+
+/// A generic shimmering circle placeholder. Useful for avatars or leading icons.
+public struct ShimmerCircle: View {
+    public var diameter: CGFloat
+    public init(diameter: CGFloat) { self.diameter = diameter }
+    public var body: some View {
+        Circle()
+            .fill(Color.placeholderFill)
+            .frame(width: diameter, height: diameter)
+            .shimmer()
     }
 }

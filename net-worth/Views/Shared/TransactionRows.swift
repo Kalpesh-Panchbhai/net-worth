@@ -90,21 +90,13 @@ public func transactionPlaceholderRow() -> some View {
             .fill(Color.elevatedBackground)
         HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 6) {
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color.placeholderFill)
-                    .frame(width: 120, height: 12)
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color.placeholderFill)
-                    .frame(width: 80, height: 10)
-                    .opacity(0.85)
+                ShimmerBlock(width: 120, height: 12, cornerRadius: 4)
+                ShimmerBlock(width: 80, height: 10, cornerRadius: 4)
             }
             Spacer()
-            RoundedRectangle(cornerRadius: 4)
-                .fill(Color.placeholderFill)
-                .frame(width: 100, height: 16)
+            ShimmerBlock(width: 100, height: 16, cornerRadius: 4)
         }
         .padding(14)
-        .shimmer()
     }
     .frame(maxWidth: .infinity, minHeight: 56)
     .elevatedShadow()

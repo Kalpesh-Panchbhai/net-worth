@@ -38,7 +38,7 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
                         }
                         if !useStore && isLoading && source.isEmpty {
                             ForEach(0..<6, id: \.self) { i in
-                                NamedEntityRow<T>.placeholder().shimmer()
+                                NamedEntityRow<T>.placeholder()
                                 if i != 5 { Hairline() }
                             }
                         } else if displayedSorted.isEmpty {
@@ -289,10 +289,10 @@ private struct Hairline: View { var body: some View { Rectangle().fill(Color.sub
 private extension NamedEntityRow {
     static func placeholder() -> some View {
         HStack(spacing: 12) {
-            Circle().fill(Color.airbnbPrimary.opacity(0.12)).frame(width: 28, height: 28)
-            RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(width: 150, height: 14)
+            ShimmerCircle(diameter: 28)
+            ShimmerBlock(width: 150, height: 14, cornerRadius: 4)
             Spacer()
-            RoundedRectangle(cornerRadius: 12).fill(Color.placeholderFill).frame(width: 60, height: 20)
+            ShimmerBlock(width: 60, height: 20, cornerRadius: 12)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
@@ -302,10 +302,10 @@ private extension NamedEntityRow {
 private extension NamedEntityRow where T == IncomeType {
     static func placeholder() -> some View {
         HStack(spacing: 12) {
-            Circle().fill(Color.airbnbPrimary.opacity(0.12)).frame(width: 28, height: 28)
-            RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(width: 140, height: 14)
+            ShimmerCircle(diameter: 28)
+            ShimmerBlock(width: 140, height: 14, cornerRadius: 4)
             Spacer()
-            RoundedRectangle(cornerRadius: 12).fill(Color.placeholderFill).frame(width: 60, height: 20)
+            ShimmerBlock(width: 60, height: 20, cornerRadius: 12)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
@@ -315,10 +315,10 @@ private extension NamedEntityRow where T == IncomeType {
 private extension NamedEntityRow where T == IncomeTag {
     static func placeholder() -> some View {
         HStack(spacing: 12) {
-            Circle().fill(Color.airbnbPrimary.opacity(0.12)).frame(width: 28, height: 28)
-            RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(width: 160, height: 14)
+            ShimmerCircle(diameter: 28)
+            ShimmerBlock(width: 160, height: 14, cornerRadius: 4)
             Spacer()
-            RoundedRectangle(cornerRadius: 12).fill(Color.placeholderFill).frame(width: 60, height: 20)
+            ShimmerBlock(width: 60, height: 20, cornerRadius: 12)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)

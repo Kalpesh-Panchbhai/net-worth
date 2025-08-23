@@ -167,7 +167,7 @@ struct IncomeListView: View {
 
                             if vm.isLoading && vm.incomes.isEmpty {
                                 ForEach(0..<5, id: \.self) { _ in
-                                    IncomeRowCard.placeholder().shimmer()
+                                    IncomeRowCard.placeholder()
                                 }
                             } else if vm.sections.isEmpty {
                                 EmptyStateCard(text: "No income records yet")
@@ -678,19 +678,14 @@ extension IncomeRowCard {
     fileprivate static func placeholder() -> some View {
         HStack(alignment: .center, spacing: 12) {
             VStack(alignment: .leading, spacing: 6) {
-                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
-                    width: 120, height: 16)
-                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
-                    width: 180, height: 14)
+                ShimmerBlock(width: 120, height: 16, cornerRadius: 4)
+                ShimmerBlock(width: 180, height: 14, cornerRadius: 4)
             }
             Spacer()
             VStack(alignment: .trailing, spacing: 8) {
-                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
-                    width: 120, height: 18)  // Total
-                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
-                    width: 90, height: 14)  // Net
-                RoundedRectangle(cornerRadius: 4).fill(Color.placeholderFill).frame(
-                    width: 80, height: 14)  // Tax
+                ShimmerBlock(width: 120, height: 18, cornerRadius: 4)  // Total
+                ShimmerBlock(width: 90, height: 14, cornerRadius: 4)   // Net
+                ShimmerBlock(width: 80, height: 14, cornerRadius: 4)   // Tax
             }
         }
         .padding(16)
