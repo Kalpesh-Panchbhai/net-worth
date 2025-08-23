@@ -191,6 +191,9 @@ extension RestClient {
     func fetchWatchAccounts(watchId: Int) async throws -> [WatchAccount] {
         try await getList("watch_account/\(watchId)/watch")
     }
+    func fetchWatchAccountsByAccount(accountId: Int) async throws -> [WatchAccount] {
+        try await getList("watch_account/\(accountId)/account")
+    }
     func fetchAccountBroker(accountId: Int) async throws -> [AccountBroker] {
         try await getList("account_broker/\(accountId)")
     }

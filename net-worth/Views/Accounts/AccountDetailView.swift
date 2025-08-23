@@ -3,6 +3,7 @@ import SwiftUI
 struct AccountDetailView: View {
     let account: Account
     @AppStorage("defaultCurrencyCode") private var displayCurrency: String = "INR"
+    @EnvironmentObject private var lookup: LookupStore
     @State private var brokerHoldings: [AccountBroker] = []
     @State private var isLoadingBroker = false
     @State private var brokerError: String? = nil
@@ -10,6 +11,10 @@ struct AccountDetailView: View {
     @State private var isLoadingTx = false
     @State private var txError: String? = nil
     @State private var showCreateTx = false
+    // Watchlists containing this account
+    @State private var accountWatchlists: [Watchlist] = []
+    @State private var isLoadingWatches = false
+    @State private var watchesError: String? = nil
     // Simplified transactions UI (no filters/search/summary)
 
     var body: some View {
@@ -60,8 +65,10 @@ struct AccountDetailView: View {
                     }
                 }
 
-                // Transactions (non-broker) — simple preview + See all
+                // Transactions (non-broker) — with watchlists shown above
                 if normalizedType(account.type) != "Broker" {
+                    // Show watchlists above transactions for non-broker accounts
+                    watchlistsSection()
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Showing last 5 transactions")
                             .font(.caption)
@@ -141,6 +148,11 @@ struct AccountDetailView: View {
                         }
                     }
                 }
+
+                // In watchlists (for broker accounts, keep below holdings)
+                if normalizedType(account.type) == "Broker" {
+                    watchlistsSection()
+                }
             }
             .padding(.vertical, 16)
             .padding(.horizontal, 16)
@@ -158,6 +170,9 @@ struct AccountDetailView: View {
         .navigationDestination(for: AccountBroker.self) { holding in
             BrokerHoldingDetailView(holding: holding)
         }
+        .navigationDestination(for: Watchlist.self) { item in
+            WatchlistAccountsView(userId: account.userId, watchlist: item)
+        }
         .sheet(isPresented: $showCreateTx) {
             NavigationStack {
                 CreateTransactionView(
@@ -170,6 +185,7 @@ struct AccountDetailView: View {
         .task {
             await loadBroker()
             await loadTransactions()
+            await loadAccountWatches()
         }
     }
 
@@ -240,11 +256,69 @@ struct AccountDetailView: View {
         }
     }
 
+    @MainActor
+    private func loadAccountWatches() async {
+        if isLoadingWatches { return }
+        isLoadingWatches = true
+        watchesError = nil
+        defer { isLoadingWatches = false }
+        do {
+            let links = try await RestClient().fetchWatchAccountsByAccount(accountId: account.id)
+            let watchIds = Set(links.map { $0.watchId })
+            // Ensure watchlists are available in store
+            if lookup.watchlists.isEmpty { await lookup.loadWatchlistsIfNeeded(userId: account.userId) }
+            let lists = lookup.watchlists.filter { watchIds.contains($0.id) }
+            self.accountWatchlists = lists.sorted { a, b in
+                let aIsAll = a.name.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame
+                let bIsAll = b.name.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame
+                if aIsAll != bIsAll { return aIsAll && !bIsAll }
+                return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
+            }
+        } catch let api as APIError {
+            watchesError = api.errorDescription ?? "Failed to load watchlists"
+        } catch {
+            watchesError = error.localizedDescription
+        }
+    }
+
     private func sortedTransactions(_ arr: [AccountTransaction]) -> [AccountTransaction] {
         arr.sorted { a, b in
             let da = DateTZ.fromBackendISTStringToUserDate(a.transactionDate) ?? .distantPast
             let db = DateTZ.fromBackendISTStringToUserDate(b.transactionDate) ?? .distantPast
             return da > db // newest first
+        }
+    }
+
+    // MARK: - Watchlists section (reusable)
+    @ViewBuilder
+    private func watchlistsSection() -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("In watchlists")
+                .font(.caption).bold()
+                .foregroundColor(.secondary)
+                .padding(.horizontal, 4)
+            if isLoadingWatches && accountWatchlists.isEmpty {
+                ForEach(0..<3, id: \.self) { _ in AssetRowCard.placeholder() }
+            } else if let err = watchesError {
+                EmptyStateCard(text: err, icon: "exclamationmark.triangle", iconFont: .title3)
+            } else if accountWatchlists.isEmpty {
+                EmptyStateCard(text: "Not in any watchlist", icon: "eye.slash", iconFont: .title3)
+            } else {
+                VStack(spacing: 12) {
+                    ForEach(accountWatchlists, id: \.id) { wl in
+                        NavigationLink(value: wl) {
+                            AssetRowCard(
+                                name: wl.name,
+                                current: wl.value.currentValue,
+                                invested: wl.value.invested,
+                                previous: wl.value.previousValue,
+                                currency: displayCurrency.uppercased(),
+                                countBadge: wl.totalAccount > 0 ? wl.totalAccount : nil
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }
