@@ -261,98 +261,6 @@ struct WatchlistListView: View {
         }
     }
 }
-
-// MARK: - Summary Card
-private struct WatchSummaryCard: View {
-    let totalCurrent: Double
-    let totalInvested: Double
-    let change: Double  // current - invested
-    let changeVsPrev: Double  // current - previous
-    let changePercent: Double?
-    let currency: String
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Total value")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text(totalCurrent, format: .currency(code: currency))
-                    .font(.system(size: 34, weight: .bold))
-                    .foregroundStyle(LinearGradient.airbnbAccent)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.65)
-                    .allowsTightening(true)
-                    .monospacedDigit()
-                    .contentTransition(.numericText())
-                    .animation(.snappy(duration: 0.45), value: totalCurrent)
-            }
-            HStack(spacing: 8) {
-                Pill(
-                    title: "Invested", value: totalInvested, currency: currency, tint: .secondary,
-                    isNeutral: true)
-                Pill(
-                    title: change >= 0 ? "P/L" : "Loss", value: abs(change), currency: currency,
-                    tint: change >= 0 ? .airbnbSuccess : .red)
-                if let pct = changePercent {
-                    ChangePill(change: changeVsPrev, percent: pct)
-                }
-                Spacer(minLength: 0)
-            }
-        }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color.elevatedBackground)
-        )
-        .elevatedShadow()
-        .accessibilityElement(children: .combine)
-    }
-}
-
-private struct Pill: View {
-    let title: String
-    let value: Double
-    let currency: String
-    var tint: Color = .airbnbPrimary
-    var isNeutral: Bool = false
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(title)
-                .font(.caption)
-                .foregroundColor(.secondary)
-            Text(value, format: .currency(code: currency))
-                .font(.headline)
-                .foregroundColor(isNeutral ? .secondary : tint)
-                .contentTransition(.numericText())
-                .animation(.snappy(duration: 0.45), value: value)
-        }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background(
-            Capsule(style: .continuous)
-                .fill((isNeutral ? Color.secondary.opacity(0.08) : tint.opacity(0.10)))
-        )
-    }
-}
-
-private struct ChangePill: View {
-    let change: Double
-    let percent: Double  // -0.12 ... 0.34
-    private var isUp: Bool { change >= 0 }
-    var body: some View {
-        HStack(spacing: 6) {
-            Image(systemName: isUp ? "arrow.up.right" : "arrow.down.right")
-            Text(String(format: "%@%.2f%%", isUp ? "+" : "-", abs(percent * 100)))
-        }
-        .font(.subheadline.weight(.semibold))
-        .foregroundColor(isUp ? .airbnbSuccess : .red)
-        .padding(.vertical, 6)
-        .padding(.horizontal, 10)
-        .background(Capsule().fill((isUp ? Color.airbnbSuccess : .red).opacity(0.12)))
-    }
-}
-
 // MARK: - List
 private struct WatchlistRowsList: View {
     let items: [Watchlist]
@@ -420,27 +328,6 @@ private struct WatchlistRowCard: View {
                     Label("Delete", systemImage: "trash")
                 }
             }
-        }
-    }
-}
-
-private struct ValueLabel: View {
-    let title: String
-    let value: Double
-    let currency: String
-    var emphasize: Bool = false
-    var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(title)
-                .font(.caption2.bold())
-                .foregroundColor(.secondary)
-            Text(CurrencyShort.shortString(value, currency: currency))
-                .font(emphasize ? .headline.weight(.semibold) : .subheadline.weight(.semibold))
-                .foregroundColor(.primary)
-                .monospacedDigit()
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
-                .allowsTightening(true)
         }
     }
 }

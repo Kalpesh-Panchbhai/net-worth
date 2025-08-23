@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		7D2736832E59DDAE00F32B4C /* WatchAccountsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2736822E59DDAE00F32B4C /* WatchAccountsController.swift */; };
 		7D2736852E59DDBB00F32B4C /* WatchlistAccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2736842E59DDBB00F32B4C /* WatchlistAccountsView.swift */; };
+		7D2736872E59E92600F32B4C /* AccountsSectionedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2736862E59E92600F32B4C /* AccountsSectionedList.swift */; };
 		7D2FBCA32E51CCDD0046FE17 /* IncomeTypesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FBCA22E51CCDD0046FE17 /* IncomeTypesView.swift */; };
 		7D2FBCA72E51CEF70046FE17 /* IncomeTagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FBCA62E51CEF70046FE17 /* IncomeTagsView.swift */; };
 		7D2FBCA92E51CEFD0046FE17 /* NamedEntitiesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FBCA82E51CEFD0046FE17 /* NamedEntitiesListView.swift */; };
@@ -63,6 +64,7 @@
 /* Begin PBXFileReference section */
 		7D2736822E59DDAE00F32B4C /* WatchAccountsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAccountsController.swift; sourceTree = "<group>"; };
 		7D2736842E59DDBB00F32B4C /* WatchlistAccountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistAccountsView.swift; sourceTree = "<group>"; };
+		7D2736862E59E92600F32B4C /* AccountsSectionedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsSectionedList.swift; sourceTree = "<group>"; };
 		7D2FBCA22E51CCDD0046FE17 /* IncomeTypesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTypesView.swift; sourceTree = "<group>"; };
 		7D2FBCA62E51CEF70046FE17 /* IncomeTagsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTagsView.swift; sourceTree = "<group>"; };
 		7D2FBCA82E51CEFD0046FE17 /* NamedEntitiesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamedEntitiesListView.swift; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 		7DAA10002BE30000000000B2 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				7D2736862E59E92600F32B4C /* AccountsSectionedList.swift */,
 				7DECCEE52E58699D00225DDA /* AssetRowCard.swift */,
 				7D74B2912E52375A00E35786 /* BannerCenter.swift */,
 				7DECCEE92E58791600225DDA /* CurrencyPickerSheet.swift */,
@@ -427,6 +430,7 @@
 				7DAB01012E70000100000001 /* WatchModels.swift in Sources */,
 				7DAB01022E70000100000002 /* WatchlistController.swift in Sources */,
 				7DAB01032E70000100000003 /* WatchlistViews.swift in Sources */,
+				7D2736872E59E92600F32B4C /* AccountsSectionedList.swift in Sources */,
 				7DECCEEC2E587C5200225DDA /* StringPickerSheet.swift in Sources */,
 				7DAB01042E70000200000004 /* FloatingActionButton.swift in Sources */,
 				7DAC01112E70000300000011 /* AccountModels.swift in Sources */,
