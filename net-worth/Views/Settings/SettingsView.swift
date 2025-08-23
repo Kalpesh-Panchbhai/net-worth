@@ -1,5 +1,6 @@
 import SwiftUI
 import LocalAuthentication
+import Security
 #if canImport(GoogleSignIn)
 import GoogleSignIn
 #endif
@@ -99,6 +100,7 @@ struct AccountManagementCard: View {
     @State private var isDeleting = false
     var onLogout: () -> Void
     @AppStorage("backendUserId") private var backendUserId: Int = -1
+    @AppStorage("biometricLockEnabled") private var biometricEnabled: Bool = false
     @EnvironmentObject private var banners: BannerCenter
     @EnvironmentObject private var lookupStore: LookupStore
     var body: some View {
@@ -192,6 +194,13 @@ struct AccountManagementCard: View {
     @MainActor
     private func deleteAccount() async {
         guard !isDeleting else { return }
+        // 1) Require Face ID/biometrics with device passcode fallback
+        let authenticated = await authenticateForAccountDeletion()
+        guard authenticated else {
+            banners.showTemporary(AppBanner(icon: "exclamationmark.triangle.fill", title: "Authentication required", message: "Face ID or device passcode is required to delete your account.", style: .warning))
+            return
+        }
+
         isDeleting = true
         defer { isDeleting = false }
         do {
@@ -217,6 +226,81 @@ struct AccountManagementCard: View {
             let msg = (error as NSError).localizedDescription
             banners.showTemporary(AppBanner(icon: "exclamationmark.triangle.fill", title: "Delete failed", message: msg, style: .warning))
         }
+    }
+
+    /// Authenticate the user according to the app's security setting:
+    /// - If Face ID is enabled and available: require Face ID first, then require device passcode.
+    /// - If Face ID is disabled or unavailable: require device passcode only.
+    private func authenticateForAccountDeletion() async -> Bool {
+        let bioContext = LAContext()
+        bioContext.localizedFallbackTitle = "Use Passcode"
+        var bioError: NSError?
+
+        let hasBiometrics = bioContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &bioError)
+
+        if biometricEnabled && hasBiometrics {
+            // Step 1: Biometric authentication (Face ID/Touch ID)
+            let bioReason = "Confirm with Face ID to continue."
+            let bioSuccess = await withCheckedContinuation { continuation in
+                bioContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: bioReason) { success, _ in
+                    continuation.resume(returning: success)
+                }
+            }
+            guard bioSuccess else { return false }
+
+            // Step 2: Device passcode only
+            return await authenticateDevicePasscode(reason: "Enter device passcode to confirm deletion.")
+        } else {
+            // No biometrics enabled/available: require passcode only
+            return await authenticateDevicePasscode(reason: "Enter device passcode to confirm deletion.")
+        }
+    }
+
+    /// Presents a device passcode-only prompt using a temporary Keychain item protected
+    /// with SecAccessControl(.devicePasscode). Returns true if the user successfully enters passcode.
+    private func authenticateDevicePasscode(reason: String) async -> Bool {
+        // Create an item requiring device passcode
+        let tag = "networth.passcode.probe." + UUID().uuidString
+        var sacError: Unmanaged<CFError>?
+        guard let access = SecAccessControlCreateWithFlags(nil, kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly, .devicePasscode, &sacError) else {
+            return false
+        }
+        let addQuery: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: tag,
+            kSecAttrAccount as String: "auth",
+            kSecAttrAccessControl as String: access,
+            kSecValueData as String: Data("auth".utf8)
+        ]
+        // Add the item (ignore duplicates since tag is unique)
+        SecItemAdd(addQuery as CFDictionary, nil)
+
+        // Trigger passcode UI by reading it back with an operation prompt
+        let laCtx = LAContext()
+        laCtx.localizedFallbackTitle = ""
+        laCtx.localizedReason = reason
+        // Disable any possible authentication reuse window to force a fresh prompt
+        laCtx.touchIDAuthenticationAllowableReuseDuration = 0
+        let copyQuery: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: tag,
+            kSecAttrAccount as String: "auth",
+            kSecReturnData as String: true,
+            kSecUseAuthenticationContext as String: laCtx,
+            kSecMatchLimit as String: kSecMatchLimitOne
+        ]
+
+        var result: CFTypeRef?
+        let status = SecItemCopyMatching(copyQuery as CFDictionary, &result)
+
+        // Cleanup the temporary item
+        let deleteQuery: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: tag
+        ]
+        SecItemDelete(deleteQuery as CFDictionary)
+
+        return status == errSecSuccess
     }
 }
 
