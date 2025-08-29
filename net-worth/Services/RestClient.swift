@@ -4,8 +4,8 @@ import Foundation
 struct RestClient {
     let baseURL: URL
     init(
-        // baseURL: URL = URL(string: "https://lz2oz2v0ul.execute-api.ap-south-1.amazonaws.com/prod")!
-        baseURL: URL = URL(string: "http://localhost:8080")!
+        baseURL: URL = URL(string: "https://lz2oz2v0ul.execute-api.ap-south-1.amazonaws.com/prod")!
+        // baseURL: URL = URL(string: "http://localhost:8080")!
     ) {
         self.baseURL = baseURL
     }
@@ -54,11 +54,6 @@ struct RestClient {
             let (data, response) = try await URLSession.shared.data(for: request)
             guard let http = response as? HTTPURLResponse else { throw APIError.badStatus(-1) }
             guard (200...299).contains(http.statusCode) else {
-                // Try to decode generic error payload { code, message }
-                struct ServerErrorPayload: Decodable { let code: String?; let message: String? }
-                if let payload = try? JSONDecoder().decode(ServerErrorPayload.self, from: data) {
-                    throw APIError.server(status: http.statusCode, code: payload.code, message: payload.message)
-                }
                 throw APIError.badStatus(http.statusCode)
             }
             return (data, http)
@@ -176,25 +171,8 @@ private struct MinimalIdResponse: Decodable {
     let id: Int?
 }
 
-// Generic API response envelope used by several endpoints: { success: Bool, data: T }
-private struct APIEnvelope<T: Decodable>: Decodable {
-    let success: Bool
-    let data: T
-}
-
 // MARK: - Backward-compatible conveniences for current entities
 extension RestClient {
-    // MARK: - Envelope helpers (success + data)
-    func getEnvelope<T: Decodable>(_ path: String) async throws -> T {
-        let envelope: APIEnvelope<T> = try await get(path)
-        guard envelope.success else { throw APIError.decoding(NSError(domain: "Envelope", code: -1, userInfo: [NSLocalizedDescriptionKey: "API indicated failure"])) }
-        return envelope.data
-    }
-    func postEnvelope<Body: Encodable, T: Decodable>(_ path: String, body: Body) async throws -> T {
-        let envelope: APIEnvelope<T> = try await post(path, body: body)
-        guard envelope.success else { throw APIError.decoding(NSError(domain: "Envelope", code: -1, userInfo: [NSLocalizedDescriptionKey: "API indicated failure"])) }
-        return envelope.data
-    }
     func fetchIncomes(userId: Int) async throws -> [Income] {
         try await getList("income/\(userId)")
     }
@@ -337,7 +315,7 @@ extension RestClient {
     }
     /// Permanently delete the user and all server-side data
     func deleteUser(id: Int) async throws {
-        try await delete("users/\(id)")
+        try await delete("user/\(id)")
     }
     func setDefault(incomeType: IncomeType) async throws {
         let payload = IncomeType(
@@ -425,12 +403,12 @@ extension RestClient {
         }
     }
 
-    // Register external user id with backend (Firebase UID)
+    // Register Firebase user UID with backend
     func registerFirebaseUser(uid: String) async throws -> Int {
-        struct Payload: Codable { let externalUserId: String }
-        struct UserData: Decodable { let id: Int; let externalUserId: String }
-        let data: UserData = try await postEnvelope("users", body: Payload(externalUserId: uid))
-        return data.id
+        struct Payload: Codable { let userId: String }
+        let body = Payload(userId: uid)
+        let response: MinimalIdResponse = try await post("user", body: body)
+        return response.id ?? -1
     }
 }
 

@@ -3,7 +3,6 @@ import Foundation
 enum APIError: LocalizedError {
     case invalidURL
     case badStatus(Int)
-    case server(status: Int, code: String?, message: String?)
     case decoding(Error)
     case transport(Error)
     
@@ -16,14 +15,6 @@ enum APIError: LocalizedError {
             if code == 404 { return "Requested resource was not found (404)." }
             if code == 401 { return "You’re not authorized to perform this action (401)." }
             return "Server responded with status: \(code)"
-        case .server(let status, let code, let message):
-            // Prefer server-provided message, fall back to status summary
-            if let message, !message.isEmpty { return message }
-            if (500...599).contains(status) { return "The server is having a problem (\(status)). Please try again." }
-            if status == 404 { return "Requested resource was not found (404)." }
-            if status == 401 { return "You’re not authorized to perform this action (401)." }
-            if let code, !code.isEmpty { return "Server error (\(status)): \(code)" }
-            return "Server responded with status: \(status)"
         case .decoding:
             return "We couldn’t read the server response. Please try again."
         case .transport(let err):
