@@ -3,24 +3,24 @@ import SwiftUI
 
 @MainActor
 final class LookupStore: ObservableObject {
-    @Published private(set) var incomeTypes: [IncomeType] = []
+    @Published private(set) var incomeSources: [IncomeSource] = []
     @Published private(set) var incomeTags: [IncomeTag] = []
     @Published private(set) var accounts: [Account] = []
     @Published private(set) var watchlists: [Watchlist] = []
     @Published private(set) var incomes: [Income] = []
 
-    private var typesLoaded = false
+    private var sourcesLoaded = false
     private var tagsLoaded = false
     private var accountsLoaded = false
     private var watchlistsLoaded = false
     private var incomesLoaded = false
     // In-flight guards for initial loads (prevent duplicate concurrent GETs)
-    private var typesLoading = false
+    private var sourcesLoading = false
     private var tagsLoading = false
     private var accountsLoading = false
     private var watchlistsLoading = false
     private var incomesLoading = false
-    private var typesRefreshing = false
+    private var sourcesRefreshing = false
     private var tagsRefreshing = false
     private var accountsRefreshing = false
     private var watchlistsRefreshing = false
@@ -28,7 +28,7 @@ final class LookupStore: ObservableObject {
     private let client = RestClient()
 
     func loadIfNeeded(userId: Int) async {
-        async let a: Void = loadIncomeTypesIfNeeded(userId: userId)
+        async let a: Void = loadIncomeSourcesIfNeeded(userId: userId)
         async let b: Void = loadIncomeTagsIfNeeded(userId: userId)
         async let c: Void = loadAccountsIfNeeded(userId: userId)
         async let d: Void = loadWatchlistsIfNeeded(userId: userId)
@@ -36,14 +36,14 @@ final class LookupStore: ObservableObject {
         _ = await (a, b, c, d, e)
     }
 
-    func loadIncomeTypesIfNeeded(userId: Int) async {
-        if typesLoaded || typesLoading { return }
-        typesLoading = true
-        defer { typesLoading = false }
+    func loadIncomeSourcesIfNeeded(userId: Int) async {
+        if sourcesLoaded || sourcesLoading { return }
+        sourcesLoading = true
+        defer { sourcesLoading = false }
         do {
-            let list = try await client.fetchIncomeTypes(userId: userId)
-            self.incomeTypes = list
-            self.typesLoaded = true
+            let list = try await client.fetchIncomeSources(userId: userId)
+            self.incomeSources = list
+            self.sourcesLoaded = true
         } catch {
             // keep empty; caller can retry
         }
@@ -110,14 +110,14 @@ final class LookupStore: ObservableObject {
     }
 
     // Explicit refreshers (allowed after mutations)
-    func refreshIncomeTypes(userId: Int) async {
-        if typesRefreshing { return }
-        typesRefreshing = true
-        defer { typesRefreshing = false }
+    func refreshIncomeSources(userId: Int) async {
+        if sourcesRefreshing { return }
+        sourcesRefreshing = true
+        defer { sourcesRefreshing = false }
         do {
-            let list = try await client.fetchIncomeTypes(userId: userId)
-            self.incomeTypes = list
-            self.typesLoaded = true
+            let list = try await client.fetchIncomeSources(userId: userId)
+            self.incomeSources = list
+            self.sourcesLoaded = true
         } catch {
             // no-op
         }
@@ -186,24 +186,24 @@ final class LookupStore: ObservableObject {
     // Wipe all in-memory data and flags (used on logout)
     func reset() {
         // Clear data
-        incomeTypes = []
+        incomeSources = []
         incomeTags = []
         accounts = []
         watchlists = []
         incomes = []
         // Reset loaded flags
-        typesLoaded = false
+        sourcesLoaded = false
         tagsLoaded = false
         accountsLoaded = false
         watchlistsLoaded = false
         incomesLoaded = false
         // Cancel loading/refreshing guards
-        typesLoading = false
+        sourcesLoading = false
         tagsLoading = false
         accountsLoading = false
         watchlistsLoading = false
         incomesLoading = false
-        typesRefreshing = false
+        sourcesRefreshing = false
         tagsRefreshing = false
         accountsRefreshing = false
         watchlistsRefreshing = false

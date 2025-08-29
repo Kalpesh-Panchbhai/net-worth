@@ -1,6 +1,6 @@
 import Foundation
 
-struct IncomeType: Codable, Identifiable, Hashable {
+struct IncomeSource: Codable, Identifiable, Hashable {
     let id: Int
     let userId: Int
     let name: String
@@ -15,7 +15,7 @@ protocol NamedEntity: Identifiable, Hashable, Codable {
     var isDefault: Bool { get }
 }
 
-extension IncomeType: NamedEntity {}
+extension IncomeSource: NamedEntity {}
 
 struct IncomeTag: Codable, Identifiable, Hashable {
     let id: Int
@@ -29,29 +29,33 @@ extension IncomeTag: NamedEntity {}
 struct Income: Codable, Identifiable, Hashable {
     let id: Int
     let userId: Int
-    let amount: Double
+    let incomeSourceId: Int
+    let incomeTagId: Int
+    let netAmount: Double
     let taxPaid: Double
-    let creditedDate: Date
     let currency: String
-    let incomeType: IncomeType
-    let incomeTag: IncomeTag
+    let creditedDate: Date
     
     enum CodingKeys: String, CodingKey {
-        case id, userId, amount, taxPaid, creditedDate, currency, incomeType, incomeTag
+        case id, userId, incomeSourceId, incomeTagId, netAmount, taxPaid, currency, creditedDate
     }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
         userId = try container.decode(Int.self, forKey: .userId)
+        incomeSourceId = try container.decode(Int.self, forKey: .incomeSourceId)
+        incomeTagId = try container.decode(Int.self, forKey: .incomeTagId)
+        
         // Accept Int or Double for amounts
-        if let amt = try? container.decode(Double.self, forKey: .amount) {
-            amount = amt
-        } else if let amtInt = try? container.decode(Int.self, forKey: .amount) {
-            amount = Double(amtInt)
+        if let amt = try? container.decode(Double.self, forKey: .netAmount) {
+            netAmount = amt
+        } else if let amtInt = try? container.decode(Int.self, forKey: .netAmount) {
+            netAmount = Double(amtInt)
         } else {
-            amount = 0
+            netAmount = 0
         }
+        
         if let tax = try? container.decode(Double.self, forKey: .taxPaid) {
             taxPaid = tax
         } else if let taxInt = try? container.decode(Int.self, forKey: .taxPaid) {
@@ -59,26 +63,59 @@ struct Income: Codable, Identifiable, Hashable {
         } else {
             taxPaid = 0
         }
+        
         let dateString = try container.decode(String.self, forKey: .creditedDate)
-        // Parse backend IST date string into a Date. Display/formatting will reflect user's timezone.
+        // Parse backend date string (YYYY-MM-DD format) into a Date
         guard let parsed = DateFormatter.incomeBackend.date(from: dateString) else {
             throw DecodingError.dataCorruptedError(forKey: .creditedDate, in: container, debugDescription: "Invalid date format: \(dateString)")
         }
         creditedDate = parsed
         currency = try container.decode(String.self, forKey: .currency)
-        incomeType = try container.decode(IncomeType.self, forKey: .incomeType)
-        incomeTag = try container.decode(IncomeTag.self, forKey: .incomeTag)
     }
 
-    // Convenience initializer used when synthesizing an Income locally (e.g., after POST returns only an id)
-    init(id: Int, userId: Int, amount: Double, taxPaid: Double, creditedDate: Date, currency: String, incomeType: IncomeType, incomeTag: IncomeTag) {
+    // Convenience initializer
+    init(id: Int, userId: Int, incomeSourceId: Int, incomeTagId: Int, netAmount: Double, taxPaid: Double, currency: String, creditedDate: Date) {
         self.id = id
         self.userId = userId
-        self.amount = amount
+        self.incomeSourceId = incomeSourceId
+        self.incomeTagId = incomeTagId
+        self.netAmount = netAmount
         self.taxPaid = taxPaid
-        self.creditedDate = creditedDate
         self.currency = currency
-        self.incomeType = incomeType
-        self.incomeTag = incomeTag
+        self.creditedDate = creditedDate
     }
+}
+
+// MARK: - Request Models
+struct CreateIncomeRequest: Codable {
+    let userId: Int
+    let incomeSourceId: Int
+    let incomeTagId: Int
+    let netAmount: Double
+    let taxPaid: Double?
+    let currency: String
+    let creditedDate: String // ISO date format
+}
+
+struct CreateIncomeSourceRequest: Codable {
+    let userId: Int
+    let name: String
+    let isDefault: Bool?
+}
+
+struct CreateIncomeTagRequest: Codable {
+    let userId: Int
+    let name: String
+    let isDefault: Bool?
+}
+
+// MARK: - API Response Models
+struct ApiResponse<T: Codable>: Codable {
+    let success: Bool
+    let data: T
+}
+
+struct ApiError: Codable {
+    let code: String
+    let message: String
 }

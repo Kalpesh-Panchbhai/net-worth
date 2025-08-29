@@ -13,7 +13,8 @@ enum APIError: LocalizedError {
         case .badStatus(let code):
             if (500...599).contains(code) { return "The server is having a problem (\(code)). Please try again." }
             if code == 404 { return "Requested resource was not found (404)." }
-            if code == 401 { return "You’re not authorized to perform this action (401)." }
+            if code == 401 { return "You're not authorized to perform this action (401)." }
+            if code == 409 { return "This name already exists. Please choose a different name." }
             return "Server responded with status: \(code)"
         case .decoding:
             return "We couldn’t read the server response. Please try again."

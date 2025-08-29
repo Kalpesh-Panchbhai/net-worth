@@ -102,10 +102,14 @@ final class IncomeController: ObservableObject {
     }
     
     var uniqueTypes: [String] {
-        Array(Set(incomes.map { $0.incomeType.name })).sorted()
+        guard let store = store else { return [] }
+        let sourceIds = Set(incomes.map { $0.incomeSourceId })
+        return store.incomeSources.filter { sourceIds.contains($0.id) }.map { $0.name }.sorted()
     }
     var uniqueTags: [String] {
-        Array(Set(incomes.map { $0.incomeTag.name })).sorted()
+        guard let store = store else { return [] }
+        let tagIds = Set(incomes.map { $0.incomeTagId })
+        return store.incomeTags.filter { tagIds.contains($0.id) }.map { $0.name }.sorted()
     }
     var availableYears: [Int] {
         let years = incomes.map { Calendar.current.component(.year, from: $0.creditedDate) }
@@ -130,11 +134,16 @@ final class IncomeController: ObservableObject {
     }
     
     var filtered: [Income] {
-        incomes.filter { income in
+        guard let store = store else { return incomes }
+        return incomes.filter { income in
             // Source filter
-            (selectedTypes.isEmpty || selectedTypes.contains(income.incomeType.name)) &&
+            let sourceName = store.incomeSources.first { $0.id == income.incomeSourceId }?.name ?? ""
+            let sourceMatch = selectedTypes.isEmpty || selectedTypes.contains(sourceName)
             // Tag filter
-            (selectedTags.isEmpty || selectedTags.contains(income.incomeTag.name)) &&
+            let tagName = store.incomeTags.first { $0.id == income.incomeTagId }?.name ?? ""
+            let tagMatch = selectedTags.isEmpty || selectedTags.contains(tagName)
+            
+            return sourceMatch && tagMatch &&
             // Financial Year filter
             {
                 if selectedFYs.isEmpty { return true }
@@ -171,7 +180,10 @@ final class IncomeController: ObservableObject {
 
         case .tag:
             // Group by income tag name
-            let grouped = Dictionary(grouping: filtered) { $0.incomeTag.name }
+            guard let store = store else { return [] }
+            let grouped = Dictionary(grouping: filtered) { income in
+                store.incomeTags.first { $0.id == income.incomeTagId }?.name ?? "Unknown"
+            }
             let keys = grouped.keys.sorted(by: <)
             return keys.map { tag in
                 let items = (grouped[tag] ?? []).sorted { $0.creditedDate > $1.creditedDate }
@@ -179,8 +191,11 @@ final class IncomeController: ObservableObject {
             }
 
         case .source:
-            // Group by income type/source name
-            let grouped = Dictionary(grouping: filtered) { $0.incomeType.name }
+            // Group by income source name
+            guard let store = store else { return [] }
+            let grouped = Dictionary(grouping: filtered) { income in
+                store.incomeSources.first { $0.id == income.incomeSourceId }?.name ?? "Unknown"
+            }
             let keys = grouped.keys.sorted(by: <)
             return keys.map { source in
                 let items = (grouped[source] ?? []).sorted { $0.creditedDate > $1.creditedDate }
@@ -215,17 +230,17 @@ final class IncomeController: ObservableObject {
         }
     }
     
-    // Totals per new semantics: Total = amount + taxPaid, Net = amount, Tax = taxPaid
-    var totalAll: Double { incomes.reduce(0) { $0 + $1.amount + $1.taxPaid } }
+    // Totals per new semantics: Total = netAmount + taxPaid, Net = netAmount, Tax = taxPaid
+    var totalAll: Double { incomes.reduce(0) { $0 + $1.netAmount + $1.taxPaid } }
     var totalTaxPaid: Double { incomes.reduce(0) { $0 + $1.taxPaid } }
-    var totalNet: Double { incomes.reduce(0) { $0 + $1.amount } }
+    var totalNet: Double { incomes.reduce(0) { $0 + $1.netAmount } }
     // Filtered totals for summary when filters are applied
-    var filteredTotalAll: Double { filtered.reduce(0) { $0 + $1.amount + $1.taxPaid } }
+    var filteredTotalAll: Double { filtered.reduce(0) { $0 + $1.netAmount + $1.taxPaid } }
     var filteredTotalTax: Double { filtered.reduce(0) { $0 + $1.taxPaid } }
-    var filteredTotalNet: Double { filtered.reduce(0) { $0 + $1.amount } }
+    var filteredTotalNet: Double { filtered.reduce(0) { $0 + $1.netAmount } }
     var totalThisMonth: Double {
         guard let start = calendar.date(from: calendar.dateComponents([.year, .month], from: Date())) else { return 0 }
-        return incomes.filter { $0.creditedDate >= start }.reduce(0) { $0 + $1.amount + $1.taxPaid }
+        return incomes.filter { $0.creditedDate >= start }.reduce(0) { $0 + $1.netAmount + $1.taxPaid }
     }
     var avgLast3Months: Double {
         let now = Date()
@@ -233,7 +248,7 @@ final class IncomeController: ObservableObject {
         let starts = months.compactMap { calendar.date(from: calendar.dateComponents([.year, .month], from: $0)) }
         let monthSums: [Double] = starts.map { start in
             let end = calendar.date(byAdding: DateComponents(month: 1, day: 0), to: start) ?? start
-            let sum = incomes.filter { $0.creditedDate >= start && $0.creditedDate < end }.reduce(0) { $0 + $1.amount + $1.taxPaid }
+            let sum = incomes.filter { $0.creditedDate >= start && $0.creditedDate < end }.reduce(0) { $0 + $1.netAmount + $1.taxPaid }
             return sum
         }
         guard !monthSums.isEmpty else { return 0 }
@@ -247,7 +262,7 @@ final class IncomeController: ObservableObject {
             let start = calendar.date(byAdding: .month, value: -offset, to: startOfCurrent) ?? Date()
             let end = calendar.date(byAdding: .month, value: 1, to: start) ?? start
             return incomes.filter { $0.creditedDate >= start && $0.creditedDate < end }
-                .reduce(0) { $0 + $1.amount + $1.taxPaid }
+                .reduce(0) { $0 + $1.netAmount + $1.taxPaid }
         }
     }
     

@@ -644,6 +644,7 @@ private struct SectionHeader: View {
 private struct IncomeRowCard: View {
     let income: Income
     let currency: String
+    @EnvironmentObject private var lookup: LookupStore
 
     var body: some View {
         Button {
@@ -651,12 +652,12 @@ private struct IncomeRowCard: View {
         } label: {
             HStack(alignment: .center, spacing: 12) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(income.incomeTag.name)
+                    Text(tagName)
                         .font(.headline.weight(.semibold))
                         .foregroundColor(.primary)
                         .lineLimit(1)
                     Text(
-                        "\(income.incomeType.name) • \(DateFormatter.dayMonYear.string(from: income.creditedDate))"
+                        "\(sourceName) • \(DateFormatter.dayMonYear.string(from: income.creditedDate))"
                     )
                     .font(.footnote)
                     .foregroundColor(.secondary)
@@ -667,7 +668,7 @@ private struct IncomeRowCard: View {
                     VStack(alignment: .trailing, spacing: 8) {
                         HStack(spacing: 8) {
                             Text("Total").font(.caption2.bold()).foregroundColor(.secondary)
-                            Text(income.amount + income.taxPaid, format: .currency(code: currency))
+                            Text(income.netAmount + income.taxPaid, format: .currency(code: currency))
                                 .font(.headline.weight(.semibold))
                                 .foregroundColor(.primary)
                                 .monospacedDigit()
@@ -678,7 +679,7 @@ private struct IncomeRowCard: View {
                         VStack(alignment: .trailing, spacing: 6) {
                             HStack(spacing: 6) {
                                 Text("Net").font(.caption2.bold())
-                                Text(income.amount, format: .currency(code: currency))
+                                Text(income.netAmount, format: .currency(code: currency))
                                     .font(.subheadline.weight(.semibold))
                                     .monospacedDigit()
                                     .lineLimit(1)
@@ -722,6 +723,14 @@ private struct IncomeRowCard: View {
         .buttonStyle(PressableButtonStyle())
         .transition(.moveAndFade)
     }
+    
+    private var sourceName: String {
+        lookup.incomeSources.first { $0.id == income.incomeSourceId }?.name ?? "Unknown Source"
+    }
+    
+    private var tagName: String {
+        lookup.incomeTags.first { $0.id == income.incomeTagId }?.name ?? "Unknown Tag"
+    }
 }
 
 extension IncomeRowCard {
@@ -760,7 +769,7 @@ struct CreateIncomeView: View {
     @State private var taxText: String = ""
     @State private var creditedDate: Date = Date()
     @State private var currencyCode: String = "INR"
-    @State private var selectedType: IncomeType? = nil
+    @State private var selectedSource: IncomeSource? = nil
     @State private var selectedTag: IncomeTag? = nil
     @State private var saving: Bool = false
     @State private var showCurrencyPicker: Bool = false
@@ -789,7 +798,7 @@ struct CreateIncomeView: View {
     private var isValid: Bool {
         guard let amount = amount, amount >= 0 else { return false }
         guard let tax = tax, tax >= 0 else { return false }
-        guard selectedType != nil, selectedTag != nil else { return false }
+        guard selectedSource != nil, selectedTag != nil else { return false }
         return true
     }
     private var totalAll: Double { (amount ?? 0) + (tax ?? 0) }
@@ -909,7 +918,7 @@ struct CreateIncomeView: View {
                         } label: {
                             SettingsCell(
                                 icon: "creditcard", title: "Source",
-                                subtitle: selectedType?.name ?? "Not set"
+                                subtitle: selectedSource?.name ?? "Not set"
                             ) {
                                 Image(systemName: "chevron.right")
                                     .font(.footnote.weight(.semibold))
@@ -960,7 +969,7 @@ struct CreateIncomeView: View {
         .toolbarBackground(.visible, for: .navigationBar)
         .onAppear {
             Task {
-                await lookup.loadIncomeTypesIfNeeded(userId: userId)
+                await lookup.loadIncomeSourcesIfNeeded(userId: userId)
                 await lookup.loadIncomeTagsIfNeeded(userId: userId)
                 bootstrapDefaults()
             }
@@ -978,9 +987,9 @@ struct CreateIncomeView: View {
             .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $showTypePicker) {
-            NamedEntityPickerSheet<IncomeType>(
-                title: "Select source", items: lookup.incomeTypes, icon: "creditcard",
-                selected: $selectedType
+            NamedEntityPickerSheet<IncomeSource>(
+                title: "Select source", items: lookup.incomeSources, icon: "creditcard",
+                selected: $selectedSource
             )
         }
         .sheet(isPresented: $showTagPicker) {
@@ -993,18 +1002,18 @@ struct CreateIncomeView: View {
 
     private func bootstrapDefaults() {
         if let ex = existing {
-            amountText = String(format: "%.2f", ex.amount)
+            amountText = String(format: "%.2f", ex.netAmount)
             taxText = String(format: "%.2f", ex.taxPaid)
             creditedDate = ex.creditedDate
             currencyCode = ex.currency.uppercased()
-            selectedType = ex.incomeType
-            selectedTag = ex.incomeTag
+            selectedSource = lookup.incomeSources.first { $0.id == ex.incomeSourceId }
+            selectedTag = lookup.incomeTags.first { $0.id == ex.incomeTagId }
             return
         }
         currencyCode = defaultCurrencyCode.uppercased()
-        if selectedType == nil {
-            selectedType =
-                lookup.incomeTypes.first(where: { $0.isDefault }) ?? lookup.incomeTypes.first
+        if selectedSource == nil {
+            selectedSource =
+                lookup.incomeSources.first(where: { $0.isDefault }) ?? lookup.incomeSources.first
         }
         if selectedTag == nil {
             selectedTag =
@@ -1013,31 +1022,30 @@ struct CreateIncomeView: View {
     }
 
     private func save() async {
-        guard isValid, let amount = amount, let tax = tax, let type = selectedType,
+        guard isValid, let amount = amount, let tax = tax, let source = selectedSource,
             let tag = selectedTag
         else { return }
         await MainActor.run { saving = true }
         do {
             if let ex = existing {
-                try await client.updateIncome(
+                _ = try await client.updateIncome(
                     id: ex.id,
-                    userId: userId,
-                    amount: amount,
+                    incomeSourceId: source.id,
+                    incomeTagId: tag.id,
+                    netAmount: amount,
                     taxPaid: tax,
                     creditedDate: creditedDate,
-                    currency: currencyCode,
-                    incomeType: type,
-                    incomeTag: tag
+                    currency: currencyCode
                 )
             } else {
                 _ = try await client.createIncome(
                     userId: userId,
-                    amount: amount,
+                    incomeSourceId: source.id,
+                    incomeTagId: tag.id,
+                    netAmount: amount,
                     taxPaid: tax,
                     creditedDate: creditedDate,
-                    currency: currencyCode,
-                    incomeType: type,
-                    incomeTag: tag
+                    currency: currencyCode
                 )
             }
             Haptics.success()

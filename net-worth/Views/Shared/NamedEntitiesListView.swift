@@ -1,6 +1,6 @@
 import SwiftUI
 
-// Generic list for any NamedEntity (e.g., IncomeType, IncomeTag)
+// Generic list for any NamedEntity (e.g., IncomeSource, IncomeTag)
 struct NamedEntitiesListView<T: NamedEntity>: View {
     let title: String
     let userId: Int
@@ -140,7 +140,13 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
         .fabOverlay(accessibilityLabel: "Add", isVisible: create != nil) { isShowingCreate = true }
         .onChange(of: errorMessage) { _, newValue in
             guard let message = newValue, !message.isEmpty else { return }
-            banners.showError(message: message, retryTitle: "Retry", retry: { Task { await load() } })
+            // Don't show retry for duplicate errors (409) since retrying won't help
+            let isDuplicateError = message.contains("already exists") || message.contains("duplicate") || message.contains("choose a different name")
+            if isDuplicateError {
+                banners.showError(message: message)
+            } else {
+                banners.showError(message: message, retryTitle: "Retry", retry: { Task { await load() } })
+            }
         }
     }
 
@@ -232,13 +238,13 @@ struct NamedEntitiesListView<T: NamedEntity>: View {
 
 private extension NamedEntitiesListView {
     var storeItems: [T] {
-        if T.self == IncomeType.self { return (lookup.incomeTypes as? [T]) ?? [] }
+        if T.self == IncomeSource.self { return (lookup.incomeSources as? [T]) ?? [] }
         if T.self == IncomeTag.self { return (lookup.incomeTags as? [T]) ?? [] }
         return []
     }
     func refreshStore() async {
-        if T.self == IncomeType.self {
-            await lookup.refreshIncomeTypes(userId: userId)
+        if T.self == IncomeSource.self {
+            await lookup.refreshIncomeSources(userId: userId)
         } else if T.self == IncomeTag.self {
             await lookup.refreshIncomeTags(userId: userId)
         }
@@ -299,7 +305,7 @@ private extension NamedEntityRow {
     }
 }
 
-private extension NamedEntityRow where T == IncomeType {
+private extension NamedEntityRow where T == IncomeSource {
     static func placeholder() -> some View {
         HStack(spacing: 12) {
             ShimmerCircle(diameter: 28)

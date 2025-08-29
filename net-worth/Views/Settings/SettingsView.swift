@@ -405,7 +405,7 @@ struct PreferencesCard: View {
                 NavigationLink { IncomeTypesView(userId: userId) } label: {
                     SettingsCell(
                         title: "Income sources",
-                        subtitle: lookup.incomeTypes.first(where: { $0.isDefault })?.name ?? "Not set",
+                        subtitle: lookup.incomeSources.first(where: { $0.isDefault })?.name ?? "Not set",
                         leading: {
                             ZStack {
                                 Circle().fill(Color.airbnbPrimary.opacity(0.12))

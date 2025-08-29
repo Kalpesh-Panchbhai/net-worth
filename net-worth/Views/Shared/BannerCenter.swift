@@ -40,8 +40,24 @@ public extension BannerCenter {
         // Only treat as offline when the message explicitly indicates offline,
         // not for generic transport errors, timeouts, or connection lost.
         let isOffline = message.localizedCaseInsensitiveContains("offline") || message.localizedCaseInsensitiveContains("no internet")
-        let title = isOffline ? "No internet connection" : "Something went wrong"
-        let subtitle = isOffline ? "You're offline or the connection was lost." : nil
+        
+        // Use specific error messages for known cases, fallback to generic for others
+        let title: String
+        let subtitle: String?
+        
+        if isOffline {
+            title = "No internet connection"
+            subtitle = "You're offline or the connection was lost."
+        } else if message.contains("already exists") || message.contains("duplicate") || message.contains("choose a different name") {
+            // For duplicate/409 errors, use the specific message as title
+            title = message
+            subtitle = nil
+        } else {
+            // Generic fallback for other errors
+            title = "Something went wrong"
+            subtitle = message.isEmpty ? nil : message
+        }
+        
         show(
             AppBanner(
                 icon: isOffline ? "wifi.exclamationmark" : "exclamationmark.triangle.fill",

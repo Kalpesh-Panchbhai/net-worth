@@ -114,6 +114,16 @@ struct RestClient {
     func patch<Body: Encodable>(_ path: String, body: Body) async throws {
         _ = try await perform(method: "PATCH", path: path, body: body)
     }
+    
+    func patch<Body: Encodable, Response: Decodable>(_ path: String, body: Body) async throws -> Response {
+        let (data, _) = try await perform(method: "PATCH", path: path, body: body)
+        if dataIsBlank(data) {
+            throw APIError.decoding(NSError(domain: "EmptyBody", code: -1))
+        }
+        do { return try JSONDecoder().decode(Response.self, from: data) } catch {
+            throw APIError.decoding(error)
+        }
+    }
 
     func delete(_ path: String) async throws {
         _ = try await perform(method: "DELETE", path: path)
@@ -122,39 +132,38 @@ struct RestClient {
     // Update an income record
     func updateIncome(
         id: Int,
-        userId: Int,
-        amount: Double,
-        taxPaid: Double,
-        creditedDate: Date,
-        currency: String,
-        incomeType: IncomeType,
-        incomeTag: IncomeTag
-    ) async throws {
-        // Always send backend datetime as IST midnight for the user's selected calendar date
-        let dateString = DateTZ.toBackendISTString(fromUserDate: creditedDate)
-
-        struct Payload: Codable {
-            let id: Int
-            let userId: Int
-            let amount: Double
-            let taxPaid: Double
-            let creditedDate: String
-            let currency: String
-            let incomeType: IncomeType
-            let incomeTag: IncomeTag
+        incomeSourceId: Int?,
+        incomeTagId: Int?,
+        netAmount: Double?,
+        taxPaid: Double?,
+        creditedDate: Date?,
+        currency: String?
+    ) async throws -> Income {
+        struct UpdatePayload: Codable {
+            let incomeSourceId: Int?
+            let incomeTagId: Int?
+            let netAmount: Double?
+            let taxPaid: Double?
+            let currency: String?
+            let creditedDate: String?
         }
-        let body = Payload(
-            id: id,
-            userId: userId,
-            amount: amount,
+        
+        let dateString = creditedDate.map { 
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            return formatter.string(from: $0)
+        }
+        let body = UpdatePayload(
+            incomeSourceId: incomeSourceId,
+            incomeTagId: incomeTagId,
+            netAmount: netAmount,
             taxPaid: taxPaid,
-            creditedDate: dateString,
             currency: currency,
-            incomeType: incomeType,
-            incomeTag: incomeTag
+            creditedDate: dateString
         )
-
-        try await patch("income", body: body)
+        
+        let response: ApiResponse<Income> = try await patch("incomes/\(id)", body: body)
+        return response.data
     }
 }
 
@@ -165,6 +174,9 @@ private struct AnyEncodable: Encodable {
     func encode(to encoder: Encoder) throws { try encodeFunc(encoder) }
 }
 
+// Empty body for PATCH requests that don't need a body
+private struct EmptyBody: Codable {}
+
 // Minimal id-only response sometimes returned by POST endpoints
 private struct MinimalIdResponse: Decodable {
     let result: String?
@@ -174,16 +186,19 @@ private struct MinimalIdResponse: Decodable {
 // MARK: - Backward-compatible conveniences for current entities
 extension RestClient {
     func fetchIncomes(userId: Int) async throws -> [Income] {
-        try await getList("income/\(userId)")
+        let response: ApiResponse<[Income]> = try await get("incomes/\(userId)")
+        return response.data
     }
     func fetchAccounts(userId: Int) async throws -> [Account] {
-        try await getList("account/\(userId)")
+        try await getList("accounts/\(userId)")
     }
-    func fetchIncomeTypes(userId: Int) async throws -> [IncomeType] {
-        try await getList("income_type/\(userId)")
+    func fetchIncomeSources(userId: Int) async throws -> [IncomeSource] {
+        let response: ApiResponse<[IncomeSource]> = try await get("income-sources/\(userId)")
+        return response.data
     }
     func fetchIncomeTags(userId: Int) async throws -> [IncomeTag] {
-        try await getList("income_tag/\(userId)")
+        let response: ApiResponse<[IncomeTag]> = try await get("income-tags/\(userId)")
+        return response.data
     }
     func fetchWatchlists(userId: Int) async throws -> [Watchlist] {
         try await getList("watch/\(userId)")
@@ -317,98 +332,69 @@ extension RestClient {
     func deleteUser(id: Int) async throws {
         try await delete("user/\(id)")
     }
-    func setDefault(incomeType: IncomeType) async throws {
-        let payload = IncomeType(
-            id: incomeType.id, userId: incomeType.userId, name: incomeType.name, isDefault: true)
-        try await patch("income_type", body: payload)
+    func setDefaultIncomeSource(id: Int) async throws {
+        try await patch("income-sources/\(id)", body: EmptyBody())
     }
-    func setDefault(incomeTag: IncomeTag) async throws {
-        let payload = IncomeTag(
-            id: incomeTag.id, userId: incomeTag.userId, name: incomeTag.name, isDefault: true)
-        try await patch("income_tag", body: payload)
+    
+    func setDefaultIncomeTag(id: Int) async throws {
+        try await patch("income-tags/\(id)", body: EmptyBody())
     }
-    func createIncomeType(userId: Int, name: String, isDefault: Bool) async throws -> IncomeType {
-        struct Payload: Codable {
-            let userId: Int
-            let name: String
-            let isDefault: Bool
-        }
-        let body = Payload(userId: userId, name: name, isDefault: isDefault)
-        return try await postWithFallback("income_type", body: body) { newId in
-            IncomeType(id: newId ?? -1, userId: userId, name: name, isDefault: isDefault)
-        }
+    
+    func createIncomeSource(userId: Int, name: String, isDefault: Bool = false) async throws -> IncomeSource {
+        let body = CreateIncomeSourceRequest(userId: userId, name: name, isDefault: isDefault)
+        let response: ApiResponse<IncomeSource> = try await post("income-sources", body: body)
+        return response.data
     }
-    func createIncomeTag(userId: Int, name: String, isDefault: Bool) async throws -> IncomeTag {
-        struct Payload: Codable {
-            let userId: Int
-            let name: String
-            let isDefault: Bool
-        }
-        let body = Payload(userId: userId, name: name, isDefault: isDefault)
-        return try await postWithFallback("income_tag", body: body) { newId in
-            IncomeTag(id: newId ?? -1, userId: userId, name: name, isDefault: isDefault)
-        }
+    
+    func createIncomeTag(userId: Int, name: String, isDefault: Bool = false) async throws -> IncomeTag {
+        let body = CreateIncomeTagRequest(userId: userId, name: name, isDefault: isDefault)
+        let response: ApiResponse<IncomeTag> = try await post("income-tags", body: body)
+        return response.data
     }
 
     func deleteIncome(id: Int) async throws {
-        try await delete("income/\(id)")
+        try await delete("incomes/\(id)")
     }
 
     // Create an income record
     func createIncome(
         userId: Int,
-        amount: Double,
+        incomeSourceId: Int,
+        incomeTagId: Int,
+        netAmount: Double,
         taxPaid: Double,
         creditedDate: Date,
-        currency: String,
-        incomeType: IncomeType,
-        incomeTag: IncomeTag
+        currency: String
     ) async throws -> Income {
-        // Always send backend datetime as IST midnight for the user's selected calendar date
-        let dateString = DateTZ.toBackendISTString(fromUserDate: creditedDate)
-        // For local synthesized Income (when backend returns only id), keep user's local midnight
-        let midnightLocal = Calendar.current.startOfDay(for: creditedDate)
-
-        struct Payload: Codable {
-            let userId: Int
-            let amount: Double
-            let taxPaid: Double
-            let creditedDate: String
-            let currency: String
-            let incomeType: IncomeType
-            let incomeTag: IncomeTag
-        }
-        let body = Payload(
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let dateString = formatter.string(from: creditedDate)
+        
+        let body = CreateIncomeRequest(
             userId: userId,
-            amount: amount,
+            incomeSourceId: incomeSourceId,
+            incomeTagId: incomeTagId,
+            netAmount: netAmount,
             taxPaid: taxPaid,
-            creditedDate: dateString,
             currency: currency,
-            incomeType: incomeType,
-            incomeTag: incomeTag
+            creditedDate: dateString
         )
-
-        return try await postWithFallback("income", body: body) { newId in
-            // Synthesize minimal Income when backend returns only an id
-            Income(
-                id: newId ?? -1,
-                userId: userId,
-                amount: amount,
-                taxPaid: taxPaid,
-                creditedDate: midnightLocal,
-                currency: currency,
-                incomeType: incomeType,
-                incomeTag: incomeTag
-            )
-        }
+        
+        let response: ApiResponse<Income> = try await post("incomes", body: body)
+        return response.data
     }
 
     // Register Firebase user UID with backend
     func registerFirebaseUser(uid: String) async throws -> Int {
-        struct Payload: Codable { let userId: String }
-        let body = Payload(userId: uid)
-        let response: MinimalIdResponse = try await post("user", body: body)
-        return response.id ?? -1
+        struct Payload: Codable { let externalUserId: String }
+        let body = Payload(externalUserId: uid)
+        let response: ApiResponse<User> = try await post("users", body: body)
+        return response.data.id
+    }
+    
+    struct User: Codable {
+        let id: Int
+        let externalUserId: String
     }
 }
 
