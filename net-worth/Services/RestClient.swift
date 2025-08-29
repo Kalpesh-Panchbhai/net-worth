@@ -4,8 +4,8 @@ import Foundation
 struct RestClient {
     let baseURL: URL
     init(
-        baseURL: URL = URL(string: "https://lz2oz2v0ul.execute-api.ap-south-1.amazonaws.com/prod")!
-        // baseURL: URL = URL(string: "http://localhost:8080")!
+        // baseURL: URL = URL(string: "https://lz2oz2v0ul.execute-api.ap-south-1.amazonaws.com/prod")!
+        baseURL: URL = URL(string: "http://localhost:8080")!
     ) {
         self.baseURL = baseURL
     }
@@ -78,6 +78,18 @@ struct RestClient {
         let (data, _) = try await perform(method: "GET", path: path)
         if dataIsBlank(data) { return [] }
         do { return try JSONDecoder().decode([E].self, from: data) } catch {
+            throw APIError.decoding(error)
+        }
+    }
+
+    // GET that expects an envelope { success: Bool, data: [E] }
+    func getListEnvelope<E: Decodable>(_ path: String) async throws -> [E] {
+        let (data, _) = try await perform(method: "GET", path: path)
+        if dataIsBlank(data) { return [] }
+        do {
+            let envelope = try JSONDecoder().decode(APIListEnvelope<E>.self, from: data)
+            return envelope.data
+        } catch {
             throw APIError.decoding(error)
         }
     }
@@ -171,6 +183,12 @@ private struct MinimalIdResponse: Decodable {
     let id: Int?
 }
 
+// Generic list envelope used by some endpoints: { "success": true, "data": [ ... ] }
+private struct APIListEnvelope<E: Decodable>: Decodable {
+    let success: Bool?
+    let data: [E]
+}
+
 // MARK: - Backward-compatible conveniences for current entities
 extension RestClient {
     func fetchIncomes(userId: Int) async throws -> [Income] {
@@ -183,7 +201,8 @@ extension RestClient {
         try await getList("income_type/\(userId)")
     }
     func fetchIncomeTags(userId: Int) async throws -> [IncomeTag] {
-        try await getList("income_tag/\(userId)")
+        // New API returns { success: Bool, data: [IncomeTag] } at /income-tags/{id}
+        try await getListEnvelope("income-tags/\(userId)")
     }
     func fetchWatchlists(userId: Int) async throws -> [Watchlist] {
         try await getList("watch/\(userId)")
