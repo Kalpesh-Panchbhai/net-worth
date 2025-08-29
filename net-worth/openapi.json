@@ -1754,8 +1754,8 @@
           },
           "creditedDate": {
             "type": "string",
-            "format": "date-time",
-            "description": "UTC ISO 8601"
+            "format": "date",
+            "description": "Date-only (YYYY-MM-DD)"
           }
         }
       },
