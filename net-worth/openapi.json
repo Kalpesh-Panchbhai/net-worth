@@ -1019,10 +1019,15 @@
             "description": "Conflict: Holding with the same symbol already exists for this account",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ApiError" },
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
                 "examples": {
                   "duplicateSymbol": {
-                    "value": { "code": "CONFLICT", "message": "Holding with the same symbol already exists for this account" }
+                    "value": {
+                      "code": "CONFLICT",
+                      "message": "Holding with the same symbol already exists for this account"
+                    }
                   }
                 }
               }
@@ -1957,9 +1962,16 @@
       "CreateHoldingRequest": {
         "type": "object",
         "properties": {
-          "accountId": { "type": "integer", "format": "int64" },
-          "name":      { "type": "string" },
-          "symbol":    { "type": "string" }
+          "accountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "symbol": {
+            "type": "string"
+          }
         },
         "required": [
           "accountId",
@@ -2028,30 +2040,6 @@
             }
           }
         }
-      },
-      "CreateHoldingRequest": {
-        "type": "object",
-        "properties": {
-          "accountId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "name": {
-            "type": "string"
-          },
-          "symbol": {
-            "type": "string"
-          },
-          "units": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "accountId",
-          "name",
-          "symbol",
-          "units"
-        ]
       },
       "CreateWatchlistAccountLinkRequest": {
         "type": "object",
