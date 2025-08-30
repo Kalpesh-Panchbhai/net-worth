@@ -984,6 +984,7 @@
           "holdings"
         ],
         "summary": "Create a holding",
+        "description": "Creates a holding under an account. Only one unique symbol per account is allowed; if a holding with the same symbol already exists for the given account, the API returns HTTP 409 (Conflict).",
         "requestBody": {
           "required": true,
           "content": {
@@ -1010,6 +1011,19 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseHolding"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict: Holding with the same symbol already exists for this account",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ApiError" },
+                "examples": {
+                  "duplicateSymbol": {
+                    "value": { "code": "CONFLICT", "message": "Holding with the same symbol already exists for this account" }
+                  }
                 }
               }
             }
@@ -1935,6 +1949,19 @@
         },
         "required": [
           "id",
+          "accountId",
+          "name",
+          "symbol"
+        ]
+      },
+      "CreateHoldingRequest": {
+        "type": "object",
+        "properties": {
+          "accountId": { "type": "integer", "format": "int64" },
+          "name":      { "type": "string" },
+          "symbol":    { "type": "string" }
+        },
+        "required": [
           "accountId",
           "name",
           "symbol"
