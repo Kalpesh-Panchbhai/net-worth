@@ -3,6 +3,14 @@ import Foundation
 extension DateFormatter {
     static let incomeBackend: DateFormatter = {
         let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd"
+        df.locale = Locale(identifier: "en_US_POSIX")
+        df.timeZone = TimeZone(identifier: "Asia/Kolkata")
+        return df
+    }()
+    
+    static let incomeBackendDateTime: DateFormatter = {
+        let df = DateFormatter()
         df.dateFormat = "yyyy-MM-dd HH:mm:ss"
         df.locale = Locale(identifier: "en_US_POSIX")
         df.timeZone = TimeZone(identifier: "Asia/Kolkata")
@@ -81,13 +89,13 @@ enum DateTZ {
                 hour: 0, minute: 0, second: 0
             )
         ) ?? date
-        return DateFormatter.incomeBackend.string(from: istMidnight)
+        return DateFormatter.incomeBackendDateTime.string(from: istMidnight)
     }
 
     // Parse IST backend date string and convert to user's local midnight for the same calendar date
     static func fromBackendISTStringToUserDate(_ s: String) -> Date? {
         // Parse as IST
-        guard let istInstant = DateFormatter.incomeBackend.date(from: s) else { return nil }
+        guard let istInstant = DateFormatter.incomeBackendDateTime.date(from: s) else { return nil }
         // Extract IST Y-M-D
         var calIST = Calendar(identifier: .gregorian)
         calIST.timeZone = ist

@@ -132,28 +132,19 @@ struct RestClient {
     // Update an income record
     func updateIncome(
         id: Int,
-        incomeSourceId: Int?,
-        incomeTagId: Int?,
-        netAmount: Double?,
-        taxPaid: Double?,
-        creditedDate: Date?,
-        currency: String?
+        incomeSourceId: Int? = nil,
+        incomeTagId: Int? = nil,
+        netAmount: Double? = nil,
+        taxPaid: Double? = nil,
+        creditedDate: Date? = nil,
+        currency: String? = nil
     ) async throws -> Income {
-        struct UpdatePayload: Codable {
-            let incomeSourceId: Int?
-            let incomeTagId: Int?
-            let netAmount: Double?
-            let taxPaid: Double?
-            let currency: String?
-            let creditedDate: String?
-        }
-        
         let dateString = creditedDate.map { 
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
             return formatter.string(from: $0)
         }
-        let body = UpdatePayload(
+        let body = UpdateIncomeRequest(
             incomeSourceId: incomeSourceId,
             incomeTagId: incomeTagId,
             netAmount: netAmount,
@@ -362,7 +353,7 @@ extension RestClient {
         incomeSourceId: Int,
         incomeTagId: Int,
         netAmount: Double,
-        taxPaid: Double,
+        taxPaid: Double? = nil,
         creditedDate: Date,
         currency: String
     ) async throws -> Income {

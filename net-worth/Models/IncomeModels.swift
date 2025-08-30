@@ -94,7 +94,16 @@ struct CreateIncomeRequest: Codable {
     let netAmount: Double
     let taxPaid: Double?
     let currency: String
-    let creditedDate: String // ISO date format
+    let creditedDate: String // Date-only format (YYYY-MM-DD)
+}
+
+struct UpdateIncomeRequest: Codable {
+    let incomeSourceId: Int?
+    let incomeTagId: Int?
+    let netAmount: Double?
+    let taxPaid: Double?
+    let currency: String?
+    let creditedDate: String? // Date-only format (YYYY-MM-DD)
 }
 
 struct CreateIncomeSourceRequest: Codable {

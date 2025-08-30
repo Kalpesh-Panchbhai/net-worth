@@ -101,6 +101,82 @@ final class IncomeController: ObservableObject {
         }
     }
     
+    // Update an income by calling backend and updating local state
+    func update(
+        _ income: Income,
+        incomeSourceId: Int? = nil,
+        incomeTagId: Int? = nil,
+        netAmount: Double? = nil,
+        taxPaid: Double? = nil,
+        creditedDate: Date? = nil,
+        currency: String? = nil
+    ) async -> Bool {
+        errorMessage = nil
+        do {
+            let updatedIncome = try await client.updateIncome(
+                id: income.id,
+                incomeSourceId: incomeSourceId,
+                incomeTagId: incomeTagId,
+                netAmount: netAmount,
+                taxPaid: taxPaid,
+                creditedDate: creditedDate,
+                currency: currency
+            )
+            // Update local list
+            if let index = incomes.firstIndex(where: { $0.id == income.id }) {
+                incomes[index] = updatedIncome
+            }
+            if let store = store { await store.refreshIncomes(userId: userId) }
+            return true
+        } catch let api as APIError {
+            if case .transport(let err) = api, let urlErr = err as? URLError, urlErr.code == .cancelled {
+                return false
+            }
+            self.errorMessage = api.errorDescription ?? "Update failed"
+            return false
+        } catch {
+            self.errorMessage = error.localizedDescription
+            return false
+        }
+    }
+    
+    // Create a new income by calling backend and updating local state
+    func create(
+        incomeSourceId: Int,
+        incomeTagId: Int,
+        netAmount: Double,
+        taxPaid: Double? = nil,
+        creditedDate: Date,
+        currency: String
+    ) async -> Bool {
+        errorMessage = nil
+        do {
+            let newIncome = try await client.createIncome(
+                userId: userId,
+                incomeSourceId: incomeSourceId,
+                incomeTagId: incomeTagId,
+                netAmount: netAmount,
+                taxPaid: taxPaid,
+                creditedDate: creditedDate,
+                currency: currency
+            )
+            // Add to local list
+            incomes.append(newIncome)
+            incomes.sort { $0.creditedDate > $1.creditedDate }
+            if let store = store { await store.refreshIncomes(userId: userId) }
+            return true
+        } catch let api as APIError {
+            if case .transport(let err) = api, let urlErr = err as? URLError, urlErr.code == .cancelled {
+                return false
+            }
+            self.errorMessage = api.errorDescription ?? "Create failed"
+            return false
+        } catch {
+            self.errorMessage = error.localizedDescription
+            return false
+        }
+    }
+    
     var uniqueTypes: [String] {
         guard let store = store else { return [] }
         let sourceIds = Set(incomes.map { $0.incomeSourceId })
