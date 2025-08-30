@@ -2,16 +2,16 @@ import SwiftUI
 
 struct WatchlistAccountsView: View {
     let userId: Int
-    let watchlist: Watchlist
+    let watchlist: WatchlistSummary
     @StateObject private var vm: WatchAccountsController
     @AppStorage("defaultCurrencyCode") private var defaultCurrencyCode: String = "INR"
-    @State private var pendingDelete: Account? = nil
+    @State private var pendingDelete: AccountSummary? = nil
     @State private var showAddSheet: Bool = false
     @State private var addingAccountId: Int? = nil
     @EnvironmentObject private var banners: BannerCenter
     @EnvironmentObject private var lookup: LookupStore
 
-    init(userId: Int, watchlist: Watchlist) {
+    init(userId: Int, watchlist: WatchlistSummary) {
         self.userId = userId
         self.watchlist = watchlist
         _vm = StateObject(wrappedValue: WatchAccountsController(userId: userId, watchId: watchlist.id))
@@ -47,7 +47,7 @@ struct WatchlistAccountsView: View {
         .background(Color.canvasBackground.ignoresSafeArea())
         .navigationTitle(watchlist.name)
         .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(for: Account.self) { account in
+        .navigationDestination(for: AccountSummary.self) { account in
             AccountDetailView(account: account)
         }
         .toolbarBackground(Color(.systemBackground), for: .navigationBar)
@@ -105,19 +105,14 @@ struct WatchlistAccountsView: View {
                                 Button {
                                     addingAccountId = acc.id
                                     Task {
-                                        do {
-                                            _ = try await RestClient().createWatchAccount(accountId: acc.id, watchId: watchlist.id)
+                                        let success = await vm.addToWatch(acc)
+                                        if success {
                                             Haptics.success()
                                             banners.show(AppBanner(icon: "checkmark.circle.fill", title: "Added to watchlist", message: "\(acc.name) → \(watchlist.name)", style: .success))
-                                            // Refresh to update membership
-                                            await vm.refresh()
-                                        } catch let api as APIError {
+                                        } else {
                                             Haptics.softImpact()
-                                            let msg = api.errorDescription ?? "Failed to add to watchlist."
+                                            let msg = vm.errorMessage ?? "Failed to add to watchlist."
                                             banners.showError(message: msg)
-                                        } catch {
-                                            Haptics.softImpact()
-                                            banners.showError(message: error.localizedDescription)
                                         }
                                         addingAccountId = nil
                                     }

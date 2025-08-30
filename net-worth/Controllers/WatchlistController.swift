@@ -4,7 +4,7 @@ import Combine
 
 @MainActor
 final class WatchlistController: ObservableObject {
-    @Published var items: [Watchlist] = []
+    @Published var items: [WatchlistSummary] = []
     @Published var isLoading = false
     @Published var errorMessage: String? = nil
 
@@ -65,9 +65,9 @@ final class WatchlistController: ObservableObject {
     }
 
     // MARK: - Aggregates
-    var totalCurrent: Double { items.reduce(0) { $0 + $1.value.currentValue } }
-    var totalPrevious: Double { items.reduce(0) { $0 + $1.value.previousValue } }
-    var totalInvested: Double { items.reduce(0) { $0 + $1.value.invested } }
+    var totalCurrent: Double { items.reduce(0) { $0 + $1.currentDayValue } }
+    var totalPrevious: Double { items.reduce(0) { $0 + $1.previousDayValue } }
+    var totalInvested: Double { items.reduce(0) { $0 + $1.invested } }
 
     var delta: Double { totalCurrent - totalInvested }
     var changeVsPrev: Double { totalCurrent - totalPrevious }
@@ -87,8 +87,17 @@ final class WatchlistController: ObservableObject {
         guard !trimmed.isEmpty else { return }
         do {
             let created = try await client.createWatchlist(userId: userId, name: trimmed)
+            // Convert Watchlist to WatchlistSummary with default values
+            let summary = WatchlistSummary(
+                id: created.id,
+                userId: created.userId,
+                name: created.name,
+                currentDayValue: 0,
+                previousDayValue: 0,
+                invested: 0
+            )
             var newItems = items
-            newItems.append(created)
+            newItems.append(summary)
             self.items = sortWatchlists(newItems)
             if let store = store { await store.refreshWatchlists(userId: userId) }
         } catch let api as APIError {
@@ -99,7 +108,7 @@ final class WatchlistController: ObservableObject {
     }
 
     // MARK: - Delete
-    func delete(_ item: Watchlist) async -> Bool {
+    func delete(_ item: WatchlistSummary) async -> Bool {
         do {
             try await client.deleteWatchlist(id: item.id)
             self.items.removeAll { $0.id == item.id }
@@ -115,15 +124,22 @@ final class WatchlistController: ObservableObject {
     }
 
     // MARK: - Rename
-    func rename(_ item: Watchlist, to newName: String) async -> Bool {
+    func rename(_ item: WatchlistSummary, to newName: String) async -> Bool {
         let trimmed = newName.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return false }
         do {
-            try await client.updateWatchlist(id: item.id, userId: userId, name: trimmed)
+            _ = try await client.updateWatchlist(id: item.id, name: trimmed)
             if let idx = items.firstIndex(where: { $0.id == item.id }) {
                 var updated = items
                 var changed = updated[idx]
-                changed = Watchlist(id: changed.id, userId: changed.userId, name: trimmed, totalAccount: changed.totalAccount, value: changed.value)
+                changed = WatchlistSummary(
+                    id: changed.id,
+                    userId: changed.userId,
+                    name: trimmed,
+                    currentDayValue: changed.currentDayValue,
+                    previousDayValue: changed.previousDayValue,
+                    invested: changed.invested
+                )
                 updated[idx] = changed
                 self.items = sortWatchlists(updated)
             }
@@ -139,7 +155,7 @@ final class WatchlistController: ObservableObject {
     }
 
     // MARK: - Helpers
-    private func sortWatchlists(_ list: [Watchlist]) -> [Watchlist] {
+    private func sortWatchlists(_ list: [WatchlistSummary]) -> [WatchlistSummary] {
         list.sorted { a, b in
             let aIsAll = a.name.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame
             let bIsAll = b.name.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame

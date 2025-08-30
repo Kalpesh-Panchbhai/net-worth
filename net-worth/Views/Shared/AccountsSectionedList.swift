@@ -1,24 +1,24 @@
 import SwiftUI
 
 struct AccountsSectionedList: View {
-    let items: [Account]
+    let items: [AccountSummary]
     let currency: String
     var isLoading: Bool = false
     var enableDelete: Bool = false
-    var onDelete: ((Account) -> Void)? = nil
-    var onAddToWatch: ((Account) -> Void)? = nil
+    var onDelete: ((AccountSummary) -> Void)? = nil
+    var onAddToWatch: ((AccountSummary) -> Void)? = nil
 
     @AppStorage("hideInactiveAccounts") private var hideInactive: Bool = true
     @State private var searchText: String = ""
     @State private var selectedTypes: Set<String> = [] // empty = all
 
     init(
-        items: [Account],
+        items: [AccountSummary],
         currency: String,
         isLoading: Bool = false,
         enableDelete: Bool = false,
-        onDelete: ((Account) -> Void)? = nil,
-        onAddToWatch: ((Account) -> Void)? = nil
+        onDelete: ((AccountSummary) -> Void)? = nil,
+        onAddToWatch: ((AccountSummary) -> Void)? = nil
     ) {
         self.items = items
         self.currency = currency
@@ -42,11 +42,12 @@ struct AccountsSectionedList: View {
             } else {
                 // Summary
                 let filtered = filteredAccounts()
-                let total = filtered.reduce(0) { $0 + $1.value.currentValue }
-                let invested = filtered.reduce(0) { $0 + $1.value.invested }
-                let previous = filtered.reduce(0) { $0 + $1.value.previousValue }
+                let total = filtered.reduce(0) { $0 + $1.currentDayValue }
+                let invested = filtered.reduce(0) { $0 + $1.invested }
+                let previous = filtered.reduce(0) { $0 + $1.previousDayValue }
                 let changeVsPrev = total - previous
                 let changePercent: Double? = abs(previous) > 0 ? (changeVsPrev / abs(previous)) : nil
+                
                 AccountsSummaryCard(
                     total: total,
                     invested: invested,
@@ -59,7 +60,8 @@ struct AccountsSectionedList: View {
                 // Filters + toggle
                 AccountsFiltersBar(types: availableTypes(), selectedTypes: $selectedTypes)
                     .padding(.horizontal, 2)
-                let hasInactive = items.contains { !$0.active }
+                
+                let hasInactive = items.contains { !$0.isActive }
                 if hasInactive {
                     HStack {
                         Toggle("Hide inactive", isOn: $hideInactive)
@@ -77,9 +79,9 @@ struct AccountsSectionedList: View {
                             NavigationLink(value: item) {
                                 AssetRowCard(
                                     name: item.name,
-                                    current: item.value.currentValue,
-                                    invested: item.value.invested,
-                                    previous: item.value.previousValue,
+                                    current: item.currentDayValue,
+                                    invested: item.invested,
+                                    previous: item.previousDayValue,
                                     currency: currency
                                 )
                             }
@@ -101,7 +103,7 @@ struct AccountsSectionedList: View {
                             }
                         }
                     } header: {
-                        let sectionTotal = section.items.reduce(0) { $0 + $1.value.currentValue }
+                        let sectionTotal = section.items.reduce(0) { $0 + $1.currentDayValue }
                         AccountsSectionHeader(title: section.title, count: section.items.count, total: sectionTotal, currency: currency)
                     }
                 }
@@ -110,7 +112,7 @@ struct AccountsSectionedList: View {
     }
 
     // MARK: - Helpers
-    private func filteredAccounts() -> [Account] {
+    private func filteredAccounts() -> [AccountSummary] {
         // Apply search + inactive, then chip selection
         var base = searchAndInactiveFiltered()
         if !selectedTypes.isEmpty { base = base.filter { selectedTypes.contains(normalizedType($0.type)) } }
@@ -118,13 +120,14 @@ struct AccountsSectionedList: View {
     }
 
     // Chips should be computed from search + inactive only, so user can add more chips while searching
-    private func searchAndInactiveFiltered() -> [Account] {
-        let anyInactive = items.contains { !$0.active }
-        var base = (anyInactive && hideInactive) ? items.filter { $0.active } : items
-        let q = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !q.isEmpty { base = base.filter { $0.name.localizedCaseInsensitiveContains(q) } }
-        return base
+    private func searchAndInactiveFiltered() -> [AccountSummary] {
+        items.filter { account in
+            let matchesSearch = searchText.isEmpty || account.name.localizedCaseInsensitiveContains(searchText)
+            let isActiveFilter = hideInactive ? account.isActive : true
+            return matchesSearch && isActiveFilter
+        }
     }
+
     private func normalizedType(_ raw: String) -> String {
         let t = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         if t.contains("broker") { return "Broker" }
@@ -133,6 +136,7 @@ struct AccountsSectionedList: View {
         if t.contains("loan") { return "Loan" }
         return "Other"
     }
+
     private func availableTypes() -> [String] {
         // Derive from search+inactive results so chips remain available for multi-select
         let base = searchAndInactiveFiltered().map { normalizedType($0.type) }
@@ -145,19 +149,27 @@ struct AccountsSectionedList: View {
             return a < b
         }
     }
-    private func groupedSections() -> [SectionData] {
-        let base = filteredAccounts()
+
+    private func groupedSections() -> [AccountSection] {
+        return groupByType(filteredAccounts())
+    }
+    
+    private func groupByType(_ accounts: [AccountSummary]) -> [AccountSection] {
         let order = ["Broker", "Saving", "Credit card", "Loan", "Other"]
-        var buckets: [String: [Account]] = [:]
-        for acc in base { buckets[normalizedType(acc.type), default: []].append(acc) }
-        var result: [SectionData] = []
-        for key in order { if let arr = buckets[key], !arr.isEmpty { result.append(SectionData(title: key, items: arr)) } }
+        var buckets: [String: [AccountSummary]] = [:]
+        for acc in accounts { buckets[normalizedType(acc.type), default: []].append(acc) }
+        var result: [AccountSection] = []
+        for key in order { if let arr = buckets[key], !arr.isEmpty { result.append(AccountSection(title: key, items: arr)) } }
         let known = Set(order)
         let extras = buckets.keys.filter { !known.contains($0) }.sorted()
-        for key in extras { if let arr = buckets[key], !arr.isEmpty { result.append(SectionData(title: key, items: arr)) } }
+        for key in extras { if let arr = buckets[key], !arr.isEmpty { result.append(AccountSection(title: key, items: arr)) } }
         return result
     }
-    private struct SectionData { let title: String; let items: [Account] }
+
+    private struct AccountSection {
+        let title: String
+        let items: [AccountSummary]
+    }
 }
 
 // MARK: - Shared subviews

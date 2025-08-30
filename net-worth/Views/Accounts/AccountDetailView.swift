@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AccountDetailView: View {
-    let account: Account
+    let account: AccountSummary
     @AppStorage("defaultCurrencyCode") private var displayCurrency: String = "INR"
     @EnvironmentObject private var lookup: LookupStore
     @State private var brokerHoldings: [AccountBroker] = []
@@ -12,7 +12,7 @@ struct AccountDetailView: View {
     @State private var txError: String? = nil
     @State private var showCreateTx = false
     // Watchlists containing this account
-    @State private var accountWatchlists: [Watchlist] = []
+    @State private var accountWatchlists: [WatchlistSummary] = []
     @State private var isLoadingWatches = false
     @State private var watchesError: String? = nil
     // Simplified transactions UI (no filters/search/summary)
@@ -21,9 +21,9 @@ struct AccountDetailView: View {
         ScrollView {
             VStack(spacing: 16) {
                 // Summary for this account
-                let total = account.value.currentValue
-                let invested = account.value.invested
-                let previous = account.value.previousValue
+                let total = account.currentDayValue
+                let invested = account.invested
+                let previous = account.previousDayValue
                 let changeVsPrev = total - previous
                 let changePercent: Double? =
                     abs(previous) > 0 ? (changeVsPrev / abs(previous)) : nil
@@ -58,9 +58,9 @@ struct AccountDetailView: View {
                         )
                         divider()
                         detailRow(
-                            icon: account.active ? "checkmark.seal" : "xmark.seal",
+                            icon: account.isActive ? "checkmark.seal" : "xmark.seal",
                             title: "Status",
-                            subtitle: account.active ? "Active" : "Inactive"
+                            subtitle: account.isActive ? "Active" : "Inactive"
                         )
                     }
                 }
@@ -170,7 +170,7 @@ struct AccountDetailView: View {
         .navigationDestination(for: AccountBroker.self) { holding in
             BrokerHoldingDetailView(holding: holding)
         }
-        .navigationDestination(for: Watchlist.self) { item in
+        .navigationDestination(for: WatchlistSummary.self) { item in
             WatchlistAccountsView(userId: account.userId, watchlist: item)
         }
         .sheet(isPresented: $showCreateTx) {
@@ -208,7 +208,7 @@ struct AccountDetailView: View {
     }
 
     private func normalizedType(_ raw: String) -> String {
-        let t = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let t = raw.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).lowercased()
         if t.contains("broker") { return "Broker" }
         if t.contains("saving") { return "Saving" }
         if t.contains("credit") { return "Credit card" }
@@ -263,14 +263,10 @@ struct AccountDetailView: View {
         watchesError = nil
         defer { isLoadingWatches = false }
         do {
-            let links = try await RestClient().fetchWatchAccountsByAccount(accountId: account.id)
-            let watchIds = Set(links.map { $0.watchId })
-            // Ensure watchlists are available in store
-            if lookup.watchlists.isEmpty { await lookup.loadWatchlistsIfNeeded(userId: account.userId) }
-            let lists = lookup.watchlists.filter { watchIds.contains($0.id) }
-            self.accountWatchlists = lists.sorted { a, b in
-                let aIsAll = a.name.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame
-                let bIsAll = b.name.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame
+            let links = try await RestClient().fetchAccountWatchlists(accountId: account.id)
+            self.accountWatchlists = links.sorted { a, b in
+                let aIsAll = a.name.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame
+                let bIsAll = b.name.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame
                 if aIsAll != bIsAll { return aIsAll && !bIsAll }
                 return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
             }
@@ -309,11 +305,10 @@ struct AccountDetailView: View {
                         NavigationLink(value: wl) {
                             AssetRowCard(
                                 name: wl.name,
-                                current: wl.value.currentValue,
-                                invested: wl.value.invested,
-                                previous: wl.value.previousValue,
-                                currency: displayCurrency.uppercased(),
-                                countBadge: wl.totalAccount > 0 ? wl.totalAccount : nil
+                                current: wl.currentDayValue,
+                                invested: wl.invested,
+                                previous: wl.previousDayValue,
+                                currency: displayCurrency.uppercased()
                             )
                         }
                     }

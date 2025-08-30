@@ -4,7 +4,7 @@ import SwiftUI
 struct WatchlistListView: View {
     @StateObject private var vm: WatchlistController
     @State private var navCollapsed = false
-    @State private var path: [Watchlist] = []
+    @State private var path: [WatchlistSummary] = []
     @State private var showFab: Bool = true
     @EnvironmentObject private var banners: BannerCenter
     @EnvironmentObject private var tabCommands: TabCommandCenter
@@ -13,8 +13,8 @@ struct WatchlistListView: View {
     @State private var showCreate = false
     @State private var createName = ""
     @State private var creating = false
-    @State private var pendingDelete: Watchlist? = nil
-    @State private var renaming: Watchlist? = nil
+    @State private var pendingDelete: WatchlistSummary? = nil
+    @State private var renaming: WatchlistSummary? = nil
     @State private var renameText: String = ""
     @State private var renamingSaving: Bool = false
 
@@ -109,7 +109,7 @@ struct WatchlistListView: View {
     }
 
     @ViewBuilder
-    private func renameSheetView(item: Watchlist) -> some View {
+    private func renameSheetView(item: WatchlistSummary) -> some View {
         ZStack {
             Rectangle().fill(.ultraThinMaterial).ignoresSafeArea()
             NavigationStack {
@@ -214,7 +214,7 @@ struct WatchlistListView: View {
             .onPreferenceChange(NavBarOffsetKey.self) { y in
                 withAnimation(.easeInOut(duration: 0.2)) { navCollapsed = y < -8 }
             }
-            .navigationDestination(for: Watchlist.self) { item in
+            .navigationDestination(for: WatchlistSummary.self) { item in
                 WatchlistAccountsView(userId: vm.userId, watchlist: item)
                     .onAppear { showFab = false }
                     .onDisappear { showFab = path.isEmpty }
@@ -263,10 +263,10 @@ struct WatchlistListView: View {
 }
 // MARK: - List
 private struct WatchlistRowsList: View {
-    let items: [Watchlist]
+    let items: [WatchlistSummary]
     let currency: String
-    var onRename: (Watchlist) -> Void
-    var onDelete: (Watchlist) -> Void
+    var onRename: (WatchlistSummary) -> Void
+    var onDelete: (WatchlistSummary) -> Void
     var body: some View {
         LazyVStack(spacing: 12) {
             ForEach(items, id: \.id) { item in
@@ -286,20 +286,20 @@ private struct WatchlistRowsList: View {
 }
 
 private struct WatchlistRowCard: View {
-    let item: Watchlist
+    let item: WatchlistSummary
     let currency: String
-    var onRename: ((Watchlist) -> Void)? = nil
-    var onDelete: ((Watchlist) -> Void)? = nil
+    var onRename: ((WatchlistSummary) -> Void)? = nil
+    var onDelete: ((WatchlistSummary) -> Void)? = nil
 
-    private var delta: Double { item.value.currentValue - item.value.invested }
+    private var delta: Double { item.currentDayValue - item.invested }
     private var deltaPercentText: String? {
-        let denom = abs(item.value.invested)
+        let denom = abs(item.invested)
         guard denom > 0 else { return nil }
         return (delta / denom).formatted(.percent.precision(.fractionLength(1)))
     }
-    private var dayChange: Double { item.value.currentValue - item.value.previousValue }
+    private var dayChange: Double { item.currentDayValue - item.previousDayValue }
     private var dayPercentText: String? {
-        let denom = abs(item.value.previousValue)
+        let denom = abs(item.previousDayValue)
         guard denom > 0 else { return nil }
         return (dayChange / denom).formatted(.percent.precision(.fractionLength(1)))
     }
@@ -307,9 +307,9 @@ private struct WatchlistRowCard: View {
     var body: some View {
         AssetRowCard(
             name: item.name,
-            current: item.value.currentValue,
-            invested: item.value.invested,
-            previous: item.value.previousValue,
+            current: item.currentDayValue,
+            invested: item.invested,
+            previous: item.previousDayValue,
             currency: currency,
             countBadge: item.totalAccount > 0 ? item.totalAccount : nil
         )

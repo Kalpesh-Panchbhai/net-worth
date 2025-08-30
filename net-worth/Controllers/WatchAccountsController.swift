@@ -4,7 +4,7 @@ import Combine
 
 @MainActor
 final class WatchAccountsController: ObservableObject {
-    @Published var items: [Account] = []
+    @Published var items: [AccountSummary] = []
     @Published var isLoading = false
     @Published var errorMessage: String? = nil
 
@@ -32,19 +32,14 @@ final class WatchAccountsController: ObservableObject {
         errorMessage = nil
         defer { isLoading = false }
         do {
-            let fetched = try await client.fetchWatchAccounts(watchId: watchId)
-            self.links = fetched
-            let ids = Set(fetched.map { $0.accountId })
-            var accounts: [Account]
-            if let store = store {
-                if store.accounts.isEmpty {
-                    await store.loadAccountsIfNeeded(userId: userId)
+            // Use new API endpoint to get accounts for watchlist
+            let accountSummaries = try await client.fetchWatchlistAccounts(watchlistId: watchId)
+            self.items = accountSummaries.sorted { a, b in
+                if a.type != b.type {
+                    return a.type.localizedCaseInsensitiveCompare(b.type) == .orderedAscending
                 }
-                accounts = store.accounts
-            } else {
-                accounts = try await client.fetchAccounts(userId: userId)
+                return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
             }
-            self.items = sortAccounts(accounts.filter { ids.contains($0.id) })
         } catch let api as APIError {
             // Suppress banners for user-initiated cancellations
             if case .transport(let err) = api, let urlErr = err as? URLError, urlErr.code == .cancelled {
@@ -62,17 +57,14 @@ final class WatchAccountsController: ObservableObject {
         errorMessage = nil
         defer { isLoading = false }
         do {
-            let fetched = try await client.fetchWatchAccounts(watchId: watchId)
-            self.links = fetched
-            let ids = Set(fetched.map { $0.accountId })
-            var accounts: [Account]
-            if let store = store {
-                await store.refreshAccounts(userId: userId)
-                accounts = store.accounts
-            } else {
-                accounts = try await client.fetchAccounts(userId: userId)
+            // Use new API endpoint to get accounts for watchlist
+            let accountSummaries = try await client.fetchWatchlistAccounts(watchlistId: watchId)
+            self.items = accountSummaries.sorted { a, b in
+                if a.type != b.type {
+                    return a.type.localizedCaseInsensitiveCompare(b.type) == .orderedAscending
+                }
+                return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
             }
-            self.items = sortAccounts(accounts.filter { ids.contains($0.id) })
         } catch let api as APIError {
             self.errorMessage = api.errorDescription ?? "Request failed"
         } catch {
@@ -80,15 +72,10 @@ final class WatchAccountsController: ObservableObject {
         }
     }
 
-    func deleteFromWatch(_ account: Account) async -> Bool {
-        guard let link = links.first(where: { $0.accountId == account.id }) else {
-            self.errorMessage = "Link not found for account."
-            return false
-        }
+    func deleteFromWatch(_ account: AccountSummary) async -> Bool {
         do {
-            try await client.deleteWatchAccount(id: link.id)
+            try await client.unlinkWatchlistAccount(watchlistId: watchId, accountId: account.id)
             // Update local state
-            links.removeAll { $0.id == link.id }
             items.removeAll { $0.id == account.id }
             return true
         } catch let api as APIError {
@@ -99,8 +86,28 @@ final class WatchAccountsController: ObservableObject {
             return false
         }
     }
+    
+    // Add method to link account to watchlist
+    func addToWatch(_ account: AccountSummary) async -> Bool {
+        do {
+            try await client.linkWatchlistAccount(watchlistId: watchId, accountId: account.id)
+            // Update local state
+            if !items.contains(where: { $0.id == account.id }) {
+                var newItems = items
+                newItems.append(account)
+                self.items = sortAccounts(newItems)
+            }
+            return true
+        } catch let api as APIError {
+            self.errorMessage = api.errorDescription ?? "Failed to add to watch."
+            return false
+        } catch {
+            self.errorMessage = error.localizedDescription
+            return false
+        }
+    }
 
-    private func sortAccounts(_ list: [Account]) -> [Account] {
+    private func sortAccounts(_ list: [AccountSummary]) -> [AccountSummary] {
         list.sorted { a, b in
             if a.type != b.type {
                 return a.type.localizedCaseInsensitiveCompare(b.type) == .orderedAscending

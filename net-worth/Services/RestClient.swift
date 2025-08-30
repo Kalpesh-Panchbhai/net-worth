@@ -180,8 +180,9 @@ extension RestClient {
         let response: ApiResponse<[Income]> = try await get("incomes/\(userId)")
         return response.data
     }
-    func fetchAccounts(userId: Int) async throws -> [Account] {
-        try await getList("accounts/\(userId)")
+    func fetchAccounts(userId: Int) async throws -> [AccountSummary] {
+        let response: ApiResponseAccountSummaryList = try await get("accounts/\(userId)")
+        return response.data
     }
     func fetchIncomeSources(userId: Int) async throws -> [IncomeSource] {
         let response: ApiResponse<[IncomeSource]> = try await get("income-sources/\(userId)")
@@ -191,14 +192,18 @@ extension RestClient {
         let response: ApiResponse<[IncomeTag]> = try await get("income-tags/\(userId)")
         return response.data
     }
-    func fetchWatchlists(userId: Int) async throws -> [Watchlist] {
-        try await getList("watch/\(userId)")
+    func fetchWatchlists(userId: Int) async throws -> [WatchlistSummary] {
+        let response: ApiResponseWatchlistSummaryList = try await get("watchlists/\(userId)")
+        return response.data
     }
-    func fetchWatchAccounts(watchId: Int) async throws -> [WatchAccount] {
-        try await getList("watch_account/\(watchId)/watch")
+    func fetchWatchlistAccounts(watchlistId: Int) async throws -> [AccountSummary] {
+        let response: ApiResponseAccountSummaryList = try await get("watchlist-accounts/\(watchlistId)")
+        return response.data
     }
-    func fetchWatchAccountsByAccount(accountId: Int) async throws -> [WatchAccount] {
-        try await getList("watch_account/\(accountId)/account")
+    
+    func fetchAccountWatchlists(accountId: Int) async throws -> [WatchlistSummary] {
+        let response: ApiResponseWatchlistSummaryList = try await get("account-watchlists/\(accountId)")
+        return response.data
     }
     func fetchAccountBroker(accountId: Int) async throws -> [AccountBroker] {
         try await getList("account_broker/\(accountId)")
@@ -209,77 +214,54 @@ extension RestClient {
     func fetchAccountBrokerTransactions(accountBrokerId: Int) async throws -> [AccountTransaction] {
         try await getList("account_transaction/\(accountBrokerId)/account_broker")
     }
-    // MARK: - Accounts (Create/Delete)
+    // MARK: - Accounts (Create/Update/Delete)
     func createAccount(
         userId: Int,
         name: String,
         type: String,
         currency: String,
-        active: Bool,
-        value: AccountValue = AccountValue(currentValue: 0, previousValue: 0, invested: 0)
+        isActive: Bool = true
     ) async throws -> Account {
-        struct Payload: Codable {
-            let userId: Int
-            let name: String
-            let type: String
-            let currency: String
-            let active: Bool
-            let value: AccountValue
-        }
-        let body = Payload(
-            userId: userId, name: name, type: type, currency: currency, active: active, value: value
+        let body = CreateAccountRequest(
+            userId: userId,
+            name: name,
+            type: type,
+            currency: currency,
+            isActive: isActive
         )
-        return try await postWithFallback("account", body: body) { newId in
-            Account(
-                id: newId ?? -1,
-                userId: userId,
-                name: name,
-                type: type,
-                currency: currency,
-                active: active,
-                value: value
-            )
-        }
+        let response: ApiResponseAccount = try await post("accounts", body: body)
+        return response.data
     }
+    
+    func updateAccount(
+        id: Int,
+        name: String? = nil,
+        isActive: Bool? = nil
+    ) async throws -> Account {
+        let body = UpdateAccountRequest(name: name, isActive: isActive)
+        let response: ApiResponseAccount = try await patch("accounts/\(id)", body: body)
+        return response.data
+    }
+    
     func deleteAccount(id: Int) async throws {
-        try await delete("account/\(id)")
+        try await delete("accounts/\(id)")
     }
     func createWatchlist(userId: Int, name: String) async throws -> Watchlist {
-        struct Payload: Codable {
-            let userId: Int
-            let name: String
-        }
-        let body = Payload(userId: userId, name: name)
-        return try await postWithFallback("watch", body: body) { newId in
-            Watchlist(
-                id: newId ?? -1,
-                userId: userId,
-                name: name,
-                totalAccount: 0,
-                value: WatchlistValue(currentValue: 0, previousValue: 0, invested: 0)
-            )
-        }
+        let body = CreateWatchlistRequest(userId: userId, name: name)
+        let response: ApiResponseWatchlist = try await post("watchlists", body: body)
+        return response.data
     }
     func deleteWatchlist(id: Int) async throws {
-        try await delete("watch/\(id)")
+        try await delete("watchlists/\(id)")
     }
-    func updateWatchlist(id: Int, userId: Int, name: String) async throws {
-        struct Payload: Codable {
-            let id: Int
-            let userId: Int
-            let name: String
-        }
-        try await patch("watch", body: Payload(id: id, userId: userId, name: name))
+    func updateWatchlist(id: Int, name: String) async throws -> Watchlist {
+        let body = UpdateWatchlistNameRequest(name: name)
+        let response: ApiResponseWatchlist = try await patch("watchlists/\(id)", body: body)
+        return response.data
     }
-    func createWatchAccount(accountId: Int, watchId: Int) async throws -> WatchAccount {
-        struct Payload: Codable {
-            let accountId: Int
-            let watchId: Int
-        }
-        let body = Payload(accountId: accountId, watchId: watchId)
-        return try await postWithFallback("watch_account", body: body) { newId in
-            WatchAccount(id: newId ?? -1, accountId: accountId, watchId: watchId)
-        }
+    func linkWatchlistAccount(watchlistId: Int, accountId: Int) async throws {
+        let body = CreateWatchlistAccountLinkRequest(watchlistId: watchlistId, accountId: accountId)
+        _ = try await perform(method: "POST", path: "watchlist-accounts", body: body)
     }
     // Create an account transaction (for account or broker holding)
     func createAccountTransaction(
@@ -315,9 +297,10 @@ extension RestClient {
             )
         }
     }
-    // Remove an account from a watchlist by link id
-    func deleteWatchAccount(id: Int) async throws {
-        try await delete("watch_account/\(id)")
+    // Remove an account from a watchlist
+    func unlinkWatchlistAccount(watchlistId: Int, accountId: Int) async throws {
+        let body = CreateWatchlistAccountLinkRequest(watchlistId: watchlistId, accountId: accountId)
+        _ = try await perform(method: "DELETE", path: "watchlist-accounts", body: body)
     }
     /// Permanently delete the user and all server-side data
     func deleteUser(id: Int) async throws {

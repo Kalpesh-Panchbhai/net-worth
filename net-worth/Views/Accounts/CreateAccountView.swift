@@ -126,7 +126,7 @@ struct CreateAccountView: View {
                 name: trimmed,
                 type: type,
                 currency: currency.uppercased(),
-                active: true
+                isActive: true
             )
             // POST succeeded; stop showing Saving…
             saving = false

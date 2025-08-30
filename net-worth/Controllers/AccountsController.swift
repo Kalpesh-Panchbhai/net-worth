@@ -4,7 +4,7 @@ import Combine
 
 @MainActor
 final class AccountsController: ObservableObject {
-    @Published var items: [Account] = []
+    @Published var items: [AccountSummary] = []
     @Published var isLoading = false
     @Published var errorMessage: String? = nil
 
@@ -22,7 +22,7 @@ final class AccountsController: ObservableObject {
         guard self.store == nil else { return }
         self.store = store
         store.$accounts
-            .sink { [weak self] accounts in
+            .sink { [weak self] (accounts: [AccountSummary]) in
                 guard let self = self else { return }
                 self.items = self.sortAccounts(accounts)
             }
@@ -65,17 +65,29 @@ final class AccountsController: ObservableObject {
     }
 
     // MARK: - Mutations
-    func create(name: String, type: String, currency: String, active: Bool) async -> Bool {
+    func create(name: String, type: String, currency: String, isActive: Bool = true) async -> Bool {
         do {
             let new = try await client.createAccount(
-                userId: userId, name: name, type: type, currency: currency.uppercased(), active: active
+                userId: userId, name: name, type: type, currency: currency.uppercased(), isActive: isActive
             )
             if let store = store {
                 await store.refreshAccounts(userId: userId)
                 await store.refreshWatchlists(userId: userId)
             } else {
+                // Convert Account to AccountSummary for local update
+                let summary = AccountSummary(
+                    id: new.id,
+                    userId: new.userId,
+                    name: new.name,
+                    type: new.type,
+                    isActive: new.isActive,
+                    currency: new.currency,
+                    currentDayValue: new.currentDayValue,
+                    previousDayValue: new.previousDayValue,
+                    invested: new.invested
+                )
                 var copy = items
-                copy.append(new)
+                copy.append(summary)
                 self.items = sortAccounts(copy)
             }
             return true
@@ -88,7 +100,7 @@ final class AccountsController: ObservableObject {
         }
     }
 
-    func delete(_ account: Account) async -> Bool {
+    func delete(_ account: AccountSummary) async -> Bool {
         do {
             try await client.deleteAccount(id: account.id)
             // Optimistic local update for responsiveness
@@ -112,9 +124,9 @@ final class AccountsController: ObservableObject {
     }
 
     // MARK: - Aggregates
-    var totalCurrent: Double { items.reduce(0) { $0 + $1.value.currentValue } }
-    var totalInvested: Double { items.reduce(0) { $0 + $1.value.invested } }
-    var totalPrevious: Double { items.reduce(0) { $0 + $1.value.previousValue } }
+    var totalCurrent: Double { items.reduce(0) { $0 + $1.currentDayValue } }
+    var totalInvested: Double { items.reduce(0) { $0 + $1.invested } }
+    var totalPrevious: Double { items.reduce(0) { $0 + $1.previousDayValue } }
     var changeVsPrev: Double { totalCurrent - totalPrevious }
     var changePercent: Double? {
         let denom = abs(totalPrevious)
@@ -126,8 +138,42 @@ final class AccountsController: ObservableObject {
         (UserDefaults.standard.string(forKey: "defaultCurrencyCode") ?? "INR").uppercased()
     }
 
+    // MARK: - Update Method
+    func update(id: Int, name: String? = nil, isActive: Bool? = nil) async -> Bool {
+        do {
+            let updated = try await client.updateAccount(id: id, name: name, isActive: isActive)
+            if let store = store {
+                await store.refreshAccounts(userId: userId)
+                await store.refreshWatchlists(userId: userId)
+            } else {
+                // Convert Account to AccountSummary for local update
+                let summary = AccountSummary(
+                    id: updated.id,
+                    userId: updated.userId,
+                    name: updated.name,
+                    type: updated.type,
+                    isActive: updated.isActive,
+                    currency: updated.currency,
+                    currentDayValue: updated.currentDayValue,
+                    previousDayValue: updated.previousDayValue,
+                    invested: updated.invested
+                )
+                if let index = items.firstIndex(where: { $0.id == id }) {
+                    items[index] = summary
+                }
+            }
+            return true
+        } catch let api as APIError {
+            self.errorMessage = api.errorDescription ?? "Request failed"
+            return false
+        } catch {
+            self.errorMessage = error.localizedDescription
+            return false
+        }
+    }
+    
     // MARK: - Helpers
-    private func sortAccounts(_ list: [Account]) -> [Account] {
+    private func sortAccounts(_ list: [AccountSummary]) -> [AccountSummary] {
         list.sorted { a, b in
             if a.type != b.type { return a.type.localizedCaseInsensitiveCompare(b.type) == .orderedAscending }
             return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending

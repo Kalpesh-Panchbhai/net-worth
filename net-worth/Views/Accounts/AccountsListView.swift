@@ -4,7 +4,7 @@ struct AccountsListView: View {
     @StateObject private var vm: AccountsController
     @State private var navCollapsed = false
     @State private var showCreateSheet = false
-    @State private var pendingDelete: Account? = nil
+    @State private var pendingDelete: AccountSummary? = nil
     @AppStorage("defaultCurrencyCode") private var defaultCurrencyCode: String = "INR"
     @EnvironmentObject private var banners: BannerCenter
     @EnvironmentObject private var tabCommands: TabCommandCenter
@@ -61,7 +61,7 @@ struct AccountsListView: View {
             .onPreferenceChange(NavBarOffsetKey.self) { y in
                 withAnimation(.easeInOut(duration: 0.2)) { navCollapsed = y < -8 }
             }
-            .navigationDestination(for: Account.self) { account in
+            .navigationDestination(for: AccountSummary.self) { account in
                 AccountDetailView(account: account)
             }
             // Custom search bar used instead of .searchable for brand styling

@@ -5,8 +5,8 @@ import SwiftUI
 final class LookupStore: ObservableObject {
     @Published private(set) var incomeSources: [IncomeSource] = []
     @Published private(set) var incomeTags: [IncomeTag] = []
-    @Published private(set) var accounts: [Account] = []
-    @Published private(set) var watchlists: [Watchlist] = []
+    @Published private(set) var accounts: [AccountSummary] = []
+    @Published private(set) var watchlists: [WatchlistSummary] = []
     @Published private(set) var incomes: [Income] = []
 
     private var sourcesLoaded = false
@@ -67,7 +67,7 @@ final class LookupStore: ObservableObject {
         accountsLoading = true
         defer { accountsLoading = false }
         do {
-            let list: [Account] = try await client.fetchAccounts(userId: userId)
+            let list: [AccountSummary] = try await client.fetchAccounts(userId: userId)
             self.accounts = list.sorted { a, b in
                 if a.type != b.type { return a.type.localizedCaseInsensitiveCompare(b.type) == .orderedAscending }
                 return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
@@ -83,7 +83,7 @@ final class LookupStore: ObservableObject {
         watchlistsLoading = true
         defer { watchlistsLoading = false }
         do {
-            let list: [Watchlist] = try await client.fetchWatchlists(userId: userId)
+            let list: [WatchlistSummary] = try await client.fetchWatchlists(userId: userId)
             self.watchlists = list.sorted { a, b in
                 let aIsAll = a.name.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame
                 let bIsAll = b.name.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame
@@ -141,7 +141,7 @@ final class LookupStore: ObservableObject {
         accountsRefreshing = true
         defer { accountsRefreshing = false }
         do {
-            let list: [Account] = try await client.fetchAccounts(userId: userId)
+            let list: [AccountSummary] = try await client.fetchAccounts(userId: userId)
             self.accounts = list.sorted { a, b in
                 if a.type != b.type { return a.type.localizedCaseInsensitiveCompare(b.type) == .orderedAscending }
                 return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
@@ -157,7 +157,7 @@ final class LookupStore: ObservableObject {
         watchlistsRefreshing = true
         defer { watchlistsRefreshing = false }
         do {
-            let list: [Watchlist] = try await client.fetchWatchlists(userId: userId)
+            let list: [WatchlistSummary] = try await client.fetchWatchlists(userId: userId)
             self.watchlists = list.sorted { a, b in
                 let aIsAll = a.name.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame
                 let bIsAll = b.name.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame
