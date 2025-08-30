@@ -8,3 +8,32 @@ struct AccountTransaction: Codable, Identifiable, Hashable {
     let value: Double
     let operation: String?
 }
+
+// MARK: - New Transaction Models (aligned with OpenAPI)
+struct Transaction: Codable, Identifiable, Hashable {
+    let id: Int
+    let accountId: Int
+    let holdingId: Int
+    let txnDate: String // Date format: "YYYY-MM-DD"
+    let invested: Double
+    let value: Double
+}
+
+struct CreateTransactionRequest: Codable {
+    let accountId: Int
+    let holdingId: Int
+    let txnDate: String // Date format: "YYYY-MM-DD"
+    let invested: Double
+    let value: Double
+}
+
+// MARK: - API Response Wrappers
+struct ApiResponseTransaction: Codable {
+    let success: Bool
+    let data: Transaction
+}
+
+struct ApiResponseTransactionList: Codable {
+    let success: Bool
+    let data: [Transaction]
+}

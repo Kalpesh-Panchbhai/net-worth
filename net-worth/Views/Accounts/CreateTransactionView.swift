@@ -2,8 +2,11 @@ import SwiftUI
 
 struct CreateTransactionView: View {
     let accountId: Int
-    let accountBrokerId: Int
+    let accountBrokerId: Int // Legacy parameter name for compatibility
     var onSaved: (() -> Void)? = nil
+    
+    // New parameter for holdings API
+    var holdingId: Int { accountBrokerId }
 
     @Environment(\.dismiss) private var dismiss
     @AppStorage("defaultCurrencyCode") private var defaultCurrency: String = "INR"
@@ -115,12 +118,16 @@ struct CreateTransactionView: View {
         errorMessage = nil
         defer { saving = false }
         do {
-            _ = try await RestClient().createAccountTransaction(
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let txnDate = dateFormatter.string(from: date)
+            
+            _ = try await RestClient().createTransaction(
                 accountId: accountId,
-                accountBrokerId: accountBrokerId,
-                transactionDate: date,
-                value: value,
-                operation: operation.rawValue
+                holdingId: holdingId,
+                txnDate: txnDate,
+                invested: value, // For now, assume invested = value
+                value: value
             )
             onSaved?()
             dismiss()

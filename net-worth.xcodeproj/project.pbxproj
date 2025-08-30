@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D0259BE2E62DA7E00D72525 /* HoldingModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0259BD2E62DA7E00D72525 /* HoldingModels.swift */; };
+		7D0259C02E62DA8B00D72525 /* openapi.json in Resources */ = {isa = PBXBuildFile; fileRef = 7D0259BF2E62DA8B00D72525 /* openapi.json */; };
 		7D2736832E59DDAE00F32B4C /* WatchAccountsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2736822E59DDAE00F32B4C /* WatchAccountsController.swift */; };
 		7D2736852E59DDBB00F32B4C /* WatchlistAccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2736842E59DDBB00F32B4C /* WatchlistAccountsView.swift */; };
 		7D2736872E59E92600F32B4C /* AccountsSectionedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2736862E59E92600F32B4C /* AccountsSectionedList.swift */; };
@@ -25,7 +27,6 @@
 		7D59B5392BE24ABA006F3F00 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7D59B5382BE24ABA006F3F00 /* GoogleSignInSwift */; };
 		7D59B53D2BE24B1C006F3F00 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7D59B53C2BE24B1C006F3F00 /* GoogleService-Info.plist */; };
 		7D627CA62E5A346800BB1CD7 /* AccountDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D627CA52E5A346800BB1CD7 /* AccountDetailView.swift */; };
-		7D627CA82E5A36BF00BB1CD7 /* BrokerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D627CA72E5A36BF00BB1CD7 /* BrokerModels.swift */; };
 		7D627CAA2E5A38EA00BB1CD7 /* TransactionModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D627CA92E5A38EA00BB1CD7 /* TransactionModels.swift */; };
 		7D627CB42E5A3E2F00BB1CD7 /* TransactionRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D627CB32E5A3E2F00BB1CD7 /* TransactionRows.swift */; };
 		7D627CB62E5A445400BB1CD7 /* BrokerHoldingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D627CB52E5A445400BB1CD7 /* BrokerHoldingDetailView.swift */; };
@@ -69,6 +70,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7D0259BD2E62DA7E00D72525 /* HoldingModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingModels.swift; sourceTree = "<group>"; };
+		7D0259BF2E62DA8B00D72525 /* openapi.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = openapi.json; sourceTree = "<group>"; };
 		7D2736822E59DDAE00F32B4C /* WatchAccountsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAccountsController.swift; sourceTree = "<group>"; };
 		7D2736842E59DDBB00F32B4C /* WatchlistAccountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistAccountsView.swift; sourceTree = "<group>"; };
 		7D2736862E59E92600F32B4C /* AccountsSectionedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsSectionedList.swift; sourceTree = "<group>"; };
@@ -86,7 +89,6 @@
 		7D59B40E2BE24774006F3F00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		7D59B53C2BE24B1C006F3F00 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7D627CA52E5A346800BB1CD7 /* AccountDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailView.swift; sourceTree = "<group>"; };
-		7D627CA72E5A36BF00BB1CD7 /* BrokerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrokerModels.swift; sourceTree = "<group>"; };
 		7D627CA92E5A38EA00BB1CD7 /* TransactionModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionModels.swift; sourceTree = "<group>"; };
 		7D627CB32E5A3E2F00BB1CD7 /* TransactionRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRows.swift; sourceTree = "<group>"; };
 		7D627CB52E5A445400BB1CD7 /* BrokerHoldingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrokerHoldingDetailView.swift; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 		7D59B3FF2BE246FF006F3F00 /* net-worth */ = {
 			isa = PBXGroup;
 			children = (
+				7D0259BF2E62DA8B00D72525 /* openapi.json */,
 				7D59B53C2BE24B1C006F3F00 /* GoogleService-Info.plist */,
 				7D59B40E2BE24774006F3F00 /* Info.plist */,
 				7D59B4002BE246FF006F3F00 /* net_worthApp.swift */,
@@ -207,8 +210,8 @@
 				7DAC01012E70000300000001 /* AccountModels.swift */,
 				7DAA000E2BE300000000000E /* AppAppearance.swift */,
 				7DAA00012BE3000000000001 /* AppTab.swift */,
-				7D627CA72E5A36BF00BB1CD7 /* BrokerModels.swift */,
 				7DCE00012E7A000100000001 /* CurrencyModels.swift */,
+				7D0259BD2E62DA7E00D72525 /* HoldingModels.swift */,
 				7DAA00022BE3000000000002 /* IncomeModels.swift */,
 				7D627CA92E5A38EA00BB1CD7 /* TransactionModels.swift */,
 				7DAB02012E70000100000001 /* WatchModels.swift */,
@@ -402,6 +405,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D0259C02E62DA8B00D72525 /* openapi.json in Resources */,
 				7D59B4082BE24701006F3F00 /* Preview Assets.xcassets in Resources */,
 				7D59B4052BE24701006F3F00 /* Assets.xcassets in Resources */,
 				7D59B53D2BE24B1C006F3F00 /* GoogleService-Info.plist in Resources */,
@@ -457,7 +461,6 @@
 				7DAB01022E70000100000002 /* WatchlistController.swift in Sources */,
 				7DAB01032E70000100000003 /* WatchlistViews.swift in Sources */,
 				7D2736872E59E92600F32B4C /* AccountsSectionedList.swift in Sources */,
-				7D627CA82E5A36BF00BB1CD7 /* BrokerModels.swift in Sources */,
 				7DECCEEC2E587C5200225DDA /* StringPickerSheet.swift in Sources */,
 				7DAB01042E70000200000004 /* FloatingActionButton.swift in Sources */,
 				7D627CBA2E5A4AC700BB1CD7 /* DecimalTextField.swift in Sources */,
@@ -466,6 +469,7 @@
 				7DECCEE62E58699D00225DDA /* AssetRowCard.swift in Sources */,
 				7DAC01132E70000300000013 /* AccountsListView.swift in Sources */,
 				7DCE00022E7A000100000002 /* CurrencyModels.swift in Sources */,
+				7D0259BE2E62DA7E00D72525 /* HoldingModels.swift in Sources */,
 				7DCE00042E7A000100000004 /* DefaultCurrencyView.swift in Sources */,
 				7D2736832E59DDAE00F32B4C /* WatchAccountsController.swift in Sources */,
 			);

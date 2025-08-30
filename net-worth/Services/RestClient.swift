@@ -205,14 +205,90 @@ extension RestClient {
         let response: ApiResponseWatchlistSummaryList = try await get("account-watchlists/\(accountId)")
         return response.data
     }
-    func fetchAccountBroker(accountId: Int) async throws -> [AccountBroker] {
-        try await getList("account_broker/\(accountId)")
+    // MARK: - Holdings API (replaces AccountBroker)
+    func fetchHoldings(accountId: Int) async throws -> [HoldingSummary] {
+        let response: ApiResponseHoldingSummaryList = try await get("holdings/\(accountId)")
+        return response.data
     }
+    
+    func createHolding(
+        accountId: Int,
+        name: String,
+        symbol: String
+    ) async throws -> Holding {
+        let body = CreateHoldingRequest(
+            accountId: accountId,
+            name: name,
+            symbol: symbol
+        )
+        let response: ApiResponseHolding = try await post("holdings", body: body)
+        return response.data
+    }
+    
+    func deleteHolding(id: Int) async throws {
+        try await delete("holdings/\(id)")
+    }
+    
+    // MARK: - Transactions API (updated for holdings)
     func fetchAccountTransactions(accountId: Int) async throws -> [AccountTransaction] {
-        try await getList("account_transaction/\(accountId)/account")
+        let response: ApiResponseTransactionList = try await get("transactions?accountId=\(accountId)")
+        return response.data.map { transaction in
+            // Convert new Transaction model to legacy AccountTransaction for compatibility
+            AccountTransaction(
+                id: transaction.id,
+                accountId: transaction.accountId,
+                accountBrokerId: transaction.holdingId,
+                transactionDate: transaction.txnDate + " 00:00:00", // Convert date format
+                value: transaction.value,
+                operation: nil
+            )
+        }
     }
+    
+    func fetchHoldingTransactions(holdingId: Int) async throws -> [AccountTransaction] {
+        let response: ApiResponseTransactionList = try await get("transactions?holdingId=\(holdingId)")
+        return response.data.map { transaction in
+            // Convert new Transaction model to legacy AccountTransaction for compatibility
+            AccountTransaction(
+                id: transaction.id,
+                accountId: transaction.accountId,
+                accountBrokerId: transaction.holdingId,
+                transactionDate: transaction.txnDate + " 00:00:00", // Convert date format
+                value: transaction.value,
+                operation: nil
+            )
+        }
+    }
+    
+    func createTransaction(
+        accountId: Int,
+        holdingId: Int,
+        txnDate: String,
+        invested: Double,
+        value: Double
+    ) async throws -> Transaction {
+        let body = CreateTransactionRequest(
+            accountId: accountId,
+            holdingId: holdingId,
+            txnDate: txnDate,
+            invested: invested,
+            value: value
+        )
+        let response: ApiResponseTransaction = try await post("transactions", body: body)
+        return response.data
+    }
+    
+    func deleteTransaction(id: Int) async throws {
+        try await delete("transactions/\(id)")
+    }
+    
+    // MARK: - Legacy Compatibility (for gradual migration)
+    func fetchAccountBroker(accountId: Int) async throws -> [AccountBroker] {
+        return try await fetchHoldings(accountId: accountId)
+    }
+    
     func fetchAccountBrokerTransactions(accountBrokerId: Int) async throws -> [AccountTransaction] {
-        try await getList("account_transaction/\(accountBrokerId)/account_broker")
+        return try await fetchHoldingTransactions(holdingId: accountBrokerId)
     }
     // MARK: - Accounts (Create/Update/Delete)
     func createAccount(
