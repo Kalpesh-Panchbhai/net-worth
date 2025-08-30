@@ -247,7 +247,7 @@ struct AccountDetailView: View {
         txError = nil
         defer { isLoadingTx = false }
         do {
-            let list = try await RestClient().fetchAccountTransactions(accountId: account.id)
+            let list = try await RestClient().fetchLegacyAccountTransactions(accountId: account.id)
             self.transactions = list
         } catch let api as APIError {
             txError = api.errorDescription ?? "Failed to load transactions"

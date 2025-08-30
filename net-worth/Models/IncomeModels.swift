@@ -94,7 +94,7 @@ struct CreateIncomeRequest: Codable {
     let netAmount: Double
     let taxPaid: Double?
     let currency: String
-    let creditedDate: String // Date-only format (YYYY-MM-DD)
+    let creditedDate: String // UTC ISO 8601 format as per OpenAPI spec
 }
 
 struct UpdateIncomeRequest: Codable {
@@ -122,6 +122,36 @@ struct CreateIncomeTagRequest: Codable {
 struct ApiResponse<T: Codable>: Codable {
     let success: Bool
     let data: T
+}
+
+struct ApiResponseIncome: Codable {
+    let success: Bool
+    let data: Income
+}
+
+struct ApiResponseIncomeList: Codable {
+    let success: Bool
+    let data: [Income]
+}
+
+struct ApiResponseIncomeSource: Codable {
+    let success: Bool
+    let data: IncomeSource
+}
+
+struct ApiResponseIncomeSourceList: Codable {
+    let success: Bool
+    let data: [IncomeSource]
+}
+
+struct ApiResponseIncomeTag: Codable {
+    let success: Bool
+    let data: IncomeTag
+}
+
+struct ApiResponseIncomeTagList: Codable {
+    let success: Bool
+    let data: [IncomeTag]
 }
 
 struct ApiError: Codable {

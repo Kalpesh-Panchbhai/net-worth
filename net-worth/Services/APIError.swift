@@ -3,6 +3,7 @@ import Foundation
 enum APIError: LocalizedError {
     case invalidURL
     case badStatus(Int)
+    case apiError(Int, ApiError)
     case decoding(Error)
     case transport(Error)
     
@@ -14,8 +15,11 @@ enum APIError: LocalizedError {
             if (500...599).contains(code) { return "The server is having a problem (\(code)). Please try again." }
             if code == 404 { return "Requested resource was not found (404)." }
             if code == 401 { return "You're not authorized to perform this action (401)." }
-            if code == 409 { return "This name already exists. Please choose a different name." }
+            if code == 409 { return "A conflict occurred. This resource may already exist or violate a constraint." }
+            if code == 400 { return "Invalid request. Please check your input and try again." }
             return "Server responded with status: \(code)"
+        case .apiError(let code, let apiError):
+            return "\(apiError.message) (Error \(code): \(apiError.code))"
         case .decoding:
             return "We couldn’t read the server response. Please try again."
         case .transport(let err):

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		7D0259BE2E62DA7E00D72525 /* HoldingModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0259BD2E62DA7E00D72525 /* HoldingModels.swift */; };
 		7D0259C02E62DA8B00D72525 /* openapi.json in Resources */ = {isa = PBXBuildFile; fileRef = 7D0259BF2E62DA8B00D72525 /* openapi.json */; };
+		7D0259C22E62DD7800D72525 /* UserModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0259C12E62DD7800D72525 /* UserModels.swift */; };
 		7D2736832E59DDAE00F32B4C /* WatchAccountsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2736822E59DDAE00F32B4C /* WatchAccountsController.swift */; };
 		7D2736852E59DDBB00F32B4C /* WatchlistAccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2736842E59DDBB00F32B4C /* WatchlistAccountsView.swift */; };
 		7D2736872E59E92600F32B4C /* AccountsSectionedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2736862E59E92600F32B4C /* AccountsSectionedList.swift */; };
@@ -72,6 +73,7 @@
 /* Begin PBXFileReference section */
 		7D0259BD2E62DA7E00D72525 /* HoldingModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldingModels.swift; sourceTree = "<group>"; };
 		7D0259BF2E62DA8B00D72525 /* openapi.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = openapi.json; sourceTree = "<group>"; };
+		7D0259C12E62DD7800D72525 /* UserModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModels.swift; sourceTree = "<group>"; };
 		7D2736822E59DDAE00F32B4C /* WatchAccountsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAccountsController.swift; sourceTree = "<group>"; };
 		7D2736842E59DDBB00F32B4C /* WatchlistAccountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistAccountsView.swift; sourceTree = "<group>"; };
 		7D2736862E59E92600F32B4C /* AccountsSectionedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsSectionedList.swift; sourceTree = "<group>"; };
@@ -214,6 +216,7 @@
 				7D0259BD2E62DA7E00D72525 /* HoldingModels.swift */,
 				7DAA00022BE3000000000002 /* IncomeModels.swift */,
 				7D627CA92E5A38EA00BB1CD7 /* TransactionModels.swift */,
+				7D0259C12E62DD7800D72525 /* UserModels.swift */,
 				7DAB02012E70000100000001 /* WatchModels.swift */,
 			);
 			path = Models;
@@ -435,6 +438,7 @@
 				7D2FBCA32E51CCDD0046FE17 /* IncomeTypesView.swift in Sources */,
 				7DAA10072BE3000000000007 /* Interactions.swift in Sources */,
 				7D4D09482E53021B00E188D0 /* RestClient.swift in Sources */,
+				7D0259C22E62DD7800D72525 /* UserModels.swift in Sources */,
 				7D6F68EA2E5739D400E0AD02 /* ScrollToTop.swift in Sources */,
 				7DECCEEE2E587D8400225DDA /* NamedEntityPickerSheet.swift in Sources */,
 				7D627CA62E5A346800BB1CD7 /* AccountDetailView.swift in Sources */,

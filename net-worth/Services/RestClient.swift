@@ -54,6 +54,11 @@ struct RestClient {
             let (data, response) = try await URLSession.shared.data(for: request)
             guard let http = response as? HTTPURLResponse else { throw APIError.badStatus(-1) }
             guard (200...299).contains(http.statusCode) else {
+                // Try to parse API error from response body
+                if !dataIsBlank(data),
+                   let apiError = try? JSONDecoder().decode(ApiError.self, from: data) {
+                    throw APIError.apiError(http.statusCode, apiError)
+                }
                 throw APIError.badStatus(http.statusCode)
             }
             return (data, http)
@@ -177,7 +182,7 @@ private struct MinimalIdResponse: Decodable {
 // MARK: - Backward-compatible conveniences for current entities
 extension RestClient {
     func fetchIncomes(userId: Int) async throws -> [Income] {
-        let response: ApiResponse<[Income]> = try await get("incomes/\(userId)")
+        let response: ApiResponseIncomeList = try await get("incomes/\(userId)")
         return response.data
     }
     func fetchAccounts(userId: Int) async throws -> [AccountSummary] {
@@ -185,11 +190,11 @@ extension RestClient {
         return response.data
     }
     func fetchIncomeSources(userId: Int) async throws -> [IncomeSource] {
-        let response: ApiResponse<[IncomeSource]> = try await get("income-sources/\(userId)")
+        let response: ApiResponseIncomeSourceList = try await get("income-sources/\(userId)")
         return response.data
     }
     func fetchIncomeTags(userId: Int) async throws -> [IncomeTag] {
-        let response: ApiResponse<[IncomeTag]> = try await get("income-tags/\(userId)")
+        let response: ApiResponseIncomeTagList = try await get("income-tags/\(userId)")
         return response.data
     }
     func fetchWatchlists(userId: Int) async throws -> [WatchlistSummary] {
@@ -230,10 +235,15 @@ extension RestClient {
     }
     
     // MARK: - Transactions API (updated for holdings)
-    func fetchAccountTransactions(accountId: Int) async throws -> [AccountTransaction] {
+    func fetchAccountTransactions(accountId: Int) async throws -> [Transaction] {
         let response: ApiResponseTransactionList = try await get("transactions?accountId=\(accountId)")
-        return response.data.map { transaction in
-            // Convert new Transaction model to legacy AccountTransaction for compatibility
+        return response.data
+    }
+    
+    // Legacy compatibility method
+    func fetchLegacyAccountTransactions(accountId: Int) async throws -> [AccountTransaction] {
+        let transactions = try await fetchAccountTransactions(accountId: accountId)
+        return transactions.map { transaction in
             AccountTransaction(
                 id: transaction.id,
                 accountId: transaction.accountId,
@@ -245,10 +255,15 @@ extension RestClient {
         }
     }
     
-    func fetchHoldingTransactions(holdingId: Int) async throws -> [AccountTransaction] {
+    func fetchHoldingTransactions(holdingId: Int) async throws -> [Transaction] {
         let response: ApiResponseTransactionList = try await get("transactions?holdingId=\(holdingId)")
-        return response.data.map { transaction in
-            // Convert new Transaction model to legacy AccountTransaction for compatibility
+        return response.data
+    }
+    
+    // Legacy compatibility method
+    func fetchLegacyHoldingTransactions(holdingId: Int) async throws -> [AccountTransaction] {
+        let transactions = try await fetchHoldingTransactions(holdingId: holdingId)
+        return transactions.map { transaction in
             AccountTransaction(
                 id: transaction.id,
                 accountId: transaction.accountId,
@@ -288,7 +303,7 @@ extension RestClient {
     }
     
     func fetchAccountBrokerTransactions(accountBrokerId: Int) async throws -> [AccountTransaction] {
-        return try await fetchHoldingTransactions(holdingId: accountBrokerId)
+        return try await fetchLegacyHoldingTransactions(holdingId: accountBrokerId)
     }
     // MARK: - Accounts (Create/Update/Delete)
     func createAccount(
@@ -321,6 +336,13 @@ extension RestClient {
     
     func deleteAccount(id: Int) async throws {
         try await delete("accounts/\(id)")
+    }
+    
+    // MARK: - Users API
+    func createOrEnsureUser(externalUserId: String) async throws -> User {
+        let body = CreateUserRequest(externalUserId: externalUserId)
+        let response: ApiResponseUser = try await post("users", body: body)
+        return response.data
     }
     func createWatchlist(userId: Int, name: String) async throws -> Watchlist {
         let body = CreateWatchlistRequest(userId: userId, name: name)
@@ -380,26 +402,40 @@ extension RestClient {
     }
     /// Permanently delete the user and all server-side data
     func deleteUser(id: Int) async throws {
-        try await delete("user/\(id)")
+        try await delete("users/\(id)")
     }
     func setDefaultIncomeSource(id: Int) async throws {
         try await patch("income-sources/\(id)", body: EmptyBody())
     }
     
+    // MARK: - Income Sources API (Complete Implementation)
+    func createIncomeSource(
+        userId: Int,
+        name: String,
+        isDefault: Bool = false
+    ) async throws -> IncomeSource {
+        let body = CreateIncomeSourceRequest(userId: userId, name: name, isDefault: isDefault)
+        let response: ApiResponseIncomeSource = try await post("income-sources", body: body)
+        return response.data
+    }
+    
+    func setDefaultIncomeSourceById(id: Int) async throws {
+        try await patch("income-sources/\(id)", body: EmptyBody())
+    }
+    
+    // MARK: - Income Tags API (Complete Implementation)
+    func createIncomeTag(
+        userId: Int,
+        name: String,
+        isDefault: Bool = false
+    ) async throws -> IncomeTag {
+        let body = CreateIncomeTagRequest(userId: userId, name: name, isDefault: isDefault)
+        let response: ApiResponseIncomeTag = try await post("income-tags", body: body)
+        return response.data
+    }
+    
     func setDefaultIncomeTag(id: Int) async throws {
         try await patch("income-tags/\(id)", body: EmptyBody())
-    }
-    
-    func createIncomeSource(userId: Int, name: String, isDefault: Bool = false) async throws -> IncomeSource {
-        let body = CreateIncomeSourceRequest(userId: userId, name: name, isDefault: isDefault)
-        let response: ApiResponse<IncomeSource> = try await post("income-sources", body: body)
-        return response.data
-    }
-    
-    func createIncomeTag(userId: Int, name: String, isDefault: Bool = false) async throws -> IncomeTag {
-        let body = CreateIncomeTagRequest(userId: userId, name: name, isDefault: isDefault)
-        let response: ApiResponse<IncomeTag> = try await post("income-tags", body: body)
-        return response.data
     }
 
     func deleteIncome(id: Int) async throws {
@@ -416,8 +452,8 @@ extension RestClient {
         creditedDate: Date,
         currency: String
     ) async throws -> Income {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         let dateString = formatter.string(from: creditedDate)
         
         let body = CreateIncomeRequest(
@@ -430,7 +466,7 @@ extension RestClient {
             creditedDate: dateString
         )
         
-        let response: ApiResponse<Income> = try await post("incomes", body: body)
+        let response: ApiResponseIncome = try await post("incomes", body: body)
         return response.data
     }
 
@@ -438,14 +474,10 @@ extension RestClient {
     func registerFirebaseUser(uid: String) async throws -> Int {
         struct Payload: Codable { let externalUserId: String }
         let body = Payload(externalUserId: uid)
-        let response: ApiResponse<User> = try await post("users", body: body)
+        let response: ApiResponseUser = try await post("users", body: body)
         return response.data.id
     }
     
-    struct User: Codable {
-        let id: Int
-        let externalUserId: String
-    }
 }
 
 // Note: Use RestClient directly going forward. A thin deprecated IncomeService wrapper
