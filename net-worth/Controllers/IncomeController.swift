@@ -166,6 +166,13 @@ final class IncomeController: ObservableObject {
             if let store = store { await store.refreshIncomes(userId: userId) }
             return true
         } catch let api as APIError {
+            // Gracefully handle one-income-per-date rule (HTTP 409)
+            if case .apiError(let status, let serverErr) = api, status == 409 {
+                self.errorMessage = serverErr.message.isEmpty
+                    ? "An income for this date already exists. Choose a different date or edit the existing entry."
+                    : serverErr.message
+                return false
+            }
             if case .transport(let err) = api, let urlErr = err as? URLError, urlErr.code == .cancelled {
                 return false
             }

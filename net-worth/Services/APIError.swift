@@ -19,7 +19,19 @@ enum APIError: LocalizedError {
             if code == 400 { return "Invalid request. Please check your input and try again." }
             return "Server responded with status: \(code)"
         case .apiError(let code, let apiError):
-            return "\(apiError.message) (Error \(code): \(apiError.code))"
+            // Prefer clean, human-friendly messages from server.
+            // 409 conflicts (e.g., duplicate names) should not show technical suffixes.
+            if code == 409 {
+                var msg = apiError.message
+                // Remove noisy suffix commonly returned by backend
+                msg = msg.replacingOccurrences(of: " for this user", with: "", options: .caseInsensitive)
+                // Collapse any double spaces left after removal
+                msg = msg.replacingOccurrences(of: "  ", with: " ")
+                msg = msg.trimmingCharacters(in: .whitespacesAndNewlines)
+                return msg.isEmpty ? "Conflict. This item may already exist." : msg
+            }
+            // For other statuses, still return the server message (fallback to generic if empty).
+            return apiError.message.isEmpty ? "Request failed (\(code)). Please try again." : apiError.message
         case .decoding:
             return "We couldn’t read the server response. Please try again."
         case .transport(let err):

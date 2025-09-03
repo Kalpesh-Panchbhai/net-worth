@@ -452,8 +452,8 @@ extension RestClient {
         creditedDate: Date,
         currency: String
     ) async throws -> Income {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
         let dateString = formatter.string(from: creditedDate)
         
         let body = CreateIncomeRequest(
