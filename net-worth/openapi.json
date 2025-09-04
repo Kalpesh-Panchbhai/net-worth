@@ -49,6 +49,10 @@
     {
       "name": "transactions",
       "description": "Transactions listing & deletion"
+    },
+    {
+      "name": "chart-data",
+      "description": "Chart data for holdings, accounts, and watchlists"
     }
   ],
   "paths": {
@@ -69,10 +73,10 @@
                 "default": {
                   "value": {
                     "userId": 1,
-                    "incomeSourceId": 10,
-                    "incomeTagId": 5,
-                    "netAmount": 1000.5,
-                    "taxPaid": 100.25,
+                    "incomeSourceId": 1,
+                    "incomeTagId": 1,
+                    "netAmount": 1800.50,
+                    "taxPaid": 180.25,
                     "currency": "INR",
                     "creditedDate": "2025-08-26"
                   }
@@ -88,12 +92,62 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseIncome"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 1,
+                        "userId": 1,
+                        "incomeSourceId": 1,
+                        "incomeTagId": 1,
+                        "netAmount": 1000.5,
+                        "taxPaid": 100.25,
+                        "currency": "INR",
+                        "creditedDate": "2025-08-26"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "duplicateComposite": {
+                    "value": {
+                      "code": "CONFLICT",
+                      "message": "Income for the same date, source and tag already exists."
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingFilter": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "Filter by accountId or holdingId is required"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -126,15 +180,29 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseWatchlistSummaryList"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "id": 1,
+                          "name": "All",
+                          "userId": 1,
+                          "currentDayValue": 2700.5,
+                          "previousDayValue": 2650.25,
+                          "invested": 2380.0
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -175,12 +243,40 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseIncomeSource"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 1,
+                        "userId": 1,
+                        "name": "Company",
+                        "isDefault": false
+                      }
+                    }
+                  }
                 }
               }
             }
           },
           "409": {
-            "$ref": "#/components/responses/Conflict"
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "duplicateName": {
+                    "value": {
+                      "code": "CONFLICT",
+                      "message": "Income source with the same name already exists."
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -224,12 +320,40 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseIncomeTag"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 1,
+                        "userId": 1,
+                        "name": "Salary",
+                        "isDefault": false
+                      }
+                    }
+                  }
                 }
               }
             }
           },
           "409": {
-            "$ref": "#/components/responses/Conflict"
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "duplicateName": {
+                    "value": {
+                      "code": "CONFLICT",
+                      "message": "Income tag with the same name already exists."
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -246,6 +370,7 @@
           "users"
         ],
         "summary": "Create or ensure a user exists",
+        "description": "Ensures a user exists for the given externalUserId using an idempotent insert (INSERT IGNORE). Returns 201 when a new user is created, or 200 when the user already exists. On first creation, a default watchlist named 'All' is created for the user.",
         "requestBody": {
           "required": true,
           "content": {
@@ -270,16 +395,38 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseUser"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 1,
+                        "externalUserId": "demo-user"
+                      }
+                    }
+                  }
                 }
               }
             }
           },
           "200": {
-            "description": "User ensured",
+            "description": "User already existed (ensured)",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseUser"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 1,
+                        "externalUserId": "demo-user"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -315,10 +462,40 @@
             "description": "User deleted"
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "code": "NOT_FOUND",
+                      "message": "User not found"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingPathId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "Path parameter 'id' is required"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -356,10 +533,22 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingPathId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "Path parameter 'id' is required"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -388,10 +577,40 @@
             "description": "Default set"
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Income tag not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "code": "NOT_FOUND",
+                      "message": "Income tag not found"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingPathId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "Path parameter 'id' is required"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -424,15 +643,42 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseIncomeSourceList"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "id": 1,
+                          "userId": 1,
+                          "name": "Company",
+                          "isDefault": false
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingPathId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "Path parameter 'id' is required"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -461,10 +707,40 @@
             "description": "Default set"
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Income source not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "code": "NOT_FOUND",
+                      "message": "Income source not found"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingPathId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "Path parameter 'id' is required"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -497,15 +773,41 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseIncomeList"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "id": 1,
+                          "userId": 1,
+                          "incomeSourceId": 1,
+                          "incomeTagId": 1,
+                          "netAmount": 1000.5,
+                          "taxPaid": 100.25,
+                          "currency": "INR",
+                          "creditedDate": "2025-08-26"
+                        },
+                        {
+                          "id": 2,
+                          "userId": 1,
+                          "incomeSourceId": 1,
+                          "incomeTagId": 1,
+                          "netAmount": 1500.75,
+                          "taxPaid": 150.25,
+                          "currency": "INR",
+                          "creditedDate": "2025-08-31"
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -535,6 +837,18 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/UpdateIncomeRequest"
+              },
+              "examples": {
+                "default": {
+                  "value": {
+                    "incomeSourceId": 1,
+                    "incomeTagId": 1,
+                    "netAmount": 1750.25,
+                    "taxPaid": 170.00,
+                    "currency": "INR",
+                    "creditedDate": "2025-09-01"
+                  }
+                }
               }
             }
           }
@@ -550,11 +864,59 @@
               }
             }
           },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "duplicateComposite": {
+                    "value": {
+                      "code": "CONFLICT",
+                      "message": "Income for the same date, source and tag already exists."
+                    }
+                  }
+                }
+              }
+            }
+          },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Income not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "code": "NOT_FOUND",
+                      "message": "Income not found"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingPathId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "Path parameter 'id' is required"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -582,7 +944,7 @@
             "description": "Deleted"
           },
           "404": {
-            "description": "Transaction not found",
+            "description": "Income not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -592,7 +954,7 @@
                   "default": {
                     "value": {
                       "code": "NOT_FOUND",
-                      "message": "Transaction not found"
+                      "message": "Income not found"
                     }
                   }
                 }
@@ -600,7 +962,22 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingPathId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "Path parameter 'id' is required"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -639,12 +1016,39 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseWatchlist"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 1,
+                        "userId": 1,
+                        "name": "My Watchlist"
+                      }
+                    }
+                  }
                 }
               }
             }
           },
           "409": {
-            "$ref": "#/components/responses/Conflict"
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "duplicateName": {
+                    "value": {
+                      "code": "CONFLICT",
+                      "message": "Watchlist with the same name already exists."
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -680,15 +1084,29 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseWatchlistSummaryList"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "id": 1,
+                          "name": "All",
+                          "userId": 1,
+                          "currentDayValue": 2700.5,
+                          "previousDayValue": 2650.25,
+                          "invested": 2380.0
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -736,18 +1154,75 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseWatchlist"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 1,
+                        "userId": 1,
+                        "name": "Updated Name"
+                      }
+                    }
+                  }
                 }
               }
             }
           },
           "409": {
-            "$ref": "#/components/responses/Conflict"
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "duplicateName": {
+                    "value": {
+                      "code": "CONFLICT",
+                      "message": "Watchlist with the same name already exists."
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Watchlist not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "code": "NOT_FOUND",
+                      "message": "Watchlist not found"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingPathId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "Path parameter 'id' is required"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -775,10 +1250,40 @@
             "description": "Deleted"
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Watchlist not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "code": "NOT_FOUND",
+                      "message": "Watchlist not found"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingPathId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "Path parameter 'id' is required"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -806,7 +1311,8 @@
                     "name": "Broker Acc 1",
                     "type": "BROKER",
                     "currency": "INR",
-                    "isActive": true
+                    "isActive": true,
+                    "needsDailyData": false
                   }
                 }
               }
@@ -820,12 +1326,43 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseAccount"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 1,
+                        "userId": 1,
+                        "name": "Broker Acc 1",
+                        "type": "BROKER",
+                        "isActive": true,
+                        "needsDailyData": false,
+                        "currency": "INR"
+                      }
+                    }
+                  }
                 }
               }
             }
           },
           "409": {
-            "$ref": "#/components/responses/Conflict"
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "duplicateNameType": {
+                    "value": {
+                      "code": "CONFLICT",
+                      "message": "Account with the same name and type already exists."
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -861,15 +1398,33 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseAccountSummaryList"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "id": 1,
+                          "userId": 1,
+                          "name": "Zerodha",
+                          "type": "BROKER",
+                          "isActive": true,
+                          "needsDailyData": true,
+                          "currency": "INR",
+                          "currentDayValue": 2700.5,
+                          "previousDayValue": 2650.25,
+                          "invested": 2380.0
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -897,10 +1452,40 @@
             "description": "Deleted"
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Account not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "code": "NOT_FOUND",
+                      "message": "Account not found"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingPathId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "Path parameter 'id' is required"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -959,18 +1544,79 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseAccount"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 1,
+                        "userId": 1,
+                        "name": "New Account Name",
+                        "type": "BROKER",
+                        "isActive": true,
+                        "needsDailyData": true,
+                        "currency": "INR"
+                      }
+                    }
+                  }
                 }
               }
             }
           },
           "409": {
-            "$ref": "#/components/responses/Conflict"
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "duplicateNameType": {
+                    "value": {
+                      "code": "CONFLICT",
+                      "message": "Account with the same name and type already exists."
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Account not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "code": "NOT_FOUND",
+                      "message": "Account not found"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingPathId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "Path parameter 'id' is required"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -1011,6 +1657,19 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseHolding"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 1,
+                        "accountId": 1,
+                        "name": "TCS",
+                        "symbol": "TCS"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -1067,15 +1726,41 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseHoldingSummaryList"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "id": 1,
+                          "accountId": 1,
+                          "name": "Apple Inc.",
+                          "symbol": "AAPL",
+                          "units": 10.5,
+                          "currentDayValue": 1950.25,
+                          "previousDayValue": 1925.0,
+                          "invested": 1700.0
+                        },
+                        {
+                          "id": 2,
+                          "accountId": 1,
+                          "name": "Tesla, Inc.",
+                          "symbol": "TSLA",
+                          "units": 3.0,
+                          "currentDayValue": 750.0,
+                          "previousDayValue": 740.0,
+                          "invested": 680.0
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -1103,10 +1788,40 @@
             "description": "Deleted"
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Holding not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "code": "NOT_FOUND",
+                      "message": "Holding not found"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingPathId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "Path parameter 'id' is required"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -1139,15 +1854,33 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseAccountSummaryList"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "id": 1,
+                          "userId": 1,
+                          "name": "Zerodha",
+                          "type": "BROKER",
+                          "isActive": true,
+                          "needsDailyData": true,
+                          "currency": "INR",
+                          "currentDayValue": 2700.5,
+                          "previousDayValue": 2650.25,
+                          "invested": 2380.0
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -1181,10 +1914,46 @@
         },
         "responses": {
           "201": {
-            "description": "Linked"
+            "description": "Linked",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "watchlistId": 1,
+                        "accountId": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingWatchlistId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "watchlistId is required to link"
+                    }
+                  },
+                  "missingAccountId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "accountId is required to link"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -1219,7 +1988,182 @@
             "description": "Deleted"
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingWatchlistId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "watchlistId is required to unlink"
+                    }
+                  },
+                  "missingAccountId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "accountId is required to unlink"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/chart-data": {
+      "get": {
+        "tags": [
+          "chart-data"
+        ],
+        "summary": "Get chart data for holdings, accounts, or watchlists",
+        "description": "Unified endpoint to fetch daily chart data for holdings, accounts, or watchlists with time period filtering and forward fill functionality.",
+        "parameters": [
+          {
+            "name": "entityType",
+            "in": "query",
+            "required": true,
+            "description": "Type of entity (holding, account, watchlist)",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "holding",
+                "account",
+                "watchlist"
+              ]
+            }
+          },
+          {
+            "name": "entityId",
+            "in": "query",
+            "required": true,
+            "description": "ID of the entity",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "timePeriod",
+            "in": "query",
+            "required": true,
+            "description": "Time period for chart data",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1M",
+                "3M",
+                "6M",
+                "1Y",
+                "2Y",
+                "5Y",
+                "ALL"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Chart data points with forward fill",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseChartDataList"
+                },
+                "examples": {
+                  "holding": {
+                    "summary": "Chart data for a holding",
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "id": 1,
+                          "date": "2024-08-01",
+                          "value": 1000.50,
+                          "invested": 950.00
+                        },
+                        {
+                          "id": 2,
+                          "date": "2024-08-02",
+                          "value": 1025.75,
+                          "invested": 950.00
+                        }
+                      ]
+                    }
+                  },
+                  "account": {
+                    "summary": "Chart data for an account (aggregated)",
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "id": 1,
+                          "date": "2024-08-01",
+                          "value": 2500.25,
+                          "invested": 2300.00
+                        },
+                        {
+                          "id": 2,
+                          "date": "2024-08-02",
+                          "value": 2575.50,
+                          "invested": 2300.00
+                        }
+                      ]
+                    }
+                  },
+                  "watchlist": {
+                    "summary": "Chart data for a watchlist (aggregated)",
+                    "value": {
+                      "success": true,
+                      "data": [
+                        {
+                          "id": 1,
+                          "date": "2024-08-01",
+                          "value": 5000.75,
+                          "invested": 4800.00
+                        },
+                        {
+                          "id": 2,
+                          "date": "2024-08-02",
+                          "value": 5125.25,
+                          "invested": 4800.00
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingEntityType": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "entityType parameter is required"
+                    }
+                  },
+                  "invalidTimePeriod": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "Invalid timePeriod. Supported values: 1M, 3M, 6M, 1Y, 2Y, 5Y, ALL"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -1243,11 +2187,12 @@
               "examples": {
                 "default": {
                   "value": {
-                    "accountId": 123,
-                    "holdingId": 456,
+                    "accountId": 1,
+                    "holdingId": 1,
                     "txnDate": "2025-08-29",
                     "invested": 1.00,
-                    "value": 10.25
+                    "value": 10.25,
+                    "mode": "add"
                   }
                 }
               }
@@ -1261,12 +2206,96 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseTransaction"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": 1,
+                        "accountId": 1,
+                        "holdingId": 1,
+                        "txnDate": "2025-08-29",
+                        "invested": 1.00,
+                        "value": 10.25
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "duplicateDate": {
+                    "value": {
+                      "code": "CONFLICT",
+                      "message": "Transaction with the same date already exists."
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingAccountId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "accountId is required to create transaction"
+                    }
+                  },
+                  "missingHoldingId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "holdingId is required to create transaction"
+                    }
+                  },
+                  "missingDate": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "txnDate is required 'YYYY-MM-DD' format"
+                    }
+                  },
+                  "missingInvested": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "invested is required to create transaction"
+                    }
+                  },
+                  "missingValue": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "value is required to create transaction"
+                    }
+                  },
+                  "missingMode": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "mode is required and must be either 'add' or 'update'"
+                    }
+                  },
+                  "invalidMode": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "mode must be either 'add' or 'update'"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -1287,7 +2316,7 @@
               "type": "integer",
               "format": "int64"
             },
-            "example": 123
+            "example": 1
           },
           {
             "name": "holdingId",
@@ -1297,7 +2326,7 @@
               "type": "integer",
               "format": "int64"
             },
-            "example": 456
+            "example": 1
           }
         ],
         "responses": {
@@ -1310,22 +2339,22 @@
                 },
                 "examples": {
                   "byAccountId": {
-                    "summary": "Transactions for accountId=123",
+                    "summary": "Transactions for accountId=1",
                     "value": {
                       "success": true,
                       "data": [
                         {
                           "id": 1,
-                          "accountId": 123,
-                          "holdingId": 1001,
+                          "accountId": 1,
+                          "holdingId": 1,
                           "txnDate": "2025-08-20",
                           "invested": 100.00,
                           "value": 120.00
                         },
                         {
                           "id": 2,
-                          "accountId": 123,
-                          "holdingId": 1002,
+                          "accountId": 1,
+                          "holdingId": 2,
                           "txnDate": "2025-08-19",
                           "invested": 50.00,
                           "value": 60.00
@@ -1334,22 +2363,22 @@
                     }
                   },
                   "byHoldingId": {
-                    "summary": "Transactions for holdingId=456",
+                    "summary": "Transactions for holdingId=1",
                     "value": {
                       "success": true,
                       "data": [
                         {
-                          "id": 10,
-                          "accountId": 789,
-                          "holdingId": 456,
+                          "id": 1,
+                          "accountId": 1,
+                          "holdingId": 1,
                           "txnDate": "2025-08-29",
                           "invested": 1.00,
                           "value": 10.00
                         },
                         {
-                          "id": 11,
-                          "accountId": 789,
-                          "holdingId": 456,
+                          "id": 2,
+                          "accountId": 1,
+                          "holdingId": 1,
                           "txnDate": "2025-08-28",
                           "invested": 1.00,
                           "value": 9.50
@@ -1392,10 +2421,40 @@
             "description": "Deleted"
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Transaction not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "code": "NOT_FOUND",
+                      "message": "Transaction not found"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "missingPathId": {
+                    "value": {
+                      "code": "VALIDATION_ERROR",
+                      "message": "Path parameter 'id' is required"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/InternalError"
@@ -1431,7 +2490,11 @@
         "required": [
           "id",
           "externalUserId"
-        ]
+        ],
+        "example": {
+          "id": 1,
+          "externalUserId": "demo-user"
+        }
       },
       "CreateIncomeTagRequest": {
         "type": "object",
@@ -1487,7 +2550,13 @@
           "userId",
           "name",
           "isDefault"
-        ]
+        ],
+        "example": {
+          "id": 1,
+          "userId": 1,
+          "name": "Salary",
+          "isDefault": false
+        }
       },
       "ApiResponseIncomeTag": {
         "type": "object",
@@ -1563,7 +2632,13 @@
           "userId",
           "name",
           "isDefault"
-        ]
+        ],
+        "example": {
+          "id": 1,
+          "userId": 1,
+          "name": "Company",
+          "isDefault": false
+        }
       },
       "CreateIncomeSourceRequest": {
         "type": "object",
@@ -1627,7 +2702,17 @@
           "taxPaid",
           "currency",
           "creditedDate"
-        ]
+        ],
+        "example": {
+          "id": 1,
+          "userId": 1,
+          "incomeSourceId": 1,
+          "incomeTagId": 1,
+          "netAmount": 1500.75,
+          "taxPaid": 150.25,
+          "currency": "INR",
+          "creditedDate": "2025-08-31"
+        }
       },
       "Transaction": {
         "type": "object",
@@ -1654,6 +2739,14 @@
           "value": {
             "type": "number"
           }
+        },
+        "example": {
+          "id": 1,
+          "accountId": 1,
+          "holdingId": 1,
+          "txnDate": "2025-08-29",
+          "invested": 1.00,
+          "value": 10.25
         }
       },
       "CreateTransactionRequest": {
@@ -1676,6 +2769,14 @@
           },
           "value": {
             "type": "number"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "add",
+              "update"
+            ],
+            "description": "add => add to latest invested/value; update => create as-is"
           }
         },
         "required": [
@@ -1683,7 +2784,8 @@
           "holdingId",
           "txnDate",
           "invested",
-          "value"
+          "value",
+          "mode"
         ]
       },
       "ApiResponseTransaction": {
@@ -1822,7 +2924,12 @@
           "id",
           "userId",
           "name"
-        ]
+        ],
+        "example": {
+          "id": 1,
+          "userId": 1,
+          "name": "All"
+        }
       },
       "ApiResponseWatchlist": {
         "type": "object",
@@ -1866,7 +2973,15 @@
           "currentDayValue",
           "previousDayValue",
           "invested"
-        ]
+        ],
+        "example": {
+          "id": 1,
+          "userId": 1,
+          "name": "All",
+          "currentDayValue": 2700.5,
+          "previousDayValue": 2650.25,
+          "invested": 2380.0
+        }
       },
       "ApiResponseWatchlistSummaryList": {
         "type": "object",
@@ -1910,6 +3025,9 @@
           "isActive": {
             "type": "boolean"
           },
+          "needsDailyData": {
+            "type": "boolean"
+          },
           "currency": {
             "type": "string"
           }
@@ -1920,8 +3038,18 @@
           "name",
           "type",
           "isActive",
+          "needsDailyData",
           "currency"
-        ]
+        ],
+        "example": {
+          "id": 1,
+          "userId": 1,
+          "name": "Zerodha",
+          "type": "BROKER",
+          "isActive": true,
+          "needsDailyData": true,
+          "currency": "INR"
+        }
       },
       "ApiResponseAccount": {
         "type": "object",
@@ -1957,7 +3085,13 @@
           "accountId",
           "name",
           "symbol"
-        ]
+        ],
+        "example": {
+          "id": 1,
+          "accountId": 1,
+          "name": "Apple Inc.",
+          "symbol": "AAPL"
+        }
       },
       "CreateHoldingRequest": {
         "type": "object",
@@ -1996,6 +3130,9 @@
           "symbol": {
             "type": "string"
           },
+          "units": {
+            "type": "number"
+          },
           "currentDayValue": {
             "type": "number"
           },
@@ -2011,10 +3148,21 @@
           "accountId",
           "name",
           "symbol",
+          "units",
           "currentDayValue",
           "previousDayValue",
           "invested"
-        ]
+        ],
+        "example": {
+          "id": 1,
+          "accountId": 1,
+          "name": "Apple Inc.",
+          "symbol": "AAPL",
+          "units": 10.5,
+          "currentDayValue": 1950.25,
+          "previousDayValue": 1925.0,
+          "invested": 1700.0
+        }
       },
       "ApiResponseHolding": {
         "type": "object",
@@ -2078,6 +3226,9 @@
           "isActive": {
             "type": "boolean"
           },
+          "needsDailyData": {
+            "type": "boolean"
+          },
           "currency": {
             "type": "string"
           },
@@ -2097,11 +3248,24 @@
           "name",
           "type",
           "isActive",
+          "needsDailyData",
           "currency",
           "currentDayValue",
           "previousDayValue",
           "invested"
-        ]
+        ],
+        "example": {
+          "id": 1,
+          "userId": 1,
+          "name": "Zerodha",
+          "type": "BROKER",
+          "isActive": true,
+          "needsDailyData": true,
+          "currency": "INR",
+          "currentDayValue": 2700.5,
+          "previousDayValue": 2650.25,
+          "invested": 2380.0
+        }
       },
       "ApiResponseAccountSummaryList": {
         "type": "object",
@@ -2116,6 +3280,59 @@
             }
           }
         }
+      },
+      "ChartData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Sequence number starting from 1"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date of the data point"
+          },
+          "value": {
+            "type": "number",
+            "description": "Current day value"
+          },
+          "invested": {
+            "type": "number",
+            "description": "Invested amount"
+          }
+        },
+        "required": [
+          "id",
+          "date",
+          "value",
+          "invested"
+        ],
+        "example": {
+          "id": 1,
+          "date": "2024-08-01",
+          "value": 1000.50,
+          "invested": 950.00
+        }
+      },
+      "ApiResponseChartDataList": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChartData"
+            }
+          }
+        },
+        "required": [
+          "success",
+          "data"
+        ]
       },
       "CreateAccountRequest": {
         "type": "object",
@@ -2143,6 +3360,10 @@
           },
           "isActive": {
             "type": "boolean"
+          },
+          "needsDailyData": {
+            "type": "boolean",
+            "description": "Optional. Whether the account needs daily data. Only settable at creation time."
           }
         },
         "required": [
