@@ -8,6 +8,7 @@ struct WatchlistAccountsView: View {
     @State private var pendingDelete: AccountSummary? = nil
     @State private var showAddSheet: Bool = false
     @State private var addingAccountId: Int? = nil
+    @State private var removingAccountId: Int? = nil
     @EnvironmentObject private var banners: BannerCenter
     @EnvironmentObject private var lookup: LookupStore
 
@@ -92,15 +93,41 @@ struct WatchlistAccountsView: View {
                         ForEach(lookup.accounts, id: \.id) { acc in
                             let isMember = vm.items.contains(where: { $0.id == acc.id })
                             if isMember {
-                                HStack {
-                                    Text(acc.name)
-                                    Spacer()
-                                    Label("Added", systemImage: "checkmark.circle.fill")
-                                        .font(.footnote.weight(.semibold))
-                                        .foregroundColor(.secondary)
+                                Button {
+                                    removingAccountId = acc.id
+                                    Task {
+                                        let success = await vm.deleteFromWatch(acc)
+                                        if success {
+                                            Haptics.success()
+                                            banners.show(
+                                                AppBanner(
+                                                    icon: "checkmark.circle",
+                                                    title: "Removed from watchlist",
+                                                    message: "\(acc.name) ← \(watchlist.name)",
+                                                    style: .success
+                                                )
+                                            )
+                                        } else {
+                                            Haptics.softImpact()
+                                            let msg = vm.errorMessage ?? "Failed to remove from watchlist."
+                                            banners.showError(message: msg)
+                                        }
+                                        removingAccountId = nil
+                                    }
+                                } label: {
+                                    HStack {
+                                        Text(acc.name)
+                                        Spacer()
+                                        if removingAccountId == acc.id {
+                                            ProgressView().progressViewStyle(.circular)
+                                        } else {
+                                            Text("Remove")
+                                                .font(.footnote.weight(.semibold))
+                                                .foregroundColor(.airbnbPrimary)
+                                        }
+                                    }
                                 }
-                                .contentShape(Rectangle())
-                                .disabled(true)
+                                .disabled(removingAccountId != nil)
                             } else {
                                 Button {
                                     addingAccountId = acc.id
