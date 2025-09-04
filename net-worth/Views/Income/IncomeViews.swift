@@ -1053,7 +1053,17 @@ struct CreateIncomeView: View {
             await MainActor.run { dismiss() }
         } catch {
             let msg = (error as? APIError)?.errorDescription ?? error.localizedDescription
-            await MainActor.run { banners.showError(message: msg) }
+            await MainActor.run { 
+                banners.showError(message: msg)
+                // For duplicate income errors (409), close the sheet after showing error
+                if let apiError = error as? APIError,
+                   case .apiError(let status, _) = apiError,
+                   status == 409 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        dismiss()
+                    }
+                }
+            }
         }
         await MainActor.run { saving = false }
     }
