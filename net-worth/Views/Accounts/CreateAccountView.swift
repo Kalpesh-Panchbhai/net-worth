@@ -53,14 +53,9 @@ struct CreateAccountView: View {
                             Haptics.selection()
                         } label: {
                             SettingsCell(icon: "square.grid.2x2", title: "Type", subtitle: typeDisplay) {
-                                HStack(spacing: 8) {
-                                    Text(typeCode)
-                                        .font(.footnote.weight(.semibold))
-                                        .foregroundColor(.secondary)
-                                    Image(systemName: "chevron.right")
-                                        .font(.footnote.weight(.semibold))
-                                        .foregroundColor(.secondary)
-                                }
+                                Image(systemName: "chevron.right")
+                                    .font(.footnote.weight(.semibold))
+                                    .foregroundColor(.secondary)
                             }
                         }
                         .buttonStyle(.plain)

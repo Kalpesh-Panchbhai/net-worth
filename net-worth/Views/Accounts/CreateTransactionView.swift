@@ -10,6 +10,7 @@ struct CreateTransactionView: View {
     var holdingId: Int { accountBrokerId }
 
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var banners: BannerCenter
     @AppStorage("defaultCurrencyCode") private var defaultCurrency: String = "INR"
     // Inputs (conditionally used)
     @State private var amountText: String = ""     // non-broker amount OR broker units? -> we keep separate
@@ -19,6 +20,7 @@ struct CreateTransactionView: View {
     @State private var operation: Operation = .add
     @State private var saving = false
     @State private var errorMessage: String? = nil
+    @State private var resolvedHoldingId: Int? = nil // for non-broker accounts
 
     enum Operation: String, CaseIterable, Identifiable { case add, update; var id: String { rawValue } }
 
@@ -168,9 +170,6 @@ struct CreateTransactionView: View {
                     }
                 }
 
-                if let err = errorMessage, !err.isEmpty {
-                    EmptyStateCard(text: err, icon: "exclamationmark.triangle", iconFont: .title3)
-                }
             }
             .padding(16)
             .padding(.bottom, LayoutConstants.tabBarHeight + 24)
@@ -187,13 +186,15 @@ struct CreateTransactionView: View {
                 Button("Cancel") { dismiss() }
             }
         }
+        .task {
+            await resolveHoldingIfNeeded()
+        }
     }
 
     @MainActor
     private func save() async {
         guard !saving else { return }
         saving = true
-        errorMessage = nil
         defer { saving = false }
         do {
             let dateFormatter = DateFormatter()
@@ -216,10 +217,21 @@ struct CreateTransactionView: View {
                 value = amt
                 invested = amt
             }
+            // Determine target holding id (non-broker must use a holding id from holdings table)
+            let targetHoldingId: Int
+            if holdingId > 0 {
+                targetHoldingId = holdingId
+            } else if let resolved = resolvedHoldingId, resolved > 0 {
+                targetHoldingId = resolved
+            } else {
+                banners.showError(message: "No holding found for this account.")
+                dismiss()
+                return
+            }
 
             _ = try await RestClient().createTransaction(
                 accountId: accountId,
-                holdingId: holdingId,
+                holdingId: targetHoldingId,
                 txnDate: txnDate,
                 invested: invested,
                 value: value,
@@ -228,9 +240,36 @@ struct CreateTransactionView: View {
             onSaved?()
             dismiss()
         } catch let api as APIError {
-            errorMessage = api.errorDescription ?? "Failed to save transaction"
+            // Show structured API error message if available (e.g., 409 duplicate date)
+            if case .apiError(_, let server) = api, !server.message.isEmpty {
+                banners.showError(message: server.message)
+            } else {
+                banners.showError(message: api.errorDescription ?? "Failed to save transaction")
+            }
+            dismiss()
         } catch {
-            errorMessage = error.localizedDescription
+            banners.showError(message: error.localizedDescription)
+            dismiss()
+        }
+    }
+
+    // MARK: - Resolve holding for non-broker accounts
+    private func resolveHoldingIfNeeded() async {
+        // If holdingId already provided (>0), nothing to do
+        guard holdingId <= 0 else { return }
+        // Only for non-broker accounts (CreateTransactionView is passed needsDailyData for non-broker)
+        guard accountId > 0 else { return }
+        do {
+            let holdings = try await RestClient().fetchHoldings(accountId: accountId)
+            // Strategy: pick the first holding for the account
+            await MainActor.run {
+                self.resolvedHoldingId = holdings.first?.id
+                if self.resolvedHoldingId == nil { banners.showError(message: "No holding found for this account.") }
+            }
+        } catch let api as APIError {
+            await MainActor.run { banners.showError(message: api.errorDescription ?? "Failed to load holdings") }
+        } catch {
+            await MainActor.run { banners.showError(message: error.localizedDescription) }
         }
     }
 }

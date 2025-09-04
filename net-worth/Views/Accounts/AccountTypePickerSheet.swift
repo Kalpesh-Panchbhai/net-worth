@@ -20,11 +20,7 @@ struct AccountTypePickerSheet: View {
                                     Haptics.selection()
                                     dismiss()
                                 } label: {
-                                    SettingsCell(
-                                        icon: "square.grid.2x2",
-                                        title: item.display,
-                                        subtitle: item.code
-                                    ) {
+                                    SettingsCell(icon: "square.grid.2x2", title: item.display) {
                                         if selectedCode == item.code {
                                             Image(systemName: "checkmark.circle.fill")
                                                 .foregroundStyle(LinearGradient.airbnbAccent)
