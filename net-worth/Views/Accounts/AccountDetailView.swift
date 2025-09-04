@@ -4,6 +4,7 @@ struct AccountDetailView: View {
     let account: AccountSummary
     @AppStorage("defaultCurrencyCode") private var displayCurrency: String = "INR"
     @EnvironmentObject private var lookup: LookupStore
+    @EnvironmentObject private var banners: BannerCenter
     @State private var brokerHoldings: [AccountBroker] = []
     @State private var isLoadingBroker = false
     @State private var brokerError: String? = nil
@@ -16,6 +17,14 @@ struct AccountDetailView: View {
     @State private var isLoadingWatches = false
     @State private var watchesError: String? = nil
     // Simplified transactions UI (no filters/search/summary)
+    @State private var showEditSheet = false
+    @State private var editName: String = ""
+    @State private var editActive: Bool = true
+    // Optimistic UI states
+    @State private var displayName: String = ""
+    @State private var displayIsActive: Bool = true
+    @State private var didBootstrapDisplay = false
+    @State private var savingEdits: Bool = false
 
     var body: some View {
         ScrollView {
@@ -39,7 +48,7 @@ struct AccountDetailView: View {
                 // Account details
                 SettingsGroup(title: "Account") {
                     VStack(spacing: 0) {
-                        detailRow(icon: "person.crop.circle", title: "Name", subtitle: account.name)
+                        detailRow(icon: "person.crop.circle", title: "Name", subtitle: displayName)
                         divider()
                         detailRow(
                             icon: "square.grid.2x2", title: "Type",
@@ -67,12 +76,13 @@ struct AccountDetailView: View {
                         }
                         divider()
                         detailRow(
-                            icon: account.isActive ? "checkmark.seal" : "xmark.seal",
+                            icon: displayIsActive ? "checkmark.seal" : "xmark.seal",
                             title: "Status",
-                            subtitle: account.isActive ? "Active" : "Inactive"
+                            subtitle: displayIsActive ? "Active" : "Inactive"
                         )
                     }
                 }
+                
 
                 // Transactions (non-broker) — with watchlists shown above
                 if normalizedType(account.type) != "Broker" {
@@ -170,8 +180,27 @@ struct AccountDetailView: View {
             .padding(.bottom, LayoutConstants.tabBarHeight + 24)
         }
         .background(Color.canvasBackground.ignoresSafeArea())
-        .navigationTitle(account.name)
+        .navigationTitle(displayName)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: {
+                    editName = displayName
+                    editActive = displayIsActive
+                    showEditSheet = true
+                }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "pencil")
+                        Text("Edit")
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(.airbnbPrimary)
+                    .padding(.vertical, 6)
+                    .padding(.horizontal, 12)
+                    .background(Capsule().fill(Color.airbnbPrimary.opacity(0.12)))
+                }
+            }
+        }
         .toolbarBackground(Color(.systemBackground), for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .fabOverlay(
@@ -202,6 +231,14 @@ struct AccountDetailView: View {
             await loadTransactions()
             await loadAccountWatches()
         }
+        .sheet(isPresented: $showEditSheet) { editSheet }
+        .onAppear {
+            if !didBootstrapDisplay {
+                displayName = account.name
+                displayIsActive = account.isActive
+                didBootstrapDisplay = true
+            }
+        }
     }
 
     // MARK: - Subviews
@@ -229,6 +266,103 @@ struct AccountDetailView: View {
         if t == "credit_card" || t.contains("credit") { return "Credit Card" }
         if t == "loan" || t.contains("loan") { return "Loan" }
         return "Other"
+    }
+
+    // MARK: - Edit Sheet (PATCH name / isActive)
+    private var editSheet: some View {
+        NavigationStack {
+            VStack(spacing: 16) {
+                SettingsGroup(title: "Edit account") {
+                    VStack(spacing: 0) {
+                        // Name
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack(spacing: 12) {
+                                TextField("Name", text: $editName)
+                                    .textInputAutocapitalization(.words)
+                                    .disableAutocorrection(true)
+                            }
+                            Rectangle().fill(Color.subtleSeparator).frame(height: 0.5)
+                        }
+                        // Active / Inactive
+                        let canDeactivate = (account.currentDayValue == 0 && account.invested == 0)
+                        Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(.horizontal, 12)
+                        HStack(spacing: 12) {
+                            SettingsCell(
+                                icon: "checkmark.seal",
+                                title: "Status",
+                                subtitle: editActive ? "Active" : "Inactive"
+                            ) {
+                                Toggle("", isOn: $editActive)
+                                    .labelsHidden()
+                                    .disabled(!canDeactivate && !editActive) // cannot switch off unless allowed
+                            }
+                        }
+                        if !canDeactivate {
+                            Text("You can mark this account Inactive only when Total and Invested are both 0.")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .padding(.horizontal, 12)
+                                .padding(.top, 6)
+                        }
+                    }
+                }
+                Spacer(minLength: 0)
+            }
+            .padding(.vertical, 16)
+            .padding(.horizontal, 16)
+            .background(Color.canvasBackground.ignoresSafeArea())
+            .navigationTitle("Edit account")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { showEditSheet = false } }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(savingEdits ? "Saving…" : "Save") { Task { await saveEdits() } }
+                        .disabled(savingEdits || editName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+            }
+            .toolbarBackground(Color.canvasBackground, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+        }
+        .presentationDetents([.medium, .large])
+        .presentationDragIndicator(.visible)
+    }
+
+    @MainActor
+    private func saveEdits() async {
+        let trimmed = editName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        // Only allow inactivation when both totals are 0
+        let canDeactivate = (account.currentDayValue == 0 && account.invested == 0)
+        var isActiveParam: Bool? = nil
+        if editActive != account.isActive {
+            if editActive == false && !canDeactivate {
+                // enforce rule; keep active
+                isActiveParam = true
+            } else {
+                isActiveParam = editActive
+            }
+        }
+        let nameParam: String? = (trimmed == account.name) ? nil : trimmed
+        savingEdits = true
+        do {
+            _ = try await RestClient().updateAccount(id: account.id, name: nameParam, isActive: isActiveParam)
+            // Optimistic UI update
+            displayName = trimmed
+            if let newActive = isActiveParam { displayIsActive = newActive }
+            // Refresh lists in background
+            Task {
+                async let a: Void = lookup.refreshAccounts(userId: account.userId)
+                async let b: Void = lookup.refreshWatchlists(userId: account.userId)
+                _ = await (a, b)
+            }
+            banners.show(AppBanner(icon: "checkmark.circle.fill", title: "Account updated", message: nil, style: .success))
+            showEditSheet = false
+        } catch let api as APIError {
+            banners.showError(message: api.errorDescription ?? "Failed to update account")
+        } catch {
+            banners.showError(message: error.localizedDescription)
+        }
+        savingEdits = false
     }
 
     @MainActor
