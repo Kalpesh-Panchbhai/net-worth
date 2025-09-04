@@ -25,13 +25,24 @@ struct RestClient {
     }
 
     private func resolvedURL(for path: String) throws -> URL {
-        if let absolute = URL(string: path), absolute.scheme != nil {
-            return absolute
-        }
+        // If absolute URL, return as-is
+        if let absolute = URL(string: path), absolute.scheme != nil { return absolute }
+
+        // Support query strings in the provided path (e.g., "transactions?accountId=1")
+        let parts = path.split(separator: "?", maxSplits: 1, omittingEmptySubsequences: false)
+        let rawPath = String(parts.first ?? "")
+        let rawQuery = parts.count > 1 ? String(parts[1]) : nil
+
+        // Build base path by appending components
         var url = baseURL
-        let trimmed = path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
-        for comp in trimmed.split(separator: "/") {
-            url.appendPathComponent(String(comp))
+        let trimmed = rawPath.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        for comp in trimmed.split(separator: "/") { url.appendPathComponent(String(comp)) }
+
+        // Attach query using URLComponents to avoid encoding '?' into the path
+        if let rawQuery {
+            var comps = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            comps?.percentEncodedQuery = rawQuery // keep any existing encoding
+            if let final = comps?.url { return final }
         }
         return url
     }
