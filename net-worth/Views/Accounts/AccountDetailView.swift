@@ -31,6 +31,8 @@ struct AccountDetailView: View {
     @State private var isSearchingHolding = false
     @State private var holdingResults: [YahooFinanceClient.Quote] = []
     @State private var selectedHoldingId: Int = 0
+    @State private var showDeleteHoldingAlert = false
+    @State private var deleteHoldingTarget: (id: Int, name: String)? = nil
 
     var body: some View {
         ScrollView {
@@ -177,6 +179,13 @@ struct AccountDetailView: View {
                                         } label: {
                                             Label("Add Transaction", systemImage: "plus.circle")
                                         }
+                                        Divider()
+                                        Button(role: .destructive) {
+                                            deleteHoldingTarget = (id: h.id, name: h.name.isEmpty ? h.symbol : h.name)
+                                            showDeleteHoldingAlert = true
+                                        } label: {
+                                            Label("Delete Holding", systemImage: "trash")
+                                        }
                                     }
                                 }
                             }
@@ -274,12 +283,34 @@ struct AccountDetailView: View {
         }
         .sheet(isPresented: $showEditSheet) { editSheet }
         .sheet(isPresented: $showAddHoldingSheet) { addHoldingSheet }
+        .alert("Delete holding?", isPresented: $showDeleteHoldingAlert, presenting: deleteHoldingTarget) { target in
+            Button("Delete", role: .destructive) {
+                Task { await deleteHolding(id: target.id, name: target.name) }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: { target in
+            Text("This will permanently delete \(target.name) from this account.")
+        }
         .onAppear {
             if !didBootstrapDisplay {
                 displayName = account.name
                 displayIsActive = account.isActive
                 didBootstrapDisplay = true
             }
+        }
+    }
+
+    // MARK: - Delete Holding
+    @MainActor
+    private func deleteHolding(id: Int, name: String) async {
+        do {
+            try await RestClient().deleteHolding(id: id)
+            await loadBroker()
+            banners.show(AppBanner(icon: "trash", title: "Holding deleted", message: name, style: .success))
+        } catch let api as APIError {
+            banners.showError(message: api.errorDescription ?? "Failed to delete holding")
+        } catch {
+            banners.showError(message: error.localizedDescription)
         }
     }
 
