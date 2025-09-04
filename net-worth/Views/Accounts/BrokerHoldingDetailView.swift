@@ -92,10 +92,10 @@ struct BrokerHoldingDetailView: View {
         .sheet(isPresented: $showCreateTx) {
             NavigationStack {
                 CreateTransactionView(
-                    accountId: 0,
-                    accountBrokerId: holding.id,
-                    needsDailyData: true,
-                    onSaved: { Task { await refresh() } }
+                    accountId: holding.accountId,
+                    holdingId: holding.id,
+                    needsDailyData: false,
+                    onSaved: { Task { await load() } }
                 )
             }
         }

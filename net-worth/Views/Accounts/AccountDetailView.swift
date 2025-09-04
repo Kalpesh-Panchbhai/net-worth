@@ -25,6 +25,12 @@ struct AccountDetailView: View {
     @State private var displayIsActive: Bool = true
     @State private var didBootstrapDisplay = false
     @State private var savingEdits: Bool = false
+    // Add Holding (broker only)
+    @State private var showAddHoldingSheet = false
+    @State private var holdingSearch: String = ""
+    @State private var isSearchingHolding = false
+    @State private var holdingResults: [YahooFinanceClient.Quote] = []
+    @State private var selectedHoldingId: Int = 0
 
     var body: some View {
         ScrollView {
@@ -164,6 +170,14 @@ struct AccountDetailView: View {
                                             units: h.currentUnit
                                         )
                                     }
+                                    .contextMenu {
+                                        Button {
+                                            selectedHoldingId = h.id
+                                            showCreateTx = true
+                                        } label: {
+                                            Label("Add Transaction", systemImage: "plus.circle")
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -204,10 +218,15 @@ struct AccountDetailView: View {
         .toolbarBackground(Color(.systemBackground), for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .fabOverlay(
-            icon: "plus", accessibilityLabel: "Add transaction",
-            isVisible: normalizedType(account.type) != "Broker"
+            icon: "plus", 
+            accessibilityLabel: normalizedType(account.type) == "Broker" ? "Add holding" : "Add transaction",
+            isVisible: true
         ) {
-            showCreateTx = true
+            if normalizedType(account.type) == "Broker" {
+                showAddHoldingSheet = true
+            } else {
+                showCreateTx = true
+            }
             Haptics.selection()
         }
         .navigationDestination(for: AccountBroker.self) { holding in
@@ -220,9 +239,17 @@ struct AccountDetailView: View {
             NavigationStack {
                 CreateTransactionView(
                     accountId: account.id,
-                    accountBrokerId: 0,
+                    holdingId: selectedHoldingId,
                     needsDailyData: account.needsDailyData,
-                    onSaved: { Task { await loadTransactions() } }
+                    onSaved: { 
+                        Task { 
+                            if normalizedType(account.type) == "Broker" {
+                                await loadBroker()
+                            } else {
+                                await loadTransactions()
+                            }
+                        }
+                    }
                 )
             }
         }
@@ -232,6 +259,7 @@ struct AccountDetailView: View {
             await loadAccountWatches()
         }
         .sheet(isPresented: $showEditSheet) { editSheet }
+        .sheet(isPresented: $showAddHoldingSheet) { addHoldingSheet }
         .onAppear {
             if !didBootstrapDisplay {
                 displayName = account.name
@@ -467,6 +495,212 @@ struct AccountDetailView: View {
                     }
                 }
             }
+        }
+    }
+
+    // MARK: - Add Holding Sheet (Broker accounts)
+    private var addHoldingSheet: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 24) {
+                    // Hero section with search
+                    VStack(spacing: 16) {
+                        VStack(spacing: 8) {
+                            Image(systemName: "magnifyingglass.circle.fill")
+                                .font(.system(size: 48))
+                                .foregroundColor(.airbnbPrimary)
+                            Text("Find your stock")
+                                .font(.title2.weight(.semibold))
+                                .foregroundColor(.primary)
+                            Text("Search by company name or symbol")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                        }
+                        .padding(.top, 20)
+                        
+                        // Modern search bar
+                        HStack(spacing: 12) {
+                            Image(systemName: "magnifyingglass")
+                                .foregroundColor(.secondary)
+                                .font(.system(size: 16, weight: .medium))
+                            TextField("e.g., Apple, AAPL", text: $holdingSearch)
+                                .textInputAutocapitalization(.none)
+                                .disableAutocorrection(true)
+                                .font(.system(size: 16))
+                                .onSubmit { Task { await searchHoldings() } }
+                            if isSearchingHolding {
+                                ProgressView()
+                                    .progressViewStyle(.circular)
+                                    .scaleEffect(0.8)
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 14)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color(.systemGray6))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(holdingSearch.isEmpty ? Color.clear : Color.airbnbPrimary.opacity(0.3), lineWidth: 1)
+                                )
+                        )
+                    }
+                    
+                    // Results section
+                    if !holdingResults.isEmpty {
+                        VStack(alignment: .leading, spacing: 16) {
+                            HStack {
+                                Text("Search Results")
+                                    .font(.headline.weight(.semibold))
+                                    .foregroundColor(.primary)
+                                Spacer()
+                                Text("\(holdingResults.count) found")
+                                    .font(.caption.weight(.medium))
+                                    .foregroundColor(.secondary)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(Capsule().fill(Color(.systemGray5)))
+                            }
+                            
+                            LazyVStack(spacing: 0) {
+                                ForEach(holdingResults, id: \.symbol) { item in
+                                    Button {
+                                        Task { await createHolding(from: item) }
+                                    } label: {
+                                        HStack(spacing: 12) {
+                                            // Stock icon
+                                            ZStack {
+                                                Circle()
+                                                    .fill(Color.airbnbPrimary.opacity(0.1))
+                                                    .frame(width: 44, height: 44)
+                                                Text(String(item.symbol.prefix(2)))
+                                                    .font(.system(size: 14, weight: .bold))
+                                                    .foregroundColor(.airbnbPrimary)
+                                            }
+                                            
+                                            VStack(alignment: .leading, spacing: 4) {
+                                                Text(item.longname ?? item.shortname ?? item.symbol)
+                                                    .font(.system(size: 16, weight: .medium))
+                                                    .foregroundColor(.primary)
+                                                    .lineLimit(1)
+                                                
+                                                HStack(spacing: 8) {
+                                                    Text(item.symbol)
+                                                        .font(.system(size: 14, weight: .semibold))
+                                                        .foregroundColor(.airbnbPrimary)
+                                                    
+                                                    if let exchange = item.exchDisp, !exchange.isEmpty {
+                                                        Text("•")
+                                                            .foregroundColor(.secondary)
+                                                            .font(.caption)
+                                                        Text(exchange)
+                                                            .font(.caption.weight(.medium))
+                                                            .foregroundColor(.secondary)
+                                                    }
+                                                }
+                                            }
+                                            
+                                            Spacer()
+                                            
+                                            Image(systemName: "plus.circle.fill")
+                                                .font(.system(size: 20))
+                                                .foregroundColor(.airbnbPrimary)
+                                        }
+                                        .padding(.horizontal, 16)
+                                        .padding(.vertical, 12)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .fill(Color(.systemBackground))
+                                                .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
+                                        )
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
+                        }
+                    } else if !holdingSearch.isEmpty && !isSearchingHolding {
+                        // Empty state
+                        VStack(spacing: 16) {
+                            Image(systemName: "magnifyingglass")
+                                .font(.system(size: 32))
+                                .foregroundColor(.secondary)
+                            Text("No results found")
+                                .font(.headline.weight(.medium))
+                                .foregroundColor(.primary)
+                            Text("Try searching with a different company name or stock symbol")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                        }
+                        .padding(.vertical, 40)
+                    } else if holdingSearch.isEmpty {
+                        // Initial state
+                        VStack(spacing: 16) {
+                            Image(systemName: "chart.line.uptrend.xyaxis")
+                                .font(.system(size: 32))
+                                .foregroundColor(.secondary)
+                            Text("Start typing to search")
+                                .font(.headline.weight(.medium))
+                                .foregroundColor(.primary)
+                            Text("Popular: AAPL, GOOGL, MSFT, TSLA")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.vertical, 40)
+                    }
+                    
+                    Spacer(minLength: 100)
+                }
+                .padding(.horizontal, 20)
+            }
+            .background(Color(.systemGroupedBackground).ignoresSafeArea())
+            .navigationTitle("Add Holding")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Close") { showAddHoldingSheet = false }
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.airbnbPrimary)
+                }
+            }
+        }
+        .presentationDetents([.medium, .large])
+        .presentationDragIndicator(.visible)
+        .task(id: holdingSearch) { await searchHoldings() }
+    }
+
+    @MainActor
+    private func searchHoldings() async {
+        let q = holdingSearch.trimmingCharacters(in: .whitespacesAndNewlines)
+        if q.isEmpty {
+            holdingResults = []
+            return
+        }
+        isSearchingHolding = true
+        defer { isSearchingHolding = false }
+        do {
+            let results = try await YahooFinanceClient().search(query: q)
+            holdingResults = results.filter { !$0.symbol.isEmpty }
+        } catch {
+            banners.showError(message: error.localizedDescription)
+        }
+    }
+
+    @MainActor
+    private func createHolding(from quote: YahooFinanceClient.Quote) async {
+        do {
+            let name = quote.longname ?? quote.shortname ?? quote.symbol
+            _ = try await RestClient().createHolding(accountId: account.id, name: name, symbol: quote.symbol)
+            showAddHoldingSheet = false
+            await loadBroker()
+            banners.show(AppBanner(icon: "checkmark.circle.fill", title: "Holding added", message: "\(name)", style: .success))
+        } catch let api as APIError {
+            showAddHoldingSheet = false
+            banners.showError(message: api.errorDescription ?? "Failed to add holding")
+        } catch {
+            showAddHoldingSheet = false
+            banners.showError(message: error.localizedDescription)
         }
     }
 }

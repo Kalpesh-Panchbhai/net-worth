@@ -2,12 +2,9 @@ import SwiftUI
 
 struct CreateTransactionView: View {
     let accountId: Int
-    let accountBrokerId: Int // Legacy parameter name for compatibility
+    let holdingId: Int
     let needsDailyData: Bool // For non-broker accounts
     var onSaved: (() -> Void)? = nil
-    
-    // New parameter for holdings API
-    var holdingId: Int { accountBrokerId }
 
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var banners: BannerCenter

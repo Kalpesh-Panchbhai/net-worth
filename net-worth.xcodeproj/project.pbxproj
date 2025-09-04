@@ -38,6 +38,7 @@
 		7D74B2922E52375A00E35786 /* BannerCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74B2912E52375A00E35786 /* BannerCenter.swift */; };
 		7D8A44B12E69A8150085B681 /* ChartDataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8A44B02E69A8150085B681 /* ChartDataModels.swift */; };
 		7D8A44B32E69C3110085B681 /* AccountTypePickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8A44B22E69C3110085B681 /* AccountTypePickerSheet.swift */; };
+		7D8A44B52E69CD860085B681 /* YahooFinanceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8A44B42E69CD860085B681 /* YahooFinanceClient.swift */; };
 		7DAA10012BE3000000000001 /* AppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00012BE3000000000001 /* AppTab.swift */; };
 		7DAA10022BE3000000000002 /* IncomeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00022BE3000000000002 /* IncomeModels.swift */; };
 		7DAA10042BE3000000000004 /* IncomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00042BE3000000000004 /* IncomeController.swift */; };
@@ -103,6 +104,7 @@
 		7D74B2912E52375A00E35786 /* BannerCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerCenter.swift; sourceTree = "<group>"; };
 		7D8A44B02E69A8150085B681 /* ChartDataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDataModels.swift; sourceTree = "<group>"; };
 		7D8A44B22E69C3110085B681 /* AccountTypePickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTypePickerSheet.swift; sourceTree = "<group>"; };
+		7D8A44B42E69CD860085B681 /* YahooFinanceClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YahooFinanceClient.swift; sourceTree = "<group>"; };
 		7DAA00012BE3000000000001 /* AppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTab.swift; sourceTree = "<group>"; };
 		7DAA00022BE3000000000002 /* IncomeModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeModels.swift; sourceTree = "<group>"; };
 		7DAA00042BE3000000000004 /* IncomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeController.swift; sourceTree = "<group>"; };
@@ -232,6 +234,7 @@
 			children = (
 				7D4D09492E5304B200E188D0 /* APIError.swift */,
 				7D4D09472E53021B00E188D0 /* RestClient.swift */,
+				7D8A44B42E69CD860085B681 /* YahooFinanceClient.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -475,6 +478,7 @@
 				7D2736872E59E92600F32B4C /* AccountsSectionedList.swift in Sources */,
 				7DECCEEC2E587C5200225DDA /* StringPickerSheet.swift in Sources */,
 				7DAB01042E70000200000004 /* FloatingActionButton.swift in Sources */,
+				7D8A44B52E69CD860085B681 /* YahooFinanceClient.swift in Sources */,
 				7D627CBA2E5A4AC700BB1CD7 /* DecimalTextField.swift in Sources */,
 				7DAC01112E70000300000011 /* AccountModels.swift in Sources */,
 				7DAC01122E70000300000012 /* AccountsController.swift in Sources */,
