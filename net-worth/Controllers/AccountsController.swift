@@ -67,28 +67,15 @@ final class AccountsController: ObservableObject {
     // MARK: - Mutations
     func create(name: String, type: String, currency: String, isActive: Bool = true) async -> Bool {
         do {
-            let new = try await client.createAccount(
+            _ = try await client.createAccount(
                 userId: userId, name: name, type: type, currency: currency.uppercased(), isActive: isActive
             )
             if let store = store {
                 await store.refreshAccounts(userId: userId)
                 await store.refreshWatchlists(userId: userId)
             } else {
-                // Convert Account to AccountSummary for local update
-                let summary = AccountSummary(
-                    id: new.id,
-                    userId: new.userId,
-                    name: new.name,
-                    type: new.type,
-                    isActive: new.isActive,
-                    currency: new.currency,
-                    currentDayValue: new.currentDayValue,
-                    previousDayValue: new.previousDayValue,
-                    invested: new.invested
-                )
-                var copy = items
-                copy.append(summary)
-                self.items = sortAccounts(copy)
+                // Refresh the full list since Account doesn't have summary fields
+                await load()
             }
             return true
         } catch let api as APIError {
@@ -141,26 +128,13 @@ final class AccountsController: ObservableObject {
     // MARK: - Update Method
     func update(id: Int, name: String? = nil, isActive: Bool? = nil) async -> Bool {
         do {
-            let updated = try await client.updateAccount(id: id, name: name, isActive: isActive)
+            _ = try await client.updateAccount(id: id, name: name, isActive: isActive)
             if let store = store {
                 await store.refreshAccounts(userId: userId)
                 await store.refreshWatchlists(userId: userId)
             } else {
-                // Convert Account to AccountSummary for local update
-                let summary = AccountSummary(
-                    id: updated.id,
-                    userId: updated.userId,
-                    name: updated.name,
-                    type: updated.type,
-                    isActive: updated.isActive,
-                    currency: updated.currency,
-                    currentDayValue: updated.currentDayValue,
-                    previousDayValue: updated.previousDayValue,
-                    invested: updated.invested
-                )
-                if let index = items.firstIndex(where: { $0.id == id }) {
-                    items[index] = summary
-                }
+                // Refresh the full list since Account doesn't have summary fields
+                await load()
             }
             return true
         } catch let api as APIError {

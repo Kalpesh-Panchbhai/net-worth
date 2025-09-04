@@ -5,17 +5,9 @@ struct Account: Codable, Identifiable, Hashable {
     let userId: Int
     let name: String
     let type: String
-    let currency: String
     let isActive: Bool
-    let currentDayValue: Double
-    let previousDayValue: Double
-    let invested: Double
-    
-    // Legacy compatibility
-    var active: Bool { isActive }
-    var value: AccountValue {
-        AccountValue(currentValue: currentDayValue, previousValue: previousDayValue, invested: invested)
-    }
+    let needsDailyData: Bool
+    let currency: String
 }
 
 struct AccountValue: Codable, Hashable {
@@ -43,6 +35,7 @@ struct CreateAccountRequest: Codable {
     let type: String
     let currency: String
     let isActive: Bool?
+    let needsDailyData: Bool?
 }
 
 struct UpdateAccountRequest: Codable {

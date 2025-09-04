@@ -25,6 +25,7 @@ struct CreateTransactionRequest: Codable {
     let txnDate: String // Date format: "YYYY-MM-DD"
     let invested: Double
     let value: Double
+    let mode: String // "add" or "update"
 }
 
 // MARK: - API Response Wrappers

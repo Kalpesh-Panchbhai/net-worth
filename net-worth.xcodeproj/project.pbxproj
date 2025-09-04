@@ -36,6 +36,7 @@
 		7D6F68E82E5730A900E0AD02 /* LookupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6F68E72E5730A900E0AD02 /* LookupStore.swift */; };
 		7D6F68EA2E5739D400E0AD02 /* ScrollToTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6F68E92E5739D400E0AD02 /* ScrollToTop.swift */; };
 		7D74B2922E52375A00E35786 /* BannerCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74B2912E52375A00E35786 /* BannerCenter.swift */; };
+		7D8A44B12E69A8150085B681 /* ChartDataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8A44B02E69A8150085B681 /* ChartDataModels.swift */; };
 		7DAA10012BE3000000000001 /* AppTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00012BE3000000000001 /* AppTab.swift */; };
 		7DAA10022BE3000000000002 /* IncomeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00022BE3000000000002 /* IncomeModels.swift */; };
 		7DAA10042BE3000000000004 /* IncomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAA00042BE3000000000004 /* IncomeController.swift */; };
@@ -99,6 +100,7 @@
 		7D6F68E72E5730A900E0AD02 /* LookupStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupStore.swift; sourceTree = "<group>"; };
 		7D6F68E92E5739D400E0AD02 /* ScrollToTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollToTop.swift; sourceTree = "<group>"; };
 		7D74B2912E52375A00E35786 /* BannerCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerCenter.swift; sourceTree = "<group>"; };
+		7D8A44B02E69A8150085B681 /* ChartDataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDataModels.swift; sourceTree = "<group>"; };
 		7DAA00012BE3000000000001 /* AppTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTab.swift; sourceTree = "<group>"; };
 		7DAA00022BE3000000000002 /* IncomeModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeModels.swift; sourceTree = "<group>"; };
 		7DAA00042BE3000000000004 /* IncomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeController.swift; sourceTree = "<group>"; };
@@ -212,6 +214,7 @@
 				7DAC01012E70000300000001 /* AccountModels.swift */,
 				7DAA000E2BE300000000000E /* AppAppearance.swift */,
 				7DAA00012BE3000000000001 /* AppTab.swift */,
+				7D8A44B02E69A8150085B681 /* ChartDataModels.swift */,
 				7DCE00012E7A000100000001 /* CurrencyModels.swift */,
 				7D0259BD2E62DA7E00D72525 /* HoldingModels.swift */,
 				7DAA00022BE3000000000002 /* IncomeModels.swift */,
@@ -460,6 +463,7 @@
 				7DAA100E2BE300000000000E /* AppAppearance.swift in Sources */,
 				7DAA100F2BE300000000000F /* RootView.swift in Sources */,
 				7DAA10102BE3000000000010 /* Transitions.swift in Sources */,
+				7D8A44B12E69A8150085B681 /* ChartDataModels.swift in Sources */,
 				7DC4221D2E545F73000D62BD /* PrivacyShieldView.swift in Sources */,
 				7DAB01012E70000100000001 /* WatchModels.swift in Sources */,
 				7DAB01022E70000100000002 /* WatchlistController.swift in Sources */,

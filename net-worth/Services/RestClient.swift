@@ -53,8 +53,20 @@ struct RestClient {
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
             guard let http = response as? HTTPURLResponse else { throw APIError.badStatus(-1) }
-            guard (200...299).contains(http.statusCode) else {
-                // Try to parse API error from response body
+            // Handle specific status codes according to OpenAPI spec
+            switch http.statusCode {
+            case 200, 201, 204:
+                // Success cases
+                break
+            case 400, 404, 409, 500:
+                // Expected error cases with API error response
+                if !dataIsBlank(data),
+                   let apiError = try? JSONDecoder().decode(ApiError.self, from: data) {
+                    throw APIError.apiError(http.statusCode, apiError)
+                }
+                throw APIError.badStatus(http.statusCode)
+            default:
+                // Unexpected status codes
                 if !dataIsBlank(data),
                    let apiError = try? JSONDecoder().decode(ApiError.self, from: data) {
                     throw APIError.apiError(http.statusCode, apiError)
@@ -117,7 +129,11 @@ struct RestClient {
     }
 
     func patch<Body: Encodable>(_ path: String, body: Body) async throws {
-        _ = try await perform(method: "PATCH", path: path, body: body)
+        let (_, http) = try await perform(method: "PATCH", path: path, body: body)
+        // Handle 204 No Content responses
+        if http.statusCode == 204 {
+            return
+        }
     }
     
     func patch<Body: Encodable, Response: Decodable>(_ path: String, body: Body) async throws -> Response {
@@ -131,7 +147,11 @@ struct RestClient {
     }
 
     func delete(_ path: String) async throws {
-        _ = try await perform(method: "DELETE", path: path)
+        let (_, http) = try await perform(method: "DELETE", path: path)
+        // Handle 204 No Content responses
+        if http.statusCode == 204 {
+            return
+        }
     }
 
     // Update an income record
@@ -280,14 +300,16 @@ extension RestClient {
         holdingId: Int,
         txnDate: String,
         invested: Double,
-        value: Double
+        value: Double,
+        mode: String = "add"
     ) async throws -> Transaction {
         let body = CreateTransactionRequest(
             accountId: accountId,
             holdingId: holdingId,
             txnDate: txnDate,
             invested: invested,
-            value: value
+            value: value,
+            mode: mode
         )
         let response: ApiResponseTransaction = try await post("transactions", body: body)
         return response.data
@@ -311,14 +333,16 @@ extension RestClient {
         name: String,
         type: String,
         currency: String,
-        isActive: Bool = true
+        isActive: Bool = true,
+        needsDailyData: Bool = false
     ) async throws -> Account {
         let body = CreateAccountRequest(
             userId: userId,
             name: name,
             type: type,
             currency: currency,
-            isActive: isActive
+            isActive: isActive,
+            needsDailyData: needsDailyData
         )
         let response: ApiResponseAccount = try await post("accounts", body: body)
         return response.data
@@ -400,10 +424,6 @@ extension RestClient {
         let body = CreateWatchlistAccountLinkRequest(watchlistId: watchlistId, accountId: accountId)
         _ = try await perform(method: "DELETE", path: "watchlist-accounts", body: body)
     }
-    /// Permanently delete the user and all server-side data
-    func deleteUser(id: Int) async throws {
-        try await delete("users/\(id)")
-    }
     func setDefaultIncomeSource(id: Int) async throws {
         try await patch("income-sources/\(id)", body: EmptyBody())
     }
@@ -436,6 +456,11 @@ extension RestClient {
     
     func setDefaultIncomeTag(id: Int) async throws {
         try await patch("income-tags/\(id)", body: EmptyBody())
+    }
+    
+    // MARK: - User Management API
+    func deleteUser(id: Int) async throws {
+        try await delete("users/\(id)")
     }
 
     func deleteIncome(id: Int) async throws {
@@ -476,6 +501,17 @@ extension RestClient {
         let body = Payload(externalUserId: uid)
         let response: ApiResponseUser = try await post("users", body: body)
         return response.data.id
+    }
+    
+    // MARK: - Chart Data API
+    func fetchChartData(
+        entityType: ChartEntityType,
+        entityId: Int,
+        timePeriod: ChartTimePeriod
+    ) async throws -> [ChartData] {
+        let path = "chart-data?entityType=\(entityType.rawValue)&entityId=\(entityId)&timePeriod=\(timePeriod.rawValue)"
+        let response: ApiResponseChartDataList = try await get(path)
+        return response.data
     }
     
 }

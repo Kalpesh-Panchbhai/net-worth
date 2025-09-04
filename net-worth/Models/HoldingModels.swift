@@ -13,12 +13,13 @@ struct HoldingSummary: Codable, Identifiable, Hashable {
     let accountId: Int
     let name: String
     let symbol: String
+    let units: Double
     let currentDayValue: Double
     let previousDayValue: Double
     let invested: Double
     
     // Legacy compatibility for existing views
-    var currentUnit: Double { 0.0 } // This will need to be calculated from transactions
+    var currentUnit: Double { units }
     var value: AccountValue {
         AccountValue(currentValue: currentDayValue, previousValue: previousDayValue, invested: invested)
     }
