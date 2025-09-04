@@ -22,6 +22,7 @@ struct AccountSummary: Codable, Identifiable, Hashable {
     let name: String
     let type: String
     let isActive: Bool
+    let needsDailyData: Bool
     let currency: String
     let currentDayValue: Double
     let previousDayValue: Double

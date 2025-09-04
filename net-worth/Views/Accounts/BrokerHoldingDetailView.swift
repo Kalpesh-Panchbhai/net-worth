@@ -94,6 +94,7 @@ struct BrokerHoldingDetailView: View {
                 CreateTransactionView(
                     accountId: 0,
                     accountBrokerId: holding.id,
+                    needsDailyData: true,
                     onSaved: { Task { await refresh() } }
                 )
             }

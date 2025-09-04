@@ -56,6 +56,15 @@ struct AccountDetailView: View {
                                     .foregroundColor(.secondary)
                             }
                         )
+                        // Only for non-broker accounts, show needs daily data
+                        if normalizedType(account.type) != "Broker" {
+                            divider()
+                            detailRow(
+                                icon: "calendar.badge.clock",
+                                title: "Enabled daily data",
+                                subtitle: account.needsDailyData ? "Yes" : "No"
+                            )
+                        }
                         divider()
                         detailRow(
                             icon: account.isActive ? "checkmark.seal" : "xmark.seal",
@@ -95,9 +104,11 @@ struct AccountDetailView: View {
                             VStack(spacing: 12) {
                                 ForEach(preview.indices, id: \.self) { i in
                                     let tx = preview[i]
-                                    let prevVal: Double? = (i + 1 < sortedAll.count) ? sortedAll[i + 1].value : nil
+                                    let prevVal: Double? =
+                                        (i + 1 < sortedAll.count) ? sortedAll[i + 1].value : nil
                                     transactionRowView(
-                                        date: DateTZ.fromBackendISTStringToUserDate(tx.transactionDate) ?? Date(),
+                                        date: DateTZ.fromBackendISTStringToUserDate(
+                                            tx.transactionDate) ?? Date(),
                                         value: tx.value,
                                         previousValue: prevVal,
                                         operation: tx.operation,
@@ -163,7 +174,10 @@ struct AccountDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(Color(.systemBackground), for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
-        .fabOverlay(icon: "plus", accessibilityLabel: "Add transaction", isVisible: normalizedType(account.type) != "Broker") {
+        .fabOverlay(
+            icon: "plus", accessibilityLabel: "Add transaction",
+            isVisible: normalizedType(account.type) != "Broker"
+        ) {
             showCreateTx = true
             Haptics.selection()
         }
@@ -178,6 +192,7 @@ struct AccountDetailView: View {
                 CreateTransactionView(
                     accountId: account.id,
                     accountBrokerId: 0,
+                    needsDailyData: account.needsDailyData,
                     onSaved: { Task { await loadTransactions() } }
                 )
             }
@@ -209,10 +224,10 @@ struct AccountDetailView: View {
 
     private func normalizedType(_ raw: String) -> String {
         let t = raw.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).lowercased()
-        if t.contains("broker") { return "Broker" }
-        if t.contains("saving") { return "Saving" }
-        if t.contains("credit") { return "Credit card" }
-        if t.contains("loan") { return "Loan" }
+        if t == "broker" || t.contains("broker") { return "Broker" }
+        if t == "savings" || t.contains("saving") { return "Savings" }
+        if t == "credit_card" || t.contains("credit") { return "Credit Card" }
+        if t == "loan" || t.contains("loan") { return "Loan" }
         return "Other"
     }
 
@@ -265,8 +280,12 @@ struct AccountDetailView: View {
         do {
             let links = try await RestClient().fetchAccountWatchlists(accountId: account.id)
             self.accountWatchlists = links.sorted { a, b in
-                let aIsAll = a.name.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame
-                let bIsAll = b.name.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame
+                let aIsAll =
+                    a.name.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                    .localizedCaseInsensitiveCompare("All") == .orderedSame
+                let bIsAll =
+                    b.name.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                    .localizedCaseInsensitiveCompare("All") == .orderedSame
                 if aIsAll != bIsAll { return aIsAll && !bIsAll }
                 return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
             }
@@ -281,7 +300,7 @@ struct AccountDetailView: View {
         arr.sorted { a, b in
             let da = DateTZ.fromBackendISTStringToUserDate(a.transactionDate) ?? .distantPast
             let db = DateTZ.fromBackendISTStringToUserDate(b.transactionDate) ?? .distantPast
-            return da > db // newest first
+            return da > db  // newest first
         }
     }
 

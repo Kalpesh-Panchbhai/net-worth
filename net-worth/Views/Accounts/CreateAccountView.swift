@@ -8,14 +8,22 @@ struct CreateAccountView: View {
     @AppStorage("defaultCurrencyCode") private var defaultCurrencyCode: String = "INR"
 
     @State private var name: String = ""
-    @State private var type: String = "Broker"
+    @State private var typeDisplay: String = "Broker"
+    @State private var typeCode: String = "BROKER"
     @State private var currency: String = "INR"
+    @State private var needsDailyData: Bool = true
     @State private var saving: Bool = false
     @State private var showCurrencyPicker: Bool = false
     @State private var showTypePicker: Bool = false
 
     private let client = RestClient()
-    private let accountTypes: [String] = ["Broker", "Saving", "Credit card", "Loan", "Other"]
+    private let accountTypes: [(display: String, code: String)] = [
+        ("Broker", "BROKER"),
+        ("Savings", "SAVINGS"),
+        ("Credit Card", "CREDIT_CARD"),
+        ("Loan", "LOAN"),
+        ("Other", "OTHER")
+    ]
 
     init(userId: Int) {
         self.userId = userId
@@ -44,10 +52,15 @@ struct CreateAccountView: View {
                             showTypePicker = true
                             Haptics.selection()
                         } label: {
-                            SettingsCell(icon: "square.grid.2x2", title: "Type", subtitle: type) {
-                                Image(systemName: "chevron.right")
-                                    .font(.footnote.weight(.semibold))
-                                    .foregroundColor(.secondary)
+                            SettingsCell(icon: "square.grid.2x2", title: "Type", subtitle: typeDisplay) {
+                                HStack(spacing: 8) {
+                                    Text(typeCode)
+                                        .font(.footnote.weight(.semibold))
+                                        .foregroundColor(.secondary)
+                                    Image(systemName: "chevron.right")
+                                        .font(.footnote.weight(.semibold))
+                                        .foregroundColor(.secondary)
+                                }
                             }
                         }
                         .buttonStyle(.plain)
@@ -86,6 +99,28 @@ struct CreateAccountView: View {
                         .buttonStyle(.plain)
                         .contentShape(Rectangle())
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        // Needs daily data (only for non-broker types)
+                        if typeCode != "BROKER" {
+                            Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(
+                                .horizontal, 12)
+                            HStack(spacing: 12) {
+                                SettingsCell(
+                                    icon: "calendar.badge.clock",
+                                    title: "Needs daily data",
+                                    subtitle: needsDailyData ? "Yes" : "No"
+                                ) {
+                                    Toggle("", isOn: $needsDailyData)
+                                        .labelsHidden()
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            Text("Enable this if values for this account are tracked daily and you want to enter both amount and invested for transactions. Disable to enter only a single amount.")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(.horizontal, 12)
+                                .padding(.top, 6)
+                        }
                     }
                 }
             }
@@ -108,7 +143,21 @@ struct CreateAccountView: View {
         .toolbarBackground(.visible, for: .navigationBar)
         .sheet(isPresented: $showCurrencyPicker) { CurrencyPickerSheet(selectedCode: $currency) }
         .sheet(isPresented: $showTypePicker) {
-            StringPickerSheet(title: "Select type", items: accountTypes, selected: $type)
+            AccountTypePickerSheet(
+                title: "Select type",
+                items: accountTypes,
+                selectedDisplay: $typeDisplay,
+                selectedCode: $typeCode
+            )
+        }
+        // Keep Broker always daily-data=true, reset to false when switching to non-broker
+        .onChange(of: typeCode) { _, newCode in
+            if newCode == "BROKER" {
+                needsDailyData = true
+            } else if needsDailyData {
+                // default to false when switching out of Broker
+                needsDailyData = false
+            }
         }
     }
 
@@ -124,9 +173,10 @@ struct CreateAccountView: View {
             _ = try await client.createAccount(
                 userId: userId,
                 name: trimmed,
-                type: type,
+                type: typeCode,
                 currency: currency.uppercased(),
-                isActive: true
+                isActive: true,
+                needsDailyData: (typeCode == "BROKER") ? true : needsDailyData
             )
             // POST succeeded; stop showing Saving…
             saving = false
@@ -147,6 +197,18 @@ struct CreateAccountView: View {
             banners.showError(message: error.localizedDescription)
             Haptics.softImpact()
         }
+    }
+}
+
+// MARK: - Type Mapping (UI display -> API enum)
+private func apiTypeValue(_ display: String) -> String {
+    let t = display.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+    switch t {
+    case "broker": return "BROKER"
+    case "saving", "savings": return "SAVINGS"
+    case "credit card", "credit-card", "credit_card": return "CREDIT_CARD"
+    case "loan": return "LOAN"
+    default: return "OTHER"
     }
 }
 

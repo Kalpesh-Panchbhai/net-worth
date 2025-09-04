@@ -130,10 +130,10 @@ struct AccountsSectionedList: View {
 
     private func normalizedType(_ raw: String) -> String {
         let t = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        if t.contains("broker") { return "Broker" }
-        if t.contains("saving") { return "Saving" }
-        if t.contains("credit") { return "Credit card" }
-        if t.contains("loan") { return "Loan" }
+        if t == "broker" || t.contains("broker") { return "Broker" }
+        if t == "savings" || t.contains("saving") { return "Savings" }
+        if t == "credit_card" || t.contains("credit") { return "Credit Card" }
+        if t == "loan" || t.contains("loan") { return "Loan" }
         return "Other"
     }
 
@@ -141,7 +141,7 @@ struct AccountsSectionedList: View {
         // Derive from search+inactive results so chips remain available for multi-select
         let base = searchAndInactiveFiltered().map { normalizedType($0.type) }
         let unique = Array(Set(base)).sorted()
-        let order = ["Broker", "Saving", "Credit card", "Loan", "Other"]
+        let order = ["Broker", "Savings", "Credit Card", "Loan", "Other"]
         return unique.sorted { a, b in
             let ia = order.firstIndex(of: a) ?? Int.max
             let ib = order.firstIndex(of: b) ?? Int.max
@@ -155,7 +155,7 @@ struct AccountsSectionedList: View {
     }
     
     private func groupByType(_ accounts: [AccountSummary]) -> [AccountSection] {
-        let order = ["Broker", "Saving", "Credit card", "Loan", "Other"]
+        let order = ["Broker", "Savings", "Credit Card", "Loan", "Other"]
         var buckets: [String: [AccountSummary]] = [:]
         for acc in accounts { buckets[normalizedType(acc.type), default: []].append(acc) }
         var result: [AccountSection] = []
