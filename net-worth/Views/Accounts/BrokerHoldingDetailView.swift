@@ -95,19 +95,16 @@ struct BrokerHoldingDetailView: View {
                     accountId: holding.accountId,
                     holdingId: holding.id,
                     needsDailyData: false,
-                    onSaved: { Task { await load() } }
+                    onSaved: { Task { await refresh() } }
                 )
             }
         }
-        .task { await load() }
+        .task { await refresh() }
     }
 
     // MARK: - Data
     @MainActor
-    private func load() async {
-        if !transactions.isEmpty { return }
-        await refresh()
-    }
+    private func load() async { await refresh() }
 
     @MainActor
     private func refresh() async {

@@ -253,6 +253,20 @@ struct AccountDetailView: View {
                 )
             }
         }
+        .onChange(of: showCreateTx) { wasShowing in
+            // When the sheet is dismissed, force a refresh to avoid any race with onSaved
+            if wasShowing == false {
+                Task {
+                    if normalizedType(account.type) == "Broker" {
+                        await loadBroker()
+                    } else {
+                        await loadTransactions()
+                    }
+                    // Reset any previously selected holding id
+                    selectedHoldingId = 0
+                }
+            }
+        }
         .task {
             await loadBroker()
             await loadTransactions()
