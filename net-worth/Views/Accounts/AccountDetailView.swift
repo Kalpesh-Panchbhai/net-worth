@@ -253,9 +253,9 @@ struct AccountDetailView: View {
                 )
             }
         }
-        .onChange(of: showCreateTx) { wasShowing in
+        .onChange(of: showCreateTx) { oldValue, newValue in
             // When the sheet is dismissed, force a refresh to avoid any race with onSaved
-            if wasShowing == false {
+            if oldValue == true && newValue == false {
                 Task {
                     if normalizedType(account.type) == "Broker" {
                         await loadBroker()
