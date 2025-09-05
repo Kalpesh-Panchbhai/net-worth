@@ -35,6 +35,10 @@ struct AccountDetailView: View {
     @State private var showDeleteHoldingAlert = false
     @State private var deleteHoldingTarget: (id: Int, name: String)? = nil
     @State private var showFabMenu = false
+    // Add to Watchlist
+    @State private var showAddToWatchSheet = false
+    @State private var addingWatchlistId: Int? = nil
+    @State private var removingWatchlistId: Int? = nil
 
     var body: some View {
         ScrollView {
@@ -237,50 +241,7 @@ struct AccountDetailView: View {
             }
         }
         // Multi-option FAB menu (Airbnb-style, circular buttons)
-        .overlay(alignment: .bottomTrailing) {
-            if showFabMenu {
-                VStack(alignment: .trailing, spacing: 14) {
-                    // Add action (holding or transaction) — only show when account is active
-                    let isBroker = normalizedType(account.type) == "Broker"
-                    let addLabel = isBroker ? "Add holding" : "Add transaction"
-                    let canAdd = displayIsActive
-                    if canAdd {
-                        // Bottom-most action near the main FAB appears first
-                        miniFab(label: addLabel, icon: "plus", enabled: true) {
-                            if reduceMotion { showFabMenu = false }
-                            else { withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) { showFabMenu = false } }
-                            if isBroker { showAddHoldingSheet = true } else { showCreateTx = true }
-                        }
-                        .offset(y: showFabMenu ? 0 : 18)
-                        .scaleEffect(showFabMenu ? 1.0 : 0.92)
-                        .opacity(showFabMenu ? 1.0 : 0.0)
-                        .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85), value: showFabMenu)
-                    }
-
-                    // Edit button (above add when present). If Add is hidden, remove the delay.
-                    miniFab(label: "Edit", icon: "pencil", enabled: true) {
-                        if reduceMotion { showFabMenu = false }
-                        else { withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) { showFabMenu = false } }
-                        editName = displayName
-                        editActive = displayIsActive
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) { showEditSheet = true }
-                    }
-                    .offset(y: showFabMenu ? 0 : (canAdd ? 26 : 18))
-                    .scaleEffect(showFabMenu ? 1.0 : (canAdd ? 0.9 : 0.92))
-                    .opacity(showFabMenu ? 1.0 : 0.0)
-                    .animation(
-                        reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85).delay(canAdd ? 0.05 : 0),
-                        value: showFabMenu
-                    )
-                }
-                .padding(.trailing, LayoutConstants.fabTrailing)
-                .padding(
-                    .bottom,
-                    LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin + LayoutConstants.fabSize + 10
-                )
-                .transition(.opacity)
-            }
-        }
+        .overlay(alignment: .bottomTrailing) { fabMenu }
         .navigationDestination(for: AccountBroker.self) { holding in
             BrokerHoldingDetailView(holding: holding, isAccountActive: displayIsActive)
         }
@@ -326,6 +287,7 @@ struct AccountDetailView: View {
         }
         .sheet(isPresented: $showEditSheet) { editSheet }
         .sheet(isPresented: $showAddHoldingSheet) { addHoldingSheet }
+        .sheet(isPresented: $showAddToWatchSheet) { addToWatchSheet }
         .alert("Delete holding?", isPresented: $showDeleteHoldingAlert, presenting: deleteHoldingTarget) { target in
             Button("Delete", role: .destructive) {
                 Task { await deleteHolding(id: target.id, name: target.name) }
@@ -420,6 +382,54 @@ struct AccountDetailView: View {
             insertion: .move(edge: .bottom).combined(with: .opacity),
             removal: .opacity
         ))
+    }
+
+    // MARK: - FAB Menu (extracted for readability and compiler performance)
+    private var fabMenu: some View {
+        Group {
+            if showFabMenu {
+                let isBroker = normalizedType(account.type) == "Broker"
+                let addLabel = isBroker ? "Add holding" : "Add transaction"
+                let canAdd = displayIsActive
+                VStack(alignment: .trailing, spacing: 14) {
+                    if canAdd {
+                        miniFab(label: addLabel, icon: "plus", enabled: true) {
+                            if reduceMotion { showFabMenu = false }
+                            else { withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) { showFabMenu = false } }
+                            if isBroker { showAddHoldingSheet = true } else { showCreateTx = true }
+                        }
+                        .offset(y: showFabMenu ? 0 : 18)
+                        .scaleEffect(showFabMenu ? 1.0 : 0.92)
+                        .opacity(showFabMenu ? 1.0 : 0.0)
+                        .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85), value: showFabMenu)
+                    }
+                    miniFab(label: "Add to watchlist", icon: "text.badge.plus", enabled: true) {
+                        if reduceMotion { showFabMenu = false } else {
+                            withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) { showFabMenu = false }
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) { showAddToWatchSheet = true }
+                    }
+                    .offset(y: showFabMenu ? 0 : (canAdd ? 22 : 18))
+                    .scaleEffect(showFabMenu ? 1.0 : 0.92)
+                    .opacity(showFabMenu ? 1.0 : 0.0)
+                    .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85).delay(canAdd ? 0.04 : 0), value: showFabMenu)
+                    miniFab(label: "Edit", icon: "pencil", enabled: true) {
+                        if reduceMotion { showFabMenu = false }
+                        else { withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) { showFabMenu = false } }
+                        editName = displayName
+                        editActive = displayIsActive
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) { showEditSheet = true }
+                    }
+                    .offset(y: showFabMenu ? 0 : (canAdd ? 26 : 18))
+                    .scaleEffect(showFabMenu ? 1.0 : (canAdd ? 0.9 : 0.92))
+                    .opacity(showFabMenu ? 1.0 : 0.0)
+                    .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85).delay(canAdd ? 0.08 : 0.03), value: showFabMenu)
+                }
+                .padding(.trailing, LayoutConstants.fabTrailing)
+                .padding(.bottom, LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin + LayoutConstants.fabSize + 10)
+                .transition(.opacity)
+            }
+        }
     }
 
     // MARK: - Edit Sheet (PATCH name / isActive)
@@ -794,6 +804,101 @@ struct AccountDetailView: View {
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
         .task(id: holdingSearch) { await searchHoldings() }
+    }
+
+    // MARK: - Add To Watchlist Sheet
+    private var addToWatchSheet: some View {
+        NavigationStack {
+            List {
+                Section("Add to watchlist") {
+                    ForEach(lookup.watchlists, id: \.id) { wl in
+                        let isAll = wl.name.trimmingCharacters(in: .whitespacesAndNewlines)
+                            .localizedCaseInsensitiveCompare("All") == .orderedSame
+                        if !isAll {
+                            let isMember = accountWatchlists.contains(where: { $0.id == wl.id })
+                            Button {
+                                if isMember {
+                                    removingWatchlistId = wl.id
+                                    Task {
+                                        do {
+                                            try await RestClient().unlinkWatchlistAccount(watchlistId: wl.id, accountId: account.id)
+                                            await loadAccountWatches()
+                                            banners.show(
+                                                AppBanner(
+                                                    icon: "checkmark.circle",
+                                                    title: "Removed from watchlist",
+                                                    message: "\(account.name) ← \(wl.name)",
+                                                    style: .success
+                                                )
+                                            )
+                                            Haptics.success()
+                                        } catch let api as APIError {
+                                            Haptics.softImpact()
+                                            banners.showError(message: api.errorDescription ?? "Failed to remove from watchlist.")
+                                        } catch {
+                                            Haptics.softImpact()
+                                            banners.showError(message: error.localizedDescription)
+                                        }
+                                        removingWatchlistId = nil
+                                    }
+                                } else {
+                                    addingWatchlistId = wl.id
+                                    Task {
+                                        do {
+                                            try await RestClient().linkWatchlistAccount(watchlistId: wl.id, accountId: account.id)
+                                            await loadAccountWatches()
+                                            banners.show(
+                                                AppBanner(
+                                                    icon: "checkmark.circle.fill",
+                                                    title: "Added to watchlist",
+                                                    message: "\(account.name) → \(wl.name)",
+                                                    style: .success
+                                                )
+                                            )
+                                            Haptics.success()
+                                        } catch let api as APIError {
+                                            Haptics.softImpact()
+                                            banners.showError(message: api.errorDescription ?? "Failed to add to watchlist.")
+                                        } catch {
+                                            Haptics.softImpact()
+                                            banners.showError(message: error.localizedDescription)
+                                        }
+                                        addingWatchlistId = nil
+                                    }
+                                }
+                            } label: {
+                                HStack {
+                                    Text(wl.name)
+                                    Spacer()
+                                    if removingWatchlistId == wl.id || addingWatchlistId == wl.id {
+                                        ProgressView().progressViewStyle(.circular)
+                                    } else if isMember {
+                                        Text("Remove")
+                                            .font(.footnote.weight(.semibold))
+                                            .foregroundColor(.airbnbPrimary)
+                                    } else {
+                                        Text("Add")
+                                            .font(.footnote.weight(.semibold))
+                                            .foregroundColor(.airbnbPrimary)
+                                    }
+                                }
+                            }
+                            .disabled(removingWatchlistId != nil || addingWatchlistId != nil)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Add to watch")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button("Close") { showAddToWatchSheet = false } }
+            }
+            .task {
+                await lookup.refreshWatchlists(userId: account.userId)
+            }
+        }
+        .presentationDetents([.medium, .large])
+        .presentationDragIndicator(.visible)
     }
 
     @MainActor
