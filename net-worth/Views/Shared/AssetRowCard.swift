@@ -11,6 +11,8 @@ struct AssetRowCard: View {
     var units: Double? = nil
     // Optional badge shown near the title (e.g., watchlist account count)
     var countBadge: Int? = nil
+    // Inactive flag for accounts: shows a pill next to the title when true
+    var isInactive: Bool = false
 
     var body: some View {
         HStack(alignment: .top, spacing: 8) {
@@ -48,6 +50,21 @@ struct AssetRowCard: View {
                 .foregroundColor(.secondary)
                 .padding(.vertical, 3)
                 .padding(.horizontal, 6)
+                .background(Capsule().fill(Color.secondary.opacity(0.12)))
+                .fixedSize()
+            }
+            if isInactive {
+                HStack(spacing: 4) {
+                    Image(systemName: "pause.circle.fill")
+                        .font(.caption.weight(.semibold))
+                    Text("Inactive")
+                        .font(.caption2.bold())
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                }
+                .foregroundColor(.secondary)
+                .padding(.vertical, 3)
+                .padding(.horizontal, 8)
                 .background(Capsule().fill(Color.secondary.opacity(0.12)))
                 .fixedSize()
             }

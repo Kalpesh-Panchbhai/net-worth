@@ -2,6 +2,7 @@ import SwiftUI
 
 struct BrokerHoldingDetailView: View {
     let holding: AccountBroker
+    let isAccountActive: Bool
     @AppStorage("defaultCurrencyCode") private var displayCurrency: String = "INR"
 
     @State private var transactions: [AccountTransaction] = []
@@ -85,7 +86,7 @@ struct BrokerHoldingDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(Color(.systemBackground), for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
-        .fabOverlay(icon: "plus", accessibilityLabel: "Add transaction") {
+        .fabOverlay(icon: "plus", accessibilityLabel: "Add transaction", isVisible: isAccountActive) {
             showCreateTx = true
             Haptics.selection()
         }

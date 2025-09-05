@@ -5,6 +5,7 @@ struct AccountDetailView: View {
     @AppStorage("defaultCurrencyCode") private var displayCurrency: String = "INR"
     @EnvironmentObject private var lookup: LookupStore
     @EnvironmentObject private var banners: BannerCenter
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var brokerHoldings: [AccountBroker] = []
     @State private var isLoadingBroker = false
     @State private var brokerError: String? = nil
@@ -33,6 +34,7 @@ struct AccountDetailView: View {
     @State private var selectedHoldingId: Int = 0
     @State private var showDeleteHoldingAlert = false
     @State private var deleteHoldingTarget: (id: Int, name: String)? = nil
+    @State private var showFabMenu = false
 
     var body: some View {
         ScrollView {
@@ -173,11 +175,13 @@ struct AccountDetailView: View {
                                         )
                                     }
                                     .contextMenu {
-                                        Button {
-                                            selectedHoldingId = h.id
-                                            showCreateTx = true
-                                        } label: {
-                                            Label("Add Transaction", systemImage: "plus.circle")
+                                        if displayIsActive {
+                                            Button {
+                                                selectedHoldingId = h.id
+                                                showCreateTx = true
+                                            } label: {
+                                                Label("Add Transaction", systemImage: "plus.circle")
+                                            }
                                         }
                                         Divider()
                                         Button(role: .destructive) {
@@ -205,41 +209,80 @@ struct AccountDetailView: View {
         .background(Color.canvasBackground.ignoresSafeArea())
         .navigationTitle(displayName)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(action: {
-                    editName = displayName
-                    editActive = displayIsActive
-                    showEditSheet = true
-                }) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "pencil")
-                        Text("Edit")
-                    }
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundColor(.airbnbPrimary)
-                    .padding(.vertical, 6)
-                    .padding(.horizontal, 12)
-                    .background(Capsule().fill(Color.airbnbPrimary.opacity(0.12)))
-                }
-            }
-        }
+        .toolbar { }
         .toolbarBackground(Color(.systemBackground), for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .fabOverlay(
-            icon: "plus", 
-            accessibilityLabel: normalizedType(account.type) == "Broker" ? "Add holding" : "Add transaction",
+            icon: showFabMenu ? "xmark" : "plus",
+            accessibilityLabel: "Actions",
             isVisible: true
         ) {
-            if normalizedType(account.type) == "Broker" {
-                showAddHoldingSheet = true
+            if reduceMotion {
+                showFabMenu.toggle()
             } else {
-                showCreateTx = true
+                withAnimation(.spring(response: 0.28, dampingFraction: 0.86)) {
+                    showFabMenu.toggle()
+                }
             }
             Haptics.selection()
         }
+        // Tap-catcher to dismiss menu when tapping outside
+        .overlay {
+            if showFabMenu {
+                Color.black.opacity(0.001) // invisible catch layer
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) { showFabMenu = false }
+                    }
+            }
+        }
+        // Multi-option FAB menu (Airbnb-style, circular buttons)
+        .overlay(alignment: .bottomTrailing) {
+            if showFabMenu {
+                VStack(alignment: .trailing, spacing: 14) {
+                    // Add action (holding or transaction) — only show when account is active
+                    let isBroker = normalizedType(account.type) == "Broker"
+                    let addLabel = isBroker ? "Add holding" : "Add transaction"
+                    let canAdd = displayIsActive
+                    if canAdd {
+                        // Bottom-most action near the main FAB appears first
+                        miniFab(label: addLabel, icon: "plus", enabled: true) {
+                            if reduceMotion { showFabMenu = false }
+                            else { withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) { showFabMenu = false } }
+                            if isBroker { showAddHoldingSheet = true } else { showCreateTx = true }
+                        }
+                        .offset(y: showFabMenu ? 0 : 18)
+                        .scaleEffect(showFabMenu ? 1.0 : 0.92)
+                        .opacity(showFabMenu ? 1.0 : 0.0)
+                        .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85), value: showFabMenu)
+                    }
+
+                    // Edit button (above add when present). If Add is hidden, remove the delay.
+                    miniFab(label: "Edit", icon: "pencil", enabled: true) {
+                        if reduceMotion { showFabMenu = false }
+                        else { withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) { showFabMenu = false } }
+                        editName = displayName
+                        editActive = displayIsActive
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) { showEditSheet = true }
+                    }
+                    .offset(y: showFabMenu ? 0 : (canAdd ? 26 : 18))
+                    .scaleEffect(showFabMenu ? 1.0 : (canAdd ? 0.9 : 0.92))
+                    .opacity(showFabMenu ? 1.0 : 0.0)
+                    .animation(
+                        reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85).delay(canAdd ? 0.05 : 0),
+                        value: showFabMenu
+                    )
+                }
+                .padding(.trailing, LayoutConstants.fabTrailing)
+                .padding(
+                    .bottom,
+                    LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin + LayoutConstants.fabSize + 10
+                )
+                .transition(.opacity)
+            }
+        }
         .navigationDestination(for: AccountBroker.self) { holding in
-            BrokerHoldingDetailView(holding: holding)
+            BrokerHoldingDetailView(holding: holding, isAccountActive: displayIsActive)
         }
         .navigationDestination(for: WatchlistSummary.self) { item in
             WatchlistAccountsView(userId: account.userId, watchlist: item)
@@ -291,6 +334,8 @@ struct AccountDetailView: View {
         } message: { target in
             Text("This will permanently delete \(target.name) from this account.")
         }
+        // Close FAB menu when leaving screen
+        .onDisappear { showFabMenu = false }
         .onAppear {
             if !didBootstrapDisplay {
                 displayName = account.name
@@ -339,6 +384,42 @@ struct AccountDetailView: View {
         if t == "credit_card" || t.contains("credit") { return "Credit Card" }
         if t == "loan" || t.contains("loan") { return "Loan" }
         return "Other"
+    }
+
+    // MARK: - Mini FAB helper
+    @ViewBuilder
+    private func miniFab(label: String, icon: String, enabled: Bool, action: @escaping () -> Void) -> some View {
+        HStack(spacing: 10) {
+            Text(label)
+                .font(.footnote.weight(.semibold))
+                .foregroundColor(enabled ? .primary : .secondary)
+                .padding(.vertical, 6)
+                .padding(.horizontal, 10)
+                .background(
+                    Capsule().fill(Color.elevatedBackground)
+                )
+                .overlay(
+                    Capsule().stroke(Color.subtleSeparator, lineWidth: 1)
+                )
+            Button(action: {
+                if enabled { Haptics.selection(); action() } else { Haptics.softImpact() }
+            }) {
+                Image(systemName: icon)
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(width: 48, height: 48)
+                    .background(
+                        Circle().fill(enabled ? LinearGradient.airbnbAccent : LinearGradient(colors: [.secondary.opacity(0.4), .secondary.opacity(0.4)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                    )
+                    .shadow(color: Color.airbnbPrimary.opacity(enabled ? 0.35 : 0.0), radius: 10, x: 0, y: 5)
+            }
+            .buttonStyle(PressableButtonStyle(scale: 0.94))
+            .disabled(!enabled)
+        }
+        .transition(.asymmetric(
+            insertion: .move(edge: .bottom).combined(with: .opacity),
+            removal: .opacity
+        ))
     }
 
     // MARK: - Edit Sheet (PATCH name / isActive)

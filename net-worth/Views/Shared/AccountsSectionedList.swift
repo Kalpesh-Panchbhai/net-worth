@@ -82,7 +82,8 @@ struct AccountsSectionedList: View {
                                     current: item.currentDayValue,
                                     invested: item.invested,
                                     previous: item.previousDayValue,
-                                    currency: currency
+                                    currency: currency,
+                                    isInactive: !item.isActive
                                 )
                             }
                             .contextMenu {
