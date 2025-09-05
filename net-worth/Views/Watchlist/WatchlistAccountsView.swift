@@ -19,9 +19,9 @@ struct WatchlistAccountsView: View {
     }
 
     var body: some View {
+        let isAll = watchlist.name.trimmingCharacters(in: .whitespacesAndNewlines)
+            .localizedCaseInsensitiveCompare("All") == .orderedSame
         ScrollView {
-            let isAll = watchlist.name.trimmingCharacters(in: .whitespacesAndNewlines)
-                .localizedCaseInsensitiveCompare("All") == .orderedSame
             AccountsSectionedList(
                 items: vm.items,
                 currency: defaultCurrencyCode.uppercased(),
@@ -34,7 +34,7 @@ struct WatchlistAccountsView: View {
             )
             .padding(.horizontal, 16)
             .padding(.vertical, 16)
-            Color.clear.frame(height: LayoutConstants.tabBarHeight + 24)
+            .padding(.bottom, LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin + LayoutConstants.fabSize + 150)
         }
         .fabOverlay(
             icon: "plus",
