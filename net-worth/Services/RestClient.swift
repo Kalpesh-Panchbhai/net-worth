@@ -210,7 +210,6 @@ private struct MinimalIdResponse: Decodable {
     let id: Int?
 }
 
-// MARK: - Backward-compatible conveniences for current entities
 extension RestClient {
     func fetchIncomes(userId: Int) async throws -> [Income] {
         let response: ApiResponseIncomeList = try await get("incomes/\(userId)")
@@ -281,6 +280,7 @@ extension RestClient {
                 accountBrokerId: transaction.holdingId,
                 transactionDate: transaction.txnDate + " 00:00:00", // Convert date format
                 value: transaction.value,
+                invested: transaction.invested,
                 operation: nil
             )
         }
@@ -301,6 +301,7 @@ extension RestClient {
                 accountBrokerId: transaction.holdingId,
                 transactionDate: transaction.txnDate + " 00:00:00", // Convert date format
                 value: transaction.value,
+                invested: transaction.invested,
                 operation: nil
             )
         }
@@ -395,40 +396,6 @@ extension RestClient {
     func linkWatchlistAccount(watchlistId: Int, accountId: Int) async throws {
         let body = CreateWatchlistAccountLinkRequest(watchlistId: watchlistId, accountId: accountId)
         _ = try await perform(method: "POST", path: "watchlist-accounts", body: body)
-    }
-    // Create an account transaction (for account or broker holding)
-    func createAccountTransaction(
-        accountId: Int,
-        accountBrokerId: Int,
-        transactionDate: Date,
-        value: Double,
-        operation: String
-    ) async throws -> AccountTransaction {
-        struct Payload: Codable {
-            let accountId: Int
-            let accountBrokerId: Int
-            let transactionDate: String
-            let value: Double
-            let operation: String
-        }
-        let dateString = DateTZ.toBackendISTString(fromUserDate: transactionDate)
-        let body = Payload(
-            accountId: accountId,
-            accountBrokerId: accountBrokerId,
-            transactionDate: dateString,
-            value: value,
-            operation: operation
-        )
-        return try await postWithFallback("account_transaction", body: body) { newId in
-            AccountTransaction(
-                id: newId ?? -1,
-                accountId: accountId,
-                accountBrokerId: accountBrokerId,
-                transactionDate: dateString,
-                value: value,
-                operation: operation
-            )
-        }
     }
     // Remove an account from a watchlist
     func unlinkWatchlistAccount(watchlistId: Int, accountId: Int) async throws {

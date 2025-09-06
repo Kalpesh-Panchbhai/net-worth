@@ -6,6 +6,7 @@ struct AccountTransaction: Codable, Identifiable, Hashable {
     let accountBrokerId: Int
     let transactionDate: String // Backend IST string: "yyyy-MM-dd HH:mm:ss"
     let value: Double
+    let invested: Double?
     let operation: String?
 }
 
@@ -38,3 +39,4 @@ struct ApiResponseTransactionList: Codable {
     let success: Bool
     let data: [Transaction]
 }
+

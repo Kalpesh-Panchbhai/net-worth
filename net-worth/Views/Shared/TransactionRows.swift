@@ -2,7 +2,7 @@ import SwiftUI
 
 // Reusable, minimal transaction row following app design tokens
 @ViewBuilder
-public func transactionRowView(date: Date, value: Double, operation: String?, currency: String) -> some View {
+public func transactionRowView(date: Date, value: Double, operation: String?, currency: String, invested: Double? = nil) -> some View {
     HStack(alignment: .center, spacing: 12) {
         VStack(alignment: .leading, spacing: 2) {
             Text(DateFormatter.dayMonYear.string(from: date))
@@ -17,11 +17,19 @@ public func transactionRowView(date: Date, value: Double, operation: String?, cu
             }
         }
         Spacer()
-        Text(value, format: .currency(code: currency))
-            .font(.headline.weight(.semibold))
-            .foregroundColor(value >= 0 ? .airbnbSuccess : .red)
-            .monospacedDigit()
-            .contentTransition(.numericText())
+        VStack(alignment: .trailing, spacing: 4) {
+            Text(value, format: .currency(code: currency))
+                .font(.headline.weight(.semibold))
+                .foregroundColor(value >= 0 ? .airbnbSuccess : .red)
+                .monospacedDigit()
+                .contentTransition(.numericText())
+            if let inv = invested {
+                Text("Invested · " + CurrencyShort.shortString(inv, currency: currency))
+                    .font(.caption2.weight(.medium))
+                    .foregroundColor(.secondary)
+                    .monospacedDigit()
+            }
+        }
     }
     .padding(14)
     .frame(maxWidth: .infinity, minHeight: 56, alignment: .center)
@@ -34,7 +42,7 @@ public func transactionRowView(date: Date, value: Double, operation: String?, cu
 
 // Overload: show delta compared to previous transaction
 @ViewBuilder
-public func transactionRowView(date: Date, value: Double, previousValue: Double?, operation: String?, currency: String) -> some View {
+public func transactionRowView(date: Date, value: Double, previousValue: Double?, operation: String?, currency: String, invested: Double? = nil) -> some View {
     HStack(alignment: .center, spacing: 12) {
         VStack(alignment: .leading, spacing: 2) {
             Text(DateFormatter.dayMonYear.string(from: date))
@@ -77,6 +85,12 @@ public func transactionRowView(date: Date, value: Double, previousValue: Double?
                 .padding(.vertical, 3)
                 .padding(.horizontal, 8)
                 .background(Capsule().fill(tint.opacity(0.12)))
+            }
+            if let inv = invested {
+                Text("Invested · " + CurrencyShort.shortString(inv, currency: currency))
+                    .font(.caption2.weight(.medium))
+                    .foregroundColor(.secondary)
+                    .monospacedDigit()
             }
         }
     }

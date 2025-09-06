@@ -70,7 +70,8 @@ struct BrokerHoldingDetailView: View {
                                     value: tx.value,
                                     previousValue: prevVal,
                                     operation: tx.operation,
-                                    currency: displayCurrency.uppercased()
+                                    currency: displayCurrency.uppercased(),
+                                    invested: tx.invested
                                 )
                             }
                         }
