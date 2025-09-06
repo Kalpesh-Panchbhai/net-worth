@@ -42,7 +42,15 @@ public func transactionRowView(date: Date, value: Double, operation: String?, cu
 
 // Overload: show delta compared to previous transaction
 @ViewBuilder
-public func transactionRowView(date: Date, value: Double, previousValue: Double?, operation: String?, currency: String, invested: Double? = nil) -> some View {
+public func transactionRowView(
+    date: Date,
+    value: Double,
+    previousValue: Double?,
+    operation: String?,
+    currency: String,
+    invested: Double? = nil,
+    previousInvested: Double? = nil
+) -> some View {
     HStack(alignment: .center, spacing: 12) {
         VStack(alignment: .leading, spacing: 2) {
             Text(DateFormatter.dayMonYear.string(from: date))
@@ -86,7 +94,28 @@ public func transactionRowView(date: Date, value: Double, previousValue: Double?
                 .padding(.horizontal, 8)
                 .background(Capsule().fill(tint.opacity(0.12)))
             }
-            if let inv = invested {
+            if let inv = invested, let pinv = previousInvested {
+                let invDelta = inv - pinv
+                let tint: Color = invDelta >= 0 ? .airbnbSuccess : .red
+                let pctText: String? = pinv.magnitude > 0 ? (invDelta / pinv.magnitude).formatted(.percent.precision(.fractionLength(1))) : nil
+                HStack(spacing: 6) {
+                    Image(systemName: invDelta >= 0 ? "arrow.up.right" : "arrow.down.right")
+                        .font(.caption2.weight(.bold))
+                    Text("Invested " + CurrencyShort.shortString(abs(invDelta), currency: currency))
+                        .font(.caption2.weight(.semibold))
+                        .monospacedDigit()
+                    if let p = pctText {
+                        Text("•").font(.caption2.weight(.bold))
+                        Text(p)
+                            .font(.caption2.weight(.semibold))
+                            .monospacedDigit()
+                    }
+                }
+                .foregroundColor(tint)
+                .padding(.vertical, 3)
+                .padding(.horizontal, 8)
+                .background(Capsule().fill(tint.opacity(0.12)))
+            } else if let inv = invested {
                 Text("Invested · " + CurrencyShort.shortString(inv, currency: currency))
                     .font(.caption2.weight(.medium))
                     .foregroundColor(.secondary)

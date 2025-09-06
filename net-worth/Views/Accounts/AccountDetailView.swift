@@ -130,6 +130,8 @@ struct AccountDetailView: View {
                                     let tx = preview[i]
                                     let prevVal: Double? =
                                         (i + 1 < sortedAll.count) ? sortedAll[i + 1].value : nil
+                                    let prevInvested: Double? =
+                                        (i + 1 < sortedAll.count) ? sortedAll[i + 1].invested : nil
                                     transactionRowView(
                                         date: DateTZ.fromBackendISTStringToUserDate(
                                             tx.transactionDate) ?? Date(),
@@ -137,7 +139,8 @@ struct AccountDetailView: View {
                                         previousValue: prevVal,
                                         operation: tx.operation,
                                         currency: displayCurrency.uppercased(),
-                                        invested: tx.invested
+                                        invested: tx.invested,
+                                        previousInvested: prevInvested
                                     )
                                 }
                             }

@@ -65,13 +65,15 @@ struct BrokerHoldingDetailView: View {
                             ForEach(preview.indices, id: \.self) { i in
                                 let tx = preview[i]
                                 let prevVal: Double? = (i + 1 < sortedAll.count) ? sortedAll[i + 1].value : nil
+                                let prevInvested: Double? = (i + 1 < sortedAll.count) ? sortedAll[i + 1].invested : nil
                                 transactionRowView(
                                     date: DateTZ.fromBackendISTStringToUserDate(tx.transactionDate) ?? Date(),
                                     value: tx.value,
                                     previousValue: prevVal,
                                     operation: tx.operation,
                                     currency: displayCurrency.uppercased(),
-                                    invested: tx.invested
+                                    invested: tx.invested,
+                                    previousInvested: prevInvested
                                 )
                             }
                         }
