@@ -2,7 +2,7 @@ import SwiftUI
 
 // Reusable, minimal transaction row following app design tokens
 @ViewBuilder
-public func transactionRowView(date: Date, value: Double, operation: String?, currency: String, invested: Double? = nil) -> some View {
+public func transactionRowView(date: Date, value: Double, operation: String?, currency: String, invested: Double? = nil, showUnits: Bool = false) -> some View {
     HStack(alignment: .center, spacing: 12) {
         VStack(alignment: .leading, spacing: 2) {
             Text(DateFormatter.dayMonYear.string(from: date))
@@ -18,11 +18,27 @@ public func transactionRowView(date: Date, value: Double, operation: String?, cu
         }
         Spacer()
         VStack(alignment: .trailing, spacing: 4) {
-            Text(value, format: .currency(code: currency))
-                .font(.headline.weight(.semibold))
-                .foregroundColor(value >= 0 ? .airbnbSuccess : .red)
-                .monospacedDigit()
+            if showUnits {
+                let tint: Color = value >= 0 ? .airbnbSuccess : .red
+                HStack(spacing: 6) {
+                    Text("Units")
+                        .font(.caption2.weight(.bold))
+                    Text(value, format: .number.precision(.fractionLength(0...6)))
+                        .font(.caption2.weight(.semibold))
+                        .monospacedDigit()
+                }
+                .foregroundColor(tint)
+                .padding(.vertical, 4)
+                .padding(.horizontal, 10)
+                .background(Capsule().fill(tint.opacity(0.12)))
                 .contentTransition(.numericText())
+            } else {
+                Text(value, format: .currency(code: currency))
+                    .font(.headline.weight(.semibold))
+                    .foregroundColor(value >= 0 ? .airbnbSuccess : .red)
+                    .monospacedDigit()
+                    .contentTransition(.numericText())
+            }
             if let inv = invested {
                 Text("Invested · " + CurrencyShort.shortString(inv, currency: currency))
                     .font(.caption2.weight(.medium))
@@ -49,7 +65,8 @@ public func transactionRowView(
     operation: String?,
     currency: String,
     invested: Double? = nil,
-    previousInvested: Double? = nil
+    previousInvested: Double? = nil,
+    showUnits: Bool = false
 ) -> some View {
     HStack(alignment: .center, spacing: 12) {
         VStack(alignment: .leading, spacing: 2) {
@@ -67,11 +84,27 @@ public func transactionRowView(
         Spacer()
         let amountColor: Color = value >= 0 ? .airbnbSuccess : .red
         VStack(alignment: .trailing, spacing: 4) {
-            Text(value, format: .currency(code: currency))
-                .font(.headline.weight(.semibold))
-                .foregroundColor(amountColor)
-                .monospacedDigit()
+            if showUnits {
+                let tint: Color = amountColor
+                HStack(spacing: 6) {
+                    Text("Units")
+                        .font(.caption2.weight(.bold))
+                    Text(value, format: .number.precision(.fractionLength(0...6)))
+                        .font(.caption2.weight(.semibold))
+                        .monospacedDigit()
+                }
+                .foregroundColor(tint)
+                .padding(.vertical, 4)
+                .padding(.horizontal, 10)
+                .background(Capsule().fill(tint.opacity(0.12)))
                 .contentTransition(.numericText())
+            } else {
+                Text(value, format: .currency(code: currency))
+                    .font(.headline.weight(.semibold))
+                    .foregroundColor(amountColor)
+                    .monospacedDigit()
+                    .contentTransition(.numericText())
+            }
             if let prev = previousValue {
                 let delta = value - prev
                 let tint: Color = delta >= 0 ? .airbnbSuccess : .red
@@ -79,9 +112,15 @@ public func transactionRowView(
                 HStack(spacing: 6) {
                     Image(systemName: delta >= 0 ? "arrow.up.right" : "arrow.down.right")
                         .font(.caption2.weight(.bold))
-                    Text(CurrencyShort.shortString(abs(delta), currency: currency))
-                        .font(.caption2.weight(.semibold))
-                        .monospacedDigit()
+                    if showUnits {
+                        Text(abs(delta), format: .number.precision(.fractionLength(0...6)))
+                            .font(.caption2.weight(.semibold))
+                            .monospacedDigit()
+                    } else {
+                        Text(CurrencyShort.shortString(abs(delta), currency: currency))
+                            .font(.caption2.weight(.semibold))
+                            .monospacedDigit()
+                    }
                     if let p = pctText {
                         Text("•").font(.caption2.weight(.bold))
                         Text(p)

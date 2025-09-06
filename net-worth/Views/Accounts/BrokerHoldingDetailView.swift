@@ -73,7 +73,8 @@ struct BrokerHoldingDetailView: View {
                                     operation: tx.operation,
                                     currency: displayCurrency.uppercased(),
                                     invested: tx.invested,
-                                    previousInvested: prevInvested
+                                    previousInvested: prevInvested,
+                                    showUnits: true
                                 )
                             }
                         }
