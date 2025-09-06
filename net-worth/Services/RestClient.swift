@@ -4,8 +4,8 @@ import Foundation
 struct RestClient {
     let baseURL: URL
     init(
-        // baseURL: URL = URL(string: "https://lz2oz2v0ul.execute-api.ap-south-1.amazonaws.com/prod")!
-        baseURL: URL = URL(string: "http://localhost:8080")!
+        baseURL: URL = URL(string: "https://5juo09qr2j.execute-api.ap-south-1.amazonaws.com/prod")!
+        // baseURL: URL = URL(string: "http://localhost:8080")!
     ) {
         self.baseURL = baseURL
     }
@@ -41,7 +41,7 @@ struct RestClient {
         // Attach query using URLComponents to avoid encoding '?' into the path
         if let rawQuery {
             var comps = URLComponents(url: url, resolvingAgainstBaseURL: false)
-            comps?.percentEncodedQuery = rawQuery // keep any existing encoding
+            comps?.percentEncodedQuery = rawQuery  // keep any existing encoding
             if let final = comps?.url { return final }
         }
         return url
@@ -72,14 +72,16 @@ struct RestClient {
             case 400, 404, 409, 500:
                 // Expected error cases with API error response
                 if !dataIsBlank(data),
-                   let apiError = try? JSONDecoder().decode(ApiError.self, from: data) {
+                    let apiError = try? JSONDecoder().decode(ApiError.self, from: data)
+                {
                     throw APIError.apiError(http.statusCode, apiError)
                 }
                 throw APIError.badStatus(http.statusCode)
             default:
                 // Unexpected status codes
                 if !dataIsBlank(data),
-                   let apiError = try? JSONDecoder().decode(ApiError.self, from: data) {
+                    let apiError = try? JSONDecoder().decode(ApiError.self, from: data)
+                {
                     throw APIError.apiError(http.statusCode, apiError)
                 }
                 throw APIError.badStatus(http.statusCode)
@@ -146,8 +148,10 @@ struct RestClient {
             return
         }
     }
-    
-    func patch<Body: Encodable, Response: Decodable>(_ path: String, body: Body) async throws -> Response {
+
+    func patch<Body: Encodable, Response: Decodable>(_ path: String, body: Body) async throws
+        -> Response
+    {
         let (data, _) = try await perform(method: "PATCH", path: path, body: body)
         if dataIsBlank(data) {
             throw APIError.decoding(NSError(domain: "EmptyBody", code: -1))
@@ -175,7 +179,7 @@ struct RestClient {
         creditedDate: Date? = nil,
         currency: String? = nil
     ) async throws -> Income {
-        let dateString = creditedDate.map { 
+        let dateString = creditedDate.map {
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
             return formatter.string(from: $0)
@@ -188,7 +192,7 @@ struct RestClient {
             currency: currency,
             creditedDate: dateString
         )
-        
+
         let response: ApiResponse<Income> = try await patch("incomes/\(id)", body: body)
         return response.data
     }
@@ -232,12 +236,14 @@ extension RestClient {
         return response.data
     }
     func fetchWatchlistAccounts(watchlistId: Int) async throws -> [AccountSummary] {
-        let response: ApiResponseAccountSummaryList = try await get("watchlist-accounts/\(watchlistId)")
+        let response: ApiResponseAccountSummaryList = try await get(
+            "watchlist-accounts/\(watchlistId)")
         return response.data
     }
-    
+
     func fetchAccountWatchlists(accountId: Int) async throws -> [WatchlistSummary] {
-        let response: ApiResponseWatchlistSummaryList = try await get("account-watchlists/\(accountId)")
+        let response: ApiResponseWatchlistSummaryList = try await get(
+            "account-watchlists/\(accountId)")
         return response.data
     }
     // MARK: - Holdings API (replaces AccountBroker)
@@ -245,7 +251,7 @@ extension RestClient {
         let response: ApiResponseHoldingSummaryList = try await get("holdings/\(accountId)")
         return response.data
     }
-    
+
     func createHolding(
         accountId: Int,
         name: String,
@@ -259,17 +265,18 @@ extension RestClient {
         let response: ApiResponseHolding = try await post("holdings", body: body)
         return response.data
     }
-    
+
     func deleteHolding(id: Int) async throws {
         try await delete("holdings/\(id)")
     }
-    
+
     // MARK: - Transactions API (updated for holdings)
     func fetchAccountTransactions(accountId: Int) async throws -> [Transaction] {
-        let response: ApiResponseTransactionList = try await get("transactions?accountId=\(accountId)")
+        let response: ApiResponseTransactionList = try await get(
+            "transactions?accountId=\(accountId)")
         return response.data
     }
-    
+
     // Legacy compatibility method
     func fetchLegacyAccountTransactions(accountId: Int) async throws -> [AccountTransaction] {
         let transactions = try await fetchAccountTransactions(accountId: accountId)
@@ -278,19 +285,20 @@ extension RestClient {
                 id: transaction.id,
                 accountId: transaction.accountId,
                 accountBrokerId: transaction.holdingId,
-                transactionDate: transaction.txnDate + " 00:00:00", // Convert date format
+                transactionDate: transaction.txnDate + " 00:00:00",  // Convert date format
                 value: transaction.value,
                 invested: transaction.invested,
                 operation: nil
             )
         }
     }
-    
+
     func fetchHoldingTransactions(holdingId: Int) async throws -> [Transaction] {
-        let response: ApiResponseTransactionList = try await get("transactions?holdingId=\(holdingId)")
+        let response: ApiResponseTransactionList = try await get(
+            "transactions?holdingId=\(holdingId)")
         return response.data
     }
-    
+
     // Legacy compatibility method
     func fetchLegacyHoldingTransactions(holdingId: Int) async throws -> [AccountTransaction] {
         let transactions = try await fetchHoldingTransactions(holdingId: holdingId)
@@ -299,14 +307,14 @@ extension RestClient {
                 id: transaction.id,
                 accountId: transaction.accountId,
                 accountBrokerId: transaction.holdingId,
-                transactionDate: transaction.txnDate + " 00:00:00", // Convert date format
+                transactionDate: transaction.txnDate + " 00:00:00",  // Convert date format
                 value: transaction.value,
                 invested: transaction.invested,
                 operation: nil
             )
         }
     }
-    
+
     func createTransaction(
         accountId: Int,
         holdingId: Int,
@@ -326,16 +334,16 @@ extension RestClient {
         let response: ApiResponseTransaction = try await post("transactions", body: body)
         return response.data
     }
-    
+
     func deleteTransaction(id: Int) async throws {
         try await delete("transactions/\(id)")
     }
-    
+
     // MARK: - Legacy Compatibility (for gradual migration)
     func fetchAccountBroker(accountId: Int) async throws -> [AccountBroker] {
         return try await fetchHoldings(accountId: accountId)
     }
-    
+
     func fetchAccountBrokerTransactions(accountBrokerId: Int) async throws -> [AccountTransaction] {
         return try await fetchLegacyHoldingTransactions(holdingId: accountBrokerId)
     }
@@ -359,7 +367,7 @@ extension RestClient {
         let response: ApiResponseAccount = try await post("accounts", body: body)
         return response.data
     }
-    
+
     func updateAccount(
         id: Int,
         name: String? = nil,
@@ -369,11 +377,11 @@ extension RestClient {
         let response: ApiResponseAccount = try await patch("accounts/\(id)", body: body)
         return response.data
     }
-    
+
     func deleteAccount(id: Int) async throws {
         try await delete("accounts/\(id)")
     }
-    
+
     // MARK: - Users API
     func createOrEnsureUser(externalUserId: String) async throws -> User {
         let body = CreateUserRequest(externalUserId: externalUserId)
@@ -405,7 +413,7 @@ extension RestClient {
     func setDefaultIncomeSource(id: Int) async throws {
         try await patch("income-sources/\(id)", body: EmptyBody())
     }
-    
+
     // MARK: - Income Sources API (Complete Implementation)
     func createIncomeSource(
         userId: Int,
@@ -416,11 +424,11 @@ extension RestClient {
         let response: ApiResponseIncomeSource = try await post("income-sources", body: body)
         return response.data
     }
-    
+
     func setDefaultIncomeSourceById(id: Int) async throws {
         try await patch("income-sources/\(id)", body: EmptyBody())
     }
-    
+
     // MARK: - Income Tags API (Complete Implementation)
     func createIncomeTag(
         userId: Int,
@@ -431,11 +439,11 @@ extension RestClient {
         let response: ApiResponseIncomeTag = try await post("income-tags", body: body)
         return response.data
     }
-    
+
     func setDefaultIncomeTag(id: Int) async throws {
         try await patch("income-tags/\(id)", body: EmptyBody())
     }
-    
+
     // MARK: - User Management API
     func deleteUser(id: Int) async throws {
         try await delete("users/\(id)")
@@ -458,7 +466,7 @@ extension RestClient {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         let dateString = formatter.string(from: creditedDate)
-        
+
         let body = CreateIncomeRequest(
             userId: userId,
             incomeSourceId: incomeSourceId,
@@ -468,7 +476,7 @@ extension RestClient {
             currency: currency,
             creditedDate: dateString
         )
-        
+
         let response: ApiResponseIncome = try await post("incomes", body: body)
         return response.data
     }
@@ -480,18 +488,19 @@ extension RestClient {
         let response: ApiResponseUser = try await post("users", body: body)
         return response.data.id
     }
-    
+
     // MARK: - Chart Data API
     func fetchChartData(
         entityType: ChartEntityType,
         entityId: Int,
         timePeriod: ChartTimePeriod
     ) async throws -> [ChartData] {
-        let path = "chart-data?entityType=\(entityType.rawValue)&entityId=\(entityId)&timePeriod=\(timePeriod.rawValue)"
+        let path =
+            "chart-data?entityType=\(entityType.rawValue)&entityId=\(entityId)&timePeriod=\(timePeriod.rawValue)"
         let response: ApiResponseChartDataList = try await get(path)
         return response.data
     }
-    
+
 }
 
 // Note: Use RestClient directly going forward. A thin deprecated IncomeService wrapper
