@@ -43,8 +43,8 @@ struct CreateTransactionView: View {
                 // Non-broker with daily data: amount + invested
                 return amountNumber != nil && investedNumber != nil
             } else {
-                // Non-broker without daily data: only amount
-                return amountNumber != nil
+                // Non-broker without daily data: amount + invested
+                return amountNumber != nil && investedNumber != nil
             }
         }
     }
@@ -135,7 +135,7 @@ struct CreateTransactionView: View {
                                 }
                             }
                         } else {
-                            // Non-broker without daily data: Amount only
+                            // Non-broker without daily data: Amount + Invested
                             HStack(spacing: 10) {
                                 Text("Amount")
                                     .font(.subheadline)
@@ -146,6 +146,23 @@ struct CreateTransactionView: View {
                                         .font(.subheadline.weight(.semibold))
                                         .foregroundColor(.secondary)
                                     DecimalTextField(text: $amountText, placeholder: "0.00", fractionDigits: 2, allowNegative: true)
+                                        .font(.title3.weight(.semibold))
+                                        .monospacedDigit()
+                                        .frame(minWidth: 120)
+                                        .tint(.airbnbPrimary)
+                                }
+                            }
+                            Rectangle().fill(Color.subtleSeparator).frame(height: 0.5).padding(.horizontal, 12).padding(.vertical, 10)
+                            HStack(spacing: 10) {
+                                Text("Invested")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                                HStack(spacing: 8) {
+                                    Text(defaultCurrency.uppercased())
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundColor(.secondary)
+                                    DecimalTextField(text: $investedText, placeholder: "0.00", fractionDigits: 2, allowNegative: true)
                                         .font(.title3.weight(.semibold))
                                         .monospacedDigit()
                                         .frame(minWidth: 120)
@@ -210,9 +227,9 @@ struct CreateTransactionView: View {
                 value = amt
                 invested = inv
             } else {
-                guard let amt = amountNumber else { return }
+                guard let amt = amountNumber, let inv = investedNumber else { return }
                 value = amt
-                invested = amt
+                invested = inv
             }
             // Determine target holding id (non-broker must use a holding id from holdings table)
             let targetHoldingId: Int
