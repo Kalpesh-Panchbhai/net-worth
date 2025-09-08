@@ -15,6 +15,8 @@ struct HomeView: View {
     // Profile state
     @State private var profileName: String = ""
     @State private var profilePhotoURL: URL? = nil
+    // Reports modal state
+    @State private var showReportsModal = false
     
     var body: some View {
         NavigationStack {
@@ -65,6 +67,22 @@ struct HomeView: View {
             .onPreferenceChange(NavBarOffsetKey.self) { y in
                 withAnimation(.easeInOut(duration: 0.2)) { 
                     navCollapsed = y < -8 
+                }
+            }
+        }
+        .fullScreenCover(isPresented: $showReportsModal) {
+            NavigationStack {
+                ScrollView {
+                    AssetOverviewCard()
+                        .padding()
+                }
+                .navigationTitle("Reports")
+                .navigationBarTitleDisplayMode(.inline)
+                .background(Color.canvasBackground)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("Close") { showReportsModal = false }
+                    }
                 }
             }
         }
@@ -289,7 +307,7 @@ struct HomeView: View {
                     color: .orange
                 ) {
                     Haptics.selection()
-                    // TODO: Navigate to reports view
+                    showReportsModal = true
                 }
             }
         }

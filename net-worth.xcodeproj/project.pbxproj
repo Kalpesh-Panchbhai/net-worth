@@ -37,6 +37,7 @@
 		7D6F68E82E5730A900E0AD02 /* LookupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6F68E72E5730A900E0AD02 /* LookupStore.swift */; };
 		7D6F68EA2E5739D400E0AD02 /* ScrollToTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6F68E92E5739D400E0AD02 /* ScrollToTop.swift */; };
 		7D74B2922E52375A00E35786 /* BannerCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74B2912E52375A00E35786 /* BannerCenter.swift */; };
+		7D7A6BB92E6F17D90009C1E1 /* AssetOverviewCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A6BB72E6F17D90009C1E1 /* AssetOverviewCard.swift */; };
 		7D8A44B12E69A8150085B681 /* ChartDataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8A44B02E69A8150085B681 /* ChartDataModels.swift */; };
 		7D8A44B32E69C3110085B681 /* AccountTypePickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8A44B22E69C3110085B681 /* AccountTypePickerSheet.swift */; };
 		7D8A44B52E69CD860085B681 /* YahooFinanceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8A44B42E69CD860085B681 /* YahooFinanceClient.swift */; };
@@ -104,6 +105,7 @@
 		7D6F68E72E5730A900E0AD02 /* LookupStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupStore.swift; sourceTree = "<group>"; };
 		7D6F68E92E5739D400E0AD02 /* ScrollToTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollToTop.swift; sourceTree = "<group>"; };
 		7D74B2912E52375A00E35786 /* BannerCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerCenter.swift; sourceTree = "<group>"; };
+		7D7A6BB72E6F17D90009C1E1 /* AssetOverviewCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetOverviewCard.swift; sourceTree = "<group>"; };
 		7D8A44B02E69A8150085B681 /* ChartDataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDataModels.swift; sourceTree = "<group>"; };
 		7D8A44B22E69C3110085B681 /* AccountTypePickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTypePickerSheet.swift; sourceTree = "<group>"; };
 		7D8A44B42E69CD860085B681 /* YahooFinanceClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YahooFinanceClient.swift; sourceTree = "<group>"; };
@@ -222,6 +224,14 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		7D7A6BB82E6F17D90009C1E1 /* Reports */ = {
+			isa = PBXGroup;
+			children = (
+				7D7A6BB72E6F17D90009C1E1 /* AssetOverviewCard.swift */,
+			);
+			path = Reports;
+			sourceTree = "<group>";
+		};
 		7DAA10002BE30000000000A0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -285,6 +295,7 @@
 				7D08E7D22E6EB75200AC3898 /* Home */,
 				7DAA10002BE30000000000B3 /* Income */,
 				7D4E7B962E58C48B007AB2B9 /* Onboarding */,
+				7D7A6BB82E6F17D90009C1E1 /* Reports */,
 				7DAA10002BE30000000000B1 /* Settings */,
 				7DAA10002BE30000000000B2 /* Shared */,
 				7DAA10002BE30000000000B0 /* TabBar */,
@@ -455,6 +466,7 @@
 				7D08E7D32E6EB75200AC3898 /* HomeView.swift in Sources */,
 				7DAA10052BE3000000000005 /* Formatters.swift in Sources */,
 				7DAA10062BE3000000000006 /* Design.swift in Sources */,
+				7D7A6BB92E6F17D90009C1E1 /* AssetOverviewCard.swift in Sources */,
 				7DC4221F2E54633B000D62BD /* PrivacyShieldManager.swift in Sources */,
 				7D2FBCA32E51CCDD0046FE17 /* IncomeTypesView.swift in Sources */,
 				7DAA10072BE3000000000007 /* Interactions.swift in Sources */,
