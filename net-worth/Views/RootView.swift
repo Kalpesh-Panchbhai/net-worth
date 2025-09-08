@@ -5,6 +5,7 @@ struct RootView: View {
     let userId: Int
     @State private var selected: AppTab = .home
     @EnvironmentObject private var networkMonitor: NetworkMonitor
+    @EnvironmentObject private var tabCommands: TabCommandCenter
     @AppStorage("appAppearance") private var appAppearanceRaw: String = AppAppearance.system
         .rawValue
     private var appAppearance: AppAppearance {
@@ -117,6 +118,11 @@ struct RootView: View {
             } else {
                 isLocked = false
             }
+        }
+        .onChange(of: tabCommands.navigateToTab) { _, target in
+            guard let tab = target else { return }
+            withAnimation(.easeInOut(duration: 0.2)) { selected = tab }
+            DispatchQueue.main.async { tabCommands.navigateToTab = nil }
         }
     }
 

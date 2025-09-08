@@ -1,4 +1,10 @@
 import SwiftUI
+#if canImport(GoogleSignIn)
+import GoogleSignIn
+#endif
+#if canImport(FirebaseAuth)
+import FirebaseAuth
+#endif
 
 struct HomeView: View {
     let userId: Int
@@ -6,6 +12,9 @@ struct HomeView: View {
     @State private var navCollapsed = false
     @State private var refreshing = false
     @EnvironmentObject private var tabCommands: TabCommandCenter
+    // Profile state
+    @State private var profileName: String = ""
+    @State private var profilePhotoURL: URL? = nil
     
     var body: some View {
         NavigationStack {
@@ -69,7 +78,66 @@ struct HomeView: View {
             Task {
                 await loadInitialData()
             }
+            fetchIdentity()
         }
+    }
+
+    // MARK: - Profile helpers
+    private var firstNameDisplay: String {
+        let trimmed = profileName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return "" }
+        let first = trimmed.split(separator: " ").first.map(String.init) ?? trimmed
+        return ", \(first)"
+    }
+
+    @ViewBuilder
+    private var avatarView: some View {
+        ZStack {
+            Circle().fill(Color.elevatedBackground)
+            if let url = profilePhotoURL {
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView().scaleEffect(0.7)
+                    case .success(let img):
+                        img.resizable().scaledToFill()
+                    case .failure:
+                        Image(systemName: "person.fill").foregroundColor(.secondary)
+                    @unknown default:
+                        Image(systemName: "person.fill").foregroundColor(.secondary)
+                    }
+                }
+            } else {
+                Image(systemName: "person.fill").foregroundColor(.secondary)
+            }
+        }
+        .frame(width: 34, height: 34)
+        .clipShape(Circle())
+        .overlay(
+            Circle().stroke(LinearGradient.airbnbAccent, lineWidth: 1.5).opacity(0.8)
+        )
+        .contentShape(Circle())
+        .onTapGesture {
+            Haptics.selection()
+            tabCommands.navigateToTab = .settings
+        }
+    }
+
+    private func fetchIdentity() {
+        #if canImport(GoogleSignIn)
+        if let user = GIDSignIn.sharedInstance.currentUser {
+            profileName = user.profile?.name ?? profileName
+            if let imageURL = user.profile?.imageURL(withDimension: 160) { profilePhotoURL = imageURL }
+            return
+        }
+        #endif
+        #if canImport(FirebaseAuth)
+        if let user = Auth.auth().currentUser {
+            profileName = user.displayName ?? profileName
+            if let url = user.photoURL { profilePhotoURL = url }
+            return
+        }
+        #endif
     }
     
     // MARK: - Welcome Header
@@ -80,20 +148,18 @@ struct HomeView: View {
                     .font(.title3)
                     .foregroundColor(.secondary)
                 
-                Text("Welcome back")
+                Text("Welcome back\(firstNameDisplay)")
                     .font(.largeTitle.bold())
                     .foregroundColor(.primary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+                    .allowsTightening(true)
             }
             
             Spacer()
             
-            // Profile/Settings quick access
-            Button(action: {}) {
-                Image(systemName: "person.circle.fill")
-                    .font(.title2)
-                    .foregroundStyle(LinearGradient.airbnbAccent)
-            }
-            .buttonStyle(.plain)
+            // Profile avatar quick access
+            avatarView
         }
         .padding(.horizontal, 4)
     }

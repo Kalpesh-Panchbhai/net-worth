@@ -48,4 +48,6 @@ final class NetworkMonitor: ObservableObject {
 // MARK: - Tab Command Center (e.g., scroll to bottom on retap)
 final class TabCommandCenter: ObservableObject {
     @Published var scrollToBottomRequest: AppTab? = nil
+    // Programmatic tab navigation requests (set a value to request switch, then reset to nil)
+    @Published var navigateToTab: AppTab? = nil
 }
