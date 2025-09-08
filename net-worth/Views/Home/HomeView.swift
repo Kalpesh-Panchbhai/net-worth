@@ -41,9 +41,6 @@ struct HomeView: View {
                         // Quick Actions Section
                         quickActionsSection
                         
-                        // Insights Section
-                        insightsSection
-                        
                         Spacer(minLength: 100)
                     }
                     .padding(.horizontal, 16)
@@ -183,7 +180,7 @@ struct HomeView: View {
                 Spacer()
                 
                 VStack(alignment: .trailing, spacing: 4) {
-                    Text("24h Change")
+                    Text("1 day change")
                         .font(.caption)
                         .foregroundColor(.secondary)
                     
@@ -197,21 +194,6 @@ struct HomeView: View {
                     .foregroundColor(netWorthChange >= 0 ? .airbnbSuccess : .airbnbPrimary)
                 }
             }
-            
-            // Mini chart placeholder
-            RoundedRectangle(cornerRadius: 8)
-                .fill(LinearGradient.airbnbAccent.opacity(0.1))
-                .frame(height: 60)
-                .overlay {
-                    HStack {
-                        Image(systemName: "chart.line.uptrend.xyaxis")
-                            .font(.title3)
-                            .foregroundStyle(LinearGradient.airbnbAccent)
-                        Text("Portfolio Performance")
-                            .font(.subheadline.weight(.medium))
-                            .foregroundColor(.secondary)
-                    }
-                }
         }
         .padding(20)
         .elevatedCardBackground(cornerRadius: 20)
@@ -225,21 +207,30 @@ struct HomeView: View {
                 value: "\(lookupStore.accounts.count)",
                 icon: "creditcard.fill",
                 color: .blue
-            )
+            ) {
+                Haptics.selection()
+                tabCommands.navigateToTab = .accounts
+            }
             
             StatCard(
                 title: "Watchlists",
                 value: "\(lookupStore.watchlists.count)",
                 icon: "heart.fill",
                 color: .pink
-            )
+            ) {
+                Haptics.selection()
+                tabCommands.navigateToTab = .watchlist
+            }
             
             StatCard(
                 title: "Income",
                 value: monthlyIncome,
                 icon: "indianrupeesign.circle.fill",
                 color: .green
-            )
+            ) {
+                Haptics.selection()
+                tabCommands.navigateToTab = .income
+            }
         }
     }
     
@@ -292,7 +283,9 @@ struct HomeView: View {
                     icon: "plus.circle.fill",
                     color: .blue
                 ) {
-                    // Navigate to add account
+                    Haptics.selection()
+                    tabCommands.navigateToTab = .accounts
+                    // TODO: Trigger add account sheet/navigation
                 }
                 
                 QuickActionCard(
@@ -301,7 +294,9 @@ struct HomeView: View {
                     icon: "plus.square.fill",
                     color: .green
                 ) {
-                    // Navigate to add income
+                    Haptics.selection()
+                    tabCommands.navigateToTab = .income
+                    // TODO: Trigger add income sheet/navigation
                 }
                 
                 QuickActionCard(
@@ -310,7 +305,9 @@ struct HomeView: View {
                     icon: "heart.circle.fill",
                     color: .pink
                 ) {
-                    // Navigate to create watchlist
+                    Haptics.selection()
+                    tabCommands.navigateToTab = .watchlist
+                    // TODO: Trigger add watchlist sheet/navigation
                 }
                 
                 QuickActionCard(
@@ -319,46 +316,13 @@ struct HomeView: View {
                     icon: "chart.bar.fill",
                     color: .orange
                 ) {
-                    // Navigate to reports
+                    Haptics.selection()
+                    // TODO: Navigate to reports view
                 }
             }
         }
     }
     
-    // MARK: - Insights Section
-    private var insightsSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Insights")
-                .font(.headline.bold())
-                .foregroundColor(.primary)
-                .padding(.horizontal, 4)
-            
-            VStack(spacing: 12) {
-                InsightCard(
-                    title: "Portfolio Diversification",
-                    message: "Your portfolio is well diversified across \(lookupStore.accounts.count) accounts",
-                    icon: "chart.pie.fill",
-                    color: .blue
-                )
-                
-                if let topPerformer = topPerformingAccount {
-                    InsightCard(
-                        title: "Top Performer",
-                        message: "\(topPerformer) is your best performing account this month",
-                        icon: "trophy.fill",
-                        color: .yellow
-                    )
-                }
-                
-                InsightCard(
-                    title: "Monthly Goal",
-                    message: "You're on track to meet your savings goal this month",
-                    icon: "target",
-                    color: .green
-                )
-            }
-        }
-    }
     
     // MARK: - Helper Properties
     private var timeOfDayGreeting: String {
@@ -384,8 +348,10 @@ struct HomeView: View {
     }
     
     private var netWorthChange: Double {
-        // Mock data - implement actual calculation
-        1250.50
+        // Calculate actual 1-day change from account summaries
+        lookupStore.accounts.reduce(0.0) { sum, account in
+            sum + (account.currentDayValue - account.previousDayValue)
+        }
     }
     
     private var netWorthChangePercent: String {
@@ -403,9 +369,6 @@ struct HomeView: View {
         []
     }
     
-    private var topPerformingAccount: String? {
-        lookupStore.accounts.first?.name
-    }
     
     // MARK: - Data Loading
     private func loadInitialData() async {
@@ -427,25 +390,29 @@ struct StatCard: View {
     let value: String
     let icon: String
     let color: Color
+    let action: () -> Void
     
     var body: some View {
-        VStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.title2)
-                .foregroundColor(color)
-            
-            Text(value)
-                .font(.title3.bold())
-                .foregroundColor(.primary)
-                .monospacedDigit()
-            
-            Text(title)
-                .font(.caption)
-                .foregroundColor(.secondary)
+        Button(action: action) {
+            VStack(spacing: 8) {
+                Image(systemName: icon)
+                    .font(.title2)
+                    .foregroundColor(color)
+                
+                Text(value)
+                    .font(.title3.bold())
+                    .foregroundColor(.primary)
+                    .monospacedDigit()
+                
+                Text(title)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 16)
+            .elevatedCardBackground(cornerRadius: 16)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 16)
-        .elevatedCardBackground(cornerRadius: 16)
+        .buttonStyle(PressableButtonStyle())
     }
 }
 
@@ -491,40 +458,6 @@ struct QuickActionCard: View {
     }
 }
 
-struct InsightCard: View {
-    let title: String
-    let message: String
-    let icon: String
-    let color: Color
-    
-    var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: icon)
-                .font(.title3)
-                .foregroundColor(color)
-                .frame(width: 32, height: 32)
-                .background(
-                    Circle()
-                        .fill(color.opacity(0.1))
-                )
-            
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.subheadline.bold())
-                    .foregroundColor(.primary)
-                
-                Text(message)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.leading)
-            }
-            
-            Spacer()
-        }
-        .padding(16)
-        .elevatedCardBackground(cornerRadius: 12)
-    }
-}
 
 struct ActivityRow: View {
     let activity: ActivityItem
