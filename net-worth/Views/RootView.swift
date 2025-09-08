@@ -22,7 +22,7 @@ struct RootView: View {
     private func tabContent() -> some View {
         switch selected {
         case .home:
-            PlaceholderScreen(title: AppTab.home.title, systemImage: AppTab.home.icon, tab: .home)
+            HomeView(userId: userId)
         case .accounts:
             AccountsListView(userId: userId)
         case .watchlist:
