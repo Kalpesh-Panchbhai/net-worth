@@ -4,8 +4,8 @@ import Foundation
 struct RestClient {
     let baseURL: URL
     init(
-        // baseURL: URL = URL(string: "https://5juo09qr2j.execute-api.ap-south-1.amazonaws.com/prod")!
-        baseURL: URL = URL(string: "http://localhost:8080")!
+        baseURL: URL = URL(string: "https://5juo09qr2j.execute-api.ap-south-1.amazonaws.com/prod")!
+        // baseURL: URL = URL(string: "http://localhost:8080")!
     ) {
         self.baseURL = baseURL
     }
