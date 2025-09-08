@@ -37,6 +37,7 @@ struct SettingsView: View {
                 }
                 .frame(height: 0)
                 VStack(spacing: 16) {
+                    AccountProfileCard()
                     AppearanceCard(selection: appearanceBinding)
                     PreferencesCard(userId: userId)
                     SecurityCard()
@@ -65,6 +66,132 @@ struct SettingsView: View {
         }
         .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 66) }
     }
+
+// MARK: - Google Account Profile Card
+struct AccountProfileCard: View {
+    @Environment(\.openURL) private var openURL
+    @State private var name: String = ""
+    @State private var email: String = ""
+    @State private var photoURL: URL? = nil
+    @State private var isSignedIn: Bool = false
+    
+    var body: some View {
+        SettingsGroup(title: "Your profile") {
+            VStack(spacing: 12) {
+                HStack(spacing: 14) {
+                    ZStack {
+                        Circle()
+                            .fill(LinearGradient.airbnbAccent)
+                            .opacity(0.18)
+                        if let url = photoURL {
+                            AsyncImage(url: url) { phase in
+                                switch phase {
+                                case .empty:
+                                    ProgressView().scaleEffect(0.8)
+                                case .success(let img):
+                                    img.resizable().scaledToFill()
+                                case .failure:
+                                    placeholderInitials
+                                @unknown default:
+                                    placeholderInitials
+                                }
+                            }
+                        } else {
+                            placeholderInitials
+                        }
+                    }
+                    .frame(width: 58, height: 58)
+                    .clipShape(Circle())
+                    .overlay(
+                        Circle()
+                            .stroke(LinearGradient.airbnbAccent, lineWidth: 2)
+                            .opacity(0.7)
+                    )
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(displayName)
+                            .font(.headline)
+                        Text(displayEmail)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.footnote.weight(.semibold))
+                        .foregroundColor(.secondary)
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    Haptics.selection()
+                    if let url = URL(string: "https://myaccount.google.com/") { openURL(url) }
+                }
+                
+                HStack(spacing: 8) {
+                    Image(systemName: "globe")
+                        .font(.caption.weight(.bold))
+                        .foregroundStyle(LinearGradient.airbnbAccent)
+                    Text("Manage your Google Account")
+                        .font(.footnote.weight(.semibold))
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Button {
+                        Haptics.selection()
+                        if let url = URL(string: "https://myaccount.google.com/") { openURL(url) }
+                    } label: {
+                        Text("Open")
+                            .font(.footnote.weight(.semibold))
+                            .padding(.vertical, 6)
+                            .padding(.horizontal, 10)
+                            .background(Capsule().fill(LinearGradient.airbnbAccent))
+                            .foregroundColor(.white)
+                    }
+                    .buttonStyle(PressableButtonStyle())
+                }
+                .padding(.top, 2)
+            }
+            .onAppear(perform: fetchIdentity)
+        }
+    }
+    
+    private var placeholderInitials: some View {
+        Text(initials(from: displayName))
+            .font(.headline.weight(.bold))
+            .foregroundColor(.airbnbPrimary)
+            .minimumScaleFactor(0.5)
+    }
+    
+    private var displayName: String { name.isEmpty ? "Signed in" : name }
+    private var displayEmail: String { email.isEmpty ? "Google account" : email }
+    
+    private func initials(from name: String) -> String {
+        let comps = name.split(separator: " ")
+        let first = comps.first?.prefix(1) ?? "N"
+        let second = comps.dropFirst().first?.prefix(1) ?? "A"
+        return String(first + second)
+    }
+    
+    private func fetchIdentity() {
+        #if canImport(GoogleSignIn)
+        if let user = GIDSignIn.sharedInstance.currentUser {
+            isSignedIn = true
+            name = user.profile?.name ?? name
+            email = user.profile?.email ?? email
+            if let imageURL = user.profile?.imageURL(withDimension: 160) { photoURL = imageURL }
+            return
+        }
+        #endif
+        #if canImport(FirebaseAuth)
+        if let user = Auth.auth().currentUser {
+            isSignedIn = true
+            name = user.displayName ?? name
+            email = user.email ?? email
+            if let url = user.photoURL { photoURL = url }
+            return
+        }
+        #endif
+        isSignedIn = false
+    }
+}
 
     // MARK: - Logout implementation
     private func logoutAndWipe() {
