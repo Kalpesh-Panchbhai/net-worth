@@ -35,9 +35,6 @@ struct HomeView: View {
                         // Quick Stats Row
                         quickStatsRow
                         
-                        // Recent Activity Section
-                        recentActivitySection
-                        
                         // Quick Actions Section
                         quickActionsSection
                         
@@ -234,40 +231,6 @@ struct HomeView: View {
         }
     }
     
-    // MARK: - Recent Activity Section
-    private var recentActivitySection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Recent Activity")
-                    .font(.headline.bold())
-                    .foregroundColor(.primary)
-                
-                Spacer()
-                
-                Button("View All") {
-                    // Navigate to activity view
-                }
-                .font(.subheadline.weight(.medium))
-                .foregroundColor(.airbnbPrimary)
-            }
-            .padding(.horizontal, 4)
-            
-            VStack(spacing: 8) {
-                ForEach(recentActivities.prefix(3), id: \.id) { activity in
-                    ActivityRow(activity: activity)
-                }
-                
-                if recentActivities.isEmpty {
-                    EmptyStateCard(
-                        text: "No recent activity",
-                        icon: "clock",
-                        iconFont: .title3
-                    )
-                }
-            }
-        }
-    }
-    
     // MARK: - Quick Actions Section
     private var quickActionsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -364,12 +327,6 @@ struct HomeView: View {
         return CurrencyShort.shortString(total, currency: defaultCurrency)
     }
     
-    private var recentActivities: [ActivityItem] {
-        // Mock data - implement actual recent activities
-        []
-    }
-    
-    
     // MARK: - Data Loading
     private func loadInitialData() async {
         // Load all data once using centralized store
@@ -459,52 +416,3 @@ struct QuickActionCard: View {
 }
 
 
-struct ActivityRow: View {
-    let activity: ActivityItem
-    
-    var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: activity.icon)
-                .font(.subheadline)
-                .foregroundColor(activity.color)
-                .frame(width: 24, height: 24)
-                .background(
-                    Circle()
-                        .fill(activity.color.opacity(0.1))
-                )
-            
-            VStack(alignment: .leading, spacing: 2) {
-                Text(activity.title)
-                    .font(.subheadline.weight(.medium))
-                    .foregroundColor(.primary)
-                
-                Text(activity.subtitle)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-            
-            Spacer()
-            
-            Text(activity.time)
-                .font(.caption)
-                .foregroundColor(.secondary)
-        }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.elevatedBackground)
-        )
-    }
-}
-
-// MARK: - Data Models
-
-struct ActivityItem {
-    let id = UUID()
-    let title: String
-    let subtitle: String
-    let icon: String
-    let color: Color
-    let time: String
-}
