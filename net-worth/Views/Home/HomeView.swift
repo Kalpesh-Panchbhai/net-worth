@@ -247,8 +247,11 @@ struct HomeView: View {
                     color: .blue
                 ) {
                     Haptics.selection()
+                    tabCommands.presentCreate = nil
                     tabCommands.navigateToTab = .accounts
-                    // TODO: Trigger add account sheet/navigation
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.30) {
+                        tabCommands.presentCreate = .accounts
+                    }
                 }
                 
                 QuickActionCard(
@@ -258,8 +261,11 @@ struct HomeView: View {
                     color: .green
                 ) {
                     Haptics.selection()
+                    tabCommands.presentCreate = nil
                     tabCommands.navigateToTab = .income
-                    // TODO: Trigger add income sheet/navigation
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.30) {
+                        tabCommands.presentCreate = .income
+                    }
                 }
                 
                 QuickActionCard(
@@ -269,8 +275,11 @@ struct HomeView: View {
                     color: .pink
                 ) {
                     Haptics.selection()
+                    tabCommands.presentCreate = nil
                     tabCommands.navigateToTab = .watchlist
-                    // TODO: Trigger add watchlist sheet/navigation
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.30) {
+                        tabCommands.presentCreate = .watchlist
+                    }
                 }
                 
                 QuickActionCard(

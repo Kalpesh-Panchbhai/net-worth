@@ -66,6 +66,18 @@ struct AccountsListView: View {
             }
             // Custom search bar used instead of .searchable for brand styling
         }
+        .onChange(of: tabCommands.presentCreate) { _, req in
+            guard req == .accounts else { return }
+            showCreateSheet = true
+            DispatchQueue.main.async { tabCommands.presentCreate = nil }
+        }
+        .onAppear {
+            // If a create request was sent before this view loaded, honor it now
+            if tabCommands.presentCreate == .accounts {
+                showCreateSheet = true
+                DispatchQueue.main.async { tabCommands.presentCreate = nil }
+            }
+        }
         .task {
             vm.attachStore(lookup)
             await vm.load()

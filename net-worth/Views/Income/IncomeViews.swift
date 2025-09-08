@@ -211,6 +211,17 @@ struct IncomeListView: View {
             vm.attachStore(lookup)
             await vm.load()
         }
+        .onChange(of: tabCommands.presentCreate) { _, req in
+            guard req == .income else { return }
+            showCreateSheet = true
+            DispatchQueue.main.async { tabCommands.presentCreate = nil }
+        }
+        .onAppear {
+            if tabCommands.presentCreate == .income {
+                showCreateSheet = true
+                DispatchQueue.main.async { tabCommands.presentCreate = nil }
+            }
+        }
         .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 66) }
         .animation(.spring(response: 0.35, dampingFraction: 0.85), value: vm.incomes)
         .animation(.easeInOut(duration: 0.2), value: vm.selectedTypes)

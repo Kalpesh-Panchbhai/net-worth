@@ -50,4 +50,6 @@ final class TabCommandCenter: ObservableObject {
     @Published var scrollToBottomRequest: AppTab? = nil
     // Programmatic tab navigation requests (set a value to request switch, then reset to nil)
     @Published var navigateToTab: AppTab? = nil
+    // Request to present creation sheet on a specific tab; set then reset to nil
+    @Published var presentCreate: AppTab? = nil
 }

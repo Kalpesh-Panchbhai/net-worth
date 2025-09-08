@@ -245,6 +245,17 @@ struct WatchlistListView: View {
             vm.attachStore(lookup)
             await vm.load()
         }
+        .onChange(of: tabCommands.presentCreate) { _, req in
+            guard req == .watchlist else { return }
+            showCreate = true
+            DispatchQueue.main.async { tabCommands.presentCreate = nil }
+        }
+        .onAppear {
+            if tabCommands.presentCreate == .watchlist {
+                showCreate = true
+                DispatchQueue.main.async { tabCommands.presentCreate = nil }
+            }
+        }
         .refreshable { await vm.refresh() }
         .animation(.spring(response: 0.35, dampingFraction: 0.85), value: vm.items)
         .onChange(of: vm.errorMessage) { _, newValue in
