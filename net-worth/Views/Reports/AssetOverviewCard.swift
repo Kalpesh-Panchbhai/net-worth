@@ -200,14 +200,16 @@ struct AssetOverviewCard: View {
                 .interpolationMethod(.monotone)
 
                 // Invested line (ink, subtle dashed)
-                LineMark(
-                    x: .value("Date", point.date),
-                    y: .value("Invested", point.invested),
-                    series: .value("Invested", "Invested")
-                )
-                .lineStyle(StrokeStyle(lineWidth: valueLineWidth, lineCap: .round, lineJoin: .round))
-                .foregroundStyle(colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
-                .interpolationMethod(.monotone)
+                if showInvestedSeries {
+                    LineMark(
+                        x: .value("Date", point.date),
+                        y: .value("Invested", point.invested),
+                        series: .value("Invested", "Invested")
+                    )
+                    .lineStyle(StrokeStyle(lineWidth: valueLineWidth, lineCap: .round, lineJoin: .round))
+                    .foregroundStyle(colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
+                    .interpolationMethod(.monotone)
+                }
             }
 
             if let sel = selectedPoint {
@@ -334,11 +336,13 @@ struct AssetOverviewCard: View {
                     .foregroundColor(colorScheme == .dark ? .white : .black)
             }
             // Invested value
-            HStack(spacing: 6) {
-                Circle().fill(colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6)).frame(width: 8, height: 8)
-                Text(p.invested, format: .currency(code: currency))
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundColor(colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
+            if showInvestedSeries {
+                HStack(spacing: 6) {
+                    Circle().fill(colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6)).frame(width: 8, height: 8)
+                    Text(p.invested, format: .currency(code: currency))
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
+                }
             }
             Text(dateFormatter.string(from: p.date))
                 .font(.system(size: 12, weight: .medium))
@@ -415,7 +419,14 @@ struct AssetOverviewCard: View {
         let fractions: [Double] = [0.0, 0.225, 0.45, 0.675, 0.9]
         return fractions.map { frac in Date(timeInterval: total * frac, since: start) }
     }
-    
+
+    // Whether to render the invested series. If every point has identical value and invested
+    // (within a small tolerance to avoid floating point noise), we hide the series entirely.
+    private var showInvestedSeries: Bool {
+        let epsilon: Double = 0.01 // ~1 paisa/cent tolerance
+        return data.contains { abs($0.value - $0.invested) > epsilon }
+    }
+
     private func sampleData(for range: Range) -> [Point] {
         let cal = Calendar.current
         let now = Date()
