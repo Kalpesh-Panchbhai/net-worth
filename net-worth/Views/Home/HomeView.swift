@@ -78,12 +78,14 @@ struct HomeView: View {
                 }
                 .navigationTitle("Reports")
                 .navigationBarTitleDisplayMode(.inline)
-                .background(Color.canvasBackground)
+                .background(Color.canvasBackground.ignoresSafeArea())
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button("Close") { showReportsModal = false }
                     }
                 }
+                .toolbarBackground(Color.canvasBackground, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
             }
         }
         .onAppear {

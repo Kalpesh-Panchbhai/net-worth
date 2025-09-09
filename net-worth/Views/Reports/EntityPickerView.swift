@@ -13,7 +13,7 @@ struct EntityPickerView: View {
     let userId: Int
     var onPicked: (EntitySelection) -> Void
 
-    @State private var selectedType: ChartEntityType = .watchlist
+    @State private var selectedType: ChartEntityType = .account
     @State private var accounts: [AccountSummary] = []
     @State private var watchlists: [WatchlistSummary] = []
     @State private var holdings: [HoldingSummary] = []
@@ -44,13 +44,11 @@ struct EntityPickerView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Close") { dismiss() }
                 }
-                if selectedType == .holding, selectedAccountForHoldings != nil {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Accounts") { selectedAccountForHoldings = nil; holdings = [] }
-                    }
-                }
             }
             .onAppear { load() }
+            .background(Color.canvasBackground.ignoresSafeArea())
+            .toolbarBackground(Color.canvasBackground, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
         }
     }
 
@@ -69,10 +67,12 @@ struct EntityPickerView: View {
             case .account:
                 List(accounts, id: \.id) { acc in
                     Button { pick(.account, id: acc.id, name: acc.name) } label: {
-                        row(title: acc.name, subtitle: acc.type.capitalized)
+                        row(title: acc.name, subtitle: displayTypeName(acc.type))
                     }
                 }
                 .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(Color.canvasBackground)
             case .watchlist:
                 List(watchlists, id: \.id) { wl in
                     Button { pick(.watchlist, id: wl.id, name: wl.name) } label: {
@@ -80,14 +80,43 @@ struct EntityPickerView: View {
                     }
                 }
                 .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(Color.canvasBackground)
             case .holding:
-                if selectedAccountForHoldings != nil {
+                if let selectedAcc = selectedAccountForHoldings {
+                    // Inline back chip to go back to accounts list
+                    HStack {
+                        Button(action: { selectedAccountForHoldings = nil; holdings = [] }) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "chevron.left")
+                                Text("Accounts")
+                            }
+                            .font(.footnote.weight(.semibold))
+                            .padding(.vertical, 6)
+                            .padding(.horizontal, 10)
+                            .background(
+                                Capsule(style: .continuous)
+                                    .fill(Color.secondary.opacity(0.14))
+                            )
+                        }
+                        .buttonStyle(.plain)
+                        Spacer(minLength: 8)
+                        Text(selectedAcc.name)
+                            .font(.caption2.weight(.semibold))
+                            .foregroundColor(.secondary)
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                    }
+                    .padding(.horizontal)
+                    .padding(.top, 4)
                     List(holdings, id: \.id) { h in
                         Button { pick(.holding, id: h.id, name: h.name) } label: {
                             row(title: h.name, subtitle: h.symbol)
                         }
                     }
                     .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
+                    .background(Color.canvasBackground)
                     // back to accounts handled by toolbar at NavigationStack level
                 } else {
                     List(accounts, id: \.id) { acc in
@@ -95,10 +124,12 @@ struct EntityPickerView: View {
                             selectedAccountForHoldings = acc
                             Task { await loadHoldings(accountId: acc.id) }
                         } label: {
-                            row(title: acc.name, subtitle: acc.type.capitalized)
+                            row(title: acc.name, subtitle: displayTypeName(acc.type))
                         }
                     }
                     .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
+                    .background(Color.canvasBackground)
                 }
             }
         }
@@ -106,7 +137,6 @@ struct EntityPickerView: View {
 
     private func row(title: String, subtitle: String?) -> some View {
         HStack(spacing: 12) {
-            Circle().fill(Color.airbnbPrimary.opacity(0.15)).frame(width: 28, height: 28)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.system(size: 15, weight: .semibold))
                 if let subtitle { Text(subtitle).font(.system(size: 12)).foregroundColor(.secondary) }
@@ -119,6 +149,16 @@ struct EntityPickerView: View {
     private func pick(_ type: ChartEntityType, id: Int, name: String) {
         onPicked(EntitySelection(type: type, id: id, name: name))
         dismiss()
+    }
+
+    // Map internal account type codes to user-friendly display names
+    private func displayTypeName(_ raw: String) -> String {
+        let t = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        if t == "broker" || t.contains("broker") { return "Broker" }
+        if t == "savings" || t.contains("saving") { return "Savings" }
+        if t == "credit_card" || t.contains("credit") { return "Credit Card" }
+        if t == "loan" || t.contains("loan") { return "Loan" }
+        return "Other"
     }
 
     private func load() {

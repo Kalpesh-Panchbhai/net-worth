@@ -70,11 +70,7 @@ struct AssetOverviewCard: View {
                 .frame(maxHeight: .infinity, alignment: .top)
         }
         .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(.background)
-                .shadow(color: .black.opacity(0.05), radius: 20, x: 0, y: 10)
-        )
+        .elevatedCardBackground(cornerRadius: 24)
         .frame(maxHeight: .infinity, alignment: .top)
     }
     
