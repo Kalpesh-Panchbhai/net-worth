@@ -160,24 +160,24 @@ struct HomeView: View {
     
     // MARK: - Welcome Header
     private var welcomeHeader: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(alignment: .center, spacing: 8) {
                 Text("Good \(timeOfDayGreeting)")
                     .font(.title3)
                     .foregroundColor(.secondary)
-                
-                Text("Welcome back\(firstNameDisplay)")
-                    .font(.largeTitle.bold())
-                    .foregroundColor(.primary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
-                    .allowsTightening(true)
+
+                Spacer()
+
+                // Profile avatar aligned to the right
+                avatarView
             }
-            
-            Spacer()
-            
-            // Profile avatar quick access
-            avatarView
+
+            Text("Welcome back\(firstNameDisplay)")
+                .font(.largeTitle.bold())
+                .foregroundColor(.primary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+                .allowsTightening(true)
         }
         .padding(.horizontal, 4)
     }
