@@ -202,7 +202,7 @@ public struct LabeledCurrencyPill: View {
                 if let p = percent, !p.isEmpty {
                     Text("•")
                         .font(.caption2.weight(.bold))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(tint)
                     Text(p)
                         .font(.caption2.weight(.semibold))
                         .foregroundColor(tint)

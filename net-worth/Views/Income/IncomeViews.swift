@@ -68,7 +68,7 @@ struct IncomeListView: View {
                                 value: geo.frame(in: .named("incomeScroll")).minY)
                         }
                         .frame(height: 0)
-                        VStack(spacing: 16) {
+                        LazyVStack(spacing: 16, pinnedViews: [.sectionHeaders]) {
                             let activeCount =
                                 vm.selectedTypes.count + vm.selectedTags.count
                                 + vm.selectedFYs.count + vm.selectedYears.count
@@ -166,19 +166,43 @@ struct IncomeListView: View {
                             }
 
                             if vm.isLoading && vm.incomes.isEmpty {
-                                ForEach(0..<5, id: \.self) { _ in
+                                ForEach(0..<5, id: \.self) { index in
                                     IncomeRowCard.placeholder()
                                 }
                             } else if vm.sections.isEmpty {
                                 EmptyStateCard(text: "No income records yet")
                             } else {
-                                IncomeSectionsList(
-                                    sections: vm.sections,
-                                    grouping: vm.grouping,
-                                    currency: defaultCurrencyCode.uppercased(),
-                                    onEdit: { item in pendingEdit = item },
-                                    onLongPress: { item in pendingDelete = item }
-                                )
+                                ForEach(vm.sections) { section in
+                                    let sectionTotal = section.items.reduce(0) { $0 + $1.netAmount + $1.taxPaid }
+                                    Section {
+                                        ForEach(section.items, id: \.self) { item in
+                                            IncomeRowCard(income: item, currency: defaultCurrencyCode.uppercased())
+                                                .contentShape(Rectangle())
+                                                .contextMenu {
+                                                    Button {
+                                                        Haptics.selection()
+                                                        pendingEdit = item
+                                                    } label: {
+                                                        Label("Modify", systemImage: "pencil")
+                                                    }
+                                                    Button(role: .destructive) {
+                                                        Haptics.selection()
+                                                        pendingDelete = item
+                                                    } label: {
+                                                        Label("Delete", systemImage: "trash")
+                                                    }
+                                                }
+                                        }
+                                    } header: {
+                                        SectionHeader(
+                                            grouping: vm.grouping,
+                                            rawTitle: section.title,
+                                            count: section.items.count,
+                                            total: sectionTotal,
+                                            currency: defaultCurrencyCode.uppercased()
+                                        )
+                                    }
+                                }
                             }
                             // Bottom anchor for scroll-to-bottom (no FAB on this screen)
                             Color.clear.frame(height: LayoutConstants.tabBarHeight + 24).id(
@@ -612,29 +636,36 @@ private struct IncomeSectionsList: View {
     var onEdit: (Income) -> Void
     var onLongPress: (Income) -> Void
     var body: some View {
-        LazyVStack(spacing: 12) {
+        Group {
             ForEach(sections) { section in
-                SectionHeader(
-                    grouping: grouping, rawTitle: section.title, count: section.items.count
-                )
-                .padding(.top, 8)
-                ForEach(section.items, id: \.self) { item in
-                    IncomeRowCard(income: item, currency: currency)
-                        .contentShape(Rectangle())
-                        .contextMenu {
-                            Button {
-                                Haptics.selection()
-                                onEdit(item)
-                            } label: {
-                                Label("Modify", systemImage: "pencil")
+                let sectionTotal = section.items.reduce(0) { $0 + $1.netAmount + $1.taxPaid }
+                Section {
+                    ForEach(section.items, id: \.self) { item in
+                        IncomeRowCard(income: item, currency: currency)
+                            .contentShape(Rectangle())
+                            .contextMenu {
+                                Button {
+                                    Haptics.selection()
+                                    onEdit(item)
+                                } label: {
+                                    Label("Modify", systemImage: "pencil")
+                                }
+                                Button(role: .destructive) {
+                                    Haptics.selection()
+                                    onLongPress(item)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
                             }
-                            Button(role: .destructive) {
-                                Haptics.selection()
-                                onLongPress(item)
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
-                        }
+                    }
+                } header: {
+                    SectionHeader(
+                        grouping: grouping,
+                        rawTitle: section.title,
+                        count: section.items.count,
+                        total: sectionTotal,
+                        currency: currency
+                    )
                 }
             }
         }
@@ -645,6 +676,8 @@ private struct SectionHeader: View {
     let grouping: IncomeController.Grouping
     let rawTitle: String
     let count: Int
+    let total: Double
+    let currency: String
 
     private var iconName: String {
         switch grouping {
@@ -655,35 +688,52 @@ private struct SectionHeader: View {
         case .source: return "square.grid.2x2"
         }
     }
+    // Grouping badge removed to avoid redundancy with icon and title
 
     var body: some View {
         HStack(spacing: 10) {
             ZStack {
-                Circle()
-                    .fill(Color.airbnbPrimary.opacity(0.12))
-                    .frame(width: 26, height: 26)
+                Capsule().fill(Color.airbnbPrimary.opacity(0.12)).frame(width: 32, height: 22)
                 Image(systemName: iconName)
                     .font(.footnote.weight(.semibold))
                     .foregroundColor(.airbnbPrimary)
             }
             Text(rawTitle)
-                .font(.headline)
+                .font(.subheadline.weight(.semibold))
                 .foregroundColor(.primary)
                 .lineLimit(1)
                 .truncationMode(.tail)
-            Spacer()
+            Spacer(minLength: 8)
+            Text(CurrencyShort.shortString(total, currency: currency))
+                .font(.subheadline.weight(.semibold))
+                .foregroundColor(.primary)
+                .monospacedDigit()
             Text("\(count)")
                 .font(.caption2.bold())
-                .foregroundColor(.airbnbPrimary)
-                .padding(.vertical, 4)
+                .foregroundColor(.secondary)
+                .padding(.vertical, 3)
                 .padding(.horizontal, 8)
-                .background(
-                    Capsule(style: .continuous)
-                        .fill(Color.airbnbPrimary.opacity(0.12))
-                )
+                .background(Capsule(style: .continuous).fill(Color.elevatedBackground))
+                .overlay(Capsule(style: .continuous).stroke(Color.subtleSeparator, lineWidth: 1))
         }
-        .padding(.horizontal, 2)
-        .padding(.vertical, 6)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 8)
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: LayoutConstants.cardCornerRadius, style: .continuous)
+                .fill(Color.elevatedBackgroundAlt)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: LayoutConstants.cardCornerRadius, style: .continuous)
+                .stroke(Color.subtleSeparator, lineWidth: 1)
+        )
+        .overlay(alignment: .leading) {
+            RoundedRectangle(cornerRadius: LayoutConstants.cardCornerRadius, style: .continuous)
+                .fill(Color.airbnbPrimary)
+                .frame(width: 4)
+                .padding(.vertical, 6)
+        }
+        .zIndex(1)
     }
 }
 
