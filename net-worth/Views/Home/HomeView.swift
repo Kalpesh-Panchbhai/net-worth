@@ -196,6 +196,24 @@ struct HomeView: View {
                         .foregroundColor(.primary)
                         .monospacedDigit()
                         .contentTransition(.numericText())
+                    
+                    // Savings rate capsule
+                    HStack(spacing: 4) {
+                        Text("\(savingsPercentage, specifier: "%.1f")% saved")
+                            .font(.caption.weight(.semibold))
+                            .foregroundColor(.airbnbSuccess)
+                        Text("•")
+                            .font(.caption2.weight(.bold))
+                            .foregroundColor(.airbnbSuccess)
+                        Text(netWorthChangePercent)
+                            .font(.caption.weight(.semibold))
+                            .foregroundColor(netWorthChange >= 0 ? .airbnbSuccess : .airbnbPrimary)
+                    }
+                    .padding(.vertical, 4)
+                    .padding(.horizontal, 10)
+                    .background(
+                        Capsule().fill(Color.airbnbSuccess.opacity(0.12))
+                    )
                 }
                 
                 Spacer()
@@ -348,6 +366,12 @@ struct HomeView: View {
         lookupStore.accounts.reduce(0.0) { sum, account in
             sum + (account.currentDayValue - account.previousDayValue)
         }
+    }
+    
+    private var savingsPercentage: Double {
+        let totalIncome = lookupStore.incomes.reduce(0.0) { $0 + $1.netAmount }
+        guard totalIncome > 0 else { return 0 }
+        return (totalNetWorth / totalIncome) * 100
     }
     
     private var netWorthChangePercent: String {
