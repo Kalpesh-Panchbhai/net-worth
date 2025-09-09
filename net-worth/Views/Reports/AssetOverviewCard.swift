@@ -66,12 +66,12 @@ struct AssetOverviewCard: View {
             entitySelectorBar
             rangeSelector
             chart
-                .frame(minHeight: 320)
-                .frame(maxHeight: .infinity, alignment: .top)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .padding(16)
         .elevatedCardBackground(cornerRadius: 24)
-        .frame(maxHeight: .infinity, alignment: .top)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
     // MARK: - Header (title + big value + green deltas)
@@ -79,9 +79,20 @@ struct AssetOverviewCard: View {
         VStack(alignment: .leading, spacing: 12) {
             // Removed decorative left icon, notification bell, and avatar for a cleaner header per request
             
-            Text("Your Total Asset")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Portfolio Value")
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundColor(.secondary)
+                    Text("Real-time tracking")
+                        .font(.system(size: 12, weight: .regular))
+                        .foregroundColor(.secondary.opacity(0.8))
+                }
+                Spacer()
+                Image(systemName: "chart.line.uptrend.xyaxis")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(.airbnbPrimary)
+            }
             
             // Main number
             Text(headlineValue, format: .currency(code: currency))

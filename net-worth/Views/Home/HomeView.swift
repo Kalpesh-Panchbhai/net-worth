@@ -72,13 +72,17 @@ struct HomeView: View {
         }
         .fullScreenCover(isPresented: $showReportsModal) {
             NavigationStack {
-                ScrollView {
-                    AssetOverviewCard()
-                        .padding()
+                GeometryReader { geo in
+                    ZStack(alignment: .top) {
+                        Color.canvasBackground.ignoresSafeArea()
+                        AssetOverviewCard()
+                            .padding(.horizontal)
+                            .padding(.top)
+                            .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
+                    }
                 }
                 .navigationTitle("Reports")
                 .navigationBarTitleDisplayMode(.inline)
-                .background(Color.canvasBackground.ignoresSafeArea())
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button("Close") { showReportsModal = false }
