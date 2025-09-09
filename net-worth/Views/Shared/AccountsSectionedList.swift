@@ -185,7 +185,7 @@ struct AccountsSummaryCard: View {
             Text("Total value").font(.subheadline).foregroundColor(.secondary)
             Text(total, format: .currency(code: currency))
                 .font(.system(size: 38, weight: .bold))
-                .foregroundStyle(LinearGradient.airbnbAccent)
+                .foregroundColor(.primary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
                 .allowsTightening(true)
@@ -254,11 +254,11 @@ struct AccountsSectionHeader: View {
                     .foregroundColor(.airbnbPrimary)
             }
             Text(title)
-                .font(.headline)
+                .font(.subheadline.weight(.semibold))
                 .foregroundColor(.primary)
                 .lineLimit(1)
                 .truncationMode(.tail)
-            Spacer()
+            Spacer(minLength: 8)
             Text(CurrencyShort.shortString(total, currency: currency))
                 .font(.subheadline.weight(.semibold))
                 .foregroundColor(.primary)
@@ -266,19 +266,28 @@ struct AccountsSectionHeader: View {
             Text("\(count)")
                 .font(.caption2.bold())
                 .foregroundColor(.secondary)
-                .padding(.vertical, 4)
+                .padding(.vertical, 3)
                 .padding(.horizontal, 8)
                 .background(Capsule(style: .continuous).fill(Color.elevatedBackground))
                 .overlay(Capsule(style: .continuous).stroke(Color.subtleSeparator, lineWidth: 1))
         }
-        .padding(.horizontal, 8)
+        .padding(.horizontal, 10)
         .padding(.vertical, 8)
+        .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: LayoutConstants.cardCornerRadius, style: .continuous)
-                .fill(Color.elevatedBackground)
+                .fill(Color.elevatedBackgroundAlt)
         )
-        .elevatedShadow()
-        .frame(maxWidth: .infinity)
+        .overlay(
+            RoundedRectangle(cornerRadius: LayoutConstants.cardCornerRadius, style: .continuous)
+                .stroke(Color.subtleSeparator, lineWidth: 1)
+        )
+        .overlay(alignment: .leading) {
+            RoundedRectangle(cornerRadius: LayoutConstants.cardCornerRadius, style: .continuous)
+                .fill(Color.airbnbPrimary)
+                .frame(width: 4)
+                .padding(.vertical, 6)
+        }
         .zIndex(1)
     }
     private func icon(for title: String) -> String {
