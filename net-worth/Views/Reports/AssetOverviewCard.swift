@@ -102,15 +102,19 @@ struct AssetOverviewCard: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
             
-            // Deltas in green
-            HStack(spacing: 12) {
-                Label("\(String(format: "%.1f%%", abs(deltaPercent)))", systemImage: deltaPercent >= 0 ? "arrow.up.right" : "arrow.down.right")
-                    .foregroundColor(.airbnbSuccess)
-                    .font(.system(size: 14, weight: .semibold))
-                
-                Text("+" + CurrencyShort.shortString(abs(deltaAmount), currency: currency))
-                    .foregroundColor(.airbnbSuccess)
-                    .font(.system(size: 14, weight: .semibold))
+            // Deltas in green (hide when invested equals value across the period)
+            if showInvestedSeries {
+                HStack(spacing: 12) {
+                    Label("\(String(format: "%.1f%%", abs(deltaPercent)))", systemImage: deltaPercent >= 0 ? "arrow.up.right" : "arrow.down.right")
+                        .foregroundColor(.airbnbSuccess)
+                        .font(.system(size: 14, weight: .semibold))
+                    Text("•")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundColor(.secondary)
+                    Text("+" + CurrencyShort.shortString(abs(deltaAmount), currency: currency))
+                        .foregroundColor(.airbnbSuccess)
+                        .font(.system(size: 14, weight: .semibold))
+                }
             }
         }
     }
@@ -351,6 +355,22 @@ struct AssetOverviewCard: View {
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundColor(colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
                 }
+            }
+            // Profit/Loss percentage vs invested (only when invested differs from value across the period)
+            if showInvestedSeries {
+                let base = p.invested
+                let change = p.value - base
+                let pct: Double = (abs(base) > 0.0001) ? (change / abs(base)) * 100.0 : 0
+                HStack(spacing: 8) {
+                    Image(systemName: pct >= 0 ? "arrow.up.right" : "arrow.down.right")
+                    Text("\(abs(pct), specifier: "%.1f")%")
+                        .font(.system(size: 13, weight: .semibold))
+                    Text("•")
+                        .font(.system(size: 12, weight: .bold))
+                    Text((change >= 0 ? "+" : "−") + CurrencyShort.shortString(abs(change), currency: currency))
+                        .font(.system(size: 13, weight: .semibold))
+                }
+                .foregroundColor(pct >= 0 ? .airbnbSuccess : .red)
             }
             Text(dateFormatter.string(from: p.date))
                 .font(.system(size: 12, weight: .medium))
