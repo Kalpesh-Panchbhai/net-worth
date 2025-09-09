@@ -8,6 +8,7 @@ struct EntitySelection: Equatable {
 
 struct EntityPickerView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var lookup: LookupStore
 
     let userId: Int
     var onPicked: (EntitySelection) -> Void
@@ -126,33 +127,39 @@ struct EntityPickerView: View {
 
     private func fetch() async {
         isLoading = true; errorMessage = nil
-        let client = RestClient()
-        do {
-            switch selectedType {
-            case .account:
-                accounts = try await client.fetchAccounts(userId: userId)
-            case .watchlist:
-                watchlists = try await client.fetchWatchlists(userId: userId)
-            case .holding:
-                accounts = try await client.fetchAccounts(userId: userId)
-                    .filter { $0.type.lowercased() == "broker" }
+        switch selectedType {
+        case .account:
+            if !lookup.accounts.isEmpty {
+                accounts = lookup.accounts
+            } else {
+                errorMessage = "No accounts available. Load data first."
             }
-            isLoading = false
-        } catch {
-            isLoading = false
-            errorMessage = error.localizedDescription
+        case .watchlist:
+            if !lookup.watchlists.isEmpty {
+                watchlists = lookup.watchlists
+            } else {
+                errorMessage = "No watchlists available. Load data first."
+            }
+        case .holding:
+            let brokers = lookup.accounts.filter { $0.type.lowercased() == "broker" }
+            if !brokers.isEmpty {
+                accounts = brokers
+            } else {
+                errorMessage = "No broker accounts available."
+            }
         }
+        isLoading = false
     }
 
     private func loadHoldings(accountId: Int) async {
         isLoading = true; errorMessage = nil
-        let client = RestClient()
-        do {
-            holdings = try await client.fetchHoldings(accountId: accountId)
-            isLoading = false
-        } catch {
-            isLoading = false
-            errorMessage = error.localizedDescription
+        // Try to load holdings if not already cached
+        await lookup.loadHoldingsIfNeeded(accountId: accountId)
+        if let cached = lookup.getHoldings(for: accountId), !cached.isEmpty {
+            holdings = cached
+        } else {
+            errorMessage = "No holdings available for this account."
         }
+        isLoading = false
     }
 }

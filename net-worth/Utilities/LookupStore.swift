@@ -8,6 +8,8 @@ final class LookupStore: ObservableObject {
     @Published private(set) var accounts: [AccountSummary] = []
     @Published private(set) var watchlists: [WatchlistSummary] = []
     @Published private(set) var incomes: [Income] = []
+    // Keyed by accountId; populated elsewhere after a holdings fetch
+    @Published private(set) var holdingsByAccount: [Int: [HoldingSummary]] = [:]
 
     private var sourcesLoaded = false
     private var tagsLoaded = false
@@ -25,6 +27,10 @@ final class LookupStore: ObservableObject {
     private var accountsRefreshing = false
     private var watchlistsRefreshing = false
     private var incomesRefreshing = false
+    // Holdings guards per accountId
+    private var holdingsLoadedIds: Set<Int> = []
+    private var holdingsLoadingIds: Set<Int> = []
+    private var holdingsRefreshingIds: Set<Int> = []
     private let client = RestClient()
 
     func loadIfNeeded(userId: Int) async {
@@ -34,6 +40,44 @@ final class LookupStore: ObservableObject {
         async let d: Void = loadWatchlistsIfNeeded(userId: userId)
         async let e: Void = loadIncomesIfNeeded(userId: userId)
         _ = await (a, b, c, d, e)
+    }
+
+    // MARK: - Holdings cache helpers (no network here)
+    func setHoldings(_ holdings: [HoldingSummary], for accountId: Int) {
+        holdingsByAccount[accountId] = holdings
+        objectWillChange.send()
+    }
+    func getHoldings(for accountId: Int) -> [HoldingSummary]? {
+        holdingsByAccount[accountId]
+    }
+
+    // MARK: - Holdings loaders (network)
+    func loadHoldingsIfNeeded(accountId: Int) async {
+        if holdingsLoadedIds.contains(accountId) || holdingsLoadingIds.contains(accountId) { return }
+        holdingsLoadingIds.insert(accountId)
+        defer { holdingsLoadingIds.remove(accountId) }
+        do {
+            let list = try await client.fetchHoldings(accountId: accountId)
+            holdingsByAccount[accountId] = list
+            holdingsLoadedIds.insert(accountId)
+            objectWillChange.send()
+        } catch {
+            // keep old cache; allow retry later
+        }
+    }
+
+    func refreshHoldings(accountId: Int) async {
+        if holdingsRefreshingIds.contains(accountId) { return }
+        holdingsRefreshingIds.insert(accountId)
+        defer { holdingsRefreshingIds.remove(accountId) }
+        do {
+            let list = try await client.fetchHoldings(accountId: accountId)
+            holdingsByAccount[accountId] = list
+            holdingsLoadedIds.insert(accountId)
+            objectWillChange.send()
+        } catch {
+            // no-op
+        }
     }
 
     func loadIncomeSourcesIfNeeded(userId: Int) async {

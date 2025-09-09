@@ -563,13 +563,23 @@ struct AssetOverviewCard: View {
         do {
             let client = RestClient()
             let period = mapRangeToPeriod(range)
-            let raw = try await client.fetchChartData(entityType: selectedEntity.type, entityId: selectedEntity.id, timePeriod: period)
+            let cache = SessionCache.shared
+            let cacheKey = SessionCache.ChartKey(type: selectedEntity.type, id: selectedEntity.id, period: period)
+            let raw: [ChartData]
+            if let cached = cache.chartData[cacheKey], !cached.isEmpty {
+                raw = cached
+            } else {
+                let fetched = try await client.fetchChartData(entityType: selectedEntity.type, entityId: selectedEntity.id, timePeriod: period)
+                cache.chartData[cacheKey] = fetched
+                raw = fetched
+            }
             // Map to points sorted by date
             let fmt = DateFormatter(); fmt.dateFormat = "yyyy-MM-dd"; fmt.timeZone = TimeZone(secondsFromGMT: 0)
             var mapped: [Point] = raw.compactMap { r in
                 guard let d = fmt.date(from: r.date) else { return nil }
                 return Point(id: r.id, date: d, value: r.value, invested: r.invested)
             }.sorted { $0.date < $1.date }
+            mapped = downsampleEvenTime(mapped, maxCount: 100)
             await MainActor.run {
                 self.selectedRange = range
                 self.data = mapped
@@ -579,6 +589,42 @@ struct AssetOverviewCard: View {
             await MainActor.run { self.isLoading = false }
             // TODO: surface error state if needed
         }
+    }
+
+    // Downsample to maxCount using evenly spaced time targets between first and last date.
+    // For each target time, pick the nearest point; always includes first and last.
+    private func downsampleEvenTime(_ points: [Point], maxCount: Int) -> [Point] {
+        guard points.count > maxCount, maxCount >= 2,
+              let first = points.first, let last = points.last else { return points }
+        let k = maxCount
+        let total = last.date.timeIntervalSince(first.date)
+        guard total > 0 else { return Array(points.prefix(k)) }
+        var result: [Point] = []
+        result.reserveCapacity(k)
+        var idx = 0
+        for i in 0..<(k - 1) {
+            let targetTime = first.date.addingTimeInterval((Double(i) * total) / Double(k - 1))
+            // advance idx to the first point with date >= targetTime
+            while idx + 1 < points.count && points[idx + 1].date < targetTime { idx += 1 }
+            // choose closer between idx and idx+1
+            let current = points[idx]
+            if idx + 1 < points.count {
+                let next = points[idx + 1]
+                let d1 = abs(current.date.timeIntervalSince(targetTime))
+                let d2 = abs(next.date.timeIntervalSince(targetTime))
+                result.append(d2 < d1 ? next : current)
+            } else {
+                result.append(current)
+            }
+        }
+        result.append(last)
+        // Remove duplicates by date to avoid clutter
+        var seen = Set<Date>()
+        let unique = result.filter { p in
+            if seen.contains(p.date) { return false }
+            seen.insert(p.date); return true
+        }
+        return unique
     }
 
     private func mapRangeToPeriod(_ range: Range) -> ChartTimePeriod {

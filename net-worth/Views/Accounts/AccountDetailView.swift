@@ -541,17 +541,16 @@ struct AccountDetailView: View {
         isLoadingBroker = true
         brokerError = nil
         defer { isLoadingBroker = false }
-        do {
-            let items = try await RestClient().fetchAccountBroker(accountId: account.id)
-            self.brokerHoldings = items.sorted { a, b in
+        // Load from LookupStore cache-first
+        await lookup.loadHoldingsIfNeeded(accountId: account.id)
+        if let cached = lookup.getHoldings(for: account.id) {
+            self.brokerHoldings = cached.sorted { a, b in
                 let an = a.name.isEmpty ? a.symbol : a.name
                 let bn = b.name.isEmpty ? b.symbol : b.name
                 return an.localizedCaseInsensitiveCompare(bn) == .orderedAscending
             }
-        } catch let api as APIError {
-            brokerError = api.errorDescription ?? "Failed to load holdings"
-        } catch {
-            brokerError = error.localizedDescription
+        } else {
+            brokerError = "Failed to load holdings from cache"
         }
     }
 

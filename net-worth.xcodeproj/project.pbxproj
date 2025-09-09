@@ -17,6 +17,7 @@
 		7D2FBCA32E51CCDD0046FE17 /* IncomeTypesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FBCA22E51CCDD0046FE17 /* IncomeTypesView.swift */; };
 		7D2FBCA72E51CEF70046FE17 /* IncomeTagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FBCA62E51CEF70046FE17 /* IncomeTagsView.swift */; };
 		7D2FBCA92E51CEFD0046FE17 /* NamedEntitiesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2FBCA82E51CEFD0046FE17 /* NamedEntitiesListView.swift */; };
+		7D3F52622E6FED76000F04E6 /* SessionCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3F52612E6FED76000F04E6 /* SessionCache.swift */; };
 		7D4D09482E53021B00E188D0 /* RestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4D09472E53021B00E188D0 /* RestClient.swift */; };
 		7D4D094A2E5304B200E188D0 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4D09492E5304B200E188D0 /* APIError.swift */; };
 		7D4E7B942E58C47D007AB2B9 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D4E7B922E58C47D007AB2B9 /* AuthManager.swift */; };
@@ -87,6 +88,7 @@
 		7D2FBCA22E51CCDD0046FE17 /* IncomeTypesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTypesView.swift; sourceTree = "<group>"; };
 		7D2FBCA62E51CEF70046FE17 /* IncomeTagsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeTagsView.swift; sourceTree = "<group>"; };
 		7D2FBCA82E51CEFD0046FE17 /* NamedEntitiesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamedEntitiesListView.swift; sourceTree = "<group>"; };
+		7D3F52612E6FED76000F04E6 /* SessionCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCache.swift; sourceTree = "<group>"; };
 		7D4D09472E53021B00E188D0 /* RestClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestClient.swift; sourceTree = "<group>"; };
 		7D4D09492E5304B200E188D0 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		7D4E7B922E58C47D007AB2B9 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
@@ -257,6 +259,7 @@
 			children = (
 				7D4D09492E5304B200E188D0 /* APIError.swift */,
 				7D4D09472E53021B00E188D0 /* RestClient.swift */,
+				7D3F52612E6FED76000F04E6 /* SessionCache.swift */,
 				7D8A44B42E69CD860085B681 /* YahooFinanceClient.swift */,
 			);
 			path = Services;
@@ -483,6 +486,7 @@
 				7D4D094A2E5304B200E188D0 /* APIError.swift in Sources */,
 				7DAA10082BE3000000000008 /* NavBarUtils.swift in Sources */,
 				7DAA10092BE3000000000009 /* Shimmer.swift in Sources */,
+				7D3F52622E6FED76000F04E6 /* SessionCache.swift in Sources */,
 				7D627CB82E5A485A00BB1CD7 /* CreateTransactionView.swift in Sources */,
 				7DAA100A2BE300000000000A /* AirbnbTabBar.swift in Sources */,
 				7DAA100B2BE300000000000B /* SettingsView.swift in Sources */,
