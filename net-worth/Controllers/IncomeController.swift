@@ -38,6 +38,8 @@ final class IncomeController: ObservableObject {
     func attachStore(_ store: LookupStore) {
         guard self.store == nil else { return }
         self.store = store
+        // Immediately sync with existing data
+        self.incomes = store.incomes.sorted { $0.creditedDate > $1.creditedDate }
         store.$incomes
             .sink { [weak self] list in
                 self?.incomes = list.sorted { $0.creditedDate > $1.creditedDate }
@@ -47,13 +49,12 @@ final class IncomeController: ObservableObject {
 
     func load() async {
         if let store = store {
-            self.incomes = store.incomes.sorted { $0.creditedDate > $1.creditedDate }
-            if store.incomes.isEmpty {
+            // Only load if we don't have data and aren't already loading
+            if store.incomes.isEmpty && !store.isLoadingIncomes {
                 isLoading = true
                 errorMessage = nil
-                defer { isLoading = false }
                 await store.loadIncomesIfNeeded(userId: userId)
-                self.incomes = store.incomes.sorted { $0.creditedDate > $1.creditedDate }
+                isLoading = false
             }
             return
         }

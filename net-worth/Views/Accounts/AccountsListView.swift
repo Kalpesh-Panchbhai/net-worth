@@ -80,7 +80,10 @@ struct AccountsListView: View {
         }
         .task {
             vm.attachStore(lookup)
-            await vm.load()
+            // Only load if store doesn't have data and isn't loading
+            if lookup.accounts.isEmpty && !lookup.isLoadingAccounts {
+                await vm.load()
+            }
         }
         .refreshable { await vm.refresh() }
         .onChange(of: vm.errorMessage) { _, newValue in

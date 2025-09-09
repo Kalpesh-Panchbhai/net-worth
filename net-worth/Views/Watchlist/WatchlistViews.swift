@@ -243,7 +243,10 @@ struct WatchlistListView: View {
         }
         .task {
             vm.attachStore(lookup)
-            await vm.load()
+            // Only load if store doesn't have data and isn't loading
+            if lookup.watchlists.isEmpty && !lookup.isLoadingWatchlists {
+                await vm.load()
+            }
         }
         .onChange(of: tabCommands.presentCreate) { _, req in
             guard req == .watchlist else { return }

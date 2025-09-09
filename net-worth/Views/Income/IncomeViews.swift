@@ -73,12 +73,18 @@ struct IncomeListView: View {
                                 vm.selectedTypes.count + vm.selectedTags.count
                                 + vm.selectedFYs.count + vm.selectedYears.count
                             let useFiltered = activeCount > 0
-                            SummaryCard(
-                                totalAll: useFiltered ? vm.filteredTotalAll : vm.totalAll,
-                                totalNet: useFiltered ? vm.filteredTotalNet : vm.totalNet,
-                                totalTax: useFiltered ? vm.filteredTotalTax : vm.totalTaxPaid,
-                                currency: defaultCurrencyCode.uppercased()
-                            )
+                            Group {
+                                if vm.isLoading && vm.incomes.isEmpty {
+                                    SummaryCard.placeholder()
+                                } else {
+                                    SummaryCard(
+                                        totalAll: useFiltered ? vm.filteredTotalAll : vm.totalAll,
+                                        totalNet: useFiltered ? vm.filteredTotalNet : vm.totalNet,
+                                        totalTax: useFiltered ? vm.filteredTotalTax : vm.totalTaxPaid,
+                                        currency: defaultCurrencyCode.uppercased()
+                                    )
+                                }
+                            }
                             .padding(.top, 8)
                             HStack(spacing: 8) {
                                 // Group-by control
@@ -233,7 +239,10 @@ struct IncomeListView: View {
         }
         .task {
             vm.attachStore(lookup)
-            await vm.load()
+            // Only load if store doesn't have data and isn't loading
+            if lookup.incomes.isEmpty && !lookup.isLoadingIncomes {
+                await vm.load()
+            }
         }
         .onChange(of: tabCommands.presentCreate) { _, req in
             guard req == .income else { return }
@@ -622,6 +631,26 @@ private struct SummaryCard: View {
         )
         .elevatedShadow()
         .accessibilityElement(children: .combine)
+    }
+    
+    // Shimmer placeholder version
+    static func placeholder() -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            ShimmerBlock(width: 100, height: 16, cornerRadius: 4)
+            ShimmerBlock(width: 220, height: 34, cornerRadius: 6)
+            HStack(spacing: 8) {
+                ShimmerBlock(width: 140, height: 32, cornerRadius: 16)
+                ShimmerBlock(width: 120, height: 32, cornerRadius: 16)
+                Spacer(minLength: 0)
+            }
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: LayoutConstants.cardCornerRadius, style: .continuous)
+                .fill(Color.elevatedBackground)
+        )
+        .elevatedShadow()
     }
 }
 

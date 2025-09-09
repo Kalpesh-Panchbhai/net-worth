@@ -21,6 +21,8 @@ final class AccountsController: ObservableObject {
     func attachStore(_ store: LookupStore) {
         guard self.store == nil else { return }
         self.store = store
+        // Immediately sync with existing data
+        self.items = sortAccounts(store.accounts)
         store.$accounts
             .sink { [weak self] (accounts: [AccountSummary]) in
                 guard let self = self else { return }
@@ -31,13 +33,12 @@ final class AccountsController: ObservableObject {
 
     func load() async {
         if let store = store { // Use store-driven updates; trigger store load if empty
-            self.items = sortAccounts(store.accounts)
-            if store.accounts.isEmpty {
+            // Only load if we don't have data and aren't already loading
+            if store.accounts.isEmpty && !store.isLoadingAccounts {
                 isLoading = true
                 errorMessage = nil
-                defer { isLoading = false }
                 await store.loadAccountsIfNeeded(userId: userId)
-                self.items = sortAccounts(store.accounts)
+                isLoading = false
             }
             return
         }

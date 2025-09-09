@@ -21,6 +21,8 @@ final class WatchlistController: ObservableObject {
     func attachStore(_ store: LookupStore) {
         guard self.store == nil else { return }
         self.store = store
+        // Immediately sync with existing data
+        self.items = sortWatchlists(store.watchlists)
         store.$watchlists
             .sink { [weak self] lists in
                 guard let self = self else { return }
@@ -31,13 +33,12 @@ final class WatchlistController: ObservableObject {
 
     func load() async {
         if let store = store {
-            self.items = sortWatchlists(store.watchlists)
-            if store.watchlists.isEmpty {
+            // Only load if we don't have data and aren't already loading
+            if store.watchlists.isEmpty && !store.isLoadingWatchlists {
                 isLoading = true
                 errorMessage = nil
-                defer { isLoading = false }
                 await store.loadWatchlistsIfNeeded(userId: userId)
-                self.items = sortWatchlists(store.watchlists)
+                isLoading = false
             }
             return
         }

@@ -48,13 +48,19 @@ struct AccountsSectionedList: View {
                 let changeVsPrev = total - previous
                 let changePercent: Double? = abs(previous) > 0 ? (changeVsPrev / abs(previous)) : nil
                 
-                AccountsSummaryCard(
-                    total: total,
-                    invested: invested,
-                    changeVsPrev: changeVsPrev,
-                    changePercent: changePercent,
-                    currency: currency
-                )
+                Group {
+                    if isLoading {
+                        AccountsSummaryCard.placeholder()
+                    } else {
+                        AccountsSummaryCard(
+                            total: total,
+                            invested: invested,
+                            changeVsPrev: changeVsPrev,
+                            changePercent: changePercent,
+                            currency: currency
+                        )
+                    }
+                }
                 .padding(.bottom, 12)
 
                 // Filters + toggle
@@ -237,6 +243,38 @@ struct AccountsSummaryCard: View {
         )
         .elevatedShadow()
         .accessibilityElement(children: .combine)
+    }
+    
+    // Shimmer placeholder version
+    static func placeholder() -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            ShimmerBlock(width: 80, height: 16, cornerRadius: 4)
+            ShimmerBlock(width: 180, height: 38, cornerRadius: 6)
+            VStack(spacing: 8) {
+                HStack {
+                    ShimmerBlock(width: 60, height: 12, cornerRadius: 4)
+                    Spacer()
+                    ShimmerBlock(width: 100, height: 20, cornerRadius: 10)
+                }
+                HStack {
+                    ShimmerBlock(width: 30, height: 12, cornerRadius: 4)
+                    Spacer()
+                    ShimmerBlock(width: 120, height: 20, cornerRadius: 10)
+                }
+                HStack {
+                    ShimmerBlock(width: 80, height: 12, cornerRadius: 4)
+                    Spacer()
+                    ShimmerBlock(width: 110, height: 20, cornerRadius: 10)
+                }
+            }
+        }
+        .padding(EdgeInsets(top: 14, leading: 14, bottom: 14, trailing: 14))
+        .frame(maxWidth: .infinity, minHeight: LayoutConstants.cardMinHeight)
+        .background(
+            RoundedRectangle(cornerRadius: LayoutConstants.cardCornerRadius, style: .continuous)
+                .fill(Color.elevatedBackground)
+        )
+        .elevatedShadow()
     }
 }
 
