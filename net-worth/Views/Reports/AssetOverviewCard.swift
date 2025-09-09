@@ -104,17 +104,13 @@ struct AssetOverviewCard: View {
             
             // Deltas in green (hide when invested equals value across the period)
             if showInvestedSeries {
-                HStack(spacing: 12) {
-                    Label("\(String(format: "%.1f%%", abs(deltaPercent)))", systemImage: deltaPercent >= 0 ? "arrow.up.right" : "arrow.down.right")
-                        .foregroundColor(.airbnbSuccess)
-                        .font(.system(size: 14, weight: .semibold))
-                    Text("•")
-                        .font(.system(size: 12, weight: .bold))
-                        .foregroundColor(.secondary)
-                    Text("+" + CurrencyShort.shortString(abs(deltaAmount), currency: currency))
-                        .foregroundColor(.airbnbSuccess)
-                        .font(.system(size: 14, weight: .semibold))
-                }
+                WideStatPill(
+                    icon: deltaAmount >= 0 ? "arrow.up.right" : "arrow.down.right",
+                    value: abs(deltaAmount),
+                    currency: currency,
+                    percent: String(format: "%.1f%%", abs(deltaPercent)),
+                    tint: deltaAmount >= 0 ? .airbnbSuccess : .red
+                )
             }
         }
     }

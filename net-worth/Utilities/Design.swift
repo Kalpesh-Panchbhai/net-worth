@@ -176,22 +176,46 @@ public struct LabeledCurrencyPill: View {
     public let value: Double
     public let currency: String
     public var tint: Color
-    public init(title: String, value: Double, currency: String, tint: Color) {
+    public var percent: String? = nil
+    public init(title: String, value: Double, currency: String, tint: Color, percent: String? = nil) {
         self.title = title
         self.value = value
         self.currency = currency
         self.tint = tint
+        self.percent = percent
     }
     public var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
                 .font(.caption)
                 .foregroundColor(.secondary)
-            Text(value, format: .currency(code: currency))
-                .font(.headline)
-                .foregroundColor(tint)
-                .monospacedDigit()
-                .contentTransition(.numericText())
+            HStack(spacing: 4) {
+                Text(value, format: .currency(code: currency))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(tint)
+                    .monospacedDigit()
+                    .contentTransition(.numericText())
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .layoutPriority(1)
+                    .allowsTightening(true)
+                if let p = percent, !p.isEmpty {
+                    Text("•")
+                        .font(.caption2.weight(.bold))
+                        .foregroundColor(.secondary)
+                    Text(p)
+                        .font(.caption2.weight(.semibold))
+                        .foregroundColor(tint)
+                        .monospacedDigit()
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .allowsTightening(true)
+                }
+            }
+            .fixedSize(horizontal: true, vertical: false)
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
+            .allowsTightening(true)
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 12)
