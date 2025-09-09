@@ -276,6 +276,7 @@ struct AssetOverviewCard: View {
             GeometryReader { geo in
                 // Drag/tap to move selection
                 Rectangle().fill(Color.clear).contentShape(Rectangle())
+                    .allowsHitTesting(selectedEntity != nil && !isLoading)
                     .gesture(
                         DragGesture(minimumDistance: 0)
                             .onChanged { g in handleHover(at: g.location, proxy: proxy, geo: geo) }
