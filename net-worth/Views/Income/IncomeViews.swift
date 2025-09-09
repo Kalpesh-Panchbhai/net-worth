@@ -210,9 +210,8 @@ struct IncomeListView: View {
                                     }
                                 }
                             }
-                            // Bottom anchor for scroll-to-bottom (no FAB on this screen)
-                            Color.clear.frame(height: LayoutConstants.tabBarHeight + 24).id(
-                                "incomeBottom")
+                            // Bottom anchor for scroll-to-bottom
+                            Color.clear.frame(height: LayoutConstants.tabBarHeight + 24).id("incomeBottom")
                         }
                         .padding(.horizontal, 16)
                         .padding(.bottom, LayoutConstants.tabBarHeight + 24)
@@ -228,6 +227,10 @@ struct IncomeListView: View {
                         proxy.scrollTo("incomeBottom", anchor: .bottom)
                     }
                     DispatchQueue.main.async { tabCommands.scrollToBottomRequest = nil }
+                }
+                .fabOverlay(icon: "plus", accessibilityLabel: "Add income") {
+                    showCreateSheet = true
+                    Haptics.selection()
                 }
             }
             .navigationTitle("Incomes")
@@ -255,7 +258,7 @@ struct IncomeListView: View {
                 DispatchQueue.main.async { tabCommands.presentCreate = nil }
             }
         }
-        .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 66) }
+        // Remove extra bottom safe-area inset; consistent FAB padding handles spacing
         .animation(.spring(response: 0.35, dampingFraction: 0.85), value: vm.incomes)
         .animation(.easeInOut(duration: 0.2), value: vm.selectedTypes)
         .animation(.easeInOut(duration: 0.2), value: vm.grouping)
@@ -319,11 +322,6 @@ struct IncomeListView: View {
                 CreateIncomeView(userId: vm.userId, existing: income)
                     .navigationBarTitleDisplayMode(.inline)
             }
-        }
-        // Floating action button to add new income
-        .fabOverlay(icon: "plus", accessibilityLabel: "Add income") {
-            showCreateSheet = true
-            Haptics.selection()
         }
     }
 }
