@@ -7,11 +7,12 @@ struct RestClient {
         if let baseURL {
             self.baseURL = baseURL
         } else {
-            #if DEBUG
+            #if targetEnvironment(simulator)
+                // Running on iOS Simulator: talk to local backend
                 self.baseURL = URL(string: "http://localhost:8080")!
             #else
-                self.baseURL = URL(
-                    string: "https://5juo09qr2j.execute-api.ap-south-1.amazonaws.com/prod")!
+                // Running on a physical device: use production backend
+                self.baseURL = URL(string: "https://kfgx37r84g.execute-api.ap-south-1.amazonaws.com/prod")!
             #endif
         }
     }
