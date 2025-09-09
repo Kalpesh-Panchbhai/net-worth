@@ -3,11 +3,17 @@ import Foundation
 // Generic REST client usable across all entities
 struct RestClient {
     let baseURL: URL
-    init(
-        baseURL: URL = URL(string: "https://5juo09qr2j.execute-api.ap-south-1.amazonaws.com/prod")!
-        // baseURL: URL = URL(string: "http://localhost:8080")!
-    ) {
-        self.baseURL = baseURL
+    init(baseURL: URL? = nil) {
+        if let baseURL {
+            self.baseURL = baseURL
+        } else {
+            #if DEBUG
+                self.baseURL = URL(string: "http://localhost:8080")!
+            #else
+                self.baseURL = URL(
+                    string: "https://5juo09qr2j.execute-api.ap-south-1.amazonaws.com/prod")!
+            #endif
+        }
     }
 
     // MARK: - Utilities

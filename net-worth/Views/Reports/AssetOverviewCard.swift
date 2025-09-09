@@ -5,33 +5,50 @@ import Charts
 struct AssetOverviewCard: View {
     // MARK: - Types
     enum Range: String, CaseIterable, Identifiable {
-        case oneWeek = "1w"
         case oneMonth = "1m"
+        case threeMonths = "3m"
+        case sixMonths = "6m"
         case oneYear = "1y"
+        case twoYears = "2y"
         case fiveYears = "5y"
         case all = "All"
         
         var id: String { rawValue }
-        var title: String { rawValue }
+        var title: String { rawValue.uppercased() }
+    }
+
+    // Convenience for current selection
+    private var selectedEntity: (type: ChartEntityType, id: Int)? {
+        if let t = entityType, let i = entityId { return (t, i) }
+        return nil
     }
     
     struct Point: Identifiable, Hashable {
         let id: Int
         let date: Date
         let value: Double
+        let invested: Double
     }
     
     // MARK: - State
-    @State private var selectedRange: Range = .oneWeek
+    @State private var selectedRange: Range = .oneMonth
     @State private var selectedPoint: Point?
     @AppStorage("defaultCurrencyCode") private var currency: String = "INR"
     @Environment(\.colorScheme) private var colorScheme
     @Namespace private var rangeNS
     @State private var tooltipSize: CGSize = .zero
     @State private var isLoading: Bool = false
+    // Data source selection (None by default)
+    @State private var entityType: ChartEntityType? = nil
+    @State private var entityId: Int? = nil
+    @State private var selectedEntityName: String = "Choose source"
+    @State private var showEntityPicker: Bool = false
+    @State private var userId: Int = 1 // TODO: Inject from app state / auth
+    // Live data
+    @State private var data: [Point] = []
     
-    // Generated demo data to match the look-and-feel of the design
-    private var data: [Point] { sampleData(for: selectedRange) }
+    // Init allowing caller to specify what to chart
+    init() {}
     private var headlineValue: Double { data.last?.value ?? 0 }
     private var deltaPercent: Double {
         guard let first = data.first?.value, let last = data.last?.value, first > 0 else { return 0 }
@@ -46,9 +63,11 @@ struct AssetOverviewCard: View {
     var body: some View {
         VStack(spacing: 16) {
             header
+            entitySelectorBar
             rangeSelector
             chart
-                .frame(height: 220)
+                .frame(minHeight: 320)
+                .frame(maxHeight: .infinity, alignment: .top)
         }
         .padding(16)
         .background(
@@ -56,6 +75,7 @@ struct AssetOverviewCard: View {
                 .fill(.background)
                 .shadow(color: .black.opacity(0.05), radius: 20, x: 0, y: 10)
         )
+        .frame(maxHeight: .infinity, alignment: .top)
     }
     
     // MARK: - Header (title + big value + green deltas)
@@ -94,7 +114,7 @@ struct AssetOverviewCard: View {
             ForEach(Range.allCases) { range in
                 Button { handleRangeTap(range) } label: { rangePill(range) }
                     .buttonStyle(.plain)
-                    .disabled(isLoading)
+                    .disabled(isLoading || selectedEntity == nil)
             }
         }
         .padding(6)
@@ -135,32 +155,59 @@ struct AssetOverviewCard: View {
         .frame(height: 36)
     }
     
-    // MARK: - Chart
+    // MARK: - Entity Selector + Chart
+    private var entitySelectorBar: some View {
+        HStack {
+            Button {
+                showEntityPicker = true
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "chevron.down.circle.fill").foregroundColor(.airbnbPrimary)
+                    Text(selectedEntityName)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.primary)
+                }
+                .padding(.vertical, 6)
+                .padding(.horizontal, 12)
+                .background(
+                    Capsule(style: .continuous)
+                        .fill(Color.secondary.opacity(0.12))
+                )
+            }
+            Spacer()
+        }
+        .sheet(isPresented: $showEntityPicker) {
+            EntityPickerView(userId: userId) { sel in
+                selectedEntityName = sel.name
+                entityType = sel.type
+                entityId = sel.id
+                startLoading(to: selectedRange)
+            }
+        }
+    }
+
     private var chart: some View {
         Chart {
             ForEach(data) { point in
-                // Area fill (very light gradient bottom up)
-                AreaMark(
-                    x: .value("Date", point.date),
-                    y: .value("Value", point.value)
-                )
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: colorScheme == .dark ? [Color.airbnbPrimary.opacity(0.18), Color.clear] : [Color.airbnbPrimary.opacity(0.20), Color.airbnbPrimary.opacity(0.03)],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
-                .interpolationMethod(.linear)
-                
-                // Main stroke line (sharp angles like image)
+                // Current value line (brand accent)
                 LineMark(
                     x: .value("Date", point.date),
-                    y: .value("Value", point.value)
+                    y: .value("Current Value", point.value),
+                    series: .value("Current Value", "Current Value")
                 )
-                .lineStyle(StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
+                .lineStyle(StrokeStyle(lineWidth: valueLineWidth, lineCap: .round, lineJoin: .round))
                 .foregroundStyle(Color.airbnbPrimary)
-                .interpolationMethod(.linear)
+                .interpolationMethod(.monotone)
+
+                // Invested line (ink, subtle dashed)
+                LineMark(
+                    x: .value("Date", point.date),
+                    y: .value("Invested", point.invested),
+                    series: .value("Invested", "Invested")
+                )
+                .lineStyle(StrokeStyle(lineWidth: valueLineWidth, lineCap: .round, lineJoin: .round))
+                .foregroundStyle(colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
+                .interpolationMethod(.monotone)
             }
 
             if let sel = selectedPoint {
@@ -172,7 +219,7 @@ struct AssetOverviewCard: View {
                 // Selection point (white base circle)
                 PointMark(
                     x: .value("Date", sel.date),
-                    y: .value("Value", sel.value)
+                    y: .value("Current Value", sel.value)
                 )
                 .symbol(Circle())
                 .foregroundStyle(Color.white)
@@ -181,7 +228,7 @@ struct AssetOverviewCard: View {
                 // Selection point (accent inner circle to create ring effect)
                 PointMark(
                     x: .value("Date", sel.date),
-                    y: .value("Value", sel.value)
+                    y: .value("Current Value", sel.value)
                 )
                 .symbol(Circle())
                 .foregroundStyle(Color.airbnbPrimary)
@@ -189,10 +236,11 @@ struct AssetOverviewCard: View {
             }
         }
         .chartXScale(domain: xDomain)
+        .chartYScale(domain: yDomain)
         .chartPlotStyle { plot in
             plot
                 .padding(.horizontal, 0) // edge-to-edge horizontally
-                .padding(.top, 20) // prevent circle clipping at max values
+                .padding(.top, 12) // prevent circle clipping at max values
         }
         .chartXAxis {
             AxisMarks(values: xAxisTickDatesLimited) { value in
@@ -211,6 +259,19 @@ struct AssetOverviewCard: View {
         .overlay(alignment: .center) {
             if isLoading {
                 loadingOverlay
+            } else if selectedEntity == nil {
+                // Empty state prompt to choose a source
+                VStack(spacing: 10) {
+                    Image(systemName: "chart.line.uptrend.xyaxis")
+                        .font(.system(size: 22, weight: .semibold))
+                        .foregroundColor(.secondary)
+                    Text("Choose source to load chart")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(.secondary)
+                    Button("Select Source") { showEntityPicker = true }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.airbnbPrimary)
+                }
             }
         }
         .chartOverlay { proxy in
@@ -265,9 +326,20 @@ struct AssetOverviewCard: View {
     // MARK: - Tooltip
     private func tooltip(for p: Point) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(p.value, format: .currency(code: currency))
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundColor(colorScheme == .dark ? .white : .black)
+            // Current value
+            HStack(spacing: 6) {
+                Circle().fill(Color.airbnbPrimary).frame(width: 8, height: 8)
+                Text(p.value, format: .currency(code: currency))
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(colorScheme == .dark ? .white : .black)
+            }
+            // Invested value
+            HStack(spacing: 6) {
+                Circle().fill(colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6)).frame(width: 8, height: 8)
+                Text(p.invested, format: .currency(code: currency))
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
+            }
             Text(dateFormatter.string(from: p.date))
                 .font(.system(size: 12, weight: .medium))
                 .foregroundColor(colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
@@ -301,27 +373,33 @@ struct AssetOverviewCard: View {
     
     private var xAxisComponent: Calendar.Component {
         switch selectedRange {
-        case .oneWeek: return .day
         case .oneMonth: return .day
+        case .threeMonths: return .day
+        case .sixMonths: return .day
         case .oneYear: return .month
+        case .twoYears: return .month
         case .fiveYears: return .year
         case .all: return .month
         }
     }
     private var xAxisStride: Int {
         switch selectedRange {
-        case .oneWeek: return 1              // every day
-        case .oneMonth: return 7             // every 7th day (~weekly)
+        case .oneMonth: return 7             // weekly
+        case .threeMonths: return 14         // bi-weekly
+        case .sixMonths: return 30           // monthly
         case .oneYear: return 2              // every 2 months
-        case .fiveYears: return 1            // every year
-        case .all: return 3                  // every 3 months (quarterly)
+        case .twoYears: return 3             // quarterly
+        case .fiveYears: return 1            // yearly
+        case .all: return 3                  // quarterly
         }
     }
     private func xAxisLabel(for date: Date) -> String {
         switch selectedRange {
-        case .oneWeek: return dayFormatter.string(from: date) // show only date (no weekday)
         case .oneMonth: return dayFormatter.string(from: date)
+        case .threeMonths: return dayFormatter.string(from: date)
+        case .sixMonths: return monthFormatter.string(from: date)
         case .oneYear: return monthFormatter.string(from: date)
+        case .twoYears: return monthFormatter.string(from: date)
         case .fiveYears: return yearFormatter.string(from: date)
         case .all: return monthFormatter.string(from: date)
         }
@@ -341,42 +419,61 @@ struct AssetOverviewCard: View {
     private func sampleData(for range: Range) -> [Point] {
         let cal = Calendar.current
         let now = Date()
+        func makePoint(id: Int, date: Date, v: Double, inv: Double) -> Point {
+            Point(id: id, date: date, value: v, invested: inv)
+        }
         switch range {
-        case .oneWeek:
-            // 7 points Mon-Sun with a clear upward trend and small dips
-            return (0..<7).map { i in
-                let date = cal.date(byAdding: .day, value: -(6 - i), to: now) ?? now
-                let base: Double = 1_100_000
-                let steps: [Double] = [0, 30_000, 15_000, 5_000, 45_000, 25_000, 60_000]
-                return Point(id: i, date: date, value: base + steps[i])
-            }
         case .oneMonth:
+            // 30 days, gradual growth; invested grows smoother below value
             return (0..<30).map { i in
                 let date = cal.date(byAdding: .day, value: -(29 - i), to: now) ?? now
-                let base: Double = 1_050_000
-                let v = base + Double(i) * 8_000 + sin(Double(i)) * 12_000
-                return Point(id: i, date: date, value: v)
+                let invested = 1_000_000 + Double(i) * 5_500
+                let value = invested + 20_000 + sin(Double(i)) * 12_000
+                return makePoint(id: i, date: date, v: value, inv: invested)
+            }
+        case .threeMonths:
+            // 90 days, weekly-ish undulations
+            return (0..<90).map { i in
+                let date = cal.date(byAdding: .day, value: -(89 - i), to: now) ?? now
+                let invested = 980_000 + Double(i) * 3_800
+                let value = invested + 35_000 + sin(Double(i)/6.0) * 18_000
+                return makePoint(id: i, date: date, v: value, inv: invested)
+            }
+        case .sixMonths:
+            // 6 months monthly cadence
+            return (0..<6).map { i in
+                let date = cal.date(byAdding: .month, value: -(5 - i), to: now) ?? now
+                let invested = 950_000 + Double(i) * 22_000
+                let value = invested + 60_000 + cos(Double(i)) * 20_000
+                return makePoint(id: i, date: date, v: value, inv: invested)
             }
         case .oneYear:
             return (0..<12).map { i in
                 let date = cal.date(byAdding: .month, value: -(11 - i), to: now) ?? now
-                let base: Double = 950_000
-                let v = base + Double(i) * 40_000 + sin(Double(i)) * 25_000
-                return Point(id: i, date: date, value: v)
+                let invested = 900_000 + Double(i) * 40_000
+                let value = invested + 80_000 + sin(Double(i)) * 25_000
+                return makePoint(id: i, date: date, v: value, inv: invested)
+            }
+        case .twoYears:
+            return (0..<24).map { i in
+                let date = cal.date(byAdding: .month, value: -(23 - i), to: now) ?? now
+                let invested = 850_000 + Double(i) * 28_000
+                let value = invested + 120_000 + sin(Double(i)/2.0) * 35_000
+                return makePoint(id: i, date: date, v: value, inv: invested)
             }
         case .fiveYears:
             return (0..<60).map { i in
                 let date = cal.date(byAdding: .month, value: -(59 - i), to: now) ?? now
-                let base: Double = 600_000
-                let v = base + Double(i) * 12_000 + cos(Double(i)) * 18_000
-                return Point(id: i, date: date, value: v)
+                let invested = 600_000 + Double(i) * 12_000
+                let value = invested + 180_000 + cos(Double(i)/3.0) * 30_000
+                return makePoint(id: i, date: date, v: value, inv: invested)
             }
         case .all:
             return (0..<36).map { i in
                 let date = cal.date(byAdding: .month, value: -(35 - i), to: now) ?? now
-                let base: Double = 500_000
-                let v = base + Double(i) * 16_000 + sin(Double(i)) * 14_000
-                return Point(id: i, date: date, value: v)
+                let invested = 500_000 + Double(i) * 16_000
+                let value = invested + 150_000 + sin(Double(i)/1.5) * 28_000
+                return makePoint(id: i, date: date, v: value, inv: invested)
             }
         }
     }
@@ -401,6 +498,35 @@ struct AssetOverviewCard: View {
         return start...end
     }
 
+    // MARK: - Y domain with dynamic padding across both series
+    private var yDomain: ClosedRange<Double> {
+        guard let minV = (data.map { min($0.value, $0.invested) }.min()),
+              let maxV = (data.map { max($0.value, $0.invested) }.max()) else {
+            return 0...1
+        }
+        let span = max(1, maxV - minV)
+        let pad = span * 0.08 // 8% breathing room
+        return (minV - pad)...(maxV + pad)
+    }
+
+    // MARK: - Presentation tuning based on range
+    private var showsAreaFill: Bool {
+        switch selectedRange {
+        case .oneMonth, .threeMonths: return true
+        default: return false
+        }
+    }
+    private var valueLineWidth: CGFloat {
+        switch selectedRange {
+        case .oneMonth, .threeMonths: return 2.5
+        case .sixMonths, .oneYear: return 2.0
+        default: return 1.6
+        }
+    }
+    private var investedLineWidth: CGFloat {
+        max(1.2, valueLineWidth - 0.6)
+    }
+
     // MARK: - Loading
     private var loadingOverlay: some View {
         ZStack {
@@ -412,17 +538,47 @@ struct AssetOverviewCard: View {
                 .progressViewStyle(.circular)
                 .tint(Color.airbnbPrimary)
         }
-        .allowsHitTesting(true)
+        // ...
     }
 
     private func startLoading(to range: Range) {
+        guard selectedEntity != nil else { return }
         withAnimation(.easeInOut(duration: 0.15)) { isLoading = true; selectedPoint = nil }
-        // Simulate async load. Replace with your real fetch.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-            withAnimation(.easeInOut(duration: 0.15)) {
-                selectedRange = range
-                isLoading = false
+        Task { await loadChart(for: range) }
+    }
+
+    private func loadChart(for range: Range) async {
+        guard let selectedEntity = selectedEntity else { return }
+        do {
+            let client = RestClient()
+            let period = mapRangeToPeriod(range)
+            let raw = try await client.fetchChartData(entityType: selectedEntity.type, entityId: selectedEntity.id, timePeriod: period)
+            // Map to points sorted by date
+            let fmt = DateFormatter(); fmt.dateFormat = "yyyy-MM-dd"; fmt.timeZone = TimeZone(secondsFromGMT: 0)
+            var mapped: [Point] = raw.compactMap { r in
+                guard let d = fmt.date(from: r.date) else { return nil }
+                return Point(id: r.id, date: d, value: r.value, invested: r.invested)
+            }.sorted { $0.date < $1.date }
+            await MainActor.run {
+                self.selectedRange = range
+                self.data = mapped
+                self.isLoading = false
             }
+        } catch {
+            await MainActor.run { self.isLoading = false }
+            // TODO: surface error state if needed
+        }
+    }
+
+    private func mapRangeToPeriod(_ range: Range) -> ChartTimePeriod {
+        switch range {
+        case .oneMonth: return .oneMonth
+        case .threeMonths: return .threeMonths
+        case .sixMonths: return .sixMonths
+        case .oneYear: return .oneYear
+        case .twoYears: return .twoYears
+        case .fiveYears: return .fiveYears
+        case .all: return .all
         }
     }
 }
