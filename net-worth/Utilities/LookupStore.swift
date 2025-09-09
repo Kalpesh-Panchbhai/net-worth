@@ -8,6 +8,11 @@ final class LookupStore: ObservableObject {
     @Published private(set) var accounts: [AccountSummary] = []
     @Published private(set) var watchlists: [WatchlistSummary] = []
     @Published private(set) var incomes: [Income] = []
+    
+    // Loading states for UI
+    @Published private(set) var isLoadingAccounts = false
+    @Published private(set) var isLoadingWatchlists = false
+    @Published private(set) var isLoadingIncomes = false
     // Keyed by accountId; populated elsewhere after a holdings fetch
     @Published private(set) var holdingsByAccount: [Int: [HoldingSummary]] = [:]
 
@@ -19,9 +24,15 @@ final class LookupStore: ObservableObject {
     // In-flight guards for initial loads (prevent duplicate concurrent GETs)
     private var sourcesLoading = false
     private var tagsLoading = false
-    private var accountsLoading = false
-    private var watchlistsLoading = false
-    private var incomesLoading = false
+    private var accountsLoading = false {
+        didSet { isLoadingAccounts = accountsLoading }
+    }
+    private var watchlistsLoading = false {
+        didSet { isLoadingWatchlists = watchlistsLoading }
+    }
+    private var incomesLoading = false {
+        didSet { isLoadingIncomes = incomesLoading }
+    }
     private var sourcesRefreshing = false
     private var tagsRefreshing = false
     private var accountsRefreshing = false

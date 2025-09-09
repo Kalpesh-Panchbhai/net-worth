@@ -185,52 +185,68 @@ struct HomeView: View {
     // MARK: - Net Worth Summary Card
     private var netWorthSummaryCard: some View {
         VStack(spacing: 16) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Total Net Worth")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    
-                    Text(totalNetWorth, format: .currency(code: defaultCurrency))
-                        .font(.title.bold())
-                        .foregroundColor(.primary)
-                        .monospacedDigit()
-                        .contentTransition(.numericText())
-                    
-                    // Savings rate capsule
-                    HStack(spacing: 4) {
-                        Text("\(savingsPercentage, specifier: "%.1f")% saved")
-                            .font(.caption.weight(.semibold))
-                            .foregroundColor(.airbnbSuccess)
-                        Text("•")
-                            .font(.caption2.weight(.bold))
-                            .foregroundColor(.airbnbSuccess)
-                        Text(netWorthChangePercent)
-                            .font(.caption.weight(.semibold))
-                            .foregroundColor(netWorthChange >= 0 ? .airbnbSuccess : .airbnbPrimary)
+            if lookupStore.isLoadingAccounts && lookupStore.accounts.isEmpty {
+                // Shimmer placeholder for net worth card
+                HStack {
+                    VStack(alignment: .leading, spacing: 8) {
+                        ShimmerBlock(width: 120, height: 16, cornerRadius: 4)
+                        ShimmerBlock(width: 200, height: 28, cornerRadius: 6)
+                        ShimmerBlock(width: 150, height: 20, cornerRadius: 10)
                     }
-                    .padding(.vertical, 4)
-                    .padding(.horizontal, 10)
-                    .background(
-                        Capsule().fill(Color.airbnbSuccess.opacity(0.12))
-                    )
+                    Spacer()
+                    VStack(alignment: .trailing, spacing: 8) {
+                        ShimmerBlock(width: 80, height: 12, cornerRadius: 4)
+                        ShimmerBlock(width: 60, height: 20, cornerRadius: 4)
+                    }
                 }
-                
-                Spacer()
-                
-                VStack(alignment: .trailing, spacing: 4) {
-                    Text("1 day change")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    
-                    HStack(spacing: 4) {
-                        Image(systemName: netWorthChange >= 0 ? "arrow.up.right" : "arrow.down.right")
-                            .font(.caption.bold())
-                        Text(netWorthChangePercent)
-                            .font(.subheadline.bold())
+            } else {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Total Net Worth")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        
+                        Text(totalNetWorth, format: .currency(code: defaultCurrency))
+                            .font(.title.bold())
+                            .foregroundColor(.primary)
                             .monospacedDigit()
+                            .contentTransition(.numericText())
+                        
+                        // Savings rate capsule
+                        HStack(spacing: 4) {
+                            Text("\(savingsPercentage, specifier: "%.1f")% saved")
+                                .font(.caption.weight(.semibold))
+                                .foregroundColor(.airbnbSuccess)
+                            Text("•")
+                                .font(.caption2.weight(.bold))
+                                .foregroundColor(.airbnbSuccess)
+                            Text(netWorthChangePercent)
+                                .font(.caption.weight(.semibold))
+                                .foregroundColor(netWorthChange >= 0 ? .airbnbSuccess : .airbnbPrimary)
+                        }
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 10)
+                        .background(
+                            Capsule().fill(Color.airbnbSuccess.opacity(0.12))
+                        )
                     }
-                    .foregroundColor(netWorthChange >= 0 ? .airbnbSuccess : .airbnbPrimary)
+                    
+                    Spacer()
+                    
+                    VStack(alignment: .trailing, spacing: 4) {
+                        Text("1 day change")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        
+                        HStack(spacing: 4) {
+                            Image(systemName: netWorthChange >= 0 ? "arrow.up.right" : "arrow.down.right")
+                                .font(.caption.bold())
+                            Text(netWorthChangePercent)
+                                .font(.subheadline.bold())
+                                .monospacedDigit()
+                        }
+                        .foregroundColor(netWorthChange >= 0 ? .airbnbSuccess : .airbnbPrimary)
+                    }
                 }
             }
         }
@@ -241,34 +257,46 @@ struct HomeView: View {
     // MARK: - Quick Stats Row
     private var quickStatsRow: some View {
         HStack(spacing: 12) {
-            StatCard(
-                title: "Accounts",
-                value: "\(lookupStore.accounts.count)",
-                icon: "creditcard.fill",
-                color: .blue
-            ) {
-                Haptics.selection()
-                tabCommands.navigateToTab = .accounts
+            if lookupStore.isLoadingAccounts && lookupStore.accounts.isEmpty {
+                StatCard.placeholder(title: "Accounts", icon: "creditcard.fill", color: .blue)
+            } else {
+                StatCard(
+                    title: "Accounts",
+                    value: "\(lookupStore.accounts.count)",
+                    icon: "creditcard.fill",
+                    color: .blue
+                ) {
+                    Haptics.selection()
+                    tabCommands.navigateToTab = .accounts
+                }
             }
             
-            StatCard(
-                title: "Watchlists",
-                value: "\(lookupStore.watchlists.count)",
-                icon: "heart.fill",
-                color: .pink
-            ) {
-                Haptics.selection()
-                tabCommands.navigateToTab = .watchlist
+            if lookupStore.isLoadingWatchlists && lookupStore.watchlists.isEmpty {
+                StatCard.placeholder(title: "Watchlists", icon: "heart.fill", color: .pink)
+            } else {
+                StatCard(
+                    title: "Watchlists",
+                    value: "\(lookupStore.watchlists.count)",
+                    icon: "heart.fill",
+                    color: .pink
+                ) {
+                    Haptics.selection()
+                    tabCommands.navigateToTab = .watchlist
+                }
             }
             
-            StatCard(
-                title: "Income",
-                value: monthlyIncome,
-                icon: "indianrupeesign.circle.fill",
-                color: .green
-            ) {
-                Haptics.selection()
-                tabCommands.navigateToTab = .income
+            if lookupStore.isLoadingIncomes && lookupStore.incomes.isEmpty {
+                StatCard.placeholder(title: "Income", icon: "indianrupeesign.circle.fill", color: .green)
+            } else {
+                StatCard(
+                    title: "Income",
+                    value: monthlyIncome,
+                    icon: "indianrupeesign.circle.fill",
+                    color: .green
+                ) {
+                    Haptics.selection()
+                    tabCommands.navigateToTab = .income
+                }
             }
         }
     }
@@ -427,6 +455,24 @@ struct StatCard: View {
             .elevatedCardBackground(cornerRadius: 16)
         }
         .buttonStyle(PressableButtonStyle())
+    }
+    
+    // Shimmer placeholder version
+    static func placeholder(title: String, icon: String, color: Color) -> some View {
+        VStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundColor(color.opacity(0.3))
+            
+            ShimmerBlock(width: 40, height: 20, cornerRadius: 4)
+            
+            Text(title)
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 16)
+        .elevatedCardBackground(cornerRadius: 16)
     }
 }
 
