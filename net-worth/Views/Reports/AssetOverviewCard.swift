@@ -133,7 +133,7 @@ struct AssetOverviewCard: View {
     @ViewBuilder
     private func rangePill(_ range: Range) -> some View {
         ZStack {
-            if selectedRange == range {
+            if selectedEntity != nil && selectedRange == range {
                 Capsule(style: .continuous)
                     .fill(Color.white)
                     .overlay(
@@ -145,7 +145,7 @@ struct AssetOverviewCard: View {
             }
             Text(range.title)
                 .font(.system(size: 14, weight: .semibold))
-                .foregroundColor(selectedRange == range ? .black : (colorScheme == .dark ? Color.white.opacity(0.8) : Color.black.opacity(0.6)))
+                .foregroundColor((selectedEntity != nil && selectedRange == range) ? .black : (colorScheme == .dark ? Color.white.opacity(0.8) : Color.black.opacity(0.6)))
         }
         .frame(maxWidth: .infinity)
         .frame(height: 36)
