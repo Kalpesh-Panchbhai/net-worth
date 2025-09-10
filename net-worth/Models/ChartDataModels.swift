@@ -24,12 +24,12 @@ enum ChartEntityType: String, CaseIterable {
 
 enum OtherChartType: String, CaseIterable {
     case income = "income"
-    case savedPercentage = "saved_percentage"
+    case savingsRate = "savings_rate"
     
     var displayName: String {
         switch self {
         case .income: return "Income"
-        case .savedPercentage: return "%Saved"
+        case .savingsRate: return "Savings Rate"
         }
     }
 }

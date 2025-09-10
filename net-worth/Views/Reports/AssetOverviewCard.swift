@@ -640,19 +640,17 @@ struct AssetOverviewCard: View {
         case .all: startDate = cal.date(byAdding: .year, value: -10, to: now) ?? now
         }
         
-        var points: [Point] = []
-        
         switch type {
         case .income:
-            points = generateIncomeChartData(from: startDate, to: now)
-        case .savedPercentage:
-            points = generateSavedPercentageData(from: startDate, to: now)
-        }
-        
-        await MainActor.run {
-            self.selectedRange = range
-            self.data = points
-            self.isLoading = false
+            let points = generateIncomeChartData(from: startDate, to: now)
+            await MainActor.run {
+                self.selectedRange = range
+                self.data = points
+                self.isLoading = false
+            }
+        case .savingsRate:
+            // For savings rate, we need to fetch net worth data asynchronously
+            await fetchNetWorthDataForSavedPercentage(from: startDate, to: now, range: range)
         }
     }
     
@@ -681,35 +679,129 @@ struct AssetOverviewCard: View {
         }
     }
     
-    private func generateSavedPercentageData(from startDate: Date, to endDate: Date) -> [Point] {
-        let cal = Calendar.current
-        var points: [Point] = []
-        var currentDate = startDate
-        var pointId = 0
-        
-        while currentDate <= endDate {
-            // Calculate total net worth at this date (simplified - using current values)
-            let totalNetWorth = lookup.accounts.reduce(0.0) { $0 + $1.currentDayValue }
-            
-            // Calculate total net income up to this date (sum of netAmount for all incomes)
-            let totalNetIncome = lookup.incomes.filter { $0.creditedDate <= currentDate }
-                .reduce(0.0) { $0 + $1.netAmount }
-            
-            // Calculate savings percentage: Total net worth / total net income * 100
-            let savedPercentage = totalNetIncome > 0 ? (totalNetWorth / totalNetIncome) * 100 : 0
-            
-            points.append(Point(
-                id: pointId,
-                date: currentDate,
-                value: savedPercentage,
-                invested: savedPercentage // For percentage, both lines show the same value
-            ))
-            
-            pointId += 1
-            currentDate = cal.date(byAdding: .day, value: 7, to: currentDate) ?? endDate // Weekly intervals
+    private func generateSavedPercentageData(from startDate: Date, to endDate: Date, range: Range) -> [Point] {
+        // First, fetch net worth data from "All Watchlists" chart data
+        Task {
+            await fetchNetWorthDataForSavedPercentage(from: startDate, to: endDate, range: range)
         }
         
-        return points
+        // Return empty for now - will be populated by async fetch
+        return []
+    }
+    
+    private func fetchNetWorthDataForSavedPercentage(from startDate: Date, to endDate: Date, range: Range) async {
+        do {
+            let client = RestClient()
+            let period = mapRangeToPeriod(range)
+            
+            // Find "All" watchlist ID from lookup store
+            guard let allWatchlist = lookup.watchlists.first(where: { 
+                $0.name.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame 
+            }) else {
+                await MainActor.run { self.isLoading = false }
+                return
+            }
+            
+            // Fetch chart data for "All Watchlists" to get net worth progression
+            let netWorthData = try await client.fetchChartData(
+                entityType: .watchlist, 
+                entityId: allWatchlist.id, 
+                timePeriod: period
+            )
+            
+            // Convert to date-indexed dictionary for lookup
+            let fmt = DateFormatter()
+            fmt.dateFormat = "yyyy-MM-dd"
+            fmt.timeZone = TimeZone(secondsFromGMT: 0)
+            
+            var netWorthByDate: [Date: Double] = [:]
+            for data in netWorthData {
+                if let date = fmt.date(from: data.date) {
+                    netWorthByDate[date] = data.value
+                }
+            }
+            
+            // Generate savings percentage points for all available net worth dates
+            var points: [Point] = []
+            let sortedNetWorthDates = netWorthByDate.keys.sorted()
+            
+            for (index, date) in sortedNetWorthDates.enumerated() {
+                // Only include dates within our selected range
+                guard date >= startDate && date <= endDate else { continue }
+                
+                // Get net worth for this date
+                let netWorth = netWorthByDate[date] ?? 0
+                
+                // Calculate cumulative net income up to this date
+                let cumulativeNetIncome = lookup.incomes.filter { $0.creditedDate <= date }
+                    .reduce(0.0) { $0 + $1.netAmount }
+                
+                // Calculate savings percentage: Net worth / Cumulative net income * 100
+                let savedPercentage = cumulativeNetIncome > 0 ? (netWorth / cumulativeNetIncome) * 100 : 0
+                
+                points.append(Point(
+                    id: index,
+                    date: date,
+                    value: savedPercentage,
+                    invested: savedPercentage
+                ))
+            }
+            
+            // Apply downsampling to max 100 points (same as other chart types)
+            let downsampledPoints = downsampleEvenTime(points, maxCount: 100)
+            
+            await MainActor.run {
+                self.selectedRange = range
+                self.data = downsampledPoints
+                self.isLoading = false
+            }
+            
+        } catch {
+            await MainActor.run { self.isLoading = false }
+        }
+    }
+    
+    private func getNetWorthForDate(_ targetDate: Date, from netWorthByDate: [Date: Double], netWorthData: [ChartData]) -> Double {
+        // Try exact match first
+        if let exactValue = netWorthByDate[targetDate] {
+            return exactValue
+        }
+        
+        // Find closest dates for interpolation
+        let sortedDates = netWorthByDate.keys.sorted()
+        
+        // Find the closest date before or equal to target
+        var beforeDate: Date?
+        var afterDate: Date?
+        
+        for date in sortedDates {
+            if date <= targetDate {
+                beforeDate = date
+            } else if afterDate == nil {
+                afterDate = date
+                break
+            }
+        }
+        
+        // Use the closest available value
+        if let before = beforeDate, let beforeValue = netWorthByDate[before] {
+            if let after = afterDate, let afterValue = netWorthByDate[after] {
+                // Interpolate between before and after
+                let totalInterval = after.timeIntervalSince(before)
+                let targetInterval = targetDate.timeIntervalSince(before)
+                let ratio = totalInterval > 0 ? targetInterval / totalInterval : 0
+                return beforeValue + (afterValue - beforeValue) * ratio
+            } else {
+                // Use before value
+                return beforeValue
+            }
+        } else if let after = afterDate, let afterValue = netWorthByDate[after] {
+            // Use after value
+            return afterValue
+        }
+        
+        // Fallback to current account values if no chart data available
+        return lookup.accounts.reduce(0.0) { $0 + $1.currentDayValue }
     }
 
     // Downsample to maxCount using evenly spaced time targets between first and last date.
