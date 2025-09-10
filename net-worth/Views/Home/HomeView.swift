@@ -214,7 +214,7 @@ struct HomeView: View {
                         
                         // Savings rate capsule
                         HStack(spacing: 4) {
-                            Text("\(savingsPercentage, specifier: "%.1f")% saved")
+                            Text("\(savingsPercentage, specifier: "%.1f")% savings rate")
                                 .font(.caption.weight(.semibold))
                                 .foregroundColor(.airbnbSuccess)
                             Text("•")
@@ -314,7 +314,8 @@ struct HomeView: View {
                     title: "Add Account",
                     subtitle: "Track new assets",
                     icon: "plus.circle.fill",
-                    color: .blue
+                    color: .blue,
+                    isDisabled: false
                 ) {
                     Haptics.selection()
                     tabCommands.presentCreate = nil
@@ -328,7 +329,8 @@ struct HomeView: View {
                     title: "Record Income",
                     subtitle: "Log new income",
                     icon: "plus.square.fill",
-                    color: .green
+                    color: .green,
+                    isDisabled: false
                 ) {
                     Haptics.selection()
                     tabCommands.presentCreate = nil
@@ -342,7 +344,8 @@ struct HomeView: View {
                     title: "Create Watchlist",
                     subtitle: "Monitor accounts",
                     icon: "heart.circle.fill",
-                    color: .pink
+                    color: .pink,
+                    isDisabled: false
                 ) {
                     Haptics.selection()
                     tabCommands.presentCreate = nil
@@ -356,8 +359,10 @@ struct HomeView: View {
                     title: "View Reports",
                     subtitle: "Analyze trends",
                     icon: "chart.bar.fill",
-                    color: .orange
+                    color: .orange,
+                    isDisabled: !allDataLoaded
                 ) {
+                    guard allDataLoaded else { return }
                     Haptics.selection()
                     showReportsModal = true
                 }
@@ -367,6 +372,11 @@ struct HomeView: View {
     
     
     // MARK: - Helper Properties
+    private var allDataLoaded: Bool {
+        !lookupStore.isLoadingAccounts && !lookupStore.isLoadingWatchlists && !lookupStore.isLoadingIncomes &&
+        !lookupStore.accounts.isEmpty && !lookupStore.watchlists.isEmpty && !lookupStore.incomes.isEmpty
+    }
+    
     private var timeOfDayGreeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
         switch hour {
@@ -481,6 +491,7 @@ struct QuickActionCard: View {
     let subtitle: String
     let icon: String
     let color: Color
+    let isDisabled: Bool
     let action: () -> Void
     
     var body: some View {
@@ -489,23 +500,23 @@ struct QuickActionCard: View {
                 HStack {
                     Image(systemName: icon)
                         .font(.title2)
-                        .foregroundColor(color)
+                        .foregroundColor(isDisabled ? color.opacity(0.5) : color)
                     
                     Spacer()
                     
                     Image(systemName: "arrow.up.right")
                         .font(.caption.bold())
-                        .foregroundColor(.secondary)
+                        .foregroundColor(isDisabled ? .secondary.opacity(0.5) : .secondary)
                 }
                 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .font(.subheadline.bold())
-                        .foregroundColor(.primary)
+                        .foregroundColor(isDisabled ? .primary.opacity(0.5) : .primary)
                     
                     Text(subtitle)
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(isDisabled ? .secondary.opacity(0.5) : .secondary)
                 }
                 
                 Spacer()
@@ -515,6 +526,7 @@ struct QuickActionCard: View {
             .elevatedCardBackground(cornerRadius: 16)
         }
         .buttonStyle(PressableButtonStyle())
+        .disabled(isDisabled)
     }
 }
 
