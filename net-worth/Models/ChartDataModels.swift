@@ -19,6 +19,19 @@ enum ChartEntityType: String, CaseIterable {
     case holding = "holding"
     case account = "account"
     case watchlist = "watchlist"
+    case other = "other"
+}
+
+enum OtherChartType: String, CaseIterable {
+    case income = "income"
+    case savedPercentage = "saved_percentage"
+    
+    var displayName: String {
+        switch self {
+        case .income: return "Income"
+        case .savedPercentage: return "%Saved"
+        }
+    }
 }
 
 enum ChartTimePeriod: String, CaseIterable {

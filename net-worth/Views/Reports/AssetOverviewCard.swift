@@ -41,9 +41,11 @@ struct AssetOverviewCard: View {
     // Data source selection (None by default)
     @State private var entityType: ChartEntityType? = nil
     @State private var entityId: Int? = nil
+    @State private var otherChartType: OtherChartType? = nil
     @State private var selectedEntityName: String = "Choose source"
     @State private var showEntityPicker: Bool = false
     @State private var userId: Int = 1 // TODO: Inject from app state / auth
+    @EnvironmentObject private var lookup: LookupStore
     // Live data
     @State private var data: [Point] = []
     
@@ -188,6 +190,7 @@ struct AssetOverviewCard: View {
                 selectedEntityName = sel.name
                 entityType = sel.type
                 entityId = sel.id
+                otherChartType = sel.otherType
                 startLoading(to: selectedRange)
             }
         }
@@ -584,6 +587,13 @@ struct AssetOverviewCard: View {
 
     private func loadChart(for range: Range) async {
         guard let selectedEntity = selectedEntity else { return }
+        
+        // Handle "Other" chart types with local data generation
+        if selectedEntity.type == .other, let otherType = otherChartType {
+            await generateOtherChartData(type: otherType, range: range)
+            return
+        }
+        
         do {
             let client = RestClient()
             let period = mapRangeToPeriod(range)
@@ -613,6 +623,93 @@ struct AssetOverviewCard: View {
             await MainActor.run { self.isLoading = false }
             // TODO: surface error state if needed
         }
+    }
+    
+    private func generateOtherChartData(type: OtherChartType, range: Range) async {
+        let cal = Calendar.current
+        let now = Date()
+        let startDate: Date
+        
+        switch range {
+        case .oneMonth: startDate = cal.date(byAdding: .month, value: -1, to: now) ?? now
+        case .threeMonths: startDate = cal.date(byAdding: .month, value: -3, to: now) ?? now
+        case .sixMonths: startDate = cal.date(byAdding: .month, value: -6, to: now) ?? now
+        case .oneYear: startDate = cal.date(byAdding: .year, value: -1, to: now) ?? now
+        case .twoYears: startDate = cal.date(byAdding: .year, value: -2, to: now) ?? now
+        case .fiveYears: startDate = cal.date(byAdding: .year, value: -5, to: now) ?? now
+        case .all: startDate = cal.date(byAdding: .year, value: -10, to: now) ?? now
+        }
+        
+        var points: [Point] = []
+        
+        switch type {
+        case .income:
+            points = generateIncomeChartData(from: startDate, to: now)
+        case .savedPercentage:
+            points = generateSavedPercentageData(from: startDate, to: now)
+        }
+        
+        await MainActor.run {
+            self.selectedRange = range
+            self.data = points
+            self.isLoading = false
+        }
+    }
+    
+    private func generateIncomeChartData(from startDate: Date, to endDate: Date) -> [Point] {
+        // Get all incomes sorted by date
+        let allIncomes = lookup.incomes.sorted { $0.creditedDate < $1.creditedDate }
+        
+        // Calculate cumulative income up to start date (for proper baseline)
+        let baselineIncome = allIncomes.filter { $0.creditedDate < startDate }
+            .reduce(0.0) { $0 + $1.netAmount }
+        
+        // Get incomes within the selected range
+        let rangeIncomes = allIncomes.filter { income in
+            income.creditedDate >= startDate && income.creditedDate <= endDate
+        }
+        
+        var cumulativeIncome = baselineIncome
+        return rangeIncomes.enumerated().map { index, income in
+            cumulativeIncome += income.netAmount
+            return Point(
+                id: index,
+                date: income.creditedDate,
+                value: cumulativeIncome,
+                invested: cumulativeIncome // For income, invested = value (no separate investment concept)
+            )
+        }
+    }
+    
+    private func generateSavedPercentageData(from startDate: Date, to endDate: Date) -> [Point] {
+        let cal = Calendar.current
+        var points: [Point] = []
+        var currentDate = startDate
+        var pointId = 0
+        
+        while currentDate <= endDate {
+            // Calculate total net worth at this date (simplified - using current values)
+            let totalNetWorth = lookup.accounts.reduce(0.0) { $0 + $1.currentDayValue }
+            
+            // Calculate total net income up to this date (sum of netAmount for all incomes)
+            let totalNetIncome = lookup.incomes.filter { $0.creditedDate <= currentDate }
+                .reduce(0.0) { $0 + $1.netAmount }
+            
+            // Calculate savings percentage: Total net worth / total net income * 100
+            let savedPercentage = totalNetIncome > 0 ? (totalNetWorth / totalNetIncome) * 100 : 0
+            
+            points.append(Point(
+                id: pointId,
+                date: currentDate,
+                value: savedPercentage,
+                invested: savedPercentage // For percentage, both lines show the same value
+            ))
+            
+            pointId += 1
+            currentDate = cal.date(byAdding: .day, value: 7, to: currentDate) ?? endDate // Weekly intervals
+        }
+        
+        return points
     }
 
     // Downsample to maxCount using evenly spaced time targets between first and last date.

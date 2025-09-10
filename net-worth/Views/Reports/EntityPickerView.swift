@@ -4,6 +4,7 @@ struct EntitySelection: Equatable {
     var type: ChartEntityType
     var id: Int
     var name: String
+    var otherType: OtherChartType?
 }
 
 struct EntityPickerView: View {
@@ -17,6 +18,7 @@ struct EntityPickerView: View {
     @State private var accounts: [AccountSummary] = []
     @State private var watchlists: [WatchlistSummary] = []
     @State private var holdings: [HoldingSummary] = []
+    @State private var incomeSources: [IncomeSource] = []
     @State private var selectedAccountForHoldings: AccountSummary?
     @State private var isLoading: Bool = false
     @State private var errorMessage: String?
@@ -28,6 +30,7 @@ struct EntityPickerView: View {
                     Text("Holding").tag(ChartEntityType.holding)
                     Text("Account").tag(ChartEntityType.account)
                     Text("Watchlist").tag(ChartEntityType.watchlist)
+                    Text("Other").tag(ChartEntityType.other)
                 }
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
@@ -77,6 +80,15 @@ struct EntityPickerView: View {
                 List(watchlists, id: \.id) { wl in
                     Button { pick(.watchlist, id: wl.id, name: wl.name) } label: {
                         row(title: wl.name, subtitle: nil)
+                    }
+                }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(Color.canvasBackground)
+            case .other:
+                List(OtherChartType.allCases, id: \.self) { otherType in
+                    Button { pick(.other, id: 0, name: otherType.displayName, otherType: otherType) } label: {
+                        row(title: otherType.displayName, subtitle: nil)
                     }
                 }
                 .listStyle(.plain)
@@ -146,8 +158,8 @@ struct EntityPickerView: View {
         .padding(.vertical, 4)
     }
 
-    private func pick(_ type: ChartEntityType, id: Int, name: String) {
-        onPicked(EntitySelection(type: type, id: id, name: name))
+    private func pick(_ type: ChartEntityType, id: Int, name: String, otherType: OtherChartType? = nil) {
+        onPicked(EntitySelection(type: type, id: id, name: name, otherType: otherType))
         dismiss()
     }
 
@@ -180,6 +192,9 @@ struct EntityPickerView: View {
             } else {
                 errorMessage = "No watchlists available. Load data first."
             }
+        case .other:
+            // No loading needed for "Other" category - it's static options
+            break
         case .holding:
             let brokers = lookup.accounts.filter { $0.type.lowercased() == "broker" }
             if !brokers.isEmpty {
@@ -203,3 +218,4 @@ struct EntityPickerView: View {
         isLoading = false
     }
 }
+
