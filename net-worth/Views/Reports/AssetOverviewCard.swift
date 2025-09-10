@@ -1,5 +1,5 @@
-import SwiftUI
 import Charts
+import SwiftUI
 
 // MARK: - Type Aliases
 typealias FinancialYear = IncomeController.FinancialYear
@@ -15,7 +15,7 @@ struct AssetOverviewCard: View {
         case twoYears = "2y"
         case fiveYears = "5y"
         case all = "All"
-        
+
         var id: String { rawValue }
         var title: String { rawValue.uppercased() }
     }
@@ -25,7 +25,7 @@ struct AssetOverviewCard: View {
         if let t = entityType, let i = entityId { return (t, i) }
         return nil
     }
-    
+
     struct Point: Identifiable, Hashable {
         let id: Int
         let date: Date
@@ -33,7 +33,7 @@ struct AssetOverviewCard: View {
         let invested: Double
         let averagePerMonth: Double?
     }
-    
+
     // MARK: - State
     @State private var selectedRange: Range = .oneMonth
     @State private var selectedPoint: Point?
@@ -48,45 +48,48 @@ struct AssetOverviewCard: View {
     @State private var otherChartType: OtherChartType? = nil
     @State private var selectedEntityName: String = "Choose source"
     @State private var showEntityPicker: Bool = false
-    @State private var userId: Int = 1 // TODO: Inject from app state / auth
+    @State private var showIncomeFilterSheet = false
+    @State private var userId: Int = 1  // TODO: Inject from app state / auth
     @EnvironmentObject private var lookup: LookupStore
     // Live data
     @State private var data: [Point] = []
-    @State private var showFilterSheet = false
     @State private var selectedTypes: Set<String> = []
     @State private var selectedTags: Set<String> = []
     @State private var selectedYears: Set<Int> = []
     @State private var selectedFYs: Set<FinancialYear> = []
-    
+
     // Init allowing caller to specify what to chart
     init() {}
     private var headlineValue: Double { data.last?.value ?? 0 }
     private var deltaPercent: Double {
-        guard let first = data.first?.value, let last = data.last?.value, first > 0 else { return 0 }
+        guard let first = data.first?.value, let last = data.last?.value, first > 0 else {
+            return 0
+        }
         return ((last - first) / first) * 100
     }
     private var deltaAmount: Double {
         guard let first = data.first?.value, let last = data.last?.value else { return 0 }
         return last - first
     }
-    
+
     // MARK: - Helper Properties
     private var isIncomeChart: Bool {
         return otherChartType == .income
     }
-    
+
     private var filteredIncomes: [Income] {
         guard isIncomeChart else { return lookup.incomes }
-        
+
         return lookup.incomes.filter { income in
             // Filter by types (income sources)
             if !selectedTypes.isEmpty {
-                let sourceName = lookup.incomeSources.first { $0.id == income.incomeSourceId }?.name ?? ""
+                let sourceName =
+                    lookup.incomeSources.first { $0.id == income.incomeSourceId }?.name ?? ""
                 if !selectedTypes.contains(sourceName) {
                     return false
                 }
             }
-            
+
             // Filter by tags
             if !selectedTags.isEmpty {
                 let tagName = lookup.incomeTags.first { $0.id == income.incomeTagId }?.name ?? ""
@@ -94,7 +97,7 @@ struct AssetOverviewCard: View {
                     return false
                 }
             }
-            
+
             // Filter by years
             if !selectedYears.isEmpty {
                 let year = Calendar.current.component(.year, from: income.creditedDate)
@@ -102,7 +105,7 @@ struct AssetOverviewCard: View {
                     return false
                 }
             }
-            
+
             // Filter by financial years
             if !selectedFYs.isEmpty {
                 let cal = Calendar.current
@@ -114,26 +117,26 @@ struct AssetOverviewCard: View {
                     return false
                 }
             }
-            
+
             return true
         }
     }
-    
+
     private var uniqueTypes: [String] {
         let sourceIds = Set(lookup.incomes.map { $0.incomeSourceId })
         return lookup.incomeSources.filter { sourceIds.contains($0.id) }.map { $0.name }.sorted()
     }
-    
+
     private var uniqueTags: [String] {
         let tagIds = Set(lookup.incomes.map { $0.incomeTagId })
         return lookup.incomeTags.filter { tagIds.contains($0.id) }.map { $0.name }.sorted()
     }
-    
+
     private var availableYears: [Int] {
         let years = lookup.incomes.map { Calendar.current.component(.year, from: $0.creditedDate) }
         return Array(Set(years)).sorted(by: >)
     }
-    
+
     private var availableFYs: [FinancialYear] {
         let cal = Calendar.current
         let startYears: [Int] = lookup.incomes.map { income in
@@ -142,9 +145,11 @@ struct AssetOverviewCard: View {
             return m >= 4 ? y : (y - 1)
         }
         let setYears = Set(startYears.filter { $0 > 0 })
-        return setYears.map { IncomeController.FinancialYear(startYear: $0) }.sorted { $0.startYear > $1.startYear }
+        return setYears.map { IncomeController.FinancialYear(startYear: $0) }.sorted {
+            $0.startYear > $1.startYear
+        }
     }
-    
+
     // MARK: - Body
     var body: some View {
         VStack(spacing: 16) {
@@ -161,7 +166,7 @@ struct AssetOverviewCard: View {
         .padding(16)
         .elevatedCardBackground(cornerRadius: 24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .sheet(isPresented: $showFilterSheet) {
+        .sheet(isPresented: $showIncomeFilterSheet) {
             NavigationStack {
                 IncomeFilterSheet(
                     types: uniqueTypes,
@@ -171,33 +176,35 @@ struct AssetOverviewCard: View {
                     selectedTypes: $selectedTypes,
                     selectedTags: $selectedTags,
                     selectedYears: $selectedYears,
-                    selectedFYs: $selectedFYs
-                ) {
-                    showFilterSheet = false
-                } onClear: {
-                    selectedTypes.removeAll()
-                    selectedTags.removeAll()
-                    selectedYears.removeAll()
-                    selectedFYs.removeAll()
-                }
+                    selectedFYs: $selectedFYs,
+                    onDone: { showIncomeFilterSheet = false },
+                    onClear: {
+                        selectedTypes.removeAll()
+                        selectedTags.removeAll()
+                        selectedYears.removeAll()
+                        selectedFYs.removeAll()
+                    }
+                )
                 .navigationTitle("Filters")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Close") { showFilterSheet = false }
+                        Button("Close") { showIncomeFilterSheet = false }
                     }
                 }
                 .toolbarBackground(Color.canvasBackground, for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
             }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
         }
     }
-    
+
     // MARK: - Header (title + big value + green deltas)
     private var header: some View {
         VStack(alignment: .leading, spacing: 12) {
             // Removed decorative left icon, notification bell, and avatar for a cleaner header per request
-            
+
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Portfolio Value")
@@ -212,7 +219,7 @@ struct AssetOverviewCard: View {
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(.airbnbPrimary)
             }
-            
+
             // Main number
             Text(headlineValue, format: .currency(code: currency))
                 .font(.system(size: 36, weight: .bold, design: .rounded))
@@ -220,7 +227,7 @@ struct AssetOverviewCard: View {
                 .monospacedDigit()
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
-            
+
             // Deltas in green (hide when invested equals value across the period)
             if showInvestedSeries {
                 WideStatPill(
@@ -233,24 +240,32 @@ struct AssetOverviewCard: View {
             }
         }
     }
-    
+
     // MARK: - Range Selector (exact pill segmented control)
     private var rangeSelector: some View {
         HStack(spacing: 0) {
             ForEach(Range.allCases) { range in
-                Button { handleRangeTap(range) } label: { rangePill(range) }
-                    .buttonStyle(.plain)
-                    .disabled(isLoading || selectedEntity == nil)
+                Button {
+                    handleRangeTap(range)
+                } label: {
+                    rangePill(range)
+                }
+                .buttonStyle(.plain)
+                .disabled(isLoading || selectedEntity == nil)
             }
         }
         .padding(6)
         .background(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(colorScheme == .dark ? Color.white.opacity(0.06) : Color.secondary.opacity(0.12))
+                .fill(
+                    colorScheme == .dark ? Color.white.opacity(0.06) : Color.secondary.opacity(0.12)
+                )
         )
         .overlay(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .stroke((colorScheme == .dark ? Color.white.opacity(0.08) : Color.black.opacity(0.05)), lineWidth: 1)
+                .stroke(
+                    (colorScheme == .dark ? Color.white.opacity(0.08) : Color.black.opacity(0.05)),
+                    lineWidth: 1)
         )
         .shadow(color: .black.opacity(0.08), radius: 10, x: 2, y: 6)
     }
@@ -275,20 +290,25 @@ struct AssetOverviewCard: View {
             }
             Text(range.title)
                 .font(.system(size: 14, weight: .semibold))
-                .foregroundColor((selectedEntity != nil && selectedRange == range) ? .black : (colorScheme == .dark ? Color.white.opacity(0.8) : Color.black.opacity(0.6)))
+                .foregroundColor(
+                    (selectedEntity != nil && selectedRange == range)
+                        ? .black
+                        : (colorScheme == .dark
+                            ? Color.white.opacity(0.8) : Color.black.opacity(0.6)))
         }
         .frame(maxWidth: .infinity)
         .frame(height: 36)
     }
-    
+
     // MARK: - Income Filters Bar
     private var incomeFiltersBar: some View {
         HStack(spacing: 8) {
-            let activeCount = selectedTypes.count + selectedTags.count + selectedYears.count + selectedFYs.count
-            
+            let activeCount =
+                selectedTypes.count + selectedTags.count + selectedYears.count + selectedFYs.count
+
             // Filters button
             Button {
-                showFilterSheet = true
+                showIncomeFilterSheet = true
             } label: {
                 HStack(spacing: 8) {
                     Image(
@@ -333,12 +353,12 @@ struct AssetOverviewCard: View {
         .onChange(of: selectedYears) { reloadIncomeChart() }
         .onChange(of: selectedFYs) { reloadIncomeChart() }
     }
-    
+
     private func reloadIncomeChart() {
         guard isIncomeChart else { return }
         startLoading(to: selectedRange)
     }
-    
+
     // MARK: - Entity Selector + Chart
     private var entitySelectorBar: some View {
         HStack {
@@ -380,7 +400,9 @@ struct AssetOverviewCard: View {
                     y: .value("Current Value", point.value),
                     series: .value("Current Value", "Current Value")
                 )
-                .lineStyle(StrokeStyle(lineWidth: valueLineWidth, lineCap: .round, lineJoin: .round))
+                .lineStyle(
+                    StrokeStyle(lineWidth: valueLineWidth, lineCap: .round, lineJoin: .round)
+                )
                 .foregroundStyle(Color.airbnbPrimary)
                 .interpolationMethod(.monotone)
 
@@ -391,11 +413,15 @@ struct AssetOverviewCard: View {
                         y: .value("Invested", point.invested),
                         series: .value("Invested", "Invested")
                     )
-                    .lineStyle(StrokeStyle(lineWidth: valueLineWidth, lineCap: .round, lineJoin: .round))
-                    .foregroundStyle(colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
+                    .lineStyle(
+                        StrokeStyle(lineWidth: valueLineWidth, lineCap: .round, lineJoin: .round)
+                    )
+                    .foregroundStyle(
+                        colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6)
+                    )
                     .interpolationMethod(.monotone)
                 }
-                
+
                 // Average per month line (for Income charts only)
                 if isIncomeChart, let avgPerMonth = point.averagePerMonth {
                     LineMark(
@@ -403,7 +429,10 @@ struct AssetOverviewCard: View {
                         y: .value("Average per Month", avgPerMonth),
                         series: .value("Average per Month", "Average per Month")
                     )
-                    .lineStyle(StrokeStyle(lineWidth: 1.5, lineCap: .round, lineJoin: .round, dash: [5, 3]))
+                    .lineStyle(
+                        StrokeStyle(
+                            lineWidth: 1.5, lineCap: .round, lineJoin: .round, dash: [5, 3])
+                    )
                     .foregroundStyle(Color.orange)
                     .interpolationMethod(.monotone)
                 }
@@ -412,9 +441,12 @@ struct AssetOverviewCard: View {
             if let sel = selectedPoint {
                 // Vertical rule
                 RuleMark(x: .value("Date", sel.date))
-                    .foregroundStyle((colorScheme == .dark ? Color.white.opacity(0.3) : Color.black.opacity(0.25)))
+                    .foregroundStyle(
+                        (colorScheme == .dark
+                            ? Color.white.opacity(0.3) : Color.black.opacity(0.25))
+                    )
                     .lineStyle(StrokeStyle(lineWidth: 1))
-                
+
                 // Selection point (white base circle)
                 PointMark(
                     x: .value("Date", sel.date),
@@ -438,8 +470,8 @@ struct AssetOverviewCard: View {
         .chartYScale(domain: yDomain)
         .chartPlotStyle { plot in
             plot
-                .padding(.horizontal, 0) // edge-to-edge horizontally
-                .padding(.top, 12) // prevent circle clipping at max values
+                .padding(.horizontal, 0)  // edge-to-edge horizontally
+                .padding(.top, 12)  // prevent circle clipping at max values
         }
         .chartXAxis {
             AxisMarks(values: xAxisTickDatesLimited) { value in
@@ -449,7 +481,9 @@ struct AssetOverviewCard: View {
                     if let date = value.as(Date.self) {
                         Text(xAxisLabel(for: date))
                             .font(.system(size: 10.5, weight: .semibold))
-                            .foregroundColor(colorScheme == .dark ? Color.white.opacity(0.7) : Color.black.opacity(0.5))
+                            .foregroundColor(
+                                colorScheme == .dark
+                                    ? Color.white.opacity(0.7) : Color.black.opacity(0.5))
                     }
                 }
             }
@@ -487,13 +521,14 @@ struct AssetOverviewCard: View {
                     .overlay(
                         Group {
                             if let p = selectedPoint,
-                               let x = proxy.position(forX: p.date),
-                               let y = proxy.position(forY: p.value) {
+                                let x = proxy.position(forX: p.date),
+                                let y = proxy.position(forY: p.value)
+                            {
                                 let plot: CGRect = {
-                                    if #available(iOS 17.0, *), let pf = proxy.plotFrame {
-                                        return geo[pf]
+                                    if #available(iOS 17.0, *) {
+                                        return geo[proxy.plotFrame!]
                                     } else {
-                                        return geo[proxy.plotAreaFrame]
+                                        return geo[proxy.plotFrame!]
                                     }
                                 }()
                                 let absPoint = CGPoint(x: plot.minX + x, y: plot.minY + y)
@@ -503,14 +538,19 @@ struct AssetOverviewCard: View {
                                 let edgeInset: CGFloat = 20
                                 let gap: CGFloat = 8
                                 // Clamp X so bubble stays fully visible without altering domain
-                                let clampedX = min(max(absPoint.x, tWidth/2 + edgeInset), geo.size.width - tWidth/2 - edgeInset)
+                                let clampedX = min(
+                                    max(absPoint.x, tWidth / 2 + edgeInset),
+                                    geo.size.width - tWidth / 2 - edgeInset)
                                 // Prefer placing above the point; if not enough space, place below
-                                let topBound = plot.minY + gap + tHeight/2
-                                let bottomBound = plot.maxY - gap - tHeight/2
-                                let aboveY = absPoint.y - gap - tHeight/2
-                                let belowY = absPoint.y + gap + tHeight/2
+                                let topBound = plot.minY + gap + tHeight / 2
+                                let bottomBound = plot.maxY - gap - tHeight / 2
+                                let aboveY = absPoint.y - gap - tHeight / 2
+                                let belowY = absPoint.y + gap + tHeight / 2
                                 let chosenY: CGFloat =
-                                    aboveY >= topBound ? aboveY : (belowY <= bottomBound ? belowY : min(max(absPoint.y, topBound), bottomBound))
+                                    aboveY >= topBound
+                                    ? aboveY
+                                    : (belowY <= bottomBound
+                                        ? belowY : min(max(absPoint.y, topBound), bottomBound))
                                 VStack(spacing: 6) {
                                     tooltip(for: p)
                                 }
@@ -522,7 +562,7 @@ struct AssetOverviewCard: View {
             }
         }
     }
-    
+
     // MARK: - Tooltip
     private func tooltip(for p: Point) -> some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -536,13 +576,17 @@ struct AssetOverviewCard: View {
             // Invested value
             if showInvestedSeries {
                 HStack(spacing: 6) {
-                    Circle().fill(colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6)).frame(width: 8, height: 8)
+                    Circle().fill(
+                        colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6)
+                    ).frame(width: 8, height: 8)
                     Text(p.invested, format: .currency(code: currency))
                         .font(.system(size: 13, weight: .semibold))
-                        .foregroundColor(colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
+                        .foregroundColor(
+                            colorScheme == .dark
+                                ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
                 }
             }
-            
+
             // Average per month line (for Income charts only)
             if isIncomeChart, let avgPerMonth = p.averagePerMonth {
                 HStack(spacing: 6) {
@@ -563,21 +607,28 @@ struct AssetOverviewCard: View {
                         .font(.system(size: 13, weight: .semibold))
                     Text("•")
                         .font(.system(size: 12, weight: .bold))
-                    Text((change >= 0 ? "+" : "−") + CurrencyShort.shortString(abs(change), currency: currency))
-                        .font(.system(size: 13, weight: .semibold))
+                    Text(
+                        (change >= 0 ? "+" : "−")
+                            + CurrencyShort.shortString(abs(change), currency: currency)
+                    )
+                    .font(.system(size: 13, weight: .semibold))
                 }
                 .foregroundColor(pct >= 0 ? .airbnbSuccess : .red)
             }
             Text(dateFormatter.string(from: p.date))
                 .font(.system(size: 12, weight: .medium))
-                .foregroundColor(colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
+                .foregroundColor(
+                    colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
         .background(
             RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .fill(colorScheme == .dark ? Color.black.opacity(0.9) : Color.white)
-                .shadow(color: colorScheme == .dark ? Color.black.opacity(0.4) : Color.black.opacity(0.12), radius: 10, x: 0, y: 6)
+                .shadow(
+                    color: colorScheme == .dark
+                        ? Color.black.opacity(0.4) : Color.black.opacity(0.12), radius: 10, x: 0,
+                    y: 6)
         )
         .background(
             GeometryReader { proxy in
@@ -586,19 +637,21 @@ struct AssetOverviewCard: View {
             }
         )
     }
-    
+
     // MARK: - Helpers
     private func handleHover(at location: CGPoint, proxy: ChartProxy, geo: GeometryProxy) {
         // Convert location to chart X date
         let frame = geo.frame(in: .local)
         let xPos = location.x - frame.origin.x
         if let date: Date = proxy.value(atX: xPos) {
-            if let nearest = data.min(by: { abs($0.date.timeIntervalSince(date)) < abs($1.date.timeIntervalSince(date)) }) {
+            if let nearest = data.min(by: {
+                abs($0.date.timeIntervalSince(date)) < abs($1.date.timeIntervalSince(date))
+            }) {
                 withAnimation(.easeInOut(duration: 0.15)) { selectedPoint = nearest }
             }
         }
     }
-    
+
     private var xAxisComponent: Calendar.Component {
         switch selectedRange {
         case .oneMonth: return .day
@@ -612,13 +665,13 @@ struct AssetOverviewCard: View {
     }
     private var xAxisStride: Int {
         switch selectedRange {
-        case .oneMonth: return 7             // weekly
-        case .threeMonths: return 14         // bi-weekly
-        case .sixMonths: return 30           // monthly
-        case .oneYear: return 2              // every 2 months
-        case .twoYears: return 3             // quarterly
-        case .fiveYears: return 1            // yearly
-        case .all: return 3                  // quarterly
+        case .oneMonth: return 7  // weekly
+        case .threeMonths: return 14  // bi-weekly
+        case .sixMonths: return 30  // monthly
+        case .oneYear: return 2  // every 2 months
+        case .twoYears: return 3  // quarterly
+        case .fiveYears: return 1  // yearly
+        case .all: return 3  // quarterly
         }
     }
     private func xAxisLabel(for date: Date) -> String {
@@ -647,14 +700,16 @@ struct AssetOverviewCard: View {
     // Whether to render the invested series. If every point has identical value and invested
     // (within a small tolerance to avoid floating point noise), we hide the series entirely.
     private var showInvestedSeries: Bool {
-        let epsilon: Double = 0.01 // ~1 paisa/cent tolerance
+        let epsilon: Double = 0.01  // ~1 paisa/cent tolerance
         return data.contains { abs($0.value - $0.invested) > epsilon }
     }
 
     private func sampleData(for range: Range) -> [Point] {
         let cal = Calendar.current
         let now = Date()
-        func makePoint(id: Int, date: Date, v: Double, inv: Double, avgPerMonth: Double? = nil) -> Point {
+        func makePoint(id: Int, date: Date, v: Double, inv: Double, avgPerMonth: Double? = nil)
+            -> Point
+        {
             Point(id: id, date: date, value: v, invested: inv, averagePerMonth: avgPerMonth)
         }
         switch range {
@@ -671,7 +726,7 @@ struct AssetOverviewCard: View {
             return (0..<90).map { i in
                 let date = cal.date(byAdding: .day, value: -(89 - i), to: now) ?? now
                 let invested = 980_000 + Double(i) * 3_800
-                let value = invested + 35_000 + sin(Double(i)/6.0) * 18_000
+                let value = invested + 35_000 + sin(Double(i) / 6.0) * 18_000
                 return makePoint(id: i, date: date, v: value, inv: invested)
             }
         case .sixMonths:
@@ -693,29 +748,29 @@ struct AssetOverviewCard: View {
             return (0..<24).map { i in
                 let date = cal.date(byAdding: .month, value: -(23 - i), to: now) ?? now
                 let invested = 850_000 + Double(i) * 28_000
-                let value = invested + 120_000 + sin(Double(i)/2.0) * 35_000
+                let value = invested + 120_000 + sin(Double(i) / 2.0) * 35_000
                 return makePoint(id: i, date: date, v: value, inv: invested)
             }
         case .fiveYears:
             return (0..<60).map { i in
                 let date = cal.date(byAdding: .month, value: -(59 - i), to: now) ?? now
                 let invested = 600_000 + Double(i) * 12_000
-                let value = invested + 180_000 + cos(Double(i)/3.0) * 30_000
+                let value = invested + 180_000 + cos(Double(i) / 3.0) * 30_000
                 return makePoint(id: i, date: date, v: value, inv: invested)
             }
         case .all:
             return (0..<36).map { i in
                 let date = cal.date(byAdding: .month, value: -(35 - i), to: now) ?? now
                 let invested = 500_000 + Double(i) * 16_000
-                let value = invested + 150_000 + sin(Double(i)/1.5) * 28_000
+                let value = invested + 150_000 + sin(Double(i) / 1.5) * 28_000
                 return makePoint(id: i, date: date, v: value, inv: invested)
             }
         }
     }
-    
+
     private var dateFormatter: DateFormatter {
         let df = DateFormatter()
-        df.dateFormat = "MMM d, yyyy" // show only date
+        df.dateFormat = "MMM d, yyyy"  // show only date
         return df
     }
     private var weekdayFormatter: DateFormatter {
@@ -723,24 +778,40 @@ struct AssetOverviewCard: View {
         df.dateFormat = "EEE"
         return df
     }
-    private var dayFormatter: DateFormatter { let df = DateFormatter(); df.dateFormat = "d"; return df }
-    private var monthFormatter: DateFormatter { let df = DateFormatter(); df.dateFormat = "MMM"; return df }
-    private var yearFormatter: DateFormatter { let df = DateFormatter(); df.dateFormat = "yyyy"; return df }
-    
+    private var dayFormatter: DateFormatter {
+        let df = DateFormatter()
+        df.dateFormat = "d"
+        return df
+    }
+    private var monthFormatter: DateFormatter {
+        let df = DateFormatter()
+        df.dateFormat = "MMM"
+        return df
+    }
+    private var yearFormatter: DateFormatter {
+        let df = DateFormatter()
+        df.dateFormat = "yyyy"
+        return df
+    }
+
     // MARK: - X domain from first to last data point (no extra padding)
     private var xDomain: ClosedRange<Date> {
-        guard let start = data.first?.date, let end = data.last?.date else { let now = Date(); return now...now }
+        guard let start = data.first?.date, let end = data.last?.date else {
+            let now = Date()
+            return now...now
+        }
         return start...end
     }
 
     // MARK: - Y domain with dynamic padding across both series
     private var yDomain: ClosedRange<Double> {
         guard let minV = (data.map { min($0.value, $0.invested) }.min()),
-              let maxV = (data.map { max($0.value, $0.invested) }.max()) else {
+            let maxV = (data.map { max($0.value, $0.invested) }.max())
+        else {
             return 0...1
         }
         let span = max(1, maxV - minV)
-        let pad = span * 0.08 // 8% breathing room
+        let pad = span * 0.08  // 8% breathing room
         return (minV - pad)...(maxV + pad)
     }
 
@@ -778,37 +849,46 @@ struct AssetOverviewCard: View {
 
     private func startLoading(to range: Range) {
         guard selectedEntity != nil else { return }
-        withAnimation(.easeInOut(duration: 0.15)) { isLoading = true; selectedPoint = nil }
+        withAnimation(.easeInOut(duration: 0.15)) {
+            isLoading = true
+            selectedPoint = nil
+        }
         Task { await loadChart(for: range) }
     }
 
     private func loadChart(for range: Range) async {
         guard let selectedEntity = selectedEntity else { return }
-        
+
         // Handle "Other" chart types with local data generation
         if selectedEntity.type == .other, let otherType = otherChartType {
             await generateOtherChartData(type: otherType, range: range)
             return
         }
-        
+
         do {
             let client = RestClient()
             let period = mapRangeToPeriod(range)
             let cache = SessionCache.shared
-            let cacheKey = SessionCache.ChartKey(type: selectedEntity.type, id: selectedEntity.id, period: period)
+            let cacheKey = SessionCache.ChartKey(
+                type: selectedEntity.type, id: selectedEntity.id, period: period)
             let raw: [ChartData]
             if let cached = cache.chartData[cacheKey], !cached.isEmpty {
                 raw = cached
             } else {
-                let fetched = try await client.fetchChartData(entityType: selectedEntity.type, entityId: selectedEntity.id, timePeriod: period)
+                let fetched = try await client.fetchChartData(
+                    entityType: selectedEntity.type, entityId: selectedEntity.id, timePeriod: period
+                )
                 cache.chartData[cacheKey] = fetched
                 raw = fetched
             }
             // Map to points sorted by date
-            let fmt = DateFormatter(); fmt.dateFormat = "yyyy-MM-dd"; fmt.timeZone = TimeZone(secondsFromGMT: 0)
+            let fmt = DateFormatter()
+            fmt.dateFormat = "yyyy-MM-dd"
+            fmt.timeZone = TimeZone(secondsFromGMT: 0)
             var mapped: [Point] = raw.compactMap { r in
                 guard let d = fmt.date(from: r.date) else { return nil }
-                return Point(id: r.id, date: d, value: r.value, invested: r.invested, averagePerMonth: nil)
+                return Point(
+                    id: r.id, date: d, value: r.value, invested: r.invested, averagePerMonth: nil)
             }.sorted { $0.date < $1.date }
             mapped = downsampleEvenTime(mapped, maxCount: 100)
             await MainActor.run {
@@ -821,12 +901,12 @@ struct AssetOverviewCard: View {
             // TODO: surface error state if needed
         }
     }
-    
+
     private func generateOtherChartData(type: OtherChartType, range: Range) async {
         let cal = Calendar.current
         let now = Date()
         let startDate: Date
-        
+
         switch range {
         case .oneMonth: startDate = cal.date(byAdding: .month, value: -1, to: now) ?? now
         case .threeMonths: startDate = cal.date(byAdding: .month, value: -3, to: now) ?? now
@@ -836,7 +916,7 @@ struct AssetOverviewCard: View {
         case .fiveYears: startDate = cal.date(byAdding: .year, value: -5, to: now) ?? now
         case .all: startDate = cal.date(byAdding: .year, value: -10, to: now) ?? now
         }
-        
+
         switch type {
         case .income:
             let points = generateIncomeChartData(from: startDate, to: now)
@@ -850,142 +930,157 @@ struct AssetOverviewCard: View {
             await fetchNetWorthDataForSavedPercentage(from: startDate, to: now, range: range)
         }
     }
-    
+
     private func generateIncomeChartData(from startDate: Date, to endDate: Date) -> [Point] {
         // Use filtered incomes based on current filter selections
         let allIncomes = filteredIncomes.sorted { $0.creditedDate < $1.creditedDate }
-        
+
         // Calculate cumulative income up to start date (for proper baseline)
         let baselineIncome = allIncomes.filter { $0.creditedDate < startDate }
             .reduce(0.0) { $0 + $1.netAmount }
-        
+
         // Get incomes within the selected range
         let rangeIncomes = allIncomes.filter { income in
             income.creditedDate >= startDate && income.creditedDate <= endDate
         }
-        
+
         // Find the very first income date across all incomes (not just filtered)
         let allIncomesForBaseline = lookup.incomes.sorted { $0.creditedDate < $1.creditedDate }
         guard let firstIncomeDate = allIncomesForBaseline.first?.creditedDate else {
             return []
         }
-        
+
         var cumulativeIncome = baselineIncome
         return rangeIncomes.enumerated().map { index, income in
             cumulativeIncome += income.netAmount
-            
+
             // Calculate average per calendar month
             // Formula: total cumulative net income until that chart day / sum of total days from the very 1st day to until that chart day * 1 calendar day (30.44 days average)
-            let totalDaysFromFirst = Calendar.current.dateComponents([.day], from: firstIncomeDate, to: income.creditedDate).day ?? 0
-            let averagePerDay = totalDaysFromFirst > 0 ? cumulativeIncome / Double(totalDaysFromFirst) : 0
-            let averagePerMonth = averagePerDay * 30.44 // Average days per month
-            
+            let totalDaysFromFirst =
+                Calendar.current.dateComponents(
+                    [.day], from: firstIncomeDate, to: income.creditedDate
+                ).day ?? 0
+            let averagePerDay =
+                totalDaysFromFirst > 0 ? cumulativeIncome / Double(totalDaysFromFirst) : 0
+            let averagePerMonth = averagePerDay * 30.44  // Average days per month
+
             return Point(
                 id: index,
                 date: income.creditedDate,
                 value: cumulativeIncome,
-                invested: cumulativeIncome, // For income, invested = value (no separate investment concept)
+                invested: cumulativeIncome,  // For income, invested = value (no separate investment concept)
                 averagePerMonth: averagePerMonth
             )
         }
     }
-    
-    private func generateSavedPercentageData(from startDate: Date, to endDate: Date, range: Range) -> [Point] {
+
+    private func generateSavedPercentageData(from startDate: Date, to endDate: Date, range: Range)
+        -> [Point]
+    {
         // First, fetch net worth data from "All Watchlists" chart data
         Task {
             await fetchNetWorthDataForSavedPercentage(from: startDate, to: endDate, range: range)
         }
-        
+
         // Return empty for now - will be populated by async fetch
         return []
     }
-    
-    private func fetchNetWorthDataForSavedPercentage(from startDate: Date, to endDate: Date, range: Range) async {
+
+    private func fetchNetWorthDataForSavedPercentage(
+        from startDate: Date, to endDate: Date, range: Range
+    ) async {
         do {
             let client = RestClient()
             let period = mapRangeToPeriod(range)
-            
+
             // Find "All" watchlist ID from lookup store
-            guard let allWatchlist = lookup.watchlists.first(where: { 
-                $0.name.trimmingCharacters(in: .whitespacesAndNewlines).localizedCaseInsensitiveCompare("All") == .orderedSame 
-            }) else {
+            guard
+                let allWatchlist = lookup.watchlists.first(where: {
+                    $0.name.trimmingCharacters(in: .whitespacesAndNewlines)
+                        .localizedCaseInsensitiveCompare("All") == .orderedSame
+                })
+            else {
                 await MainActor.run { self.isLoading = false }
                 return
             }
-            
+
             // Fetch chart data for "All Watchlists" to get net worth progression
             let netWorthData = try await client.fetchChartData(
-                entityType: .watchlist, 
-                entityId: allWatchlist.id, 
+                entityType: .watchlist,
+                entityId: allWatchlist.id,
                 timePeriod: period
             )
-            
+
             // Convert to date-indexed dictionary for lookup
             let fmt = DateFormatter()
             fmt.dateFormat = "yyyy-MM-dd"
             fmt.timeZone = TimeZone(secondsFromGMT: 0)
-            
+
             var netWorthByDate: [Date: Double] = [:]
             for data in netWorthData {
                 if let date = fmt.date(from: data.date) {
                     netWorthByDate[date] = data.value
                 }
             }
-            
+
             // Generate savings percentage points for all available net worth dates
             var points: [Point] = []
             let sortedNetWorthDates = netWorthByDate.keys.sorted()
-            
+
             for (index, date) in sortedNetWorthDates.enumerated() {
                 // Only include dates within our selected range
                 guard date >= startDate && date <= endDate else { continue }
-                
+
                 // Get net worth for this date
                 let netWorth = netWorthByDate[date] ?? 0
-                
+
                 // Calculate cumulative net income up to this date
                 let cumulativeNetIncome = lookup.incomes.filter { $0.creditedDate <= date }
                     .reduce(0.0) { $0 + $1.netAmount }
-                
+
                 // Calculate savings percentage: Net worth / Cumulative net income * 100
-                let savedPercentage = cumulativeNetIncome > 0 ? (netWorth / cumulativeNetIncome) * 100 : 0
-                
-                points.append(Point(
-                    id: index,
-                    date: date,
-                    value: savedPercentage,
-                    invested: savedPercentage,
-                    averagePerMonth: nil
-                ))
+                let savedPercentage =
+                    cumulativeNetIncome > 0 ? (netWorth / cumulativeNetIncome) * 100 : 0
+
+                points.append(
+                    Point(
+                        id: index,
+                        date: date,
+                        value: savedPercentage,
+                        invested: savedPercentage,
+                        averagePerMonth: nil
+                    ))
             }
-            
+
             // Apply downsampling to max 100 points (same as other chart types)
             let downsampledPoints = downsampleEvenTime(points, maxCount: 100)
-            
+
             await MainActor.run {
                 self.selectedRange = range
                 self.data = downsampledPoints
                 self.isLoading = false
             }
-            
+
         } catch {
             await MainActor.run { self.isLoading = false }
         }
     }
-    
-    private func getNetWorthForDate(_ targetDate: Date, from netWorthByDate: [Date: Double], netWorthData: [ChartData]) -> Double {
+
+    private func getNetWorthForDate(
+        _ targetDate: Date, from netWorthByDate: [Date: Double], netWorthData: [ChartData]
+    ) -> Double {
         // Try exact match first
         if let exactValue = netWorthByDate[targetDate] {
             return exactValue
         }
-        
+
         // Find closest dates for interpolation
         let sortedDates = netWorthByDate.keys.sorted()
-        
+
         // Find the closest date before or equal to target
         var beforeDate: Date?
         var afterDate: Date?
-        
+
         for date in sortedDates {
             if date <= targetDate {
                 beforeDate = date
@@ -994,7 +1089,7 @@ struct AssetOverviewCard: View {
                 break
             }
         }
-        
+
         // Use the closest available value
         if let before = beforeDate, let beforeValue = netWorthByDate[before] {
             if let after = afterDate, let afterValue = netWorthByDate[after] {
@@ -1011,7 +1106,7 @@ struct AssetOverviewCard: View {
             // Use after value
             return afterValue
         }
-        
+
         // Fallback to current account values if no chart data available
         return lookup.accounts.reduce(0.0) { $0 + $1.currentDayValue }
     }
@@ -1020,7 +1115,8 @@ struct AssetOverviewCard: View {
     // For each target time, pick the nearest point; always includes first and last.
     private func downsampleEvenTime(_ points: [Point], maxCount: Int) -> [Point] {
         guard points.count > maxCount, maxCount >= 2,
-              let first = points.first, let last = points.last else { return points }
+            let first = points.first, let last = points.last
+        else { return points }
         let k = maxCount
         let total = last.date.timeIntervalSince(first.date)
         guard total > 0 else { return Array(points.prefix(k)) }
@@ -1047,7 +1143,8 @@ struct AssetOverviewCard: View {
         var seen = Set<Date>()
         let unique = result.filter { p in
             if seen.contains(p.date) { return false }
-            seen.insert(p.date); return true
+            seen.insert(p.date)
+            return true
         }
         return unique
     }
@@ -1066,7 +1163,7 @@ struct AssetOverviewCard: View {
 }
 
 // MARK: - Income Filter Sheet (Reusable Component)
-struct IncomeFilterSheet: View {
+private struct IncomeFilterSheet: View {
     let types: [String]
     let tags: [String]
     let years: [Int]
@@ -1077,130 +1174,205 @@ struct IncomeFilterSheet: View {
     @Binding var selectedFYs: Set<FinancialYear>
     let onDone: () -> Void
     let onClear: () -> Void
-    
+    @State private var query: String = ""
+
     var body: some View {
         ScrollView {
-            LazyVStack(spacing: 0) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Types")
-                        .font(.headline)
-                        .padding(.horizontal)
-                    
-                    ForEach(types, id: \.self) { type in
-                        Button(action: {
-                            if selectedTypes.contains(type) {
-                                selectedTypes.remove(type)
-                            } else {
-                                selectedTypes.insert(type)
-                            }
-                        }) {
-                            HStack {
-                                Text(type)
-                                Spacer()
-                                if selectedTypes.contains(type) {
-                                    Image(systemName: "checkmark")
-                                        .foregroundColor(.airbnbPrimary)
+            VStack(spacing: 16) {
+                AppSearchBar(text: $query, placeholder: "Search")
+                    .padding(.top, 8)
+
+                // Source (chips)
+                SettingsGroup(title: sourceTitle) {
+                    let filtered = types.filter {
+                        let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
+                        return q.isEmpty ? true : $0.localizedCaseInsensitiveContains(q)
+                    }
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 96), spacing: 8)], spacing: 8) {
+                        ForEach(filtered, id: \.self) { item in
+                            FilterChip(title: item, isOn: selectedTypes.contains(item)) {
+                                withAnimation(.snappy) {
+                                    if selectedTypes.contains(item) {
+                                        selectedTypes.remove(item)
+                                    } else {
+                                        selectedTypes.insert(item)
+                                    }
                                 }
+                                Haptics.selection()
                             }
-                            .padding()
                         }
-                        .foregroundColor(.primary)
                     }
                 }
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Tags")
-                        .font(.headline)
-                        .padding(.horizontal)
-                    
-                    ForEach(tags, id: \.self) { tag in
-                        Button(action: {
-                            if selectedTags.contains(tag) {
-                                selectedTags.remove(tag)
-                            } else {
-                                selectedTags.insert(tag)
-                            }
-                        }) {
-                            HStack {
-                                Text(tag)
-                                Spacer()
-                                if selectedTags.contains(tag) {
-                                    Image(systemName: "checkmark")
-                                        .foregroundColor(.airbnbPrimary)
+
+                // Tag (chips)
+                SettingsGroup(title: tagTitle) {
+                    let filtered = tags.filter {
+                        let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
+                        return q.isEmpty ? true : $0.localizedCaseInsensitiveContains(q)
+                    }
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 120), spacing: 8)], spacing: 8)
+                    {
+                        ForEach(filtered, id: \.self) { item in
+                            FilterChip(title: item, isOn: selectedTags.contains(item)) {
+                                withAnimation(.snappy) {
+                                    if selectedTags.contains(item) {
+                                        selectedTags.remove(item)
+                                    } else {
+                                        selectedTags.insert(item)
+                                    }
                                 }
+                                Haptics.selection()
                             }
-                            .padding()
                         }
-                        .foregroundColor(.primary)
                     }
                 }
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Years")
-                        .font(.headline)
-                        .padding(.horizontal)
-                    
-                    ForEach(years, id: \.self) { year in
-                        Button(action: {
-                            if selectedYears.contains(year) {
-                                selectedYears.remove(year)
-                            } else {
-                                selectedYears.insert(year)
-                            }
-                        }) {
-                            HStack {
-                                Text("\(year)")
-                                Spacer()
-                                if selectedYears.contains(year) {
-                                    Image(systemName: "checkmark")
-                                        .foregroundColor(.airbnbPrimary)
+
+                // Year (list with highlight)
+                SettingsGroup(title: yearTitle) {
+                    let filteredYears = years.filter {
+                        let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
+                        return q.isEmpty ? true : String($0).localizedCaseInsensitiveContains(q)
+                    }.sorted(by: >)
+                    VStack(spacing: 0) {
+                        ForEach(filteredYears.indices, id: \.self) { idx in
+                            let y = filteredYears[idx]
+                            let isSel = selectedYears.contains(y)
+                            Button {
+                                withAnimation(.snappy) {
+                                    if isSel {
+                                        selectedYears.remove(y)
+                                    } else {
+                                        selectedYears.insert(y)
+                                    }
                                 }
+                                Haptics.selection()
+                            } label: {
+                                HStack {
+                                    Text(String(y))
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                    if isSel {
+                                        Image(systemName: "checkmark")
+                                            .font(.footnote.weight(.semibold))
+                                            .foregroundColor(.airbnbPrimary)
+                                            .padding(6)
+                                            .background(
+                                                Circle().fill(Color.airbnbPrimary.opacity(0.12)))
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .contentShape(Rectangle())
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 10)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                        .fill(isSel ? Color.airbnbPrimary.opacity(0.06) : .clear)
+                                )
                             }
-                            .padding()
+                            .buttonStyle(.plain)
+                            if idx < filteredYears.count - 1 {
+                                Rectangle().fill(Color.subtleSeparator).frame(height: 0.5)
+                                    .padding(.horizontal, 12)
+                            }
                         }
-                        .foregroundColor(.primary)
                     }
                 }
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Financial Years")
-                        .font(.headline)
-                        .padding(.horizontal)
-                    
-                    ForEach(fys, id: \.self) { fy in
-                        Button(action: {
-                            if selectedFYs.contains(fy) {
-                                selectedFYs.remove(fy)
-                            } else {
-                                selectedFYs.insert(fy)
-                            }
-                        }) {
-                            HStack {
-                                Text(fy.title)
-                                Spacer()
-                                if selectedFYs.contains(fy) {
-                                    Image(systemName: "checkmark")
-                                        .foregroundColor(.airbnbPrimary)
+
+                // Financial year (list with highlight)
+                SettingsGroup(title: fyTitle) {
+                    let filtered = fys.filter {
+                        let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
+                        return q.isEmpty ? true : $0.title.localizedCaseInsensitiveContains(q)
+                    }
+                    VStack(spacing: 0) {
+                        ForEach(filtered.indices, id: \.self) { idx in
+                            let fy = filtered[idx]
+                            let isSel = selectedFYs.contains(fy)
+                            Button {
+                                withAnimation(.snappy) {
+                                    if isSel {
+                                        selectedFYs.remove(fy)
+                                    } else {
+                                        selectedFYs.insert(fy)
+                                    }
                                 }
+                                Haptics.selection()
+                            } label: {
+                                HStack {
+                                    Text(fy.title)
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                    if isSel {
+                                        Image(systemName: "checkmark")
+                                            .font(.footnote.weight(.semibold))
+                                            .foregroundColor(.airbnbPrimary)
+                                            .padding(6)
+                                            .background(
+                                                Circle().fill(Color.airbnbPrimary.opacity(0.12)))
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .contentShape(Rectangle())
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 10)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                        .fill(isSel ? Color.airbnbPrimary.opacity(0.06) : .clear)
+                                )
                             }
-                            .padding()
+                            .buttonStyle(.plain)
+                            if idx < filtered.count - 1 {
+                                Rectangle().fill(Color.subtleSeparator).frame(height: 0.5)
+                                    .padding(.horizontal, 12)
+                            }
                         }
-                        .foregroundColor(.primary)
                     }
                 }
+
+                Color.clear.frame(height: 8)
             }
+            .padding(.horizontal, 16)
+            .padding(.bottom, 8)
         }
-        .navigationTitle("Filters")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Close") { onDone() }
+        .background(Color.canvasBackground)
+        .safeAreaInset(edge: .bottom) {
+            HStack(spacing: 12) {
+                Button(action: {
+                    onClear()
+                    onDone()
+                }) {
+                    Text("Clear filters").bold()
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .foregroundColor(.airbnbPrimary)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .fill(Color.elevatedBackground)
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .stroke(Color.subtleSeparator, lineWidth: 1)
+                        )
+                }
+                .buttonStyle(PressableButtonStyle())
             }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Clear") { onClear() }
-            }
+            .padding(16)
+            .background(Color.canvasBackground.ignoresSafeArea(edges: .bottom))
         }
-        .toolbarBackground(Color.canvasBackground, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
+        .tint(.airbnbPrimary)
+    }
+
+    // MARK: - Helpers (titles and summaries)
+    private var sourceTitle: String {
+        selectedTypes.isEmpty ? "Source" : "Source (\(selectedTypes.count))"
+    }
+    private var tagTitle: String {
+        selectedTags.isEmpty ? "Tag" : "Tag (\(selectedTags.count))"
+    }
+    private var yearTitle: String {
+        selectedYears.isEmpty ? "Year" : "Year (\(selectedYears.count))"
+    }
+    private var fyTitle: String {
+        selectedFYs.isEmpty ? "Financial year" : "Financial year (\(selectedFYs.count))"
     }
 }
