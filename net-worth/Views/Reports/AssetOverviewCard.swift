@@ -1,6 +1,9 @@
 import SwiftUI
 import Charts
 
+// MARK: - Type Aliases
+typealias FinancialYear = IncomeController.FinancialYear
+
 // MARK: - Asset Overview Card (matches the attached design)
 struct AssetOverviewCard: View {
     // MARK: - Types
@@ -28,6 +31,7 @@ struct AssetOverviewCard: View {
         let date: Date
         let value: Double
         let invested: Double
+        let averagePerMonth: Double?
     }
     
     // MARK: - State
@@ -48,6 +52,11 @@ struct AssetOverviewCard: View {
     @EnvironmentObject private var lookup: LookupStore
     // Live data
     @State private var data: [Point] = []
+    @State private var showFilterSheet = false
+    @State private var selectedTypes: Set<String> = []
+    @State private var selectedTags: Set<String> = []
+    @State private var selectedYears: Set<Int> = []
+    @State private var selectedFYs: Set<FinancialYear> = []
     
     // Init allowing caller to specify what to chart
     init() {}
@@ -61,11 +70,89 @@ struct AssetOverviewCard: View {
         return last - first
     }
     
+    // MARK: - Helper Properties
+    private var isIncomeChart: Bool {
+        return otherChartType == .income
+    }
+    
+    private var filteredIncomes: [Income] {
+        guard isIncomeChart else { return lookup.incomes }
+        
+        return lookup.incomes.filter { income in
+            // Filter by types (income sources)
+            if !selectedTypes.isEmpty {
+                let sourceName = lookup.incomeSources.first { $0.id == income.incomeSourceId }?.name ?? ""
+                if !selectedTypes.contains(sourceName) {
+                    return false
+                }
+            }
+            
+            // Filter by tags
+            if !selectedTags.isEmpty {
+                let tagName = lookup.incomeTags.first { $0.id == income.incomeTagId }?.name ?? ""
+                if !selectedTags.contains(tagName) {
+                    return false
+                }
+            }
+            
+            // Filter by years
+            if !selectedYears.isEmpty {
+                let year = Calendar.current.component(.year, from: income.creditedDate)
+                if !selectedYears.contains(year) {
+                    return false
+                }
+            }
+            
+            // Filter by financial years
+            if !selectedFYs.isEmpty {
+                let cal = Calendar.current
+                let comp = cal.dateComponents([.year, .month], from: income.creditedDate)
+                guard let y = comp.year, let m = comp.month else { return true }
+                let startYear = m >= 4 ? y : (y - 1)
+                let fy = IncomeController.FinancialYear(startYear: startYear)
+                if !selectedFYs.contains(fy) {
+                    return false
+                }
+            }
+            
+            return true
+        }
+    }
+    
+    private var uniqueTypes: [String] {
+        let sourceIds = Set(lookup.incomes.map { $0.incomeSourceId })
+        return lookup.incomeSources.filter { sourceIds.contains($0.id) }.map { $0.name }.sorted()
+    }
+    
+    private var uniqueTags: [String] {
+        let tagIds = Set(lookup.incomes.map { $0.incomeTagId })
+        return lookup.incomeTags.filter { tagIds.contains($0.id) }.map { $0.name }.sorted()
+    }
+    
+    private var availableYears: [Int] {
+        let years = lookup.incomes.map { Calendar.current.component(.year, from: $0.creditedDate) }
+        return Array(Set(years)).sorted(by: >)
+    }
+    
+    private var availableFYs: [FinancialYear] {
+        let cal = Calendar.current
+        let startYears: [Int] = lookup.incomes.map { income in
+            let comp = cal.dateComponents([.year, .month], from: income.creditedDate)
+            guard let y = comp.year, let m = comp.month else { return 0 }
+            return m >= 4 ? y : (y - 1)
+        }
+        let setYears = Set(startYears.filter { $0 > 0 })
+        return setYears.map { IncomeController.FinancialYear(startYear: $0) }.sorted { $0.startYear > $1.startYear }
+    }
+    
     // MARK: - Body
     var body: some View {
         VStack(spacing: 16) {
             header
             entitySelectorBar
+            if isIncomeChart {
+                incomeFiltersBar
+            }
             rangeSelector
             chart
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -74,6 +161,36 @@ struct AssetOverviewCard: View {
         .padding(16)
         .elevatedCardBackground(cornerRadius: 24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .sheet(isPresented: $showFilterSheet) {
+            NavigationStack {
+                IncomeFilterSheet(
+                    types: uniqueTypes,
+                    tags: uniqueTags,
+                    years: availableYears,
+                    fys: availableFYs,
+                    selectedTypes: $selectedTypes,
+                    selectedTags: $selectedTags,
+                    selectedYears: $selectedYears,
+                    selectedFYs: $selectedFYs
+                ) {
+                    showFilterSheet = false
+                } onClear: {
+                    selectedTypes.removeAll()
+                    selectedTags.removeAll()
+                    selectedYears.removeAll()
+                    selectedFYs.removeAll()
+                }
+                .navigationTitle("Filters")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Close") { showFilterSheet = false }
+                    }
+                }
+                .toolbarBackground(Color.canvasBackground, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
+            }
+        }
     }
     
     // MARK: - Header (title + big value + green deltas)
@@ -164,6 +281,64 @@ struct AssetOverviewCard: View {
         .frame(height: 36)
     }
     
+    // MARK: - Income Filters Bar
+    private var incomeFiltersBar: some View {
+        HStack(spacing: 8) {
+            let activeCount = selectedTypes.count + selectedTags.count + selectedYears.count + selectedFYs.count
+            
+            // Filters button
+            Button {
+                showFilterSheet = true
+            } label: {
+                HStack(spacing: 8) {
+                    Image(
+                        systemName: activeCount == 0
+                            ? "line.3.horizontal.decrease.circle"
+                            : "line.3.horizontal.decrease.circle.fill")
+                }
+                .font(.subheadline.weight(.semibold))
+                .foregroundColor(.airbnbPrimary)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 12)
+                .background(Capsule().fill(Color.airbnbPrimary.opacity(0.12)))
+            }
+            .buttonStyle(PressableButtonStyle())
+
+            Spacer(minLength: 0)
+
+            // Clear button
+            if activeCount > 0 {
+                Button {
+                    withAnimation(.snappy) {
+                        selectedTypes.removeAll()
+                        selectedTags.removeAll()
+                        selectedYears.removeAll()
+                        selectedFYs.removeAll()
+                    }
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "xmark.circle.fill").font(.subheadline)
+                        Text("Clear").font(.subheadline.weight(.semibold))
+                    }
+                    .foregroundColor(.airbnbPrimary)
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 12)
+                    .background(Capsule().fill(Color.airbnbPrimary.opacity(0.12)))
+                }
+                .buttonStyle(PressableButtonStyle())
+            }
+        }
+        .onChange(of: selectedTypes) { reloadIncomeChart() }
+        .onChange(of: selectedTags) { reloadIncomeChart() }
+        .onChange(of: selectedYears) { reloadIncomeChart() }
+        .onChange(of: selectedFYs) { reloadIncomeChart() }
+    }
+    
+    private func reloadIncomeChart() {
+        guard isIncomeChart else { return }
+        startLoading(to: selectedRange)
+    }
+    
     // MARK: - Entity Selector + Chart
     private var entitySelectorBar: some View {
         HStack {
@@ -218,6 +393,18 @@ struct AssetOverviewCard: View {
                     )
                     .lineStyle(StrokeStyle(lineWidth: valueLineWidth, lineCap: .round, lineJoin: .round))
                     .foregroundStyle(colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
+                    .interpolationMethod(.monotone)
+                }
+                
+                // Average per month line (for Income charts only)
+                if isIncomeChart, let avgPerMonth = point.averagePerMonth {
+                    LineMark(
+                        x: .value("Date", point.date),
+                        y: .value("Average per Month", avgPerMonth),
+                        series: .value("Average per Month", "Average per Month")
+                    )
+                    .lineStyle(StrokeStyle(lineWidth: 1.5, lineCap: .round, lineJoin: .round, dash: [5, 3]))
+                    .foregroundStyle(Color.orange)
                     .interpolationMethod(.monotone)
                 }
             }
@@ -355,6 +542,16 @@ struct AssetOverviewCard: View {
                         .foregroundColor(colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
                 }
             }
+            
+            // Average per month line (for Income charts only)
+            if isIncomeChart, let avgPerMonth = p.averagePerMonth {
+                HStack(spacing: 6) {
+                    Circle().fill(Color.orange).frame(width: 8, height: 8)
+                    Text(avgPerMonth, format: .currency(code: currency))
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(Color.orange)
+                }
+            }
             // Profit/Loss percentage vs invested (only when invested differs from value across the period)
             if showInvestedSeries {
                 let base = p.invested
@@ -457,8 +654,8 @@ struct AssetOverviewCard: View {
     private func sampleData(for range: Range) -> [Point] {
         let cal = Calendar.current
         let now = Date()
-        func makePoint(id: Int, date: Date, v: Double, inv: Double) -> Point {
-            Point(id: id, date: date, value: v, invested: inv)
+        func makePoint(id: Int, date: Date, v: Double, inv: Double, avgPerMonth: Double? = nil) -> Point {
+            Point(id: id, date: date, value: v, invested: inv, averagePerMonth: avgPerMonth)
         }
         switch range {
         case .oneMonth:
@@ -611,7 +808,7 @@ struct AssetOverviewCard: View {
             let fmt = DateFormatter(); fmt.dateFormat = "yyyy-MM-dd"; fmt.timeZone = TimeZone(secondsFromGMT: 0)
             var mapped: [Point] = raw.compactMap { r in
                 guard let d = fmt.date(from: r.date) else { return nil }
-                return Point(id: r.id, date: d, value: r.value, invested: r.invested)
+                return Point(id: r.id, date: d, value: r.value, invested: r.invested, averagePerMonth: nil)
             }.sorted { $0.date < $1.date }
             mapped = downsampleEvenTime(mapped, maxCount: 100)
             await MainActor.run {
@@ -655,8 +852,8 @@ struct AssetOverviewCard: View {
     }
     
     private func generateIncomeChartData(from startDate: Date, to endDate: Date) -> [Point] {
-        // Get all incomes sorted by date
-        let allIncomes = lookup.incomes.sorted { $0.creditedDate < $1.creditedDate }
+        // Use filtered incomes based on current filter selections
+        let allIncomes = filteredIncomes.sorted { $0.creditedDate < $1.creditedDate }
         
         // Calculate cumulative income up to start date (for proper baseline)
         let baselineIncome = allIncomes.filter { $0.creditedDate < startDate }
@@ -667,14 +864,28 @@ struct AssetOverviewCard: View {
             income.creditedDate >= startDate && income.creditedDate <= endDate
         }
         
+        // Find the very first income date across all incomes (not just filtered)
+        let allIncomesForBaseline = lookup.incomes.sorted { $0.creditedDate < $1.creditedDate }
+        guard let firstIncomeDate = allIncomesForBaseline.first?.creditedDate else {
+            return []
+        }
+        
         var cumulativeIncome = baselineIncome
         return rangeIncomes.enumerated().map { index, income in
             cumulativeIncome += income.netAmount
+            
+            // Calculate average per calendar month
+            // Formula: total cumulative net income until that chart day / sum of total days from the very 1st day to until that chart day * 1 calendar day (30.44 days average)
+            let totalDaysFromFirst = Calendar.current.dateComponents([.day], from: firstIncomeDate, to: income.creditedDate).day ?? 0
+            let averagePerDay = totalDaysFromFirst > 0 ? cumulativeIncome / Double(totalDaysFromFirst) : 0
+            let averagePerMonth = averagePerDay * 30.44 // Average days per month
+            
             return Point(
                 id: index,
                 date: income.creditedDate,
                 value: cumulativeIncome,
-                invested: cumulativeIncome // For income, invested = value (no separate investment concept)
+                invested: cumulativeIncome, // For income, invested = value (no separate investment concept)
+                averagePerMonth: averagePerMonth
             )
         }
     }
@@ -743,7 +954,8 @@ struct AssetOverviewCard: View {
                     id: index,
                     date: date,
                     value: savedPercentage,
-                    invested: savedPercentage
+                    invested: savedPercentage,
+                    averagePerMonth: nil
                 ))
             }
             
@@ -853,13 +1065,142 @@ struct AssetOverviewCard: View {
     }
 }
 
-#Preview {
-    ScrollView {
-        AssetOverviewCard()
-            .padding()
-            .background(
-                LinearGradient(colors: [Color.blue.opacity(0.08), Color.clear], startPoint: .top, endPoint: .bottom)
-                    .ignoresSafeArea()
-            )
+// MARK: - Income Filter Sheet (Reusable Component)
+struct IncomeFilterSheet: View {
+    let types: [String]
+    let tags: [String]
+    let years: [Int]
+    let fys: [FinancialYear]
+    @Binding var selectedTypes: Set<String>
+    @Binding var selectedTags: Set<String>
+    @Binding var selectedYears: Set<Int>
+    @Binding var selectedFYs: Set<FinancialYear>
+    let onDone: () -> Void
+    let onClear: () -> Void
+    
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Types")
+                        .font(.headline)
+                        .padding(.horizontal)
+                    
+                    ForEach(types, id: \.self) { type in
+                        Button(action: {
+                            if selectedTypes.contains(type) {
+                                selectedTypes.remove(type)
+                            } else {
+                                selectedTypes.insert(type)
+                            }
+                        }) {
+                            HStack {
+                                Text(type)
+                                Spacer()
+                                if selectedTypes.contains(type) {
+                                    Image(systemName: "checkmark")
+                                        .foregroundColor(.airbnbPrimary)
+                                }
+                            }
+                            .padding()
+                        }
+                        .foregroundColor(.primary)
+                    }
+                }
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Tags")
+                        .font(.headline)
+                        .padding(.horizontal)
+                    
+                    ForEach(tags, id: \.self) { tag in
+                        Button(action: {
+                            if selectedTags.contains(tag) {
+                                selectedTags.remove(tag)
+                            } else {
+                                selectedTags.insert(tag)
+                            }
+                        }) {
+                            HStack {
+                                Text(tag)
+                                Spacer()
+                                if selectedTags.contains(tag) {
+                                    Image(systemName: "checkmark")
+                                        .foregroundColor(.airbnbPrimary)
+                                }
+                            }
+                            .padding()
+                        }
+                        .foregroundColor(.primary)
+                    }
+                }
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Years")
+                        .font(.headline)
+                        .padding(.horizontal)
+                    
+                    ForEach(years, id: \.self) { year in
+                        Button(action: {
+                            if selectedYears.contains(year) {
+                                selectedYears.remove(year)
+                            } else {
+                                selectedYears.insert(year)
+                            }
+                        }) {
+                            HStack {
+                                Text("\(year)")
+                                Spacer()
+                                if selectedYears.contains(year) {
+                                    Image(systemName: "checkmark")
+                                        .foregroundColor(.airbnbPrimary)
+                                }
+                            }
+                            .padding()
+                        }
+                        .foregroundColor(.primary)
+                    }
+                }
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Financial Years")
+                        .font(.headline)
+                        .padding(.horizontal)
+                    
+                    ForEach(fys, id: \.self) { fy in
+                        Button(action: {
+                            if selectedFYs.contains(fy) {
+                                selectedFYs.remove(fy)
+                            } else {
+                                selectedFYs.insert(fy)
+                            }
+                        }) {
+                            HStack {
+                                Text(fy.title)
+                                Spacer()
+                                if selectedFYs.contains(fy) {
+                                    Image(systemName: "checkmark")
+                                        .foregroundColor(.airbnbPrimary)
+                                }
+                            }
+                            .padding()
+                        }
+                        .foregroundColor(.primary)
+                    }
+                }
+            }
+        }
+        .navigationTitle("Filters")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close") { onDone() }
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Clear") { onClear() }
+            }
+        }
+        .toolbarBackground(Color.canvasBackground, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
     }
 }
