@@ -41,6 +41,7 @@ struct SettingsView: View {
                     AppearanceCard(selection: appearanceBinding)
                     PreferencesCard(userId: userId)
                     SecurityCard()
+                    BuildInfoCard()
                     AccountManagementCard(userId: userId, onLogout: logoutAndWipe)
                 }
                 .padding(16)
@@ -190,6 +191,149 @@ struct AccountProfileCard: View {
         }
         #endif
         isSignedIn = false
+    }
+}
+
+// MARK: - Build Info
+struct BuildInfoCard: View {
+    @State private var expiration: Date? = nil
+    @State private var buildInfo: (version: String, build: String, bundleId: String) = ("", "", "")
+
+    var body: some View {
+        SettingsGroup(title: "Build") {
+            VStack(spacing: 16) {
+                // App Version Row
+                HStack(spacing: 12) {
+                    ZStack {
+                        Circle().fill(Color.airbnbPrimary.opacity(0.12))
+                        Image(systemName: "app.badge")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundColor(.airbnbPrimary)
+                    }
+                    .frame(width: 32, height: 32)
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Version")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundColor(.primary)
+                        Text("\(buildInfo.version) (\(buildInfo.build))")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                    }
+                    Spacer()
+                }
+                .padding(.horizontal, 12)
+                
+                // App Expiration Section
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 12) {
+                        ZStack {
+                            Circle().fill(Color.airbnbPrimary.opacity(0.12))
+                            Image(systemName: "clock")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundColor(.airbnbPrimary)
+                        }
+                        .frame(width: 32, height: 32)
+                        
+                        VStack(alignment: .leading, spacing: 2) {
+                            let days = daysRemaining(until: expiration ?? estimatedExpiration())
+                            if days >= 0 {
+                                Text("Expires in \(days) day\(days == 1 ? "" : "s")")
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundColor(.primary)
+                            } else {
+                                Text("Expired \(-days) day\(days == -1 ? "" : "s") ago")
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundColor(.red)
+                            }
+                        }
+                        
+                        Spacer()
+                        
+                        let exp = expiration ?? estimatedExpiration()
+                        Text(badgeText(for: exp))
+                            .font(.caption.bold())
+                            .foregroundColor(.white)
+                            .padding(.vertical, 4)
+                            .padding(.horizontal, 8)
+                            .background(Capsule().fill(badgeColor(for: exp)))
+                    }
+                    
+                    // Date and time details
+                    VStack(alignment: .leading, spacing: 4) {
+                        let exp = expiration ?? estimatedExpiration()
+                        Text(formattedDate(exp))
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                        
+                        Text("at \(formattedTime(exp))")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.leading, 44)
+                }
+                .padding(.horizontal, 12)
+            }
+        }
+        .onAppear(perform: loadBuildInfo)
+    }
+
+    private func formattedDate(_ date: Date) -> String {
+        let df = DateFormatter()
+        df.dateFormat = "EEEE, dd MMM yyyy"
+        df.timeZone = TimeZone.current
+        return df.string(from: date)
+    }
+    
+    private func formattedTime(_ date: Date) -> String {
+        let tf = DateFormatter()
+        tf.dateFormat = "h:mm a"
+        tf.timeZone = TimeZone.current
+        return tf.string(from: date)
+    }
+
+    private func loadBuildInfo() {
+        // Load build info
+        buildInfo = MobileProvision.getBuildInfo()
+        
+        // Try to get actual expiration date, but don't worry if it fails
+        if expiration == nil {
+            if let mp = MobileProvision.read() {
+                self.expiration = mp.expirationDate
+            }
+        }
+    }
+    
+    private func estimatedExpiration() -> Date {
+        // Always provide a fallback expiration date based on build time + 7 days
+        if let executablePath = Bundle.main.executablePath,
+           let attributes = try? FileManager.default.attributesOfItem(atPath: executablePath),
+           let creationDate = attributes[.creationDate] as? Date {
+            return Calendar.current.date(byAdding: .day, value: 7, to: creationDate) ?? Date()
+        }
+        
+        // Ultimate fallback: 7 days from now
+        return Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date()
+    }
+
+    private func daysRemaining(until date: Date) -> Int {
+        let seconds = date.timeIntervalSinceNow
+        let daysDouble = seconds / 86400.0
+        let rounded = Int(floor(daysDouble + 0.9999))
+        return rounded
+    }
+
+    private func badgeText(for date: Date) -> String {
+        let d = daysRemaining(until: date)
+        if d >= 0 { return "\(d)d left" } else { return "Expired" }
+    }
+
+    private func badgeColor(for date: Date) -> Color {
+        let d = daysRemaining(until: date)
+        if d < 0 { return .red }
+        if d <= 2 { return .red }
+        if d <= 5 { return .orange }
+        return .green
     }
 }
 

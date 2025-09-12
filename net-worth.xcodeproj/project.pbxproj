@@ -68,6 +68,7 @@
 		7DC4221D2E545F73000D62BD /* PrivacyShieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC4221C2E545F73000D62BD /* PrivacyShieldView.swift */; };
 		7DC4221F2E54633B000D62BD /* PrivacyShieldManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC4221E2E54633B000D62BD /* PrivacyShieldManager.swift */; };
 		7DC422212E546A29000D62BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC422202E546A29000D62BD /* AppDelegate.swift */; };
+		7DC87EAC2E749417008FE870 /* MobileProvision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC87EAB2E749417008FE870 /* MobileProvision.swift */; };
 		7DCE00022E7A000100000002 /* CurrencyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCE00012E7A000100000001 /* CurrencyModels.swift */; };
 		7DCE00042E7A000100000004 /* DefaultCurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCE00032E7A000100000003 /* DefaultCurrencyView.swift */; };
 		7DECCEE62E58699D00225DDA /* AssetRowCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DECCEE52E58699D00225DDA /* AssetRowCard.swift */; };
@@ -138,6 +139,7 @@
 		7DC4221C2E545F73000D62BD /* PrivacyShieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyShieldView.swift; sourceTree = "<group>"; };
 		7DC4221E2E54633B000D62BD /* PrivacyShieldManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyShieldManager.swift; sourceTree = "<group>"; };
 		7DC422202E546A29000D62BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		7DC87EAB2E749417008FE870 /* MobileProvision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileProvision.swift; sourceTree = "<group>"; };
 		7DCE00012E7A000100000001 /* CurrencyModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyModels.swift; sourceTree = "<group>"; };
 		7DCE00032E7A000100000003 /* DefaultCurrencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCurrencyView.swift; sourceTree = "<group>"; };
 		7DECCEE52E58699D00225DDA /* AssetRowCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetRowCard.swift; sourceTree = "<group>"; };
@@ -284,6 +286,7 @@
 				7DAA00052BE3000000000005 /* Formatters.swift */,
 				7DAA00072BE3000000000007 /* Interactions.swift */,
 				7D6F68E72E5730A900E0AD02 /* LookupStore.swift */,
+				7DC87EAB2E749417008FE870 /* MobileProvision.swift */,
 				7DAA00082BE3000000000008 /* NavBarUtils.swift */,
 				7DC4221E2E54633B000D62BD /* PrivacyShieldManager.swift */,
 				7D6F68E92E5739D400E0AD02 /* ScrollToTop.swift */,
@@ -474,6 +477,7 @@
 				7DAA10062BE3000000000006 /* Design.swift in Sources */,
 				7D7A6BB92E6F17D90009C1E1 /* AssetOverviewCard.swift in Sources */,
 				7DC4221F2E54633B000D62BD /* PrivacyShieldManager.swift in Sources */,
+				7DC87EAC2E749417008FE870 /* MobileProvision.swift in Sources */,
 				7D2FBCA32E51CCDD0046FE17 /* IncomeTypesView.swift in Sources */,
 				7DAA10072BE3000000000007 /* Interactions.swift in Sources */,
 				7D4D09482E53021B00E188D0 /* RestClient.swift in Sources */,
