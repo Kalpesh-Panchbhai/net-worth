@@ -78,3 +78,4 @@ If something goes wrong, the script creates automatic backups:
 - **Build Phase**: Runs before Sources compilation
 
 The automation is now fully configured and will work automatically with every build!
+# Test change for pre-commit hook
