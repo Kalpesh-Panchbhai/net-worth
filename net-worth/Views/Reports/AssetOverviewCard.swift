@@ -32,6 +32,8 @@ struct AssetOverviewCard: View {
         let value: Double
         let invested: Double
         let averagePerMonth: Double?
+        let taxPaid: Double
+        let averageTaxPerMonth: Double?
     }
 
     // MARK: - State
@@ -57,6 +59,12 @@ struct AssetOverviewCard: View {
     @State private var selectedTags: Set<String> = []
     @State private var selectedYears: Set<Int> = []
     @State private var selectedFYs: Set<FinancialYear> = []
+    
+    // Chart series visibility toggles for income charts
+    @State private var showIncomeSeries: Bool = true
+    @State private var showAvgIncomeSeries: Bool = true
+    @State private var showTaxSeries: Bool = true
+    @State private var showAvgTaxSeries: Bool = true
 
     // Init allowing caller to specify what to chart
     init() {}
@@ -180,6 +188,9 @@ struct AssetOverviewCard: View {
             rangeSelector
             chart
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+            if isIncomeChart {
+                chartLegend
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .padding(16)
@@ -221,10 +232,134 @@ struct AssetOverviewCard: View {
             .presentationDragIndicator(.visible)
         }
         // Refresh chart immediately when filters change (even without changing range)
-        .onChange(of: selectedTypes) { _ in reloadIncomeChart() }
-        .onChange(of: selectedTags) { _ in reloadIncomeChart() }
-        .onChange(of: selectedYears) { _ in reloadIncomeChart() }
-        .onChange(of: selectedFYs) { _ in reloadIncomeChart() }
+        .onChange(of: selectedTypes) { reloadIncomeChart() }
+        .onChange(of: selectedTags) { reloadIncomeChart() }
+        .onChange(of: selectedYears) { reloadIncomeChart() }
+        .onChange(of: selectedFYs) { reloadIncomeChart() }
+    }
+    
+    // MARK: - Chart Legend
+    private var chartLegend: some View {
+        HStack(spacing: 0) {
+            // Income series toggle
+            Button {
+                withAnimation(.snappy) {
+                    showIncomeSeries.toggle()
+                }
+            } label: {
+                HStack(spacing: 6) {
+                    Circle()
+                        .fill(showIncomeSeries ? Color.airbnbPrimary : Color.secondary.opacity(0.3))
+                        .frame(width: 8, height: 8)
+                    Text("Income")
+                        .font(.caption.weight(.medium))
+                        .foregroundColor(showIncomeSeries ? .primary : .secondary)
+                        .strikethrough(!showIncomeSeries)
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.plain)
+            
+            // Avg Income series toggle
+            Button {
+                withAnimation(.snappy) {
+                    showAvgIncomeSeries.toggle()
+                }
+            } label: {
+                HStack(spacing: 6) {
+                    Rectangle()
+                        .fill(showAvgIncomeSeries ? Color.orange : Color.secondary.opacity(0.3))
+                        .frame(width: 12, height: 2)
+                        .overlay(
+                            Rectangle()
+                                .fill(showAvgIncomeSeries ? Color.orange : Color.secondary.opacity(0.3))
+                                .frame(width: 2, height: 2)
+                                .offset(x: -3)
+                        )
+                        .overlay(
+                            Rectangle()
+                                .fill(showAvgIncomeSeries ? Color.orange : Color.secondary.opacity(0.3))
+                                .frame(width: 2, height: 2)
+                                .offset(x: 3)
+                        )
+                    Text("Avg Income")
+                        .font(.caption.weight(.medium))
+                        .foregroundColor(showAvgIncomeSeries ? .primary : .secondary)
+                        .strikethrough(!showAvgIncomeSeries)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .fixedSize(horizontal: true, vertical: false)
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.plain)
+            
+            // Tax series toggle
+            Button {
+                withAnimation(.snappy) {
+                    showTaxSeries.toggle()
+                }
+            } label: {
+                HStack(spacing: 6) {
+                    Circle()
+                        .fill(showTaxSeries ? Color.red : Color.secondary.opacity(0.3))
+                        .frame(width: 8, height: 8)
+                    Text("Tax")
+                        .font(.caption.weight(.medium))
+                        .foregroundColor(showTaxSeries ? .primary : .secondary)
+                        .strikethrough(!showTaxSeries)
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.plain)
+            
+            // Avg Tax series toggle
+            Button {
+                withAnimation(.snappy) {
+                    showAvgTaxSeries.toggle()
+                }
+            } label: {
+                HStack(spacing: 6) {
+                    Rectangle()
+                        .fill(showAvgTaxSeries ? Color.purple : Color.secondary.opacity(0.3))
+                        .frame(width: 12, height: 2)
+                        .overlay(
+                            Rectangle()
+                                .fill(showAvgTaxSeries ? Color.purple : Color.secondary.opacity(0.3))
+                                .frame(width: 1, height: 2)
+                                .offset(x: -4)
+                        )
+                        .overlay(
+                            Rectangle()
+                                .fill(showAvgTaxSeries ? Color.purple : Color.secondary.opacity(0.3))
+                                .frame(width: 1, height: 2)
+                                .offset(x: -1)
+                        )
+                        .overlay(
+                            Rectangle()
+                                .fill(showAvgTaxSeries ? Color.purple : Color.secondary.opacity(0.3))
+                                .frame(width: 1, height: 2)
+                                .offset(x: 2)
+                        )
+                    VStack(spacing: 0) {
+                        Text("Avg Tax")
+                            .font(.caption.weight(.medium))
+                            .foregroundColor(showAvgTaxSeries ? .primary : .secondary)
+                            .strikethrough(!showAvgTaxSeries)
+                            .lineLimit(1)
+                    }
+                    .fixedSize(horizontal: true, vertical: false)
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 8)
     }
 
     // MARK: - Header (title + big value + green deltas)
@@ -493,17 +628,19 @@ struct AssetOverviewCard: View {
     private var chart: some View {
         Chart {
             ForEach(data) { point in
-                // Current value line (brand accent)
-                LineMark(
-                    x: .value("Date", point.date),
-                    y: .value("Current Value", point.value),
-                    series: .value("Current Value", "Current Value")
-                )
-                .lineStyle(
-                    StrokeStyle(lineWidth: valueLineWidth, lineCap: .round, lineJoin: .round)
-                )
-                .foregroundStyle(Color.airbnbPrimary)
-                .interpolationMethod(.monotone)
+                // Current value line (brand accent) - Income series
+                if !isIncomeChart || showIncomeSeries {
+                    LineMark(
+                        x: .value("Date", point.date),
+                        y: .value("Current Value", point.value),
+                        series: .value("Current Value", "Current Value")
+                    )
+                    .lineStyle(
+                        StrokeStyle(lineWidth: valueLineWidth, lineCap: .round, lineJoin: .round)
+                    )
+                    .foregroundStyle(Color.airbnbPrimary)
+                    .interpolationMethod(.monotone)
+                }
 
                 // Invested line (ink, subtle dashed)
                 if showInvestedSeries {
@@ -521,8 +658,22 @@ struct AssetOverviewCard: View {
                     .interpolationMethod(.monotone)
                 }
 
+                // Tax paid line (for Income charts only)
+                if isIncomeChart && showTaxSeries {
+                    LineMark(
+                        x: .value("Date", point.date),
+                        y: .value("Tax Paid", point.taxPaid),
+                        series: .value("Tax Paid", "Tax Paid")
+                    )
+                    .lineStyle(
+                        StrokeStyle(lineWidth: valueLineWidth, lineCap: .round, lineJoin: .round)
+                    )
+                    .foregroundStyle(Color.red)
+                    .interpolationMethod(.monotone)
+                }
+
                 // Average per month line (for Income charts only)
-                if isIncomeChart, let avgPerMonth = point.averagePerMonth {
+                if isIncomeChart && showAvgIncomeSeries, let avgPerMonth = point.averagePerMonth {
                     LineMark(
                         x: .value("Date", point.date),
                         y: .value("Average per Month", avgPerMonth),
@@ -533,6 +684,21 @@ struct AssetOverviewCard: View {
                             lineWidth: 1.5, lineCap: .round, lineJoin: .round, dash: [5, 3])
                     )
                     .foregroundStyle(Color.orange)
+                    .interpolationMethod(.monotone)
+                }
+
+                // Average tax per month line (for Income charts only)
+                if isIncomeChart && showAvgTaxSeries, let avgTaxPerMonth = point.averageTaxPerMonth {
+                    LineMark(
+                        x: .value("Date", point.date),
+                        y: .value("Average Tax per Month", avgTaxPerMonth),
+                        series: .value("Average Tax per Month", "Average Tax per Month")
+                    )
+                    .lineStyle(
+                        StrokeStyle(
+                            lineWidth: 1.5, lineCap: .round, lineJoin: .round, dash: [3, 2])
+                    )
+                    .foregroundStyle(Color.purple)
                     .interpolationMethod(.monotone)
                 }
             }
@@ -546,23 +712,42 @@ struct AssetOverviewCard: View {
                     )
                     .lineStyle(StrokeStyle(lineWidth: 1))
 
-                // Selection point (white base circle)
-                PointMark(
-                    x: .value("Date", sel.date),
-                    y: .value("Current Value", sel.value)
-                )
-                .symbol(Circle())
-                .foregroundStyle(Color.white)
-                .symbolSize(130)
+                // Point markers - only show if series is enabled
+                if !isIncomeChart || showIncomeSeries {
+                    PointMark(x: .value("Date", sel.date), y: .value("Value", sel.value))
+                        .foregroundStyle(Color.airbnbPrimary)
+                        .symbolSize(36)
+                }
 
-                // Selection point (accent inner circle to create ring effect)
-                PointMark(
-                    x: .value("Date", sel.date),
-                    y: .value("Current Value", sel.value)
-                )
-                .symbol(Circle())
-                .foregroundStyle(Color.airbnbPrimary)
-                .symbolSize(80)
+                if showInvestedSeries {
+                    PointMark(x: .value("Date", sel.date), y: .value("Invested", sel.invested))
+                        .foregroundStyle(
+                            colorScheme == .dark
+                                ? Color.white.opacity(0.85) : Color.black.opacity(0.6)
+                        )
+                        .symbolSize(36)
+                }
+                
+                // Tax point marker (for Income charts only)
+                if isIncomeChart && showTaxSeries {
+                    PointMark(x: .value("Date", sel.date), y: .value("Tax Paid", sel.taxPaid))
+                        .foregroundStyle(Color.red)
+                        .symbolSize(36)
+                }
+                
+                // Average income point marker (for Income charts only)
+                if isIncomeChart && showAvgIncomeSeries, let avgPerMonth = sel.averagePerMonth {
+                    PointMark(x: .value("Date", sel.date), y: .value("Average per Month", avgPerMonth))
+                        .foregroundStyle(Color.orange)
+                        .symbolSize(36)
+                }
+                
+                // Average tax point marker (for Income charts only)
+                if isIncomeChart && showAvgTaxSeries, let avgTaxPerMonth = sel.averageTaxPerMonth {
+                    PointMark(x: .value("Date", sel.date), y: .value("Average Tax per Month", avgTaxPerMonth))
+                        .foregroundStyle(Color.purple)
+                        .symbolSize(36)
+                }
             }
         }
         .chartXScale(domain: xDomain)
@@ -631,8 +816,8 @@ struct AssetOverviewCard: View {
                                     }
                                 }()
                                 let absPoint = CGPoint(x: plot.minX + x, y: plot.minY + y)
-                                // Use measured tooltip size; provide sensible fallbacks
-                                let tWidth: CGFloat = max(tooltipSize.width, 120)
+                                // Use measured tooltip size; provide sensible fallbacks + safety buffer
+                                let tWidth: CGFloat = max(tooltipSize.width, 120) + 12
                                 let tHeight: CGFloat = max(tooltipSize.height, 44)
                                 let edgeInset: CGFloat = 20
                                 let gap: CGFloat = 8
@@ -664,35 +849,74 @@ struct AssetOverviewCard: View {
 
     // MARK: - Tooltip
     private func tooltip(for p: Point) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            // Current value
-            HStack(spacing: 6) {
-                Circle().fill(Color.airbnbPrimary).frame(width: 8, height: 8)
-                Text(p.value, format: .currency(code: currency))
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(colorScheme == .dark ? .white : .black)
+        // Precompute rows outside ViewBuilder to avoid non-View expressions in the builder
+        let rows: [(color: Color, label: String, value: String)] = {
+            guard isIncomeChart else { return [] }
+            var tmp: [(Color, String, String)] = []
+            if showIncomeSeries {
+                tmp.append((.airbnbPrimary, "Income:", p.value.formatted(.currency(code: currency))))
             }
-            // Invested value
-            if showInvestedSeries {
-                HStack(spacing: 6) {
-                    Circle().fill(
-                        colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6)
-                    ).frame(width: 8, height: 8)
-                    Text(p.invested, format: .currency(code: currency))
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundColor(
-                            colorScheme == .dark
-                                ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
-                }
+            if showAvgIncomeSeries, let avgPerMonth = p.averagePerMonth {
+                tmp.append((.orange, "Avg Income:", avgPerMonth.formatted(.currency(code: currency))))
             }
+            if showTaxSeries {
+                tmp.append((.red, "Tax:", p.taxPaid.formatted(.currency(code: currency))))
+            }
+            if showAvgTaxSeries, let avgTaxPerMonth = p.averageTaxPerMonth {
+                tmp.append((.purple, "Avg Tax:", avgTaxPerMonth.formatted(.currency(code: currency))))
+            }
+            return tmp
+        }()
 
-            // Average per month line (for Income charts only)
-            if isIncomeChart, let avgPerMonth = p.averagePerMonth {
+        return VStack(alignment: .leading, spacing: 4) {
+            if isIncomeChart {
+                HStack(alignment: .top, spacing: 12) {
+                    // Left column: dot + label
+                    VStack(alignment: .leading, spacing: 6) {
+                        ForEach(Array(rows.enumerated()), id: \.offset) { _, item in
+                            HStack(spacing: 6) {
+                                Circle().fill(item.color).frame(width: 8, height: 8)
+                                Text(item.label)
+                                    .font(.system(size: 13, weight: .medium))
+                                    .foregroundColor(.secondary)
+                                    .lineLimit(1)
+                                    .fixedSize(horizontal: true, vertical: false)
+                            }
+                        }
+                    }
+                    // Right column: value (right-aligned)
+                    VStack(alignment: .trailing, spacing: 6) {
+                        ForEach(Array(rows.enumerated()), id: \.offset) { _, item in
+                            Text(item.value)
+                                .font(.system(size: 13, weight: item.label == "Income:" ? .semibold : .semibold))
+                                .foregroundColor(item.color == .airbnbPrimary ? (colorScheme == .dark ? .white : .black) : item.color)
+                                .multilineTextAlignment(.trailing)
+                        }
+                    }
+                }
+            } else {
+                // Non-income chart tooltip
+                
+                // Current value
                 HStack(spacing: 6) {
-                    Circle().fill(Color.orange).frame(width: 8, height: 8)
-                    Text(avgPerMonth, format: .currency(code: currency))
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundColor(Color.orange)
+                    Circle().fill(Color.airbnbPrimary).frame(width: 8, height: 8)
+                    Text(p.value, format: .currency(code: currency))
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(colorScheme == .dark ? .white : .black)
+                }
+                
+                // Invested value
+                if showInvestedSeries {
+                    HStack(spacing: 6) {
+                        Circle().fill(
+                            colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6)
+                        ).frame(width: 8, height: 8)
+                        Text(p.invested, format: .currency(code: currency))
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundColor(
+                                colorScheme == .dark
+                                    ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
+                    }
                 }
             }
             // Profit/Loss percentage vs invested (only when invested differs from value across the period)
@@ -718,9 +942,12 @@ struct AssetOverviewCard: View {
                 .font(.system(size: 12, weight: .medium))
                 .foregroundColor(
                     colorScheme == .dark ? Color.white.opacity(0.85) : Color.black.opacity(0.6))
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
+        // Let tooltip naturally size to its widest child (prevents date from clipping)
         .background(
             RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .fill(colorScheme == .dark ? Color.black.opacity(0.9) : Color.white)
@@ -733,6 +960,7 @@ struct AssetOverviewCard: View {
             GeometryReader { proxy in
                 Color.clear
                     .onAppear { tooltipSize = proxy.size }
+                    .onChange(of: proxy.size) { _, newSize in tooltipSize = newSize }
             }
         )
     }
@@ -806,10 +1034,10 @@ struct AssetOverviewCard: View {
     private func sampleData(for range: Range) -> [Point] {
         let cal = Calendar.current
         let now = Date()
-        func makePoint(id: Int, date: Date, v: Double, inv: Double, avgPerMonth: Double? = nil)
+        func makePoint(id: Int, date: Date, v: Double, inv: Double, avgPerMonth: Double? = nil, tax: Double = 0, avgTaxPerMonth: Double? = nil)
             -> Point
         {
-            Point(id: id, date: date, value: v, invested: inv, averagePerMonth: avgPerMonth)
+            Point(id: id, date: date, value: v, invested: inv, averagePerMonth: avgPerMonth, taxPaid: tax, averageTaxPerMonth: avgTaxPerMonth)
         }
         switch range {
         case .oneMonth:
@@ -910,9 +1138,17 @@ struct AssetOverviewCard: View {
         allValues.append(contentsOf: data.map { $0.value })
         allValues.append(contentsOf: data.map { $0.invested })
         
-        // Add average per month values for income charts to ensure they're within bounds
+        // Add visible series values for income charts to ensure they're within bounds
         if isIncomeChart {
-            allValues.append(contentsOf: data.compactMap { $0.averagePerMonth })
+            if showAvgIncomeSeries {
+                allValues.append(contentsOf: data.compactMap { $0.averagePerMonth })
+            }
+            if showTaxSeries {
+                allValues.append(contentsOf: data.map { $0.taxPaid })
+            }
+            if showAvgTaxSeries {
+                allValues.append(contentsOf: data.compactMap { $0.averageTaxPerMonth })
+            }
         }
         
         guard let minV = allValues.min(), let maxV = allValues.max() else {
@@ -994,10 +1230,10 @@ struct AssetOverviewCard: View {
             let fmt = DateFormatter()
             fmt.dateFormat = "yyyy-MM-dd"
             fmt.timeZone = TimeZone(secondsFromGMT: 0)
-            var mapped: [Point] = raw.compactMap { r in
+            var mapped: [Point] = raw.enumerated().compactMap { index, r in
                 guard let d = fmt.date(from: r.date) else { return nil }
                 return Point(
-                    id: r.id, date: d, value: r.value, invested: r.invested, averagePerMonth: nil)
+                    id: index, date: d, value: r.value, invested: r.invested, averagePerMonth: nil, taxPaid: 0, averageTaxPerMonth: nil)
             }.sorted { $0.date < $1.date }
             mapped = downsampleEvenTime(mapped, maxCount: 100)
             await MainActor.run {
@@ -1069,8 +1305,12 @@ struct AssetOverviewCard: View {
         }
 
         var cumulativeIncome = baselineIncome
+        var cumulativeTax = allIncomes.filter { $0.creditedDate < startDate }
+            .reduce(0.0) { $0 + $1.taxPaid }
+            
         return rangeIncomes.enumerated().map { index, income in
             cumulativeIncome += income.netAmount
+            cumulativeTax += income.taxPaid
 
             // Calculate average per calendar month
             // Formula: total cumulative net income until that chart day / sum of total days from the start date to until that chart day * 1 calendar day (30.44 days average)
@@ -1081,13 +1321,20 @@ struct AssetOverviewCard: View {
             let averagePerDay =
                 totalDaysFromFirst > 0 ? cumulativeIncome / Double(totalDaysFromFirst) : 0
             let averagePerMonth = averagePerDay * 30.44  // Average days per month
+            
+            // Calculate average tax per calendar month
+            let averageTaxPerDay =
+                totalDaysFromFirst > 0 ? cumulativeTax / Double(totalDaysFromFirst) : 0
+            let averageTaxPerMonth = averageTaxPerDay * 30.44  // Average days per month
 
             return Point(
                 id: index,
                 date: income.creditedDate,
                 value: cumulativeIncome,
                 invested: cumulativeIncome,  // For income, invested = value (no separate investment concept)
-                averagePerMonth: averagePerMonth
+                averagePerMonth: averagePerMonth,
+                taxPaid: cumulativeTax,
+                averageTaxPerMonth: averageTaxPerMonth
             )
         }
     }
@@ -1166,7 +1413,9 @@ struct AssetOverviewCard: View {
                         date: date,
                         value: savedPercentage,
                         invested: savedPercentage,
-                        averagePerMonth: nil
+                        averagePerMonth: nil,
+                        taxPaid: 0,
+                        averageTaxPerMonth: nil
                     ))
             }
 
