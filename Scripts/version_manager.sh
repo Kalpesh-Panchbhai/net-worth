@@ -111,9 +111,8 @@ main() {
     # Get commit count
     local commit_count
     if [ "$is_pre_commit" = "true" ]; then
-        # For pre-commit, calculate next commit number
-        local current_count=$(git -C "$project_dir" rev-list --count HEAD 2>/dev/null || echo "0")
-        commit_count=$((current_count + 1))
+        # For pre-commit, use current commit count (the commit being made will have this number)
+        commit_count=$(git -C "$project_dir" rev-list --count HEAD 2>/dev/null || echo "1")
     else
         # For build phase, use current commit count
         commit_count=$(git -C "$project_dir" rev-list --count HEAD 2>/dev/null || echo "1")
