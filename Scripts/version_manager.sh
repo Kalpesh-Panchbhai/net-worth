@@ -73,24 +73,21 @@ update_project_version() {
     # Create backup
     cp "$project_file" "$project_file.backup" || return 1
     
-    # Update MARKETING_VERSION - handle current format (1.0) and convert to semantic versioning
-    if ! sed -i '' "s/MARKETING_VERSION = [0-9]*\.[0-9]*;/MARKETING_VERSION = $new_version;/g" "$project_file"; then
-        mv "$project_file.backup" "$project_file"
-        return 1
-    fi
+    # Update MARKETING_VERSION - handle current format and convert to semantic versioning
+    sed -i '' "s/MARKETING_VERSION = [0-9]*\.[0-9]*\.[0-9]*;/MARKETING_VERSION = $new_version;/g" "$project_file"
     
     # Update CURRENT_PROJECT_VERSION (build number)
-    if ! sed -i '' "s/CURRENT_PROJECT_VERSION = [0-9]*;/CURRENT_PROJECT_VERSION = $new_build;/g" "$project_file"; then
-        mv "$project_file.backup" "$project_file"
-        return 1
-    fi
+    sed -i '' "s/CURRENT_PROJECT_VERSION = [0-9]*;/CURRENT_PROJECT_VERSION = $new_build;/g" "$project_file"
     
-    # Verify changes
-    if grep -q "MARKETING_VERSION = $new_version;" "$project_file" && grep -q "CURRENT_PROJECT_VERSION = $new_build;" "$project_file"; then
+    # Verify changes - check that we have at least one instance of each
+    local version_count=$(grep -c "MARKETING_VERSION = $new_version;" "$project_file")
+    local build_count=$(grep -c "CURRENT_PROJECT_VERSION = $new_build;" "$project_file")
+    
+    if [ "$version_count" -gt 0 ] && [ "$build_count" -gt 0 ]; then
         rm "$project_file.backup"
         return 0
     else
-        echo "❌ Verification failed - restoring backup"
+        echo "❌ Verification failed - version: $version_count, build: $build_count"
         mv "$project_file.backup" "$project_file"
         return 1
     fi
