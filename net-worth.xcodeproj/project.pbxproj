@@ -394,6 +394,7 @@
 				7D59B3F92BE246FF006F3F00 /* Sources */,
 				7D59B3FA2BE246FF006F3F00 /* Frameworks */,
 				7D59B3FB2BE246FF006F3F00 /* Resources */,
+				7D59B4202BE24800006F3F00 /* Update Build Number */,
 			);
 			buildRules = (
 			);
@@ -459,6 +460,30 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7D59B4202BE24800006F3F00 /* Update Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/.git/HEAD",
+				"$(SRCROOT)/.git/refs/heads/main",
+			);
+			name = "Update Build Number";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/build_number_updated.timestamp",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "# Update build number based on Git commit count\n\"${SRCROOT}/Scripts/update_build_number.sh\"\n# Create timestamp file to track when build number was updated\ntouch \"${SRCROOT}/build_number_updated.timestamp\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7D59B3F92BE246FF006F3F00 /* Sources */ = {
@@ -661,7 +686,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 384;
 				DEVELOPMENT_ASSET_PATHS = "\"net-worth/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -691,7 +716,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 384;
 				DEVELOPMENT_ASSET_PATHS = "\"net-worth/Preview Content\"";
 				DEVELOPMENT_TEAM = 2SHT42699C;
 				ENABLE_PREVIEWS = YES;
