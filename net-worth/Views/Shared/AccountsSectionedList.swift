@@ -111,7 +111,16 @@ struct AccountsSectionedList: View {
                         }
                     } header: {
                         let sectionTotal = section.items.reduce(0) { $0 + $1.currentDayValue }
-                        AccountsSectionHeader(title: section.title, count: section.items.count, total: sectionTotal, currency: currency)
+                        let sectionInvested = section.items.reduce(0) { $0 + $1.invested }
+                        let sectionPrevious = section.items.reduce(0) { $0 + $1.previousDayValue }
+                        AccountsSectionHeader(
+                            title: section.title, 
+                            count: section.items.count, 
+                            total: sectionTotal, 
+                            invested: sectionInvested,
+                            previous: sectionPrevious,
+                            currency: currency
+                        )
                     }
                 }
             }
@@ -282,7 +291,12 @@ struct AccountsSectionHeader: View {
     let title: String
     let count: Int
     let total: Double
+    let invested: Double
+    let previous: Double
     let currency: String
+    
+    @State private var showPreview = false
+    
     var body: some View {
         HStack(spacing: 10) {
             ZStack {
@@ -327,7 +341,136 @@ struct AccountsSectionHeader: View {
                 .padding(.vertical, 6)
         }
         .zIndex(1)
+        .onTapGesture {
+            Haptics.selection()
+            showPreview = true
+        }
+        .sheet(isPresented: $showPreview) {
+            TypePreviewSheet(
+                title: title,
+                total: total,
+                invested: invested,
+                previous: previous,
+                currency: currency,
+                count: count
+            )
+            .presentationDetents([.height(280)])
+            .presentationDragIndicator(.visible)
+        }
     }
+    private func icon(for title: String) -> String {
+        let t = title.lowercased()
+        if t.contains("broker") { return "building.columns" }
+        if t.contains("saving") { return "banknote" }
+        if t.contains("loan") { return "creditcard" }
+        if t.contains("credit") { return "creditcard" }
+        return "wallet.pass"
+    }
+}
+
+// MARK: - Type Preview Sheet
+struct TypePreviewSheet: View {
+    let title: String
+    let total: Double
+    let invested: Double
+    let previous: Double
+    let currency: String
+    let count: Int
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            // Header
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(Color.airbnbPrimary.opacity(0.12))
+                        .frame(width: 44, height: 44)
+                    Image(systemName: icon(for: title))
+                        .font(.title3.weight(.semibold))
+                        .foregroundColor(.airbnbPrimary)
+                }
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.title2.weight(.bold))
+                        .foregroundColor(.primary)
+                    Text("\(count) account\(count == 1 ? "" : "s")")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+            }
+            .padding(.top, 8)
+            
+            // Financial Details (similar to account row)
+            VStack(alignment: .leading, spacing: 12) {
+                // Total Value
+                HStack {
+                    Text("Total Value")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text(total, format: .currency(code: currency))
+                        .font(.title3.weight(.semibold))
+                        .foregroundColor(.primary)
+                        .monospacedDigit()
+                }
+                
+                // Invested
+                HStack {
+                    Text("Invested")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text(invested, format: .currency(code: currency))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(.airbnbPrimary)
+                        .monospacedDigit()
+                }
+                
+                // P/L
+                HStack {
+                    Text("P/L")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    let pl = total - invested
+                    let plPercent = invested.magnitude > 0 ? (pl / invested.magnitude) : 0
+                    WideStatPill(
+                        icon: pl >= 0 ? "arrow.up.right" : "arrow.down.right",
+                        value: abs(pl),
+                        currency: currency,
+                        percent: plPercent.formatted(.percent.precision(.fractionLength(1))),
+                        tint: pl >= 0 ? .airbnbSuccess : .red
+                    )
+                }
+                
+                // 1 day change
+                HStack {
+                    Text("1 day change")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    let changeVsPrev = total - previous
+                    let changePercent = abs(previous) > 0 ? (changeVsPrev / abs(previous)) : 0
+                    WideStatPill(
+                        icon: changeVsPrev >= 0 ? "arrow.up.right" : "arrow.down.right",
+                        value: abs(changeVsPrev),
+                        currency: currency,
+                        percent: changePercent.formatted(.percent.precision(.fractionLength(1))),
+                        tint: changeVsPrev >= 0 ? .airbnbSuccess : .red
+                    )
+                }
+            }
+            
+            Spacer()
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 16)
+        .background(Color.canvasBackground)
+    }
+    
     private func icon(for title: String) -> String {
         let t = title.lowercased()
         if t.contains("broker") { return "building.columns" }
