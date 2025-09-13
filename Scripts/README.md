@@ -19,22 +19,36 @@ The automation ensures that your app's build number (`CURRENT_PROJECT_VERSION`) 
 
 ## Current Status
 
-✅ **Automation is Active**: The build number will automatically update every time you build your project.
+✅ **Full Automation is Active**: The build number will automatically update in two scenarios:
 
-- Current commit count: 384
-- Build number automatically set to: 384
+1. **Before Every Commit** (via Git pre-commit hook)
+2. **During Xcode Builds** (via build phase script)
+
+- Current commit count: 386
+- Build number automatically set to: 386
 - Script integrated into Xcode build phases
+- Pre-commit hook installed and active
 
-## What Happens When You Push Changes
+## What Happens When You Commit Changes
 
-Every time you:
-1. Make commits to your repository
-2. Build your project in Xcode
+Every time you commit to Git, the pre-commit hook will:
+1. Calculate the new commit number (current + 1)
+2. Update the build number in the Xcode project
+3. Add the updated project file to your commit
+4. Complete the commit with the correct build number
 
-The build number will automatically increment to match your total commit count. This means:
-- **Commit 385** → Build number becomes 385
-- **Commit 386** → Build number becomes 386
+This means:
+- **Before commit 387** → Build number becomes 387
+- **Before commit 388** → Build number becomes 388
 - And so on...
+
+## Git Pre-Commit Hook
+
+A Git pre-commit hook has been installed at `.git/hooks/pre-commit` that:
+- Runs automatically before every commit
+- Updates the build number to match the upcoming commit number
+- Includes the updated project file in the commit
+- Ensures your build number is always current when pushing to GitHub
 
 ## Manual Testing
 
