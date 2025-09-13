@@ -185,6 +185,8 @@ struct IncomeListView: View {
                             } else {
                                 ForEach(vm.sections) { section in
                                     let sectionTotal = section.items.reduce(0) { $0 + $1.netAmount + $1.taxPaid }
+                                    let sectionNet = section.items.reduce(0) { $0 + $1.netAmount }
+                                    let sectionTax = section.items.reduce(0) { $0 + $1.taxPaid }
                                     Section {
                                         ForEach(section.items, id: \.self) { item in
                                             IncomeRowCard(income: item, currency: defaultCurrencyCode.uppercased())
@@ -210,6 +212,8 @@ struct IncomeListView: View {
                                             rawTitle: section.title,
                                             count: section.items.count,
                                             total: sectionTotal,
+                                            net: sectionNet,
+                                            tax: sectionTax,
                                             currency: defaultCurrencyCode.uppercased()
                                         )
                                     }
@@ -559,6 +563,8 @@ private struct IncomeSectionsList: View {
         Group {
             ForEach(sections) { section in
                 let sectionTotal = section.items.reduce(0) { $0 + $1.netAmount + $1.taxPaid }
+                let sectionNet = section.items.reduce(0) { $0 + $1.netAmount }
+                let sectionTax = section.items.reduce(0) { $0 + $1.taxPaid }
                 Section {
                     ForEach(section.items, id: \.self) { item in
                         IncomeRowCard(income: item, currency: currency)
@@ -584,6 +590,8 @@ private struct IncomeSectionsList: View {
                         rawTitle: section.title,
                         count: section.items.count,
                         total: sectionTotal,
+                        net: sectionNet,
+                        tax: sectionTax,
                         currency: currency
                     )
                 }
@@ -597,7 +605,11 @@ private struct SectionHeader: View {
     let rawTitle: String
     let count: Int
     let total: Double
+    let net: Double
+    let tax: Double
     let currency: String
+    
+    @State private var showPreview = false
 
     private var iconName: String {
         switch grouping {
@@ -654,6 +666,160 @@ private struct SectionHeader: View {
                 .padding(.vertical, 6)
         }
         .zIndex(1)
+        .onTapGesture {
+            Haptics.selection()
+            showPreview = true
+        }
+        .sheet(isPresented: $showPreview) {
+            IncomeSectionPreviewSheet(
+                title: rawTitle,
+                total: total,
+                net: net,
+                tax: tax,
+                currency: currency,
+                count: count,
+                iconName: iconName
+            )
+            .presentationDetents([.height(280)])
+            .presentationDragIndicator(.visible)
+        }
+    }
+}
+
+// MARK: - Income Section Preview Sheet
+private struct IncomeSectionPreviewSheet: View {
+    let title: String
+    let total: Double
+    let net: Double
+    let tax: Double
+    let currency: String
+    let count: Int
+    let iconName: String
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            // Header
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(Color.airbnbPrimary.opacity(0.12))
+                        .frame(width: 44, height: 44)
+                    Image(systemName: iconName)
+                        .font(.title3.weight(.semibold))
+                        .foregroundColor(.airbnbPrimary)
+                }
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.title2.weight(.bold))
+                        .foregroundColor(.primary)
+                    Text("\(count) item\(count == 1 ? "" : "s")")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+            }
+            .padding(.top, 8)
+            
+            // Financial Details (similar to income row aggregations)
+            VStack(alignment: .leading, spacing: 12) {
+                // Total
+                HStack {
+                    Text("Total")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text(total, format: .currency(code: currency))
+                        .font(.title3.weight(.semibold))
+                        .foregroundColor(.primary)
+                        .monospacedDigit()
+                }
+                
+                // Net
+                HStack {
+                    Text("Net")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    VStack(alignment: .trailing, spacing: 6) {
+                        let netPct: String? = total > 0 ? (net / total).formatted(.percent.precision(.fractionLength(1))) : nil
+                        if let pct = netPct {
+                            HStack(spacing: 6) {
+                                Text("Net")
+                                    .font(.caption2.bold())
+                                    .lineLimit(1)
+                                Text(net, format: .currency(code: currency))
+                                    .font(.subheadline.weight(.semibold))
+                                    .monospacedDigit()
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.8)
+                                    .allowsTightening(true)
+                                Text("•")
+                                    .font(.caption2.weight(.bold))
+                                Text(pct)
+                                    .font(.caption2.weight(.semibold))
+                                    .monospacedDigit()
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.8)
+                                    .allowsTightening(true)
+                            }
+                            .foregroundColor(.airbnbSuccess)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(
+                                Capsule(style: .continuous)
+                                    .fill(Color.airbnbSuccess.opacity(0.12))
+                            )
+                        }
+                    }
+                }
+                
+                // Tax
+                HStack {
+                    Text("Tax paid")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    VStack(alignment: .trailing, spacing: 6) {
+                        let taxPct: String? = total > 0 ? (tax / total).formatted(.percent.precision(.fractionLength(1))) : nil
+                        if let pct = taxPct {
+                            HStack(spacing: 6) {
+                                Text("Tax")
+                                    .font(.caption2.bold())
+                                    .lineLimit(1)
+                                Text(tax, format: .currency(code: currency))
+                                    .font(.subheadline.weight(.semibold))
+                                    .monospacedDigit()
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.8)
+                                    .allowsTightening(true)
+                                Text("•")
+                                    .font(.caption2.weight(.bold))
+                                Text(pct)
+                                    .font(.caption2.weight(.semibold))
+                                    .monospacedDigit()
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.8)
+                                    .allowsTightening(true)
+                            }
+                            .foregroundColor(.red)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(
+                                Capsule(style: .continuous)
+                                    .fill(Color.red.opacity(0.12))
+                            )
+                        }
+                    }
+                }
+            }
+            
+            Spacer()
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 16)
+        .background(Color.canvasBackground)
     }
 }
 
