@@ -4,11 +4,16 @@ struct BrokerHoldingDetailView: View {
     let holding: AccountBroker
     let isAccountActive: Bool
     @AppStorage("defaultCurrencyCode") private var displayCurrency: String = "INR"
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @State private var transactions: [AccountTransaction] = []
     @State private var isLoading = false
     @State private var errorMessage: String? = nil
     @State private var showCreateTx = false
+    @State private var showReportsModal = false
+    // Micro-interactions for toolbar button
+    @State private var breathe = false
+    @State private var rippleTrigger = false
 
     var body: some View {
         ScrollView {
@@ -88,6 +93,9 @@ struct BrokerHoldingDetailView: View {
         .background(Color.canvasBackground.ignoresSafeArea())
         .navigationTitle((holding.name.isEmpty ? holding.symbol : holding.name))
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) { trendToolbarButton }
+        }
         .toolbarBackground(Color(.systemBackground), for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .fabOverlay(icon: "plus", accessibilityLabel: "Add transaction", isVisible: isAccountActive) {
@@ -104,7 +112,94 @@ struct BrokerHoldingDetailView: View {
                 )
             }
         }
+        .fullScreenCover(isPresented: $showReportsModal) {
+            NavigationStack {
+                GeometryReader { geo in
+                    ZStack(alignment: .top) {
+                        Color.canvasBackground.ignoresSafeArea()
+                        AssetOverviewCard(
+                            preselect: (
+                                type: .holding,
+                                id: holding.id,
+                                name: (holding.name.isEmpty ? holding.symbol : holding.name)
+                            )
+                        )
+                            .padding(.horizontal)
+                            .padding(.top)
+                            .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
+                    }
+                }
+                .navigationTitle("Reports")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("Close") { showReportsModal = false }
+                    }
+                }
+                .toolbarBackground(Color.canvasBackground, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
+            }
+        }
         .task { await refresh() }
+    }
+
+    // MARK: - Toolbar Button
+    private var trendToolbarButton: some View {
+        Button {
+            Haptics.selection()
+            showReportsModal = true
+            // Tap ripple feedback (respect Reduce Motion)
+            guard !reduceMotion else { return }
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.9)) { rippleTrigger.toggle() }
+            // Reset ripple after animation completes
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.65) { withAnimation(.easeOut(duration: 0.25)) { rippleTrigger = false } }
+        } label: {
+            ZStack {
+                // Soft radial glow behind the button
+                Circle()
+                    .fill(Color.airbnbPrimary.opacity(0.22))
+                    .blur(radius: 10)
+                    .scaleEffect(breathe ? 1.08 : 0.96)
+                    .opacity(0.8)
+
+                Circle()
+                    .fill(LinearGradient.airbnbAccent)
+                    .overlay(
+                        Circle().stroke(Color.white.opacity(0.18), lineWidth: 0.8)
+                    )
+                    .overlay(
+                        Circle()
+                            .fill(
+                                LinearGradient(
+                                    colors: [Color.white.opacity(0.25), Color.clear],
+                                    startPoint: .top,
+                                    endPoint: .center
+                                )
+                            )
+                            .padding(1)
+                            .opacity(0.7)
+                    )
+
+                Image(systemName: "chart.line.uptrend.xyaxis")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(.white)
+                    .shadow(color: Color.black.opacity(0.25), radius: 1, x: 0, y: 1)
+
+                // Ripple ring
+                Circle()
+                    .stroke(LinearGradient.airbnbAccent, lineWidth: 2)
+                    .scaleEffect(rippleTrigger ? 1.7 : 0.9)
+                    .opacity(rippleTrigger ? 0.35 : 0.0)
+                    .animation(.easeOut(duration: 0.6), value: rippleTrigger)
+            }
+            .frame(width: 34, height: 34)
+            .shadow(color: Color.airbnbPrimary.opacity(0.25), radius: 8, x: 0, y: 4)
+            .scaleEffect(reduceMotion ? 1.0 : (breathe ? 1.02 : 0.98))
+            .animation(reduceMotion ? nil : .easeInOut(duration: 1.6).repeatForever(autoreverses: true), value: breathe)
+            .onAppear { if !reduceMotion { breathe = true } }
+        }
+        .buttonStyle(PressableButtonStyle(scale: 0.96))
+        .accessibilityLabel("View Trends")
     }
 
     // MARK: - Data

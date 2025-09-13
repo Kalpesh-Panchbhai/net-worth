@@ -67,7 +67,21 @@ struct AssetOverviewCard: View {
     @State private var showAvgTaxSeries: Bool = true
 
     // Init allowing caller to specify what to chart
-    init() {}
+    init(
+        preselect: (type: ChartEntityType, id: Int, name: String)? = nil,
+        otherChart: OtherChartType? = nil,
+        userId: Int? = nil
+    ) {
+        if let p = preselect {
+            _entityType = State(initialValue: p.type)
+            _entityId = State(initialValue: p.id)
+            _selectedEntityName = State(initialValue: p.name)
+        }
+        if let oc = otherChart {
+            _otherChartType = State(initialValue: oc)
+        }
+        if let uid = userId { _userId = State(initialValue: uid) }
+    }
     private var headlineValue: Double { data.last?.value ?? 0 }
     private var deltaPercent: Double {
         guard let first = data.first?.value, let last = data.last?.value, first > 0 else {
@@ -236,6 +250,11 @@ struct AssetOverviewCard: View {
         .onChange(of: selectedTags) { reloadIncomeChart() }
         .onChange(of: selectedYears) { reloadIncomeChart() }
         .onChange(of: selectedFYs) { reloadIncomeChart() }
+        .onAppear {
+            if selectedEntity != nil {
+                startLoading(to: selectedRange)
+            }
+        }
     }
     
     // MARK: - Chart Legend
