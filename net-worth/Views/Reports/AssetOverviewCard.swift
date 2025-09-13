@@ -70,7 +70,8 @@ struct AssetOverviewCard: View {
     init(
         preselect: (type: ChartEntityType, id: Int, name: String)? = nil,
         otherChart: OtherChartType? = nil,
-        userId: Int? = nil
+        userId: Int? = nil,
+        incomeFilters: (types: Set<String>, tags: Set<String>, years: Set<Int>, fys: Set<IncomeController.FinancialYear>)? = nil
     ) {
         if let p = preselect {
             _entityType = State(initialValue: p.type)
@@ -81,6 +82,12 @@ struct AssetOverviewCard: View {
             _otherChartType = State(initialValue: oc)
         }
         if let uid = userId { _userId = State(initialValue: uid) }
+        if let filters = incomeFilters {
+            _selectedTypes = State(initialValue: filters.types)
+            _selectedTags = State(initialValue: filters.tags)
+            _selectedYears = State(initialValue: filters.years)
+            _selectedFYs = State(initialValue: filters.fys)
+        }
     }
     private var headlineValue: Double { data.last?.value ?? 0 }
     private var deltaPercent: Double {
