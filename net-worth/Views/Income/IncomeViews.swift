@@ -832,24 +832,32 @@ private struct IncomeRowCard: View {
         Button {
             Haptics.softImpact()
         } label: {
-            HStack(alignment: .center, spacing: 12) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(tagName)
-                        .font(.headline.weight(.semibold))
-                        .foregroundColor(.primary)
-                        .lineLimit(1)
-                    Text(
-                        "\(sourceName) • \(DateFormatter.dayMonYear.string(from: income.creditedDate))"
-                    )
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
-                    .lineLimit(1)
-                }
-                Spacer(minLength: 8)
-                HStack(alignment: .top, spacing: 10) {
-                    VStack(alignment: .trailing, spacing: 8) {
-                        HStack(spacing: 8) {
-                            Text("Total").font(.caption2.bold()).foregroundColor(.secondary)
+            VStack(alignment: .leading, spacing: 10) {
+                // Top region adapts between single row and stacked layout
+                ViewThatFits(in: .horizontal) {
+                    // Preferred: title/subtitle on the left, total on the right
+                    HStack(alignment: .top, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(tagName)
+                                .font(.headline.weight(.semibold))
+                                .foregroundColor(.primary)
+                                .lineLimit(2)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .allowsTightening(true)
+                                .layoutPriority(1)
+                            Text("\(sourceName) • \(DateFormatter.dayMonYear.string(from: income.creditedDate))")
+                                .font(.footnote)
+                                .foregroundColor(.secondary)
+                                .lineLimit(2)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .allowsTightening(true)
+                        }
+                        Spacer(minLength: 8)
+                        VStack(alignment: .trailing, spacing: 6) {
+                            Text("Total")
+                                .font(.caption2.bold())
+                                .foregroundColor(.secondary)
+                                .lineLimit(1)
                             Text(income.netAmount + income.taxPaid, format: .currency(code: currency))
                                 .font(.headline.weight(.semibold))
                                 .foregroundColor(.primary)
@@ -858,71 +866,108 @@ private struct IncomeRowCard: View {
                                 .minimumScaleFactor(0.75)
                                 .allowsTightening(true)
                         }
-                        VStack(alignment: .trailing, spacing: 6) {
-                            HStack(spacing: 6) {
-                                let total = income.netAmount + income.taxPaid
-                                let netPct: String? = total > 0 ? (income.netAmount / total).formatted(.percent.precision(.fractionLength(1))) : nil
-                                Text("Net").font(.caption2.bold()).lineLimit(1)
-                                Text(income.netAmount, format: .currency(code: currency))
-                                    .font(.subheadline.weight(.semibold))
-                                    .monospacedDigit()
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.8)
-                                    .allowsTightening(true)
-                                if let p = netPct {
-                                    Text("•").font(.caption2.weight(.bold))
-                                    Text(p)
-                                        .font(.caption2.weight(.semibold))
-                                        .monospacedDigit()
-                                        .lineLimit(1)
-                                        .minimumScaleFactor(0.8)
-                                        .allowsTightening(true)
-                                }
-                            }
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.82)
-                            .allowsTightening(true)
-                            .fixedSize(horizontal: true, vertical: false)
-                            .foregroundColor(.airbnbSuccess)
-                            .padding(.vertical, 4)
-                            .padding(.horizontal, 8)
-                            .background(
-                                Capsule(style: .continuous).fill(Color.airbnbSuccess.opacity(0.12))
-                            )
-                            HStack(spacing: 6) {
-                                let total = income.netAmount + income.taxPaid
-                                let taxPct: String? = total > 0 ? (income.taxPaid / total).formatted(.percent.precision(.fractionLength(1))) : nil
-                                Text("Tax").font(.caption2.bold()).lineLimit(1)
-                                Text(income.taxPaid, format: .currency(code: currency))
-                                    .font(.subheadline.weight(.semibold))
-                                    .monospacedDigit()
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.8)
-                                    .allowsTightening(true)
-                                if let p = taxPct {
-                                    Text("•").font(.caption2.weight(.bold))
-                                    Text(p)
-                                        .font(.caption2.weight(.semibold))
-                                        .monospacedDigit()
-                                        .lineLimit(1)
-                                        .minimumScaleFactor(0.8)
-                                        .allowsTightening(true)
-                                }
-                            }
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.82)
-                            .allowsTightening(true)
-                            .fixedSize(horizontal: true, vertical: false)
-                            .foregroundColor(.airbnbPrimary)
-                            .padding(.vertical, 4)
-                            .padding(.horizontal, 8)
-                            .background(
-                                Capsule(style: .continuous).fill(Color.airbnbPrimary.opacity(0.12))
-                            )
-                        }
-                        .layoutPriority(1)
                     }
-                    // Chevron removed per design
+                    // Fallback: stack total below the title when horizontal space is tight
+                    VStack(alignment: .leading, spacing: 6) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(tagName)
+                                .font(.headline.weight(.semibold))
+                                .foregroundColor(.primary)
+                                .lineLimit(2)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .allowsTightening(true)
+                            Text("\(sourceName) • \(DateFormatter.dayMonYear.string(from: income.creditedDate))")
+                                .font(.footnote)
+                                .foregroundColor(.secondary)
+                                .lineLimit(2)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .allowsTightening(true)
+                        }
+                        HStack {
+                            Spacer()
+                            VStack(alignment: .trailing, spacing: 4) {
+                                Text("Total")
+                                    .font(.caption2.bold())
+                                    .foregroundColor(.secondary)
+                                Text(income.netAmount + income.taxPaid, format: .currency(code: currency))
+                                    .font(.headline.weight(.semibold))
+                                    .foregroundColor(.primary)
+                                    .monospacedDigit()
+                                    .minimumScaleFactor(0.75)
+                                    .lineLimit(1)
+                            }
+                        }
+                    }
+                }
+
+                // Net/Tax chips (kept readable, adaptive spacing)
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 10) {
+                        let total = income.netAmount + income.taxPaid
+                        let netPct: String? = total > 0 ? (income.netAmount / total).formatted(.percent.precision(.fractionLength(1))) : nil
+                        let taxPct: String? = total > 0 ? (income.taxPaid / total).formatted(.percent.precision(.fractionLength(1))) : nil
+                        HStack(spacing: 6) {
+                            Text("Net").font(.caption2.bold())
+                            Text(income.netAmount, format: .currency(code: currency))
+                                .font(.subheadline.weight(.semibold))
+                                .monospacedDigit()
+                                .minimumScaleFactor(0.85)
+                                .lineLimit(1)
+                            if let p = netPct { Text("•").font(.caption2.weight(.bold)); Text(p).font(.caption2.weight(.semibold)).monospacedDigit() }
+                        }
+                        .foregroundColor(.airbnbSuccess)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 8)
+                        .background(Capsule(style: .continuous).fill(Color.airbnbSuccess.opacity(0.12)))
+
+                        HStack(spacing: 6) {
+                            Text("Tax").font(.caption2.bold())
+                            Text(income.taxPaid, format: .currency(code: currency))
+                                .font(.subheadline.weight(.semibold))
+                                .monospacedDigit()
+                                .minimumScaleFactor(0.85)
+                                .lineLimit(1)
+                            if let p = taxPct { Text("•").font(.caption2.weight(.bold)); Text(p).font(.caption2.weight(.semibold)).monospacedDigit() }
+                        }
+                        .foregroundColor(.airbnbPrimary)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 8)
+                        .background(Capsule(style: .continuous).fill(Color.airbnbPrimary.opacity(0.12)))
+
+                        Spacer(minLength: 0)
+                    }
+                    VStack(alignment: .leading, spacing: 8) {
+                        let total = income.netAmount + income.taxPaid
+                        let netPct: String? = total > 0 ? (income.netAmount / total).formatted(.percent.precision(.fractionLength(1))) : nil
+                        let taxPct: String? = total > 0 ? (income.taxPaid / total).formatted(.percent.precision(.fractionLength(1))) : nil
+                        HStack(spacing: 6) {
+                            Text("Net").font(.caption2.bold())
+                            Text(income.netAmount, format: .currency(code: currency))
+                                .font(.subheadline.weight(.semibold))
+                                .monospacedDigit()
+                                .minimumScaleFactor(0.85)
+                                .lineLimit(1)
+                            if let p = netPct { Text("•").font(.caption2.weight(.bold)); Text(p).font(.caption2.weight(.semibold)).monospacedDigit() }
+                        }
+                        .foregroundColor(.airbnbSuccess)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 8)
+                        .background(Capsule(style: .continuous).fill(Color.airbnbSuccess.opacity(0.12)))
+
+                        HStack(spacing: 6) {
+                            Text("Tax").font(.caption2.bold())
+                            Text(income.taxPaid, format: .currency(code: currency))
+                                .font(.subheadline.weight(.semibold))
+                                .monospacedDigit()
+                                .minimumScaleFactor(0.85)
+                                .lineLimit(1)
+                            if let p = taxPct { Text("•").font(.caption2.weight(.bold)); Text(p).font(.caption2.weight(.semibold)).monospacedDigit() }
+                        }
+                        .foregroundColor(.airbnbPrimary)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 8)
+                        .background(Capsule(style: .continuous).fill(Color.airbnbPrimary.opacity(0.12)))
+                    }
                 }
             }
             .padding(16)
