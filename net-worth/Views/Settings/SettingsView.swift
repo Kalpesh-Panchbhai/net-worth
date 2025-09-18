@@ -236,15 +236,16 @@ struct BuildInfoCard: View {
                         .frame(width: 32, height: 32)
                         
                         VStack(alignment: .leading, spacing: 2) {
-                            let days = daysRemaining(until: expiration ?? estimatedExpiration())
-                            if days >= 0 {
-                                Text("Expires in \(days) day\(days == 1 ? "" : "s")")
-                                    .font(.subheadline.weight(.semibold))
-                                    .foregroundColor(.primary)
-                            } else {
-                                Text("Expired \(-days) day\(days == -1 ? "" : "s") ago")
+                            let expDate = expiration ?? estimatedExpiration()
+                            let text = timeRemainingText(until: expDate)
+                            if text.lowercased().hasPrefix("expired") {
+                                Text(text)
                                     .font(.subheadline.weight(.semibold))
                                     .foregroundColor(.red)
+                            } else {
+                                Text(text)
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundColor(.primary)
                             }
                         }
                         
@@ -319,8 +320,39 @@ struct BuildInfoCard: View {
     private func daysRemaining(until date: Date) -> Int {
         let seconds = date.timeIntervalSinceNow
         let daysDouble = seconds / 86400.0
-        let rounded = Int(floor(daysDouble + 0.9999))
-        return rounded
+        if seconds >= 0 {
+            // For future dates, count only fully remaining days (no rounding up)
+            return Int(floor(daysDouble))
+        } else {
+            // For past dates, if less than a full day has passed, show 0 days
+            // Otherwise, return negative full days elapsed
+            let daysPast = Int(floor(abs(daysDouble)))
+            return daysPast == 0 ? 0 : -daysPast
+        }
+    }
+
+    private func timeRemainingText(until date: Date) -> String {
+        let seconds = date.timeIntervalSinceNow
+        if seconds <= 0 {
+            // Already expired
+            let days = abs(daysRemaining(until: date))
+            if days >= 1 {
+                return "Expired \(days) day\(days == 1 ? "" : "s") ago"
+            } else {
+                return "Expired"
+            }
+        }
+        if seconds >= 86400 {
+            let days = Int(floor(seconds / 86400))
+            return "Expires in \(days) day\(days == 1 ? "" : "s")"
+        } else if seconds >= 3600 {
+            let hours = Int(floor(seconds / 3600))
+            return "Expires in \(hours) hr\(hours == 1 ? "" : "s")"
+        } else {
+            // Less than an hour: show minutes, round up to at least 1 min
+            let mins = max(1, Int(ceil(seconds / 60)))
+            return "Expires in \(mins) min\(mins == 1 ? "" : "s")"
+        }
     }
 
     private func badgeText(for date: Date) -> String {
