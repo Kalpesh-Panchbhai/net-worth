@@ -208,9 +208,6 @@ struct WatchlistListView: View {
             }
             .navigationTitle("Watchlists")
             .navigationBarTitleDisplayMode(.large)
-            .airbnbNavBarBackground(collapsed: navCollapsed)
-            .toolbarBackground(Color(.systemBackground), for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
             .onPreferenceChange(NavBarOffsetKey.self) { y in
                 withAnimation(.easeInOut(duration: 0.2)) { navCollapsed = y < -8 }
             }

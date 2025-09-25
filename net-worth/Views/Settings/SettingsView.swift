@@ -60,7 +60,6 @@ struct SettingsView: View {
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)
-            .airbnbNavBarBackground(collapsed: navCollapsed)
             .onPreferenceChange(NavBarOffsetKey.self) { y in
                 withAnimation(.easeInOut(duration: 0.2)) { navCollapsed = y < -8 }
             }

@@ -20,21 +20,18 @@ struct net_worthApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("backendUserId") private var backendUserId: Int = -1
     init() {
-        // Hide hairline at top (scroll edge large title), show after scrolling (standard)
-        let scrollEdge = UINavigationBarAppearance()
-        scrollEdge.configureWithOpaqueBackground()
-        scrollEdge.backgroundColor = UIColor.systemGroupedBackground
-        scrollEdge.shadowColor = .clear
-        
-        let standard = UINavigationBarAppearance()
-        standard.configureWithOpaqueBackground()
-        standard.backgroundColor = UIColor.systemGroupedBackground
-        // default shadowColor -> shows divider when scrolled
-        
+        // Simplified navigation bar configuration for better iOS version compatibility
         let navBar = UINavigationBar.appearance()
-        navBar.scrollEdgeAppearance = scrollEdge
-        navBar.standardAppearance = standard
-        navBar.compactAppearance = standard
+        navBar.prefersLargeTitles = true
+        navBar.tintColor = UIColor.systemBlue
+        
+        // Use default appearances to avoid conflicts
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithDefaultBackground()
+        
+        navBar.standardAppearance = appearance
+        navBar.compactAppearance = appearance
+        navBar.scrollEdgeAppearance = appearance
     }
     var body: some Scene {
         WindowGroup {
