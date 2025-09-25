@@ -15,7 +15,7 @@ struct FloatingActionButton: View {
         icon: String = "plus",
         size: CGFloat = 56,
         gradient: LinearGradient = .airbnbAccent,
-        shadow: Color = Color.airbnbPrimary.opacity(0.35),
+        shadow: Color = Color.clear,
         shadowRadius: CGFloat = 12,
         shadowYOffset: CGFloat = 6,
         accessibilityLabel: String = "Add",
@@ -40,7 +40,6 @@ struct FloatingActionButton: View {
                 .background(
                     Circle().fill(gradient)
                 )
-                .shadow(color: shadow, radius: shadowRadius, x: 0, y: shadowYOffset)
         }
         .buttonStyle(PressableButtonStyle(scale: 0.94))
         .accessibilityLabel(accessibilityLabel)

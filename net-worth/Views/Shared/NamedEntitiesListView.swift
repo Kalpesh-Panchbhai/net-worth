@@ -278,7 +278,6 @@ private struct NamedEntityRow<T: NamedEntity>: View {
                     .padding(.vertical, 4)
                     .padding(.horizontal, 8)
                     .background(Capsule().fill(LinearGradient.airbnbAccent))
-                    .shadow(color: .airbnbPrimary.opacity(0.25), radius: 6, x: 0, y: 3)
             }
         }
         .padding(.horizontal, 12)

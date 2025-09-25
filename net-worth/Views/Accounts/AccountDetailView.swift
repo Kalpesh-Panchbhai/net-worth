@@ -468,7 +468,6 @@ struct AccountDetailView: View {
                     .background(
                         Circle().fill(enabled ? LinearGradient.airbnbAccent : LinearGradient(colors: [.secondary.opacity(0.4), .secondary.opacity(0.4)], startPoint: .topLeading, endPoint: .bottomTrailing))
                     )
-                    .shadow(color: Color.airbnbPrimary.opacity(enabled ? 0.35 : 0.0), radius: 10, x: 0, y: 5)
             }
             .buttonStyle(PressableButtonStyle(scale: 0.94))
             .disabled(!enabled)
