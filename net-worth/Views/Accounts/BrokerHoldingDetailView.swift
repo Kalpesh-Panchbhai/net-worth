@@ -183,7 +183,6 @@ struct BrokerHoldingDetailView: View {
                 Image(systemName: "chart.line.uptrend.xyaxis")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(.white)
-                    .shadow(color: Color.black.opacity(0.25), radius: 1, x: 0, y: 1)
 
                 // Ripple ring
                 Circle()
@@ -193,7 +192,6 @@ struct BrokerHoldingDetailView: View {
                     .animation(.easeOut(duration: 0.6), value: rippleTrigger)
             }
             .frame(width: 34, height: 34)
-            .shadow(color: Color.airbnbPrimary.opacity(0.25), radius: 8, x: 0, y: 4)
             .scaleEffect(reduceMotion ? 1.0 : (breathe ? 1.02 : 0.98))
             .animation(reduceMotion ? nil : .easeInOut(duration: 1.6).repeatForever(autoreverses: true), value: breathe)
             .onAppear { if !reduceMotion { breathe = true } }
