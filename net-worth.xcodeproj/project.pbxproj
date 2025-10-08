@@ -11,6 +11,9 @@
 		7D0259C02E62DA8B00D72525 /* openapi.json in Resources */ = {isa = PBXBuildFile; fileRef = 7D0259BF2E62DA8B00D72525 /* openapi.json */; };
 		7D0259C22E62DD7800D72525 /* UserModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0259C12E62DD7800D72525 /* UserModels.swift */; };
 		7D08E7D32E6EB75200AC3898 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D08E7D12E6EB75200AC3898 /* HomeView.swift */; };
+		7D20D4D72E967CDC003ED86F /* ScreenshotOCRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D20D4D52E967CDC003ED86F /* ScreenshotOCRService.swift */; };
+		7D20D4D82E967CDC003ED86F /* ScreenshotTransactionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D20D4D62E967CDC003ED86F /* ScreenshotTransactionService.swift */; };
+		7D20D4DA2E967CF8003ED86F /* ScreenshotImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D20D4D92E967CF8003ED86F /* ScreenshotImportView.swift */; };
 		7D2736832E59DDAE00F32B4C /* WatchAccountsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2736822E59DDAE00F32B4C /* WatchAccountsController.swift */; };
 		7D2736852E59DDBB00F32B4C /* WatchlistAccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2736842E59DDBB00F32B4C /* WatchlistAccountsView.swift */; };
 		7D2736872E59E92600F32B4C /* AccountsSectionedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2736862E59E92600F32B4C /* AccountsSectionedList.swift */; };
@@ -84,6 +87,9 @@
 		7D0259BF2E62DA8B00D72525 /* openapi.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = openapi.json; sourceTree = "<group>"; };
 		7D0259C12E62DD7800D72525 /* UserModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModels.swift; sourceTree = "<group>"; };
 		7D08E7D12E6EB75200AC3898 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		7D20D4D52E967CDC003ED86F /* ScreenshotOCRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotOCRService.swift; sourceTree = "<group>"; };
+		7D20D4D62E967CDC003ED86F /* ScreenshotTransactionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotTransactionService.swift; sourceTree = "<group>"; };
+		7D20D4D92E967CF8003ED86F /* ScreenshotImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotImportView.swift; sourceTree = "<group>"; };
 		7D2736822E59DDAE00F32B4C /* WatchAccountsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAccountsController.swift; sourceTree = "<group>"; };
 		7D2736842E59DDBB00F32B4C /* WatchlistAccountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistAccountsView.swift; sourceTree = "<group>"; };
 		7D2736862E59E92600F32B4C /* AccountsSectionedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsSectionedList.swift; sourceTree = "<group>"; };
@@ -263,6 +269,8 @@
 			children = (
 				7D4D09492E5304B200E188D0 /* APIError.swift */,
 				7D4D09472E53021B00E188D0 /* RestClient.swift */,
+				7D20D4D52E967CDC003ED86F /* ScreenshotOCRService.swift */,
+				7D20D4D62E967CDC003ED86F /* ScreenshotTransactionService.swift */,
 				7D3F52612E6FED76000F04E6 /* SessionCache.swift */,
 				7D8A44B42E69CD860085B681 /* YahooFinanceClient.swift */,
 			);
@@ -348,6 +356,7 @@
 				7DECCEED2E587D8400225DDA /* NamedEntityPickerSheet.swift */,
 				7DAA000C2BE300000000000C /* PlaceholderScreen.swift */,
 				7DC4221C2E545F73000D62BD /* PrivacyShieldView.swift */,
+				7D20D4D92E967CF8003ED86F /* ScreenshotImportView.swift */,
 				7DECCEEB2E587C5200225DDA /* StringPickerSheet.swift */,
 				7D627CB32E5A3E2F00BB1CD7 /* TransactionRows.swift */,
 			);
@@ -492,6 +501,8 @@
 			files = (
 				7DC422212E546A29000D62BD /* AppDelegate.swift in Sources */,
 				7D4E7B942E58C47D007AB2B9 /* AuthManager.swift in Sources */,
+				7D20D4D72E967CDC003ED86F /* ScreenshotOCRService.swift in Sources */,
+				7D20D4D82E967CDC003ED86F /* ScreenshotTransactionService.swift in Sources */,
 				7D59B4012BE246FF006F3F00 /* net_worthApp.swift in Sources */,
 				7DECCEEA2E58791600225DDA /* CurrencyPickerSheet.swift in Sources */,
 				7DAA10012BE3000000000001 /* AppTab.swift in Sources */,
@@ -529,6 +540,7 @@
 				7D627CB62E5A445400BB1CD7 /* BrokerHoldingDetailView.swift in Sources */,
 				7D7A6BBB2E6F2D990009C1E1 /* EntityPickerView.swift in Sources */,
 				7D2FBCA72E51CEF70046FE17 /* IncomeTagsView.swift in Sources */,
+				7D20D4DA2E967CF8003ED86F /* ScreenshotImportView.swift in Sources */,
 				7DAA100D2BE300000000000D /* IncomeViews.swift in Sources */,
 				7D627CAA2E5A38EA00BB1CD7 /* TransactionModels.swift in Sources */,
 				7DAA100E2BE300000000000E /* AppAppearance.swift in Sources */,
@@ -688,7 +700,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 429;
+				CURRENT_PROJECT_VERSION = 430;
 				DEVELOPMENT_ASSET_PATHS = "\"net-worth/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -703,7 +715,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.2;
+				MARKETING_VERSION = 1.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.net-worth.net-worth";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -718,7 +730,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 429;
+				CURRENT_PROJECT_VERSION = 430;
 				DEVELOPMENT_ASSET_PATHS = "\"net-worth/Preview Content\"";
 				DEVELOPMENT_TEAM = 2SHT42699C;
 				ENABLE_PREVIEWS = YES;
@@ -734,7 +746,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.2;
+				MARKETING_VERSION = 1.4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.net-worth.net-worth";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
