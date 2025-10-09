@@ -379,17 +379,18 @@ struct HomeView: View {
                     Haptics.selection()
                     showReportsModal = true
                 }
-                
-                QuickActionCard(
-                    title: "Add from Image",
-                    subtitle: "Scan transaction",
-                    icon: "photo.badge.plus",
-                    color: .purple,
-                    isDisabled: false
-                ) {
-                    Haptics.selection()
-                    showImageTransactionModal = true
-                }
+            }
+            
+            // Full-width card for Add transaction from image
+            QuickActionCard(
+                title: "Add transaction from image",
+                subtitle: "Scan image",
+                icon: "photo.badge.plus",
+                color: .blue,
+                isDisabled: false
+            ) {
+                Haptics.selection()
+                showImageTransactionModal = true
             }
         }
     }
@@ -537,6 +538,8 @@ struct QuickActionCard: View {
                     Text(title)
                         .font(.subheadline.bold())
                         .foregroundColor(isDisabled ? .primary.opacity(0.5) : .primary)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
                     
                     Text(subtitle)
                         .font(.caption)
@@ -546,7 +549,7 @@ struct QuickActionCard: View {
                 Spacer()
             }
             .padding(16)
-            .frame(height: 100)
+            .frame(minHeight: 100)
             .elevatedCardBackground(cornerRadius: 16)
         }
         .buttonStyle(PressableButtonStyle())

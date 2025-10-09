@@ -67,7 +67,7 @@ struct ImageTransactionView: View {
                                 Image(systemName: "photo.badge.plus")
                                     .font(.system(size: 48))
                                     .foregroundColor(.secondary)
-                                Text("Select a bank balance screenshot")
+                                Text("Select a image")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }
