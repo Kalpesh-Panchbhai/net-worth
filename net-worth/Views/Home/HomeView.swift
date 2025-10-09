@@ -17,6 +17,8 @@ struct HomeView: View {
     @State private var profilePhotoURL: URL? = nil
     // Reports modal state
     @State private var showReportsModal = false
+    // Image transaction modal state
+    @State private var showImageTransactionModal = false
     
     var body: some View {
         NavigationStack {
@@ -89,6 +91,18 @@ struct HomeView: View {
                 }
                 .toolbarBackground(Color.canvasBackground, for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
+            }
+        }
+        .sheet(isPresented: $showImageTransactionModal) {
+            NavigationStack {
+                QuickImageTransactionView(
+                    userId: userId,
+                    onSaved: {
+                        Task {
+                            await loadInitialData()
+                        }
+                    }
+                )
             }
         }
         .onAppear {
@@ -364,6 +378,17 @@ struct HomeView: View {
                     guard allDataLoaded else { return }
                     Haptics.selection()
                     showReportsModal = true
+                }
+                
+                QuickActionCard(
+                    title: "Add from Image",
+                    subtitle: "Scan transaction",
+                    icon: "photo.badge.plus",
+                    color: .purple,
+                    isDisabled: false
+                ) {
+                    Haptics.selection()
+                    showImageTransactionModal = true
                 }
             }
         }
