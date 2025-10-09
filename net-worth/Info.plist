@@ -32,5 +32,7 @@
 	</dict>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Face ID is used to quickly and securely unlock the app.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to your photo library to read bank balance screenshots and automatically create transactions.</string>
 </dict>
 </plist>

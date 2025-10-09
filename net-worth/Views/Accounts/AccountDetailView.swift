@@ -13,6 +13,7 @@ struct AccountDetailView: View {
     @State private var isLoadingTx = false
     @State private var txError: String? = nil
     @State private var showCreateTx = false
+    @State private var showImageTx = false
     // Watchlists containing this account
     @State private var accountWatchlists: [WatchlistSummary] = []
     @State private var isLoadingWatches = false
@@ -276,6 +277,20 @@ struct AccountDetailView: View {
                 )
             }
         }
+        .sheet(isPresented: $showImageTx) {
+            NavigationStack {
+                ImageTransactionView(
+                    accountId: account.id,
+                    holdingId: 0,
+                    needsDailyData: account.needsDailyData,
+                    onSaved: {
+                        Task {
+                            await loadTransactions()
+                        }
+                    }
+                )
+            }
+        }
         .onChange(of: showCreateTx) { oldValue, newValue in
             // When the sheet is dismissed, force a refresh to avoid any race with onSaved
             if oldValue == true && newValue == false {
@@ -287,6 +302,14 @@ struct AccountDetailView: View {
                     }
                     // Reset any previously selected holding id
                     selectedHoldingId = 0
+                }
+            }
+        }
+        .onChange(of: showImageTx) { oldValue, newValue in
+            // When the image transaction sheet is dismissed, refresh transactions
+            if oldValue == true && newValue == false {
+                Task {
+                    await loadTransactions()
                 }
             }
         }
@@ -497,16 +520,28 @@ struct AccountDetailView: View {
                         .opacity(showFabMenu ? 1.0 : 0.0)
                         .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85), value: showFabMenu)
                     }
+                    // Add from image (non-broker only)
+                    if canAdd && !isBroker {
+                        miniFab(label: "Add from image", icon: "photo.badge.plus", enabled: true) {
+                            if reduceMotion { showFabMenu = false }
+                            else { withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) { showFabMenu = false } }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) { showImageTx = true }
+                        }
+                        .offset(y: showFabMenu ? 0 : 22)
+                        .scaleEffect(showFabMenu ? 1.0 : 0.92)
+                        .opacity(showFabMenu ? 1.0 : 0.0)
+                        .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85).delay(0.04), value: showFabMenu)
+                    }
                     miniFab(label: "Add to watchlist", icon: "text.badge.plus", enabled: true) {
                         if reduceMotion { showFabMenu = false } else {
                             withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) { showFabMenu = false }
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) { showAddToWatchSheet = true }
                     }
-                    .offset(y: showFabMenu ? 0 : (canAdd ? 22 : 18))
+                    .offset(y: showFabMenu ? 0 : (canAdd && !isBroker ? 26 : canAdd ? 22 : 18))
                     .scaleEffect(showFabMenu ? 1.0 : 0.92)
                     .opacity(showFabMenu ? 1.0 : 0.0)
-                    .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85).delay(canAdd ? 0.04 : 0), value: showFabMenu)
+                    .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85).delay(canAdd && !isBroker ? 0.08 : canAdd ? 0.04 : 0), value: showFabMenu)
                     miniFab(label: "Edit", icon: "pencil", enabled: true) {
                         if reduceMotion { showFabMenu = false }
                         else { withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) { showFabMenu = false } }
@@ -514,10 +549,10 @@ struct AccountDetailView: View {
                         editActive = displayIsActive
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) { showEditSheet = true }
                     }
-                    .offset(y: showFabMenu ? 0 : (canAdd ? 26 : 18))
+                    .offset(y: showFabMenu ? 0 : (canAdd && !isBroker ? 30 : canAdd ? 26 : 18))
                     .scaleEffect(showFabMenu ? 1.0 : (canAdd ? 0.9 : 0.92))
                     .opacity(showFabMenu ? 1.0 : 0.0)
-                    .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85).delay(canAdd ? 0.08 : 0.03), value: showFabMenu)
+                    .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85).delay(canAdd && !isBroker ? 0.12 : canAdd ? 0.08 : 0.03), value: showFabMenu)
                 }
                 .padding(.trailing, LayoutConstants.fabTrailing)
                 .padding(.bottom, LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin + LayoutConstants.fabSize + 10)
