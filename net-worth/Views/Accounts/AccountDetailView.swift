@@ -40,8 +40,6 @@ struct AccountDetailView: View {
     @State private var addingWatchlistId: Int? = nil
     @State private var removingWatchlistId: Int? = nil
     @State private var showReportsModal = false
-    // Screenshot import
-    @State private var showScreenshotImport = false
     // Micro-interactions for toolbar button
     @State private var breathe = false
     @State private var rippleTrigger = false
@@ -300,18 +298,6 @@ struct AccountDetailView: View {
         .sheet(isPresented: $showEditSheet) { editSheet }
         .sheet(isPresented: $showAddHoldingSheet) { addHoldingSheet }
         .sheet(isPresented: $showAddToWatchSheet) { addToWatchSheet }
-        .sheet(isPresented: $showScreenshotImport) {
-            ScreenshotImportView(
-                accountName: account.name,
-                userId: account.userId,
-                onSuccess: {
-                    Task {
-                        await loadTransactions()
-                        await lookup.refreshAccounts(userId: account.userId)
-                    }
-                }
-            )
-        }
         .alert("Delete holding?", isPresented: $showDeleteHoldingAlert, presenting: deleteHoldingTarget) { target in
             Button("Delete", role: .destructive) {
                 Task { await deleteHolding(id: target.id, name: target.name) }
@@ -511,28 +497,16 @@ struct AccountDetailView: View {
                         .opacity(showFabMenu ? 1.0 : 0.0)
                         .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85), value: showFabMenu)
                     }
-                    // Screenshot import (non-broker only)
-                    if !isBroker && canAdd {
-                        miniFab(label: "Add transaction from screenshot", icon: "photo", enabled: true) {
-                            if reduceMotion { showFabMenu = false }
-                            else { withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) { showFabMenu = false } }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) { showScreenshotImport = true }
-                        }
-                        .offset(y: showFabMenu ? 0 : 22)
-                        .scaleEffect(showFabMenu ? 1.0 : 0.92)
-                        .opacity(showFabMenu ? 1.0 : 0.0)
-                        .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85).delay(0.04), value: showFabMenu)
-                    }
                     miniFab(label: "Add to watchlist", icon: "text.badge.plus", enabled: true) {
                         if reduceMotion { showFabMenu = false } else {
                             withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) { showFabMenu = false }
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) { showAddToWatchSheet = true }
                     }
-                    .offset(y: showFabMenu ? 0 : (canAdd && !isBroker ? 26 : canAdd ? 22 : 18))
+                    .offset(y: showFabMenu ? 0 : (canAdd ? 22 : 18))
                     .scaleEffect(showFabMenu ? 1.0 : 0.92)
                     .opacity(showFabMenu ? 1.0 : 0.0)
-                    .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85).delay(canAdd && !isBroker ? 0.08 : canAdd ? 0.04 : 0), value: showFabMenu)
+                    .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85).delay(canAdd ? 0.04 : 0), value: showFabMenu)
                     miniFab(label: "Edit", icon: "pencil", enabled: true) {
                         if reduceMotion { showFabMenu = false }
                         else { withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) { showFabMenu = false } }
@@ -540,10 +514,10 @@ struct AccountDetailView: View {
                         editActive = displayIsActive
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) { showEditSheet = true }
                     }
-                    .offset(y: showFabMenu ? 0 : (canAdd && !isBroker ? 30 : canAdd ? 26 : 18))
+                    .offset(y: showFabMenu ? 0 : (canAdd ? 26 : 18))
                     .scaleEffect(showFabMenu ? 1.0 : (canAdd ? 0.9 : 0.92))
                     .opacity(showFabMenu ? 1.0 : 0.0)
-                    .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85).delay(canAdd && !isBroker ? 0.12 : canAdd ? 0.08 : 0.03), value: showFabMenu)
+                    .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85).delay(canAdd ? 0.08 : 0.03), value: showFabMenu)
                 }
                 .padding(.trailing, LayoutConstants.fabTrailing)
                 .padding(.bottom, LayoutConstants.tabBarHeight + LayoutConstants.fabBottomMargin + LayoutConstants.fabSize + 10)
