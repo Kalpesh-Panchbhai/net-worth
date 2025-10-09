@@ -329,18 +329,14 @@ struct ImageTransactionParser {
             
             // Special handling for "as of" dates (common in investment screenshots)
             if lowerLine.contains("as of") {
-                print("🔍 Found 'as of' in line: '\(line)'")
                 // Extract the part after "as of"
                 if let asOfRange = lowerLine.range(of: "as of") {
                     let afterAsOf = String(line[asOfRange.upperBound...]).trimmingCharacters(in: .whitespaces)
-                    print("🔍 Text after 'as of': '\(afterAsOf)'")
                     
                     // Clean up: remove comma and time portion
                     let cleanedAfterAsOf = afterAsOf
                         .replacingOccurrences(of: ",", with: "")
                         .components(separatedBy: ",").first ?? afterAsOf
-                    
-                    print("🔍 Cleaned text: '\(cleanedAfterAsOf)'")
                     
                     // Try to parse this part
                     for formatter in dateFormatters {
@@ -350,13 +346,11 @@ struct ImageTransactionParser {
                             for length in 1...min(4, words.count - i) {
                                 let dateString = words[i..<(i+length)].joined(separator: " ")
                                 if let date = formatter.date(from: dateString) {
-                                    print("✅ Parsed date '\(dateString)' as \(date)")
                                     return date
                                 }
                             }
                         }
                     }
-                    print("❌ Could not parse date from 'as of' line")
                 }
             }
             

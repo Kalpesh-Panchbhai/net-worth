@@ -336,17 +336,8 @@ struct ImageTransactionView: View {
             // Extract text from image
             let textLines = try await ImageTextExtractor.extractText(from: image)
             
-            // Debug: Print extracted text
-            print("🔍 Extracted text lines:")
-            for (index, line) in textLines.enumerated() {
-                print("  Line \(index): '\(line)'")
-            }
-            
             // Parse transaction details
             let parsed = try ImageTransactionParser.parse(from: textLines)
-            
-            print("📅 Parsed date: \(parsed.date)")
-            print("📅 Date formatted: \(DateFormatter.dayMonYear.string(from: parsed.date))")
             
             // Update state
             extractedAmount = parsed.amount
