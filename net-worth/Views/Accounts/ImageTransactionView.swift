@@ -289,7 +289,7 @@ struct ImageTransactionView: View {
             .padding(.bottom, LayoutConstants.tabBarHeight + 24)
         }
         .background(Color.canvasBackground.ignoresSafeArea())
-        .navigationTitle("Add from Image")
+        .navigationTitle("Add transaction from Image")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {

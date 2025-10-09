@@ -520,9 +520,9 @@ struct AccountDetailView: View {
                         .opacity(showFabMenu ? 1.0 : 0.0)
                         .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.85), value: showFabMenu)
                     }
-                    // Add from image (non-broker only)
+                    // Add transaction from image (non-broker only)
                     if canAdd && !isBroker {
-                        miniFab(label: "Add from image", icon: "photo.badge.plus", enabled: true) {
+                        miniFab(label: "Add transaction from image", icon: "photo.badge.plus", enabled: true) {
                             if reduceMotion { showFabMenu = false }
                             else { withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) { showFabMenu = false } }
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) { showImageTx = true }
