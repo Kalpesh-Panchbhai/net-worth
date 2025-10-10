@@ -32,6 +32,9 @@ struct net_worthApp: App {
         navBar.standardAppearance = appearance
         navBar.compactAppearance = appearance
         navBar.scrollEdgeAppearance = appearance
+
+        // Setup expiry notifications
+        ExpiryNotifier.shared.setupExpiryNotifications()
     }
     var body: some Scene {
         WindowGroup {
@@ -66,6 +69,10 @@ struct net_worthApp: App {
         .onChange(of: scenePhase) { _, newPhase in
             // Show a window-level privacy shield above all content (including sheets) when not active
             PrivacyShieldManager.shared.setVisible(newPhase != .active)
+            // Ensure notifications are scheduled when app returns to foreground
+            if newPhase == .active {
+                ExpiryNotifier.shared.setupExpiryNotifications()
+            }
         }
     }
 }
