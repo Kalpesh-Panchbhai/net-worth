@@ -400,8 +400,9 @@ struct HomeView: View {
                     subtitle: "View distribution",
                     icon: "chart.pie.fill",
                     color: .purple,
-                    isDisabled: false
+                    isDisabled: !allDataLoaded
                 ) {
+                    guard allDataLoaded else { return }
                     Haptics.selection()
                     showAssetAllocationModal = true
                 }
