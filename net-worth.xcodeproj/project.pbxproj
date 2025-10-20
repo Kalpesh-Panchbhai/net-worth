@@ -42,6 +42,7 @@
 		7D74B2922E52375A00E35786 /* BannerCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D74B2912E52375A00E35786 /* BannerCenter.swift */; };
 		7D7A6BB92E6F17D90009C1E1 /* AssetOverviewCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A6BB72E6F17D90009C1E1 /* AssetOverviewCard.swift */; };
 		7D7A6BBB2E6F2D990009C1E1 /* EntityPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7A6BBA2E6F2D990009C1E1 /* EntityPickerView.swift */; };
+		7D85A0852EA6284D00A634EB /* AssetAllocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D85A0842EA6284D00A634EB /* AssetAllocationView.swift */; };
 		7D8A44B12E69A8150085B681 /* ChartDataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8A44B02E69A8150085B681 /* ChartDataModels.swift */; };
 		7D8A44B32E69C3110085B681 /* AccountTypePickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8A44B22E69C3110085B681 /* AccountTypePickerSheet.swift */; };
 		7D8A44B52E69CD860085B681 /* YahooFinanceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D8A44B42E69CD860085B681 /* YahooFinanceClient.swift */; };
@@ -119,6 +120,7 @@
 		7D74B2912E52375A00E35786 /* BannerCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerCenter.swift; sourceTree = "<group>"; };
 		7D7A6BB72E6F17D90009C1E1 /* AssetOverviewCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetOverviewCard.swift; sourceTree = "<group>"; };
 		7D7A6BBA2E6F2D990009C1E1 /* EntityPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityPickerView.swift; sourceTree = "<group>"; };
+		7D85A0842EA6284D00A634EB /* AssetAllocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetAllocationView.swift; sourceTree = "<group>"; };
 		7D8A44B02E69A8150085B681 /* ChartDataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDataModels.swift; sourceTree = "<group>"; };
 		7D8A44B22E69C3110085B681 /* AccountTypePickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTypePickerSheet.swift; sourceTree = "<group>"; };
 		7D8A44B42E69CD860085B681 /* YahooFinanceClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YahooFinanceClient.swift; sourceTree = "<group>"; };
@@ -245,6 +247,7 @@
 		7D7A6BB82E6F17D90009C1E1 /* Reports */ = {
 			isa = PBXGroup;
 			children = (
+				7D85A0842EA6284D00A634EB /* AssetAllocationView.swift */,
 				7D7A6BB72E6F17D90009C1E1 /* AssetOverviewCard.swift */,
 				7D7A6BBA2E6F2D990009C1E1 /* EntityPickerView.swift */,
 			);
@@ -563,6 +566,7 @@
 				7DAB01042E70000200000004 /* FloatingActionButton.swift in Sources */,
 				7D8A44B52E69CD860085B681 /* YahooFinanceClient.swift in Sources */,
 				7D9841EF2E97C118007B31A6 /* ImageTransactionView.swift in Sources */,
+				7D85A0852EA6284D00A634EB /* AssetAllocationView.swift in Sources */,
 				7D627CBA2E5A4AC700BB1CD7 /* DecimalTextField.swift in Sources */,
 				7DAC01112E70000300000011 /* AccountModels.swift in Sources */,
 				7DAC01122E70000300000012 /* AccountsController.swift in Sources */,
@@ -708,7 +712,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 444;
+				CURRENT_PROJECT_VERSION = 445;
 				DEVELOPMENT_ASSET_PATHS = "\"net-worth/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -738,7 +742,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 444;
+				CURRENT_PROJECT_VERSION = 445;
 				DEVELOPMENT_ASSET_PATHS = "\"net-worth/Preview Content\"";
 				DEVELOPMENT_TEAM = 2SHT42699C;
 				ENABLE_PREVIEWS = YES;

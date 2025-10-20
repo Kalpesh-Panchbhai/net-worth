@@ -19,6 +19,8 @@ struct HomeView: View {
     @State private var showReportsModal = false
     // Image transaction modal state
     @State private var showImageTransactionModal = false
+    // Asset allocation modal state
+    @State private var showAssetAllocationModal = false
     
     var body: some View {
         NavigationStack {
@@ -104,6 +106,15 @@ struct HomeView: View {
                     }
                 )
             }
+        }
+        .fullScreenCover(isPresented: $showAssetAllocationModal) {
+            AssetAllocationView(userId: userId)
+                .environmentObject(lookupStore)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("Close") { showAssetAllocationModal = false }
+                    }
+                }
         }
         .onAppear {
             Task {
@@ -322,7 +333,8 @@ struct HomeView: View {
                 .foregroundColor(.primary)
                 .padding(.horizontal, 4)
             
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 2), spacing: 12) {
+            // Row 1: Add Account, Record Income, Create Watchlist
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 3), spacing: 12) {
                 QuickActionCard(
                     title: "Add Account",
                     subtitle: "Track new assets",
@@ -367,7 +379,10 @@ struct HomeView: View {
                         tabCommands.presentCreate = .watchlist
                     }
                 }
-                
+            }
+            
+            // Row 2: View Reports, Asset Allocation
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 2), spacing: 12) {
                 QuickActionCard(
                     title: "View Reports",
                     subtitle: "Analyze trends",
@@ -379,9 +394,20 @@ struct HomeView: View {
                     Haptics.selection()
                     showReportsModal = true
                 }
+                
+                QuickActionCard(
+                    title: "Asset Allocation",
+                    subtitle: "View distribution",
+                    icon: "chart.pie.fill",
+                    color: .purple,
+                    isDisabled: false
+                ) {
+                    Haptics.selection()
+                    showAssetAllocationModal = true
+                }
             }
             
-            // Full-width card for Add transaction from image
+            // Row 3: Full-width card for Add transaction from image
             QuickActionCard(
                 title: "Add transaction from image",
                 subtitle: "Scan image",
@@ -521,36 +547,47 @@ struct QuickActionCard: View {
     
     var body: some View {
         Button(action: action) {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 10) {
                 HStack {
-                    Image(systemName: icon)
-                        .font(.title2)
-                        .foregroundColor(isDisabled ? color.opacity(0.5) : color)
+                    ZStack {
+                        Circle()
+                            .fill(isDisabled ? color.opacity(0.1) : color.opacity(0.15))
+                            .frame(width: 44, height: 44)
+                        
+                        Image(systemName: icon)
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundColor(isDisabled ? color.opacity(0.5) : color)
+                    }
                     
                     Spacer()
                     
                     Image(systemName: "arrow.up.right")
-                        .font(.caption.bold())
-                        .foregroundColor(isDisabled ? .secondary.opacity(0.5) : .secondary)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(isDisabled ? .secondary.opacity(0.4) : .secondary.opacity(0.6))
                 }
                 
-                VStack(alignment: .leading, spacing: 2) {
+                Spacer(minLength: 4)
+                
+                VStack(alignment: .leading, spacing: 4) {
                     Text(title)
-                        .font(.subheadline.bold())
+                        .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(isDisabled ? .primary.opacity(0.5) : .primary)
                         .lineLimit(2)
                         .fixedSize(horizontal: false, vertical: true)
                     
                     Text(subtitle)
-                        .font(.caption)
+                        .font(.system(size: 13, weight: .regular))
                         .foregroundColor(isDisabled ? .secondary.opacity(0.5) : .secondary)
+                        .lineLimit(2)
                 }
-                
-                Spacer()
             }
-            .padding(16)
-            .frame(minHeight: 100)
-            .elevatedCardBackground(cornerRadius: 16)
+            .padding(18)
+            .frame(minHeight: 120)
+            .background(
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .fill(Color.elevatedBackground)
+            )
+            .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
         }
         .buttonStyle(PressableButtonStyle())
         .disabled(isDisabled)
