@@ -42,6 +42,21 @@ private struct CurrencyBadge: View {
 
 // MARK: - Income
 struct IncomeListView: View {
+    enum ViewMode: String, CaseIterable, Identifiable {
+        case normal = "Normal"
+        case cumulative = "Cumulative"
+        case average = "Average"
+        
+        var id: String { rawValue }
+        var icon: String {
+            switch self {
+            case .normal: return "list.bullet"
+            case .cumulative: return "chart.line.uptrend.xyaxis"
+            case .average: return "chart.bar.fill"
+            }
+        }
+    }
+    
     @StateObject private var vm: IncomeController
     @State private var navCollapsed = false
     @EnvironmentObject private var banners: BannerCenter
@@ -53,6 +68,7 @@ struct IncomeListView: View {
     @State private var pendingEdit: Income? = nil
     @State private var showCreateSheet = false
     @State private var showReportsModal = false
+    @State private var viewMode: ViewMode = .normal
     // Micro-interactions for toolbar button
     @State private var breathe = false
     @State private var rippleTrigger = false
@@ -61,6 +77,13 @@ struct IncomeListView: View {
     init(userId: Int) {
         _vm = StateObject(wrappedValue: IncomeController(userId: userId))
     }
+    
+    // Computed property to check if filters are active
+    private var useFiltered: Bool {
+        let activeCount = vm.selectedTypes.count + vm.selectedTags.count + vm.selectedFYs.count + vm.selectedYears.count
+        return activeCount > 0
+    }
+    
     var body: some View {
         NavigationStack {
             ScrollViewReader { proxy in
@@ -86,12 +109,15 @@ struct IncomeListView: View {
                                         totalAll: useFiltered ? vm.filteredTotalAll : vm.totalAll,
                                         totalNet: useFiltered ? vm.filteredTotalNet : vm.totalNet,
                                         totalTax: useFiltered ? vm.filteredTotalTax : vm.totalTaxPaid,
-                                        currency: defaultCurrencyCode.uppercased()
+                                        currency: defaultCurrencyCode.uppercased(),
+                                        viewMode: viewMode,
+                                        allIncomes: useFiltered ? vm.filtered : vm.incomes
                                     )
                                 }
                             }
                             .padding(.top, 8)
-                            HStack(spacing: 8) {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
                                 // Group-by control
                                 Menu {
                                     Picker("Group by", selection: $vm.grouping) {
@@ -103,6 +129,34 @@ struct IncomeListView: View {
                                     HStack(spacing: 8) {
                                         Image(systemName: "square.grid.2x2")
                                         Text(vm.grouping.title)
+                                    }
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundColor(.airbnbPrimary)
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 12)
+                                    .background(Capsule().fill(Color.airbnbPrimary.opacity(0.12)))
+                                }
+                                
+                                // View mode control
+                                Menu {
+                                    ForEach(ViewMode.allCases) { mode in
+                                        Button {
+                                            withAnimation(.snappy) {
+                                                viewMode = mode
+                                            }
+                                            Haptics.selection()
+                                        } label: {
+                                            Label {
+                                                Text(mode.rawValue)
+                                            } icon: {
+                                                Image(systemName: mode.icon)
+                                            }
+                                        }
+                                    }
+                                } label: {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: viewMode.icon)
+                                        Text(viewMode.rawValue)
                                     }
                                     .font(.subheadline.weight(.semibold))
                                     .foregroundColor(.airbnbPrimary)
@@ -130,9 +184,7 @@ struct IncomeListView: View {
                                 }
                                 .buttonStyle(PressableButtonStyle())
 
-                                Spacer(minLength: 0)
-
-                                // Clear button moved to the far right
+                                // Clear button
                                 if activeCount > 0 {
                                     Button {
                                         withAnimation(.snappy) {
@@ -156,6 +208,8 @@ struct IncomeListView: View {
                                     }
                                     .buttonStyle(PressableButtonStyle())
                                 }
+                            }
+                            .padding(.horizontal, 16)
                             }
                             if activeCount > 0 {
                                 let sourcesText = vm.selectedTypes.sorted().joined(separator: ", ")
@@ -189,22 +243,28 @@ struct IncomeListView: View {
                                     let sectionTax = section.items.reduce(0) { $0 + $1.taxPaid }
                                     Section {
                                         ForEach(section.items, id: \.self) { item in
-                                            IncomeRowCard(income: item, currency: defaultCurrencyCode.uppercased())
-                                                .contentShape(Rectangle())
-                                                .contextMenu {
-                                                    Button {
-                                                        Haptics.selection()
-                                                        pendingEdit = item
-                                                    } label: {
-                                                        Label("Modify", systemImage: "pencil")
-                                                    }
-                                                    Button(role: .destructive) {
-                                                        Haptics.selection()
-                                                        pendingDelete = item
-                                                    } label: {
-                                                        Label("Delete", systemImage: "trash")
-                                                    }
+                                            IncomeRowCard(
+                                                income: item,
+                                                currency: defaultCurrencyCode.uppercased(),
+                                                viewMode: viewMode,
+                                                allIncomes: useFiltered ? vm.filtered : vm.incomes
+                                            )
+                                            .id("\(item.id)-\(viewMode.rawValue)")
+                                            .contentShape(Rectangle())
+                                            .contextMenu {
+                                                Button {
+                                                    Haptics.selection()
+                                                    pendingEdit = item
+                                                } label: {
+                                                    Label("Modify", systemImage: "pencil")
                                                 }
+                                                Button(role: .destructive) {
+                                                    Haptics.selection()
+                                                    pendingDelete = item
+                                                } label: {
+                                                    Label("Delete", systemImage: "trash")
+                                                }
+                                            }
                                         }
                                     } header: {
                                         SectionHeader(
@@ -214,7 +274,10 @@ struct IncomeListView: View {
                                             total: sectionTotal,
                                             net: sectionNet,
                                             tax: sectionTax,
-                                            currency: defaultCurrencyCode.uppercased()
+                                            currency: defaultCurrencyCode.uppercased(),
+                                            viewMode: viewMode,
+                                            sectionItems: section.items,
+                                            allIncomes: useFiltered ? vm.filtered : vm.incomes
                                         )
                                     }
                                 }
@@ -273,6 +336,7 @@ struct IncomeListView: View {
         .animation(.spring(response: 0.35, dampingFraction: 0.85), value: vm.incomes)
         .animation(.easeInOut(duration: 0.2), value: vm.selectedTypes)
         .animation(.easeInOut(duration: 0.2), value: vm.grouping)
+        .animation(.snappy(duration: 0.3), value: viewMode)
         .onChange(of: vm.errorMessage) { _, newValue in
             guard let message = newValue, !message.isEmpty else { return }
             // Suppress banners for pull-to-refresh if we already have data
@@ -323,15 +387,24 @@ struct IncomeListView: View {
         // Create Income sheet
         .sheet(isPresented: $showCreateSheet) {
             NavigationStack {
-                CreateIncomeView(userId: vm.userId)
-                    .navigationBarTitleDisplayMode(.inline)
+                CreateIncomeView(
+                    userId: vm.userId,
+                    viewMode: viewMode,
+                    allIncomes: useFiltered ? vm.filtered : vm.incomes
+                )
+                .navigationBarTitleDisplayMode(.inline)
             }
         }
         // Edit Income sheet
         .sheet(item: $pendingEdit) { income in
             NavigationStack {
-                CreateIncomeView(userId: vm.userId, existing: income)
-                    .navigationBarTitleDisplayMode(.inline)
+                CreateIncomeView(
+                    userId: vm.userId,
+                    existing: income,
+                    viewMode: viewMode,
+                    allIncomes: useFiltered ? vm.filtered : vm.incomes
+                )
+                .navigationBarTitleDisplayMode(.inline)
             }
         }
         .fullScreenCover(isPresented: $showReportsModal) {
@@ -456,14 +529,115 @@ private struct SummaryCard: View {
     let totalNet: Double
     let totalTax: Double
     let currency: String
+    let viewMode: IncomeListView.ViewMode
+    let allIncomes: [Income]
+    
+    // Calculate display values based on view mode
+    private var displayTotal: Double {
+        switch viewMode {
+        case .normal:
+            return totalAll
+        case .cumulative:
+            return calculateCumulativeTotal()
+        case .average:
+            return calculateAverageTotal()
+        }
+    }
+    
+    private var displayNet: Double {
+        switch viewMode {
+        case .normal:
+            return totalNet
+        case .cumulative:
+            return calculateCumulativeNet()
+        case .average:
+            return calculateAverageNet()
+        }
+    }
+    
+    private var displayTax: Double {
+        switch viewMode {
+        case .normal:
+            return totalTax
+        case .cumulative:
+            return calculateCumulativeTax()
+        case .average:
+            return calculateAverageTax()
+        }
+    }
+    
+    // Calculate cumulative values
+    private func calculateCumulativeTotal() -> Double {
+        allIncomes.reduce(0) { $0 + $1.netAmount + $1.taxPaid }
+    }
+    
+    private func calculateCumulativeNet() -> Double {
+        allIncomes.reduce(0) { $0 + $1.netAmount }
+    }
+    
+    private func calculateCumulativeTax() -> Double {
+        allIncomes.reduce(0) { $0 + $1.taxPaid }
+    }
+    
+    // Calculate average values
+    private func calculateAverageTotal() -> Double {
+        guard !allIncomes.isEmpty else { return 0 }
+        let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
+        guard let firstDate = sortedIncomes.first?.creditedDate,
+              let lastDate = sortedIncomes.last?.creditedDate else { return 0 }
+        
+        let cumulative = calculateCumulativeTotal()
+        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: lastDate).day ?? 0
+        guard totalDays > 0 else { return cumulative }
+        
+        let averagePerDay = cumulative / Double(totalDays)
+        return averagePerDay * 30.44
+    }
+    
+    private func calculateAverageNet() -> Double {
+        guard !allIncomes.isEmpty else { return 0 }
+        let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
+        guard let firstDate = sortedIncomes.first?.creditedDate,
+              let lastDate = sortedIncomes.last?.creditedDate else { return 0 }
+        
+        let cumulative = calculateCumulativeNet()
+        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: lastDate).day ?? 0
+        guard totalDays > 0 else { return cumulative }
+        
+        let averagePerDay = cumulative / Double(totalDays)
+        return averagePerDay * 30.44
+    }
+    
+    private func calculateAverageTax() -> Double {
+        guard !allIncomes.isEmpty else { return 0 }
+        let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
+        guard let firstDate = sortedIncomes.first?.creditedDate,
+              let lastDate = sortedIncomes.last?.creditedDate else { return 0 }
+        
+        let cumulative = calculateCumulativeTax()
+        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: lastDate).day ?? 0
+        guard totalDays > 0 else { return cumulative }
+        
+        let averagePerDay = cumulative / Double(totalDays)
+        return averagePerDay * 30.44
+    }
 
+    // Display label based on view mode
+    private var titleLabel: String {
+        switch viewMode {
+        case .normal: return "Total income"
+        case .cumulative: return "Cumulative income"
+        case .average: return "Average income/month"
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Total income")
+            Text(titleLabel)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
             HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text(totalAll, format: .currency(code: currency))
+                Text(displayTotal, format: .currency(code: currency))
                     .font(.system(size: 34, weight: .bold))
                     .foregroundColor(.primary)
                     .lineLimit(1)
@@ -471,23 +645,23 @@ private struct SummaryCard: View {
                     .allowsTightening(true)
                     .monospacedDigit()
                     .contentTransition(.numericText())
-                    .animation(.snappy(duration: 0.45), value: totalAll)
+                    .animation(.snappy(duration: 0.45), value: displayTotal)
             }
             ViewThatFits(in: .horizontal) {
                 // Preferred: pills side-by-side
                 HStack(spacing: 8) {
-                    let netPct: String? = totalAll > 0 ? (totalNet / totalAll).formatted(.percent.precision(.fractionLength(1))) : nil
-                    let taxPct: String? = totalAll > 0 ? (totalTax / totalAll).formatted(.percent.precision(.fractionLength(1))) : nil
+                    let netPct: String? = displayTotal > 0 ? (displayNet / displayTotal).formatted(.percent.precision(.fractionLength(1))) : nil
+                    let taxPct: String? = displayTotal > 0 ? (displayTax / displayTotal).formatted(.percent.precision(.fractionLength(1))) : nil
                     LabeledCurrencyPill(
                         title: "Net income",
-                        value: totalNet,
+                        value: displayNet,
                         currency: currency,
                         tint: .airbnbSuccess,
                         percent: netPct
                     )
                     LabeledCurrencyPill(
                         title: "Tax paid",
-                        value: totalTax,
+                        value: displayTax,
                         currency: currency,
                         tint: .airbnbPrimary,
                         percent: taxPct
@@ -496,18 +670,18 @@ private struct SummaryCard: View {
                 }
                 // Fallback: stack vertically when space is tight
                 VStack(alignment: .leading, spacing: 8) {
-                    let netPct: String? = totalAll > 0 ? (totalNet / totalAll).formatted(.percent.precision(.fractionLength(1))) : nil
-                    let taxPct: String? = totalAll > 0 ? (totalTax / totalAll).formatted(.percent.precision(.fractionLength(1))) : nil
+                    let netPct: String? = displayTotal > 0 ? (displayNet / displayTotal).formatted(.percent.precision(.fractionLength(1))) : nil
+                    let taxPct: String? = displayTotal > 0 ? (displayTax / displayTotal).formatted(.percent.precision(.fractionLength(1))) : nil
                     LabeledCurrencyPill(
                         title: "Net income",
-                        value: totalNet,
+                        value: displayNet,
                         currency: currency,
                         tint: .airbnbSuccess,
                         percent: netPct
                     )
                     LabeledCurrencyPill(
                         title: "Tax paid",
-                        value: totalTax,
+                        value: displayTax,
                         currency: currency,
                         tint: .airbnbPrimary,
                         percent: taxPct
@@ -550,53 +724,6 @@ private struct SummaryCard: View {
 
 // Local StatPill removed in favor of shared LabeledCurrencyPill
 
-private struct IncomeSectionsList: View {
-    let sections: [IncomeController.Section]
-    let grouping: IncomeController.Grouping
-    let currency: String
-    var onEdit: (Income) -> Void
-    var onLongPress: (Income) -> Void
-    var body: some View {
-        Group {
-            ForEach(sections) { section in
-                let sectionTotal = section.items.reduce(0) { $0 + $1.netAmount + $1.taxPaid }
-                let sectionNet = section.items.reduce(0) { $0 + $1.netAmount }
-                let sectionTax = section.items.reduce(0) { $0 + $1.taxPaid }
-                Section {
-                    ForEach(section.items, id: \.self) { item in
-                        IncomeRowCard(income: item, currency: currency)
-                            .contentShape(Rectangle())
-                            .contextMenu {
-                                Button {
-                                    Haptics.selection()
-                                    onEdit(item)
-                                } label: {
-                                    Label("Modify", systemImage: "pencil")
-                                }
-                                Button(role: .destructive) {
-                                    Haptics.selection()
-                                    onLongPress(item)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            }
-                    }
-                } header: {
-                    SectionHeader(
-                        grouping: grouping,
-                        rawTitle: section.title,
-                        count: section.items.count,
-                        total: sectionTotal,
-                        net: sectionNet,
-                        tax: sectionTax,
-                        currency: currency
-                    )
-                }
-            }
-        }
-    }
-}
-
 private struct SectionHeader: View {
     let grouping: IncomeController.Grouping
     let rawTitle: String
@@ -605,6 +732,9 @@ private struct SectionHeader: View {
     let net: Double
     let tax: Double
     let currency: String
+    let viewMode: IncomeListView.ViewMode
+    let sectionItems: [Income]
+    let allIncomes: [Income]
     
     @State private var showPreview = false
 
@@ -618,6 +748,141 @@ private struct SectionHeader: View {
         }
     }
     // Grouping badge removed to avoid redundancy with icon and title
+    
+    // Calculate display values based on view mode
+    private var displayTotal: Double {
+        switch viewMode {
+        case .normal:
+            return total
+        case .cumulative:
+            return calculateCumulativeTotal()
+        case .average:
+            return calculateAverageTotal()
+        }
+    }
+    
+    private var displayNet: Double {
+        switch viewMode {
+        case .normal:
+            return net
+        case .cumulative:
+            return calculateCumulativeNet()
+        case .average:
+            return calculateAverageNet()
+        }
+    }
+    
+    private var displayTax: Double {
+        switch viewMode {
+        case .normal:
+            return tax
+        case .cumulative:
+            return calculateCumulativeTax()
+        case .average:
+            return calculateAverageTax()
+        }
+    }
+    
+    // Calculate cumulative values up to the last item in this section
+    private func calculateCumulativeTotal() -> Double {
+        guard let lastItem = sectionItems.last else { return 0 }
+        let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
+        var cumulative = 0.0
+        for inc in sortedIncomes {
+            cumulative += inc.netAmount + inc.taxPaid
+            if inc.id == lastItem.id {
+                break
+            }
+        }
+        return cumulative
+    }
+    
+    private func calculateCumulativeNet() -> Double {
+        guard let lastItem = sectionItems.last else { return 0 }
+        let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
+        var cumulative = 0.0
+        for inc in sortedIncomes {
+            cumulative += inc.netAmount
+            if inc.id == lastItem.id {
+                break
+            }
+        }
+        return cumulative
+    }
+    
+    private func calculateCumulativeTax() -> Double {
+        guard let lastItem = sectionItems.last else { return 0 }
+        let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
+        var cumulative = 0.0
+        for inc in sortedIncomes {
+            cumulative += inc.taxPaid
+            if inc.id == lastItem.id {
+                break
+            }
+        }
+        return cumulative
+    }
+    
+    // Calculate average values up to the last item in this section
+    private func calculateAverageTotal() -> Double {
+        guard let lastItem = sectionItems.last else { return 0 }
+        let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
+        guard let firstDate = sortedIncomes.first?.creditedDate else { return 0 }
+        
+        var cumulative = 0.0
+        for inc in sortedIncomes {
+            cumulative += inc.netAmount + inc.taxPaid
+            if inc.id == lastItem.id {
+                break
+            }
+        }
+        
+        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: lastItem.creditedDate).day ?? 0
+        guard totalDays > 0 else { return cumulative }
+        
+        let averagePerDay = cumulative / Double(totalDays)
+        return averagePerDay * 30.44
+    }
+    
+    private func calculateAverageNet() -> Double {
+        guard let lastItem = sectionItems.last else { return 0 }
+        let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
+        guard let firstDate = sortedIncomes.first?.creditedDate else { return 0 }
+        
+        var cumulative = 0.0
+        for inc in sortedIncomes {
+            cumulative += inc.netAmount
+            if inc.id == lastItem.id {
+                break
+            }
+        }
+        
+        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: lastItem.creditedDate).day ?? 0
+        guard totalDays > 0 else { return cumulative }
+        
+        let averagePerDay = cumulative / Double(totalDays)
+        return averagePerDay * 30.44
+    }
+    
+    private func calculateAverageTax() -> Double {
+        guard let lastItem = sectionItems.last else { return 0 }
+        let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
+        guard let firstDate = sortedIncomes.first?.creditedDate else { return 0 }
+        
+        var cumulative = 0.0
+        for inc in sortedIncomes {
+            cumulative += inc.taxPaid
+            if inc.id == lastItem.id {
+                break
+            }
+        }
+        
+        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: lastItem.creditedDate).day ?? 0
+        guard totalDays > 0 else { return cumulative }
+        
+        let averagePerDay = cumulative / Double(totalDays)
+        return averagePerDay * 30.44
+    }
 
     var body: some View {
         HStack(spacing: 10) {
@@ -633,7 +898,7 @@ private struct SectionHeader: View {
                 .lineLimit(1)
                 .truncationMode(.tail)
             Spacer(minLength: 8)
-            Text(CurrencyShort.shortString(total, currency: currency))
+            Text(CurrencyShort.shortString(displayTotal, currency: currency))
                 .font(.subheadline.weight(.semibold))
                 .foregroundColor(.primary)
                 .monospacedDigit()
@@ -670,9 +935,9 @@ private struct SectionHeader: View {
         .sheet(isPresented: $showPreview) {
             IncomeSectionPreviewSheet(
                 title: rawTitle,
-                total: total,
-                net: net,
-                tax: tax,
+                total: displayTotal,
+                net: displayNet,
+                tax: displayTax,
                 currency: currency,
                 count: count,
                 iconName: iconName
@@ -823,6 +1088,8 @@ private struct IncomeSectionPreviewSheet: View {
 private struct IncomeRowCard: View {
     let income: Income
     let currency: String
+    let viewMode: IncomeListView.ViewMode
+    let allIncomes: [Income]
     @EnvironmentObject private var lookup: LookupStore
 
     var body: some View {
@@ -851,11 +1118,11 @@ private struct IncomeRowCard: View {
                         }
                         Spacer(minLength: 8)
                         VStack(alignment: .trailing, spacing: 6) {
-                            Text("Total")
+                            Text(displayLabel)
                                 .font(.caption2.bold())
                                 .foregroundColor(.secondary)
                                 .lineLimit(1)
-                            Text(income.netAmount + income.taxPaid, format: .currency(code: currency))
+                            Text(displayValue, format: .currency(code: currency))
                                 .font(.headline.weight(.semibold))
                                 .foregroundColor(.primary)
                                 .monospacedDigit()
@@ -883,10 +1150,10 @@ private struct IncomeRowCard: View {
                         HStack {
                             Spacer()
                             VStack(alignment: .trailing, spacing: 4) {
-                                Text("Total")
+                                Text(displayLabel)
                                     .font(.caption2.bold())
                                     .foregroundColor(.secondary)
-                                Text(income.netAmount + income.taxPaid, format: .currency(code: currency))
+                                Text(displayValue, format: .currency(code: currency))
                                     .font(.headline.weight(.semibold))
                                     .foregroundColor(.primary)
                                     .monospacedDigit()
@@ -900,12 +1167,12 @@ private struct IncomeRowCard: View {
                 // Net/Tax chips (kept readable, adaptive spacing)
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 10) {
-                        let total = income.netAmount + income.taxPaid
-                        let netPct: String? = total > 0 ? (income.netAmount / total).formatted(.percent.precision(.fractionLength(1))) : nil
-                        let taxPct: String? = total > 0 ? (income.taxPaid / total).formatted(.percent.precision(.fractionLength(1))) : nil
+                        let total = displayValue
+                        let netPct: String? = total > 0 ? (displayNetValue / total).formatted(.percent.precision(.fractionLength(1))) : nil
+                        let taxPct: String? = total > 0 ? (displayTaxValue / total).formatted(.percent.precision(.fractionLength(1))) : nil
                         HStack(spacing: 6) {
                             Text("Net").font(.caption2.bold())
-                            Text(income.netAmount, format: .currency(code: currency))
+                            Text(displayNetValue, format: .currency(code: currency))
                                 .font(.subheadline.weight(.semibold))
                                 .monospacedDigit()
                                 .minimumScaleFactor(0.85)
@@ -919,7 +1186,7 @@ private struct IncomeRowCard: View {
 
                         HStack(spacing: 6) {
                             Text("Tax").font(.caption2.bold())
-                            Text(income.taxPaid, format: .currency(code: currency))
+                            Text(displayTaxValue, format: .currency(code: currency))
                                 .font(.subheadline.weight(.semibold))
                                 .monospacedDigit()
                                 .minimumScaleFactor(0.85)
@@ -934,12 +1201,12 @@ private struct IncomeRowCard: View {
                         Spacer(minLength: 0)
                     }
                     VStack(alignment: .leading, spacing: 8) {
-                        let total = income.netAmount + income.taxPaid
-                        let netPct: String? = total > 0 ? (income.netAmount / total).formatted(.percent.precision(.fractionLength(1))) : nil
-                        let taxPct: String? = total > 0 ? (income.taxPaid / total).formatted(.percent.precision(.fractionLength(1))) : nil
+                        let total = displayValue
+                        let netPct: String? = total > 0 ? (displayNetValue / total).formatted(.percent.precision(.fractionLength(1))) : nil
+                        let taxPct: String? = total > 0 ? (displayTaxValue / total).formatted(.percent.precision(.fractionLength(1))) : nil
                         HStack(spacing: 6) {
                             Text("Net").font(.caption2.bold())
-                            Text(income.netAmount, format: .currency(code: currency))
+                            Text(displayNetValue, format: .currency(code: currency))
                                 .font(.subheadline.weight(.semibold))
                                 .monospacedDigit()
                                 .minimumScaleFactor(0.85)
@@ -953,7 +1220,7 @@ private struct IncomeRowCard: View {
 
                         HStack(spacing: 6) {
                             Text("Tax").font(.caption2.bold())
-                            Text(income.taxPaid, format: .currency(code: currency))
+                            Text(displayTaxValue, format: .currency(code: currency))
                                 .font(.subheadline.weight(.semibold))
                                 .monospacedDigit()
                                 .minimumScaleFactor(0.85)
@@ -985,6 +1252,150 @@ private struct IncomeRowCard: View {
     private var tagName: String {
         lookup.incomeTags.first { $0.id == income.incomeTagId }?.name ?? "Unknown Tag"
     }
+    
+    // Display label based on view mode
+    private var displayLabel: String {
+        switch viewMode {
+        case .normal: return "Total"
+        case .cumulative: return "Cumulative"
+        case .average: return "Avg/month"
+        }
+    }
+    
+    // Display value based on view mode (Total = Net + Tax)
+    private var displayValue: Double {
+        switch viewMode {
+        case .normal:
+            return income.netAmount + income.taxPaid
+        case .cumulative:
+            return cumulativeTotalUpToThisIncome
+        case .average:
+            return averageTotalPerMonthUpToThisIncome
+        }
+    }
+    
+    // Display net value based on view mode
+    private var displayNetValue: Double {
+        switch viewMode {
+        case .normal:
+            return income.netAmount
+        case .cumulative:
+            return cumulativeNetUpToThisIncome
+        case .average:
+            return averageNetPerMonthUpToThisIncome
+        }
+    }
+    
+    // Display tax value based on view mode
+    private var displayTaxValue: Double {
+        switch viewMode {
+        case .normal:
+            return income.taxPaid
+        case .cumulative:
+            return cumulativeTaxUpToThisIncome
+        case .average:
+            return averageTaxPerMonthUpToThisIncome
+        }
+    }
+    
+    // Calculate cumulative total (net + tax) up to and including this income
+    private var cumulativeTotalUpToThisIncome: Double {
+        let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
+        var cumulative = 0.0
+        for inc in sortedIncomes {
+            cumulative += inc.netAmount + inc.taxPaid
+            if inc.id == income.id {
+                break
+            }
+        }
+        return cumulative
+    }
+    
+    // Calculate cumulative net income up to and including this income
+    private var cumulativeNetUpToThisIncome: Double {
+        let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
+        var cumulative = 0.0
+        for inc in sortedIncomes {
+            cumulative += inc.netAmount
+            if inc.id == income.id {
+                break
+            }
+        }
+        return cumulative
+    }
+    
+    // Calculate cumulative tax up to and including this income
+    private var cumulativeTaxUpToThisIncome: Double {
+        let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
+        var cumulative = 0.0
+        for inc in sortedIncomes {
+            cumulative += inc.taxPaid
+            if inc.id == income.id {
+                break
+            }
+        }
+        return cumulative
+    }
+    
+    // Calculate average total per month up to and including this income
+    private var averageTotalPerMonthUpToThisIncome: Double {
+        let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
+        guard let firstDate = sortedIncomes.first?.creditedDate else { return 0 }
+        
+        var cumulative = 0.0
+        for inc in sortedIncomes {
+            cumulative += inc.netAmount + inc.taxPaid
+            if inc.id == income.id {
+                break
+            }
+        }
+        
+        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: income.creditedDate).day ?? 0
+        guard totalDays > 0 else { return cumulative }
+        
+        let averagePerDay = cumulative / Double(totalDays)
+        return averagePerDay * 30.44
+    }
+    
+    // Calculate average net per month up to and including this income
+    private var averageNetPerMonthUpToThisIncome: Double {
+        let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
+        guard let firstDate = sortedIncomes.first?.creditedDate else { return 0 }
+        
+        var cumulative = 0.0
+        for inc in sortedIncomes {
+            cumulative += inc.netAmount
+            if inc.id == income.id {
+                break
+            }
+        }
+        
+        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: income.creditedDate).day ?? 0
+        guard totalDays > 0 else { return cumulative }
+        
+        let averagePerDay = cumulative / Double(totalDays)
+        return averagePerDay * 30.44
+    }
+    
+    // Calculate average tax per month up to and including this income
+    private var averageTaxPerMonthUpToThisIncome: Double {
+        let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
+        guard let firstDate = sortedIncomes.first?.creditedDate else { return 0 }
+        
+        var cumulative = 0.0
+        for inc in sortedIncomes {
+            cumulative += inc.taxPaid
+            if inc.id == income.id {
+                break
+            }
+        }
+        
+        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: income.creditedDate).day ?? 0
+        guard totalDays > 0 else { return cumulative }
+        
+        let averagePerDay = cumulative / Double(totalDays)
+        return averagePerDay * 30.44
+    }
 }
 
 extension IncomeRowCard {
@@ -1014,6 +1425,8 @@ extension IncomeRowCard {
 struct CreateIncomeView: View {
     let userId: Int
     let existing: Income?
+    let viewMode: IncomeListView.ViewMode
+    let allIncomes: [Income]
     @EnvironmentObject private var lookup: LookupStore
     @EnvironmentObject private var banners: BannerCenter
     @Environment(\.dismiss) private var dismiss
@@ -1033,9 +1446,11 @@ struct CreateIncomeView: View {
 
     private let client = RestClient()
 
-    init(userId: Int, existing: Income? = nil) {
+    init(userId: Int, existing: Income? = nil, viewMode: IncomeListView.ViewMode = .normal, allIncomes: [Income] = []) {
         self.userId = userId
         self.existing = existing
+        self.viewMode = viewMode
+        self.allIncomes = allIncomes
     }
 
     // MARK: - Validation
@@ -1072,7 +1487,9 @@ struct CreateIncomeView: View {
                     totalAll: totalAll,
                     totalNet: amount ?? 0,
                     totalTax: tax ?? 0,
-                    currency: currencyCode
+                    currency: currencyCode,
+                    viewMode: viewMode,
+                    allIncomes: allIncomes
                 )
 
                 // Amount inputs
