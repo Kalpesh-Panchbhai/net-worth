@@ -583,11 +583,16 @@ private struct SummaryCard: View {
     private func calculateAverageTotal() -> Double {
         guard !allIncomes.isEmpty else { return 0 }
         let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
-        guard let firstDate = sortedIncomes.first?.creditedDate,
+        guard let firstIncomeDate = sortedIncomes.first?.creditedDate,
               let lastDate = sortedIncomes.last?.creditedDate else { return 0 }
         
+        // Get the 1st of the month of the first income
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: firstIncomeDate)
+        guard let firstOfMonth = calendar.date(from: components) else { return 0 }
+        
         let cumulative = calculateCumulativeTotal()
-        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: lastDate).day ?? 0
+        let totalDays = calendar.dateComponents([.day], from: firstOfMonth, to: lastDate).day ?? 0
         guard totalDays > 0 else { return cumulative }
         
         let averagePerDay = cumulative / Double(totalDays)
@@ -597,11 +602,16 @@ private struct SummaryCard: View {
     private func calculateAverageNet() -> Double {
         guard !allIncomes.isEmpty else { return 0 }
         let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
-        guard let firstDate = sortedIncomes.first?.creditedDate,
+        guard let firstIncomeDate = sortedIncomes.first?.creditedDate,
               let lastDate = sortedIncomes.last?.creditedDate else { return 0 }
         
+        // Get the 1st of the month of the first income
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: firstIncomeDate)
+        guard let firstOfMonth = calendar.date(from: components) else { return 0 }
+        
         let cumulative = calculateCumulativeNet()
-        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: lastDate).day ?? 0
+        let totalDays = calendar.dateComponents([.day], from: firstOfMonth, to: lastDate).day ?? 0
         guard totalDays > 0 else { return cumulative }
         
         let averagePerDay = cumulative / Double(totalDays)
@@ -611,11 +621,16 @@ private struct SummaryCard: View {
     private func calculateAverageTax() -> Double {
         guard !allIncomes.isEmpty else { return 0 }
         let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
-        guard let firstDate = sortedIncomes.first?.creditedDate,
+        guard let firstIncomeDate = sortedIncomes.first?.creditedDate,
               let lastDate = sortedIncomes.last?.creditedDate else { return 0 }
         
+        // Get the 1st of the month of the first income
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: firstIncomeDate)
+        guard let firstOfMonth = calendar.date(from: components) else { return 0 }
+        
         let cumulative = calculateCumulativeTax()
-        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: lastDate).day ?? 0
+        let totalDays = calendar.dateComponents([.day], from: firstOfMonth, to: lastDate).day ?? 0
         guard totalDays > 0 else { return cumulative }
         
         let averagePerDay = cumulative / Double(totalDays)
@@ -827,7 +842,12 @@ private struct SectionHeader: View {
     private func calculateAverageTotal() -> Double {
         guard let lastItem = sectionItems.last else { return 0 }
         let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
-        guard let firstDate = sortedIncomes.first?.creditedDate else { return 0 }
+        guard let firstIncomeDate = sortedIncomes.first?.creditedDate else { return 0 }
+        
+        // Get the 1st of the month of the first income
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: firstIncomeDate)
+        guard let firstOfMonth = calendar.date(from: components) else { return 0 }
         
         var cumulative = 0.0
         for inc in sortedIncomes {
@@ -837,7 +857,7 @@ private struct SectionHeader: View {
             }
         }
         
-        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: lastItem.creditedDate).day ?? 0
+        let totalDays = calendar.dateComponents([.day], from: firstOfMonth, to: lastItem.creditedDate).day ?? 0
         guard totalDays > 0 else { return cumulative }
         
         let averagePerDay = cumulative / Double(totalDays)
@@ -847,7 +867,12 @@ private struct SectionHeader: View {
     private func calculateAverageNet() -> Double {
         guard let lastItem = sectionItems.last else { return 0 }
         let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
-        guard let firstDate = sortedIncomes.first?.creditedDate else { return 0 }
+        guard let firstIncomeDate = sortedIncomes.first?.creditedDate else { return 0 }
+        
+        // Get the 1st of the month of the first income
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: firstIncomeDate)
+        guard let firstOfMonth = calendar.date(from: components) else { return 0 }
         
         var cumulative = 0.0
         for inc in sortedIncomes {
@@ -857,7 +882,7 @@ private struct SectionHeader: View {
             }
         }
         
-        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: lastItem.creditedDate).day ?? 0
+        let totalDays = calendar.dateComponents([.day], from: firstOfMonth, to: lastItem.creditedDate).day ?? 0
         guard totalDays > 0 else { return cumulative }
         
         let averagePerDay = cumulative / Double(totalDays)
@@ -867,7 +892,12 @@ private struct SectionHeader: View {
     private func calculateAverageTax() -> Double {
         guard let lastItem = sectionItems.last else { return 0 }
         let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
-        guard let firstDate = sortedIncomes.first?.creditedDate else { return 0 }
+        guard let firstIncomeDate = sortedIncomes.first?.creditedDate else { return 0 }
+        
+        // Get the 1st of the month of the first income
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: firstIncomeDate)
+        guard let firstOfMonth = calendar.date(from: components) else { return 0 }
         
         var cumulative = 0.0
         for inc in sortedIncomes {
@@ -877,7 +907,7 @@ private struct SectionHeader: View {
             }
         }
         
-        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: lastItem.creditedDate).day ?? 0
+        let totalDays = calendar.dateComponents([.day], from: firstOfMonth, to: lastItem.creditedDate).day ?? 0
         guard totalDays > 0 else { return cumulative }
         
         let averagePerDay = cumulative / Double(totalDays)
@@ -1340,7 +1370,12 @@ private struct IncomeRowCard: View {
     // Calculate average total per month up to and including this income
     private var averageTotalPerMonthUpToThisIncome: Double {
         let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
-        guard let firstDate = sortedIncomes.first?.creditedDate else { return 0 }
+        guard let firstIncomeDate = sortedIncomes.first?.creditedDate else { return 0 }
+        
+        // Get the 1st of the month of the first income
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: firstIncomeDate)
+        guard let firstOfMonth = calendar.date(from: components) else { return 0 }
         
         var cumulative = 0.0
         for inc in sortedIncomes {
@@ -1350,7 +1385,7 @@ private struct IncomeRowCard: View {
             }
         }
         
-        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: income.creditedDate).day ?? 0
+        let totalDays = calendar.dateComponents([.day], from: firstOfMonth, to: income.creditedDate).day ?? 0
         guard totalDays > 0 else { return cumulative }
         
         let averagePerDay = cumulative / Double(totalDays)
@@ -1360,7 +1395,12 @@ private struct IncomeRowCard: View {
     // Calculate average net per month up to and including this income
     private var averageNetPerMonthUpToThisIncome: Double {
         let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
-        guard let firstDate = sortedIncomes.first?.creditedDate else { return 0 }
+        guard let firstIncomeDate = sortedIncomes.first?.creditedDate else { return 0 }
+        
+        // Get the 1st of the month of the first income
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: firstIncomeDate)
+        guard let firstOfMonth = calendar.date(from: components) else { return 0 }
         
         var cumulative = 0.0
         for inc in sortedIncomes {
@@ -1370,7 +1410,7 @@ private struct IncomeRowCard: View {
             }
         }
         
-        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: income.creditedDate).day ?? 0
+        let totalDays = calendar.dateComponents([.day], from: firstOfMonth, to: income.creditedDate).day ?? 0
         guard totalDays > 0 else { return cumulative }
         
         let averagePerDay = cumulative / Double(totalDays)
@@ -1380,7 +1420,12 @@ private struct IncomeRowCard: View {
     // Calculate average tax per month up to and including this income
     private var averageTaxPerMonthUpToThisIncome: Double {
         let sortedIncomes = allIncomes.sorted { $0.creditedDate < $1.creditedDate }
-        guard let firstDate = sortedIncomes.first?.creditedDate else { return 0 }
+        guard let firstIncomeDate = sortedIncomes.first?.creditedDate else { return 0 }
+        
+        // Get the 1st of the month of the first income
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: firstIncomeDate)
+        guard let firstOfMonth = calendar.date(from: components) else { return 0 }
         
         var cumulative = 0.0
         for inc in sortedIncomes {
@@ -1390,7 +1435,7 @@ private struct IncomeRowCard: View {
             }
         }
         
-        let totalDays = Calendar.current.dateComponents([.day], from: firstDate, to: income.creditedDate).day ?? 0
+        let totalDays = calendar.dateComponents([.day], from: firstOfMonth, to: income.creditedDate).day ?? 0
         guard totalDays > 0 else { return cumulative }
         
         let averagePerDay = cumulative / Double(totalDays)

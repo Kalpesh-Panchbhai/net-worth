@@ -1333,16 +1333,21 @@ struct AssetOverviewCard: View {
         var cumulativeIncome = baselineIncome
         var cumulativeTax = allIncomes.filter { $0.creditedDate < startDate }
             .reduce(0.0) { $0 + $1.taxPaid }
+        
+        // Get the 1st of the month of the first income for average calculation
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: firstIncomeDate)
+        let firstOfMonth = calendar.date(from: components) ?? firstIncomeDate
             
         return rangeIncomes.enumerated().map { index, income in
             cumulativeIncome += income.netAmount
             cumulativeTax += income.taxPaid
 
             // Calculate average per calendar month
-            // Formula: total cumulative net income until that chart day / sum of total days from the start date to until that chart day * 1 calendar day (30.44 days average)
+            // Formula: total cumulative net income until that chart day / sum of total days from the 1st of the month of first income to until that chart day * 1 calendar day (30.44 days average)
             let totalDaysFromFirst =
-                Calendar.current.dateComponents(
-                    [.day], from: firstIncomeDate, to: income.creditedDate
+                calendar.dateComponents(
+                    [.day], from: firstOfMonth, to: income.creditedDate
                 ).day ?? 0
             let averagePerDay =
                 totalDaysFromFirst > 0 ? cumulativeIncome / Double(totalDaysFromFirst) : 0
