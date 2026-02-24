@@ -2,57 +2,62 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Net Worth Backend API",
-    "version": "1.0.0"
+    "description": "RESTful API for managing personal net worth tracking including users, accounts, holdings, transactions, incomes, and watchlists.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Net Worth Backend"
+    }
   },
   "servers": [
     {
-      "url": "http://localhost:8080"
+      "url": "http://localhost:8080",
+      "description": "Local development server"
     }
   ],
   "tags": [
     {
       "name": "users",
-      "description": "User management"
+      "description": "User management operations"
     },
     {
       "name": "income-tags",
-      "description": "Income tag management"
+      "description": "Income tag management for categorizing incomes"
     },
     {
       "name": "income-sources",
-      "description": "Income source management"
+      "description": "Income source management for tracking income origins"
     },
     {
       "name": "incomes",
-      "description": "Income management"
+      "description": "Income record management"
     },
     {
       "name": "watchlists",
-      "description": "Watchlist management"
+      "description": "Watchlist management for grouping accounts"
     },
     {
       "name": "accounts",
-      "description": "Account management"
+      "description": "Account management (broker, savings, etc.)"
     },
     {
       "name": "holdings",
-      "description": "Holding management"
+      "description": "Holding management within accounts"
     },
     {
       "name": "watchlist-accounts",
-      "description": "Accounts under a watchlist"
+      "description": "Link/unlink accounts to watchlists"
     },
     {
       "name": "account-watchlists",
-      "description": "Watchlists that include an account"
+      "description": "List watchlists containing a specific account"
     },
     {
       "name": "transactions",
-      "description": "Transactions listing & deletion"
+      "description": "Transaction management for holdings"
     },
     {
       "name": "chart-data",
-      "description": "Chart data for holdings, accounts, and watchlists"
+      "description": "Time-series chart data for holdings, accounts, and watchlists"
     }
   ],
   "paths": {
@@ -1914,9 +1919,12 @@
         },
         "responses": {
           "201": {
-            "description": "Linked",
+            "description": "Account linked to watchlist successfully",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWatchlistAccountLink"
+                },
                 "examples": {
                   "default": {
                     "value": {
@@ -2478,13 +2486,16 @@
       },
       "User": {
         "type": "object",
+        "description": "User entity representing an application user",
         "properties": {
           "id": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Internal unique user identifier"
           },
           "externalUserId": {
-            "type": "string"
+            "type": "string",
+            "description": "External user identifier (e.g., from authentication provider)"
           }
         },
         "required": [
@@ -2517,9 +2528,11 @@
       },
       "CreateUserRequest": {
         "type": "object",
+        "description": "Request body for creating or ensuring a user exists",
         "properties": {
           "externalUserId": {
-            "type": "string"
+            "type": "string",
+            "description": "External user identifier (e.g., from authentication provider). Uses idempotent insert - returns existing user if already exists."
           }
         },
         "required": [
@@ -2716,59 +2729,80 @@
       },
       "Transaction": {
         "type": "object",
+        "description": "Transaction record for a holding",
         "properties": {
           "id": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Unique transaction identifier"
           },
           "accountId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Account ID this transaction belongs to"
           },
           "holdingId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Holding ID this transaction is for"
           },
           "txnDate": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "Transaction date (YYYY-MM-DD)"
           },
           "invested": {
-            "type": "number"
+            "type": "number",
+            "description": "Total invested amount after this transaction"
           },
           "value": {
-            "type": "number"
+            "type": "number",
+            "description": "Total units/value after this transaction"
           }
         },
+        "required": [
+          "id",
+          "accountId",
+          "holdingId",
+          "txnDate",
+          "invested",
+          "value"
+        ],
         "example": {
           "id": 1,
           "accountId": 1,
           "holdingId": 1,
           "txnDate": "2025-08-29",
-          "invested": 1.00,
+          "invested": 1000.00,
           "value": 10.25
         }
       },
       "CreateTransactionRequest": {
         "type": "object",
+        "description": "Request body for creating a transaction",
         "properties": {
           "accountId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Account ID"
           },
           "holdingId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Holding ID"
           },
           "txnDate": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "Transaction date (YYYY-MM-DD)"
           },
           "invested": {
-            "type": "number"
+            "type": "number",
+            "description": "Invested amount for this transaction"
           },
           "value": {
-            "type": "number"
+            "type": "number",
+            "description": "Units/value for this transaction"
           },
           "mode": {
             "type": "string",
@@ -2776,7 +2810,7 @@
               "add",
               "update"
             ],
-            "description": "add => add to latest invested/value; update => create as-is"
+            "description": "'add' => adds to latest invested/value from previous transaction; 'update' => creates transaction with exact values provided"
           }
         },
         "required": [
@@ -2818,29 +2852,35 @@
         "properties": {
           "userId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Internal user ID"
           },
           "incomeSourceId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Income source ID"
           },
           "incomeTagId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Income tag ID"
           },
           "netAmount": {
-            "type": "number"
+            "type": "number",
+            "description": "Net income amount after deductions"
           },
           "taxPaid": {
-            "type": "number"
+            "type": "number",
+            "description": "Tax paid on this income (defaults to 0 if not provided)"
           },
           "currency": {
-            "type": "string"
+            "type": "string",
+            "description": "Currency code (e.g., INR, USD)"
           },
           "creditedDate": {
             "type": "string",
-            "format": "date-time",
-            "description": "UTC ISO 8601"
+            "format": "date",
+            "description": "Date when income was credited (YYYY-MM-DD format)"
           }
         },
         "required": [
@@ -2907,17 +2947,21 @@
       },
       "Watchlist": {
         "type": "object",
+        "description": "Watchlist entity for grouping accounts",
         "properties": {
           "id": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Unique watchlist identifier"
           },
           "userId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Owner user ID"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Watchlist name (must be unique per user)"
           }
         },
         "required": [
@@ -2944,26 +2988,33 @@
       },
       "WatchlistSummary": {
         "type": "object",
+        "description": "Watchlist summary with aggregated value metrics from all linked accounts",
         "properties": {
           "id": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Unique watchlist identifier"
           },
           "userId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Owner user ID"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Watchlist name"
           },
           "currentDayValue": {
-            "type": "number"
+            "type": "number",
+            "description": "Current day total market value of all linked accounts"
           },
           "previousDayValue": {
-            "type": "number"
+            "type": "number",
+            "description": "Previous day total market value of all linked accounts"
           },
           "invested": {
-            "type": "number"
+            "type": "number",
+            "description": "Total invested amount across all linked accounts"
           }
         },
         "required": [
@@ -2999,21 +3050,25 @@
       },
       "Account": {
         "type": "object",
+        "description": "Account entity representing a financial account",
         "properties": {
           "id": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Unique account identifier"
           },
           "userId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Owner user ID"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Account name"
           },
           "type": {
             "type": "string",
-            "description": "Account type",
+            "description": "Account type classification",
             "enum": [
               "BROKER",
               "SAVINGS",
@@ -3023,13 +3078,16 @@
             ]
           },
           "isActive": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the account is active"
           },
           "needsDailyData": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether account requires daily data fetching (e.g., from Dhan API)"
           },
           "currency": {
-            "type": "string"
+            "type": "string",
+            "description": "Account currency code"
           }
         },
         "required": [
@@ -3064,20 +3122,25 @@
       },
       "Holding": {
         "type": "object",
+        "description": "Holding entity representing an investment position within an account",
         "properties": {
           "id": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Unique holding identifier"
           },
           "accountId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Parent account ID"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Holding name (e.g., company name)"
           },
           "symbol": {
-            "type": "string"
+            "type": "string",
+            "description": "Holding symbol/ticker (must be unique per account)"
           }
         },
         "required": [
@@ -3095,16 +3158,20 @@
       },
       "CreateHoldingRequest": {
         "type": "object",
+        "description": "Request body for creating a new holding",
         "properties": {
           "accountId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Parent account ID"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Holding name"
           },
           "symbol": {
-            "type": "string"
+            "type": "string",
+            "description": "Holding symbol/ticker (must be unique per account)"
           }
         },
         "required": [
@@ -3115,32 +3182,41 @@
       },
       "HoldingSummary": {
         "type": "object",
+        "description": "Holding summary with current value metrics",
         "properties": {
           "id": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Unique holding identifier"
           },
           "accountId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Parent account ID"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Holding name"
           },
           "symbol": {
-            "type": "string"
+            "type": "string",
+            "description": "Holding symbol/ticker"
           },
           "units": {
-            "type": "number"
+            "type": "number",
+            "description": "Number of units held (from latest transaction)"
           },
           "currentDayValue": {
-            "type": "number"
+            "type": "number",
+            "description": "Current day market value"
           },
           "previousDayValue": {
-            "type": "number"
+            "type": "number",
+            "description": "Previous day market value"
           },
           "invested": {
-            "type": "number"
+            "type": "number",
+            "description": "Total invested amount"
           }
         },
         "required": [
@@ -3208,38 +3284,56 @@
       },
       "AccountSummary": {
         "type": "object",
+        "description": "Account summary with current value metrics",
         "properties": {
           "id": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Unique account identifier"
           },
           "userId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Owner user ID"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Account name"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "description": "Account type (BROKER, SAVINGS, CREDIT_CARD, LOAN, OTHER)",
+            "enum": [
+              "BROKER",
+              "SAVINGS",
+              "CREDIT_CARD",
+              "LOAN",
+              "OTHER"
+            ]
           },
           "isActive": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the account is active"
           },
           "needsDailyData": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether account requires daily data fetching"
           },
           "currency": {
-            "type": "string"
+            "type": "string",
+            "description": "Account currency code"
           },
           "currentDayValue": {
-            "type": "number"
+            "type": "number",
+            "description": "Current day total market value of all holdings"
           },
           "previousDayValue": {
-            "type": "number"
+            "type": "number",
+            "description": "Previous day total market value of all holdings"
           },
           "invested": {
-            "type": "number"
+            "type": "number",
+            "description": "Total invested amount across all holdings"
           }
         },
         "required": [
@@ -3283,24 +3377,25 @@
       },
       "ChartData": {
         "type": "object",
+        "description": "Single data point in a time-series chart representing daily value and investment",
         "properties": {
           "id": {
             "type": "integer",
             "format": "int64",
-            "description": "Sequence number starting from 1"
+            "description": "Sequential identifier starting from 1"
           },
           "date": {
             "type": "string",
             "format": "date",
-            "description": "Date of the data point"
+            "description": "Date of the data point (YYYY-MM-DD)"
           },
           "value": {
             "type": "number",
-            "description": "Current day value"
+            "description": "Market value on this date (uses forward fill for missing dates)"
           },
           "invested": {
             "type": "number",
-            "description": "Invested amount"
+            "description": "Total invested amount as of this date (uses forward fill for missing dates)"
           }
         },
         "required": [
@@ -3336,17 +3431,20 @@
       },
       "CreateAccountRequest": {
         "type": "object",
+        "description": "Request body for creating a new account",
         "properties": {
           "userId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Owner user ID"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Account name (must be unique per user and type)"
           },
           "type": {
             "type": "string",
-            "description": "Account type",
+            "description": "Account type classification",
             "enum": [
               "BROKER",
               "SAVINGS",
@@ -3356,14 +3454,18 @@
             ]
           },
           "currency": {
-            "type": "string"
+            "type": "string",
+            "description": "Account currency code (e.g., INR, USD)"
           },
           "isActive": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the account is active (defaults to true)",
+            "default": true
           },
           "needsDailyData": {
             "type": "boolean",
-            "description": "Optional. Whether the account needs daily data. Only settable at creation time."
+            "description": "Whether account requires daily data fetching from external APIs (defaults to false). Only settable at creation time.",
+            "default": false
           }
         },
         "required": [
@@ -3375,25 +3477,30 @@
       },
       "UpdateAccountRequest": {
         "type": "object",
-        "description": "Provide any subset of fields to update. At least one field is required.",
+        "description": "Request body for updating an account. Provide any subset of fields to update. At least one field is required.",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "New account name (must be unique per user and type)"
           },
           "isActive": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the account is active"
           }
         }
       },
       "CreateWatchlistRequest": {
         "type": "object",
+        "description": "Request body for creating a new watchlist",
         "properties": {
           "userId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Owner user ID"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Watchlist name (must be unique per user)"
           }
         },
         "required": [
@@ -3403,9 +3510,11 @@
       },
       "UpdateWatchlistNameRequest": {
         "type": "object",
+        "description": "Request body for updating a watchlist name",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "New watchlist name (must be unique per user)"
           }
         },
         "required": [
@@ -3414,18 +3523,60 @@
       },
       "ApiError": {
         "type": "object",
+        "description": "Standard error response structure",
         "properties": {
           "code": {
-            "type": "string"
+            "type": "string",
+            "description": "Error code (e.g., VALIDATION_ERROR, NOT_FOUND, CONFLICT, INTERNAL_ERROR)"
           },
           "message": {
-            "type": "string"
+            "type": "string",
+            "description": "Human-readable error message"
           }
         },
         "required": [
           "code",
           "message"
-        ]
+        ],
+        "example": {
+          "code": "VALIDATION_ERROR",
+          "message": "Path parameter 'id' is required"
+        }
+      },
+      "WatchlistAccountLink": {
+        "type": "object",
+        "description": "Represents a link between a watchlist and an account",
+        "properties": {
+          "watchlistId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Watchlist ID"
+          },
+          "accountId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Account ID"
+          }
+        },
+        "required": [
+          "watchlistId",
+          "accountId"
+        ],
+        "example": {
+          "watchlistId": 1,
+          "accountId": 1
+        }
+      },
+      "ApiResponseWatchlistAccountLink": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/WatchlistAccountLink"
+          }
+        }
       }
     },
     "responses": {
