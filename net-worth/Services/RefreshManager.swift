@@ -20,11 +20,12 @@ final class RefreshManager: ObservableObject {
                 icon: "arrow.trianglehead.2.counterclockwise", title: "Refreshing data…",
                 message: "0s elapsed", style: .neutral))
 
-        timerTask = Task {
+        timerTask = Task { [weak self] in
             while !Task.isCancelled {
                 try? await Task.sleep(nanoseconds: 1_000_000_000)
-                elapsedSeconds += 1.0
-                let secs = Int(elapsedSeconds)
+                guard let self, self.isRefreshing, !Task.isCancelled else { break }
+                self.elapsedSeconds += 1.0
+                let secs = Int(self.elapsedSeconds)
                 banners.show(
                     AppBanner(
                         icon: "arrow.trianglehead.2.counterclockwise", title: "Refreshing data…",
@@ -35,6 +36,8 @@ final class RefreshManager: ObservableObject {
         do {
             let result = try await client.refreshData()
             timerTask?.cancel()
+            timerTask = nil
+            isRefreshing = false
             let durationSec = String(format: "%.1f", Double(result.durationMs) / 1000.0)
             Haptics.success()
             banners.showTemporary(
@@ -43,6 +46,8 @@ final class RefreshManager: ObservableObject {
                     message: "Completed in \(durationSec)s", style: .success))
         } catch {
             timerTask?.cancel()
+            timerTask = nil
+            isRefreshing = false
             Haptics.softImpact()
             let msg = (error as? APIError)?.errorDescription ?? error.localizedDescription
             banners.showTemporary(
@@ -50,6 +55,5 @@ final class RefreshManager: ObservableObject {
                     icon: "exclamationmark.triangle.fill", title: "Refresh failed", message: msg,
                     style: .warning))
         }
-        isRefreshing = false
     }
 }
