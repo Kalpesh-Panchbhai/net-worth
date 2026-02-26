@@ -35,18 +35,18 @@ struct Income: Codable, Identifiable, Hashable {
     let taxPaid: Double
     let currency: String
     let creditedDate: Date
-    
+
     enum CodingKeys: String, CodingKey {
         case id, userId, incomeSourceId, incomeTagId, netAmount, taxPaid, currency, creditedDate
     }
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
         userId = try container.decode(Int.self, forKey: .userId)
         incomeSourceId = try container.decode(Int.self, forKey: .incomeSourceId)
         incomeTagId = try container.decode(Int.self, forKey: .incomeTagId)
-        
+
         // Accept Int or Double for amounts
         if let amt = try? container.decode(Double.self, forKey: .netAmount) {
             netAmount = amt
@@ -55,7 +55,7 @@ struct Income: Codable, Identifiable, Hashable {
         } else {
             netAmount = 0
         }
-        
+
         if let tax = try? container.decode(Double.self, forKey: .taxPaid) {
             taxPaid = tax
         } else if let taxInt = try? container.decode(Int.self, forKey: .taxPaid) {
@@ -63,18 +63,23 @@ struct Income: Codable, Identifiable, Hashable {
         } else {
             taxPaid = 0
         }
-        
+
         let dateString = try container.decode(String.self, forKey: .creditedDate)
         // Parse backend date string (YYYY-MM-DD format) into a Date
         guard let parsed = DateFormatter.incomeBackend.date(from: dateString) else {
-            throw DecodingError.dataCorruptedError(forKey: .creditedDate, in: container, debugDescription: "Invalid date format: \(dateString)")
+            throw DecodingError.dataCorruptedError(
+                forKey: .creditedDate, in: container,
+                debugDescription: "Invalid date format: \(dateString)")
         }
         creditedDate = parsed
         currency = try container.decode(String.self, forKey: .currency)
     }
 
     // Convenience initializer
-    init(id: Int, userId: Int, incomeSourceId: Int, incomeTagId: Int, netAmount: Double, taxPaid: Double, currency: String, creditedDate: Date) {
+    init(
+        id: Int, userId: Int, incomeSourceId: Int, incomeTagId: Int, netAmount: Double,
+        taxPaid: Double, currency: String, creditedDate: Date
+    ) {
         self.id = id
         self.userId = userId
         self.incomeSourceId = incomeSourceId
@@ -94,7 +99,7 @@ struct CreateIncomeRequest: Codable {
     let netAmount: Double
     let taxPaid: Double?
     let currency: String
-    let creditedDate: String // Date-only format (YYYY-MM-DD) as per OpenAPI spec
+    let creditedDate: String  // Date-only format (YYYY-MM-DD) as per OpenAPI spec
 }
 
 struct UpdateIncomeRequest: Codable {
@@ -103,7 +108,7 @@ struct UpdateIncomeRequest: Codable {
     let netAmount: Double?
     let taxPaid: Double?
     let currency: String?
-    let creditedDate: String? // Date-only format (YYYY-MM-DD)
+    let creditedDate: String?  // Date-only format (YYYY-MM-DD)
 }
 
 struct CreateIncomeSourceRequest: Codable {

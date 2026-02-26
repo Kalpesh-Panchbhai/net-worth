@@ -12,7 +12,8 @@ struct RestClient {
                 self.baseURL = URL(string: "http://localhost:8080")!
             #else
                 // Running on a physical device: use production backend
-                self.baseURL = URL(string: "https://kfgx37r84g.execute-api.ap-south-1.amazonaws.com/prod")!
+                self.baseURL = URL(
+                    string: "https://kfgx37r84g.execute-api.ap-south-1.amazonaws.com/prod")!
             #endif
         }
     }
@@ -449,6 +450,12 @@ extension RestClient {
 
     func setDefaultIncomeTag(id: Int) async throws {
         try await patch("income-tags/\(id)", body: EmptyBody())
+    }
+
+    // MARK: - Refresh API
+    func refreshData() async throws -> RefreshResult {
+        let response: ApiResponseRefresh = try await post("refresh", body: EmptyBody())
+        return response.data
     }
 
     // MARK: - User Management API

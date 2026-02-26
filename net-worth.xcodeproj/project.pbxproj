@@ -78,6 +78,8 @@
 		7DCE00022E7A000100000002 /* CurrencyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCE00012E7A000100000001 /* CurrencyModels.swift */; };
 		7DCE00042E7A000100000004 /* DefaultCurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DCE00032E7A000100000003 /* DefaultCurrencyView.swift */; };
 		7DDBBBF72E981A3F001C2191 /* QuickImageTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBBBF62E981A3F001C2191 /* QuickImageTransactionView.swift */; };
+		7DE587BA2F50934F00673A03 /* RefreshModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE587B92F50934F00673A03 /* RefreshModels.swift */; };
+		7DE587BC2F50950C00673A03 /* RefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE587BB2F50950C00673A03 /* RefreshManager.swift */; };
 		7DECCEE62E58699D00225DDA /* AssetRowCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DECCEE52E58699D00225DDA /* AssetRowCard.swift */; };
 		7DECCEE82E5875FF00225DDA /* CreateAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DECCEE72E5875FF00225DDA /* CreateAccountView.swift */; };
 		7DECCEEA2E58791600225DDA /* CurrencyPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DECCEE92E58791600225DDA /* CurrencyPickerSheet.swift */; };
@@ -156,6 +158,8 @@
 		7DCE00012E7A000100000001 /* CurrencyModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyModels.swift; sourceTree = "<group>"; };
 		7DCE00032E7A000100000003 /* DefaultCurrencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCurrencyView.swift; sourceTree = "<group>"; };
 		7DDBBBF62E981A3F001C2191 /* QuickImageTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickImageTransactionView.swift; sourceTree = "<group>"; };
+		7DE587B92F50934F00673A03 /* RefreshModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshModels.swift; sourceTree = "<group>"; };
+		7DE587BB2F50950C00673A03 /* RefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshManager.swift; sourceTree = "<group>"; };
 		7DECCEE52E58699D00225DDA /* AssetRowCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetRowCard.swift; sourceTree = "<group>"; };
 		7DECCEE72E5875FF00225DDA /* CreateAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountView.swift; sourceTree = "<group>"; };
 		7DECCEE92E58791600225DDA /* CurrencyPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPickerSheet.swift; sourceTree = "<group>"; };
@@ -264,6 +268,7 @@
 				7DCE00012E7A000100000001 /* CurrencyModels.swift */,
 				7D0259BD2E62DA7E00D72525 /* HoldingModels.swift */,
 				7DAA00022BE3000000000002 /* IncomeModels.swift */,
+				7DE587B92F50934F00673A03 /* RefreshModels.swift */,
 				7D627CA92E5A38EA00BB1CD7 /* TransactionModels.swift */,
 				7D0259C12E62DD7800D72525 /* UserModels.swift */,
 				7DAB02012E70000100000001 /* WatchModels.swift */,
@@ -275,6 +280,7 @@
 			isa = PBXGroup;
 			children = (
 				7D4D09492E5304B200E188D0 /* APIError.swift */,
+				7DE587BB2F50950C00673A03 /* RefreshManager.swift */,
 				7D4D09472E53021B00E188D0 /* RestClient.swift */,
 				7D3F52612E6FED76000F04E6 /* SessionCache.swift */,
 				7D8A44B42E69CD860085B681 /* YahooFinanceClient.swift */,
@@ -511,6 +517,7 @@
 				7DC422212E546A29000D62BD /* AppDelegate.swift in Sources */,
 				7D4E7B942E58C47D007AB2B9 /* AuthManager.swift in Sources */,
 				7D59B4012BE246FF006F3F00 /* net_worthApp.swift in Sources */,
+				7DE587BA2F50934F00673A03 /* RefreshModels.swift in Sources */,
 				7DECCEEA2E58791600225DDA /* CurrencyPickerSheet.swift in Sources */,
 				7DAA10012BE3000000000001 /* AppTab.swift in Sources */,
 				7DAA10022BE3000000000002 /* IncomeModels.swift in Sources */,
@@ -518,6 +525,7 @@
 				7DDBBBF72E981A3F001C2191 /* QuickImageTransactionView.swift in Sources */,
 				7D3C94052E99368D0066CBE6 /* ExpiryNotifier.swift in Sources */,
 				7D2736852E59DDBB00F32B4C /* WatchlistAccountsView.swift in Sources */,
+				7DE587BC2F50950C00673A03 /* RefreshManager.swift in Sources */,
 				7DAA10042BE3000000000004 /* IncomeController.swift in Sources */,
 				7D6F68E82E5730A900E0AD02 /* LookupStore.swift in Sources */,
 				7D08E7D32E6EB75200AC3898 /* HomeView.swift in Sources */,
@@ -712,7 +720,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 451;
+				CURRENT_PROJECT_VERSION = 452;
 				DEVELOPMENT_ASSET_PATHS = "\"net-worth/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -742,7 +750,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 451;
+				CURRENT_PROJECT_VERSION = 452;
 				DEVELOPMENT_ASSET_PATHS = "\"net-worth/Preview Content\"";
 				DEVELOPMENT_TEAM = 2SHT42699C;
 				ENABLE_PREVIEWS = YES;

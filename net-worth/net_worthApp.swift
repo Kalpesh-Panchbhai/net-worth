@@ -1,13 +1,14 @@
 import SwiftUI
 import UIKit
+
 #if canImport(GoogleSignIn)
-import GoogleSignIn
+    import GoogleSignIn
 #endif
 #if canImport(FirebaseCore)
-import FirebaseCore
+    import FirebaseCore
 #endif
 #if canImport(FirebaseAuth)
-import FirebaseAuth
+    import FirebaseAuth
 #endif
 
 @main
@@ -17,6 +18,7 @@ struct net_worthApp: App {
     @StateObject private var bannerCenter = BannerCenter()
     @StateObject private var tabCommands = TabCommandCenter()
     @StateObject private var lookupStore = LookupStore()
+    @StateObject private var refreshManager = RefreshManager()
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("backendUserId") private var backendUserId: Int = -1
     init() {
@@ -24,11 +26,11 @@ struct net_worthApp: App {
         let navBar = UINavigationBar.appearance()
         navBar.prefersLargeTitles = true
         navBar.tintColor = UIColor.systemBlue
-        
+
         // Use default appearances to avoid conflicts
         let appearance = UINavigationBarAppearance()
         appearance.configureWithDefaultBackground()
-        
+
         navBar.standardAppearance = appearance
         navBar.compactAppearance = appearance
         navBar.scrollEdgeAppearance = appearance
@@ -49,6 +51,7 @@ struct net_worthApp: App {
             .environmentObject(bannerCenter)
             .environmentObject(tabCommands)
             .environmentObject(lookupStore)
+            .environmentObject(refreshManager)
             .tint(.airbnbPrimary)
             .task {
                 if backendUserId > 0 {
@@ -62,7 +65,7 @@ struct net_worthApp: App {
             }
             .onOpenURL { url in
                 #if canImport(GoogleSignIn)
-                _ = GIDSignIn.sharedInstance.handle(url)
+                    _ = GIDSignIn.sharedInstance.handle(url)
                 #endif
             }
         }
@@ -140,16 +143,19 @@ private struct OnboardingScreen: View {
             .navigationBarHidden(true)
             .overlay(alignment: .top) { GlobalBannerHost() }
         }
-        .fullScreenCover(isPresented: $showCurrencyPicker, onDismiss: {
-            // Proceed only after user has picked a currency
-            let code = defaultCurrencyCode.trimmingCharacters(in: .whitespacesAndNewlines)
-            if !code.isEmpty, let id = pendingUserId {
-                backendUserId = id
-                Haptics.success()
-                Task { await lookupStore.loadIfNeeded(userId: id) }
-                pendingUserId = nil
+        .fullScreenCover(
+            isPresented: $showCurrencyPicker,
+            onDismiss: {
+                // Proceed only after user has picked a currency
+                let code = defaultCurrencyCode.trimmingCharacters(in: .whitespacesAndNewlines)
+                if !code.isEmpty, let id = pendingUserId {
+                    backendUserId = id
+                    Haptics.success()
+                    Task { await lookupStore.loadIfNeeded(userId: id) }
+                    pendingUserId = nil
+                }
             }
-        }) {
+        ) {
             NavigationStack {
                 DefaultCurrencyView()
                     .navigationBarTitleDisplayMode(.inline)
@@ -168,36 +174,63 @@ private struct OnboardingScreen: View {
         defer { isSigningIn = false }
         do {
             #if canImport(FirebaseCore) && canImport(GoogleSignIn) && canImport(FirebaseAuth)
-            if FirebaseApp.app() == nil { FirebaseApp.configure() }
-            guard let presenting = topViewController() else { throw NSError(domain: "Auth", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unable to present sign-in"]) }
-            let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: presenting)
-            guard let idToken = result.user.idToken?.tokenString else { throw NSError(domain: "Auth", code: -2, userInfo: [NSLocalizedDescriptionKey: "Missing ID token"]) }
-            let accessToken = result.user.accessToken.tokenString
-            let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
-            let authResult = try await withCheckedThrowingContinuation { (cont: CheckedContinuation<AuthDataResult, Error>) in
-                Auth.auth().signIn(with: credential) { res, err in
-                    if let err = err { cont.resume(throwing: err) }
-                    else if let res = res { cont.resume(returning: res) }
-                    else { cont.resume(throwing: NSError(domain: "Auth", code: -3, userInfo: [NSLocalizedDescriptionKey: "Sign-in failed"])) }
+                if FirebaseApp.app() == nil { FirebaseApp.configure() }
+                guard let presenting = topViewController() else {
+                    throw NSError(
+                        domain: "Auth", code: -1,
+                        userInfo: [NSLocalizedDescriptionKey: "Unable to present sign-in"])
                 }
-            }
-            let firebaseUID = authResult.user.uid
-            let id = try await RestClient().registerFirebaseUser(uid: firebaseUID)
-            if id > 0 {
-                // If default currency is not set yet, force selection before proceeding
-                if defaultCurrencyCode.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    pendingUserId = id
-                    showCurrencyPicker = true
+                let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: presenting)
+                guard let idToken = result.user.idToken?.tokenString else {
+                    throw NSError(
+                        domain: "Auth", code: -2,
+                        userInfo: [NSLocalizedDescriptionKey: "Missing ID token"])
+                }
+                let accessToken = result.user.accessToken.tokenString
+                let credential = GoogleAuthProvider.credential(
+                    withIDToken: idToken, accessToken: accessToken)
+                let authResult = try await withCheckedThrowingContinuation {
+                    (cont: CheckedContinuation<AuthDataResult, Error>) in
+                    Auth.auth().signIn(with: credential) { res, err in
+                        if let err = err {
+                            cont.resume(throwing: err)
+                        } else if let res = res {
+                            cont.resume(returning: res)
+                        } else {
+                            cont.resume(
+                                throwing: NSError(
+                                    domain: "Auth", code: -3,
+                                    userInfo: [NSLocalizedDescriptionKey: "Sign-in failed"]))
+                        }
+                    }
+                }
+                let firebaseUID = authResult.user.uid
+                let id = try await RestClient().registerFirebaseUser(uid: firebaseUID)
+                if id > 0 {
+                    // If default currency is not set yet, force selection before proceeding
+                    if defaultCurrencyCode.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        pendingUserId = id
+                        showCurrencyPicker = true
+                    } else {
+                        backendUserId = id
+                        Haptics.success()
+                        await lookupStore.loadIfNeeded(userId: id)
+                    }
                 } else {
-                    backendUserId = id
-                    Haptics.success()
-                    await lookupStore.loadIfNeeded(userId: id)
+                    throw NSError(
+                        domain: "API", code: -4,
+                        userInfo: [
+                            NSLocalizedDescriptionKey:
+                                "Failed to create or fetch user. Please try again."
+                        ])
                 }
-            } else {
-                throw NSError(domain: "API", code: -4, userInfo: [NSLocalizedDescriptionKey: "Failed to create or fetch user. Please try again."])
-            }
             #else
-            throw NSError(domain: "Auth", code: -10, userInfo: [NSLocalizedDescriptionKey: "Firebase/Google Sign-In not configured. Add Firebase packages and GoogleService-Info.plist."])
+                throw NSError(
+                    domain: "Auth", code: -10,
+                    userInfo: [
+                        NSLocalizedDescriptionKey:
+                            "Firebase/Google Sign-In not configured. Add Firebase packages and GoogleService-Info.plist."
+                    ])
             #endif
         } catch {
             errorMessage = (error as NSError).localizedDescription
@@ -208,18 +241,24 @@ private struct OnboardingScreen: View {
     @MainActor
     private func topViewController(base: UIViewController? = nil) -> UIViewController? {
         if let base { return ascend(from: base) }
-        guard let scene = UIApplication.shared.connectedScenes
-            .compactMap({ $0 as? UIWindowScene })
-            .first(where: { $0.activationState == .foregroundActive }),
-              let root = scene.windows.first(where: { $0.isKeyWindow })?.rootViewController else {
+        guard
+            let scene = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .first(where: { $0.activationState == .foregroundActive }),
+            let root = scene.windows.first(where: { $0.isKeyWindow })?.rootViewController
+        else {
             return nil
         }
         return ascend(from: root)
     }
 
     private func ascend(from root: UIViewController) -> UIViewController {
-        if let nav = root as? UINavigationController, let vis = nav.visibleViewController { return ascend(from: vis) }
-        if let tab = root as? UITabBarController, let sel = tab.selectedViewController { return ascend(from: sel) }
+        if let nav = root as? UINavigationController, let vis = nav.visibleViewController {
+            return ascend(from: vis)
+        }
+        if let tab = root as? UITabBarController, let sel = tab.selectedViewController {
+            return ascend(from: sel)
+        }
         if let presented = root.presentedViewController { return ascend(from: presented) }
         return root
     }

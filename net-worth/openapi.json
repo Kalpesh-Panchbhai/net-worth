@@ -58,9 +58,69 @@
     {
       "name": "chart-data",
       "description": "Time-series chart data for holdings, accounts, and watchlists"
+    },
+    {
+      "name": "refresh",
+      "description": "Manual data refresh operations"
     }
   ],
   "paths": {
+    "/refresh": {
+      "post": {
+        "tags": [
+          "refresh"
+        ],
+        "summary": "Trigger manual data refresh",
+        "description": "Triggers a manual refresh of all account data. This runs the same logic as the scheduled 2-hour job. Use this to update data on-demand from the iOS app.",
+        "responses": {
+          "200": {
+            "description": "Data refreshed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseRefresh"
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "message": "Data refreshed successfully",
+                        "durationMs": 5432
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Refresh failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                },
+                "examples": {
+                  "refreshFailed": {
+                    "value": {
+                      "success": false,
+                      "error": {
+                        "code": "REFRESH_FAILED",
+                        "message": "Data refresh failed: Connection timeout"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
     "/incomes": {
       "post": {
         "tags": [
@@ -2473,6 +2533,36 @@
   },
   "components": {
     "schemas": {
+      "ApiResponseRefresh": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/RefreshResult"
+          }
+        }
+      },
+      "RefreshResult": {
+        "type": "object",
+        "description": "Result of a manual data refresh operation",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Status message"
+          },
+          "durationMs": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Duration of the refresh operation in milliseconds"
+          }
+        },
+        "example": {
+          "message": "Data refreshed successfully",
+          "durationMs": 5432
+        }
+      },
       "ApiResponseUser": {
         "type": "object",
         "properties": {
