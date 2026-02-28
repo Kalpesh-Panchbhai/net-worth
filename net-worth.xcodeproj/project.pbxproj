@@ -80,6 +80,7 @@
 		7DDBBBF72E981A3F001C2191 /* QuickImageTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDBBBF62E981A3F001C2191 /* QuickImageTransactionView.swift */; };
 		7DE587BA2F50934F00673A03 /* RefreshModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE587B92F50934F00673A03 /* RefreshModels.swift */; };
 		7DE587BC2F50950C00673A03 /* RefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE587BB2F50950C00673A03 /* RefreshManager.swift */; };
+		7DE587BE2F50A00000673A03 /* XIRR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE587BD2F50A00000673A03 /* XIRR.swift */; };
 		7DECCEE62E58699D00225DDA /* AssetRowCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DECCEE52E58699D00225DDA /* AssetRowCard.swift */; };
 		7DECCEE82E5875FF00225DDA /* CreateAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DECCEE72E5875FF00225DDA /* CreateAccountView.swift */; };
 		7DECCEEA2E58791600225DDA /* CurrencyPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DECCEE92E58791600225DDA /* CurrencyPickerSheet.swift */; };
@@ -160,6 +161,7 @@
 		7DDBBBF62E981A3F001C2191 /* QuickImageTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickImageTransactionView.swift; sourceTree = "<group>"; };
 		7DE587B92F50934F00673A03 /* RefreshModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshModels.swift; sourceTree = "<group>"; };
 		7DE587BB2F50950C00673A03 /* RefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshManager.swift; sourceTree = "<group>"; };
+		7DE587BD2F50A00000673A03 /* XIRR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XIRR.swift; sourceTree = "<group>"; };
 		7DECCEE52E58699D00225DDA /* AssetRowCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetRowCard.swift; sourceTree = "<group>"; };
 		7DECCEE72E5875FF00225DDA /* CreateAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountView.swift; sourceTree = "<group>"; };
 		7DECCEE92E58791600225DDA /* CurrencyPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPickerSheet.swift; sourceTree = "<group>"; };
@@ -316,6 +318,7 @@
 				7D6F68E92E5739D400E0AD02 /* ScrollToTop.swift */,
 				7DAA00092BE3000000000009 /* Shimmer.swift */,
 				7DAA00102BE3000000000010 /* Transitions.swift */,
+				7DE587BD2F50A00000673A03 /* XIRR.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -585,6 +588,7 @@
 				7D0259BE2E62DA7E00D72525 /* HoldingModels.swift in Sources */,
 				7DCE00042E7A000100000004 /* DefaultCurrencyView.swift in Sources */,
 				7D2736832E59DDAE00F32B4C /* WatchAccountsController.swift in Sources */,
+				7DE587BE2F50A00000673A03 /* XIRR.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -720,7 +724,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 454;
+				CURRENT_PROJECT_VERSION = 455;
 				DEVELOPMENT_ASSET_PATHS = "\"net-worth/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -750,7 +754,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 454;
+				CURRENT_PROJECT_VERSION = 455;
 				DEVELOPMENT_ASSET_PATHS = "\"net-worth/Preview Content\"";
 				DEVELOPMENT_TEAM = 2SHT42699C;
 				ENABLE_PREVIEWS = YES;

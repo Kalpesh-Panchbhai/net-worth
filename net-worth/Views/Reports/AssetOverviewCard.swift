@@ -26,7 +26,7 @@ struct AssetOverviewCard: View {
         return nil
     }
 
-    struct Point: Identifiable, Hashable {
+    struct Point: Identifiable, Hashable, DatedInvestmentPoint {
         let id: Int
         let date: Date
         let value: Double
@@ -34,6 +34,10 @@ struct AssetOverviewCard: View {
         let averagePerMonth: Double?
         let taxPaid: Double
         let averageTaxPerMonth: Double?
+
+        var pointDate: Date { date }
+        var pointValue: Double { value }
+        var pointInvested: Double { invested }
     }
 
     // MARK: - State
@@ -105,6 +109,10 @@ struct AssetOverviewCard: View {
         let newMoneyAdded = lastPoint.invested - firstPoint.invested
         let expectedValue = firstPoint.value + newMoneyAdded
         return lastPoint.value - expectedValue
+    }
+    private var xirrPercent: Double? {
+        guard !isIncomeChart else { return nil }
+        return XIRR.calculate(from: data)
     }
 
     // MARK: - Helper Properties
@@ -442,9 +450,32 @@ struct AssetOverviewCard: View {
                     icon: deltaAmount >= 0 ? "arrow.up.right" : "arrow.down.right",
                     value: abs(deltaAmount),
                     currency: currency,
-                    percent: String(format: "%.1f%%", abs(deltaPercent)),
+                    percent: String(format: "%.1f%%", deltaPercent),
                     tint: deltaAmount >= 0 ? .airbnbSuccess : .red
                 )
+
+                // XIRR (annualized return)
+                if let xirr = xirrPercent {
+                    HStack(spacing: 6) {
+                        Image(
+                            systemName: xirr >= 0
+                                ? "chart.line.uptrend.xyaxis" : "chart.line.downtrend.xyaxis"
+                        )
+                        .font(.caption2.weight(.bold))
+                        Text("XIRR")
+                            .font(.footnote.weight(.semibold))
+                        Text("•").font(.caption2.weight(.semibold))
+                        Text(String(format: "%.2f%%", xirr))
+                            .font(.footnote.weight(.semibold))
+                            .monospacedDigit()
+                    }
+                    .foregroundColor(xirr >= 0 ? .airbnbSuccess : .red)
+                    .padding(.vertical, 4)
+                    .padding(.horizontal, 10)
+                    .background(
+                        Capsule().fill((xirr >= 0 ? Color.airbnbSuccess : Color.red).opacity(0.12))
+                    )
+                }
             }
         }
     }
@@ -823,7 +854,9 @@ struct AssetOverviewCard: View {
                             .font(.system(size: 10.5, weight: .semibold))
                             .foregroundColor(
                                 colorScheme == .dark
-                                    ? Color.white.opacity(0.7) : Color.black.opacity(0.5))
+                                    ? Color.white.opacity(0.7) : Color.black.opacity(0.5)
+                            )
+                            .fixedSize()
                     }
                 }
             }
@@ -1069,27 +1102,40 @@ struct AssetOverviewCard: View {
         case .all: return 3  // quarterly
         }
     }
+
+    /// Actual number of days the data spans
+    private var dataSpanDays: Int {
+        guard let first = data.first?.date, let last = data.last?.date else { return 0 }
+        return max(1, Calendar.current.dateComponents([.day], from: first, to: last).day ?? 1)
+    }
+
     private func xAxisLabel(for date: Date) -> String {
-        switch selectedRange {
-        case .oneMonth: return dayFormatter.string(from: date)
-        case .threeMonths: return dayFormatter.string(from: date)
-        case .sixMonths: return monthFormatter.string(from: date)
-        case .oneYear: return monthFormatter.string(from: date)
-        case .twoYears: return monthFormatter.string(from: date)
-        case .fiveYears: return yearFormatter.string(from: date)
-        case .all: return monthFormatter.string(from: date)
+        let days = dataSpanDays
+        if days <= 90 {  // up to ~3 months  → "5 Feb"
+            return dayMonthFormatter.string(from: date)
+        } else if days <= 180 {  // up to ~6 months  → "Feb"
+            return monthFormatter.string(from: date)
+        } else if days <= 730 {  // up to ~2 years   → "Feb '25"
+            return monthYearFormatter.string(from: date)
+        } else {  // >2 years          → "2025"
+            return yearFormatter.string(from: date)
         }
     }
 
-    // Explicitly compute up to 5 tick dates across the visible domain
+    // Compute evenly-spaced tick dates within the visible domain
     private var xAxisTickDatesLimited: [Date] {
-        // Tuned fractions reduce the perceived leading gap while keeping labels in-bounds
         guard xDomain.upperBound > xDomain.lowerBound else { return [] }
         let start = xDomain.lowerBound
         let end = xDomain.upperBound
         let total = end.timeIntervalSince(start)
-        let fractions: [Double] = [0.0, 0.225, 0.45, 0.675, 0.9]
-        return fractions.map { frac in Date(timeInterval: total * frac, since: start) }
+
+        let count = dataSpanDays <= 180 ? 4 : 5
+
+        // Evenly space from 0.05 to 0.85 to avoid edge clipping
+        return (0..<count).map { i in
+            let frac = 0.05 + 0.80 * Double(i) / Double(count - 1)
+            return Date(timeInterval: total * frac, since: start)
+        }
     }
 
     // Whether to render the invested series. If every point has identical value and invested
@@ -1183,9 +1229,19 @@ struct AssetOverviewCard: View {
         df.dateFormat = "d"
         return df
     }
+    private var dayMonthFormatter: DateFormatter {
+        let df = DateFormatter()
+        df.dateFormat = "d MMM"
+        return df
+    }
     private var monthFormatter: DateFormatter {
         let df = DateFormatter()
         df.dateFormat = "MMM"
+        return df
+    }
+    private var monthYearFormatter: DateFormatter {
+        let df = DateFormatter()
+        df.dateFormat = "MMM ''yy"
         return df
     }
     private var yearFormatter: DateFormatter {
