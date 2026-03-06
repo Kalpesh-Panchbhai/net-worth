@@ -58,7 +58,8 @@ struct AssetOverviewCard: View {
     @State private var userId: Int = 1  // TODO: Inject from app state / auth
     @EnvironmentObject private var lookup: LookupStore
     // Live data
-    @State private var data: [Point] = []
+    @State private var data: [Point] = []  // Downsampled for chart display
+    @State private var fullData: [Point] = []  // Full dataset for statistics
     @State private var selectedTypes: Set<String> = []
     @State private var selectedTags: Set<String> = []
     @State private var selectedYears: Set<Int> = []
@@ -113,6 +114,30 @@ struct AssetOverviewCard: View {
     private var xirrPercent: Double? {
         guard !isIncomeChart else { return nil }
         return XIRR.calculate(from: data)
+    }
+
+    // Highest profit % and date from ALL data (not just displayed)
+    private var highestProfit: (percent: Double, date: Date)? {
+        guard !isIncomeChart, showInvestedSeries else { return nil }
+        let dataSource = fullData.isEmpty ? data : fullData
+        let profitsWithDates = dataSource.compactMap { point -> (percent: Double, date: Date)? in
+            guard point.invested > 0 else { return nil }
+            let pct = ((point.value - point.invested) / point.invested) * 100
+            return (pct, point.date)
+        }
+        return profitsWithDates.max(by: { $0.percent < $1.percent })
+    }
+
+    // Lowest profit % and date from ALL data (not just displayed)
+    private var lowestProfit: (percent: Double, date: Date)? {
+        guard !isIncomeChart, showInvestedSeries else { return nil }
+        let dataSource = fullData.isEmpty ? data : fullData
+        let profitsWithDates = dataSource.compactMap { point -> (percent: Double, date: Date)? in
+            guard point.invested > 0 else { return nil }
+            let pct = ((point.value - point.invested) / point.invested) * 100
+            return (pct, point.date)
+        }
+        return profitsWithDates.min(by: { $0.percent < $1.percent })
     }
 
     // MARK: - Helper Properties
@@ -195,7 +220,7 @@ struct AssetOverviewCard: View {
 
     // MARK: - Body
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 10) {
             header
             entitySelectorBar
             if isIncomeChart {
@@ -224,7 +249,11 @@ struct AssetOverviewCard: View {
             }
             rangeSelector
             chart
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(maxWidth: .infinity)
+                .frame(minHeight: 420)
+            if showInvestedSeries {
+                compactMetricsBar
+            }
             if isIncomeChart {
                 chartLegend
             }
@@ -416,68 +445,248 @@ struct AssetOverviewCard: View {
         .padding(.vertical, 8)
     }
 
-    // MARK: - Header (title + big value + green deltas)
+    // MARK: - Header (title + big value)
     private var header: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // Removed decorative left icon, notification bell, and avatar for a cleaner header per request
-
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Portfolio Value")
-                        .font(.system(size: 15, weight: .medium))
-                        .foregroundColor(.secondary)
-                    Text("Real-time tracking")
-                        .font(.system(size: 12, weight: .regular))
-                        .foregroundColor(.secondary.opacity(0.8))
-                }
-                Spacer()
-                Image(systemName: "chart.line.uptrend.xyaxis")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.airbnbPrimary)
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Portfolio Value")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(.secondary)
+                Text(headlineValue, format: .currency(code: currency))
+                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .foregroundColor(.primary)
+                    .monospacedDigit()
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
             }
+            Spacer()
+            Image(systemName: "chart.line.uptrend.xyaxis")
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(.airbnbPrimary)
+        }
+    }
 
-            // Main number
-            Text(headlineValue, format: .currency(code: currency))
-                .font(.system(size: 36, weight: .bold, design: .rounded))
-                .foregroundColor(.primary)
-                .monospacedDigit()
-                .lineLimit(1)
-                .minimumScaleFactor(0.6)
+    // MARK: - Compact Metrics Bar (below chart)
+    private var compactMetricsBar: some View {
+        HStack(spacing: 0) {
+            // Profit/Loss
+            metricItem(
+                icon: deltaAmount >= 0 ? "arrow.up.right" : "arrow.down.right",
+                label: "P/L",
+                value: String(format: "%.1f%%", deltaPercent),
+                subValue: CurrencyShort.shortString(
+                    deltaAmount >= 0 ? deltaAmount : -deltaAmount, currency: currency),
+                color: deltaAmount >= 0 ? .airbnbSuccess : .red
+            )
 
-            // Deltas in green (hide when invested equals value across the period)
-            if showInvestedSeries {
-                WideStatPill(
-                    icon: deltaAmount >= 0 ? "arrow.up.right" : "arrow.down.right",
-                    value: abs(deltaAmount),
-                    currency: currency,
-                    percent: String(format: "%.1f%%", deltaPercent),
-                    tint: deltaAmount >= 0 ? .airbnbSuccess : .red
+            Divider().frame(height: 40)
+
+            // XIRR
+            if let xirr = xirrPercent {
+                metricItem(
+                    icon: xirr >= 0 ? "chart.line.uptrend.xyaxis" : "chart.line.downtrend.xyaxis",
+                    label: "XIRR",
+                    value: String(format: "%.2f%%", xirr),
+                    subValue: nil,
+                    color: xirr >= 0 ? .airbnbSuccess : .red
                 )
 
-                // XIRR (annualized return)
-                if let xirr = xirrPercent {
-                    HStack(spacing: 6) {
-                        Image(
-                            systemName: xirr >= 0
-                                ? "chart.line.uptrend.xyaxis" : "chart.line.downtrend.xyaxis"
-                        )
-                        .font(.caption2.weight(.bold))
-                        Text("XIRR")
-                            .font(.footnote.weight(.semibold))
-                        Text("•").font(.caption2.weight(.semibold))
-                        Text(String(format: "%.2f%%", xirr))
-                            .font(.footnote.weight(.semibold))
-                            .monospacedDigit()
-                    }
-                    .foregroundColor(xirr >= 0 ? .airbnbSuccess : .red)
-                    .padding(.vertical, 4)
-                    .padding(.horizontal, 10)
-                    .background(
-                        Capsule().fill((xirr >= 0 ? Color.airbnbSuccess : Color.red).opacity(0.12))
-                    )
-                }
+                Divider().frame(height: 40)
+            }
+
+            // High
+            if let high = highestProfit {
+                metricItem(
+                    icon: "arrow.up.to.line",
+                    label: "High",
+                    value: String(format: "%.1f%%", high.percent),
+                    subValue: high.date.formatted(.dateTime.day().month(.abbreviated).year()),
+                    color: high.percent >= 0 ? .airbnbSuccess : .red
+                )
+
+                Divider().frame(height: 40)
+            }
+
+            // Low
+            if let low = lowestProfit {
+                metricItem(
+                    icon: "arrow.down.to.line",
+                    label: "Low",
+                    value: String(format: "%.1f%%", low.percent),
+                    subValue: low.date.formatted(.dateTime.day().month(.abbreviated).year()),
+                    color: low.percent >= 0 ? .airbnbSuccess : .red
+                )
             }
         }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 12)
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(Color.elevatedBackground)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .strokeBorder(Color.secondary.opacity(0.1), lineWidth: 1)
+        )
+    }
+
+    private func metricItem(
+        icon: String, label: String, value: String, subValue: String?, color: Color
+    ) -> some View {
+        VStack(alignment: .center, spacing: 4) {
+            HStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.caption2.weight(.bold))
+                    .foregroundColor(color)
+                Text(label)
+                    .font(.caption2.weight(.medium))
+                    .foregroundColor(.secondary)
+            }
+            .frame(height: 16)
+
+            Text(value)
+                .font(.system(size: 16, weight: .bold))
+                .foregroundColor(color)
+                .monospacedDigit()
+                .frame(height: 20)
+
+            Group {
+                if let subValue = subValue {
+                    Text(subValue)
+                        .font(.caption2)
+                        .foregroundColor(.secondary.opacity(0.8))
+                } else {
+                    Text(" ")
+                        .font(.caption2)
+                        .foregroundColor(.clear)
+                }
+            }
+            .frame(height: 14)
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+    }
+
+    // MARK: - Old Performance Metrics Card (unused)
+    private var performanceMetricsCard_unused: some View {
+        VStack(spacing: 0) {
+            // Top row: Profit/Loss and XIRR
+            HStack(spacing: 12) {
+                // Profit/Loss
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(spacing: 4) {
+                        Image(systemName: deltaAmount >= 0 ? "arrow.up.right" : "arrow.down.right")
+                            .font(.caption2.weight(.bold))
+                            .foregroundColor(deltaAmount >= 0 ? .airbnbSuccess : .red)
+                        Text("Profit/Loss")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    HStack(spacing: 6) {
+                        Text(String(format: "%.1f%%", deltaPercent))
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundColor(deltaAmount >= 0 ? .airbnbSuccess : .red)
+                            .monospacedDigit()
+                        Text("•")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundColor(.secondary)
+                        Text(
+                            CurrencyShort.shortString(
+                                deltaAmount >= 0 ? deltaAmount : -deltaAmount, currency: currency)
+                        )
+                        .font(.footnote.weight(.semibold))
+                        .foregroundColor(deltaAmount >= 0 ? .airbnbSuccess : .red)
+                        .monospacedDigit()
+                        .lineLimit(1)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                // XIRR
+                if let xirr = xirrPercent {
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 4) {
+                            Image(
+                                systemName: xirr >= 0
+                                    ? "chart.line.uptrend.xyaxis" : "chart.line.downtrend.xyaxis"
+                            )
+                            .font(.caption2.weight(.bold))
+                            .foregroundColor(xirr >= 0 ? .airbnbSuccess : .red)
+                            Text("XIRR")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        Text(String(format: "%.2f%%", xirr))
+                            .font(.system(size: 18, weight: .bold))
+                            .foregroundColor(xirr >= 0 ? .airbnbSuccess : .red)
+                            .monospacedDigit()
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+
+            // Divider
+            if highestProfit != nil || lowestProfit != nil {
+                Divider()
+                    .padding(.horizontal, 14)
+            }
+
+            // Bottom row: High and Low
+            if let high = highestProfit, let low = lowestProfit {
+                HStack(spacing: 12) {
+                    // Highest
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "arrow.up.to.line")
+                                .font(.caption2.weight(.bold))
+                                .foregroundColor(.secondary)
+                            Text("High")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        Text(String(format: "%.2f%%", high.percent))
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundColor(high.percent >= 0 ? .airbnbSuccess : .red)
+                            .monospacedDigit()
+                        Text(high.date, format: .dateTime.month(.abbreviated).day())
+                            .font(.caption2)
+                            .foregroundColor(.secondary.opacity(0.8))
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                    // Lowest
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "arrow.down.to.line")
+                                .font(.caption2.weight(.bold))
+                                .foregroundColor(.secondary)
+                            Text("Low")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        Text(String(format: "%.2f%%", low.percent))
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundColor(low.percent >= 0 ? .airbnbSuccess : .red)
+                            .monospacedDigit()
+                        Text(low.date, format: .dateTime.month(.abbreviated).day())
+                            .font(.caption2)
+                            .foregroundColor(.secondary.opacity(0.8))
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
+            }
+        }
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(Color.elevatedBackground)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .strokeBorder(Color.secondary.opacity(0.1), lineWidth: 1)
+        )
     }
 
     // MARK: - Range Selector (exact pill segmented control)
@@ -1359,16 +1568,17 @@ struct AssetOverviewCard: View {
             let fmt = DateFormatter()
             fmt.dateFormat = "yyyy-MM-dd"
             fmt.timeZone = TimeZone(secondsFromGMT: 0)
-            var mapped: [Point] = raw.enumerated().compactMap { index, r in
+            let mapped: [Point] = raw.enumerated().compactMap { index, r in
                 guard let d = fmt.date(from: r.date) else { return nil }
                 return Point(
                     id: index, date: d, value: r.value, invested: r.invested, averagePerMonth: nil,
                     taxPaid: 0, averageTaxPerMonth: nil)
             }.sorted { $0.date < $1.date }
-            mapped = downsampleEvenTime(mapped, maxCount: 100)
+            let downsampled = downsampleEvenTime(mapped, maxCount: 100)
             await MainActor.run {
                 self.selectedRange = range
-                self.data = mapped
+                self.fullData = mapped  // Store full data for statistics
+                self.data = downsampled  // Use downsampled for chart
                 self.isLoading = false
             }
         } catch {
@@ -1397,6 +1607,7 @@ struct AssetOverviewCard: View {
             let points = generateIncomeChartData(from: startDate, to: now)
             await MainActor.run {
                 self.selectedRange = range
+                self.fullData = points  // Income data is already filtered, store as full
                 self.data = points
                 self.isLoading = false
             }
@@ -1564,6 +1775,7 @@ struct AssetOverviewCard: View {
 
             await MainActor.run {
                 self.selectedRange = range
+                self.fullData = points  // Store full data for statistics
                 self.data = downsampledPoints
                 self.isLoading = false
             }
